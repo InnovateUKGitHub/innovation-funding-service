@@ -11,52 +11,45 @@ var compass = require('compass-importer')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
-var gdsFrontendToolkitPath = nodeModulesPath + 'govuk_frontend_toolkit/'
-var gdsTemplateJinjaPath = nodeModulesPath + 'govuk_template_jinja/'
-var gdsElementsPath = nodeModulesPath + 'govuk-elements-sass/'
-var vendorImages = [
-	gdsTemplateJinjaPath + 'assets/images/**/**',
-	gdsTemplateJinjaPath + 'assets/stylesheets/images/**/**',
-  gdsFrontendToolkitPath + 'images/**/**'
-]
+var govukFrontendPath = nodeModulesPath + 'govuk-frontend/'
 var sassFiles = [
   __dirname + '/sass/**/*.scss',
-  gdsFrontendToolkitPath + '**/*.scss',
-  gdsElementsPath + '**/*.scss'
+  govukFrontendPath + 'settings/**/*.scss',
+  govukFrontendPath + 'tools/**/*.scss',
+  govukFrontendPath + 'helpers/**/*.scss',
+  govukFrontendPath + 'core/**/*.scss',
+  govukFrontendPath + 'objects/**/*.scss',
+  govukFrontendPath + 'components/**/*.scss',
+  govukFrontendPath + 'utilities/**/*.scss',
+  govukFrontendPath + 'overrides/**/*.scss'
 ]
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
-  __dirname + '/js/vendor/jquery-ui/jquery-ui.min.js',
-  gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
-  gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
-  gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
+  nodeModulesPath + 'jquery-ui-dist/jquery-ui.js',
+	govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
-  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
+  __dirname + '/js/vendor/govuk/govuk-cookies.js',
   __dirname + '/js/vendor/wysiwyg-editor/*.js',
   '!' + __dirname + '/js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
-// copy over the vendor javascript files to the js/vendor/govuk folder
-gulp.task('web-core:copy-js-govuk', function () {
-	return gulp.src(filesExist([
-	  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
-    gdsTemplateJinjaPath + 'assets/javascripts/ie.js'
-  ]))
-  .pipe(gulp.dest(__dirname + '/js/vendor/govuk'))
-})
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('web-core:copy-fonts-govuk', function () {
-  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*'))
+  return gulp.src(filesExist(govukFrontendPath + 'assets/fonts/*'))
   .pipe(gulp.dest(__dirname + '/css/fonts'))
 })
 //  copy over the images from GDS node-modules to images folder
 gulp.task('web-core:copy-images-govuk', function () {
-  return gulp.src(filesExist(vendorImages))
+  return gulp.src(filesExist(govukFrontendPath + 'assets/images/**/**'))
   .pipe(gulp.dest(__dirname + '/images'))
 })
-gulp.task('web-core:copy-govuk', gulp.parallel('web-core:copy-js-govuk', 'web-core:copy-fonts-govuk', 'web-core:copy-images-govuk'))
+//  copy over html5shiv javascript to the javascript folder
+gulp.task('web-core:copy-html5shiv', function () {
+  return gulp.src(filesExist(nodeModulesPath + 'html5shiv/dist/html5shiv.js'))
+  .pipe(gulp.dest(__dirname + '/js/vendor/html5shiv'))
+})
 
 // concat and minify all the ifs files
 gulp.task('web-core:ifs-js', function () {
@@ -86,15 +79,16 @@ gulp.task('web-core:vendor', function () {
 })
 
 // build all js
-gulp.task('web-core:js', gulp.series('web-core:copy-govuk', gulp.parallel('web-core:vendor', 'web-core:ifs-js')))
+gulp.task('web-core:js', gulp.parallel('web-core:vendor', 'web-core:ifs-js', 'web-core:copy-html5shiv'))
 
-gulp.task('web-core:css', function () {
+gulp.task('web-core:css', gulp.parallel('web-core:copy-images-govuk', 'web-core:copy-fonts-govuk', function () {
   return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
         ignore: [
           '**/prototype.scss',
           '**/prototype/**/*.scss',
+          '**/layout/_gdsUpgrade.scss',
           '**/node_modules/**/*.scss'
         ]
       },
@@ -102,16 +96,14 @@ gulp.task('web-core:css', function () {
     }))
     .pipe(sassLint.format())
     .pipe(sass({includePaths: [
-      gdsFrontendToolkitPath + 'stylesheets',
-      gdsElementsPath + 'public/sass',
-      gdsTemplateJinjaPath + 'assets/stylesheets'
+        nodeModulesPath
     ],
       importer: compass,
       outputStyle: 'compressed'
     }).on('error', sass.logError))
     .pipe(replace('url(images/', 'url(/images/'))
     .pipe(gulp.dest(__dirname + '/css'))
-})
+}))
 
 gulp.task('web-core:css:watch', function () {
   gulp.watch(__dirname + '/sass/**/*.scss', ['web-core:css'])

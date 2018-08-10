@@ -16,7 +16,6 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -107,8 +106,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private OrganisationRepository organisationRepository;
     @Autowired
     private SpendProfileRepository spendProfileRepository;
     @Autowired

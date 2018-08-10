@@ -38,7 +38,7 @@ User cannot choose Research when both Research and Public sector types are ineli
     [Teardown]    go back
     When the user chooses an organisation type    ${ACADEMIC_TYPE_ID}
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user should see the text in the element  css=#content p    Your organisation type does not match our eligibility criteria for lead applicants.
+    And the user should see the text in the element  css=#main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
 
 User cannot choose Public Sector when both Research and Public sector types are ineligible
     [Documentation]    IFS-1014
@@ -46,7 +46,7 @@ User cannot choose Public Sector when both Research and Public sector types are 
     [Teardown]    go back
     When the user chooses an organisation type    ${PUBLIC_SECTOR_TYPE_ID}
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user should see the text in the element  css=#content p    Your organisation type does not match our eligibility criteria for lead applicants.
+    And the user should see the text in the element  css=#main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
 
 *** Keywords ***
 the user should see RTO selected in the confirm organisation page
@@ -68,4 +68,4 @@ the user starts a competition create account journey
     [Arguments]    ${competition_name}
     the user clicks the button/link in the paginated list    link=${competition_name}
     the user clicks the button/link    link=Start new application
-    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Create account")

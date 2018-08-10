@@ -19,17 +19,17 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Not required to register'})" />
 
-	<p>Several business types are not required to register with Companies House to contribute to a project.</p>
+	<p class="govuk-body">Several business types are not required to register with Companies House to contribute to a project.</p>
 
-	<p>If your business type is not listed you must either <a href="#">register with Companies House</a> or <a href="#">contact Innovate UK</a>.</p>
+	<p class="govuk-body">If your business type is not listed you must either <a href="#">register with Companies House</a> or <a href="#">contact Innovate UK</a>.</p>
 
 	<form action="">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<legend class="heading-medium">Select business type</legend>
+			<legend class="govuk-heading-m">Select business type</legend>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 
 				<label for="bus-type-1" class="block-label selection-button-radio">
 
@@ -74,23 +74,23 @@
 			</div>
 
 			<div class="extra-margin">
-				<a href="#" class="button" data-js-modal="modal-bus-type">Update business type</a>
+				<a href="#" class="govuk-button" data-js-modal="modal-bus-type">Update business type</a>
 			</div>
 
 			<div class="modal-bus-type" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Update business type</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Update business type</h2>
 
-					<p>Making this change will inform Innovate UK of your selection as <span id="bus-type-article">[article]</span> <strong><span id="bus-type">[business type]</span></strong></p>
+					<p class="govuk-body">Making this change will inform Innovate UK of your selection as <span id="bus-type-article">[article]</span> <strong><span id="bus-type">[business type]</span></strong></p>
 
-					<hr />
+					<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	            	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-	            		<a href="/prototypes/1588-project-status" class="button">Submit</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+	            		<a href="/prototypes/1588-project-status" class="govuk-button">Submit</a>
 
 	            	</div>
 

@@ -10,7 +10,7 @@ IFS.competitionManagement.fundingInformation = (function () {
     handleCompetitionCode: function (el) {
       var button = jQuery(el)
       var competitionId = button.val()
-      var field = button.closest('.form-group').find('input')
+      var field = button.closest('.govuk-form-group').find('input')
       var requiredAttribute = 'required'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)

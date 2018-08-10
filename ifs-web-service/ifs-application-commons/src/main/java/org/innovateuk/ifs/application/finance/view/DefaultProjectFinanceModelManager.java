@@ -141,9 +141,10 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     }
 
     private LabourCost getWorkingDaysPerYearCostItemFrom(Map<FinanceRowType, FinanceRowCostCategory> financeDetails) {
-        for (FinanceRowType rowType : financeDetails.keySet()) {
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : financeDetails.entrySet()) {
+            FinanceRowType rowType = entry.getKey();
             if (rowType.getType().equals(FinanceRowType.LABOUR.getType())) {
-                return ((LabourCostCategory) financeDetails.get(rowType)).getWorkingDaysPerYearCostItem();
+                return ((LabourCostCategory) entry).getWorkingDaysPerYearCostItem();
             }
         }
         throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
@@ -153,8 +154,9 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
                                                                        Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances) {
         Map<FinanceRowType, BigDecimal> sectionDifferencesMap = new LinkedHashMap<>();
 
-        for (FinanceRowType rowType : organisationProjectFinances.keySet()) {
-            FinanceRowCostCategory financeRowProjectCostCategory = organisationProjectFinances.get(rowType);
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : organisationProjectFinances.entrySet()) {
+            FinanceRowType rowType = entry.getKey();
+            FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
             sectionDifferencesMap.put(rowType, financeRowProjectCostCategory.getTotal().subtract(financeRowAppCostCategory.getTotal()));
         }

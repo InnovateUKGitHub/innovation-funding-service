@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionFunder;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class CompetitionFunderServiceImpl extends BaseTransactionalService imple
     
     @Autowired
     private CompetitionFunderRepository competitionFunderRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Override
     @Transactional

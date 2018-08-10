@@ -11,23 +11,23 @@ import java.util.Optional;
 
 @Service
 public class StatusRestServiceImpl extends BaseRestService implements StatusRestService {
-    private static final String competitionURL = "/project/competition";
-    private static final String projectRestURL = "/project";
+    private static final String COMPETITION_URL = "/project/competition";
+    private static final String PROJECT_REST_URL = "/project";
 
     @Override
     public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
-        return getWithRestResult(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class);
+        return getWithRestResult(COMPETITION_URL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class);
     }
 
     @Override
     public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
         return filterByUserId.
-                map(userId -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
-                .orElseGet(() -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
+                map(userId -> getWithRestResult(PROJECT_REST_URL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
+                .orElseGet(() -> getWithRestResult(PROJECT_REST_URL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
     }
 
     @Override
     public RestResult<ProjectStatusResource> getProjectStatus(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/status", ProjectStatusResource.class);
+        return getWithRestResult(PROJECT_REST_URL + "/" + projectId + "/status", ProjectStatusResource.class);
     }
 }

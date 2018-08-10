@@ -1,106 +1,109 @@
 <!-- =================Application question=========================== -->
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
-        <fieldset>
-            <legend class="visuallyhidden">Application question</legend>
-            <h2 class="heading-medium extra-margin">Application question</h2>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <h2 class="govuk-fieldset__heading">Application question</h2>
+            </legend>
 
-            <dl class="application-question-list grid-row">
-                <dt class="column-third">Question heading</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
+            <dl class="govuk-list application-question-list govuk-grid-row">
+                <dt class="govuk-grid-column-one-third">Question heading</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
                     th:text="${question.shortTitle}"></dd>
-                <dt class="column-third">Question title</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
+                <dt class="govuk-grid-column-one-third">Question title</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
                     th:text="${question.title}"></dd>
-                <dt class="column-third">Question subtitle</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
+                <dt class="govuk-grid-column-one-third">Question subtitle</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
                     th:text="${question.subTitle}"></dd>
-                <dt class="column-third">Guidance title</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
+                <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
                     th:text="${question.guidanceTitle}"></dd>
-                <dt class="column-third">Guidance</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
-                <dd class="column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
+                <dt class="govuk-grid-column-one-third">Guidance</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
                     ifs:utext="${question.guidance}"></dd>
-                <dt class="column-third">Max word count</dt>
-                <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
+                <dt class="govuk-grid-column-one-third">Max word count</dt>
+                <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
-                    <dt class="column-third">Appendix</dt>
-                    <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
-                    <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
+                    <dt class="govuk-grid-column-one-third">Appendix</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${question.appendix}">Yes</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${question.appendix}">No</dd>
                     <th:block th:if="${question.appendix}">
-                        <dt class="column-third">Accepted appendix file types</dt>
-                        <dd class="column-two-thirds">
+                        <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
+                        <dd class="govuk-grid-column-two-thirds">
                             <ul>
                                 <li th:each="fileType : ${question.allowedFileTypes}"
                                     th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
-                        <dt class="column-third">Appendix guidance</dt>
-                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
+                        <dt class="govuk-grid-column-one-third">Appendix guidance</dt>
+                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
                     </th:block>
                 </th:block>
             </dl>
         </fieldset>
         <fieldset
-            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}">
-            <legend class="visuallyhidden">Assessment of this question</legend>
-            <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
+            class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
+            </legend>
 
-            <dl class="application-question-list grid-row">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <th:block th:if="${question.scored != null}">
-                    <dt class="column-third">Scored</dt>
-                    <dd class="column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Scored</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.scored}">
-                        <dt class="column-third">Out of</dt>
-                        <dd class="column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                        <dt class="govuk-grid-column-one-third">Out of</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.scoreTotal}"></dd>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${question.writtenFeedback != null}">
-                    <dt class="column-third">Written feedback</dt>
-                    <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Written feedback</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.writtenFeedback}">
-                        <dt class="column-third">Guidance title</dt>
-                        <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
+                        <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
                             None
                         </dd>
-                        <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
+                        <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
                             th:text="${question.assessmentGuidanceTitle}"></dd>
-                        <dt class="column-third">Guidance</dt>
-                        <dd class="column-two-thirds">
-                            <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
-                            <dl class="grid-row extra-margin">
+                        <dt class="govuk-grid-column-one-third">Guidance</dt>
+                        <dd class="govuk-grid-column-two-thirds">
+                            <p class="govuk-body" th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
+                            <dl class="govuk-grid-row govuk-!-margin-top-6">
                                 <th:block th:each="score : ${question.guidanceRows}">
-                                    <dt class="column-quarter"
+                                    <dt class="govuk-grid-column-one-quarter"
                                         th:text="${score.subject != null ? score.subject.replace(',', '-') : score.subject}"></dt>
-                                    <dd class="column-three-quarters" th:text="${score.justification}"></dd>
+                                    <dd class="govuk-grid-column-three-quarters" th:text="${score.justification}"></dd>
                                 </th:block>
                             </dl>
                         </dd>
-                        <dt class="column-third">Max word count</dt>
-                        <dd class="column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                        <dt class="govuk-grid-column-one-third">Max word count</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
-                    <dt class="column-third">Research category question</dt>
-                    <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Research category question</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
                 </th:block>
                 <th:block th:if="${question.scope != null}">
-                    <dt class="column-third">Scope 'Y/N' question</dt>
-                    <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Scope 'Y/N' question</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
                 </th:block>
             </dl>
         </fieldset>
     </th:block>
     <th:block th:if="${editable}">
 
-        <h2 class="heading-medium extra-margin">Application question</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
 
         <input type="hidden"
                th:name="question.questionId"
@@ -110,17 +113,16 @@
                th:value="${question.type}"/>
 
         <div class="question">
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'form-group-error'">
-                <label class="form-label" for="question.shortTitle">
-                    <span class="form-label-bold">Question heading</span>
-                    <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.shortTitle">
+                    Question heading
                 </label>
-
-                <input class="form-control width-x-large"
-                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'form-control-error'"
+                <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-!-width-two-thirds"
+                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
                        type="text"
                        required="required"
                        id="question.shortTitle"
@@ -128,17 +130,16 @@
                        th:value="${question.shortTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'form-group-error'">
-                <label class="form-label" for="question.title">
-                    <span class="form-label-bold">Question title</span>
-                    <th:block th:if="${#fields.hasErrors('question.title')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.title')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.title">
+                    Question title
                 </label>
-
-                <input th:classappend="${#fields.hasErrors('question.title')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.title')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.title')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        required="required"
                        id="question.title"
@@ -146,33 +147,33 @@
                        th:value="${question.title}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'form-group-error'">
-                <label class="form-label" for="question.subTitle">
-                    <span class="form-label-bold">Question subtitle</span>
-                    <th:block th:if="${#fields.hasErrors('question.subTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.subTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.subTitle">
+                    Question subtitle
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.subTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.subTitle"
                        th:name="question.subTitle"
                        th:value="${question.subTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group"
-                 th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-group-error'">
-                <label class="form-label" for="question.guidanceTitle">
-                    <span class="form-label-bold">Question guidance title</span>
-                    <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.guidanceTitle">
+                    Question guidance title
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.guidanceTitle"
                        required="required"
@@ -180,19 +181,20 @@
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-group-error'">
-                <label class="form-label" for="question.guidance">
-                    <span class="form-label-bold">Question guidance</span>
-                    <th:block th:if="${#fields.hasErrors('question.guidance')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidance')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.guidance">
+                    Question guidance
                 </label>
+                <th:block th:if="${#fields.hasErrors('question.guidance')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidance')}"
+                              th:text="${err}"></span>
+                </th:block>
                 <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
-                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-control-error'"
+                                  class="govuk-textarea"
+                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-textarea--error'"
                                   th:name="question.guidance"
                                   required="required"
                                   ifs:utext="${question.guidance}">
@@ -202,16 +204,16 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-group-error'">
-                <label class="form-label" for="question.maxWords">
-                    <span class="form-label-bold">Max word count</span>
-                    <th:block th:if="${#fields.hasErrors('question.maxWords')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.maxWords')}"
-                              th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="question.maxWords">
+                    Max word count
                 </label>
-                <input class="form-control width-medium"
-                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-control-error'"
+                <th:block th:if="${#fields.hasErrors('question.maxWords')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-input--width-10"
+                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
                        type="number"
                        id="question.maxWords"
                        min="1"
@@ -222,74 +224,89 @@
             </div>
 
             <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
-                <div class="form-group"
-                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'form-group-error'">
-                    <fieldset class="inline">
-                        <legend class="form-label-bold" id="question.appendix">Appendix</legend>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.appendix">
+                            <h2 class="govuk-fieldset__heading">Appendix</h2>
+                        </legend>
                         <th:block th:if="${#fields.hasErrors('question.appendix')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendix')}"
                               th:text="${err}"></span>
                         </th:block>
-                        <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
-                            <input id="appendix-yes"
-                                   th:name="question.appendix"
-                                   th:checked="${question.appendix != null and question.appendix}"
-                                   value="1"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="appendix-yes">Yes</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input id="appendix-no"
-                                   th:name="question.appendix"
-                                   th:checked="${question.appendix != null and !question.appendix}"
-                                   value="0"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="appendix-no">No</label>
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                                <input id="appendix-yes"
+                                       class="govuk-radios__input"
+                                       th:name="question.appendix"
+                                       th:checked="${question.appendix != null and question.appendix}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-yes"
+                                       class="govuk-label govuk-radios__label">Yes</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="appendix-no"
+                                       class="govuk-radios__input"
+                                       th:name="question.appendix"
+                                       th:checked="${question.appendix != null and !question.appendix}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-no"
+                                       class="govuk-label govuk-radios__label">No</label>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
-                <div id="allowedFileTypesDiv" class="form-group panel">
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="question.allowedFileTypes">
-                                <span class="form-label-bold">Accepted appendix file types</span>
-                                <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                                <span class="error-message"
+                <div id="allowedFileTypesDiv" class="panel">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedFileTypes">
+                                <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                                <span class="govuk-error-message"
                                       th:each="err : ${#fields.errors('question.allowedFileTypes')}"
                                       th:text="${err}"></span>
-                                </th:block>
-                            </legend>
-                            <div class="multiple-choice"
-                                 th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                                <input type="checkbox"
-                                       th:field="*{question.allowedFileTypes}"
-                                       th:value="${fileTypeCategory}"
-                                       required="required"
-                                       data-autosave-list/> <!-- data-autosave-disabled -->
-                                <label th:for="${#ids.prev('question.allowedFileTypes')}"
-                                       th:text="${fileTypeCategory.displayName}">PDF</label>
+                            </th:block>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item"
+                                     th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:field="*{question.allowedFileTypes}"
+                                           th:value="${fileTypeCategory}"
+                                           required="required"
+                                           data-autosave-list/> <!-- data-autosave-disabled -->
+                                    <label th:for="${#ids.prev('question.allowedFileTypes')}"
+                                           th:text="${fileTypeCategory.displayName}"
+                                           class="govuk-label govuk-checkboxes__label">PDF</label>
+                                </div>
                             </div>
+
                         </fieldset>
                     </div>
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
-                        <label class="form-label" for="question.appendixGuidance">
-                            <span class="form-label-bold">Appendix guidance</span>
-                            <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
-                                  th:text="${err}"></span>
-                            </th:block>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s"
+                               for="question.appendixGuidance">
+                            Appendix guidance
                         </label>
+                        <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
+                                  th:text="${err}"></span>
+                        </th:block>
                         <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
+                                  class="govuk-textarea"
                                   id="question.appendixGuidance"
-                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-control-error'"
+                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-textarea--error'"
                                   th:name="question.appendixGuidance"
                                   required="required"
                                   ifs:utext="${question.appendixGuidance}">
@@ -308,85 +325,102 @@
                 <input type="hidden" name="competitionSetupForm.question.type"
                        th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>
 
-                <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.researchCategoryQuestion">Research category question</legend>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.researchCategoryQuestion">
+                                <h2 class="govuk-fieldset__heading">Research category question</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
                                 th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice">
-                                <input id="research-category-yes"
-                                       th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion != null and question.researchCategoryQuestion}"
-                                       value="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="research-category-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="research-category-no"
-                                       th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion != null and !question.researchCategoryQuestion}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="research-category-no">No</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item">
+                                    <input id="research-category-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.researchCategoryQuestion"
+                                           th:checked="${question.researchCategoryQuestion != null and question.researchCategoryQuestion}"
+                                           value="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="research-category-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="research-category-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.researchCategoryQuestion"
+                                           th:checked="${question.researchCategoryQuestion != null and !question.researchCategoryQuestion}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="research-category-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
 
                 </th:block>
                 <th:block th:if="${question.scored != null or #fields.hasErrors('question.scored')}">
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.scored')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.scored">Scored</legend>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.scored')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.scored">
+                                <h2 class="govuk-fieldset__heading">Scored</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.scored')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.scored')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scored')}"
                                   th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice" data-target="score-total">
-                                <input id="scored-yes"
-                                       th:name="question.scored"
-                                       th:checked="${question.scored != null and question.scored}"
-                                       value="1"
-                                       require
-                                       d="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="scored-yes">Yes</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="score-total">
+                                    <input id="scored-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.scored"
+                                           th:checked="${question.scored != null and question.scored}"
+                                           value="1"
+                                           require
+                                           d="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="scored-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="scored-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.scored"
+                                           th:checked="${question.scored != null and !question.scored}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="scored-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
-                            <div class="multiple-choice">
-                                <input id="scored-no"
-                                       th:name="question.scored"
-                                       th:checked="${question.scored != null and !question.scored}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="scored-no">No</label>
-                            </div>
+
                         </fieldset>
                     </div>
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-group-error'"
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-form-group--error'"
                          id="score-total">
-                        <label class="form-label" for="question.scoreTotal">
-                            <span class="form-label-bold">Out of</span>
-                            <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
-                                      th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label govuk-label--s" for="question.scoreTotal">
+                            Out of
                         </label>
-                        <input class="form-control width-medium"
-                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-control-error'"
+                        <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
+                                      th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-input--width-10"
+                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-input--error'"
                                type="number"
                                id="question.scoreTotal"
                                min="1"
@@ -398,18 +432,32 @@
 
                 <th:block th:if="${question.scope != null}">
 
-                    <div class="form-group">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                            <div class="multiple-choice">
-                                <input id="scoped-yes" th:name="question.scope" th:checked="${question.scope == true}"
-                                       value="1" type="radio"/>
-                                <label for="scoped-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="scoped-no" th:name="question.scope" th:checked="${question.scope == false}"
-                                       value="0" type="radio"/>
-                                <label for="scoped-no">No</label>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-fieldset__heading">Scope 'Y/N' question</h2>
+                            </legend>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item">
+                                    <input id="scoped-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.scope"
+                                           th:checked="${question.scope == true}"
+                                           value="1"
+                                           type="radio"/>
+                                    <label for="scoped-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="multiple-choice">
+                                    <input id="scoped-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.scope"
+                                           th:checked="${question.scope == false}"
+                                           value="0"
+                                           type="radio"/>
+                                    <label for="scoped-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
@@ -418,49 +466,57 @@
 
                 <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.writtenFeedback">Written feedback</legend>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.writtenFeedback">
+                                <h2 class="">Written feedback</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice" data-target="scored-options" data-target-clear-validation="true">
-                                <input id="writtenFeedback-yes"
-                                       th:name="question.writtenFeedback"
-                                       th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
-                                       value="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="writtenFeedback-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="writtenFeedback-no"
-                                       th:name="question.writtenFeedback"
-                                       th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="writtenFeedback-no">No</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="scored-options" data-target-clear-validation="true">
+                                    <input id="writtenFeedback-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.writtenFeedback"
+                                           th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
+                                           value="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="writtenFeedback-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="writtenFeedback-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.writtenFeedback"
+                                           th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="writtenFeedback-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
                     <div class="js-hidden" id="scored-options">
-                        <div class="form-group"
-                             th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-group-error'">
-                            <label class="form-label" for="question.assessmentGuidanceTitle">
-                                <span class="form-label-bold">Guidance title</span>
-                                <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
-                                    <span class="error-message"
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label govuk-label--s" for="question.assessmentGuidanceTitle">
+                                Guidance title
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-control-error'"
+                            </th:block>
+                            <input class="govuk-input govuk-!-width-two-thirds"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
                                    th:name="question.assessmentGuidanceTitle"
@@ -468,18 +524,18 @@
                                    required="required"/>
                         </div>
 
-                        <div class="form-group"
-                             th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-group-error'">
-                            <label class="form-label" for="question.assessmentGuidance">
-                                <span class="form-label-bold">Guidance</span>
-                                <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
-                                    <span class="error-message"
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label govuk-label--s" for="question.assessmentGuidance">
+                                Guidance
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidance')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-control-error'"
+                            </th:block>
+                            <input class="govuk-input govuk-!-width-two-thirds"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidance"
                                    th:name="question.assessmentGuidance"
@@ -488,84 +544,85 @@
                                    required="required"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="govuk-form-group">
 
                             <input type="hidden" name="removeGuidanceRow"/>
-                            <h3 class="heading-small">Guidance table</h3>
-                            <table id="guidance-table" class="assessed-guidance"
+
+                            <h3 class="govuk-heading-s">Guidance table</h3>
+                            <table id="guidance-table" class="govuk-table assessed-guidance"
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Score <span class="visuallyhidden"> from</span></th>
-                                    <th scope="col"><span class="visuallyhidden">Score to</span></th>
-                                    <th scope="col">Justification</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Score to</span></th>
+                                    <th class="govuk-table__header" scope="col">Justification</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
                                     <tr th:id="${'guidance-'+iteration.index}"
-                                        class="form-group-row-validated"
-                                        th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
-                                            <label class="form-label"
+                                        class="govuk-table__row form-group-row-validated"
+                                        th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
+                                        <td class="govuk-table__cell govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreFrom">
-                                                <span class="visuallyhidden">Score from</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
-                                                    <span class="error-message"
+                                                Score from
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreFrom')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required"
                                                    type="number"
                                                    min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input govuk-input--width-4"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreFrom"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'form-group-error'">
-                                            <label class="form-label"
+                                        <td class="govuk-table__cell govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreTo">
-                                                <span class="visuallyhidden">Score to</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
-                                                    <span class="error-message"
+                                                Score to
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreTo')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required" type="number" min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input govuk-input--width-4"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreTo"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}"
                                                    value=""
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
-                                            <label class="form-label"
+                                        <td class="govuk-table__cell govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].justification">
-                                                <span class="visuallyhidden">Justification</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                Justification
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
-                                                      th:errorclass="form-control-error"
+                                                      class="govuk-textarea"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="guidanceRows[__${iteration.index}__].justification"
                                                       th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
@@ -573,8 +630,8 @@
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                       rows="3"/>
                                         </td>
-                                        <td>
-                                            <button class="buttonlink alignright" data-remove-row="guidance"
+                                        <td class="govuk-table__cell">
+                                            <button class="button-clear alignright" data-remove-row="guidance"
                                                     type="button" name="remove-guidance-row"
                                                     th:value="${iteration.index}"
                                                     th:id="'remove-guidance-row-' + ${iteration.index}">Remove
@@ -585,65 +642,65 @@
                                 </tbody>
                             </table>
 
-                            <table id="guidance-table"
+                            <table class="govuk-table" id="guidance-table"
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Justification</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Subject</th>
+                                    <th class="govuk-table__header" scope="col">Justification</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
                                     <tr th:id="${'guidance-'+iteration.index}"
-                                        class="form-group-row-validated"
-                                        th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'form-group-error'">
-                                            <label class="form-label"
+                                        class="govuk-table__row form-group-row-validated"
+                                        th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
+                                        <td class="govuk-table__cell govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-subject'}">
-                                                <span class="visuallyhidden">Subject</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
-                                                    <span class="error-message"
+                                                Subject
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input govuk-input--width-4"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                    maxlength="255"
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
-                                            <label class="form-label"
+                                        <td class="govuk-table__cell govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-justification'}">
-                                                <span class="visuallyhidden">Justification</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                Justification
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
+                                                      class="govuk-textarea"
                                                       rows="3"
-                                                      th:errorclass="form-control-error"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                       th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
                                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                         </td>
-                                        <td>
-                                            <button class="buttonlink alignright" data-remove-row="guidance"
+                                        <td class="govuk-table__cell govuk-table__cell">
+                                            <button class="button-clear alignright" data-remove-row="guidance"
                                                     type="button" name="remove-guidance-row"
                                                     th:value="${iteration.index}"
                                                     th:id="'remove-guidance-row-' + ${iteration.index}">Remove
@@ -653,23 +710,23 @@
                                 </th:block>
                                 </tbody>
                             </table>
-                            <div class="alignright extra-margin">
-                                <button class="buttonlink" data-add-row="guidance" type="button">+Add guidance row
+                            <div class="alignright govuk-!-margin-top-6">
+                                <button class="button-clear" data-add-row="guidance" type="button">+Add guidance row
                                 </button>
                             </div>
 
-                            <div class="form-group"
-                                 th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-group-error'">
-                                <label class="form-label" for="question.assessmentMaxWords">
-                                    <span class="form-label-bold">Max word count</span>
-                                    <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
-                                        <span class="error-message"
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-form-group--error'">
+                                <label class="govuk-label" for="question.assessmentMaxWords">
+                                    Max word count
+                                </label>
+                                <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
+                                        <span class="govuk-error-message"
                                               th:each="err : ${#fields.errors('question.assessmentMaxWords')}"
                                               th:text="${err}"></span>
-                                    </th:block>
-                                </label>
-                                <input class="form-control width-medium"
-                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-control-error'"
+                                </th:block>
+                                <input class="govuk-input govuk-input--width-10"
+                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-input--error'"
                                        type="number"
                                        id="question.assessmentMaxWords"
                                        min="0"

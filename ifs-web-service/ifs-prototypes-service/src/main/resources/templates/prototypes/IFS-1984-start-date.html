@@ -19,11 +19,11 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Project details'}, ${null})" />
 
-    <h2 class="heading-medium">Target project start date</h2>
+    <h2 class="govuk-heading-m">Target project start date</h2>
 
-    <p>The project can only start when:</p>
+    <p class="govuk-body">The project can only start when:</p>
 
-    <ol class="list list-number">
+    <ol class="govuk-list govuk-list--number">
         <li>You have provided the documents we need.</li>
         <li>We have approved your financial information.</li>
         <li>You have received, signed and returned the grant offer letter on behalf of the project.</li>
@@ -31,12 +31,12 @@
 
     <form action="#">
 
-        <div class="form-group">
-            <fieldset>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
                 <legend id="projectStartDate">
-                    <span class="heading-medium">Target start date</span>
+                    <span class="govuk-heading-m">Target start date</span>
                 </legend>
-                <p class="form-hint">Projects must start on the first day of a month so please choose the month and year
+                <p class="govuk-hint">Projects must start on the first day of a month so please choose the month and year
                     of your project start.</p>
 
                 <div class="date-group extra-margin">
@@ -44,7 +44,7 @@
                         <label class="form-label" for="start-day">
                             <span>Day</span>
                         </label>
-                        <input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day"
+                        <input class="govuk-input width-extra-small" type="number" placeholder="DD" id="start-day"
                                name="start-day" value="1" readonly="readonly"/>
                     </div>
 
@@ -52,7 +52,7 @@
                         <label class="form-label" for="start-month">
                             <span>Month</span>
                         </label>
-                        <input class="form-control width-extra-small" type="number" placeholder="MM" min="1" max="12"
+                        <input class="govuk-input width-extra-small" type="number" placeholder="MM" min="1" max="12"
                                id="start-month" name="start-month" value="" required/>
                     </div>
 
@@ -60,7 +60,7 @@
                         <label class="form-label" for="start-year">
                             <span>Year</span>
                         </label>
-                        <input class="form-control width-extra-small" type="number" placeholder="YYYY" min="2018"
+                        <input class="govuk-input width-extra-small" type="number" placeholder="YYYY" min="2018"
                                max="2030" id="start-year" name="start-year" value="" required/>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
             </fieldset>
         </div>
 
-        <h3 class="heading-medium">Project duration</h3>
+        <h3 class="govuk-heading-m">Project duration</h3>
 
-        <p>Project duration stated in your application: <br /><strong>9 months</strong></p>
+        <p class="govuk-body">Project duration stated in your application: <br /><strong>9 months</strong></p>
 
-        <button class="button button-large" formaction="/prototypes/IFS-1984-project-details">Save</button>
+        <button class="govuk-button button-large" formaction="/prototypes/IFS-1984-project-details">Save</button>
 	</form>
 
 

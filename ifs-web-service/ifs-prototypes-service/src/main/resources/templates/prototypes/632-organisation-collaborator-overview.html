@@ -19,16 +19,16 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
           <span class="heading-secondary">Technology inspired</span>
           Application team
         </h1>
 
-        <p>View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
+        <p class="govuk-body">View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <div class="message-alert">
-            <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">As the lead applicant you can:</h2>
             <ul class="list-bullet">
               <li>add collaborating and contributing organisations and individuals</li>
               <li>manage organisations and individuals</li>
@@ -37,36 +37,36 @@
           </div>
         </th:block>
 
-        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+        <p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
         <div class="table-display-stacked">
 
-          <h2 class="heading-medium">Empire Ltd, Lead organisation</h2>
+          <h2 class="govuk-heading-m">Empire Ltd, Lead organisation</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Steve Smith</td>
-                <td>steve.smith@empire.com</td>
-                <td>Lead</td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Steve Smith</td>
+                <td class="govuk-table__cell">steve.smith@empire.com</td>
+                <td class="govuk-table__cell">Lead</td>
               </tr>
               <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
-                <td>Paul Davidson</td>
-                <td>paul.davidsonh@empire.com</td>
-                <td></td>
+                <td class="govuk-table__cell">Paul Davidson</td>
+                <td class="govuk-table__cell">paul.davidsonh@empire.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
             </tbody>
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'empire'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=empire' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}">Update Empire Ltd</a>
             </p>
           </th:block>
@@ -75,32 +75,32 @@
 
         <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
-          <h2 class="heading-medium">Ludlow</h2>
+          <h2 class="govuk-heading-m">Ludlow</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Jessica Doe</td>
-                <td>jessica.dow@ludlow.com</td>
-                <td></td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Jessica Doe</td>
+                <td class="govuk-table__cell">jessica.dow@ludlow.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
-              <tr>
-                <td>Ryan Dell</td>
-                <td>ryan.dell@ludlow.com</td>
-                <td>Invite pending</td>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Ryan Dell</td>
+                <td class="govuk-table__cell">ryan.dell@ludlow.com</td>
+                <td class="govuk-table__cell">Invite pending</td>
               </tr>
             </tbody>
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Update Ludlow</a>
             </p>
           </th:block>
@@ -109,27 +109,27 @@
 
         <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
-          <h2 class="heading-medium">EGGS</h2>
+          <h2 class="govuk-heading-m">EGGS</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Paul Tom</td>
-                <td>paul.tom@eggs.com</td>
-                <td></td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Paul Tom</td>
+                <td class="govuk-table__cell">paul.tom@eggs.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
             </tbody>
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Update EGGS</a>
             </p>
           </th:block>
@@ -138,17 +138,17 @@
 
         <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-          <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
+          <p class="govuk-body extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
-          <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
+          <p class="govuk-body"><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
 
         </th:block>
 
-        <p class="extra-margin">
+        <p class="govuk-body extra-margin">
           <a href="/prototypes/635-application-overview" class="button-secondary" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application overview</a>
 
           <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
-            <a href="#" class="button">Begin application</a>
+            <a href="#" class="govuk-button">Begin application</a>
           </th:block>
 
         </p>
@@ -156,18 +156,18 @@
 
         <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-            <h2 class="heading-medium no-margin">Removing collaborator</h2>
-            <p>Are you sure you wish to remove this collaborator from this application.</p>
-            <p>This step cannot be undone.</p>
-            <hr />
-            <div class="grid-row extra-margin">
+            <h2 class="govuk-heading-m govuk-!-margin-0">Removing collaborator</h2>
+            <p class="govuk-body">Are you sure you wish to remove this collaborator from this application.</p>
+            <p class="govuk-body">This step cannot be undone.</p>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
-                    <div class="column-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                    <div class="govuk-grid-column-one-half">
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
-                    <div class="column-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove</button>
+                    <div class="govuk-grid-column-one-half alignright-button">
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove</button>
                     </div>
                 </form>
             </div>
@@ -175,18 +175,18 @@
 
         <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-            <h2 class="heading-medium no-margin">Remove organisation and collaborator</h2>
-            <p>Are you sure you wish to remove this organisation from this application?</p>
-            <p>This will remove all collaborators and delete the organisations financial details.</p>
-            <hr />
-            <div class="grid-row extra-margin">
+            <h2 class="govuk-heading-m govuk-!-margin-0">Remove organisation and collaborator</h2>
+            <p class="govuk-body">Are you sure you wish to remove this organisation from this application?</p>
+            <p class="govuk-body">This will remove all collaborators and delete the organisations financial details.</p>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
-                    <div class="column-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                    <div class="govuk-grid-column-one-half">
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
-                    <div class="column-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
+                    <div class="govuk-grid-column-one-half alignright-button">
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
                     </div>
                 </form>
             </div>
