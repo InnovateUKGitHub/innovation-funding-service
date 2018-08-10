@@ -50,11 +50,6 @@
 
     <div class="form-footer" th:if="${!model.compAdminUser}">
         <div id="editDetails" class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
-        <div class="form-footer__info">
-            <span class="textarea-footer"></span>
-            <span class="update-label">Created by IFS Web System User on </span>
-            <span class="update-details">13 September 2017</span>
-        </div>
     </div>
 
     <ul class="inline-nav extra-margin">
@@ -144,11 +139,10 @@
 
     <div class="form-footer" th:if="${!model.compAdminUser}">
         <div id="editDOI" class="form-footer__actions"><a th:href="@{/profile/declaration/edit}">Edit</a></div>
-        <div class="form-footer__info">
-            <span class="textarea-footer"></span>
-            <span class="update-label">Created by IFS Web System User on </span>
-            <span class="update-details">13 September 2017</span>
-        </div>
+    </div>
+
+    <div class="extra-margin" th:if="${!model.compAdminUser}">
+        <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
     </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
