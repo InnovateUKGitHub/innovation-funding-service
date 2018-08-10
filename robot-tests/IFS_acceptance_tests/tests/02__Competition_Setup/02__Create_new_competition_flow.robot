@@ -545,7 +545,7 @@ Documents in project setup: The competition admin adds document requirements
     And the user clicks the button/link          link = Add document type
     When the user enters text to a text field    id = title    Test document type
     And the user clicks the button/link          jQuery = span:contains("PDF")
-    And the user clicks the button/link          jQuery = span:contains("spreadsheet")
+    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
     And the user enters text to a text field     css = .editor    Guidance test.
     And the user clicks the button/link          css = button[type = "submit"]
     And the user should see the element          jQuery = span:contains("Test document type")
