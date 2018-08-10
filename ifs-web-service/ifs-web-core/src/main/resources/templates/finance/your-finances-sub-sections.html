@@ -4,20 +4,20 @@
 <!-- ===========================Your finances section view =========================== -->
 <th:block th:fragment="finance(model)">
     <div class="your-finances">
-        <h2 class="heading-medium no-margin-bottom">Finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
         <div class="message-alert">
-            <p>Only members from your organisation will be able to see a breakdown of your finances.</p>
+            <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your finances.</p>
         </div>
-        <p class="extra-margin">Please complete your project finances.</p>
+        <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
 
-        <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom"
+        <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="govuk-details govuk-!-margin-bottom-6"
                  th:attr="open=${model.notRequestingFunding ? 'open' : null}">
-            <summary><span class="summary">Not requesting funding</span></summary>
-            <div class="panel-indent">
-                <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or
+            <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Not requesting funding</span></summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">If your organisation is not funded by Innovate UK then you do not need to submit organisational or
                     funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
-                <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
-                <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
+                <button th:unless="${model.notRequestingFunding}" class="govuk-button" name="not_requesting_funding">Not requesting funding</button>
+                <button th:if="${model.notRequestingFunding}" class="govuk-button" name="requesting_funding">Requesting funding</button>
             </div>
         </details>
         <ul class="task-list">
@@ -28,8 +28,8 @@
         </ul>
     </div>
 
-    <h2 class="heading-medium">Finance summary</h2>
-    <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+    <h2 class="govuk-heading-m">Finance summary</h2>
+    <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
     <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})"/>
 
@@ -53,37 +53,35 @@
         </div>
     </th:block>
 
-    <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
-        <legend class="heading-medium no-margin-bottom">Financial overview</legend>
-        <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <table class="extra-margin-bottom">
-                    <thead>
-                    <tr>
-                        <th scope="col">Section</th>
-                        <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
+    <fieldset th:unless="${model.financeOverviewRows.isEmpty()}" class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
+            <h2 class="govuk-fieldset__heading">Financial overview</h2>
+        </legend>
+        <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <table class="govuk-table govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Section</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="last-year">Last financial year (&pound;)</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}"
-                        th:with="formInput=${formInputViewModel.formInput}"
-                        th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''"
-                        class="form-group">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="govuk-table__row govuk-form-group">
+                        <td class="govuk-table__cell">
                             <label th:for="${'input-'+formInput.id}">
                                 <span th:text="${formInput.description}"></span>
-                                <th:block
-                                    th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})"/>
+                                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                             </label>
                         </td>
-                        <td class="numeric">
-                            <input class="form-control width-large"
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <input class="govuk-input govuk-input--width-10"
                                    th:disabled="${formInputViewModel.readonly}"
                                    th:id="${'input-'+formInput.id}"
                                    th:name="'formInput['+${formInput.id}+']'"
                                    th:value="*{formInput[__${formInput.id}__]}"
-                                   th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-control-error'"
+                                   th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-input--error'"
                                    required="required"
                                    type="number"/>
                         </td>
@@ -110,10 +108,10 @@
             <div class="form-footer__actions">
                 <button id="mark-all-as-complete"
                         th:unless="${model.complete}"
-                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                        type="submit" name="mark_section_as_complete" class="button-clear">Mark as complete
                 </button>
                 <button th:if="${model.complete}"
-                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                        type="submit" name="mark_section_as_incomplete" class="button-clear"
                         th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
                 </button>
             </div>
@@ -121,11 +119,11 @@
         <div>
             <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
                th:if="${model.complete}"
-               class="extra-margin button-secondary">Return to finances
+               class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
             <button type="submit"
                     th:unless="${model.complete}"
-                    class="extra-margin button">
+                    class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
         </div>
@@ -136,7 +134,7 @@
     <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
         <li class="read-only">
             <div class="task">
-                <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
+                <h3 class="govuk-heading-s" th:text="${childSection.section.name}"></h3>
             </div>
             <div class="task-status"><span>No action required</span></div>
         </li>
@@ -144,14 +142,16 @@
     <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
         <li>
             <div class="task">
-                <h3 class="heading-small">
+                <h3 class="govuk-heading-s">
                     <th:block th:unless="${model.allReadOnly}">
                         <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
-                           th:text="${childSection.section.name}"></a>
+                           th:text="${childSection.section.name}"
+                           class="govuk-link"></a>
                     </th:block>
                     <th:block th:if="${model.allReadOnly}">
                         <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
-                           th:text="${childSection.section.name}"></a>
+                           th:text="${childSection.section.name}"
+                           class="govuk-link"></a>
                     </th:block>
                 </h3>
             </div>
@@ -164,37 +164,24 @@
 </th:block>
 
 <th:block th:fragment="your_finance_summary (model)">
-    <div class="form-group" style="overflow:auto;">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col" class="numeric width-small">Total project costs</th>
-                <th scope="col" class="numeric width-small">&percnt; Grant</th>
-                <th scope="col" class="numeric width-small">Funding sought (&pound;)</th>
-                <th scope="col" class="numeric width-small">Other public sector funding (&pound;)</th>
-                <th scope="col" class="numeric width-small">Contribution to project (&pound;)</th>
-            </tr>
+    <div class="govuk-form-group" style="overflow:auto;">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">% Grant</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Funding sought (&pound;)</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public sector funding (&pound;)</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution to project (&pound;)</th>
+                </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td class="numeric"><strong>&pound;<th:block
-                    th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}"/>
-                </strong></td>
-                <td class="numeric">
-                    <th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'"/>
-                </td>
-                <td class="numeric">
-                    <th:block
-                        th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}"/>
-                </td>
-                <td class="numeric">
-                    <th:block
-                        th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}"/>
-                </td>
-                <td class="numeric">
-                    <th:block
-                        th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}"/>
-                </td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
             </tr>
             </tbody>
         </table>
@@ -215,12 +202,13 @@
 
 <th:block th:fragment="funding_finances(model, internalView)">
     <th:block th:if="${model.fundingSectionLocked}">
-        The following steps must be completed before you can supply funding details:
-        <ul class="list list-bullet">
+        <p class="govuk-body">The following steps must be completed before you can supply funding details:</p>
+        <ul class="govuk-list govuk-list--bullet">
             <th:block th:unless="${model.researchCategoryComplete}">
                 <th:block th:if="${model.leadApplicant}">
                     <li>you must select a
-                        <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">
+                        <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}"
+                           class="govuk-link">
                             research category
                         </a>
                     </li>
@@ -231,7 +219,8 @@
             </th:block>
             <th:block th:unless="${model.yourOrganisationComplete}">
                 <li>you must state
-                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}"
+                       class="govuk-link">
                         your organisation size
                     </a>
                 </li>
@@ -251,13 +240,13 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="overview_finances(model, internalView)">
-    <h2 class="heading-medium">Funding rules for this competition</h2>
-    <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
-              th:with="formInput=${formInputViewModel.formInput}">
-        <th:block th:if="${formInput.type.displayableFinancialSummaryType}"
-                  th:with="model=${model.openSectionViewModel}">
-            <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+    <th:block th:fragment="overview_finances(model, internalView)">
+        <h2 class="govuk-heading-m">Funding rules for this competition</h2>
+        <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
+                  th:with="formInput=${formInputViewModel.formInput}">
+            <th:block th:if="${formInput.type.displayableFinancialSummaryType}"
+                      th:with="model=${model.openSectionViewModel}" >
+                <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
                                                 currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
                                                 completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
                                                 eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId}), currentCompetition=(${model.application.currentCompetition}),
@@ -267,7 +256,7 @@
             </th:block>
         </th:block>
         <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-            <div class="wysiwyg-styles">
+            <div class="govuk-body wysiwyg-styles">
                 <th:block
                     th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"></th:block>
             </div>
@@ -276,31 +265,29 @@
     <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
 </th:block>
 
-
 <th:block th:fragment="project_location(model)">
-    <div class="extra-margin">
+    <div class="govuk-!-margin-top-6">
         <th:block th:unless="${model.readonly}">
-            <p>Where will most of the project work take place?</p>
+            <p class="govuk-body">Where will most of the project work take place?</p>
             <!--/* edit */-->
-            <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
-                <label class="form-label" for="projectLocation">
-                    <span class="form-label-bold">Postcode</span>
-                    <th:block th:if="${#fields.hasErrors('projectLocation')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'govuk-form-group--error'">
+                <label class="govuk-label--s" for="projectLocation">
+                    Postcode
                 </label>
-                <input class="form-control width-large"
+                <th:block th:if="${#fields.hasErrors('projectLocation')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-input--width-10"
                        id="projectLocation"
                        th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
                        type="text"
                        name="financePosition-projectLocation"
                        th:value="${model.projectLocationValue}" />
             </div>
-
         </th:block>
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
-            <dl class="readonly-data">
+            <dl class="govuk-list readonly-data">
                 <dt>Postcode</dt>
                 <dd th:if="${model.projectLocationValue != null}" th:text="${model.projectLocationValue}">Postcode</dd>
             </dl>

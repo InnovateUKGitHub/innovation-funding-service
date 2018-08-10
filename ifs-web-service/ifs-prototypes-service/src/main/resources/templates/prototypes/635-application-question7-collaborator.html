@@ -19,10 +19,10 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, ${'Risks'})" />
 
 <form action="#" method="post" class="form-serialize-js">
-	<div class="form-group extra-margin" id="0">
+	<div class="govuk-form-group extra-margin" id="0">
 
-		<label class="form-label form-label-bold" for="1">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?
-			<span class="form-hint">We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.</span>
+		<label class="govuk-label" for="1">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?
+			<span class="govuk-hint">We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.</span>
 		</label>
 
 		<div class="validation-messages">
@@ -33,9 +33,9 @@
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
 		<span class="summary">What should I include in the project risks section?</span>
 		</summary>
-		<div class="panel" id="details-content-0" aria-hidden="false" style="display: block;">
-			<p>Please describe your plans for limiting and managing risk. You need to:</p>
-				<ul class="list list-bullet">
+		<div class="govuk-body panel" id="details-content-0" aria-hidden="false" style="display: block;">
+			<p class="govuk-body">Please describe your plans for limiting and managing risk. You need to:</p>
+				<ul class="govuk-list govuk-list--bullet">
 					<li>identify the project's main risks and uncertainties</li>
 					<li>detail specific technical, commercial, managerial and environmental risks</li>
 					<li>list any other uncertainties such as ethical issues associated with the project</li>
@@ -56,7 +56,7 @@
 			    </div>
 			</div>
 			<div class="readonly" contenteditable="false">
-				<p>Three principal risks exist at this stage:</p>
+				<p class="govuk-body">Three principal risks exist at this stage:</p>
 				<ul class="list-number">
 					<li>The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identify if the method needs to be altered during scale up to replicate results. In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase</li>
 					<li>During the phase to engineer a technique to isolate the issue we anticipate that there are inherent safety issues. We have consulted an independent firm to ensure that suitable equipment and measures have been put in place to minimise the risk to staff.</li>
@@ -94,17 +94,17 @@
 					</div>
 
 					<div class="assign-team">
-						<ul class="list list-bullet">
+						<ul class="govuk-list govuk-list--bullet">
 							<li>
-								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+								<button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_9">Pete Tom</button>
 
 							</li>
 							<li>
-								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+								<button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_5">Jessica Doe</button>
 
 							</li>
 							<li>
-								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+								<button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_1">Steve Smith</button>
 
 							</li>
 						</ul>

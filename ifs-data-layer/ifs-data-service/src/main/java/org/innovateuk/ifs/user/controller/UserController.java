@@ -23,8 +23,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
@@ -183,22 +181,12 @@ public class UserController {
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
-                {
-                    registrationService.sendUserVerificationEmail(created, empty()).getSuccess();
-                    return created;
-                }
-        ).toPostCreateResponse();
+        return registrationService.createOrganisationUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
-                {
-                    registrationService.sendUserVerificationEmail(created, of(competitionId)).getSuccess();
-                    return created;
-                }
-        ).toPostCreateResponse();
+        return registrationService.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")

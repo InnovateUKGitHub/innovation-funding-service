@@ -4,15 +4,12 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -28,10 +25,8 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.innovateuk.ifs.user.resource.Title.Ms;
@@ -48,9 +43,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     protected ProfileController supplyControllerUnderTest() {
         return new ProfileController();
     }
-
-    @Mock
-    private EthnicityRestService ethnicityRestService;
 
     @Mock
     private OrganisationService organisationService;
@@ -75,13 +67,8 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
-                .withDisability(Disability.YES)
-                .withGender(Gender.FEMALE)
-                .withEthnicity(2L)
                 .build();
         setLoggedInUser(user);
-
-        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
     }
 
     @SuppressWarnings("unchecked")
@@ -124,9 +111,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .andExpect(model().attribute("model", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("emailAddress", Matchers.equalTo(user.getEmail()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("gender", Matchers.equalTo(user.getGender().getDisplayName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("disability", Matchers.equalTo(user.getDisability().getDisplayName()))));
+                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))));
 
         verifyOrganisationAddress(result, operatingOrgAddress, "model");
     }
@@ -196,16 +181,13 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
         when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
-                "Mrs", "0987654321", "MALE", 2L,"NO", false))
+                "Mrs", "0987654321", false))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", Mrs.toString())
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")
-                .param("gender", Gender.MALE.toString())
-                .param("ethnicity", "2")
-                .param("disability", Disability.NO.toString())
                 .param("allowMarketingEmails", Boolean.FALSE.toString())
 
         );
@@ -217,9 +199,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 eq("newlastname"),
                 any(),
                 eq("0987654321"),
-                any(),
-                any(),
-                any(),
                 eq(false));
     }
 
@@ -230,9 +209,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
-                .param("gender", "illegalcharacters:!@#$%^&*()")
-                .param("ethnicity", "illegalcharacters:!@#$%^&*()")
-                .param("disability", "illegalcharacters:!@#$%^&*()")
         );
 
         verify(userService, times(0)).updateDetails(
@@ -241,9 +217,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 isA(String.class),
                 isA(String.class),
                 isA(String.class),
-                isA(String.class),
-                isA(String.class),
-                isA(Long.class),
                 isA(String.class),
                 isA(Boolean.class));
     }
@@ -254,9 +227,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
                 eq(user.getPhoneNumber()),
-                anyString(),
-                anyLong(),
-                anyString(),
                 anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUserResource().build());
@@ -265,9 +235,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
-                .param("gender", user.getGender().name())
-                .param("ethnicity", user.getEthnicity().toString())
-                .param("disability", user.getDisability().name())
                 .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(status().is2xxSuccessful())
@@ -280,9 +247,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
-                .param("gender", "")
-                .param("ethnicity", "")
-                .param("disability", "")
                 .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(status().is2xxSuccessful())
@@ -294,7 +258,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
-                eq(user.getPhoneNumber()), anyString(), anyLong(), anyString(), anyBoolean()))
+                eq(user.getPhoneNumber()), anyBoolean()))
                 .thenReturn(ServiceResult.serviceFailure(error));
 
         mockMvc.perform(post("/profile/edit")
@@ -302,9 +266,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
-                .param("gender", user.getGender().name())
-                .param("ethnicity", user.getEthnicity().toString())
-                .param("disability", user.getDisability().name())
                 .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(model().hasErrors());

@@ -43,43 +43,43 @@
         <section class="info-area">
 
         	<div class="boxed">
-        		<h2 class="heading-medium no-margin">Challenge area</h2>
-        		<h3 class="heading-small no-margin">Innovation area</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
+        		<h2 class="govuk-heading-m govuk-!-margin-0">Challenge area</h2>
+        		<h3 class="govuk-heading-s govuk-!-margin-0">Innovation area</h3>
+                <p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
-                <div class="grid-row">
-                    <div class="column-third">
-                        <p>Project cost <br /><span class="heading-medium">£500,000</span></p>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
+                        <p class="govuk-body">Project cost <br /><span class="govuk-heading-m">£500,000</span></p>
                     </div>
-                    <div class="column-third">
-                        <p>Grant request <br /><span class="heading-medium">£300,000</span></p>
+                    <div class="govuk-grid-column-one-third">
+                        <p class="govuk-body">Grant request <br /><span class="govuk-heading-m">£300,000</span></p>
                     </div>
-                    <div class="column-third">
-                        <p>Other public sector funding <br /><span class="heading-medium">£20,000</span></p>
+                    <div class="govuk-grid-column-one-third">
+                        <p class="govuk-body">Other public sector funding <br /><span class="govuk-heading-m">£20,000</span></p>
                     </div>
                 </div>
 
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-                <div class="grid-row">
-                	<div class="column-third">
-                		<p>Assigned <br /><span class="heading-medium">5</span></p>
+                <div class="govuk-grid-row">
+                	<div class="govuk-grid-column-one-third">
+                		<p class="govuk-body">Assigned <br /><span class="govuk-heading-m">5</span></p>
 
-                		<p>Accepted <br /><span class="heading-medium">4</span></p>
+                		<p class="govuk-body">Accepted <br /><span class="govuk-heading-m">4</span></p>
 
-                		<p>Started <br /><span class="heading-medium">1</span></p>
+                		<p class="govuk-body">Started <br /><span class="govuk-heading-m">1</span></p>
                 	</div>
-                	<div class="column-third">
-                		<p>Completed <br /><span class="heading-medium">1</span></p>
+                	<div class="govuk-grid-column-one-third">
+                		<p class="govuk-body">Completed <br /><span class="govuk-heading-m">1</span></p>
 
-                		<p>Score % <br /><span class="heading-medium">80</span></p>
+                		<p class="govuk-body">Score % <br /><span class="govuk-heading-m">80</span></p>
 
-                		<p>Spread <br /><span class="heading-medium">10</span></p>
+                		<p class="govuk-body">Spread <br /><span class="govuk-heading-m">10</span></p>
                 	</div>
-                	<div class="column-third">
-                		<p>On scope <br /><span class="heading-medium">1</span></p>
+                	<div class="govuk-grid-column-one-third">
+                		<p class="govuk-body">On scope <br /><span class="govuk-heading-m">1</span></p>
 
-                		<p>Recommmended <br /><span class="heading-medium">1</span></p>
+                		<p class="govuk-body">Recommmended <br /><span class="govuk-heading-m">1</span></p>
                 	</div>
                 </div>
             </div>
@@ -88,62 +88,62 @@
 
     <section class="data-area">
 
-        <h2 class="heading-large" id="current-assessors">Assigned <span class="assigned-count">(4)</span></h2>
+        <h2 class="govuk-heading-l" id="current-assessors">Assigned <span class="assigned-count">(4)</span></h2>
 
         <th:block th:insert="prototypes/fragments/comp-admin :: prototype-assessor-assigned-table" />
 
         <!-- <p class="extra-margin" id="no-assessors">No assessors are currently assigned to this application</p> -->
 
-        <h2 class="heading-large" id="current-assessors">Previously assigned <span class="assigned-count">(2)</span></h2>
+        <h2 class="govuk-heading-l" id="current-assessors">Previously assigned <span class="assigned-count">(2)</span></h2>
 
         <div class="table-overflow">
             <table id="assessor-previously-assigned-list">
-                <thead>
-                    <tr>
-                        <th scope="col">Assessor</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col">Skills</th>
-                        <th scope="col">Applications</th>
-                        <th scope="col">Reason</th>
-                        <th scope="col">Further details</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Assessor</th>
+                        <th class="govuk-table__header" scope="col">Type</th>
+                        <th class="govuk-table__header" scope="col">Innovation area</th>
+                        <th class="govuk-table__header" scope="col">Skills</th>
+                        <th class="govuk-table__header" scope="col">Applications</th>
+                        <th class="govuk-table__header" scope="col">Reason</th>
+                        <th class="govuk-table__header" scope="col">Further details</th>
                         <th class="alignright" scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
                         <th scope="row">Bill Knightly</th>
-                        <td>Academic</td>
+                        <td class="govuk-table__cell">Academic</td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                        <td>3</td>
-                        <td>Rejected</td>
-                       	<td>Assessor had ot started the application by the start date.</td>
-                        <td class="alignright"><a href="#" class="remove-assessor">Reinvite</a></td>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">Rejected</td>
+                       	<td class="govuk-table__cell">Assessor had ot started the application by the start date.</td>
+                        <td class="govuk-table__cell alignright"><a href="#" class="remove-assessor">Reinvite</a></td>
                     </tr>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Oliver Romero</th>
-                        <td>Academic</td>
+                        <td class="govuk-table__cell">Academic</td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                        <td>3</td>
-                        <td>Rejected</td>
-                        <td>Conflict of interest <br /> I am currently opening another project that is similar to this has left me compromised</td>
-                        <td class="alignright"><a href="#" class="reinvite-assessor">Reinvite</a></td>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">Rejected</td>
+                        <td class="govuk-table__cell">Conflict of interest <br /> I am currently opening another project that is similar to this has left me compromised</td>
+                        <td class="govuk-table__cell alignright"><a href="#" class="reinvite-assessor">Reinvite</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
     	<div class="alignright-button extra-margin" style="display: none" id="added-assessors">
-    		<a href="/prototypes/1373-manage-applications?sendAssignments" class="button button=large">Continue</a>
+    		<a href="/prototypes/1373-manage-applications?sendAssignments" class="govuk-button button=large">Continue</a>
     	</div>
 
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-    	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+    	<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-    	<h2 class="heading-large" id="current-assessors">Assign more assessors</h2>
+    	<h2 class="govuk-heading-l" id="current-assessors">Assign more assessors</h2>
 
     	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" />
 

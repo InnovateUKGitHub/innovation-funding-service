@@ -56,9 +56,9 @@ IFS.core.conditionalForms = (function () {
         }
         if (clearForm || clearValidation) {
           // clear validation
-          var formGroup = target.find('.form-group')
+          var formGroup = target.find('.govuk-form-group')
           formGroup.each(function () {
-            var field = jQuery(this).find('input, textarea')
+            var field = jQuery(this).find('input, textarea, select')
             var requiredAttribute = 'required'
             var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
             var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)

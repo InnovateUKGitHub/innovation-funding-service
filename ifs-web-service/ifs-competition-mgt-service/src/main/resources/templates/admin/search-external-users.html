@@ -1,78 +1,84 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Find external users'" />
 </head>
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-        <div class="search-filters extra-margin">
-            <fieldset>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label" for="searchString">
-                            <span class="form-label">Look for</span>
-                            <th:block th:if="${#fields.hasErrors('searchString')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
-                            </th:block>
-                            </label>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='govuk-heading-l'" />
 
-                            <input class="form-control"
-                                   type="text"
-                                   th:errorclass="form-control-error"
-                                   th:field="*{searchString}"
-                                   id="searchString"
-                                   name="searchString">
+        <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div class="search-filters govuk-!-margin-top-6">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="searchString">
+                                    Look for
+                                </label>
+                                <th:block th:if="${#fields.hasErrors('searchString')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
+                                </th:block>
+                                <input class="govuk-input"
+                                       type="text"
+                                       th:errorclass="govuk-input--error"
+                                       th:field="*{searchString}"
+                                       id="searchString"
+                                       name="searchString">
+                            </div>
+                        </div>
+                        <div class="govuk-grid-column-one-half">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label"
+                                       for="searchCategory">in</label>
+                                <select th:field="*{searchCategory}"
+                                        class="govuk-select"
+                                        id="searchCategory"
+                                        name="searchCategory">
+                                    <option th:each="category : ${T(org.innovateuk.ifs.user.resource.SearchCategory).values()}"
+                                            th:value="${category}"
+                                            th:text="${category.displayName}"
+                                            th:selected="${form.searchCategory == null && category.selectedByDefault}"></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label" for="searchCategory">in</label>
-                            <select th:field="*{searchCategory}" class="form-control" id="searchCategory" name="searchCategory">
-                                <option th:each="category : ${T(org.innovateuk.ifs.user.resource.SearchCategory).values()}"
-                                        th:value="${category}"
-                                        th:text="${category.displayName}"
-                                        th:selected="${form.searchCategory == null && category.selectedByDefault}"></option>
-                            </select>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
+                            <a href="?" class="govuk-link">Clear</a>
+                        </div>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="govuk-button govuk-!-margin-0">Search</button>
                         </div>
                     </div>
-                </div>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <a href="?">Clear</a>
-                    </div>
-                    <div class="column-half alignright">
-                        <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="button no-margin">Search</button>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
+                </fieldset>
+            </div>
 
-        <ul class="inline-nav cf" th:if="${mode == 'search'}">
-            <li th:classappend="${tab == 'users' ? 'selected' : ''}">
-                <button type="submit" name="active" class="buttonlink">Active accounts</button>
-            </li>
-            <li th:classappend="${tab == 'invites' ? 'selected' : ''}">
-                <button type="submit" name="pending" class="buttonlink">Pending accounts</button>
-            </li>
-        </ul>
-    </form>
+            <ul class="govuk-list inline-nav cf" th:if="${mode == 'search'}">
+                <li th:classappend="${tab == 'users' ? 'selected' : ''}">
+                    <button type="submit" name="active" class="button-clear">Active accounts</button>
+                </li>
+                <li th:classappend="${tab == 'invites' ? 'selected' : ''}">
+                    <button type="submit" name="pending" class="button-clear">Pending accounts</button>
+                </li>
+            </ul>
+        </form>
 
-    <th:block th:if="${mode == 'search'}">
-        <th:block th:unless="${tab == 'invites'}" th:insert="fragments/external-users :: user-list(users=${users})" />
-        <th:block th:if="${tab == 'invites'}" th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
-    </th:block>
+        <th:block th:if="${mode == 'search'}">
+            <th:block th:unless="${tab == 'invites'}" th:insert="fragments/external-users :: user-list(users=${users})" />
+            <th:block th:if="${tab == 'invites'}" th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

@@ -1,68 +1,69 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Interviews you have agreed to attend'" />
 </head>
 
-<body class="Interviews you have agreed to attend">
+<body class="govuk-template__body Interviews you have agreed to attend">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard})" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='govuk-heading-xl'" />
 
-    <div class="grid-row">
-        <div class="column-one-half competition details">
-            <dl class="font-xsmall">
-                <dt>Competition:</dt>
-                <dd th:text="${model.competitionTitle}"></dd>
-                <dt>Innovation Lead:</dt>
-                <dd th:text="${model.leadTechnologist}"></dd>
-            </dl>
-        </div>
-
-        <div class="column-one-half">
-            <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
-        </div>
-    </div>
-
-    <div class="my-applications">
-
-        <p class="extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
-
-            <div class="progress-list">
-                <h2 class="heading-medium no-margin">Applications for interview panel (<span
-                    th:text="${#lists.size(model.applications)}"/>)</h2>
-
-                <ul>
-                    <li th:each="app : ${model.applications}">
-
-                        <th:block>
-                            <div class="task">
-                                <a class="heading-small"
-                                   th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})} + ${model.originQuery}"
-                                   th:text="${app.displayLabel}">Application name</a>
-                                <p th:text="${app.leadOrganisation}" class="no-margin"/>
-                            </div>
-                        </th:block>
-
-                    </li>
-                    <th:block th:if="${#lists.isEmpty(model.applications)}">
-                        <li class="status-2-col">
-                            <div class="task">
-                                <p>No applications have been allocated to this interview panel.</p>
-                            </div>
-                        </li>
-                    </th:block>
-                </ul>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half competition details">
+                <dl class="govuk-list govuk-!-font-size-16">
+                    <dt>Competition:</dt>
+                    <dd th:text="${model.competitionTitle}"></dd>
+                    <dt>Innovation Lead:</dt>
+                    <dd th:text="${model.leadTechnologist}"></dd>
+                </dl>
             </div>
-    </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <div class="govuk-grid-column-one-half">
+                <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" class="govuk-link" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
+            </div>
+        </div>
+
+        <div class="my-applications">
+
+            <p class="govuk-body govuk-!-margin-top-6">Please click on the links below to review the applications and all feedback before the interview.</p>
+
+                <div class="progress-list">
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Applications for interview panel (<span
+                        th:text="${#lists.size(model.applications)}"/>)</h2>
+
+                    <ul>
+                        <li th:each="app : ${model.applications}">
+                            <th:block>
+                                <div class="task">
+                                    <a class="govuk-heading-s"
+                                       th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})} + ${model.originQuery}"
+                                       th:text="${app.displayLabel}">Application name</a>
+                                    <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
+                                </div>
+                            </th:block>
+                        </li>
+                        <th:block th:if="${#lists.isEmpty(model.applications)}">
+                            <li class="status-2-col">
+                                <div class="task">
+                                    <p class="govuk-body">No applications have been allocated to this interview panel.</p>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

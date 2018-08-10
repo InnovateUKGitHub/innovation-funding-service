@@ -24,12 +24,9 @@ import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.review.domain.Review;
@@ -91,6 +88,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
@@ -145,7 +143,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     @Mock
     private NotificationTemplateRenderer notificationTemplateRendererMock;
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationService;
     @Mock
     private ReviewParticipantMapper reviewParticipantMapperMock;
     @Mock
@@ -549,19 +547,19 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.empty());
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.empty());
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationService.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepositoryMock, reviewInviteRepositoryMock, userRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(competitionRepositoryMock, reviewInviteRepositoryMock, userRepositoryMock, reviewParticipantRepositoryMock, notificationService);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
         inOrder.verify(reviewParticipantRepositoryMock).save(createAssessmentPanelParticipantExpectations(invites.get(0)));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(0), EMAIL);
         inOrder.verify(reviewParticipantRepositoryMock).save(createAssessmentPanelParticipantExpectations(invites.get(1)));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -738,18 +736,18 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
         when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(reviewParticipants.get(0));
         when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(reviewParticipants.get(1));
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationService.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock, notificationService);
         inOrder.verify(reviewInviteRepositoryMock).getByIdIn(inviteIds);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(0), EMAIL);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(1), EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 

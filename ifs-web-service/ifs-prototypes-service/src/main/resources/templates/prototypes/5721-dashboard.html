@@ -20,10 +20,10 @@
                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Inform'}, ${null})" />
                             <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ready to open'}, ${null})" />
                               <div class="no-constrain-width justify-left">
-                                <div class="grid-row">
+                                <div class="govuk-grid-row">
                                   <div class="column-two-thirds">
                                     <div class="boxed">
-                                      <h2 class="heading-medium no-margin-top">Competition information</h2>
+                                      <h2 class="govuk-heading-m govuk-!-margin-top-0">Competition information</h2>
                                       <dl class="standard-definition-list">
                                         <dt>Competition type</dt>
                                         <dd>Programme</dd>
@@ -38,147 +38,147 @@
                                         <dt>Competition Executive</dt>
                                         <dd>Paul Ray</dd>
                                       </dl>
-                                      <p th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
+                                      <p class="govuk-body" th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
                                         <a href="/prototypes/2469-comp-setup?compStatus=ready">View and update competition setup</a>
                                       </p>
                                     </div>
                                     <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                      <div class="grid-row extra-margin">
-                                        <div class="column-third dashboard-actions">
-                                          <a href="#" class="button">Notify assessors</a>
+                                      <div class="govuk-grid-row extra-margin">
+                                        <div class="govuk-grid-column-one-third dashboard-actions">
+                                          <a href="#" class="govuk-button">Notify assessors</a>
                                         </div>
-                                        <div class="column-third">
+                                        <div class="govuk-grid-column-one-third">
                                           <div class="highlight-panel">
-                                            <span class="heading-large">10</span><br />
+                                            <span class="govuk-heading-l">10</span><br />
                                             <small>changes since last notification</small>
                                           </div>
                                         </div>
-                                        <!-- <div class="column-third">
+                                        <!-- <div class="govuk-grid-column-one-third">
                                           <div class="highlight-panel">
-                                            <span class="heading-large">2</span><br />
+                                            <span class="govuk-heading-l">2</span><br />
                                             <small>days since last notification</small>
                                           </div>
                                         </div> -->
                                       </div>
                                     </th:block>
-                                    <h2 class="heading-medium">Key statistics</h2>
-                                    <ul class="grid-row">
-                                      <li class="column-third">
+                                    <h2 class="govuk-heading-m">Key statistics</h2>
+                                    <ul class="govuk-list govuk-grid-row">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready'}">
-                                            <span class="heading-large">10</span><br /><small>Assessors invited</small>
+                                            <span class="govuk-heading-l">10</span><br /><small>Assessors invited</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">10</span><br /><small>Applications requiring additional assessors</small>
+                                            <span class="govuk-heading-l">10</span><br /><small>Applications requiring additional assessors</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                            <span class="heading-large">50</span><br /><small>Total assignments</small>
+                                            <span class="govuk-heading-l">50</span><br /><small>Total assignments</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">287</span><br /><small>Applications</small>
+                                            <span class="govuk-heading-l">287</span><br /><small>Applications</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">287</span><br /><small>Applications</small>
+                                            <span class="govuk-heading-l">287</span><br /><small>Applications</small>
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready'}">
-                                            <span class="heading-large">4</span><br /><small>Invitations accepted</small>
+                                            <span class="govuk-heading-l">4</span><br /><small>Invitations accepted</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">10</span><br /><small>Assignments made</small>
+                                            <span class="govuk-heading-l">10</span><br /><small>Assignments made</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                            <span class="heading-large">25</span><br /><small>Awaiting response</small>
+                                            <span class="govuk-heading-l">25</span><br /><small>Awaiting response</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">0</span><br /><small>Applications being funded</small>
+                                            <span class="govuk-heading-l">0</span><br /><small>Applications being funded</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">3</span><br /><small>Applications being funded</small>
+                                            <span class="govuk-heading-l">3</span><br /><small>Applications being funded</small>
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                            <span class="heading-large">5</span><br /><small>Applications per assessor</small>
+                                            <span class="govuk-heading-l">5</span><br /><small>Applications per assessor</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">4</span><br /><small>Assessors without applications</small>
+                                            <span class="govuk-heading-l">4</span><br /><small>Assessors without applications</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                            <span class="heading-large">10</span><br /><small>Assignments accepted</small>
+                                            <span class="govuk-heading-l">10</span><br /><small>Assignments accepted</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">0</span><br /><small>Applications not being funded</small>
+                                            <span class="govuk-heading-l">0</span><br /><small>Applications not being funded</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">281</span><br /><small>Applications not being funded</small>
+                                            <span class="govuk-heading-l">281</span><br /><small>Applications not being funded</small>
                                           </th:block>
                                         </div>
                                       </li>
                                     </ul>
-                                    <ul class="grid-row extra-margin">
-                                      <li class="column-third">
+                                    <ul class="govuk-list govuk-grid-row extra-margin">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                            <span class="heading-large">12</span><br /><small>Applications started</small>
+                                            <span class="govuk-heading-l">12</span><br /><small>Applications started</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">10</span><br /><small>Assessors invited</small>
+                                            <span class="govuk-heading-l">10</span><br /><small>Assessors invited</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                            <span class="heading-large">4</span><br /><small>Assessments started</small>
+                                            <span class="govuk-heading-l">4</span><br /><small>Assessments started</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">0</span><br /><small>Applications on hold</small>
+                                            <span class="govuk-heading-l">0</span><br /><small>Applications on hold</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">3</span><br /><small>Applications on hold</small>
+                                            <span class="govuk-heading-l">3</span><br /><small>Applications on hold</small>
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                            <span class="heading-large">6</span><br /><small>Applications (beyond 50%)</small>
+                                            <span class="govuk-heading-l">6</span><br /><small>Applications (beyond 50%)</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">4</span><br /><small>Invitations accepted</small>
+                                            <span class="govuk-heading-l">4</span><br /><small>Invitations accepted</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                            <span class="heading-large">5</span><br /><small>Assessments submitted</small>
+                                            <span class="govuk-heading-l">5</span><br /><small>Assessments submitted</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">0</span><br /><small>Applications notified of decision</small>
+                                            <span class="govuk-heading-l">0</span><br /><small>Applications notified of decision</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">284</span><br /><small>Applications notified of decision</small>
+                                            <span class="govuk-heading-l">284</span><br /><small>Applications notified of decision</small>
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                            <span class="heading-large">4</span><br /><small>Applications submitted</small>
+                                            <span class="govuk-heading-l">4</span><br /><small>Applications submitted</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                            <span class="heading-large">5</span><br /><small>Applications per assessor</small>
+                                            <span class="govuk-heading-l">5</span><br /><small>Applications per assessor</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                            <span class="heading-large">287</span><br /><small>Applications awaiting a decision</small>
+                                            <span class="govuk-heading-l">287</span><br /><small>Applications awaiting a decision</small>
                                           </th:block>
                                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                            <span class="heading-large">3</span><br /><small>Applications awaiting a decision</small>
+                                            <span class="govuk-heading-l">3</span><br /><small>Applications awaiting a decision</small>
                                           </th:block>
                                         </div>
                                       </li>
                                     </ul>
-                                    <h2 class="heading-medium">Competition navigation</h2>
-                                    <ul class="link-list">
+                                    <h2 class="govuk-heading-m">Competition navigation</h2>
+                                    <ul class="govuk-list link-list">
                                       <li>
                                         <a th:href="${(param.status != null ? '/prototypes/5052-view-applications?comp=' + param.status[0] : '/prototypes/5052-view-applications?comp=Open')}" class="" th:classappend="${(param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Applications: All, submitted, non-submitted, ineligible</a>
                                       </li>
@@ -195,85 +195,85 @@
                                         <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=decision&#38;comp=' + param.status[0] : '')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Input and review funding decision</a>
                                       </li>
                                     </ul>
-                                    <!-- <div class="grid-row dashboard-actions">
-                                      <div class="column-third">
-                                        <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=feedback&#38;comp=' + param.status[0] : '')}" class="button" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Feedback</a>
+                                    <!-- <div class="govuk-grid-row dashboard-actions">
+                                      <div class="govuk-grid-column-one-third">
+                                        <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=feedback&#38;comp=' + param.status[0] : '')}" class="govuk-button" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Feedback</a>
                                       </div>
                                     </div> -->
                                   </div>
-                                  <div class="column-third">
-                                    <h2 class="heading-medium extra-margin-top">Competition milestones</h2>
+                                  <div class="govuk-grid-column-one-third">
+                                    <h2 class="govuk-heading-m extra-margin-top">Competition milestones</h2>
                                     <ul class="comp-timeline-status">
                                       <li class="done">
-                                        <h3 class="heading-small">Open date</h3>
-                                        <p>10 October 2016</p>
+                                        <h3 class="govuk-heading-s">Open date</h3>
+                                        <p class="govuk-body">10 October 2016</p>
                                       </li>
                                       <li class="done">
-                                        <h3 class="heading-small">Briefing event</h3>
-                                        <p>12 October 2016</p>
+                                        <h3 class="govuk-heading-s">Briefing event</h3>
+                                        <p class="govuk-body">12 October 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Submission date</h3>
-                                        <p>30 October 2016</p>
+                                        <h3 class="govuk-heading-s">Submission date</h3>
+                                        <p class="govuk-body">30 October 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Allocate assessors</h3>
-                                        <p>31 October 2016</p>
+                                        <h3 class="govuk-heading-s">Allocate assessors</h3>
+                                        <p class="govuk-body">31 October 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button">Notify assessors</a>
+                                            <a href="#" class="govuk-button">Notify assessors</a>
                                           </div>
                                         </th:block>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Assessor briefing</h3>
-                                        <p>05 November 2016</p>
+                                        <h3 class="govuk-heading-s">Assessor briefing</h3>
+                                        <p class="govuk-body">05 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Assessor accepts</h3>
-                                        <p>12 November 2016</p>
+                                        <h3 class="govuk-heading-s">Assessor accepts</h3>
+                                        <p class="govuk-body">12 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Assessor deadline</h3>
-                                        <p>17 November 2016</p>
+                                        <h3 class="govuk-heading-s">Assessor deadline</h3>
+                                        <p class="govuk-body">17 November 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button">Close assessment</a>
+                                            <a href="#" class="govuk-button">Close assessment</a>
                                           </div>
                                         </th:block>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Line draw</h3>
-                                        <p>20 November 2016</p>
+                                        <h3 class="govuk-heading-s">Line draw</h3>
+                                        <p class="govuk-body">20 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Assessment panel</h3>
-                                        <p>23 November 2016</p>
+                                        <h3 class="govuk-heading-s">Assessment panel</h3>
+                                        <p class="govuk-body">23 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Funders panel</h3>
-                                        <p>03 December 2016</p>
+                                        <h3 class="govuk-heading-s">Funders panel</h3>
+                                        <p class="govuk-body">03 December 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Funding decision notifications</h3>
-                                        <p>05 December 2016</p>
+                                        <h3 class="govuk-heading-s">Funding decision notifications</h3>
+                                        <p class="govuk-body">05 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:unless="${param.action != null and param.action[0] == 'notify'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button disabled">Manage funding notifications</a>
+                                            <a href="#" class="govuk-button disabled">Manage funding notifications</a>
                                           </div>
                                         </th:block>
                                         <th:block th:if="${param.action != null and param.action[0] == 'notify' or param.status != null and param.status[0] == 'Inform'}">
                                           <div class="aligncentre">
-                                            <a href="/prototypes/1561-funding-notifications?comp=panel" class="button">Manage funding notifications</a>
+                                            <a href="/prototypes/1561-funding-notifications?comp=panel" class="govuk-button">Manage funding notifications</a>
                                           </div>
                                         </th:block>
                                       </li>
                                       <li th:class="${(param.action != null and param.action[0] == 'feedback-sent' ? 'done' : 'not-done')}">
-                                        <h3 class="heading-small">Release feedback</h3>
-                                        <p>10 December 2016</p>
+                                        <h3 class="govuk-heading-s">Release feedback</h3>
+                                        <p class="govuk-body">10 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:unless="${param.action != null and param.action[0] == 'feedback-sent'}">
                                           <div class="aligncentre">
-                                            <a href="/prototypes/1561-inform-release-feedback?comp=Inform" class="button">Release feedback</a>
+                                            <a href="/prototypes/1561-inform-release-feedback?comp=Inform" class="govuk-button">Release feedback</a>
                                           </div>
                                         </th:block>
                                       </li>
@@ -283,99 +283,99 @@
                               </div>
                               <!--
                                 <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Submission date</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Submission date</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Briefing event</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Briefing event</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Allocate assessors</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Allocate assessors</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessor dashboard</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessor dashboard</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Allocate assesors</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Allocate assesors</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessor accepts</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessor accepts</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessor deadline</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessor deadline</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessor accepts</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessor accepts</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessor deadline</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessor deadline</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Line draw</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Line draw</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessment panel</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessment panel</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Line draw</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Line draw</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Assessment panel</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Assessment panel</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Panel date</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Panel date</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Funders panel</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Funders panel</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Funders panel</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Funders panel</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Notifications</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Notifications</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
-                                            <h2 class="heading-medium no-margin-bottom">Release feedback</h2>
-                                            <p>18 October 2016</p>
+                                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Release feedback</h2>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
-                                <hr />
-                                <dl class="standard-definition-list extra-margin-bottom">
+                                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                                <dl class="standard-definition-list govuk-!-margin-bottom-6">
                                     <dt>Competition type</dt>
                                     <dd>Study of feasibility</dd>
                                     <dt>Innovation area</dt>
@@ -388,111 +388,111 @@
                                     <dd>Jess Smith</dd>
                                 </dl>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <a href="#" class="button button-large">Notify assessors</a>
+                                    <a href="#" class="govuk-button button-large">Notify assessors</a>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <a href="#" class="button button-large width-full aligncentre">Export panel sheet</a>
+                                            <a href="#" class="govuk-button button-large width-full aligncentre">Export panel sheet</a>
                                         </div>
                                         <div class="column-quarter">
-                                            <a href="#" class="button button-large width-full aligncentre">Update assessors</a>
+                                            <a href="#" class="govuk-button button-large width-full aligncentre">Update assessors</a>
                                         </div>
-                                        <div class="column-half">
-                                            <p><span class="heading-large">5</span> changes since last update</p>
+                                        <div class="govuk-grid-column-one-half">
+                                            <p class="govuk-body"><span class="govuk-heading-l">5</span> changes since last update</p>
                                         </div>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <a href="#" class="button button-large">Export panel sheet</a>
+                                    <a href="#" class="govuk-button button-large">Export panel sheet</a>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <a href="#" class="button button-large">Export panel sheet</a>
+                                    <a href="#" class="govuk-button button-large">Export panel sheet</a>
                                 </th:block>
-                                <h2 class="heading-medium">Review progress</h2>
+                                <h2 class="govuk-heading-m">Review progress</h2>
                                 <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                    <ul class="list-overview">
-                                        <li><h3 class="heading-small"><a href="/prototypes/5062-open-applications?comp=Open">All applications</a></h3></li>
-                                        <li><h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=Open">Invite assessors</a></h3></li>
-                                        <li><h3 class="heading-small"><a href="#">Update competition details</a></h3></li>
+                                    <ul class="govuk-list list-overview">
+                                        <li><h3 class="govuk-heading-s"><a href="/prototypes/5062-open-applications?comp=Open">All applications</a></h3></li>
+                                        <li><h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=Open">Invite assessors</a></h3></li>
+                                        <li><h3 class="govuk-heading-s"><a href="#">Update competition details</a></h3></li>
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5472-assign-assessors?comp=Closed">Allocate assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5472-assign-assessors?comp=Closed">Allocate assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=Closed">Invite assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=Closed">Invite assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-submitted-applications?comp=Closed&#38;status=assessment">Submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-submitted-applications?comp=Closed&#38;status=assessment">Submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-not-submitted-applications?comp=Closed&#38;status=assessment">Not submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-not-submitted-applications?comp=Closed&#38;status=assessment">Not submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Update competition details</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Update competition details</a></h3>
                                         </li>
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5389-manage-assessors?comp=assessment">Manage assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5389-manage-assessors?comp=assessment">Manage assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5470-manage-applications?comp=assessment">Manage applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5470-manage-applications?comp=assessment">Manage applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=assessment">Invite assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=assessment">Invite assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-submitted-applications?comp=assessment&#38;status=assessment">Submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-submitted-applications?comp=assessment&#38;status=assessment">Submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-not-submitted-applications?comp=assessment&#38;status=assessment">Not submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-not-submitted-applications?comp=assessment&#38;status=assessment">Not submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Update competition details</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Update competition details</a></h3>
                                         </li>
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Setup panel</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Setup panel</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Manage assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Manage assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Manage applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Manage applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=panel">Invite assessors</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=panel">Invite assessors</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Not submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Not submitted applications</a></h3>
                                         </li>
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Funding decision</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Funding decision</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Submitted applications</a></h3>
                                         </li>
                                         <li>
-                                            <h3 class="heading-small"><a href="#">Not submitted applications</a></h3>
+                                            <h3 class="govuk-heading-s"><a href="#">Not submitted applications</a></h3>
                                         </li>
                                     </ul>
                               </th:block> -->

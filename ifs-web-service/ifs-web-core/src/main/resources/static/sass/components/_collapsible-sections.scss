@@ -1,9 +1,5 @@
 %toggle-button {
-  @include media-down(mobile){
-    font-size:15px;
-  }
-
-  font-size: 19px;
+  @include govuk-font(19);
   font-weight: 700;
   text-align:left;
   padding: 10px 40px 10px 10px; //padding right for the icons
@@ -14,11 +10,12 @@
   > h2,
   > h3 {
     position: relative;
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
+    margin: 0;
     clear:both;
 
     &:last-child {
-      border-top: 1px solid $border-colour;
+      border-top: 1px solid $govuk-border-colour;
     }
 
     button {
@@ -29,7 +26,7 @@
 
       &:hover,
       &:focus{
-        background: $highlight-colour;
+        background: govuk-colour("grey-4");
       }
 
       &::-moz-focus-inner {
@@ -70,7 +67,7 @@
     }
 
     + [aria-hidden="false"] {
-      @extend %contain-floats;
+      @include govuk-clearfix;
       display: block;
       padding:0 0 3em;
     }
@@ -81,24 +78,24 @@
   }
 
   > h2{
-    &.heading-medium {
+    &.govuk-heading-m {
       margin: 0;
 
       button{
-        @include core-24;
+        @include govuk-font(24);
         font-weight: bold;
       }
     }
   }
 
   .status {
+    @include govuk-font(16);
     float: right;
     padding-top: 2px;
     font-weight: normal;
-    font-size: 0.9em;
 
     &.yes{
-      color: $green;
+      color: govuk-colour("green");
       font-weight: bold;
       padding-right: 1em;
     }
@@ -116,7 +113,7 @@
   }
 
   .collapsible-content {
-    @extend %contain-floats;
+    @include govuk-clearfix;
     padding:10px;
   }
 
@@ -127,12 +124,12 @@
       float: none;
     }
 
+    @include govuk-font(16);
     float: right;
     font-weight: normal;
     margin-right: 190px;
     width: 144px;
     text-align: left;
-    font-size: 16px;
   }
 }
 
@@ -145,8 +142,8 @@
       @extend %toggle-button;
       padding-right:2px;
 
-      &.heading-medium{
-        @include core-24;
+      &.govuk-heading-m{
+        @include govuk-font(24);
         font-weight: bold;
       }
     }
