@@ -213,7 +213,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
+        when(organisationRepositoryMock.findByUsersId(nullable(Long.class))).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -503,7 +503,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
 
         when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
+        when(organisationRepositoryMock.findByUsersId(nullable(Long.class))).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
