@@ -44,7 +44,7 @@ Custom Suite Setup
 The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page              ${CA_UpcomingComp}
-    the user clicks the button/link             jQuery = .button:contains("Create competition")
+    the user clicks the button/link             jQuery=.govuk-button:contains("Create competition")
     the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information

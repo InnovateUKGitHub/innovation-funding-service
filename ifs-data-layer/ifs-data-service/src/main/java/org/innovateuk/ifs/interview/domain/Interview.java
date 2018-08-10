@@ -36,6 +36,9 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         this.target = application;
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public Interview(Application application, ProcessRole processRole) {
         if (!application.getId().equals(processRole.getApplicationId())) {

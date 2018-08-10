@@ -23,48 +23,48 @@
 
     <div class="no-constrain-width justify-left">
 
-    <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+    <p class="govuk-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
 
-    <div class="grid-row">
+    <div class="govuk-grid-row">
         <div class="column-quarter">
-            <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
+            <button class="govuk-button width-full" th:disabled="${param.action == null}">Confirm actions</button>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+                <span class="govuk-heading-l" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
             </div>
         </div>
     </div>
 
-      <h2 class="heading-medium">Key statistics</h2>
+      <h2 class="govuk-heading-m">Key statistics</h2>
 
-      <ul class="grid-row">
+      <ul class="govuk-list govuk-grid-row">
 
         <li class="column-quarter">
           <div class="highlight-panel highlight-panel-padded">
-            <span class="heading-large">2</span><br /><small>Assessors pending</small>
+            <span class="govuk-heading-l">2</span><br /><small>Assessors pending</small>
           </div>
         </li>
 
         <li class="column-quarter">
           <div class="highlight-panel highlight-panel-padded">
-            <span class="heading-large">3</span><br /><small>Assessors accepted</small>
+            <span class="govuk-heading-l">3</span><br /><small>Assessors accepted</small>
           </div>
         </li>
 
         <li class="column-quarter">
           <div class="highlight-panel highlight-panel-padded">
-            <span class="heading-large">7</span><br /><small>Applications assigned to panel</small>
+            <span class="govuk-heading-l">7</span><br /><small>Applications assigned to panel</small>
           </div>
         </li>
 
       </ul>
 
-      <!-- <h2 class="heading-medium">Panel navigation</h2> -->
+      <!-- <h2 class="govuk-heading-m">Panel navigation</h2> -->
 
-      <h2 class="heading-medium">Panel navigation</h2>
+      <h2 class="govuk-heading-m">Panel navigation</h2>
 
-      <ul class="link-list">
+      <ul class="govuk-list link-list">
         <li><a href="/prototypes/IFS-707-manage-assessors">Invite assessors to attend</a></li>
         <li><a href="/prototypes/IFS-806-manage-applications">Assign applications to panel</a></li>
         <li><a href="/prototypes/IFS-806-assign-applications">Allocate applications to assessors</a></li>

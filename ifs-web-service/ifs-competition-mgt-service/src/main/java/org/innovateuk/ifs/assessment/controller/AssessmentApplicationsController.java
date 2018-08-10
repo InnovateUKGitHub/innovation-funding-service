@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 @RequestMapping("/assessment/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessment applications", securedType = AssessmentApplicationsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT_APPLICATIONS')")
-public class AssessmentApplicationsController extends BaseAssessmentController<ApplicationCountSummaryPageResource> {
+public class AssessmentApplicationsController extends BaseAssessmentController {
 
     @Autowired
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;

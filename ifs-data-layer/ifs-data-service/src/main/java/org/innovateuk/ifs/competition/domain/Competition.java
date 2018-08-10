@@ -366,10 +366,6 @@ public class Competition implements ProcessActivity {
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
     }
 
-    private boolean isMilestoneSet(MilestoneType milestoneType) {
-        return getMilestone(milestoneType).isPresent();
-    }
-
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
         return getMilestone(milestoneType).map(Milestone::getDate);
     }

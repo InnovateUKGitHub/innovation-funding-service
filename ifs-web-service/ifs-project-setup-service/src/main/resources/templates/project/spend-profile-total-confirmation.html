@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm spend profile submit'" />
 </head>
-<body class="app-confirm-submit">
+<body class="govuk-template__body app-confirm-submit">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <form th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send project spend profile',size='heading-medium'" />
-        <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
-        <input type="submit" class="button" value="Submit"/>
-    </form>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <form th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send project spend profile',size='govuk-heading-m'" />
+            <p class="govuk-body">The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+            <input type="submit" class="govuk-button" value="Submit"/>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
