@@ -26,6 +26,6 @@ sleep 1
 
 docker cp anonymised-data-service:/dump/anonymised-dump.sql.gpg /tmp/anonymised.sql.gpg
 
-#docker kill anonymised-data-service && docker rm anonymised-data-service
+docker kill anonymised-data-service && docker rm anonymised-data-service
 
 echo "Now simply run 'gpg --decrypt /tmp/anonymised.sql.gpg > /tmp/anonymised.sql' specifying the password 'password' when prompted"
