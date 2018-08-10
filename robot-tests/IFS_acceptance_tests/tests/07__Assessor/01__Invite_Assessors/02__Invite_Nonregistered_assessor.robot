@@ -104,7 +104,7 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
-    Then the user should see the element   jQuery=h3:contains("Innovation areas") ~ ul li:contains("Emerging and enabling") li:contains("Satellite applications")
+    Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ div th:contains("Emerging and enabling")
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
