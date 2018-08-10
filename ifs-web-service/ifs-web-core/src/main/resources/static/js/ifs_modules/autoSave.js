@@ -190,7 +190,7 @@ IFS.core.autoSave = (function () {
         }
 
         var name = field.prop('name')
-        var formGroup = field.closest('.form-group')
+        var formGroup = field.closest('.govuk-form-group')
         var autoSaveInfo = formGroup.find('.autosave-info')
         var startAjaxTime = new Date().getTime()
 
@@ -244,7 +244,7 @@ IFS.core.autoSave = (function () {
                 return true
               } else {
                 var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-                autoSaveInfo.html('<span class="error-message">' + errorMessage + '</span>')
+                autoSaveInfo.html('<span class="govuk-error-message">' + errorMessage + '</span>')
               }
             }
           }).always(function () {

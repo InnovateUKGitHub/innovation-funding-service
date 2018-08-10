@@ -4,14 +4,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
 import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -37,9 +35,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  * @param <F> the form class
  */
 public abstract class AbstractContentGroupController<M extends AbstractPublicContentViewModel, F extends AbstractContentGroupForm> extends AbstractPublicContentSectionController<M, F> {
-
-    @Autowired
-    private CompetitionSetupService competitionSetupService;
 
     @PostMapping(value = "/{competitionId}/edit", params = "uploadFile")
     public String saveAndUpload(Model model,
