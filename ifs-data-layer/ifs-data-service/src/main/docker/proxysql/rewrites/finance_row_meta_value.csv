@@ -1,1 +1,1 @@
-value|IF(finance_row_meta_field_id != 6 AND value REGEXP '^[0-9.]+$', ROUND(value * (1 + ((RAND() * 20) / 100) - (20 / 100))), value)
+value|IF(finance_row_meta_field_id != 6 AND value  REGEXP '^[0-9.]+$', ROUND(value * (1 + ((RAND() * 20) / 100) - (20 / 100))), value)

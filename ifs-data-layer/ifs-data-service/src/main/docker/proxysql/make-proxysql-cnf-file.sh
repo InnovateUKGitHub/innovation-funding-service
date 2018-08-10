@@ -18,11 +18,11 @@ function generate_query_rules_for_proxysql() {
         table_name=$(echo $i | sed "s/.*\///" | sed "s/.*\///" | sed "s/\..*//")
 
         # the column_array is an array of the column names that are rewrite candidates for this table e.g. "first_name"
-        echo "$(sed 's/^\(.*\)|.*$/\1/g' $i)" | mapfile -t column_array
+        mapfile -t column_array < <(sed 's/^\(.*\)|.*$/\1/g' $i)
 
         # the column_rewrite_array is an array of the rewrite rules against each corresponding column name in the
         # column_array array e.g. "CONCAT(first_name, 'XXX')"
-        echo "$(sed 's/^.*|\(.*\)$/\1/g' $i)" | mapfile -t column_rewrite_array
+        mapfile -t column_rewrite_array < <(sed 's/^.*|\(.*\)$/\1/g' $i)
 
         # a query to find the base select statement that we wish mysqldump to issue against this table when running a
         # dump of its data
