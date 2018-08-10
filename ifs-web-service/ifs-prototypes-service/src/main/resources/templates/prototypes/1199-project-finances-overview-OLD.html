@@ -23,32 +23,32 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<div class="constrain-width">
 
-		<h2 class="heading-medium">Overview</h2>
+		<h2 class="govuk-heading-m">Overview</h2>
 
 		<div class="table-overflow ">
-			<table>
-				<thead>
-					<tr>
-						<th scope="col">Start date</th>
-						<th scope="col">Duration</th>
-						<th scope="col" class="numeric">Total project cost</th>
-						<th scope="col" class="numeric">Grant applied for</th>
-						<th scope="col" class="numeric">Other public sector funding</th>
-						<th scope="col" class="numeric">Total % grant</th>
+			<table class="govuk-table">
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header" scope="col">Start date</th>
+						<th class="govuk-table__header" scope="col">Duration</th>
+						<th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
+						<th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for</th>
+						<th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding</th>
+						<th class="govuk-table__header govuk-table__header--numeric" scope="col">Total % grant</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>1 June 2016</td>
-						<td>36 months</td>
-						<td class="numeric">&pound;400,0000</td>
-						<td class="numeric">&pound;200,000</td>
-						<td class="numeric">&pound;0</td>
-						<td class="numeric">50%</td>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">1 June 2016</td>
+						<td class="govuk-table__cell">36 months</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;400,0000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;200,000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">50%</td>
 					</tr>
 				</tbody>
 			</table>
@@ -76,17 +76,17 @@
 
 	<div class="table-overflow extra-margin">
 
-		<h2 class="heading-medium">Project cost breakdown</h2>
+		<h2 class="govuk-heading-m">Project cost breakdown</h2>
 
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="min-width: 200px">Partner</th>
-					<th scope="col" class="numeric">% Grant</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
 					<th scope="col" colspan="2" class="aligncentre">Total costs</th>
 					<th scope="col" colspan="2" class="aligncentre">Labour</th>
 					<th scope="col" colspan="2" class="aligncentre">AMS</th>
-					<th scope="col" class="numeric">AMS to labour</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">AMS to labour</th>
 					<th scope="col" colspan="2" class="aligncentre">Materials</th>
 					<th scope="col" colspan="2" class="aligncentre">Capital util</th>
 					<th scope="col" colspan="2" class="aligncentre">Sub contract</th>
@@ -95,141 +95,141 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Total</th>
 
-					<td class="numeric">73%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">73%</td>
 
-					<td class="numeric">&pound;375,000</td>
-					<td class="numeric">100%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;375,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">100%</td>
 
-					<td class="numeric">&pound;180,000</td>
-					<td class="numeric">48%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;180,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">48%</td>
 
-					<td class="numeric">&pound;36,000</td>
-					<td class="numeric">10%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;36,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">10%</td>
 
-					<td class="numeric">20%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20%</td>
 
-					<td class="numeric">&pound;44,000</td>
-					<td class="numeric">12%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;44,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">12%</td>
 
-					<td class="numeric">&pound;15,000</td>
-					<td class="numeric">4%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;15,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">4%</td>
 
-					<td class="numeric">&pound;25,000</td>
-					<td class="numeric">7%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;25,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">7%</td>
 
-					<td class="numeric">&pound;25,000</td>
-					<td class="numeric">7%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;25,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">7%</td>
 
-					<td class="numeric">&pound;50,000</td>
-					<td class="numeric">13%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;50,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">13%</td>
 				</tr>
 			</tfoot>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<th scope="row">
 						Aptrans Ltd<br />
 						<small>Lead partner</small>
 					</th>
-					<td class="numeric">50%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">50%</td>
 
-					<td class="numeric">&pound;190,000</td>
-					<td class="numeric">51%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;190,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">51%</td>
 
-					<td class="numeric">&pound;100,000</td>
-					<td class="numeric">53%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;100,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">53%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">20%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20%</td>
 
-					<td class="numeric">&pound;30,000</td>
-					<td class="numeric">16%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">16%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;0</td>
-					<td class="numeric">0%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">0%</td>
 
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">
 						Biotech Corp <br />
 						<small>Partner</small>
 					</th>
-					<td class="numeric">50%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">50%</td>
 
-					<td class="numeric">&pound;190,000</td>
-					<td class="numeric">51%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;190,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">51%</td>
 
-					<td class="numeric">&pound;100,000</td>
-					<td class="numeric">53%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;100,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">53%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">20%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20%</td>
 
-					<td class="numeric">&pound;30,000</td>
-					<td class="numeric">16%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">16%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;0</td>
-					<td class="numeric">0%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">0%</td>
 
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">
 						University of Cardiff <br />
 						<small>Lead partner</small>
 					</th>
-					<td class="numeric">50%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">50%</td>
 
-					<td class="numeric">&pound;190,000</td>
-					<td class="numeric">51%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;190,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">51%</td>
 
-					<td class="numeric">&pound;100,000</td>
-					<td class="numeric">53%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;100,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">53%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">20%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20%</td>
 
-					<td class="numeric">&pound;30,000</td>
-					<td class="numeric">16%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">16%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">11%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">11%</td>
 
-					<td class="numeric">&pound;10,000</td>
-					<td class="numeric">5%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">5%</td>
 
-					<td class="numeric">&pound;0</td>
-					<td class="numeric">0%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">0%</td>
 
 				</tr>
 			</tbody>

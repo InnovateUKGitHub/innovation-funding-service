@@ -36,10 +36,12 @@ public class FormInputResponseFileUploadLookupStrategies {
 
         FormInputResponse formInputResponse = null;
 
-        if(question.hasMultipleStatuses()){ // If question has multiple statuses only the user who uploaded file is allowed to remove them.
+        if(question.hasMultipleStatuses()){ // If question has multiple statuses only the user who uploaded files is allowed to remove them.
             formInputResponse =
-                    formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(id.getApplicationId(), id.getProcessRoleId(), id.getFormInputId());
-        } else {                            // If question has single status then whoever has question assinged to them can edit/read files associated with the question
+                    formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(id.getApplicationId(),
+                                                                                                id.getProcessRoleId(),
+                                                                                                id.getFormInputId());
+        } else {                            // If question has single status then whoever has the question assigned to them can edit/read files associated with the question
 
             List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(id.getApplicationId(), id.getFormInputId());
             if(formInputResponses != null && !formInputResponses.isEmpty()){ // Question with single status will only have one form input response
@@ -47,11 +49,7 @@ public class FormInputResponseFileUploadLookupStrategies {
             }
         }
 
-        if (formInputResponse == null) {
-            return null;
-        }
-
-        if (formInputResponse.getFileEntry() == null) {
+        if (formInputResponse == null || formInputResponse.getFileEntry() == null) {
             return null;
         }
 

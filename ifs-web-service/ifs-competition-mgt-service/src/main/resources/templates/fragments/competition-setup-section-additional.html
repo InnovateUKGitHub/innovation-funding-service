@@ -2,43 +2,45 @@
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-content">
 
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='govuk-heading-xl'" />
 
     <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
           th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${model.general.editable}">
-            <legend class="visuallyhidden">Funding information</legend>
-            <div class="grid-row">
-                <div class="column-half">
-                    <div class="form-group">
-                        <span class="form-label-bold">Funder</span>
+        <fieldset th:if="${model.general.editable}"
+                  class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Funding information</legend>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group">
+                        <span class="govuk-label">Funder</span>
                     </div>
                 </div>
 
-                <div class="column-half">
-                    <div class="form-group">
-                        <span class="form-label-bold">Budget</span>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group">
+                        <span class="govuk-label">Budget</span>
                     </div>
                 </div>
             </div>
 
-            <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
-                <div class="column-half">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'form-group-error'">
-                        <label class="form-label" th:for="funders[__${iteration.index}__].funder">
-                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
-                            </th:block>
+            <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funder">
                         </label>
-                        <input required="required" class="form-control width-x-large"
-                               th:errorclass="form-control-error"
+                        <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
+                        </th:block>
+                        <input required="required"
+                               class="govuk-input govuk-input--width-30"
+                               th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funder"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
@@ -46,16 +48,16 @@
                     </div>
                 </div>
 
-                <div class="column-half">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'form-group-error'">
-                        <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
-                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
-                            </th:block>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funderBudget">
                         </label>
+                        <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
+                        </th:block>
                         <input required="required" type="number" min="0"
-                               class="form-control width-x-large"
-                               th:errorclass="form-control-error"
+                               class="govuk-input govuk-input--width-30"
+                               th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funderBudget"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
                                value=""
@@ -65,70 +67,72 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}" />
 
-                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="button button-clear" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="button-clear" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
             </div>
 
 
-            <div class="grid-row" id="dynamic-row-pointer">
-                <div class="column-half">
+            <div class="govuk-grid-row" id="dynamic-row-pointer">
+                <div class="govuk-grid-column-one-half">
                     &nbsp;
                 </div>
-                <div class="column-half">
-                    <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
+                <div class="govuk-grid-column-one-half">
+                    <p class="govuk-heading-s govuk-!-margin-0">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
-                        <button class="buttonlink" name="add-cofunder" data-add-row="cofunder" type="button">+Add co-funder</button>
+                        <button class="button-clear" name="add-cofunder" data-add-row="cofunder" type="button">+Add co-funder</button>
                     </div>
                 </div>
             </div>
 
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-            <fieldset>
-                <legend class="heading-medium">Reporting fields</legend>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">Reporting fields</h2>
+                </legend>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'form-group-error'">
-                    <label class="form-label" for="pafNumber">
-                        <span class="form-label-bold">PAF number</span>
-                    <th:block th:if="${#fields.hasErrors('pafNumber')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
-                    </th:block>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="pafNumber">
+                        PAF number
                     </label>
-                    <input class="form-control width-large"
-                           th:errorclass="form-control-error"
+                    <th:block th:if="${#fields.hasErrors('pafNumber')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            id="pafNumber"
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'form-group-error'">
-                    <label class="form-label" for="budgetCode">
-                        <span class="form-label-bold">Budget code</span>
-                        <th:block th:if="${#fields.hasErrors('budgetCode')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
-                        </th:block>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="budgetCode">
+                        Budget code
                     </label>
-                    <input class="form-control width-large"
+                    <th:block th:if="${#fields.hasErrors('budgetCode')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
                            id="budgetCode"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}" />
                 </div>
 
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'form-group-error'">
-                    <label class="form-label" for="activityCode">
-                        <span class="form-label-bold">Activity code</span>
-                        <th:block th:if="${#fields.hasErrors('activityCode')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
-                        </th:block>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="activityCode">
+                        Activity code
                     </label>
-                    <input class="form-control width-large"
-                           th:errorclass="form-control-error"
+                    <th:block th:if="${#fields.hasErrors('activityCode')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            id="activityCode"
                            th:field="${competitionSetupForm.activityCode}"
@@ -137,16 +141,16 @@
 
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-group-error'">
-                    <label class="form-label" for="competitionCode">
-                        <span class="form-label-bold">Competition code</span>
-                        <th:block th:if="${#fields.hasErrors('competitionCode')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
-                        </th:block>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="competitionCode">
+                        Competition code
                     </label>
+                    <th:block th:if="${#fields.hasErrors('competitionCode')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
+                    </th:block>
                     <input readonly="readonly"
-                           class="form-control width-large readonly-boxed"
-                           th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"
+                           class="govuk-input govuk-input--width-10 readonly-boxed"
+                           th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-input--error'"
                            type="text"
                            id="competitionCode"
                            name="competitionCode"
@@ -154,42 +158,42 @@
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
                            data-autosave-disabled="data-autosave-disabled"/>
-                    <button class="button button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
+                    <button class="button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </fieldset>
 
-        <fieldset th:if="${!model.general.editable}" id="section-2-">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col">Funder</th>
-                    <th scope="col" class="numeric">Budget</th>
+        <fieldset th:if="${!model.general.editable}" id="section-2-" class="govuk-fieldset">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Funder</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Budget</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <td class="numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">Total</td>
+                <tfoot class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Total</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">Total</td>
                 </tr>
                 </tfoot>
-                <tbody>
-                <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
-                        <td th:text="${funder.funder}">Funder Name</td>
-                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
+                        <td class="govuk-table__cell" th:text="${funder.funder}">Funder Name</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
-                        <td th:text="${funder.funder}">Co-Funder Name</td>
-                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
+                        <td class="govuk-table__cell" th:text="${funder.funder}">Co-Funder Name</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
                 </tbody>
             </table>
 
-            <dl class="standard-definition-list extra-margin">
+            <dl class="standard-definition-list govuk-!-margin-top-6">
                 <dt>PAF number</dt>
                 <dd th:text="${competitionSetupForm.pafNumber}">PAF Number</dd>
                 <dt>Budget code</dt>
@@ -200,11 +204,11 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </fieldset>
 
     </form>
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='terms-and-conditions')}">
                 <span class="pagination-label">Previous</span>

@@ -21,8 +21,11 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
  * Utility class to provide common use case wrappers that can be used to wrap callbacks that require either an entity or
  * some failure message if that entity cannot be found.
  */
-public class RestLookupCallbacks {
+public final class RestLookupCallbacks {
 
+    private RestLookupCallbacks() {
+        // private no-args constructor
+    }
     public static <SuccessType> RestResult<SuccessType> find(
             SuccessType result,
             Error failureResponse) {

@@ -1,53 +1,57 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your skills'" />
     </head>
 
-    <body>
+    <body class="govuk-template__body">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
-            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
-                of competition you will be invited to assess. If you would like to amend them or add new ones please
-                contact Innovate UK <a href="mailto:support@innovateuk.ukri.org">support@innovateuk.ukri.org</a>.
-            </p>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='govuk-heading-xl'" />
+                <p class="govuk-body">These innovation areas have been chosen as your current areas of expertise. They will influence the types
+                    of competition you will be invited to assess. If you would like to amend them or add new ones please
+                    contact Innovate UK <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a>.
+                </p>
 
-            <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
-              <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
-                        th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
-                <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
-                  information and communications technology (ICT)
-                </li>
-              </th:block>
-            </ul>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Innovation areas</h2>
 
-            <h2 class="heading-medium">Skill areas</h2>
-            <p id="skillAreas"
-               th:text="${model.skillAreas} ? (${model.skillAreas} != '' ? ${model.skillAreas} : 'None declared') : 'Not answered'" />
+                <ul class="govuk-list govuk-list--bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
+                  <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
+                            th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
+                    <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
+                      information and communications technology (ICT)
+                    </li>
+                  </th:block>
+                </ul>
 
-            <h2 class="heading-medium">Assessor type</h2>
-            <p id="assessorType"
-               th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
+                <h2 class="govuk-heading-m">Skill areas</h2>
+                <p class="govuk-body" id="skillAreas"
+                   th:text="${model.skillAreas} ? (${model.skillAreas} != '' ? ${model.skillAreas} : 'None declared') : 'Not answered'" />
 
-            <div class="form-footer">
-                <div class="form-footer__actions">
-                    <a th:href="@{/profile/skills/edit}">Edit</a>
+                <h2 class="govuk-heading-m">Assessor type</h2>
+                <p class="govuk-body" id="assessorType"
+                   th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
+
+                <div class="form-footer">
+                    <div class="form-footer__actions">
+                        <a th:href="@{/profile/skills/edit}" class="govuk-body govuk-link">Edit</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="extra-margin">
-                <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
-            </div>
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
+                </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

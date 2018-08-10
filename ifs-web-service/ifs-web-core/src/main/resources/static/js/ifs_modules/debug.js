@@ -3,7 +3,7 @@ IFS.core.debug = (function () {
   return {
     init: function () {
       if ((window.location.hostname === 'ifs.local-dev' && window.location.port !== '4000') && window.location.pathname.indexOf('/prototypes') === -1) {
-        jQuery(document).on('dblclick', '#footer', function () {
+        jQuery(document).on('dblclick', '.govuk-footer', function () {
           IFS.core.debug.toggleDebug()
         })
 

@@ -1,47 +1,28 @@
-//temp file for all the worth styles
-//will be cut up in smaller pieces later
-
 //variables
+$govuk-is-ie8: false !default;
+// mising govuk variable TODO remove this when govuk fixes the bug
+$govuk-button-colour: #00823B;
+$ifs-warning-button-colour: #c00000;
+$wide-page-width: 1380px;
 
-$is-ie: false !default;
-
-@mixin media-down($size: false, $max-width: false, $min-width: false) {
-  @if $is-ie == false {
-    @if $size == mobile {
-      @media (max-width: 640px) {
-        @content;
-      }
-    }
-
-    @else if $size == tablet {
-      @media (max-width: 800px) {
-        @content;
-      }
-    }
-  }
-}
+@import "mixins";
 
 @import 'compass/css3/transition';
-@import 'layout/gdsUpgrade';
 @import 'layout/layout';
 @import 'layout/grid';
 @import 'layout/small';
+@import 'layout/gdsUpgrade';
 
-/*
-#Nomensa/Worth Elements
+//IFS components
 
-## List elements
-*/
-
+//List elements
 @import 'components/boxed-list';
 @import 'components/list-overview';
 @import 'components/progress-list';
 @import 'components/task-list';
 @import 'components/link-list';
 
-/*
-## Modals
-*/
+//Modals
 @import 'components/modal';
 
 //Modifiers
@@ -52,7 +33,6 @@ $is-ie: false !default;
 //Custom components
 @import 'components/collapsible-sections';
 @import 'components/highlight-panel';
-@import 'components/submitted-panel';
 @import 'components/progress-indicator';
 @import 'components/event-alert';
 @import 'components/message-alerts';
@@ -64,5 +44,8 @@ $is-ie: false !default;
 @import "components/tabs";
 @import "components/password-toggle";
 @import 'components/wysiwyg';
-@import 'components/user-feedback';
 @import 'components/invites';
+@import "components/flextable";
+@import "components/buttons";
+@import "components/panel";
+@import "components/cookie-message";

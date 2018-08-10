@@ -21,17 +21,17 @@
 
 	<form>
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<h2 class="heading-medium">Project Manager</h2>
+			<h2 class="govuk-heading-m">Project Manager</h2>
 
-			<legend class="visuallyhidden">Project Manager</legend>
+			<legend class="govuk-visually-hidden">Project Manager</legend>
 
-			<p class="form-hint">Who will be the Project Manager for your project?</p>
+			<p class="govuk-hint">Who will be the Project Manager for your project?</p>
 
-			<p>As lead partner you must choose a Project Manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
+			<p class="govuk-body">As lead partner you must choose a Project Manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
-			<div class="form-group extra-margin">
+			<div class="govuk-form-group extra-margin">
 				<label for="pm-name-1" class="block-label selection-button-radio">
 					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" checked="checked" />
 					John Smith
@@ -50,7 +50,7 @@
 				<label for="add-pm" class="block-label selection-button-radio">
 					<input id="add-pm" type="radio" name="pm-name-group" value="Add new team member" />
 					Add new team member
-					<span class="form-hint">A new team member will be invited to join the project</span>
+					<span class="govuk-hint">A new team member will be invited to join the project</span>
 				</label>
 			</div>
 
@@ -58,25 +58,25 @@
 
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('pm')" />
 
-		<p>If you add a new team member this section will remain in a pending state until they have accepted. Once the team member has created their account you can assign them the role of Project Manager.</p>
+		<p class="govuk-body">If you add a new team member this section will remain in a pending state until they have accepted. Once the team member has created their account you can assign them the role of Project Manager.</p>
 
 		<div class="extra-margin">
-			<a href="#" class="button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
+			<a href="#" class="govuk-button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
 		</div>
 
 		<div class="modal-assign" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Assign Project Manager</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Assign Project Manager</h2>
 
-				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
+				<p class="govuk-body">This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 				<div class="alignright-button">
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-					<a href="/prototypes/1575-project-details" class="button">Assign Project Manager</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+					<a href="/prototypes/1575-project-details" class="govuk-button">Assign Project Manager</a>
 				</div>
 
 			</div>
@@ -86,15 +86,15 @@
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Project Manager cannot be assigned</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Project Manager cannot be assigned</h2>
 
-				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
+				<p class="govuk-body"><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 				<div class="alignright-button">
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-					<a href="#" class="button js-close">OK</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+					<a href="#" class="govuk-button js-close">OK</a>
 				</div>
 
 			</div>

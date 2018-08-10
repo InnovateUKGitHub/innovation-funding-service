@@ -46,7 +46,7 @@ Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    45
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    jQuery=.govuk-error-message
 
 User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
@@ -82,7 +82,7 @@ Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    35
-    Then the user should not see the element    css=.error-message
+    Then the user should not see the element    css=.govuk-error-message
 
 
 User still sees warning that the funding section will be reset
@@ -121,7 +121,7 @@ Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    25
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    jQuery=.govuk-error-message
     And the user marks the 'your funding' section as incomplete again
 
 *** Keywords ***
@@ -132,10 +132,10 @@ Custom Suite Setup
 The user marks their organisation as
     [Arguments]    ${org_size}
     the user selects the radio button    financePosition-organisationSize  ${org_size}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element  css=.error-message
+    the user should not see the element  css=.govuk-error-message
     the user should see the text in the page    Please complete your project finances.
 
 the user completes the funding section with funding level
