@@ -12,16 +12,6 @@ jacocoTestReport {
 
 }
 
-test {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-
-    if (!['ifs-data-service', 'ifs-finance-data-service'].contains(project.name)) {
-        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-    }
-}
-
 dependencies {
     if (project.hasProperty("cloud") && project.cloud == "development") {
         compile 'de.codecentric:spring-boot-admin-starter-client:2.0.0'
