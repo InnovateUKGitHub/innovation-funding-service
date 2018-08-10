@@ -21,7 +21,7 @@ IFS.projectSetup.spendProfile = (function () {
       var currentTotal = parseInt(inst.attr('data-calculation-rawvalue'), 10)
       var eligibleTotal = parseInt(totalTd.next().find('input').attr('data-calculation-rawvalue'), 10)
 
-      var categoryName = inst.closest('tr').find('th span:not(".error-message")').text().toLowerCase()
+      var categoryName = inst.closest('tr').find('th span:not(".govuk-error-message")').text().toLowerCase()
       var message = s.message
       message = message.replace('%category%', categoryName)
 

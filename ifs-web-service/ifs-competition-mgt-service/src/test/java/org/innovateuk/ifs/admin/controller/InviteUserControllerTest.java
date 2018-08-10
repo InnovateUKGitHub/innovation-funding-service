@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.InviteUserService;
+import org.innovateuk.ifs.invite.InviteUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

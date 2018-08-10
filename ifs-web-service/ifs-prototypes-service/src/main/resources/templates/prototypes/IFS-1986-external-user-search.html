@@ -10,25 +10,25 @@
 
 <main tabindex="-1" id="content">
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search external users',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkUrl=@{/}"  />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search external users',size='govuk-heading-l'" />
 
 
     <form method="GET">
       <div class="search-filters extra-margin">
-        <fieldset>
-            <div class="grid-row">
-                <div class="column-half">
-                  <div class="form-group">
+        <fieldset class="govuk-fieldset">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  <div class="govuk-form-group">
                     <label class="form-label" for="filterSearch">Look for</label>
-                    <input class="form-control extra-margin-bottom" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
+                    <input class="form-control govuk-!-margin-bottom-6" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
                     <a href="?">Clear</a>
                   </div>
                 </div>
-                <div class="column-half">
-                  <div class="form-group">
+                <div class="govuk-grid-column-one-half">
+                  <div class="govuk-form-group">
                     <label class="form-label" for="filterCategory">in</label>
-                    <select class="form-control" id="filterCategory" name="filterCategory">
+                    <select class="govuk-select" id="filterCategory" name="filterCategory">
                       <option value="name">Name</option>
                       <option value="organisation">Organisation name</option>
                       <option value="email" selected="">Email</option>
@@ -36,41 +36,41 @@
                   </div>
                 </div>
             </div>
-            <div class="grid-row">
-              <div class="column-full">
-                <button class="button no-margin">Search</button>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <button class="govuk-button govuk-!-margin-0">Search</button>
               </div>
             </div>
         </fieldset>
       </div>
     </form>
     <div>
-      <ul class="inline-nav cf">
+      <ul class="govuk-list inline-nav cf">
           <li class="selected"><a th:href="@{/prototypes/IFS-1986-external-user-search.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Registered</a></li>
           <li><a th:href="@{/prototypes/IFS-1986-external-user-search-unregistered.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Unregistered</a></li>
       </ul>
       <p id="result-count">
-          <span class="heading-xlarge no-margin">38</span>
-          <span class="heading-small">registered users</span>
+          <span class="govuk-heading-xl govuk-!-margin-0">38</span>
+          <span class="govuk-heading-s">registered users</span>
       </p>
       <div class="table-overflow">
-          <table>
-              <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Organisation name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Organisation ID</th>
-                    <th scope="col">Status</th>
+          <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="col">Organisation name</th>
+                    <th class="govuk-table__header" scope="col">Email</th>
+                    <th class="govuk-table__header" scope="col">Organisation ID</th>
+                    <th class="govuk-table__header" scope="col">Status</th>
                 </tr>
               </thead>
-              <tbody>
-                  <tr>
-                      <td>Mark Smith</td>
-                      <td>Company Ltd.</td>
-                      <td>mark.smith@companyltd.com</td>
-                      <td>1233</td>
-                      <td>Sent</td>
+              <tbody class="govuk-table__body">
+                  <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Mark Smith</td>
+                      <td class="govuk-table__cell">Company Ltd.</td>
+                      <td class="govuk-table__cell">mark.smith@companyltd.com</td>
+                      <td class="govuk-table__cell">1233</td>
+                      <td class="govuk-table__cell">Sent</td>
                   </tr>
               </tbody>
           </table>
@@ -718,15 +718,15 @@ jQuery(document).ready(function(){
     jQuery("tbody").empty();
     if(filtered.length){
       hasResults(true);
-      jQuery('.heading-xlarge.no-margin').text(filtered.length)
+      jQuery('.govuk-heading-xl.govuk-!-margin-0').text(filtered.length)
       jQuery.each(filtered, function(index,value){
          var html = `
-         <tr>
-            <td>${value.name}</td>
-            <td>${value.organisation}</td>
-            <td>${value.email}</td>
-            <td>${value.id}</td>
-            <td>${value.status}</td>
+         <tr class="govuk-table__row">
+            <td class="govuk-table__cell">${value.name}</td>
+            <td class="govuk-table__cell">${value.organisation}</td>
+            <td class="govuk-table__cell">${value.email}</td>
+            <td class="govuk-table__cell">${value.id}</td>
+            <td class="govuk-table__cell">${value.status}</td>
          </tr>
          `
          jQuery("tbody").append(html);

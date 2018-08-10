@@ -3,11 +3,8 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
 import org.innovateuk.ifs.competition.status.PublicContentStatusText;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
@@ -51,10 +48,8 @@ public class PublicContentStatusDeterminerTest {
     public void getApplicablePublicContentStatusText_openDateInPastAndClosingDateInLessThanTwoWeeksAwayReturnsClosingSoon() throws Exception {
         PublicContentStatusDeterminer publicContentStatusDeterminer = new PublicContentStatusDeterminer();
 
-        ZonedDateTime midday = ZonedDateTime.of(LocalDate.now(), LocalTime.NOON, TimeZoneUtil.UK_TIME_ZONE);
-
-        ZonedDateTime inTwoWeeks = midday.plusDays(14L);
-        ZonedDateTime yesterday = midday.minusDays(1L);
+        ZonedDateTime inTwoWeeks = ZonedDateTime.now().plusDays(14L).minusHours(1);
+        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1L);
 
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource()
                 .withCompetitionOpenDate(yesterday)
