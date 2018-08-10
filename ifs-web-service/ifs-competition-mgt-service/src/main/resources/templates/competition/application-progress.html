@@ -1,253 +1,266 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application progress'" />
     </head>
 
-    <body class="competition-management competition-setup">
+    <body class="govuk-template__body competition-management competition-setup">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
-            <h2 class="heading-medium" th:text="|${model.applicationId}: ${model.applicationName}|">
-                94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
-            </h2>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-            <div class="grid-row extra-margin">
-                <div class="column-quarter">
-                    <h3 class="heading-small">Partners</h3>
-                    <ul>
-                        <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
-                            th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
-                        </li>
-                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
-                    </ul>
+                <h2 class="govuk-heading-m" th:text="|${model.applicationId}: ${model.applicationName}|">
+                    94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
+                </h2>
+
+                <div class="govuk-grid-row govuk-!-margin-top-6">
+                    <div class="govuk-grid-column-one-quarter">
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Partners</h3>
+                        <ul class="govuk-list">
+                            <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
+                                th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
+                            </li>
+                            <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
+                        </ul>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Innovation area</h3>
+                        <span class="govuk-body" th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
+                    </div>
                 </div>
-                <div class="column-quarter">
-                    <h3 class="heading-small">Innovation area</h3>
-                    <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
+                <div class="govuk-body govuk-!-margin-top-3 govuk-!-bottom-top-6">
+                    <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}" class="govuk-link">Review application</a>
                 </div>
-            </div>
-            <div class="extra-margin">
-                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}">Review application</a>
-            </div>
 
-            <h2 class="heading-medium" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
+                <h2 class="govuk-heading-m" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
-            <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
-                <table class="assessors-assigned">
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Innovation area</th>
-                            <th class="numeric" scope="col">Total applications</th>
-                            <th class="numeric" scope="col">Assigned</th>
-                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Notified</th>
-                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Accepted</th>
-                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Started</th>
-                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Submitted</th>
-                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
+                    <table class="govuk-table assessors-assigned">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Assessor</th>
+                                <th class="govuk-table__header" scope="col">Type</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total applications</th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Assigned</th>
+                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Notified</th>
+                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Accepted</th>
+                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Started</th>
+                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Submitted</th>
+                                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.assigned}">
+                                <td class="govuk-table__cell">
+                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">Oliver Romero</a>
+                                </td>
+                                <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
+                                <td class="govuk-table__cell" th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">4</td>
+                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                    <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
+                                    <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
+                                </td>
+                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                    <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
+                                    <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
+                                </td>
+                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                    <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
+                                    <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
+                                </td>
+                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                    <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
+                                    <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
+                                </td>
+                                <td class="govuk-table__cell alignright">
+                                    <a th:if="${assessor.notified}" class="button-secondary govuk-!-margin-0 govuk-link" data-js-modal="remove-assigned-assessor-modal"
+                                       th:href="${removeActionNonJs}"
+                                       th:attr="data-modal-form-action=${removeAction}"
+                                       th:with="
+                                       removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
+                                       removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
+                                       th:unless="${assessor.submitted}">Remove</a>
+                                    <form th:unless="${assessor.notified}" method="post"
+                                          th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}">
+                                        <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
+
+                <th:block th:if="${model.inAssessment}">
+                <h2 class="govuk-heading-m" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
+
+                <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
+                    <table class="govuk-table assessors-rejected">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-150" scope="col">Assessor</th>
+                                <th class="govuk-table__header width-100" scope="col">Type</th>
+                                <th class="govuk-table__header width-200" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Reason</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-80" scope="col">Total applications</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-80" scope="col">Assigned</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="assessor : ${model.rejected}">
+                            <td class="govuk-table__cell">
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                   th:text="${assessor.name}"
+                                   class="govuk-link">Irving Wolfe</a>
+                            </td>
+                            <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
+                            <td class="govuk-table__cell" th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
+                            <td class="govuk-table__cell"><th:block th:text="${assessor.rejectReason.displayLabel}">Too many assignments</th:block><br />
+                                <th:block th:text="${assessor.rejectComment}">You have frequently assigned me too many applications,
+                                    I can and have told you previously that I can only be assigned a reduced amount of applications during the summer.
+                                    I do like reviewing the applications for your competitions, but please do not assign so many to me.</th:block>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">4</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="assessor : ${model.assigned}">
-                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                   th:text="${assessor.name}">Oliver Romero</a></td>
-                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
-                            <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
-                            <td class="numeric" th:text="${assessor.assignedCount}">4</td>
-                            <td th:if="${model.inAssessment}" class="aligncentre">
-                                <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
-                            </td>
-                            <td th:if="${model.inAssessment}" class="aligncentre">
-                                <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
-                            </td>
-                            <td th:if="${model.inAssessment}" class="aligncentre">
-                                <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
-                            </td>
-                            <td th:if="${model.inAssessment}" class="aligncentre">
-                                <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
-                            </td>
-                            <td class="alignright">
-                                <a th:if="${assessor.notified}" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
-                                   th:href="${removeActionNonJs}"
-                                   th:attr="data-modal-form-action=${removeAction}"
-                                   th:with="
-                                   removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
-                                   removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
-                                   th:unless="${assessor.submitted}">Remove</a>
-                                <form th:unless="${assessor.notified}" method="post"
-                                      th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}">
-                                    <button type="submit" class="button-secondary no-margin">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
 
-            <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
-
-            <th:block th:if="${model.inAssessment}">
-            <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
-
-            <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
-                <table class="assessors-rejected">
-                    <thead>
-                        <tr>
-                            <th class="width-medium" scope="col">Assessor</th>
-                            <th class="width-small-medium" scope="col">Type</th>
-                            <th class="width-large" scope="col">Innovation area</th>
-                            <th scope="col">Reason</th>
-                            <th class="numeric width-small" scope="col">Total applications</th>
-                            <th class="numeric width-small" scope="col">Assigned</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="assessor : ${model.rejected}">
-                        <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                               th:text="${assessor.name}">Irving Wolfe</a></td>
-                        <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
-                        <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                        <td><th:block th:text="${assessor.rejectReason.displayLabel}">Too many assignments</th:block><br />
-                            <th:block th:text="${assessor.rejectComment}">You have frequently assigned me too many applications,
-                                I can and have told you previously that I can only be assigned a reduced amount of applications during the summer.
-                                I do like reviewing the applications for your competitions, but please do not assign so many to me.</th:block>
-                        </td>
-                        <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
-                        <td class="numeric" th:text="${assessor.assignedCount}">4</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
 
-            <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
+                <h2 class="govuk-heading-m" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
-            <div class="table-overflow" th:unless="${#lists.isEmpty(model.previouslyAssigned)}">
-                <table class="assessors-previous">
-                    <thead>
-                        <tr>
-                            <th class="width-large" scope="col">Assessor</th>
-                            <th class="width-small" scope="col">Type</th>
-                            <th scope="col">Innovation area</th>
-                            <th class="numeric width-small-medium" scope="col">Total applications</th>
-                            <th class="numeric width-small-medium" scope="col">Assigned</th>
-                            <th class="width-small" scope="col"><span class="visuallyhidden">Reassign</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="assessor : ${model.previouslyAssigned}">
-                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                   th:text="${assessor.name}">Dave Smith</a></td>
-                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
-                            <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
-                            <td class="numeric" th:text="${assessor.assignedCount}">4</td>
-                            <td>
-                                <form method="post"
-                                      th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
-                                    <button type="submit" class="button-secondary no-margin">Reassign</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="table-overflow" th:unless="${#lists.isEmpty(model.previouslyAssigned)}">
+                    <table class="govuk-table assessors-previous">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-200" scope="col">Assessor</th>
+                                <th class="govuk-table__header width-80" scope="col">Type</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Total applications</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assigned</th>
+                                <th class="govuk-table__header width-80" scope="col"><span class="govuk-visually-hidden">Reassign</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.previouslyAssigned}">
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">Dave Smith</a></td>
+                                <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
+                                <td class="govuk-table__cell" th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">4</td>
+                                <td class="govuk-table__cell">
+                                    <form method="post"
+                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
+                                        <button type="submit" class="button-secondary govuk-!-margin-0">Reassign</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
-            </th:block>
-            <h2 class="heading-medium">Available assessors</h2>
+                </th:block>
+                <h2 class="govuk-heading-m">Available assessors</h2>
 
-            <div class="search-filters extra-margin">
-                <form action="#" method="GET">
-                    <fieldset>
-                        <div class="grid-row">
-                            <div class="column-two-thirds">
-                                <div class="form-group">
-                                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                                    <select th:field="${model.filterInnovationArea}"
-                                            class="form-control"
-                                            aria-labelledby="innovation-area"
-                                            id="filterInnovationArea">
-                                        <option th:selected="${model.filterInnovationArea} == null" value="">--</option>
-                                        <optgroup th:each="innovationSector : ${model.innovationSectors}" th:label="${innovationSector.name}">
-                                            <option th:each="innovationArea : ${innovationSector.children}"
-                                                    th:value="${innovationArea.id}"
-                                                    th:text="${innovationArea.name}"
-                                                    th:selected="${model.filterInnovationArea} == ${innovationArea.id}">
-                                            </option>
-                                        </optgroup>
-                                    </select>
+                <div class="search-filters govuk-!-margin-top-6">
+                    <form action="#" method="GET">
+                        <fieldset class="govuk-fieldset">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-two-thirds">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label"
+                                               for="filterInnovationArea">Innovation area</label>
+                                        <select th:field="${model.filterInnovationArea}"
+                                                class="govuk-select"
+                                                aria-labelledby="innovation-area"
+                                                id="filterInnovationArea">
+                                            <option th:selected="${model.filterInnovationArea} == null" value="">--</option>
+                                            <optgroup th:each="innovationSector : ${model.innovationSectors}" th:label="${innovationSector.name}">
+                                                <option th:each="innovationArea : ${innovationSector.children}"
+                                                        th:value="${innovationArea.id}"
+                                                        th:text="${innovationArea.name}"
+                                                        th:selected="${model.filterInnovationArea} == ${innovationArea.id}">
+                                                </option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <a href="?" class="govuk-body govuk-link">Clear all filters</a>
                                 </div>
-                                <a href="?">Clear all filters</a>
+                                <div class="govuk-grid-column-one-third">
+                                    <button class="govuk-button">Filter</button>
+                                </div>
                             </div>
-                            <div class="column-third">
-                                <button class="button">Filter</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
-            <div class="grid-row sorting">
-                <div class="column-two-thirds">
-                    <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="heading-small">Assessors</span></p>
+                        </fieldset>
+                    </form>
                 </div>
-            </div>
 
-            <div class="table-overflow">
-                <table class="assessors-available">
-                    <thead>
-                        <tr>
-                            <th class="width-large" scope="col">Assessor</th>
-                            <th scope="col">Skill areas</th>
-                            <th class="numeric width-small-medium" scope="col">Total applications</th>
-                            <th class="numeric width-small-medium" scope="col">Assigned</th>
-                            <th class="numeric width-small-medium" scope="col">Submitted</th>
-                            <th class="width-small" scope="col"><span class="visuallyhidden">Actions</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="assessor : ${model.available}">
-                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                   th:text="${assessor.name}">John Barnes</a></td>
-                            <td th:text="${assessor.skillAreas}">skills</td>
-                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">4</td>
-                            <td class="numeric" th:text="${assessor.assignedCount}">2</td>
-                            <td class="numeric" th:text="${assessor.submittedApplications}">1</td>
-                            <td>
-                                <form method="post"
-                                      th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
-                                    <button type="submit" class="button-secondary no-margin">Assign</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(model.available)}">
-                            <td colspan="6">No available assessors found.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="govuk-body govuk-grid-row sorting">
+                    <div class="govuk-grid-column-two-thirds">
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Assessors</span>
+                    </div>
+                </div>
 
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <div class="table-overflow">
+                    <table class="govuk-table assessors-available">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-200" scope="col">Assessor</th>
+                                <th class="govuk-table__header" scope="col">Skill areas</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Total applications</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assigned</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Submitted</th>
+                                <th class="govuk-table__header width-80" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.available}">
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">John Barnes</a></td>
+                                <td class="govuk-table__cell" th:text="${assessor.skillAreas}">skills</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.totalApplicationsCount}">4</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">2</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.submittedApplications}">1</td>
+                                <td class="govuk-table__cell">
+                                    <form method="post"
+                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
+                                        <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.available)}">
+                                <td class="govuk-table__cell" colspan="6">No available assessors found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />

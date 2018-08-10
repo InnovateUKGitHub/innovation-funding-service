@@ -1,57 +1,63 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications to assessors'" />
 </head>
 
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Allocate applications to assessors',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Allocate applications to assessors',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-    <div class="grid-row sorting">
-        <div class="column-half">
-            <span class="heading-xlarge" th:text="${model.pagination.totalCount}">20</span>
-            <span class="heading-small">assessors</span>
+        <div class="govuk-body govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half">
+                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
+            </div>
         </div>
-    </div>
 
-    <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Assessor</th>
-                <th scope="col">Skill areas</th>
-                <th class="numeric width-small" scope="col">Allocated</th>
-                <th scope="col"><span class="visuallyhidden">button</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="assessor : ${model.assessors}">
-                <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}/skills(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
-                <td th:text="${assessor.skillAreas}">skill areas</td>
-                <td th:text="${assessor.numberOfAllocatedApplications}" class="numeric"></td>
-                <td class="alignright">
-                    <a class="button-secondary no-margin"
-                       th:href="@{/assessment/interview/competition/{cid}/assessors/unallocated-applications/{aid}(cid=${model.competitionId},aid=${assessor.id})}"
-                       th:text="Allocate">
-                        Allocate
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="table-overflow">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Skill areas</th>
+                    <th class="govuk-table__header govuk-table__header--numeric width-80" scope="col">Allocated</th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">button</span></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
+                    <td class="govuk-table__cell">
+                        <a th:href="@{/competition/{cid}/assessors/profile/{aid}/skills(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}"
+                           th:text="${assessor.name}"
+                           class="govuk-link" />
+                    </td>
+                    <td class="govuk-table__cell" th:text="${assessor.skillAreas}">skill areas</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.numberOfAllocatedApplications}" />
+                    <td class="govuk-table__cell alignright">
+                        <a class="button-secondary govuk-!-margin-0"
+                           th:href="@{/assessment/interview/competition/{cid}/assessors/unallocated-applications/{aid}(cid=${model.competitionId},aid=${assessor.id})}"
+                           th:text="Allocate">
+                            Allocate
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

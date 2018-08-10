@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Resend invite to project manager'" />
 </head>
-<body>
+<body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" />
 
-    <form th:action="@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" method="POST" >
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='heading-xlarge'" />
-        <h2 class="heading-medium no-margin">Resend invite to team member</h2>
-        <p>They will be resent an email inviting them to join the project.</p>
-        <hr />
-        <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" th:value="${model.inviteId}"/>
-        <button class="button" type="submit">Resend</button>
-    </form>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form th:action="@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" method="POST" >
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='govuk-heading-xl'" />
+            <h2 class="govuk-heading-m govuk-!-margin-0">Resend invite to team member</h2>
+            <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" th:value="${model.inviteId}"/>
+            <button class="govuk-button" type="submit">Resend</button>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

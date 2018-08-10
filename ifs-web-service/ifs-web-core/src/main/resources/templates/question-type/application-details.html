@@ -3,12 +3,14 @@
 <th:block th:fragment="read-only(model)"  th:with="competition=${model.competition}">
 
     <th:block th:if="${model.complete and !model.applicationIsClosed}">
-        <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
+        <div class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Application details are marked as complete</p>
+        </div>
     </th:block>
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl class="font-xsmall">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <dl class="govuk-list govuk-!-font-size-16">
                 <dt>Competition name</dt>
                 <dd th:text="${competition.name}"></dd>
                 <dt>When do you wish to start your project?</dt>
@@ -35,16 +37,16 @@
                 </th:block>
             </dl>
         </div>
-        <div class="column-half">
+        <div class="govuk-grid-column-one-half">
             <th:block th:if="${showApplicationTeamLink}">
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}" class="govuk-link">
                             view contributors and collaborators
                         </a>
                     </li>
                     <li>
-                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}">
+                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}" class="govuk-link">
                             view the grant terms and conditions
                         </a>
                     </li>

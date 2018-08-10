@@ -1,58 +1,62 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" />
 </head>
-<body class="error">
+<body class="govuk-template__body error">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thymeleaf rendering error',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thymeleaf rendering error',size='govuk-heading-l'" />
 
 
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
-  <!--/*
-    <p th:if="${timestamp}" id='created'>
-        <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
-    </p> */-->
+        <p class="govuk-body" th:if="${url}">
+            <b>Page:</b> <span th:text="${url}">Page URL</span>
+        </p>
+      <!--/*
+        <p class="govuk-body" th:if="${timestamp}" id='created'>
+            <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
+        </p> */-->
 
-    <p th:if="${status}">
-        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
-            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
-    </p>
+        <p class="govuk-body" th:if="${status}">
+            <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+                th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+        </p>
 
-    <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
-           ${exception} or ${message} are set internally by Spring Boot. */-->
-    <div th:if="(${message} and ${message.length() != 0})">
-        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
-		<span th:if="${message} and ${message.length() != 0}"
-              th:text="${message}">message ...</span>
+        <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
+               ${exception} or ${message} are set internally by Spring Boot. */-->
+        <div th:if="(${message} and ${message.length() != 0})">
+            <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
+            <span th:if="${message} and ${message.length() != 0}"
+                  th:text="${message}">message ...</span>
+            </pre>
+        </div>
+
+        <p class="govuk-body" th:unless="${exception} or (${message} and ${message.length() != 0})">
+            Cause unknown (no exception details available)
+        </p>
+       <!--/*
+        <p class="govuk-body">
+            You are seeing this error page due to Spring Boot (which returns a
+            view called "error" in response to uncaught exceptions. Since we are
+            using Thymeleaf this corresponds to the template
+            <code>error.html</code>
+            )
+        </p> */-->
+
+        <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
+            Stack trace will be printed here...
         </pre>
-    </div>
 
-    <p th:unless="${exception} or (${message} and ${message.length() != 0})">
-        Cause unknown (no exception details available)
-    </p>
-   <!--/*
-    <p>
-        You are seeing this error page due to Spring Boot (which returns a
-        view called "error" in response to uncaught exceptions. Since we are
-        using Thymeleaf this corresponds to the template
-        <code>error.html</code>
-        )
-    </p> */-->
-
-    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
-        Stack trace will be printed here...
-    </pre>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
