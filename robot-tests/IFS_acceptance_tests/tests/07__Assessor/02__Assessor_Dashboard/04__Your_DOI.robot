@@ -6,6 +6,8 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
 ...
 ...               IFS-3941 Introduce date to DOI
+...
+...               IFS-3942 Assessor profile view - Assessor
 Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
@@ -20,23 +22,24 @@ Back to the dashboard link
     ...
     ...    INFUND-5432
     ...
-    ...    INFUND-7060
-    Given The user should see the element    jQuery=.message-alert a:contains("your declaration of interest")    #this checks the alert message on the top of the page
-    When the user clicks the button/link    jQuery=h2:contains("Your assessor details") + ul a:contains("your declaration of interest")
-    And The user should see the text in the element    css=p:nth-child(3)    Not answered
-    And The user should see the text in the element    css=p:nth-child(13)    Not answered
+    ...    INFUND-7060  IFS-3942
+    Given The user should see the element  jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
+    When the user clicks the button/link   link = your details
+    And the user clicks the button/link    link = DOI
+    And The user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
+    And The user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Not answered")
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715  IFS-1947
     ...
-    ...    INFUND-7060
+    ...    INFUND-7060  IFS-3942
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=your details
-    And the user clicks the button/link      link=DOI
-    When the user clicks the button/link     id=editDOI
-    When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
+    Given the user clicks the button/link    link = your details
+    And the user clicks the button/link      link = DOI
+    When the user clicks the button/link     id = editDOI
+    When the user clicks the button/link     jQuery = button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages triggered
 
 Server-side when Yes selected at yes/no
@@ -90,8 +93,9 @@ Successful save for the DOI form
     When the user clicks the button/link   jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
-    And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And the user clicks the button/link    jQuery=a:contains("Edit")
+    And the user clicks the button/link    link = your details
+    And the user clicks the button/link    link = DOI
+    When the user clicks the button/link   id = editDOI
     And the user should see the correct inputs in the declaration form
 
 the user checks for the update DOI message

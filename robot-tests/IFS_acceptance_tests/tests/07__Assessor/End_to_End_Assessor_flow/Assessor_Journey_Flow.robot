@@ -82,7 +82,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Accepted
     When the user clicks the button/link   link=EtoE
-    And the user should see the element    jQuery=.govuk-heading-s:contains("Innovation areas") + ul:contains("Emerging technology")
+    And the user should see the element    jQuery = h3:contains("Innovation areas") ~ div th:contains("Emerging and enabling")
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link  link=Dashboard
