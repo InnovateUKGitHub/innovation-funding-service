@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assess competition'" />
     </head>
@@ -8,23 +8,27 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment interview panel',size='heading-xlarge'" />
-            <p th:text="|You have been invited to the assessment interview panel for: '${model.competitionName}'.|"></p>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
 
-            <div class="grid-row">
-                <section class="column-half">
-                    <div>
-                        <p class="heading-medium">Your email address is linked to an existing account.</p>
-                        <p>Please sign in with your existing account.</p>
-                        <p><a th:href="@{/invite-accept/interview/{inviteHash}/accept(inviteHash=${model.panelInviteHash})}">Click here to sign in</a></p>
-                    </div>
-                </section>
-                <section class="column-half"></section>
-            </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment interview panel',size='govuk-heading-xl'" />
+                <p class="govuk-body" th:text="|You have been invited to the assessment interview panel for: '${model.competitionName}'.|"></p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <div class="govuk-grid-row">
+                    <section class="govuk-grid-column-one-half">
+                        <div>
+                            <p class="govuk-heading-m">Your email address is linked to an existing account.</p>
+                            <p class="govuk-body">Please sign in with your existing account.</p>
+                            <p class="govuk-body"><a th:href="@{/invite-accept/interview/{inviteHash}/accept(inviteHash=${model.panelInviteHash})}" class="govuk-link">Click here to sign in</a></p>
+                        </div>
+                    </section>
+                    <section class="govuk-grid-column-one-half"></section>
+                </div>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

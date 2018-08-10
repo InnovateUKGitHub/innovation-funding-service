@@ -35,4 +35,4 @@ The values it can have are:
 
 ## Getting the status of an input
 
-You can also get the status of an input within the scope of a <div class="form-group">, this can be done by setting data-{constraint}-status on an element. It will then give a data-status="true" or data-status="false" back on the same element. For an example of this you can see `Advanced use cases` in the html.  
+You can also get the status of an input within the scope of a <div class="govuk-form-group">, this can be done by setting data-{constraint}-status on an element. It will then give a data-status="true" or data-status="false" back on the same element. For an example of this you can see `Advanced use cases` in the html.

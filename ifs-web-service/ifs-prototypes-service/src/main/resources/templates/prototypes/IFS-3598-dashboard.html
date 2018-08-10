@@ -17,7 +17,7 @@
 
     <main id="content">
         <div class="my-applications">
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 Dashboard
             </h1>
 
@@ -25,11 +25,11 @@
 
         <section class="in-progress">
             <div class="progress-list">
-                <h2 class="heading-medium">Applications in progress</h2>
+                <h2 class="govuk-heading-m">Applications in progress</h2>
                 <ul>
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small">
+                            <h3 class="govuk-heading-s">
                                 <a th:href="${type == 'collaborator' ? '/prototypes/IFS-3599-collaborator-application' : '/prototypes/IFS-3598-lead-application'}"
                                    th:text="${type == 'collaborator' ? 'Evolution of the global phosphorous cycle' : 'Untitled application (start here)'}">Application title</a>
                             </h3>
@@ -41,7 +41,7 @@
                         <div class="status">
 
                             <div class="status-msg msg-deadline">
-                                <strong class="bold-medium days-remaining">729</strong> <br>
+                                <strong class="govuk-!-font-weight-bold-medium days-remaining">729</strong> <br>
                                 days left <br>
                                 Deadline
                                 <span class="day">3</span>

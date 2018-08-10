@@ -1,37 +1,40 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile summary'" />
 </head>
-<body class="competition-management project-management finance-checks-confirm">
+<body class="govuk-template__body competition-management project-management finance-checks-confirm">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-  <div class="grid-row">
-      <div class="column-two-thirds">
-        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
-        </th:block>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
+            </th:block>
+          </div>
+          <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
+              <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance Checks</h2>
+          </div>
       </div>
-      <div class="column-third alignright extra-margin">
-          <h2 class="bold-small blue-block">Finance Checks</h2>
-      </div>
-  </div>
-  <hr/>
+      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-    <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
-      <h2 class="heading-medium no-margin">Generate spend profile</h2>
-  		<p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
-  		<p>Partners will be notified that they can now create their spend profile.</p>
-			<button class="button large extra-margin">Generate spend profile</button>
-    </form>
+        <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
+          <h2 class="govuk-heading-m govuk-!-margin-0">Generate spend profile</h2>
+            <p class="govuk-body">This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+            <p class="govuk-body">Partners will be notified that they can now create their spend profile.</p>
+                <button class="button govuk-!-margin-top-6">Generate spend profile</button>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

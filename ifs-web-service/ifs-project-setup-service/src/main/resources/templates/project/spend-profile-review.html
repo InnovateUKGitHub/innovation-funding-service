@@ -1,71 +1,75 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
-<body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
+<body class="govuk-template__body app-overview" th:classappend="${(param.view != null and param.view[0] == 'full' ? 'wide-page' : '')}">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-    <th:block th:if="${model.submitted and !model.approved}">
-        <div class="success-alert extra-margin-bottom">
-            <p><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
-        </div>
-    </th:block>
-
-    <th:block th:if="${model.submitted and model.approved}">
-        <div class="success-alert extra-margin-bottom">
-            <p><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
-        </div>
-    </th:block>
-
-    <p>This overview shows the spend profile status of each organisation in your project.</p>
-
-    <th:block th:if="${model.submitted}">
-        <h2 class="heading-medium">Spend profile</h2>
-        <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
-           You may view these profiles.</p>
-        <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
-            You may view these profiles.</p>
-    </th:block>
-
-    <h2 class="heading-medium">Partner progress</h2>
-
-    <ul class="task-list">
-        <li th:unless="${#lists.isEmpty(model.editablePartners)}"
-            th:each="partner : ${model.editablePartners}">
-            <div class="task">
-                <h3 class="heading-small">
-                    <a th:if="${partner.value.showEditLinkToUser}"
-                       th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
-                       th:text="${partner.value.organisationName}" />
-                    <th:block th:unless="${partner.value.showEditLinkToUser}"
-                              th:text="${partner.value.organisationName}" />
-                    <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                </h3>
+        <th:block th:if="${model.submitted and !model.approved}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body"><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
             </div>
-            <div th:if="${partner.value.markedComplete}" class="task-status-complete">
-                <span>Complete</span>
+        </th:block>
+
+        <th:block th:if="${model.submitted and model.approved}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
             </div>
-            <span th:unless="${partner.value.markedComplete}" class="notification">
-                In progress
-            </span>
-        </li>
-    </ul>
+        </th:block>
 
-    <th:block th:if="${model.markAsComplete and !model.submitted}">
-        <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
-    </th:block>
+        <p class="govuk-body">This overview shows the spend profile status of each organisation in your project.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:if="${model.submitted}">
+            <h2 class="govuk-heading-m">Spend profile</h2>
+            <p class="govuk-body" th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
+               You may view these profiles.</p>
+            <p class="govuk-body" th:if="${model.approved}">All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
+                You may view these profiles.</p>
+        </th:block>
+
+        <h2 class="govuk-heading-m">Partner progress</h2>
+
+        <ul class="task-list">
+            <li th:unless="${#lists.isEmpty(model.editablePartners)}"
+                th:each="partner : ${model.editablePartners}">
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <a th:if="${partner.value.showEditLinkToUser}"
+                           th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
+                           th:text="${partner.value.organisationName}"
+                           class="govuk-link"/>
+                        <th:block th:unless="${partner.value.showEditLinkToUser}"
+                                  th:text="${partner.value.organisationName}" />
+                        <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </h3>
+                </div>
+                <div th:if="${partner.value.markedComplete}" class="task-status-complete">
+                    <span>Complete</span>
+                </div>
+                <span th:unless="${partner.value.markedComplete}" class="notification">
+                    In progress
+                </span>
+            </li>
+        </ul>
+
+        <th:block th:if="${model.markAsComplete and !model.submitted}">
+            <p class="govuk-body govuk-!-margin-top-6">Please review each partner's spend profile once they are marked as complete.</p>
+            <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="govuk-button">Review and send total project spend profile</a>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
