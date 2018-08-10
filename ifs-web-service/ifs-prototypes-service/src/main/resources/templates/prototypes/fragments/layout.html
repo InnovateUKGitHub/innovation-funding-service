@@ -5,12 +5,12 @@
 
 <div th:fragment="prototype-sprint-nav">
 
-    <header class="no-margin-bottom ">
-        <h1 class="heading-xlarge no-margin-bottom">Prototype index</h1>
+    <header class="govuk-!-margin-bottom-0">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">Prototype index</h1>
         <h2 class="subtitle">Directory of front end code to show user journeys</h2>
     </header>
 
-    <ul class="inline-nav extra-margin">
+    <ul class="govuk-list inline-nav extra-margin">
         <li th:class="${(sprint == 'decouple' ? 'selected' : '')}"><a href="/prototypes/index">Decoupling org from user</a></li>
         <li th:class="${(sprint == 'assessorJourney' ? 'selected' : '')}"><a href="/prototypes/index-assessor-journey">Assessor journey</a></li>
         <li th:class="${(sprint == 'separateServices' ? 'selected' : '')}"><a href="/prototypes/index-separate-services">Separate services</a></li>
@@ -23,12 +23,12 @@
 
 <div th:fragment="prototype-sprint-nav-archive">
 
-    <header class="no-margin-bottom ">
-        <h1 class="heading-xlarge no-margin-bottom">Prototype index</h1>
+    <header class="govuk-!-margin-bottom-0 ">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">Prototype index</h1>
         <h2 class="subtitle">Directory of front end code to show user journeys</h2>
     </header>
 
-    <ul class="inline-nav extra-margin">
+    <ul class="govuk-list inline-nav extra-margin">
         <li th:class="${(sprint == 'sprint1' ? 'selected' : '')}"><a href="/prototypes/index">1</a></li>
         <li th:class="${(sprint == 'sprint2' ? 'selected' : '')}"><a href="/prototypes/index-sprint2">2</a></li>
         <li th:class="${(sprint == 'sprint3' ? 'selected' : '')}"><a href="/prototypes/index-sprint3">3</a></li>
@@ -52,7 +52,7 @@
 <!-- ===========================Place: admin main <header>  =========================== -->
 
 <div th:fragment="prototype-admin-header">
-    <header role="banner" id="global-header">
+    <header class="govuk-header " role="banner" data-module="header">
         <th:block th:insert="fragments/elements :: notification" />
         <div class="header-wrapper">
             <div class="header-global header-admin">
@@ -83,7 +83,7 @@
     </header>
 
     <div class="grid-container phase-banner">
-        <p>
+        <p class="govuk-body">
             <strong class="phase-tag">BETA</strong>
             <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
         </p>
@@ -136,7 +136,7 @@
     </header>
 
     <div class="grid-container phase-banner">
-        <p>
+        <p class="govuk-body">
             <strong class="phase-tag">BETA</strong>
             <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
         </p>
@@ -189,7 +189,7 @@
     </header>
 
     <div class="grid-container phase-banner">
-        <p>
+        <p class="govuk-body">
             <strong class="phase-tag">BETA</strong>
             <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
         </p>
@@ -217,7 +217,7 @@
                 <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
                 <div class="pie-overlay">
                     <span class="day">2</span>
-                    <span class="visuallyhidden">Days left</span>
+                    <span class="govuk-visually-hidden">Days left</span>
                 </div>
             </div>
     	</div>
@@ -234,7 +234,7 @@
               <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
               <div class="pie-overlay">
                   <span class="day">2</span>
-                  <span class="visuallyhidden">Days left</span>
+                  <span class="govuk-visually-hidden">Days left</span>
               </div>
           </div>
       </div>
@@ -251,7 +251,7 @@
                 <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
                 <div class="pie-overlay">
                     <span class="day">2</span>
-                    <span class="visuallyhidden">Days left</span>
+                    <span class="govuk-visually-hidden">Days left</span>
                 </div>
             </div>
         </div>
@@ -261,24 +261,24 @@
 <!-- ==============Assign questions in application summary  ====================== -->
 
 <div th:fragment="prototype-assign-question">
-	<div class="column-third assign-container collapsible">
+	<div class="govuk-grid-column-one-third assign-container collapsible">
         <div class="assign-button">
             Assigned to: <strong>You</strong>
         </div>
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_9">Pete Tom</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_5">Jessica Doe</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_1">Steve Smith</button>
 
                 </li>
             </ul>
@@ -289,24 +289,24 @@
 <!-- ==============Reassigned question to you in application summary  ====================== -->
 
 <div th:fragment="prototype-reassigned-question-to-you">
-    <div class="column-third assign-container collapsible">
+    <div class="govuk-grid-column-one-third assign-container collapsible">
         <div class="assign-button">
             Reassigned to: <strong>You</strong>
         </div>
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_9">Pete Tom</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_5">Jessica Doe</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_1">Steve Smith</button>
 
                 </li>
             </ul>
@@ -318,24 +318,24 @@
 <!-- ==============Reassign question in application summary  ====================== -->
 
 <div th:fragment="prototype-reassign-question">
-	<div class="column-third assign-container collapsible">
+	<div class="govuk-grid-column-one-third assign-container collapsible">
         <div class="assign-button">
             Assigned to: <strong>Jessica Doe</strong>
         </div>
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_9">Pete Tom</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_5">Jessica Doe</button>
 
                 </li>
                 <li>
-                    <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
+                    <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="1_1">Steve Smith</button>
 
                 </li>
             </ul>
@@ -347,7 +347,7 @@
 <!-- ========Assigned questions in application summary - collaborator view======= -->
 
 <div th:fragment="prototype-question-collaborator-assigned-to-me">
-    <div class="column-third assign-container">
+    <div class="govuk-grid-column-one-third assign-container">
         <div>
             Assigned to you
         </div>
@@ -358,7 +358,7 @@
 <!-- ========Assigned questions in application summary - collaborator view======= -->
 
 <div th:fragment="prototype-question-collaborator-assigned-to-lead">
-    <div class="column-third assign-container">
+    <div class="govuk-grid-column-one-third assign-container">
         <div>
             Assigned to John Smith
         </div>
@@ -390,15 +390,15 @@
 
     <div class="assign-team">
       <h3>Reassign question</h3>
-      <ul class="list list-bullet">
+      <ul class="govuk-list govuk-list--bullet">
           <li>
-              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Pete Tom">Pete Tom</button>
+              <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="Pete Tom">Pete Tom</button>
           </li>
           <li>
-              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Jessica Doe">Jessica Doe</button>
+              <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="Jessica Doe">Jessica Doe</button>
           </li>
           <li>
-              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Steve Smith">Steve Smith</button>
+              <button type="submit" name="assign_question" class="button-clear" formaction="#question-1" value="Steve Smith">Steve Smith</button>
           </li>
       </ul>
     </div>
@@ -416,14 +416,14 @@
 <!-- ================== Application progress snippet  =========================== -->
 
 <div th:fragment="prototype-application-progress">
-    <h3 class="heading-medium no-margin">Application progress:</h3>
+    <h3 class="govuk-heading-m govuk-!-margin-0">Application progress:</h3>
 
     <div class="progress-container">
         <div class="progress-indicator">
             <div class="progress" aria-valuemin="0" aria-valuemax="100" role="progressbar" aria-valuenow="55" style="width:55%">
                 <div>
                     55%
-                    <span class="visuallyhidden"> Complete</span>
+                    <span class="govuk-visually-hidden"> Complete</span>
                 </div>
             </div>
         </div>

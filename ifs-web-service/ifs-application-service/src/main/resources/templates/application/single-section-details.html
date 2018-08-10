@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
 
 <th:block
@@ -12,9 +12,12 @@
         <li th:with="questionAssignee=(${questionAssignees.get(question.id)})"
             th:id="'form-input-'+${question.id}">
             <div class="task">
-                <h3 class="heading-small">
+                <h3 class="govuk-heading-s">
                     <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${applicationId},questionId=${question.id})}"
-                       th:text="|${questionNumber}${question.shortName}|" th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''" />
+                       th:text="|${questionNumber}${question.shortName}|"
+                       th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
+                       class="govuk-link" />
+
                 </h3>
             </div>
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
@@ -40,7 +43,7 @@
             </th:block>
             <div th:if="${model.completed.completedOrMarkedAsComplete(question, section)}"
                  class="task-status-complete">
-                <span class="visuallyhidden" th:text="${section.name}"></span>
+                <span class="govuk-visually-hidden" th:text="${section.name}"></span>
                 <span>Complete</span>
             </div>
         </li>

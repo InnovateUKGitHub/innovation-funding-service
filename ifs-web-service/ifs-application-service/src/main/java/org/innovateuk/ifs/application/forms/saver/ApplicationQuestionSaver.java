@@ -99,7 +99,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
         if (errorsSoFar.hasFieldErrors(String.valueOf(questionId))) {
             applicationMessages.add(new ValidationMessages(
-                    fieldError(questionId + "", "", MARKED_AS_COMPLETE_INVALID_DATA_KEY)));
+                    fieldError(Long.toString(questionId), "", MARKED_AS_COMPLETE_INVALID_DATA_KEY)));
         }
 
         ValidationMessages combinedMessages = collectValidationMessages(applicationMessages);

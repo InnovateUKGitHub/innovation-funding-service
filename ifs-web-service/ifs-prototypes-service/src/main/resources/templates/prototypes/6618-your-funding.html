@@ -24,14 +24,14 @@
         <form>
 
           <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-          	<div class="form-group">
+          	<div class="govuk-form-group">
           		<label class="form-label" for="other-funding">
-          			<span class="heading-medium">Enter your funding level (maximum 50%)</span>
-          			<span class="form-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
+          			<span class="govuk-heading-m">Enter your funding level (maximum 50%)</span>
+          			<span class="govuk-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
           		</label>
           		<details>
           		    <summary><span class="summary">What funding level should I enter?</span></summary>
-          		    <div class="panel">
+          		    <div class="govuk-body panel">
           		    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
           		    </div>
           		</details>
@@ -47,13 +47,13 @@
           </th:block>
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <h2 class="heading-medium no-margin-bottom">Other funding for this project</h2>
-            	<fieldset>
-            		<legend class="visuallyhidden">Other funding for this project</legend>
-            		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other funding for this project</h2>
+            	<fieldset class="govuk-fieldset">
+            		<legend class="govuk-visually-hidden">Other funding for this project</legend>
+            		<p class="govuk-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
             		<details>
             			    <summary><span class="summary">What should I include in other funding?</span></summary>
-            			    <div class="panel">
+            			    <div class="govuk-body panel">
             			    	You must provide details of other public funding that you are currently applying for (or have already applied for) in relation to this project. You do not need to include completed grants that were used to reach this point in the development process. This information is important as other public sector support counts as part of the funding you can receive for your project.
             			    </div>
             		</details>
@@ -70,28 +70,28 @@
 
             		<div class="question" id="finance-other-funding">
             			<div data-finance-subsection-table-container="34">
-            			    <div class="form-group">
-            			        <table>
-            			            <thead>
-            			                <tr>
+            			    <div class="govuk-form-group">
+            			        <table class="govuk-table">
+            			            <thead class="govuk-table__head">
+            			                <tr class="govuk-table__row">
             			                    <th scope="col" id="funding-source">Source of funding</th>
             			                    <th scope="col" class="width-large" id="funding-date">Date secured</th>
             			                    <th scope="col" class="numeric width-medium" id="funding-amount">Funding amount (&pound;)</th>
             			                </tr>
             			            </thead>
-            			            <tbody>
-            			                <tr>
-            			                	<td>
-            			                		<label for="other-funding-source-1" class="visuallyhidden">Source of funding</label>
+            			            <tbody class="govuk-table__body">
+            			                <tr class="govuk-table__row">
+            			                	<td class="govuk-table__cell">
+            			                		<label for="other-funding-source-1" class="govuk-visually-hidden">Source of funding</label>
             			                		<input type="text" id="other-funding-source-1" class="form-control width-full" aria-labelledby="funding-source" />
             			                	</td>
-            			                	<td>
-            			                		<label for="other-funding-date-m-1" class="visuallyhidden">Date secured</label>
+            			                	<td class="govuk-table__cell">
+            			                		<label for="other-funding-date-m-1" class="govuk-visually-hidden">Date secured</label>
             			                		<input type="text" id="other-funding-date-m-1" class="form-control width-small" placeholder="MM" aria-labelledby="funding-date" />
             			                		<input type="text" id="other-funding-date-y-1" class="form-control width-small" placeholder="YYYY" aria-labelledby="funding-date" />
             			                	</td>
-            			                	<td class="numeric">
-            			                		<label for="other-funding-amount-1" class="visuallyhidden">Funding amount (&pound;)</label>
+            			                	<td class="govuk-table__cell govuk-table__cell--numeric">
+            			                		<label for="other-funding-amount-1" class="govuk-visually-hidden">Funding amount (&pound;)</label>
             			                		<input type="text" id="other-funding-amount-1" class="form-control width-full" aria-labelledby="funding-amount" />
             			                	</td>
             			                </tr>
@@ -110,27 +110,27 @@
 
           <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
 
-            <h2 class="heading-medium extra-margin-top">Other funding for this project</h2>
+            <h2 class="govuk-heading-m extra-margin-top">Other funding for this project</h2>
 
-            <table class="extra-margin-bottom">
-              <thead>
-                <tr>
-                  <th scope="col">Source of funding</th>
-                  <th scope="col">Date secured</th>
+            <table class="govuk-!-margin-bottom-6">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="col">Source of funding</th>
+                  <th class="govuk-table__header" scope="col">Date secured</th>
                   <th scope="col" class="alignright">Funding amount (&pound;)</th>
                 </tr>
               </thead>
               <tfoot>
-                <tr>
+                <tr class="govuk-table__row">
                   <th colspan="2" scope="row">Total other funding</th>
-                  <td class="numeric">34,000</td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric">34,000</td>
                 </tr>
               </tfoot>
-              <tbody>
-                <tr>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
                   <th scope="row">National rail</th>
-                  <td>17 April 2016</td>
-                  <td class="numeric">34,000</td>
+                  <td class="govuk-table__cell">17 April 2016</td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric">34,000</td>
                 </tr>
               </tbody>
             </table>
@@ -139,8 +139,8 @@
           </th:block>
 
 
-          <div class="form-group extra-margin-top" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <fieldset>
+          <div class="govuk-form-group extra-margin-top" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset class="govuk-fieldset">
               <label for="agree-terms" class="block-label">
                 <input id="agree-terms" value="agree-terms" type="checkbox"/>
                 As a member of this consortium I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.
@@ -149,13 +149,13 @@
           </div>
 
           <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
-            <p>As a member of this consortium you have agreed to the <a href="#">terms and conditions</a> set out by Innovate UK.</p>
+            <p class="govuk-body">As a member of this consortium you have agreed to the <a href="#">terms and conditions</a> set out by Innovate UK.</p>
           </th:block>
 
           <div class="extra-margin">
             <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="govuk-button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 
