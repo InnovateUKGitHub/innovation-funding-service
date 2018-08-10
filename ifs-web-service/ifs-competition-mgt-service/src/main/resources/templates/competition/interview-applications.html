@@ -1,55 +1,57 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
 </head>
 
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl>
-                <dt>Assessor type</dt>
-                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
-                <dt>Phone number</dt>
-                <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
-                <dt>Email address</dt>
-                <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
-            </dl>
+        <div class="grid-row">
+            <div class="govuk-grid-column-one-half">
+                <dl class="govuk-list">
+                    <dt>Assessor type</dt>
+                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
+                    <dt>Phone number</dt>
+                    <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
+                    <dt>Email address</dt>
+                    <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
+                </dl>
+            </div>
+
+            <div class="govuk-grid-column-one-half">
+                <dl class="govuk-list">
+                    <dt>Innovation areas</dt>
+                    <dd>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li th:each="innovationSector : ${model.innovationSectors}">
+                                <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li th:each="innovationArea : ${innovationSector.children}">
+                                        <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>Skill areas</dt>
+                    <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
+                </dl>
+            </div>
         </div>
 
-        <div class="column-half">
-            <dl>
-                <dt>Innovation areas</dt>
-                <dd>
-                    <ul class="list list-bullet">
-                        <li th:each="innovationSector : ${model.innovationSectors}">
-                            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
-                            <ul class="list list-bullet">
-                                <li th:each="innovationArea : ${innovationSector.children}">
-                                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </dd>
-                <dt>Skill areas</dt>
-                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
-            </dl>
-        </div>
-    </div>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

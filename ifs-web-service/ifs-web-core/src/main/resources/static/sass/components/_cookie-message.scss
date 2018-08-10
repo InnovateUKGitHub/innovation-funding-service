@@ -1,0 +1,18 @@
+#global-cookie-message {
+  width: 100%;
+  background-color: #d5e8f3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  p {
+    @include govuk-font(16);
+    margin: 0 auto;
+    max-width: 960px;
+  }
+}
+
+.js-enabled {
+  #global-cookie-message {
+    display: none;
+  }
+}

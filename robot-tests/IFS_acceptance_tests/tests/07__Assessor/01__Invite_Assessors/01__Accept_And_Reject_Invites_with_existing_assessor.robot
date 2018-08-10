@@ -67,7 +67,7 @@ User can view the competition brief
     And the user should see the element         jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And the user should see the element         jQuery=li:contains("Competition opens")
     And the user should see the element         jQuery=li:contains("Competition closes")
-    And the user should see the element         jQuery=.button:contains("Start new application")
+    And the user should see the element         jQuery=.govuk-button:contains("Start new application")
     And The user closes the competition brief
     And the user clicks the button/link         link=Assessor dashboard
 
@@ -228,7 +228,7 @@ the assessor should see the correct date
 Close the competition in assessment
     Log in as a different user       &{Comp_admin1_credentials}
     The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    The user clicks the button/link  jQuery=.button:contains("Close assessment")
+    The user clicks the button/link  jQuery=.govuk-button:contains("Close assessment")
 
 The user should get a competition brief window
     Select Window    title=Competition Overview - Innovation Funding Service

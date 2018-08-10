@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.acceptedAssessmentStates;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
@@ -34,6 +37,9 @@ public class FormInputResponseFileUploadRules {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
@@ -66,7 +72,9 @@ public class FormInputResponseFileUploadRules {
         ProcessRole interviewAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
                 Role.INTERVIEW_ASSESSOR,
                 fileEntry.getCompoundId().getApplicationId());
-        return assessorProcessRole != null || panelAssessorProcessRole != null || interviewAssessorProcessRole != null;
+        return (assessorProcessRole != null && assessmentIsAccepted(assessorProcessRole))
+                || panelAssessorProcessRole != null
+                || interviewAssessorProcessRole != null;
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
@@ -77,5 +85,10 @@ public class FormInputResponseFileUploadRules {
         List<Role> allApplicantRoles = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
+    }
+
+    private boolean assessmentIsAccepted(ProcessRole processRole) {
+        Assessment assessment = assessmentRepository.findOneByParticipantId(processRole.getId());
+        return acceptedAssessmentStates.contains(assessment.getProcessState());
     }
 }

@@ -66,7 +66,7 @@ Enter address manually: Postcode Validations
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     And the user expands enter details manually
-    And the user should see the element    css=.form-label .error-message
+    And the user should see the element    css=.govuk-error-message
     And the user moves focus to the element       css=[name="manual-address"]
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
@@ -107,7 +107,7 @@ Applicant goes to the organisation search page
     the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Create account")
     And the user clicks the button/link    jQuery=span:contains("Business")
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
 
