@@ -254,7 +254,7 @@ IFS.core.formValidation = (function () {
         // Get value of error msg
         // If email is changed then remove error msg
 
-        var currentServerError = field.closest('tr').find('.error-message').text()
+        var currentServerError = field.closest('tr').find('.govuk-error-message').text()
         var currentServerMsgCheck = 'An invite has already been created for this email address.'
 
         if (currentServerError === currentServerMsgCheck) {
