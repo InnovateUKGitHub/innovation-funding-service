@@ -3,11 +3,11 @@
 <th:block th:fragment="section-content">
 
     <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',subTitle=${competitionTitle},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',subTitle=${competitionTitle},size='govuk-heading-xl'" />
     </th:block>
 
-    <h2 class="heading-small">Required documents</h2>
-    <p class="form-hint">The project manager will have to upload these in project setup.</p>
+    <h2 class="govuk-heading-s">Required documents</h2>
+    <p class="govuk-hint">The project manager will have to upload these in project setup.</p>
 
     <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
           th:object="${landingPageForm}"
@@ -16,38 +16,41 @@
           method="post" novalidate="novalidate">
 
         <div th:if="${model.general.editable}">
-            <div class="form-group">
-                <fieldset>
-                    <div class="multiple-choice" th:each="document : ${model.general.competition.projectDocuments}" >
-                        <input th:value="${document.id}"
-                                type="checkbox"
-                                name="enabledIds"
-                                th:id="${'projectdocument-enabled-' + document.id}"
-                                th:checked="${document.enabled}" />
-                        <label th:for=${checkboxId}>
-                            <span th:text=${document.title}>document_title</span>
-                            <span class="end-label-link">
-                                <th>
-                                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
-                                </th>
-                            </span>
-                        </label>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.projectDocuments}" >
+                            <input th:value="${document.id}"
+                                    type="checkbox"
+                                    name="enabledIds"
+                                    class="govuk-checkboxes__input"
+                                    th:id="${'projectdocument-enabled-' + document.id}"
+                                    th:checked="${document.enabled}" />
+                            <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
+                                <span th:text=${document.title}>document_title</span>
+                                <span class="end-label-link">
+                                    <th>
+                                         <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
+                                    </th>
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
             </div>
 
             <th:form th:unless="${model.general.state.preventEdit}">
-                <p>
+                <p class="govuk-body">
                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/add(competitionId=${model.general.competition.id})}">Add document type</a>
                 </p>
             </th:form>
 
-            <button class="button" id="doneButton">Done</button>
+            <button class="govuk-button" id="doneButton">Done</button>
         </div>
 
     </form>
 
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part"
                th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
