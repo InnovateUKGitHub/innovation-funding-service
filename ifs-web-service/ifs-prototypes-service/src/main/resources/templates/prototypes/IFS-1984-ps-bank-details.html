@@ -22,67 +22,67 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Bank account'}, ${null})" />
 
-    <p class="extra-margin">In order for us to pay your grant we need the bank details of your organisation.</p>
-    <p>The bank account must belong to the organisation listed.</p>
+    <p class="govuk-body extra-margin">In order for us to pay your grant we need the bank details of your organisation.</p>
+    <p class="govuk-body">The bank account must belong to the organisation listed.</p>
 
-    <h2 class="heading-medium">Organisation information</h2>
-    <p class="extra-margin">
+    <h2 class="govuk-heading-m">Organisation information</h2>
+    <p class="govuk-body extra-margin">
         Empire Ltd <br />
         Company no. 60674010
     </p>
 
     <form>
 
-        <h2 class="heading-medium no-margin-bottom">Account details</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
 
-        <legend class="visuallyhidden">Account details</legend>
+        <legend class="govuk-visually-hidden">Account details</legend>
 
-        <p class="form-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use to receive the grant.</p>
+        <p class="govuk-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use to receive the grant.</p>
 
-        <p class="form-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
+        <p class="govuk-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
 
-        <div class="form-group extra-margin">
+        <div class="govuk-form-group extra-margin">
             <label for="bank-acc-number">
                 <span class="form-label-bold">Account number</span>
-                <span class="form-hint">For example: 1548965</span>
+                <span class="govuk-hint">For example: 1548965</span>
             </label>
             <input class="form-control width-medium" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label for="bank-sort-code">
                 <span class="form-label-bold">Sort code</span>
-                <span class="form-hint">For example: 311212</span>
+                <span class="govuk-hint">For example: 311212</span>
             </label>
             <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
         </div>
 
-        <div class="form-group">
-            <fieldset>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
                 <legend id="addressType">
-                    <h2 class="heading-medium">Billing address</h2>
+                    <h2 class="govuk-heading-m">Billing address</h2>
                 </legend>
-                <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+                <p class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'"  th:unless="${user == 'internal'}"/>
             </fieldset>
         </div>
 
-        <button class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
+        <button class="govuk-button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
 
         <div class="modal-bank" role="dialog" aria-hidden="true" style="margin-top: -174px;">
             <button class="js-close close" aria-label="Close Popup">Close</button>
             <div>
 
-                <h2 class="heading-medium no-margin">Submit bank details</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0">Submit bank details</h2>
 
-                <p>Your bank details will now be submitted to Innovate UK.</p>
+                <p class="govuk-body">Your bank details will now be submitted to Innovate UK.</p>
 
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
                 <div>
-                    <button class="button button-large" formaction="/prototypes/IFS-1984-ps-bank-details-confirm">Submit</button>
-                    <button aria-label="Close Popup" class="buttonlink js-close">Cancel</button>
+                    <button class="govuk-button button-large" formaction="/prototypes/IFS-1984-ps-bank-details-confirm">Submit</button>
+                    <button aria-label="Close Popup" class="button-clear js-close">Cancel</button>
                 </div>
 
             </div>

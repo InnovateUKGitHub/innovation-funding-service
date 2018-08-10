@@ -1,28 +1,18 @@
 
 .button-secondary{
-  @include button($panel-colour);
-  @include box-sizing (border-box);
-  margin: 0 $gutter-half $gutter-half 0;
-  padding: em(10) em(15) em(5) em(15);
-  vertical-align: top;
-
-  &.no-margin {
-    margin: 0;
-  }
-
-  @include media (mobile) {
+  @include govuk-media-query(mobile) {
     width: 100%;
     text-align: center;
   }
 
   // Disabled buttons
   &[disabled="disabled"] {
-    background: $highlight-colour;
+    background: govuk-colour("grey-4");
   }
 }
 
 .button-link-style{
-  margin: 0 $gutter-half $gutter-half 0;
+  margin: 0 $govuk-gutter-half $govuk-gutter-half 0;
   padding: em(10) em(15) em(5) em(15);
   display: inline-block;
 }
@@ -35,16 +25,12 @@
   text-decoration: none;
 
   &:hover{
-    background: $highlight-colour;
+    background: govuk-colour("grey-4");
   }
 
   &.highlight{
-    background: $button-colour;
+    background: $govuk-button-colour;
     color: white;
-  }
-
-  &.no-margin {
-    margin: 0;
   }
 }
 

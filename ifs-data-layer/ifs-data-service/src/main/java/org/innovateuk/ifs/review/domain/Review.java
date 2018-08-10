@@ -39,6 +39,9 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         this.target = application;
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public Review(Application application, ProcessRole processRole) {
         if (!application.getId().equals(processRole.getApplicationId())) {

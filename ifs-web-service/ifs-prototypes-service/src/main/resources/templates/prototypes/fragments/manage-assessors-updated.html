@@ -4,30 +4,30 @@
 <!-- =========================== Manage assessor intro=========================== -->
 <div th:fragment="prototype-assessor-intro">
 
-    <h2 class="heading-medium">Key statistics</h2>
+    <h2 class="govuk-heading-m">Key statistics</h2>
 
-    <div class="grid-row">
+    <div class="govuk-grid-row">
         <div class="column-quarter">
             <div class="highlight-panel">
-                <span class="heading-large">60</span><br />
+                <span class="govuk-heading-l">60</span><br />
                 <small>invited</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
-                <span class="heading-large">23</span><br />
+                <span class="govuk-heading-l">23</span><br />
                 <small>accepted</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
-                <span class="heading-large">3</span><br />
+                <span class="govuk-heading-l">3</span><br />
                 <small>declined</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
-                <span class="heading-large">6</span><br />
+                <span class="govuk-heading-l">6</span><br />
                 <small>assessors on invite list</small>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <dd>Agriculture and food</dd>
     </dl>
 
-    <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and review assessor invites for this competition.</p>
+    <p class="extra-margin govuk-!-margin-bottom-6">Choose a tab to find, invite and review assessor invites for this competition.</p>
 
 </div>
 
@@ -60,14 +60,14 @@
         <li class="width-full">
             <ul class="tabular-list__rowinternal">
                 <li class="width-half"><span th:unless="${site == 'rc'}">Contract and DOI: <strong th:text="${doi}">Yes</strong></span></li>
-                <li class="width-half alignright"><a href="#" class="button button-secondary add-to-invite">+ Add to invite list</a></li>
+                <li class="width-half alignright"><a href="#" class="govuk-button button-secondary add-to-invite">+ Add to invite list</a></li>
             </ul>
         </li>
     </ul> -->
 
     <ul class="tabular-list__row">
         <li class="width-30-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="govuk-heading-s">NAME</a>
         </li>
 
         <li class="width-10-percent">
@@ -82,7 +82,7 @@
             <strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
         </li>
 
-        <li class="width-10-percent alignright"><a href="#" class="button button-secondary add-to-invite">Add</a></li>
+        <li class="width-10-percent alignright"><a href="#" class="govuk-button button-secondary add-to-invite">Add</a></li>
     </ul>
 
 </div>
@@ -94,7 +94,7 @@
     <ul class="tabular-list__row">
 
         <li class="width-15-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="govuk-heading-s">NAME</a>
         </li>
 
         <li class="width-15-percent">
@@ -121,7 +121,7 @@
             </th:block>
 
             <th:block th:if="status != null">
-                <p th:text="${msg}"></p>
+                <p class="govuk-body" th:text="${msg}"></p>
             </th:block>
 
         </li>
@@ -129,14 +129,14 @@
         <li class="width-20-percent alignright">
 
             <th:block th:if="${status == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="button invite-individual">Invite individual</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="govuk-button invite-individual">Invite individual</a>
             </th:block>
 
             <th:block th:if="${status != null}">
                 <p class="extra-margin-right">Status: <strong th:text="${status}"></strong></p>
             </th:block>
 
-            <p>
+            <p class="govuk-body">
                 <a href="#" class="extra-margin-right">Remove from list</a>
             </p>
         </li>
@@ -149,7 +149,7 @@
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
-            <p class="no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
+            <p class="govuk-body govuk-!-margin-0">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
         </li>
         <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
             ORG
@@ -160,14 +160,14 @@
         <li class="width-full">
             <ul class="tabular-list__row--internal">
                 <li class="width-half">
-                    <h3 class="heading-small no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-0"><a href="#" th:text="${application}">APPLICATION</a></h3>
 
                     <th:block th:if="${status != null}">
-                        <p>Status: <strong th:text="${status}">STATUS</strong></p>
+                        <p class="govuk-body">Status: <strong th:text="${status}">STATUS</strong></p>
                     </th:block>
 
                     <th:block th:if="${area != null}">
-                        <p>Area: <strong th:text="${area}">AREA</strong></p>
+                        <p class="govuk-body">Area: <strong th:text="${area}">AREA</strong></p>
                     </th:block>
 
                 </li>
@@ -175,16 +175,16 @@
 
                     <th:block th:if="${type != null and type == 'assign'}">
                         <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=application-assigned'}"
-                            class="button button-secondary alignright">Assign</a>
+                            class="govuk-button button-secondary alignright">Assign</a>
                     </th:block>
 
                     <th:block th:if="${type != null and type == 'remove'}">
                         <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=remove-assigned'}"
-                            class="button button-secondary alignright">Remove</a>
+                            class="govuk-button button-secondary alignright">Remove</a>
                     </th:block>
 
                     <th:block th:if="${type == null}">
-                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="govuk-button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
                     </th:block>
 
                 </li>
@@ -198,10 +198,10 @@
 <div th:fragment="prototype-assesor-row-assign-assessor">
     <ul class="tabular-list__row">
         <li class="width-20-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="govuk-heading-s">NAME</a>
         </li>
         <li class="width-10-percent">
-            <strong class="show-mobile">Type:</strong> <span class="no-margin" th:text="${busType}">TYPE</span>
+            <strong class="show-mobile">Type:</strong> <span class="govuk-!-margin-0" th:text="${busType}">TYPE</span>
         </li>
         <li class="width-20-percent">
             <strong class="show-mobile">Innovation area:</strong> <span th:text="${area}">INNOVATION AREA</span>
@@ -243,22 +243,22 @@
 
             <!--<div class="tabular-list" id="assessors-find">-->
 
-            <div class="grid-row">
+            <div class="govuk-grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">Find registered assessors and add them to your invite list for this competition</h2>
                 </div>
                 <!--<div class="column-quarter aligncentre">
-                   <h3 class="heading-large no-margin">6</h3>
-                   <p>Assessors on invite list</p>
+                   <h3 class="govuk-heading-l govuk-!-margin-0">6</h3>
+                   <p class="govuk-body">Assessors on invite list</p>
                </div> -->
             </div>
 
             <!--<div class="search-filters">-->
-            <!--<div class="grid-row">-->
+            <!--<div class="govuk-grid-row">-->
 
-            <!--<div class="column-half">-->
+            <!--<div class="govuk-grid-column-one-half">-->
 
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="filterInnovationType">Type</label>-->
 
             <!--<select name="filterInnovationType" id="filterInnovationType" class="form-control">-->
@@ -278,8 +278,8 @@
 
             <!--</div>-->
 
-            <!--<div class="column-half">-->
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-grid-column-one-half">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>-->
 
             <!--<select name="filterInnovationArea" id="filterInnovationArea" class="form-control">-->
@@ -299,17 +299,17 @@
 
             <!--</div>-->
 
-            <!--<div class="grid-row">-->
+            <!--<div class="govuk-grid-row">-->
 
-            <!--<div class="column-half">-->
-            <!--<div class="form-group">-->
-            <!--<label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>-->
-            <!--<input type="text" class="form-control" id="filterSearch" name="filterSearch" />-->
+            <!--<div class="govuk-grid-column-one-half">-->
+            <!--<div class="govuk-form-group">-->
+            <!--<label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>-->
+            <!--<input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />-->
             <!--</div>-->
             <!--</div>-->
 
             <!--<div class="column-quarter">-->
-            <!--<label class="form-label" for="filterContract">Contract and DOI</label>-->
+            <!--<label class="govuk-label" for="filterContract">Contract and DOI</label>-->
             <!--<select name="filterContract" id="filterContract" class="form-control width-">-->
             <!--<option value="Show all">Show all</option>-->
             <!--<option value="Yes">Yes</option>-->
@@ -320,14 +320,14 @@
 
             <!--<div class="column-quarter">-->
 
-            <!--<div class="grid-row">-->
-            <!--<div class="column-half">-->
+            <!--<div class="govuk-grid-row">-->
+            <!--<div class="govuk-grid-column-one-half">-->
             <!--<div class="extra-margin-top">-->
             <!--<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>-->
             <!--</div>-->
             <!--</div>-->
-            <!--<div class="column-half alignright">-->
-            <!--<button class="button">Filter</button>-->
+            <!--<div class="govuk-grid-column-one-half alignright">-->
+            <!--<button class="govuk-button">Filter</button>-->
             <!--</div>-->
             <!--</div>-->
 
@@ -337,14 +337,14 @@
 
             <!--</div>-->
 
-            <!--<div class="grid-row sorting">-->
-            <!--<div class="column-half">-->
-            <!--<span class="heading-large">20</span> assessors-->
+            <!--<div class="govuk-grid-row sorting">-->
+            <!--<div class="govuk-grid-column-one-half">-->
+            <!--<span class="govuk-heading-l">20</span> assessors-->
             <!--</div>-->
 
-            <!--<div class="column-half alignright">-->
+            <!--<div class="govuk-grid-column-one-half alignright">-->
             <!--<label for="inviteFilter">Sort by-->
-            <!--<select class="form-control" id="inviteFilter" name="inviteFilter">-->
+            <!--<select class="govuk-select" id="inviteFilter" name="inviteFilter">-->
             <!--<option value="">All</option>-->
             <!--<option value="">To be invited</option>-->
             <!--<option value="">Invite sent</option>-->
@@ -368,7 +368,7 @@
             <!--<li id="assessor-type" class="width-10-percent">Type</li>-->
             <!--<li id="assessor-area" class="width-40-percent" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>-->
             <!--<li id="assessor-contract" class="width-20-percent">Contract and DOI</li>-->
-            <!--&lt;!&ndash; <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> &ndash;&gt;-->
+            <!--&lt;!&ndash; <li id="assessor-org" class="width-third alignright"><a href="#" class="govuk-button button-secondary">Invite page</a></li> &ndash;&gt;-->
             <!--</ul>-->
 
             <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}" />-->
@@ -384,65 +384,65 @@
             <th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2" />
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Type</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Assessor name</th>
+                            <th class="govuk-table__header" scope="col">Type</th>
                             <th scope="col" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}"></th>
-                            <th scope="col">Contract and DOI</th>
-                            <th scope="col"><span class="visuallyhidden">Add</span></th>
+                            <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Add</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
-                            <td>Industry</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Add</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
-                            <td>Academic</td>
-                            <td>Healthcare, Regenerative medicine, Stratified medicine</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
-                            </td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Add</a>
+                            <td class="govuk-table__cell alignright">
+                                <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
-                            <td>Academic</td>
-                            <td>Healthcare, Analytical science</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
+                            <td class="govuk-table__cell">Academic</td>
+                            <td class="govuk-table__cell">Healthcare, Regenerative medicine, Stratified medicine</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Add</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
-                            <td>Industry</td>
-                            <td>Architectures and operating systems</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
-                            </td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Add</a>
+                            <td class="govuk-table__cell alignright">
+                                <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                            <td>Industry</td>
-                            <td>Electronics, sensors &#38; photonics, Materials</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
+                            <td class="govuk-table__cell">Academic</td>
+                            <td class="govuk-table__cell">Healthcare, Analytical science</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Add</a>
+                            <td class="govuk-table__cell alignright">
+                                <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Architectures and operating systems</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                            </td>
+                            <td class="govuk-table__cell alignright">
+                                <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                            </td>
+                            <td class="govuk-table__cell alignright">
+                                <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
                     </tbody>
@@ -457,33 +457,33 @@
 
         <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
 
-            <div class="grid-row">
+            <div class="govuk-grid-row">
                 <div class="column-three-quarters">
 
-                    <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Invite one or more people to become assessors for this competition</h2>
-                    <h2 class="heading-small no-margin-top" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0" th:unless="${site == 'rc'}">Invite one or more people to become assessors for this competition</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
                 </div>
                 <!-- <div class="column-quarter aligncentre">
-                 <h3 class="heading-large no-margin">6</h3>
-                 <p>Assessors on invite list</p>
+                 <h3 class="govuk-heading-l govuk-!-margin-0">6</h3>
+                 <p class="govuk-body">Assessors on invite list</p>
              </div> -->
             </div>
 
-            <div class="boxed extra-margin extra-margin-bottom">
-                <h3 class="heading-small no-margin-top">Invite a non-registered assessor</h3>
+            <div class="boxed extra-margin govuk-!-margin-bottom-6">
+                <h3 class="govuk-heading-s govuk-!-margin-top-0">Invite a non-registered assessor</h3>
                 <details th:unless="${site == 'rc'}">
                     <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
 
-                    <div class="panel">
+                    <div class="govuk-body panel">
                         <form th:action="${#httpServletRequest.requestURI}">
-                            <p>Enter new assessor's details below and then add them to your invite list.</p>
+                            <p class="govuk-body">Enter new assessor's details below and then add them to your invite list.</p>
 
-                            <div class="form-group">
-                                <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
+                            <div class="govuk-form-group">
+                                <label for="grouped-innovation-area" class="govuk-label">Innovation area</label>
 
-                                <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
+                                <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
 
-                                <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
+                                <select class="govuk-select" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
                               <option value="">Please select an innovation area</option>
                               <optgroup label="Emerging and enabling technologies">
                                   <option value="15">Creative economy</option>
@@ -511,33 +511,33 @@
 
                             <div class="table-display-stacked">
                                 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-                                    <thead>
-                                        <tr>
+                                    <thead class="govuk-table__head">
+                                        <tr class="govuk-table__row">
                                             <th id="invite-label-assessor-name" scope="col" class="width-40-percent">Name</th>
                                             <th id="invite-label-assessor-email" scope="col" class="width-40-percent">Email</th>
-                                            <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
+                                    <tbody class="govuk-table__body">
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
 
                                             </td>
                                         </tr>
                                         <tr id="prototype-assessor-row-two">
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                             </td>
-                                            <td class="numeric">
+                                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                                 <a href="#" id="prototype-remove-two">Remove</a>
                                             </td>
                                         </tr>
@@ -551,7 +551,7 @@
                             <div>
                                 <input type="hidden" name="status" value="invite-new" />
                                 <input type="hidden" name="tab" value="invite" />
-                                <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
+                                <a class="govuk-button govuk-!-margin-0 " id="prototype-add-assessors">Add assessors to list</a>
                             </div>
 
                         </form>
@@ -560,7 +560,7 @@
             </div>
 
             <!--<div class="alignright">-->
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="sort-by">Sort by</label>-->
             <!--<select name="sort-by" id="sort-by" class="form-control">-->
             <!--<option value="Assessor name">Assessor name</option>-->
@@ -583,7 +583,7 @@
             <!--Include all for group invite-->
             <!--</label>-->
             <!--</li>-->
-            <!--<li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>-->
+            <!--<li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="govuk-button button-secondary disabled" id="invite-group">Invite group</a></li>-->
             <!--</ul>-->
 
             <!--<th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">-->
@@ -609,117 +609,117 @@
             <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" />-->
 
             <!--</div>-->
-            <div class="grid-row sorting">
+            <div class="govuk-grid-row sorting">
                 <div class="column-two-thirds">
-                    <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+                    <h4><span class="govuk-heading-xl govuk-!-margin-0 available">20</span> <strong>Assessors</strong></h4>
                 </div>
 
-                <div class="column-third alignright">
-                    <div class="form-group">
+                <div class="govuk-grid-column-one-third alignright">
+                    <div class="govuk-form-group">
                         <label for="sort-by">Sort by</label>
-                        <select name="sort-by" id="sort-by" class="form-control">
+                        <select name="sort-by" id="sort-by" class="govuk-select">
                         <option value="Title">Assessor name</option>
                         <option value="Employer">Email address</option>
                         <option value="Innovation Area">Innovation area</option>
                         <option value="Contract and DOI">Contract and DOI</option>
                     </select>
                     </div>
-                    <div class="alignright-button extra-margin extra-margin-bottom">
-                        <a href="#" class="button">Review and send group invite</a>
+                    <div class="alignright-button extra-margin govuk-!-margin-bottom-6">
+                        <a href="#" class="govuk-button">Review and send group invite</a>
                     </div>
                 </div>
             </div>
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col">Innovation area</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Assessor name</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th class="govuk-table__header" scope="col">Innovation area</th>
                             <th scope="col" class="aligncentre">Contract and DOI</th>
                             <th scope="col" class="alignright">Remove assessor</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                            <td>dave@email.com</td>
-                            <td>Earth Observation</td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                            <td class="govuk-table__cell">dave@email.com</td>
+                            <td class="govuk-table__cell">Earth Observation</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
-                            <td>chris@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                            <td class="govuk-table__cell">chris@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
-                            <td>martin@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
+                            <td class="govuk-table__cell">martin@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
-                            <td>chantel@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                            <td class="govuk-table__cell">chantel@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
-                            <td>richard@email.com</td>
-                            <td>Internet of thingss</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
+                            <td class="govuk-table__cell">richard@email.com</td>
+                            <td class="govuk-table__cell">Internet of thingss</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="alignright-button extra-margin extra-margin-bottom">
-                <a href="#" class="button">Review and send group invite</a>
+            <div class="alignright-button extra-margin govuk-!-margin-bottom-6">
+                <a href="#" class="govuk-button">Review and send group invite</a>
             </div>
             <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" />
         </th:block>
 
         <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
 
-            <div class="grid-row">
+            <div class="govuk-grid-row">
 
                 <div class="column-three-quarters">
 
-                  <h2 class="heading-small">Overview of invited assessors, their contract, DOI and acceptance status</h2>
+                  <h2 class="govuk-heading-s">Overview of invited assessors, their contract, DOI and acceptance status</h2>
 
                 </div>
 
             </div>
 
             <div class="search-filters extra-margin">
-                <div class="grid-row">
+                <div class="govuk-grid-row">
 
-                  <div class="column-third">
-                      <div class="form-group">
+                  <div class="govuk-grid-column-one-third">
+                      <div class="govuk-form-group">
                         <label for="filterInnovationType">Type</label>
-                        <select name="filterInnovationType" id="filterInnovationType" class="form-control">
+                        <select name="filterInnovationType" id="filterInnovationType" class="govuk-select">
 
                           <th:block th:if="${param.filterInnovationType != null}">
                               <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
@@ -735,11 +735,11 @@
                       </div>
                   </div>
 
-                  <div class="column-third">
-                    <div class="form-group">
+                  <div class="govuk-grid-column-one-third">
+                    <div class="govuk-form-group">
                       <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
-                      <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                      <select name="filterInnovationArea" id="filterInnovationArea" class="govuk-select">
 
                         <th:block th:if="${param.filterInnovationArea != null}">
                             <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -754,10 +754,10 @@
                     </div>
                   </div>
 
-                  <div class="column-third">
-                      <div class="form-group">
-                        <label class="form-label" for="filterStatus">Status</label>
-                        <select name="filterStatus" id="filterStatus" class="form-control width-full">
+                  <div class="govuk-grid-column-one-third">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="filterStatus">Status</label>
+                        <select name="filterStatus" id="filterStatus" class="govuk-select width-full">
                              <option value="All">All</option>
                              <option value="Invite accepted">Invite accepted</option>
                              <option value="Invite sent">Invite sent</option>
@@ -768,34 +768,34 @@
 
             </div>
 
-            <div class="grid-row">
+            <div class="govuk-grid-row">
 
-                <div class="column-third">
-                    <div class="form-group">
-                        <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                        <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                <div class="govuk-grid-column-one-third">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
+                        <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                     </div>
                 </div>
 
-                <div class="column-third">
-                    <label class="form-label" for="filterContract">Contract and DOI</label>
-                    <select name="filterContract" id="filterContract" class="form-control width-full">
+                <div class="govuk-grid-column-one-third">
+                    <label class="govuk-label" for="filterContract">Contract and DOI</label>
+                    <select name="filterContract" id="filterContract" class="govuk-select width-full">
                          <option value="Yes">Yes</option>
                          <option value="No">No</option>
                          <option value="Show all">Show all</option>
                      </select>
                 </div>
 
-                <div class="column-third">
+                <div class="govuk-grid-column-one-third">
 
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="extra-margin-top">
                                 <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
                             </div>
                         </div>
-                        <div class="column-half alignright">
-                            <button class="button">Filter</button>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 
@@ -811,18 +811,18 @@
 <th:block th:if="${param.tab != null and param.tab[0] == 'overview' and param.view == null or param.view != null and param.view[0] == 'application'}">
     <!--<div class="tabular-list" id="assessors-assign-application">-->
 
-    <div class="grid-row sorting">
-        <!--<div class="column-half">-->
-        <!--<span class="heading-large">20</span> assessors-->
+    <div class="govuk-grid-row sorting">
+        <!--<div class="govuk-grid-column-one-half">-->
+        <!--<span class="govuk-heading-l">20</span> assessors-->
         <!--</div>-->
         <div class="column-two-thirds">
-            <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+            <h4><span class="govuk-heading-xl govuk-!-margin-0 available">20</span> <strong>Assessors</strong></h4>
         </div>
 
-        <div class="column-third alignright">
-            <div class="form-group">
+        <div class="govuk-grid-column-one-third alignright">
+            <div class="govuk-form-group">
                 <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">
+                        <select class="govuk-select" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
                             <option value="">To be invited</option>
                             <option value="">Invite sent</option>
@@ -864,44 +864,44 @@
     <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" />-->
 
     <div class="table-overflow">
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Assessor name</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Contract and DOI</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Details</th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor name</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <th class="govuk-table__header" scope="col">Details</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                     </td>
-                    <td>Invite accepted</td>
-                    <td></td>
+                    <td class="govuk-table__cell">Invite accepted</td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
-                    <td>Academic</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="no">No</span></span>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                    <td class="govuk-table__cell">Academic</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="no">No</span></span>
                     </td>
-                    <td>Invite declined</td>
-                    <td>Invite declined as person is too busy</td>
+                    <td class="govuk-table__cell">Invite declined</td>
+                    <td class="govuk-table__cell">Invite declined as person is too busy</td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
-                    <td>Business</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                     </td>
-                    <td>Awaiting response</td>
-                    <td>Invite sent: 22 June 2016</td>
+                    <td class="govuk-table__cell">Awaiting response</td>
+                    <td class="govuk-table__cell">Invite sent: 22 June 2016</td>
                 </tr>
             </tbody>
         </table>
@@ -919,35 +919,35 @@
 <!-- =========================== Manage assessors assign =========================== -->
 
 <div th:fragment="prototype-assessor-assign">
-    <div class="grid-row">
+    <div class="govuk-grid-row">
         <div class="column-two-thirds">
 
-            <h1 class="heading-xlarge no-margin-bottom">Assign assessor</h1>
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">Assign assessor</h1>
 
             <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 
-                <h2 class="heading-medium">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
+                <h2 class="govuk-heading-m">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
 
-                <h2 class="heading-medium no-margin-top" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-0" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
 
                 <th:block th:if="${site == 'rc'}">
 
-                    <p>Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
+                    <p class="govuk-body">Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
 
                 </th:block>
 
                 <th:block th:unless="${site == 'rc'}">
 
-                    <div class="grid-row extra-margin-bottom">
-                        <div class="column-half">
-                            <h3 class="heading-small">Innovation area</h3>
-                            <ul class="list list-bullet">
+                    <div class="govuk-grid-row govuk-!-margin-bottom-6">
+                        <div class="govuk-grid-column-one-half">
+                            <h3 class="govuk-heading-s">Innovation area</h3>
+                            <ul class="govuk-list govuk-list--bullet">
                                 <li>Advanced materials</li>
                             </ul>
                         </div>
-                        <div class="column-half">
-                            <h3 class="heading-small">Partners</h3>
-                            <ul class="list list-bullet">
+                        <div class="govuk-grid-column-one-half">
+                            <h3 class="govuk-heading-s">Partners</h3>
+                            <ul class="govuk-list govuk-list--bullet">
                                 <li>Aptrans Ltd (Lead)</li>
                                 <li>Biotech Corp</li>
                                 <li>University of Cardiff</li>
@@ -961,37 +961,37 @@
 
             <th:block th:if="${param.view != null and param.view[0] == 'assessor'}">
 
-                <h2 class="heading-medium" th:text="${(param.name != null ? param.name[0] : 'TESTER')}">John Smith</h2>
+                <h2 class="govuk-heading-m" th:text="${(param.name != null ? param.name[0] : 'TESTER')}">John Smith</h2>
 
-                <p>Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
+                <p class="govuk-body">Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
 
             </th:block>
 
         </div>
-        <div class="column-third aligncentre">
+        <div class="govuk-grid-column-one-third aligncentre">
             <ul>
                 <li>
-                    <h3 class="heading-xlarge no-margin-bottom" id="assessors-remaining">3</h3>
-                    <p>Applications left to assign</p>
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0" id="assessors-remaining">3</h3>
+                    <p class="govuk-body">Applications left to assign</p>
                 </li>
             </ul>
         </div>
     </div>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-        <div class="grid-row extra-margin-bottom">
-            <div class="column-half">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
+            <div class="govuk-grid-column-one-half">
                 <a href="#">View application details</a>
             </div>
-            <div class="column-half alignright">
-                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+            <div class="govuk-grid-column-one-half alignright">
+                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="govuk-button button-secondary">Return to assign tab</a>
             </div>
         </div>
     </th:block>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
-        <div class="alignright extra-margin-bottom">
-            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+        <div class="alignright govuk-!-margin-bottom-6">
+            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="govuk-button button-secondary">Return to assign tab</a>
         </div>
     </th:block>
 
@@ -1013,15 +1013,15 @@
 
         </div>
 
-        <h2 class="heading-small dark-view">Assessors</h2>
+        <h2 class="govuk-heading-s dark-view">Assessors</h2>
 
         <div class="search-filters">
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
 
                     <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
-                    <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                    <select name="filterInnovationArea" id="filterInnovationArea" class="govuk-select">
 
                             <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
                                 <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -1034,10 +1034,10 @@
                             <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
                         </select>
                 </div>
-                <div class="column-half" th:unless="${site == 'rc'}">
+                <div class="govuk-grid-column-one-half" th:unless="${site == 'rc'}">
                     <label for="filterType">Type</label>
 
-                    <select name="filterType" id="filterType" class="form-control">
+                    <select name="filterType" id="filterType" class="govuk-select">
                             <option th:if="${param.filterType != null}" th:remove="tag">
                                 <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
                             </option>
@@ -1052,22 +1052,22 @@
                 </div>
             </div>
 
-            <div class="grid-row extra-margin">
-                <div class="column-half">
-                    <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+            <div class="govuk-grid-row extra-margin">
+                <div class="govuk-grid-column-one-half">
+                    <label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
+                    <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
 
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="extra-margin-top">
                                 <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
                             </div>
                         </div>
-                        <div class="column-half alignright">
-                            <button class="button">Filter</button>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 
@@ -1119,25 +1119,25 @@
             </th:block>
         </div>
 
-        <h2 class="heading-small dark-view">Applications</h2>
+        <h2 class="govuk-heading-s dark-view">Applications</h2>
 
         <div class="search-filters extra-margin-top">
-            <div class="grid-row">
-                <div class="column-half">
-                    <label class="form-label" for="filterSearch">Filter by keyword</label>
-                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <label class="govuk-label" for="filterSearch">Filter by keyword</label>
+                    <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
 
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="extra-margin-top">
                                 <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
                             </div>
                         </div>
-                        <div class="column-half alignright">
-                            <button class="button">Filter</button>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 
@@ -1195,11 +1195,11 @@
 
 <!-- =========================== Manage assessors innovation areas collapsible list =========================== -->
 <th:block th:fragment="prototype-assessor-innovation-areas">
-    <fieldset>
+    <fieldset class="govuk-fieldset">
         <legend>
-            <h2 class="heading-medium">Innovation areas</h2>
+            <h2 class="govuk-heading-m">Innovation areas</h2>
                 <th:block th:if="${assessor == 'non-registered'}">
-                    <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
+                    <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                 </th:block>
         </legend>
         <div class="collapsible">
@@ -1207,7 +1207,7 @@
                 <span class="input-counter">0 selected</span>
             </h2>
             <fieldset class="collapsible-content">
-                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <legend class="govuk-visually-hidden">Emerging and enabling</legend>
                 <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-1" />
             </fieldset>
 
@@ -1215,7 +1215,7 @@
                 <span class="input-counter">0 selected</span>
             </h2>
             <fieldset class="collapsible-content">
-                <legend class="visuallyhidden">Health and life sciences</legend>
+                <legend class="govuk-visually-hidden">Health and life sciences</legend>
                 <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-2" />
             </fieldset>
 
@@ -1223,7 +1223,7 @@
                 <span class="input-counter">0 selected</span>
             </h2>
             <fieldset class="collapsible-content">
-                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <legend class="govuk-visually-hidden">Emerging and enabling</legend>
                 <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-3" />
             </fieldset>
 
@@ -1232,7 +1232,7 @@
                 <span class="input-counter">0 selected</span>
             </h2>
             <fieldset class="collapsible-content">
-                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <legend class="govuk-visually-hidden">Emerging and enabling</legend>
                 <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-4" />
             </fieldset>
 
@@ -1241,7 +1241,7 @@
                 <span class="input-counter">0 selected</span>
             </h2>
             <fieldset class="collapsible-content">
-                <legend class="visuallyhidden">Transport</legend>
+                <legend class="govuk-visually-hidden">Transport</legend>
                 <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-5" />
             </fieldset>
 
@@ -1251,11 +1251,11 @@
 
 <!-- =========================== Manage assessors innovation areas full list =========================== -->
 <th:block th:fragment="prototype-assessor-innovation-areas-full-list">
-    <fieldset>
+    <fieldset class="govuk-fieldset">
         <legend>
-            <h2 class="heading-medium">Innovation areas</h2>
+            <h2 class="govuk-heading-m">Innovation areas</h2>
             <th:block th:if="${assessor == 'non-registered'}">
-                <p class="form-hint">You can select more than one innovation area.</p>
+                <p class="govuk-hint">You can select more than one innovation area.</p>
             </th:block>
         </legend>
         <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-1" />

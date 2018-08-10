@@ -44,7 +44,7 @@ public class PopulatedCompetitionStatusViewModel {
 
     private StatusPermission projectStatusPermission(SetupSectionInternalUser internalUser, UserResource userResource) {
         return new StatusPermission(
-                internalUser.canAccessCompaniesHouseSection(userResource).isAccessibleOrNotRequired(),
+                internalUser.canAccessCompaniesHouseSection().isAccessibleOrNotRequired(),
                 internalUser.canAccessProjectDetailsSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessMonitoringOfficerSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessBankDetailsSection(userResource).isAccessibleOrNotRequired(),
