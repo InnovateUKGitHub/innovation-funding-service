@@ -44,6 +44,9 @@ the user marks every section but one as complete
 the user selects Research category
     [Arguments]  ${res_category}
     the user clicks the button/link   link=Research category
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery=h1 span:contains("EOI Application")
+    Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
+    ...    AND             the user should not see the element   css = label[for="researchCategory3"]
     the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete

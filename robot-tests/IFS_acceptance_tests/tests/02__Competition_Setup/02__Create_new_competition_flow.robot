@@ -71,6 +71,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2833 As a Portfolio manager I am able to edit the 'Question heading' in Project details
 ...
 ...               IFS-1084 As a comp exec I am able to delete a competition prior to the competition opens date
+...
+...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -302,7 +304,6 @@ Eligibility: Mark as Done then Edit again
     [Tags]    HappyPath
     Given the user selects the checkbox      research-categories-33
     And the user selects the checkbox        research-categories-34
-    And the user selects the checkbox        research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the checkbox        lead-applicant-type-1  # business
     And the user selects the checkbox        lead-applicant-type-3  # RTOs
@@ -315,7 +316,6 @@ Eligibility: Mark as Done then Edit again
     Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
     And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
     And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Industrial research")
-    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Experimental development")
     And the user should see the element      jQuery = dt:contains("Lead applicant") ~ dd:contains("Business")
     And the user should see the element      jQuery = dt:contains("Research participation") ~ dd:contains("50%")
     And the user should see the element      jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
@@ -725,6 +725,14 @@ The Applicant is able to apply to the competition once is Open
     [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}
+
+The Applicant see the selected research cartegories
+    [Documentation]  IFS-2941
+    When the user clicks the button/link     link=Research category
+    Then the user should see the element     css = label[for="researchCategory1"]
+    And the user should see the element      css = label[for="researchCategory2"]
+    When the user clicks the button twice    jQuery=label:contains("Feasibility studies")
+    And the user clicks the button/link      id=application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
