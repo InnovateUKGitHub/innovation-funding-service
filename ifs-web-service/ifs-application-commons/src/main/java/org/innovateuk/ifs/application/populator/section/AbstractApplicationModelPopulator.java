@@ -99,7 +99,7 @@ public abstract class AbstractApplicationModelPopulator {
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource>
             questions) {
         return questions.stream().filter(q -> questionIds.contains(q.getId()))
-                .sorted(Comparator.comparing(QuestionResource::getPriority))
+                .sorted()
                 .collect(toList());
     }
 }
