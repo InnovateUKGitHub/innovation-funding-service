@@ -1,0 +1,155 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
+$button-shadow-size: $govuk-border-width-form-element;
+// Button styling and overrides
+
+table {
+  .govuk-button {
+    &:last-child {
+      margin-right: 3px;
+    }
+  }
+}
+
+.button-secondary{
+  @extend .govuk-button;
+  @include box-shadow(0 2px 0 darken(govuk-colour("grey-3"), 15%));
+  background-color: govuk-colour("grey-3");
+  color: $govuk-text-colour;
+
+  // Ensure that any global link styles are overridden
+  &:link,
+  &:visited,
+  &:active,
+  &:hover {
+    color: $govuk-text-colour;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: darken(govuk-colour("grey-3"), 5%);
+  }
+
+  &.disabled,
+  &[disabled]{
+    background-color: govuk-colour("grey-3");
+
+    &:hover,
+    &:focus {
+      background-color: govuk-colour("grey-3");
+    }
+  }
+}
+
+.button-warning{
+  @extend .govuk-button;
+  @include box-shadow(0 2px 0 darken($ifs-warning-button-colour, 15%));
+  background-color: $ifs-warning-button-colour;
+
+  &:hover,
+  &:focus {
+    background-color: darken($ifs-warning-button-colour, 5%);
+  }
+}
+
+.button-clear {
+  @include govuk-font($size: 19, $line-height: 19px);
+  @include govuk-focusable;
+  @include box-shadow(none);
+  @include box-sizing(border-box);
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background-color: transparent;
+  color: govuk-colour("blue");
+  text-decoration: underline;
+  padding: 9px 0 6px;
+  border: none;
+
+  // Fix unwanted button padding in Firefox
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: transparent;
+    color: $govuk-link-hover-colour;
+  }
+
+  &.disabled,
+  &[disabled]{
+    text-decoration: none;
+    background: transparent;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $govuk-link-hover-colour;
+    }
+  }
+
+  &:link,
+  &:visited {
+    color: govuk-colour("blue");
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $govuk-link-hover-colour;
+    }
+  }
+
+  @include is-ie8() {
+    border-bottom: none;
+  }
+}
+
+.govuk-button + .button-clear,
+.button-secondary + .button-clear {
+  padding: 9px 10px 6px 10px;
+}
+
+
+.alignright-button {
+  @include govuk-clearfix;
+  text-align:right;
+
+  a {
+    line-height:45px;
+
+    &.govuk-button {
+      line-height:1;
+    }
+  }
+
+  a,
+  button,
+  [role="button"] {
+    display:inline-block;
+    margin:0 5px 0 0;
+
+    &:last-child {
+      margin-right:0;
+    }
+  }
+}
+
+@include media-down(mobile) {
+  .alignright-button {
+    a,
+    button,
+    [role="button"] {
+      margin:0 0 5px;
+      display: block;
+      text-align: center;
+    }
+  }
+}

@@ -1,41 +1,45 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"   th:with="pageTitle='Page not found'"/>
 </head>
-<body>
+<body class="govuk-template__body ">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
 
-<main tabindex="-1" id="content">
-    <h1 class="heading-large">Page not found</h1>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <h1 class="govuk-heading-l">Page not found</h1>
 
-    <p th:if="${status}">
-        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
-            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
-    </p>
+        <p class="govuk-body" th:if="${url}">
+            <b>Page:</b> <span th:text="${url}">Page URL</span>
+        </p>
 
-    <div>
-        <span>
-            Please check the web address or search term you entered for any errors. You can return to <a th:href="${userDashboardLink}">your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
-        </span>
-    </div>
+        <p class="govuk-body" th:if="${status}">
+            <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+                th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+        </p>
 
-    <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
-        Error message will be displayed here for developers on dev/UAT environments.
-    </th:block>
+        <div>
+            <span>
+                Please check the web address or search term you entered for any errors. You can return to <a th:href="${userDashboardLink}" class="govuk-link">your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
+        </div>
 
-    <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
-        Stack trace will be printed here...
-    </th:block>
+        <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
+            Error message will be displayed here for developers on dev/UAT environments.
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
+            Stack trace will be printed here...
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

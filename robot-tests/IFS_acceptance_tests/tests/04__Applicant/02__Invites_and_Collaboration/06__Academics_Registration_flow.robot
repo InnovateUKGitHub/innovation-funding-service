@@ -13,17 +13,17 @@ Academic organisations search
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
-    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
     And The user should see the element                 jQuery=h1:contains("Research") ~ .message-alert:contains("Your organisation must be registered on Je-S ")
-    And the user clicks the button/link                 jQuery=.button:contains("Search")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Search")
     Then the user should see an error                   Please enter an organisation name to search.
     When the user enters text to a text field           id=organisationSearchName    abcd
-    And the user clicks the button/link                 jQuery=.button:contains("Search")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Search")
     Then the user should see the text in the page       No results found.
     When the user enters text to a text field           id=organisationSearchName    !!
-    And the user clicks the button/link                 jQuery=.button:contains("Search")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Search")
     Then the user should see the text in the page       No results found.
 
 Accept invitation as academic
@@ -34,7 +34,7 @@ Accept invitation as academic
     And the invited user fills the create account form  Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
-    And the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link                link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link                 link=Your finances

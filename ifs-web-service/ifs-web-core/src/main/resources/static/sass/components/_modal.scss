@@ -1,8 +1,13 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
 [role="dialog"]{
   @include box-sizing(border-box);
   @include transition-property(top,margin);
   @include transition-duration(300ms);
-  border-top: 10px solid $link-colour;
+  @include govuk-font(19);
+  border-top: 10px solid $govuk-link-colour;
   width:80%;
   margin-left:-40%;
   left:50%;
@@ -10,11 +15,11 @@
   background-color: #FFF;
   top:50%;
   padding: 40px 30px 30px 30px;
-  font-size: 19px;
   z-index: 20;
 
   .close,
   .ui-dialog-titlebar-close {
+    @include govuk-font(19);
     background:none;
     border:1px solid #000;
     position: absolute;
@@ -23,9 +28,8 @@
     cursor:pointer;
     line-height:1;
     padding:0;
-    font-size:19px;
     font-weight: normal;
-    color: $link-colour;
+    color: $govuk-link-colour;
   }
 
   .close {
@@ -35,18 +39,13 @@
     }
   }
 
-  .button {
-    font-size: 19px;
-  }
-
-  .buttonlink {
+  .button-clear {
     padding: 8px;
     margin-left: 22px;
-    font-size: 19px;
   }
 
   &.warning-modal {
-    border-top: 10px solid $red;
+    border-top: 10px solid $govuk-error-colour;
 
     .modal-content {
       padding-left: 60px;

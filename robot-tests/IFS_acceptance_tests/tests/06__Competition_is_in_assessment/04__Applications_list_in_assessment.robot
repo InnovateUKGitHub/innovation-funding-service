@@ -45,8 +45,8 @@ Submitted applications
 Submitted applications Key Statistics
     [Documentation]    INFUND-7371
     [Tags]    HappyPath  Pending
-    # TODO Resolve issue with count Then the calculations should be correct    css=.grid-row li:nth-child(2) span
-    Then both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
+    # TODO Resolve issue with count Then the calculations should be correct    css=.govuk-grid-row li:nth-child(2) span
+    Then both calculations in the page should show the same    css=.govuk-grid-row li:nth-child(2) span
 
 Submitted applications View completed applications
     [Documentation]    INFUND-7351
@@ -136,7 +136,7 @@ The calculations should be correct
 Both calculations in the page should show the same
     [Arguments]    ${SUMMARY_LOCATOR}
     ${APPLICATIONS_NUMBER_SUMMARY}=    get text    ${SUMMARY_LOCATOR}
-    ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-half span
+    ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.govuk-grid-column-one-half span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
 User opens the excel and checks the content
