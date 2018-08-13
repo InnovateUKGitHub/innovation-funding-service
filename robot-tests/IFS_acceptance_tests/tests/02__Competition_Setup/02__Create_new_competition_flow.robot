@@ -71,6 +71,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2833 As a Portfolio manager I am able to edit the 'Question heading' in Project details
 ...
 ...               IFS-1084 As a comp exec I am able to delete a competition prior to the competition opens date
+...
+...               IFS-3916 Configurable Project Setup documents: Configuration
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -539,7 +541,7 @@ Application: Done enabled when all questions are marked as complete
     Then the user should see the element      jQuery=li:contains("Application") .task-status-complete
 
 Documents in project setup: The competition admin adds document requirements
-    [Documentation]
+    [Documentation]    IFS-3916
     [Tags]
     Given the user clicks the button/link        link = Documents in project setup
     And the user clicks the button/link          link = Add document type
@@ -551,7 +553,7 @@ Documents in project setup: The competition admin adds document requirements
     And the user should see the element          jQuery = span:contains("Test document type")
 
 Documents in project setup: The competition admin removes a document
-    [Documentation]
+    [Documentation]    IFS-3916
     [Tags]
     Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ span:contains("Edit")
     When the user clicks the button/link        css = button[name = "removeDocument"]
