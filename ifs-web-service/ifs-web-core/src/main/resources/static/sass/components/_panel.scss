@@ -1,0 +1,8 @@
+.panel {
+  @include box-sizing(border-box);
+  clear: both;
+  border-left-style: solid;
+  border-color: $govuk-border-colour;
+  padding: .78947em;
+  margin-bottom: .78947em;
+}

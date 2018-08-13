@@ -51,10 +51,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationProgressService applicationProgressService;
 
-    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
-        put("id", new Sort(ASC, "id"));
-        put("name", new Sort(ASC, "name", "id"));
-    }};
+    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
+
+    static {
+        Map<String, Sort> applicationSortFieldMap = new HashMap<>();
+        applicationSortFieldMap.put("id", new Sort(ASC, "id"));
+        applicationSortFieldMap.put("name", new Sort(ASC, "name", "id"));
+
+        APPLICATION_SORT_FIELD_MAP = Collections.unmodifiableMap(applicationSortFieldMap);
+    }
 
     @Override
     @Transactional

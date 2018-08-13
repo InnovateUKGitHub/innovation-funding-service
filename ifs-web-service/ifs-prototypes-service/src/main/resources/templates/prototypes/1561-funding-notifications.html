@@ -21,50 +21,50 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Manage funding applications'}, ${null})" />
 
-  <h2 class="heading-medium">Key statistics</h2>
+  <h2 class="govuk-heading-m">Key statistics</h2>
 
-  <div class="grid-row extra-margin-bottom">
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">287</span><br />
+        <span class="govuk-heading-l">287</span><br />
         <small>applications</small>
       </div>
 		</div>
 
 		<div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
+        <span class="govuk-heading-l">3</span><br />
         <small>applications being funded</small>
       </div>
 		</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">281</span><br />
+        <span class="govuk-heading-l">281</span><br />
         <small>applications not being funded</small>
       </div>
     </div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
+        <span class="govuk-heading-l">3</span><br />
         <small>applications on hold</small>
       </div>
     </div>
   </div>
 
-  <div class="grid-row extra-margin-bottom">
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '284' : '0')}">0</span><br />
+        <span class="govuk-heading-l" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '284' : '0')}">0</span><br />
         <small>applications notified of decision</small>
       </div>
   	</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '287' : '3')}">287</span><br />
+        <span class="govuk-heading-l" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '287' : '3')}">287</span><br />
         <small>applications awaiting a decision</small>
       </div>
   	</div>
@@ -74,26 +74,26 @@
 
 			<div th:if="${param.comp != null} and ${param.comp[0] == 'panel'}" th:remove="tag">
 
-				<!-- <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a> -->
+				<!-- <a href="#" class="govuk-button" data-js-modal="modal-publish-funding-decision">Notify applicants</a> -->
 
 				<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Notify applicants</h2>
+						<h2 class="govuk-heading-m govuk-!-margin-0">Notify applicants</h2>
 
-						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+						<p class="govuk-body">Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
-						<p>This step cannot be undone.</p>
+						<p class="govuk-body">This step cannot be undone.</p>
 
-						<hr />
+						<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-			            <div class="grid-row extra-margin">
-			            	<div class="column-half">
+			            <div class="govuk-grid-row extra-margin">
+			            	<div class="govuk-grid-column-one-half">
 			            		<a href="#">Cancel</a>
 			            	</div>
-			            	<div class="column-half alignright-button">
-			            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="button">Notify applicants</a>
+			            	<div class="govuk-grid-column-one-half alignright-button">
+			            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="govuk-button">Notify applicants</a>
 			            	</div>
 			            </div>
 
@@ -103,19 +103,19 @@
 			</div>
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='manageNotifications'" />
 
     <form>
 
-      <div class="grid-row sorting sorting-controls">
-        <div class="column-half">
-          <div class="form-group">
+      <div class="govuk-grid-row sorting sorting-controls">
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-form-group">
             <fieldset class="alignleft select-all-applications">
-              <legend class="visuallyhidden">Select application by type</legend>
+              <legend class="govuk-visually-hidden">Select application by type</legend>
               <label class="form-label" for="select-aaplications-1">Select application type</label>
-                <select class="form-control select-applications" id="select-aaplications-1">
+                <select class="govuk-select select-applications" id="select-aaplications-1">
                   <option>-- Select applications --</option>
                   <option value="successful">Successful</option>
                   <option value="unsuccessful">Unsuccessful</option>
@@ -123,31 +123,31 @@
                   <option value="deselect">Deselect</option>
                 </select>
             </fieldset>
-            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+            <span class="govuk-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
           </div>
         </div>
 
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
           <input type="hidden" name="comp" value="panel" />
-          <button class="button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write and send email</button>
+          <button class="govuk-button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write and send email</button>
         </div>
       </div>
 
   			<div class="table-overflow">
   				<table id="application-list">
-  					<thead>
-  						<tr>
+  					<thead class="govuk-table__head">
+  						<tr class="govuk-table__row">
                 <th scope="col" id="select-applications-label">Select applications</th>
-  							<th scope="col">Application number</th>
-  							<th scope="col">Project title</th>
-  							<th scope="col">Lead</th>
-                <th scope="col">Funding decision</th>
-                <th scope="col">Email status</th>
+  							<th class="govuk-table__header" scope="col">Application number</th>
+  							<th class="govuk-table__header" scope="col">Project title</th>
+  							<th class="govuk-table__header" scope="col">Lead</th>
+                <th class="govuk-table__header" scope="col">Funding decision</th>
+                <th class="govuk-table__header" scope="col">Email status</th>
                 <th scope="col" class="alignright">Date sent</th>
   						</tr>
   					</thead>
-  					<tbody>
-  						<tr>
+  					<tbody class="govuk-table__body">
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-1">
@@ -157,14 +157,14 @@
 
                 </td>
 
-                <td>194731</td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-                <td>Successful</td>
+                <td class="govuk-table__cell">194731</td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+                <td class="govuk-table__cell">Successful</td>
                 <td th:text="${(param.action != null and param.action[0] == 'emails-sent' ? 'Sent' : '-')}">-</td>
                 <td class="alignright" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '9 January 2017' : '-')}">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-2">
@@ -173,14 +173,14 @@
                   </label>
 
                 </td>
-  							<td>194732</td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-  							<td>Unsuccessful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194732</td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+  							<td class="govuk-table__cell">Unsuccessful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-3">
@@ -189,14 +189,14 @@
                   </label>
 
                 </td>
-  							<td>194733</td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-  							<td>On hold</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194733</td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+  							<td class="govuk-table__cell">On hold</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-4">
@@ -205,15 +205,15 @@
                   </label>
 
                 </td>
-  							<td>194734</td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-  							<td>Successful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194734</td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+  							<td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
 
-              <tr>
+              <tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -224,14 +224,14 @@
 
                 </td>
 
-  							<td>194735</td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-                <td>Successful</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194735</td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -242,14 +242,14 @@
 
                 </td>
 
-  							<td>194736</td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-  							<td>Unsuccessful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194736</td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+  							<td class="govuk-table__cell">Unsuccessful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-7">
@@ -258,14 +258,14 @@
                   </label>
 
                 </td>
-  							<td>194737</td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-  							<td>On hold</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194737</td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+  							<td class="govuk-table__cell">On hold</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -276,24 +276,24 @@
 
                 </td>
 
-  							<td>194738</td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-  							<td>Successful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194738</td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+  							<td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
   					</tbody>
   				</table>
         </div>
 
-        <div class="grid-row sorting sorting-controls no-border">
-          <div class="column-half">
-            <div class="form-group">
+        <div class="govuk-grid-row sorting sorting-controls no-border">
+          <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group">
               <fieldset class="alignleft select-all-applications">
-                <legend class="visuallyhidden">Select application by type</legend>
+                <legend class="govuk-visually-hidden">Select application by type</legend>
                 <label class="form-label" for="select-aaplications-1">Select application type</label>
-                  <select class="form-control select-applications" id="select-aaplications-1">
+                  <select class="govuk-select select-applications" id="select-aaplications-1">
                     <option>-- Select applications --</option>
                     <option value="successful">Successful</option>
                     <option value="unsuccessful">Unsuccessful</option>
@@ -301,13 +301,13 @@
                     <option value="deselect">Deselect</option>
                   </select>
               </fieldset>
-              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+              <span class="govuk-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
             </div>
           </div>
 
-          <div class="column-half alignright">
+          <div class="govuk-grid-column-one-half alignright">
             <input type="hidden" name="comp" value="panel" />
-            <button class="button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write and send email</button>
+            <button class="govuk-button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write and send email</button>
           </div>
         </div>
 
@@ -330,7 +330,7 @@
           </li>
       </ul>
 
-      <div class="aligncentre extra-margin-bottom">
+      <div class="aligncentre govuk-!-margin-bottom-6">
           <a href="#" class="extra-margin-right">0 to 20</a>
           <a href="#" class="extra-margin-right">21 to 40</a>
           <a href="#" class="extra-margin-right">41 to 60</a>

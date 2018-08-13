@@ -21,18 +21,18 @@
         <!-- HARDCODED PROTOTYPE HTML -->
         <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" />
 
-        <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-          <h2 class="heading-small no-margin">Organisation size determines funding</h2>
-          <p>Your organisation size will determine the level of funding you may receive.</p>
-          <p>Changing the organisation size will reset the funding level.</p>
+        <div class="message-alert govuk-!-margin-bottom-6" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+          <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+          <p class="govuk-body">Your organisation size will determine the level of funding you may receive.</p>
+          <p class="govuk-body">Changing the organisation size will reset the funding level.</p>
         </div>
 
         <form action="#">
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <fieldset class="extra-margin-bottom">
-              <legend class="heading-medium no-margin-bottom">Business size</legend>
-              <p class="form-hint">To determine your funding level please provide your business size. If you are unsure please use the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+            <fieldset class="govuk-!-margin-bottom-6">
+              <legend class="govuk-heading-m govuk-!-margin-bottom-0">Business size</legend>
+              <p class="govuk-hint">To determine your funding level please provide your business size. If you are unsure please use the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
               <div class="form-block">
                 <label class="block-label selection-button-radio" for="radio-1">
                   <input id="radio-1" type="radio" name="radio-group" value="Micro"/>
@@ -79,122 +79,122 @@
 
           <fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">
 
-            <legend class="heading-medium visuallyhidden">Full time employees and turnover</legend>
+            <legend class="govuk-heading-m govuk-visually-hidden">Full time employees and turnover</legend>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label for="turnover" class="form-label-bold">
                 Turnover (&pound;)
-                <span class="form-hint">Your turnover from the last financial year.</span>
+                <span class="govuk-hint">Your turnover from the last financial year.</span>
               </label>
-              <input type="text" class="form-control width-medium" id="turnover" name="turnover" />
+              <input type="text" class="govuk-input width-medium" id="turnover" name="turnover" />
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label for="staff-count" class="form-label-bold">
                 Number of full-time employees
               </label>
-              <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
+              <input type="text" class="govuk-input width-medium" id="staff-count" name="staff-count" />
             </div>
 
           </fieldset>
 
           <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="extra-margin-bottom">
-                <legend class="heading-medium no-margin-bottom">End of last financial year</legend>
-                <span class="form-hint">Enter the month and year that your last financial year finished.<br />For example: 12 2016</span>
+            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-!-margin-bottom-6">
+                <legend class="govuk-heading-m govuk-!-margin-bottom-0">End of last financial year</legend>
+                <span class="govuk-hint">Enter the month and year that your last financial year finished.<br />For example: 12 2016</span>
                 <div class="date-group extra-margin">
                     <div class="month">
                         <label class="form-label" for="start-month">
                             <div>Month</div>
                         </label>
-                        <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+                        <input class="govuk-input width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
                     </div>
 
                     <div class="year">
                         <label class="form-label" for="start-year">
                             <div>Year</div>
                         </label>
-                        <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+                        <input class="govuk-input width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
-              <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="heading-medium no-margin-bottom">Financial overview</legend>
-              <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="heading-small">Financial overview</h2>
-              <div class="grid-row">
-                <div class="column-half">
-                  <table class="extra-margin-bottom">
-                    <thead>
-                      <tr>
-                        <th scope="col">Section</th>
+            <fieldset class="govuk-fieldset">
+              <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-m govuk-!-margin-bottom-0">Financial overview</legend>
+              <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-s">Financial overview</h2>
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  <table class="govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                      <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Section</th>
                         <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
                       </tr>
                     </thead>
                     <tbody th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-turnover">Annual Turnover</td>
-                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-turnover" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-small" aria-labelledby="last-year annual-turnover" /></td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-profit">Annual Profit</td>
-                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-profit" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-small" aria-labelledby="last-year annual-profit" /></td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-exports">Annual Exports</td>
-                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-exports" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-small" aria-labelledby="last-year annual-exports" /></td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="research">Research and development spend</td>
-                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year research" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-small" aria-labelledby="last-year research" /></td>
                       </tr>
                     </tbody>
                     <tbody th:if="${param.status != null and param.status[0] == 'readOnly'}">
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-turnover">Annual Turnover</td>
-                        <td class="numeric">200,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">200,000</td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-profit">Annual Profit</td>
-                        <td class="numeric">50,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">50,000</td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="annual-exports">Annual Exports</td>
-                        <td class="numeric">50,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">50,000</td>
                       </tr>
-                      <tr>
+                      <tr class="govuk-table__row">
                         <td id="research">Research and development spend</td>
-                        <td class="numeric">20,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">20,000</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
-              <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+              <div class="govuk-form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
                   <label for="staff-count" class="form-label-bold">
                       Full time employees
-                      <span class="form-hint">Number of full time employees at your organisation at the end of the last financial year.</span>
+                      <span class="govuk-hint">Number of full time employees at your organisation at the end of the last financial year.</span>
                   </label>
-                  <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
+                  <input type="text" class="govuk-input width-medium" id="staff-count" name="staff-count" />
               </div>
             </fieldset>
 
             <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
-              <dl class="readonly-data extra-margin-bottom">
+              <dl class="readonly-data govuk-!-margin-bottom-6">
                 <dt>Full time employees</dt>
                 <dd>42</dd>
               </dl>
             </th:block>
 
-            <!--<fieldset>-->
+            <!--<fieldset class="govuk-fieldset">-->
 
-              <!--<legend class="heading-large no-margin-bottom">Projected growth</legend>-->
+              <!--<legend class="govuk-heading-l govuk-!-margin-bottom-0">Projected growth</legend>-->
 
-              <!--<p>Details relating to your projected growth for the next 5 years.</p>-->
+              <!--<p class="govuk-body">Details relating to your projected growth for the next 5 years.</p>-->
 
               <!--<details th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
                 <!--<summary><span class="summary">What we need from the projected growth?</span></summary>-->
-                <!--<div class="panel">-->
-                  <!--<p>-->
+                <!--<div class="govuk-body panel">-->
+                  <!--<p class="govuk-body">-->
                     <!--GUIDANCE TEXT REQUIRED-->
                   <!--</p>-->
                 <!--</div>-->
@@ -202,11 +202,11 @@
 
 
 
-                <!--<div class="table-overflow extra-margin-bottom">-->
-                  <!--<table class="extra-margin-bottom">-->
-                    <!--<thead>-->
-                      <!--<tr>-->
-                        <!--<th></th>-->
+                <!--<div class="table-overflow govuk-!-margin-bottom-6">-->
+                  <!--<table class="govuk-!-margin-bottom-6">-->
+                    <!--<thead class="govuk-table__head">-->
+                      <!--<tr class="govuk-table__row">-->
+                        <!--<th class="govuk-table__header" scope="col"></th>-->
                         <!--<th scope="col" class="alignright width-small" id="current">Current</th>-->
                         <!--<th scope="col" class="alignright width-small" id="1-year">1 year</th>-->
                         <!--<th scope="col" class="alignright width-small" id="3-plus-years">3+ years</th>-->
@@ -214,15 +214,15 @@
                         <!--<th scope="col" class="alignright" id="percent-related">Proportion related to project (%)</th>-->
                       <!--</tr>-->
                     <!--</thead>-->
-                    <!--<tbody>-->
-                      <!--<tr>-->
+                    <!--<tbody class="govuk-table__body">-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row" id="turnover">Annual turnover (&pound;)</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover current" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 1-year" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover percent-related" /></td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
@@ -230,19 +230,19 @@
                           <!--<td class="numeric" aria-labelledby="turnover 1-year">12,000</td>-->
                           <!--<td class="numeric" aria-labelledby="turnover 3-plus-years">12,000</td>-->
                           <!--<td class="numeric" aria-labelledby="turnover 5-plus-years">12,000</td>-->
-                          <!--<td class="numeric">12%</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12%</td>-->
                         <!--</th:block>-->
 
 
                       <!--</tr>-->
-                      <!--<tr>-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row" id="profit">Annual profit (&pound;)</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit current" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 1-year" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 3-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 5-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit percent-related" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="profit current" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="profit 1-year" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="profit 3-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="profit 5-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="profit percent-related" /></td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
@@ -253,14 +253,14 @@
                           <!--<td class="numeric" aria-labelledby="profit percent-related">12%</td>-->
                         <!--</th:block>-->
                       <!--</tr>-->
-                      <!--<tr>-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row" id="exports">Exports (&pound;)</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover current" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 1-year" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="turnover percent-related" /></td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
@@ -271,14 +271,14 @@
                           <!--<td class="numeric" aria-labelledby="turnover percent-related">12%</td>-->
                         <!--</th:block>-->
                       <!--</tr>-->
-                      <!--<tr>-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row" id="research">Research and development spend as a percentage of annual turnover</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research current" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 1-year" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 3-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 5-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research percent-related" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="research current" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="research 1-year" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="research 3-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="research 5-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="research percent-related" /></td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
@@ -289,32 +289,32 @@
                           <!--<td class="numeric" aria-labelledby="research percent-related">12%</td>-->
                         <!--</th:block>-->
                       <!--</tr>-->
-                      <!--<tr>-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row">Research and development (Spend value)</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric">&pound;0</td>-->
-                          <!--<td class="numeric">&pound;0</td>-->
-                          <!--<td class="numeric">&pound;0</td>-->
-                          <!--<td class="numeric">&pound;0</td>-->
-                          <!--<td class="numeric">0%</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">0%</td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric">12,000</td>-->
-                          <!--<td class="numeric">12,000</td>-->
-                          <!--<td class="numeric">12,000</td>-->
-                          <!--<td class="numeric">12,000</td>-->
-                          <!--<td class="numeric">12%</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12,000</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12,000</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12,000</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12,000</td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric">12%</td>-->
                         <!--</th:block>-->
                       <!--</tr>-->
-                      <!--<tr>-->
+                      <!--<tr class="govuk-table__row">-->
                         <!--<th scope="row" id="staff-count">Staff count</th>-->
                         <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count current" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 1-year" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 3-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 5-plus-years" /></td>-->
-                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count percent-related" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="staff-count current" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="staff-count 1-year" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="staff-count 3-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="staff-count 5-plus-years" /></td>-->
+                          <!--<td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" class="govuk-input width-full" aria-labelledby="staff-count percent-related" /></td>-->
                         <!--</th:block>-->
 
                         <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
@@ -341,7 +341,7 @@
               </th:block>
 
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 

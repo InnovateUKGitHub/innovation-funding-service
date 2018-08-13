@@ -1,9 +1,9 @@
 %fix-right {
-  background: $grey-3;
+  background: govuk-colour("grey-3");
   font-weight:bold;
 
   + .fix-right {
-    background: $grey-4;
+    background: govuk-colour("grey-4");
     white-space: normal;
   }
 
@@ -22,6 +22,7 @@
   position: relative;
 
   input {
+    @include govuk-font(16);
     text-align:right;
     min-width:4em;
     padding:3px;
@@ -35,7 +36,7 @@
   }
 
   th {
-    font-size:15px;
+    @include govuk-font(16);
 
     &[scope="col"] {
       text-align:right;
@@ -47,12 +48,12 @@
   }
 
   td {
-    font-size:16px;
+    @include govuk-font(16);
     text-align:right;
   }
 
   .year {
-    border-right: 1px solid $border-colour;
+    border-right: 1px solid $govuk-border-colour;
   }
 
   .flex-table-wrap {
@@ -61,7 +62,7 @@
   }
 
   .form-group-row {
-    &.form-group-error {
+    &.govuk-form-group--error {
       .fix-right {
         @extend %fix-right;
       }
@@ -85,7 +86,7 @@
 
     tr {
       &.form-group-row {
-        &.form-group-error {
+        &.govuk-form-group--error {
           > * {
             &:first-child {
               margin-top:-1px;
@@ -101,7 +102,7 @@
   tbody {
     tr {
       &.form-group-row {
-        &.form-group-error {
+        &.govuk-form-group--error {
           th {
             &:first-of-type {
               margin-top:1px;
@@ -133,7 +134,7 @@
         left: 0;
         position: absolute;
         width: 310px;
-        border-right: 1px solid $grey-2;
+        border-right: 1px solid govuk-colour("grey-2");
         background-color: #fff;
 
         + td {
@@ -152,13 +153,13 @@
           + th {
             &[scope="row"] {
               left:175px;
-              border-right: 1px solid $border-colour;
+              border-right: 1px solid $govuk-border-colour;
             }
           }
 
           &[colspan="2"]{
             width:350px;
-            border-right:1px solid $border-colour;
+            border-right:1px solid $govuk-border-colour;
           }
         }
       }
