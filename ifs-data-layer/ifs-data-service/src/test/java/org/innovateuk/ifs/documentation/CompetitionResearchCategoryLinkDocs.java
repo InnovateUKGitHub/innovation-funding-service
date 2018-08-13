@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResearchCategoryLinkResourceBuilder;
-import org.innovateuk.ifs.competition.domain.CompetitionResearchCategoryLink;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;

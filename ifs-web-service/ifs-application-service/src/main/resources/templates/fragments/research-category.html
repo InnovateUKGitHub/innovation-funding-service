@@ -4,9 +4,9 @@
 <th:block th:fragment="research_category(model)">
     <form
         th:action="@{/application/{applicationId}/form/question/{questionId}/research-category(applicationId=${model.applicationId},questionId=${model.questionId})}"
-          method="post"
-          th:object="${form}"
-          novalidate="novalidate">
+        method="post"
+        th:object="${form}"
+        novalidate="novalidate">
 
         <div class="question">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'govuk-form-group--error'">
@@ -46,7 +46,7 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('researchCategory')}"
                                   th:text="${err}"></span>
                         </th:block>
-                        <div class="govuk-radios">
+                        <div class="govuk-radios" th:if="${#list.size(model.availableResearchCategories) > 1}">
                             <div class="govuk-radios__item"
                                  th:each="item : ${model.availableResearchCategories}">
                                 <input type="radio"
@@ -60,6 +60,19 @@
                                     [[${item.name}]]
                                     <span class="govuk-hint" th:text="${item.description}">description</span>
                                 </label>
+                            </div>
+                        </div>
+                        <div class="govuk-checkboxes" th:if="${#list.size(model.availableResearchCategories) == 1}">
+                            <div class="govuk-checkboxes__item"
+                                 th:each="item : ${model.availableResearchCategories}">
+                                <input type="checkbox"
+                                       class="govuk-checkboxes__input"
+                                       th:field="*{researchCategory}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       id="research-category-choice"/> <!-- data-autosave-disabled -->
+                                <label for="research-category-choice"
+                                       class="govuk-label govuk-checkboxes__label">PDF</label>
                             </div>
                         </div>
                     </fieldset>
@@ -110,7 +123,7 @@
             <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             <!--/* 'Return and edit' link */-->
             <th:block th:if="${model.canMarkAsComplete}"
-                th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+                      th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
         </div>
     </div>
 </th:block>
