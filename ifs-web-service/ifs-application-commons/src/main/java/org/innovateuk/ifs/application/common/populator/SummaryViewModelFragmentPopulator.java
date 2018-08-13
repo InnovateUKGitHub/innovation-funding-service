@@ -95,7 +95,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         this.userService = userService;
     }
 
-    public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
+    public SummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
