@@ -180,12 +180,12 @@
                             and organisationForm.useSearchResultAddress == false
                             and organisationForm.addressForm.selectedPostcode != null}">
                 <h3 class="govuk-heading-s">Operating Address</h3>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine3}"></div>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.town}"></div>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.county}"></div>
-                <div th:text="${organisationForm.addressForm.selectedPostcode?.postcode}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine3}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.town}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.county}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.postcode}"></div>
             </div>
         </div>
     </fieldset>
@@ -202,12 +202,12 @@
 
             <h3 class="govuk-heading-s">Address</h3>
             <div>
-                <div th:text="${business?.officeAddress?.addressLine1}"></div>
-                <div th:text="${business?.officeAddress?.addressLine2}"></div>
-                <div th:text="${business?.officeAddress?.addressLine3}"></div>
-                <div th:text="${business?.officeAddress?.town}"></div>
-                <div th:text="${business?.officeAddress?.county}"></div>
-                <div th:text="${business?.officeAddress?.postcode}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.addressLine1}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.addressLine2}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.addressLine3}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.town}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.county}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${business?.officeAddress?.postcode}"></div>
             </div>
         </div>
     </fieldset>

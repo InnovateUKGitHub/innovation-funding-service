@@ -31,7 +31,7 @@
         </div>
 
         <h1 class="govuk-heading-xl">
-            <span class="heading-secondary">Start new application</span>
+            <span class="govuk-caption-xl">Start new application</span>
             Choose your organisation type
         </h1>
 
@@ -39,12 +39,12 @@
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
-        <p class="govuk-!-margin-top-6 gov-uk-body">This is the organisation that will lead the application.</p>
+        <p class="govuk-body govuk-!-margin-top-6">This is the organisation that will lead the application.</p>
 
          <form id="lead-organisation-type-form"
                th:object="${organisationForm}"
                th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
-             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
+             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'govuk-form-group--error'">
                  <fieldset class="govuk-fieldset">
                      <legend class="govuk-fieldset__legend govuk-visually-hidden" id="organisationTypeId">
                         <span class="govuk-fieldset__heading">Please select your organisation type</span>

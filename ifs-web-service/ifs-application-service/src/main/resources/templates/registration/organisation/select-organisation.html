@@ -1,55 +1,67 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.canSelectOrganisation() ? 'Select your organisation' : 'Your organisation'},subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+    <main tabindex="-1" id="content">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.canSelectOrganisation() ? 'Select your organisation' : 'Your organisation'},subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
 
-    <p th:unless="${model.collaboratorJourney}">This is the organisation that will lead the application.</p>
-    <p th:if="${model.collaboratorJourney}">This is the organisation that you will join the application with.</p>
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-heading"
+             tabindex="-1">
+            <h2 class="govuk-error-summary__title"
+                id="error-summary-heading">
+                We were unable to save your changes.
+            </h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
-    <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
-        <th:block th:if="${model.canSelectOrganisation()}">
-            <div class="form-group">
-                <div class="multiple-choice" th:each="choice : ${model.choices}">
-                    <input th:field="*{selectedOrganisationId}" th:value="${choice.id}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                    <label th:for="${#ids.prev('selectedOrganisationId')}">
-                        <span class="form-label-bold" th:text="${choice.name}" />
-                        <span class="form-hint" th:text="${choice.type}" />
-                    </label>
+        <p class="govuk-body" th:unless="${model.collaboratorJourney}">This is the organisation that will lead the application.</p>
+        <p class="govuk-body" th:if="${model.collaboratorJourney}">This is the organisation that you will join the application with.</p>
+
+        <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
+            <th:block th:if="${model.canSelectOrganisation()}">
+                <div class="form-group">
+                    <div class="multiple-choice" th:each="choice : ${model.choices}">
+                        <input th:field="*{selectedOrganisationId}" th:value="${choice.id}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                        <label th:for="${#ids.prev('selectedOrganisationId')}">
+                            <span class="form-label-bold" th:text="${choice.name}" />
+                            <span class="form-hint" th:text="${choice.type}" />
+                        </label>
+                    </div>
                 </div>
-            </div>
-        </th:block>
-        <th:block th:unless="${model.canSelectOrganisation()}" th:with="organisation=${model.onlyOrganisation()}">
-            <dl class="readonly-data">
-                <dt th:text="${organisation.name}"></dt>
-                <dd th:text="${organisation.type}"></dd>
-            </dl>
-            <input name="selectedOrganisationId" th:value="${organisation.id}" type="hidden" />
-        </th:block>
+            </th:block>
+            <th:block th:unless="${model.canSelectOrganisation()}" th:with="organisation=${model.onlyOrganisation()}">
+                <dl class="govuk-list readonly-data">
+                    <dt th:text="${organisation.name}"></dt>
+                    <dd th:text="${organisation.type}"></dd>
+                </dl>
+                <input name="selectedOrganisationId" th:value="${organisation.id}" type="hidden" />
+            </th:block>
 
-        <p>
-            <a th:unless="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Apply with a different organisation.</a>
-            <a th:if="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Join with a different organisation.</a>
-        </p>
+            <p class="govuk-body">
+                <a class="govuk-link" th:unless="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Apply with a different organisation.</a>
+                <a class="govuk-link" th:if="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Join with a different organisation.</a>
+            </p>
 
-        <button type="submit" class="button extra-margin">Save and continue</button>
-    </form>
+            <button type="submit" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

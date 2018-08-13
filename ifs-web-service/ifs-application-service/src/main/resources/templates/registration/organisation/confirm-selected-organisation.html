@@ -15,12 +15,12 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='govuk-heading-xl'" />
 
-        <div class="message-alert">
+        <div class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
-        <p th:if="${isLeadApplicant}" class="extra-margin">This organisation will lead the application.</p>
-        <p th:unless="${isLeadApplicant}" class="extra-margin">This is the organisation that you will join the application with.</p>
+        <p class="govuk-body" th:if="${isLeadApplicant}">This organisation will lead the application.</p>
+        <p th:unless="${isLeadApplicant}">This is the organisation that you will join the application with.</p>
 
         <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
@@ -49,9 +49,6 @@
                             </label>
                         </div>
                     </div>
-                  </label>
-              </div>
-
                 </div>
             </fieldset>
 
