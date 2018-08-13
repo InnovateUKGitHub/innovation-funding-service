@@ -31,14 +31,14 @@ Cancel button redirects to the read-only view without changes
     [Tags]
     Given the user clicks the button/link            jQuery=a:contains("Cancel")
     Then the user should be redirected to the correct page    ${assessment_skills_url}
-    [Teardown]    the user clicks the button/link    id=editSkills
+    [Teardown]    the user clicks the button/link    id = editSkills
 
 Back button from edit page redirects to read only view
     [Documentation]    INFUND-8009  IFS-3942
     [Tags]
     Given the user clicks the button/link            link=Your skills
     Then the user should be redirected to the correct page    ${assessment_skills_url}
-    [Teardown]    the user clicks the button/link    jQuery=div:nth-child(10) a:contains("Edit")
+    [Teardown]    the user clicks the button/link    id = editSkills
 
 Server-side validations
     [Documentation]    INFUND-5182
@@ -64,20 +64,20 @@ Save Skills should redirect to the read-only view
     And the user clicks the button/link          jQuery=button:contains("Save and return to your skills")
     Then the user should be redirected to the correct page    ${assessment_skills_url}
     And the user should see the element          jQuery=h3:contains("Skill areas")~ p:contains("assessor skill areas text")
-    And the user should see the element          jQuery=dt:contains("Assessor type")~dd:contains("Business")
-    And the user should see the element          jQuery=td:contains("Materials, process and manufacturing design technologies")
+    And the user should see the element          jQuery = dt:contains("Assessor type")~dd:contains("Business")
+    And the user should see the element          jQuery = td:contains("Materials, process and manufacturing design technologies")
 
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
     [Tags]
     When the user clicks the button/link            link=Assessor dashboard
     Then The user should not see the element        jQuery=.message-alert a:contains('your skills')    #this checks the alert message on the top of the page
-    [Teardown]    the user clicks the button/link   link=your details
+    [Teardown]    the user clicks the button/link   link = your details
 
 Return to assessor dashboard from skills page
     [Documentation]    INFUND-8009
     [Tags]
-    When the user clicks the button/link    link=Assessor dashboard
+    When the user clicks the button/link    jQuery=a:contains("Return to assessor dashboard")
     Then the user should be redirected to the correct page     ${assessor_dashboard_url}
 
 *** Keywords ***

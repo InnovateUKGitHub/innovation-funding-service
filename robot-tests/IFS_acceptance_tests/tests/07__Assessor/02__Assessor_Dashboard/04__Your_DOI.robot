@@ -23,7 +23,7 @@ Back to the dashboard link
     ...    INFUND-5432
     ...
     ...    INFUND-7060  IFS-3942
-    Given The user should see the element  jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
+    Given The user should see the element  jQuery = ul li a:contains("your declaration of interest")    #this checks the alert message on the top of the page
     When the user clicks the button/link   link = your details
     And the user clicks the button/link    link = DOI
     And The user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
