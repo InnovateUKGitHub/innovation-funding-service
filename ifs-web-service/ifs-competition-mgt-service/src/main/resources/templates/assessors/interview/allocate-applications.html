@@ -1,108 +1,118 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
 </head>
 
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications allocated for interview',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications allocated for interview',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" />
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-    <h2 class="heading-medium no-margin" th:text="${model.user.getName()}">Felix Wilson</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${model.user.getName()}">Felix Wilson</h2>
 
-    <p>Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
+        <p class="govuk-body">Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
 
-    <div class="grid-row sorting extra-margin">
-        <span class="heading-xlarge no-margin" th:text="${#lists.size(model.applications)}">4</span>
-        <span class="heading-small">applications</span>
-    </div>
-
-    <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
-          th:object="${form}">
-        <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
-                    <th class="width-small">Application number</th>
-                    <th>Project title</th>
-                    <th>Lead organisation</th>
-                    <th class="numeric">Assessors</th>
-                    <th class="alignright"><span class="visuallyhidden">Remove</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="applicationInterview : ${model.applications}">
-                    <td>
-                        <a th:text="${applicationInterview.id}"
-                           th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}">114</a>
-                    </td>
-                    <td th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
-                    <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>
-                    <td th:text="${applicationInterview.numberOfAssessors}" class="numeric">1</td>
-                    <td class="alignright">
-                        <button class="buttonlink" name="remove" th:value="${applicationInterview.id}">Remove</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="govuk-body govuk-grid-row sorting govuk-!-margin-top-6">
+            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${#lists.size(model.applications)}">4</span>
+            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
         </div>
-        <fieldset class="extra-margin">
-            <legend class="visuallyhidden">Email assessor</legend>
-            <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
-                <label class="form-label-bold" th:for="${#ids.next('subject')}">
-                    <span>Email subject</span>
+
+        <form method="POST"
+              th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
+              th:object="${form}">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header govuk-table__header--numeric">Assessors</th>
+                        <th class="govuk-table__header alignright"><span class="govuk-visually-hidden">Remove</span></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="applicationInterview : ${model.applications}">
+                        <td class="govuk-table__cell">
+                            <a th:text="${applicationInterview.id}"
+                               th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}"
+                               class="govuk-link">114</a>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
+                        <td class="govuk-table__cell" th:text="${applicationInterview.leadOrganisation}">Ooba</td>
+                        <td th:text="${applicationInterview.numberOfAssessors}" class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                        <td class="govuk-table__cell alignright">
+                            <button class="button-clear" name="remove" th:value="${applicationInterview.id}">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-visually-hidden">Email assessor</legend>
+                <div class="govuk-form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="${#ids.next('subject')}">
+                        Email subject
+                    </label>
                     <th:block th:if="${#fields.hasErrors('subject')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
                     </th:block>
-                </label>
-                <input class="form-control width-full"
-                       id="subject"
-                       type="text"
-                       th:field="*{subject}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
-            </div>
-
-            <h3 class="heading-small">Message</h3>
-
-            <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
-
-            <div class="form-group extra-margin">
-                <label class="form-label-bold" for="message">Additional text</label>
-                <div class="textarea-wrapped">
-                    <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
-                    </textarea>
+                    <input class="govuk-input"
+                           id="subject"
+                           type="text"
+                           th:field="*{subject}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
                 </div>
-            </div>
 
-            <p class="form-hint extra-margin">
-                Yours sincerely,
-            </p>
+                <h3 class="govuk-heading-s">Message</h3>
 
-            <p class="form-hint extra-margin">
-                Innovate UK, part of UK Research and Innovation <br />
-                Tel: 0300 321 4357 <br />
-                Email: competitions@innovateuk.ukri.org
-            </p>
+                <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-            <input type="submit" class="button" value="Notify"/>
+                <div class="govuk-form-group govuk-!-margin-top-6">
+                    <label class="govuk-label"
+                           for="message">Additional text</label>
+                    <div class="textarea-wrapped">
+                        <textarea id="message"
+                                  rows="8"
+                                  data-editor="html"
+                                  class="govuk-textarea"
+                                  th:field="*{content}">
+                        </textarea>
+                    </div>
+                </div>
 
-            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button button-clear">
-                Cancel
-            </a>
-        </fieldset>
-    </form>
+                <p class="govuk-hint govuk-!-margin-top-6">
+                    Yours sincerely,
+                </p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+                <p class="govuk-hint govuk-!-margin-top-6">
+                    Innovate UK, part of UK Research and Innovation <br />
+                    Tel: 0300 321 4357 <br />
+                    Email: competitions@innovateuk.ukri.org
+                </p>
 
+                <div class="govuk-body govuk-!-margin-top-6">
+                    <input type="submit" class="govuk-button" value="Notify"/>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button-clear">
+                        Cancel
+                    </a>
+                </div>
+
+            </fieldset>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

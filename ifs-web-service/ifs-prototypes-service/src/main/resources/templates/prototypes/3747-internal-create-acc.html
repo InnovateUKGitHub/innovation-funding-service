@@ -16,20 +16,20 @@
 
 	 <!--HARDCODED PROTOTYPE HTML-->
 
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin">Create internal account</h1>
+	<div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="govuk-heading-l govuk-!-margin-0">Create internal account</h1>
     </div>
 
-	<h2 class="heading-medium">Your details</h2>
+	<h2 class="govuk-heading-m">Your details</h2>
 
 	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Your details</legend>
-			<div class="form-group">
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Your details</legend>
+			<div class="govuk-form-group">
 				<label class="form-label" for="title">
 					<span class="form-label-bold">Title</span>
 				</label>
-				<select class="form-control width-medium" id="title" name="title">
+				<select class="govuk-select width-medium" id="title" name="title">
 					<option value="">Mr</option>
 					<option value="">Miss</option>
 					<option value="">Mrs</option>
@@ -37,24 +37,24 @@
 					<option value="">Dr</option>
 				</select>
 			</div>
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label class="form-label" for="first-name">
 					<span class="form-label-bold">First name</span>
 				</label>
 				<input class="form-control" id="first-name" name="first-name" type="text" th:value="${(param.edit == null ? '':'Joe')}"/>
 			</div>
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label class="form-label" for="last-name">
 					<span class="form-label-bold">Last name</span>
 				</label>
 				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
 			</div>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label class="form-label" for="password">
 					<span class="form-label-bold">Password</span>
-					<span class="form-hint">Your password is case-sensitive and needs to:</span>
-					<ul class="list list-bullet form-hint">
+					<span class="govuk-hint">Your password is case-sensitive and needs to:</span>
+					<ul class="govuk-list govuk-list--bullet govuk-hint">
 						<li>be between 10 and 30 characters long</li>
 						<li>contain at least 1 capital letter</li>
 						<li>contain at least 1 number</li>
@@ -62,25 +62,25 @@
 				</label>
 				<input class="form-control" id="password" name="password" type="password" />
 			</div>
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label class="form-label" for="retype-password">
 					<span class="form-label-bold">Re-type password</span>
 				</label>
 				<input class="form-control" id="retype-password" name="retype-password" type="password" />
 			</div>
 
-			<div class="form-group">
-				<h3 class="heading-small">Invited email</h3>
-				<p class="form-hint">You have been invited into this system by:<br /><strong>exampleperson@inovateuk.gov.uk</strong></p>
+			<div class="govuk-form-group">
+				<h3 class="govuk-heading-s">Invited email</h3>
+				<p class="govuk-hint">You have been invited into this system by:<br /><strong>exampleperson@inovateuk.gov.uk</strong></p>
 			</div>
-			<div class="form-group">
-				<h3 class="heading-small">Inovate UK team</h3>
-				<p class="form-hint">You have been invited into this system as part of the following team:<br /><strong>Project Finance team</strong></p>
+			<div class="govuk-form-group">
+				<h3 class="govuk-heading-s">Inovate UK team</h3>
+				<p class="govuk-hint">You have been invited into this system as part of the following team:<br /><strong>Project Finance team</strong></p>
 			</div>
 
 		</fieldset>
 
-		<a href="/prototypes/3115-comp-dashboard?user=admin" class="button button-large extra-margin">Continue</a>
+		<a href="/prototypes/3115-comp-dashboard?user=admin" class="govuk-button button-large extra-margin">Continue</a>
 
 	</form>
 

@@ -46,6 +46,9 @@ public class AssessmentInvite extends CompetitionInvite<AssessmentInvite> implem
         super(competition, existingUser.getName(), existingUser.getEmail(), hash, CREATED);
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated // TODO workaround for mapstruct see: https://devops.innovateuk.org/issue-tracking/browse/INFUND-4585
     public InnovationArea getInnovationAreaOrNull() {
         return innovationArea;

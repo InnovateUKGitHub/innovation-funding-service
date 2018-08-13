@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Project Setup process.
  */
-public enum ProjectState implements ProcessState, IdentifiableEnum<ProjectState> {
+public enum ProjectState implements ProcessState, IdentifiableEnum {
 
     SETUP(17, State.PENDING),
     LIVE(18, State.ACCEPTED),

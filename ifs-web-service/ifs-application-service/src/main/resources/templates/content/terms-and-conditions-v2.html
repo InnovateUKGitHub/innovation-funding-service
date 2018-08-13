@@ -1,102 +1,106 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions'" />
 </head>
-<body class="terms-and-conditions">
+<body class="govuk-template__body terms-and-conditions">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-            <h2 class="heading-large">1. Terms of use</h2>
-            <p>Innovate UK, part of UK Research and Innovation, owns this website. This page and any pages it links to explains our terms of use. You must agree to these to use the Innovate UK website.</p>
-            <h3 class="heading-medium">1.1. Using our site</h3>
-            <p>Access to our site is permitted on a temporary basis. We reserve the right to withdraw, suspend or amend the service that we provide on our site without notice.</p>
-            <p>If you  create any user identification code, password or any other piece of information used as part of our security procedures (the "identity credentials"),  it must be treated as confidential and not disclosed to any third party. We have the right, to remove any identity credentials, whether chosen by you or allocated by us if in our opinion you have failed to comply with any of these terms.</p>
-            <h3 class="heading-medium">1.2. Our liability</h3>
-            <p>While we make every effort to keep the Innovate UK website up to date, we do not provide any guarantees, conditions or warranties as to its accuracy and availability. Your use of our site and its contents shall be at your own risk.</p>
-            <p>This does not affect our liability for death or personal injury resulting from our negligence, or our liability for fraudulent misrepresentation, or any other liability which cannot be excluded or limited under applicable law.</p>
-            <h3 class="heading-medium">1.3. Jurisdiction and applicable law</h3>
-            <p>Any dispute or claim that is made relating to our website or terms is bound by the court jurisdiction of England and Wales. Innovate UK has the right to bring proceedings against you for breach of these conditions in your country of residence or any other relevant country.</p>
-            <h2 class="heading-large">2. Acceptable use policy</h2>
-            <p>This acceptable use policy sets out the terms on which we allow you to use our site in any capacity.</p>
-            <h3 class="heading-medium">2.1. Prohibited uses</h3>
-            <p>You may use our site only for lawful purposes. You may not use our site:</p>
-            <ul class="list list-bullet">
-                <li>in any way that breaches any applicable local, national or international law or regulation</li>
-                <li>in any way or which has any effect that is unlawful or fraudulent</li>
-                <li>for the purpose of harming or attempting to harm any person in any way</li>
-                <li>to send, knowingly receive, upload, download, use or re-use any material which does not comply with our content standards</li>
-                <li>to transmit, or procure the sending of, any unsolicited or unauthorised advertising or promotional material or any other form of similar solicitation (spam)</li>
-                <li>to knowingly transmit any data, send or upload any material which is malicious or technologically harmful or which may adversely affect the operation of any computer software or hardware</li>
-            </ul>
-            <p>You also agree not to reproduce, duplicate, copy or re-sell any part of our site in contravention of the provisions of the terms and not to access without authority, interfere with, damage or disrupt:</p>
-            <ul class="list list-bullet">
-                <li>any part of our site</li>
-                <li>any equipment or network on which our site is stored;</li>
-                <li>any software used in the provision of our site; or</li>
-                <li>any equipment, network or software owned or used by any third party</li>
-            </ul>
-            <h3 class="heading-medium">2.2. Suspension and termination</h3>
-            <p>If you breach any of these terms then we reserve the right to take any appropriate action against you. This may include:</p>
-            <ul class="list list-bullet">
-                <li>immediate, temporary or permanent withdrawal of your right to use our site</li>
-                <li>immediate, temporary or permanent removal of any posting or material uploaded by you to our site</li>
-                <li>the issue of a warning to you</li>
-                <li>legal proceedings against you for reimbursement of all costs on an indemnity basis (including, but not limited to, reasonable administrative and legal costs) resulting from the breach</li>
-                <li>further legal action against you</li>
-                <li>disclosure of information to law enforcement authorities as we reasonably feel is necessary.</li>
-            </ul>
-            <p>We exclude liability for actions taken in response to breaches of the acceptable use policy. The responses described in this policy are not limited, and we may take any other action we deem appropriate.</p>
-            <h2 class="heading-large">3. Privacy policy</h2>     
-            <p>Innovate UK’s <a href="https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk">privacy notice</a> and <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter">information management policy</a> should be read in addition to <a href="https://www.ukri.org/privacy-notice/">UKRI’s privacy notice</a>.</p>
-            <p>This policy explains Innovate UK’s specific arrangements for collecting, storing, using and sharing your information. This can include personal data or confidential or commercially sensitive information. It provides details on how we use this information to support our ability to fund, support and connect innovative businesses and encourage sustainable economic growth for the UK.</p>
-            <p>Any information we collect from you; through our online platforms, grant applications and administration, events or elsewhere; will be managed according to this policy and is subject to data protection.</p>
-            <p>This policy complies with the <a href="https://gdpr-info.eu/">General Data Protection Regulation</a> (EU 2016/679), or GDPR, introduced on 25 May 2018.</p>
-            <p>As a public sector organisation we are also subject to some further data protection obligations under the <a href="http://www.legislation.gov.uk/ukpga/2018/12/contents">UK Data Protection Act 2018</a>.</p>
-            <h2 class="heading-large">4. Joint sponsors</h2>     
-            <p>Any information received for a competition and/or grant (or similar) run by, with, or on behalf of a joint-sponsor will be shared directly by you with both Innovate UK and the joint-sponsor. Any information generated by either Innovate UK or the joint-sponsor during the collaboration will also be shared with each other on the same basis. Innovate UK and the joint-sponsor will be directly and individually accountable to you for the information it holds. It will handle such information in accordance with its own funding and information management policies.</p>
-            <h2 class="heading-large">5. Licence</h2>
-            <p>You can reproduce content published on the Innovate UK website under the Open Government Licence (OGL) as long as you follow the licence conditions.</p>
-            <p>You should contact us (<a href="https://innovateuk.blog.gov.uk/2016/01/05/meet-the-team-media-relations/">https://innovateuk.blog.gov.uk/2016/01/05/meet-the-team-media-relations/</a>) if you want to reproduce a piece of content.</p>
-            <p>If you reproduce a piece of content from Innovate UK you must credit us in one of the following ways:</p>
-            <ul class="list list-bullet">
-                <li>"from Innovate UK /insert website address" (delete as applicable) or</li>
-                <li>"this content/article is from Innovate UK /insert website address" (delete as applicable).</li>
-            </ul>
-            <p>You cannot use the Innovate UK logo on your site or anywhere else without our express permission.</p>
-            <h2 class="heading-large">6. Excluded websites</h2>
-            <p>Any Innovate UK Content can only be shown on websites that do not fall into any one or more of the categories listed below. A site will be deemed to fall within one of the following categories where there is a material and prominent section of the site that falls within such category:</p>
-            <ul class="list list-bullet">
-                <li>sites that incite hatred whether based on race, religion, belief, gender, sexuality or otherwise, or promote, encourage or facilitate anti-social behaviour</li>
-                <li>sites that promote, encourage or facilitate violence</li>
-                <li>sites that promote, encourage or facilitate terrorism or other activities that risk UK national security</li>
-                <li>sites that discriminate against any specific social group or otherwise exploit vulnerable sections of society</li>
-                <li>sites that promote, facilitate or encourage illegal activity</li>
-                <li>sites which are misleading, pornographic, defamatory, or that contain illegal or otherwise actionable content under UK law</li>
-                <li>sites which infringe individual privacy</li>
-            </ul>
-            <h2 class="heading-large">7. Indemnity</h2>
-            <p>You agree to indemnify, hold harmless and defend Innovate UK as a result of any breach of the standard licence terms or otherwise in connection with your use of the Innovate UK website. This is in respect of all damages, costs and expenses, including reasonable legal fees and litigation expenses.</p>
-            <h2 class="heading-large">8. Accessibility</h2>
-            <p>We are committed to providing a website that is easy to use by everyone regardless of circumstances. We aim to uphold the guidelines for the government websites. These guidelines support the W3C’s Web Content Accessibility Guidelines. We are constantly improving and maintaining our standards in this regard.</p>
-            <h2 class="heading-large">9. General</h2>
-            <p>The rights and obligations contain in these terms cannot be assigned, charged, sublicensed or dealt with by any third party.</p>
-            <p>We may decide not to exercise or enforce any right available to us under these terms and conditions. We can always decide to exercise or enforce that right at a later date.</p>
-            <p>You should check these terms and conditions regularly. We can update them at any time without notice. We will post a notification of any material changes we make on our website.</p>
-            <p>You agree to any changes if you continue to use the Innovate UK website after the terms and conditions have been updated.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='govuk-heading-xl'" />
+
+                <h2 class="govuk-heading-l">1. Terms of use</h2>
+                <p>Innovate UK, part of UK Research and Innovation, owns this website. This page and any pages it links to explains our terms of use. You must agree to these to use the Innovate UK website.</p>
+                <h3 class="govuk-heading-m">1.1. Using our site</h3>
+                <p>Access to our site is permitted on a temporary basis. We reserve the right to withdraw, suspend or amend the service that we provide on our site without notice.</p>
+                <p>If you  create any user identification code, password or any other piece of information used as part of our security procedures (the "identity credentials"),  it must be treated as confidential and not disclosed to any third party. We have the right, to remove any identity credentials, whether chosen by you or allocated by us if in our opinion you have failed to comply with any of these terms.</p>
+                <h3 class="govuk-heading-m">1.2. Our liability</h3>
+                <p>While we make every effort to keep the Innovate UK website up to date, we do not provide any guarantees, conditions or warranties as to its accuracy and availability. Your use of our site and its contents shall be at your own risk.</p>
+                <p>This does not affect our liability for death or personal injury resulting from our negligence, or our liability for fraudulent misrepresentation, or any other liability which cannot be excluded or limited under applicable law.</p>
+                <h3 class="govuk-heading-m">1.3. Jurisdiction and applicable law</h3>
+                <p>Any dispute or claim that is made relating to our website or terms is bound by the court jurisdiction of England and Wales. Innovate UK has the right to bring proceedings against you for breach of these conditions in your country of residence or any other relevant country.</p>
+                <h2 class="govuk-heading-m">2. Acceptable use policy</h2>
+                <p>This acceptable use policy sets out the terms on which we allow you to use our site in any capacity.</p>
+                <h3 class="govuk-heading-m">2.1. Prohibited uses</h3>
+                <p>You may use our site only for lawful purposes. You may not use our site:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>in any way that breaches any applicable local, national or international law or regulation</li>
+                    <li>in any way or which has any effect that is unlawful or fraudulent</li>
+                    <li>for the purpose of harming or attempting to harm any person in any way</li>
+                    <li>to send, knowingly receive, upload, download, use or re-use any material which does not comply with our content standards</li>
+                    <li>to transmit, or procure the sending of, any unsolicited or unauthorised advertising or promotional material or any other form of similar solicitation (spam)</li>
+                    <li>to knowingly transmit any data, send or upload any material which is malicious or technologically harmful or which may adversely affect the operation of any computer software or hardware</li>
+                </ul>
+                <p>You also agree not to reproduce, duplicate, copy or re-sell any part of our site in contravention of the provisions of the terms and not to access without authority, interfere with, damage or disrupt:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>any part of our site</li>
+                    <li>any equipment or network on which our site is stored;</li>
+                    <li>any software used in the provision of our site; or</li>
+                    <li>any equipment, network or software owned or used by any third party</li>
+                </ul>
+                <h3 class="govuk-heading-m">2.2. Suspension and termination</h3>
+                <p>If you breach any of these terms then we reserve the right to take any appropriate action against you. This may include:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>immediate, temporary or permanent withdrawal of your right to use our site</li>
+                    <li>immediate, temporary or permanent removal of any posting or material uploaded by you to our site</li>
+                    <li>the issue of a warning to you</li>
+                    <li>legal proceedings against you for reimbursement of all costs on an indemnity basis (including, but not limited to, reasonable administrative and legal costs) resulting from the breach</li>
+                    <li>further legal action against you</li>
+                    <li>disclosure of information to law enforcement authorities as we reasonably feel is necessary.</li>
+                </ul>
+                <p>We exclude liability for actions taken in response to breaches of the acceptable use policy. The responses described in this policy are not limited, and we may take any other action we deem appropriate.</p>
+                <h2 class="govuk-heading-l">3. Privacy policy</h2>     
+                <p>Innovate UK’s <a href="https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk" class="govuk-link">privacy notice</a> and <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter" class="govuk-link">information management policy</a> should be read in addition to <a href="https://www.ukri.org/privacy-notice/" class="govuk-link">UKRI’s privacy notice</a>.</p>
+                <p>This policy explains Innovate UK’s specific arrangements for collecting, storing, using and sharing your information. This can include personal data or confidential or commercially sensitive information. It provides details on how we use this information to support our ability to fund, support and connect innovative businesses and encourage sustainable economic growth for the UK.</p>
+                <p>Any information we collect from you; through our online platforms, grant applications and administration, events or elsewhere; will be managed according to this policy and is subject to data protection.</p>
+                <p>This policy complies with the <a href="https://gdpr-info.eu/" class="govuk-link">General Data Protection Regulation</a> (EU 2016/679), or GDPR, introduced on 25 May 2018.</p>
+                <p>As a public sector organisation we are also subject to some further data protection obligations under the <a href="http://www.legislation.gov.uk/ukpga/2018/12/contents" class="govuk-link">UK Data Protection Act 2018</a>.</p>
+                <h2 class="govuk-heading-l">4. Joint sponsors</h2>     
+                <p>Any information received for a competition and/or grant (or similar) run by, with, or on behalf of a joint-sponsor will be shared directly by you with both Innovate UK and the joint-sponsor. Any information generated by either Innovate UK or the joint-sponsor during the collaboration will also be shared with each other on the same basis. Innovate UK and the joint-sponsor will be directly and individually accountable to you for the information it holds. It will handle such information in accordance with its own funding and information management policies.</p>
+                <h2 class="govuk-heading-l">5. Licence</h2>
+                <p>You can reproduce content published on the Innovate UK website under the Open Government Licence (OGL) as long as you follow the licence conditions.</p>
+                <p>You should contact us (<a href="https://innovateuk.blog.gov.uk/2016/01/05/meet-the-team-media-relations/" class="govuk-link">https://innovateuk.blog.gov.uk/2016/01/05/meet-the-team-media-relations/</a>) if you want to reproduce a piece of content.</p>
+                <p>If you reproduce a piece of content from Innovate UK you must credit us in one of the following ways:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>"from Innovate UK /insert website address" (delete as applicable) or</li>
+                    <li>"this content/article is from Innovate UK /insert website address" (delete as applicable).</li>
+                </ul>
+                <p>You cannot use the Innovate UK logo on your site or anywhere else without our express permission.</p>
+                <h2 class="govuk-heading-l">6. Excluded websites</h2>
+                <p>Any Innovate UK Content can only be shown on websites that do not fall into any one or more of the categories listed below. A site will be deemed to fall within one of the following categories where there is a material and prominent section of the site that falls within such category:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>sites that incite hatred whether based on race, religion, belief, gender, sexuality or otherwise, or promote, encourage or facilitate anti-social behaviour</li>
+                    <li>sites that promote, encourage or facilitate violence</li>
+                    <li>sites that promote, encourage or facilitate terrorism or other activities that risk UK national security</li>
+                    <li>sites that discriminate against any specific social group or otherwise exploit vulnerable sections of society</li>
+                    <li>sites that promote, facilitate or encourage illegal activity</li>
+                    <li>sites which are misleading, pornographic, defamatory, or that contain illegal or otherwise actionable content under UK law</li>
+                    <li>sites which infringe individual privacy</li>
+                </ul>
+                <h2 class="govuk-heading-l">7. Indemnity</h2>
+                <p>You agree to indemnify, hold harmless and defend Innovate UK as a result of any breach of the standard licence terms or otherwise in connection with your use of the Innovate UK website. This is in respect of all damages, costs and expenses, including reasonable legal fees and litigation expenses.</p>
+                <h2 class="govuk-heading-l">8. Accessibility</h2>
+                <p>We are committed to providing a website that is easy to use by everyone regardless of circumstances. We aim to uphold the guidelines for the government websites. These guidelines support the W3C’s Web Content Accessibility Guidelines. We are constantly improving and maintaining our standards in this regard.</p>
+                <h2 class="govuk-heading-l">9. General</h2>
+                <p>The rights and obligations contain in these terms cannot be assigned, charged, sublicensed or dealt with by any third party.</p>
+                <p>We may decide not to exercise or enforce any right available to us under these terms and conditions. We can always decide to exercise or enforce that right at a later date.</p>
+                <p>You should check these terms and conditions regularly. We can update them at any time without notice. We will post a notification of any material changes we make on our website.</p>
+                <p>You agree to any changes if you continue to use the Innovate UK website after the terms and conditions have been updated.</p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <th:block th:insert="content/fragments :: content-menu(current=${'terms'})" />
+            </div>
         </div>
-        <div class="column-one-third">
-            <th:block th:insert="content/fragments :: content-menu(current=${'terms'})" />
-        </div>
-    </div>
     <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

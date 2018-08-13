@@ -20,34 +20,34 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">
+    <h1 class="govuk-heading-xl">
         <span class="heading-secondary">Start new application</span>
         Choose organisation type
     </h1>
 
     <th:block th:if="${type == 'lead'}">
-        <div class="message-alert extra-margin-bottom">
-            <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
-        <p class="extra-margin">This is the organisation that will lead the application.</p>
+        <p class="govuk-body extra-margin">This is the organisation that will lead the application.</p>
     </th:block>
 
     <th:block th:unless="${type == 'lead'}">
-        <p>This is the organisation you will be part of for the application.</p>
+        <p class="govuk-body">This is the organisation you will be part of for the application.</p>
     </th:block>
 
     <form id="lead-organisation-type-form" action="/prototypes/IFS-3598-org-details" method="GET" novalidate="novalidate">
-        <div class="form-group">
-            <fieldset>
-                <legend class="extra-margin-bottom" id="organisationTypeId">
-                    <span class="visuallyhidden">Please select your organisation type</span>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-!-margin-bottom-6" id="organisationTypeId">
+                    <span class="govuk-visually-hidden">Please select your organisation type</span>
                 </legend>
 
                 <div class="multiple-choice">
                     <input id="radio-1" type="radio" required="required" value="1" data-required-errormessage="Please select an organisation type." name="organisationTypeId">
                     <label for="radio-1">
                         <span>Business</span>
-                        <span class="form-hint">UK based business.</span>
+                        <span class="govuk-hint">UK based business.</span>
                     </label>
                 </div>
 
@@ -56,7 +56,7 @@
                     <input id="radio-2" type="radio" required="required" value="2" data-required-errormessage="Please select an organisation type." name="organisationTypeId">
                     <label for="radio-2">
                         <span>Research</span>
-                        <span class="form-hint">Higher education and organisations registered with Je-S.</span>
+                        <span class="govuk-hint">Higher education and organisations registered with Je-S.</span>
                     </label>
                 </div>
 
@@ -65,11 +65,11 @@
                     <input id="radio-3" type="radio" required="required" value="3" data-required-errormessage="Please select an organisation type." name="organisationTypeId">
                     <label for="radio-3">
                         <span>Research and technology organisation (RTO)</span>
-                        <span class="form-hint">Organisations which solely promote and conduct collaborative research and innovation.</span>
+                        <span class="govuk-hint">Organisations which solely promote and conduct collaborative research and innovation.</span>
                     </label>
                 </div>
-                <div id="rto-guidance" class="panel" aria-hidden="true">
-                    <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
+                <div id="rto-guidance" class="govuk-body panel" aria-hidden="true">
+                    <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
                     <ul class="list-bullet">
                         <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
                         <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
@@ -80,7 +80,7 @@
                     <input id="radio-4" type="radio" required="required" value="4" data-required-errormessage="Please select an organisation type." name="organisationTypeId">
                     <label for="radio-4">
                         <span>Public sector, charity or non Je-S registered research organisation</span>
-                        <span class="form-hint">A not-for-profit public sector body or charity working on innovation.</span>
+                        <span class="govuk-hint">A not-for-profit public sector body or charity working on innovation.</span>
                     </label>
                 </div>
 
@@ -90,7 +90,7 @@
         </div>
 
 
-        <p>
+        <p class="govuk-body">
             If your organisation type is not listed contact the <a href="/info/contact">customer support service</a>.
         </p>
 
@@ -102,7 +102,7 @@
         <input type="hidden" name="type" th:value="${type}" />
 
         <button id="lead-organisation-type-cta"
-                class="button button-large extra-margin"
+                class="govuk-button button-large extra-margin"
                 name="select-company-type" type="submit"
                 th:text="${type == 'lead' ? 'Save and continue' : 'Continue'}">BUTTON TEXT</button>
     </form>

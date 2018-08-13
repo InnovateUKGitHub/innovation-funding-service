@@ -5,8 +5,8 @@
         <button type="submit"
                 name="add_cost"
                 th:value="${question.id}"
-                th:class="'buttonlink'"
-                class="add-another-row buttonlink"
+                th:class="'button-clear'"
+                class="add-another-row button-clear"
                 th:attrappend="data-repeatable-rowcontainer=${rowcontainer}"
                 th:text="${text}"
                 >
@@ -15,21 +15,22 @@
 
     <!-- ===========================Form: Textinput =========================== -->
 
-    <div th:fragment="textinput(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
+    <div th:fragment="textinput(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
 
-        <label class="form-label form-label-bold" th:for="${formInput.id}">
-          <span th:if="${question.name}" th:text="question.name" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        <label th:if="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}"
+               th:text="question.name">
         </label>
-
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-textinput (id=${formInput.id}, response=${model.response.value})" />
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
-    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error">
+    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? govuk-form-group--error">
 
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:unless="${model.complete or model.closed or model.summary}">
@@ -47,27 +48,26 @@
         <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
             <th:block th:if="${model.complete}">
-                <div class="success-alert assignee extra-margin-bottom">
-                    <p>This question is marked as complete</p>
+                <div class="success-alert assignee govuk-!-margin-bottom-6">
+                    <p class="govuk-body">This question is marked as complete</p>
                 </div>
             </th:block>
 
         </div>
 
-        <label class="form-label form-label-bold"
+        <label class="govuk-label"
                th:for="formInput[__${formInput.id}__]"
                th:id="'form-label-'+${formInput.id}">
             <th:block th:if="${model.closed or model.summary}">
-                <span class="heading-small" th:if="${question.name} and ${question.name != 'Project summary'} and ${question.name != 'Public description'}"
+                <span class="govuk-heading-s" th:if="${question.name} and ${question.name != 'Project summary'} and ${question.name != 'Public description'}"
                       th:text="${question.name}" />
             </th:block>
             <th:block th:unless="${model.closed or model.summary}">
-              <span class="heading-small" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+              <span class="govuk-heading-s" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
-
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:unless="${model.closed or model.summary}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:unless="${hideDetails}" th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
         <th:block th:if="${hideDetails}" th:insert="question-type/form-elements :: form-text-only(${model})" />
@@ -75,12 +75,14 @@
 
     <!-- ===========================Form: Date input =========================== -->
 
-    <div th:fragment="date(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label form-label-bold" th:for="${formInput.id}">
-          <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+    <div th:fragment="date(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
+        <label th:if="${question.getName()}"
+               th:text="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}">
         </label>
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.id}, day='', month='', year='')" />
     </div>
@@ -99,7 +101,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="heading-small no-margin" th:text="${formInput.description}">Project management appendix</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.description}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance-appendix (${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
@@ -115,8 +117,8 @@
          */-->
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
-            <p th:if="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
-            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
+            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body uploaded-file">No file currently uploaded</p>
+            <a th:unless="${#strings.isEmpty(filename)}" class="govuk-body govuk-link uploaded-file" th:href="${downloadUrl}"  th:text="${filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
         </th:block>
         <!--/* file upload can still be changed */-->
         <th:block th:if="${viewmode == 'edit'}">
@@ -127,25 +129,25 @@
                 #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
                 field has been binded
             */-->
-            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'form-group-error')">
+            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="uploaded-file">No file currently uploaded</p>
+                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
                     <th:block th:if="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
                     </th:block>
                     <th:block th:unless="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" />
                     </th:block>
-                    <label th:for="${inputField}" class="button-secondary extra-margin">+ Upload</label>
+                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                     <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
-                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
+                    <a class="govuk-body govuk-link uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
                     <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
                 </th:block>
             </div>
@@ -154,20 +156,22 @@
 
     <!-- ===========================Form: Percentage =========================== -->
 
-    <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label" th:for="${formInput.id}">
-          <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+    <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
+        <label th:if="${question.getName()}"
+               th:text="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}">
         </label>
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
-        <span>%</span>
+        <span>&percnt;</span>
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
-        <th:block ifs:utext="${question.description}" />
+        <div class="govuk-body" ifs:utext="${question.description}" />
         <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 

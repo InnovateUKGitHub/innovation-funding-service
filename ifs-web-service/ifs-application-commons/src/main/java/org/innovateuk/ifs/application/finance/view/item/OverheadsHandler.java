@@ -57,7 +57,7 @@ public class OverheadsHandler extends FinanceRowHandler {
         if (rateType.isPresent() && customRate.isPresent()) {
             overheadRateType = OverheadRateType.valueOf(rateType.get().getValue());
             rate = handleRate(overheadRateType, Integer.valueOf(customRate.get().getValue()));
-        } else if (rateType.isPresent() && !customRate.isPresent()) {
+        } else if (rateType.isPresent()) {
             overheadRateType = OverheadRateType.valueOf(rateType.get().getValue());
             rate = handleRate(overheadRateType, 0);
         } else if (!rateType.isPresent() && customRate.isPresent()) {

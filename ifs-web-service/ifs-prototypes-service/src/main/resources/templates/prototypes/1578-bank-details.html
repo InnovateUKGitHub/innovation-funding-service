@@ -19,22 +19,22 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" />
 
-	<p>In order for us to pay your grant we need your bank account details. We will then verify the bank account to the lead organisation.</p>
+	<p class="govuk-body">In order for us to pay your grant we need your bank account details. We will then verify the bank account to the lead organisation.</p>
 
-	<p>The bank account must belong to the organisation listed.</p>
+	<p class="govuk-body">The bank account must belong to the organisation listed.</p>
 
-	<h3 class="heading-medium">Organisation information</h3>
-	<p class="form-hint">This information provided during the application process cannot be changed.</p>
+	<h3 class="govuk-heading-m">Organisation information</h3>
+	<p class="govuk-hint">This information provided during the application process cannot be changed.</p>
 
 	<div th:if="${param.status == null}">
-		<p class="extra-margin">
+		<p class="govuk-body extra-margin">
 			Aptrans Ltd <br />
 			Company no. 04214477
 		</p>
 	</div>
 
 	<div th:if="${param.status != null and param.status[0] == 'nonBusiness'}">
-		<p class="extra-margin">University of Cardiff</p>
+		<p class="govuk-body extra-margin">University of Cardiff</p>
 	</div>
 
 	<form action="#">
@@ -42,25 +42,25 @@
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-bank-details" />
 
 		<div class="extra-margin">
-			<a href="#" class="button" data-js-modal="modal-bank">Submit bank account details</a>
+			<a href="#" class="govuk-button" data-js-modal="modal-bank">Submit bank account details</a>
 		</div>
 
 		<div class="modal-bank" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="heading-medium no-margin">Submit bank details</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Submit bank details</h2>
 
-				<p>Are you sure you wish to submit your bank details?</p>
+				<p class="govuk-body">Are you sure you wish to submit your bank details?</p>
 
-				<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+				<p class="govuk-body">After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-            		<a href="/prototypes/1588-project-status?stage=level3" class="button">Submit</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+            		<a href="/prototypes/1588-project-status?stage=level3" class="govuk-button">Submit</a>
 
             	</div>
 

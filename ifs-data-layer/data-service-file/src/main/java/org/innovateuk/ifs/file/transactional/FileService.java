@@ -25,6 +25,9 @@ public interface FileService {
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier);
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<FileEntry> deleteFile(long fileEntryId);
