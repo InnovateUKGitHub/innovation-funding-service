@@ -9,6 +9,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResearchCategoryLinkResourceBuilder.newCompetitionResearchCategoryLinkResource;
+import static org.innovateuk.ifs.documentation.CompetitionResearchCategoryLinkDocs.competitionResearchCategoryLinkBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionResearchCategoryLinkDocs.competitionResearchCategoryLinkResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -32,7 +33,7 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
         final Long competitionId = 1L;
 
         when(competitionResearchCategoryService.findByCompetition(competitionId))
-                .thenReturn(serviceSuccess(newCompetitionResearchCategoryLinkResource().build(3)));
+                .thenReturn(serviceSuccess(competitionResearchCategoryLinkBuilder.build(3)));
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/competition-research-category/{id}", competitionId))
                 .andExpect(status().isOk())
