@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
