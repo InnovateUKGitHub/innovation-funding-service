@@ -191,8 +191,8 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccess();
             } else {
-                messages.getSuccess().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
+                messages.getSuccess().getErrors()
+                        .forEach(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccess();
             }
         }

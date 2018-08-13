@@ -55,14 +55,14 @@
 
 		<section class="data-area">
 
-			<h2 class="heading-large">Confirm invites</h2>
+			<h2 class="govuk-heading-l">Confirm invites</h2>
 
-			<div class="grid-row highlight-panel">
-				<div class="column-half">
-					<p class="no-margin"><span class="heading-large">10</span> <strong>assessors</strong></p>
+			<div class="govuk-grid-row highlight-panel">
+				<div class="govuk-grid-column-one-half">
+					<p class="govuk-body govuk-!-margin-0"><span class="govuk-heading-l">10</span> <strong>assessors</strong></p>
 				</div>
-				<div class="column-half alignright-button">
-					<a href="#" class="button" data-js-modal="modal-invite-assessors">Send invites to assessors</a>
+				<div class="govuk-grid-column-one-half alignright-button">
+					<a href="#" class="govuk-button" data-js-modal="modal-invite-assessors">Send invites to assessors</a>
 				</div>
 			</div>
 
@@ -70,101 +70,101 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Send invites to assessors</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Send invites to assessors</h2>
 
-					<p>Are you sure that you wish to send invites to the assessors on the invite list?</p>
+					<p class="govuk-body">Are you sure that you wish to send invites to the assessors on the invite list?</p>
 
-					<p>Once the invites have been sent this action cannot be undone.</p>
+					<p class="govuk-body">Once the invites have been sent this action cannot be undone.</p>
 
-					<hr />
+					<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-		            <div class="grid-row extra-margin">
-		            	<div class="column-half">
+		            <div class="govuk-grid-row extra-margin">
+		            	<div class="govuk-grid-column-one-half">
 		            		<a href="/prototypes/863-invite-list">Cancel</a>
 		            	</div>
-		            	<div class="column-half alignright-button">
-		            		<a href="/prototypes/997-comp-applications-dashboard-open?invitesSent" class="button">Send invites</a>
+		            	<div class="govuk-grid-column-one-half alignright-button">
+		            		<a href="/prototypes/997-comp-applications-dashboard-open?invitesSent" class="govuk-button">Send invites</a>
 		            	</div>
 		            </div>
 
 		        </div>
 		    </div>
 
-			<h3 class="heading-small"><span class="heading-large">4</span> Current assessors</h3>
+			<h3 class="govuk-heading-s"><span class="govuk-heading-l">4</span> Current assessors</h3>
 
 			<div class="table-overflow">
-				<table>
-					<thead>
-						<tr>
-							<th scope="col">Assessor</th>
-							<th scope="col">Type</th>
-							<th scope="col">Innovation area</th>
-							<th scope="col">Contract and DOI</th>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Assessor</th>
+							<th class="govuk-table__header" scope="col">Type</th>
+							<th class="govuk-table__header" scope="col">Innovation area</th>
+							<th class="govuk-table__header" scope="col">Contract and DOI</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
 							<th scope="row">Earnest	Massey</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Oliver Romero</th>
-							<td>Acadmic</td>
+							<td class="govuk-table__cell">Acadmic</td>
 			                <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Jeffrey	Carlson</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="no">No</span></td>
+							<td class="govuk-table__cell"><span class="no">No</span></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Jonathan Copeland</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
-			<h3 class="heading-small extra-margin"><span class="heading-large">6</span> New assessors</h3>
+			<h3 class="govuk-heading-s extra-margin"><span class="govuk-heading-l">6</span> New assessors</h3>
 
 			<div class="table-overflow">
-				<table>
-					<thead>
-						<tr>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
 							<th style="width: 50%" scope="col">Assessor</th>
 							<th style="width: 50%" scope="col">Email</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
 							<th scope="row">Bill Knightly</th>
-							<td>b.knightly@assessor.co.uk</td>
+							<td class="govuk-table__cell">b.knightly@assessor.co.uk</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Dave Redford</th>
-							<td>d.redford@assessor.co.uk</td>
+							<td class="govuk-table__cell">d.redford@assessor.co.uk</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Peter Newman</th>
-							<td>p.newman@assessor.co.uk</td>
+							<td class="govuk-table__cell">p.newman@assessor.co.uk</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Ryan Brown</th>
-							<td>r.brown@assessor.co.uk</td>
+							<td class="govuk-table__cell">r.brown@assessor.co.uk</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Tim Townsend</th>
-							<td>t.townsend@assessor.co.uk</td>
+							<td class="govuk-table__cell">t.townsend@assessor.co.uk</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Vince Wilson</th>
-							<td>v.wilson@assessor.co.uk</td>
+							<td class="govuk-table__cell">v.wilson@assessor.co.uk</td>
 						</tr>
 
 					</tbody>

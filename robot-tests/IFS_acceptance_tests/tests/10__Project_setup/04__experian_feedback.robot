@@ -71,7 +71,7 @@ Project Finance has the options to edit the details and to approve the bank deta
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the element    link=Change bank account details
-    And the user should see the element    jQuery=.button:contains("Approve bank account details")
+    And the user should see the element    jQuery=.govuk-button:contains("Approve bank account details")
 
 Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
@@ -119,7 +119,7 @@ Project Finance cancels bank details changes
     And the user moves focus to the element       css=[id="addressForm.selectedPostcode.addressLine1"]
     Then the user sees the text in the text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
     When the user clicks the button/link    id=modal-change-bank-details
-    And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
+    And the user clicks the button/link     jQuery=.button-clear:contains("Cancel")
     Then the text box should be editable    id=organisationName
     When the user clicks the button/link    link=Review bank details
     Then the user should see the text in the page    These details are now undergoing an internal review.
@@ -142,12 +142,12 @@ Project Finance approves the bank details
     [Tags]    HappyPath
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name} - Account details
-    When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
-    Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
-    When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    And the user clicks the button/link    jQuery=.button:contains("Approve account")
-    Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link     jQuery=.button-clear:contains("Cancel")
+    Then the user should see the element    jQuery=.govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Approve account")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
     And the user should not see the text in the page  We are unable to save your bank account details
     When the user goes back to the previous page
@@ -162,10 +162,10 @@ Project Finance cannot approve the bank details again
     [Tags]
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
     And the user should see the text in the page  ${Jetpulse_Name} - Account details
-    When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    And the user clicks the button/link    jQuery=.button:contains("Approve account")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Approve account")
     And the user goes back to the previous page
-    Then the user should not see the element   jQuery=.button:contains("Approve account")
+    Then the user should not see the element   jQuery=.govuk-button:contains("Approve account")
     And the user should see the text in the page    The bank details provided have been approved.
 
 Lead partner can see that bank details has been approved

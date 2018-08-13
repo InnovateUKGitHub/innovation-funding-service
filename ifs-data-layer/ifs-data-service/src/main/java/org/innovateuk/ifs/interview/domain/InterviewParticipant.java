@@ -80,6 +80,7 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
         return this;
     }
 
+    @Override
     public void setStatus(ParticipantStatus status) {
         super.setStatus(status);
     }

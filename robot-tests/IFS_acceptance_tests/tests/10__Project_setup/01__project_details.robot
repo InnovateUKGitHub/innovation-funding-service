@@ -169,14 +169,14 @@ Lead partner can change the Start Date
     Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
-    And the user clicks the button/link                 jQuery=.button:contains("Save")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Save")
     Then the user should see a field and summary error  Please enter a future date.
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     And the user enters text to a text field     id=projectStartDate_year    ${nextyear}
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save")
     Then The user should see the text in the page   Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
@@ -189,7 +189,7 @@ Option to invite a project manager
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
-    And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
+    And the user should see the element    jQuery=.govuk-hint:contains("Who will be the Project Manager for your project?")
     When the user selects the radio button    projectManager    new
     Then the user should see the element    id=invite-project-manager
     When the user selects the radio button    projectManager    projectManager1
@@ -211,10 +211,10 @@ Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field    id=name-project-manager    John Smith
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field    id=email-project-manager    test
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address.
     When the user selects the radio button    projectManager    projectManager1
@@ -222,7 +222,7 @@ Inviting project manager client side validations
     And the user should not see the text in the page    Please enter a valid name.
     When the user selects the radio button    projectManager    new
     And the user enters text to a text field    id=email-project-manager    test@example.com
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
     And the user should not see an error in the page
@@ -276,16 +276,16 @@ Lead partner selects a project manager
     [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
-    When the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue.
     When the user selects the radio button    projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue.
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project Manager
     And the user should see the element    css=#projectManager1:checked ~ label
     And the user selects the radio button    projectManager    projectManager2
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the text in the page    Elmo Chenault
     And the matching status checkbox is updated    project-details    3    yes
@@ -295,20 +295,20 @@ Lead partner can change the project address
     [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
-    When the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save")
     Then the user should see the text in the page    You need to select an address before you can continue.
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Find UK address")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Find UK address")
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
     And the address fields should be filled
-    And the user clicks the button/link    jQuery=.button:contains("Save project address")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save project address")
     And the user should see the address data
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
-    And the user clicks the button/link    jQuery=.button:contains("Save project address")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save project address")
     Then the user should see the text in the page    1, Sheffield, S1 2ED
 
 Project details can be submitted with PM, project address and start date
@@ -333,7 +333,7 @@ Non lead partner invites finance contact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
     When the user clicks the button/link       jQuery=button:contains("Invite to project")
     Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
-    And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save finance contact")
     [Teardown]    Logout as user
 
 Invited Fin Contact for non lead partner
@@ -398,14 +398,14 @@ Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field    id=name-finance-contact    John Smith
-    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field    id=email-finance-contact    test
-    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address
     When the user enters text to a text field    id=email-finance-contact    test@example.com
-    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
 
@@ -448,7 +448,7 @@ Lead partner selects a finance contact
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
     And the user selects the radio button    financeContact    financeContact2
-    And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the text in the page    Elmo Chenault
 
@@ -482,7 +482,7 @@ Academic Partner nominates Finance contact
     When the user clicks the button/link    link=Project details
     And the user clicks the button/link            jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
     And the user selects the radio button          financeContact    financeContact1
-    And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element     jQuery=td:contains("${organisationEggsName}")
     And select the project location         EGGS
@@ -637,7 +637,7 @@ all the fields are completed
     the matching status checkbox is updated  project-details  3  yes
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="govuk-radios__item"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 the user can see all project details completed
@@ -673,7 +673,7 @@ the invited user signs in
     [Arguments]  ${email}  ${name}  ${famName}
     the user reads his email and clicks the link    ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element                 jQuery=h1:contains("Account verified")
-    the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
     Logging in and Error Checking                   ${email}  ${correct_password}
 
 The user resends and clicks the button

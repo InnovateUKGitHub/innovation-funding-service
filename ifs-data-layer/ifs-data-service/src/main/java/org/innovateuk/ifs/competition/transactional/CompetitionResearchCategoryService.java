@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CompetitionResearchCategoryService {
 
-    @NotSecured(value = "Any user can see the latest site terms and conditions",
+    @NotSecured(value = "Any user can find the Research Category Link per competition",
             mustBeSecuredByOtherServices = false)
     ServiceResult<List<CompetitionResearchCategoryLinkResource>> findByCompetition(Long competitionId);
 }

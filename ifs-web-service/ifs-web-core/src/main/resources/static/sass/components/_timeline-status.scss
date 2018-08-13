@@ -1,15 +1,20 @@
 .timeline-status{
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 
   li{
-    border-top: 1px solid $secondary-text-colour;
-    color: $secondary-text-colour;
+    border-top: 1px solid $govuk-secondary-text-colour;
+    color: $govuk-secondary-text-colour;
 
     h3{
       margin: 10px 0 0 0;
+      color: $govuk-secondary-text-colour;
     }
 
     p{
       margin: 0 0 10px 0;
+      color: $govuk-secondary-text-colour;
     }
 
     &:first-child{
@@ -19,15 +24,23 @@
     &.done{
       @extend %icon-tick;
       background-position: right 1em;
-      border-top: 1px solid $text-colour;
-      color: $text-colour;
+      border-top: 1px solid $govuk-text-colour;
+      color: $govuk-text-colour;
+
+      h3{
+        color: $govuk-text-colour;
+      }
+
+      p{
+        color: $govuk-text-colour;
+      }
 
       &:first-child{
         border-top: none;
       }
     }
 
-    .button{
+    .govuk-button{
       width: 100%;
     }
   }
