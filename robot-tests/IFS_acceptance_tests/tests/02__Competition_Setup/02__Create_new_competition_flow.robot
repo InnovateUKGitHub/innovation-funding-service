@@ -116,17 +116,17 @@ Initial details - User enters valid values and marks as done
 Initial details - Innovation sector of Open should be visible
     [Documentation]    INFUND-9152
     [Tags]    HappyPath
-    Given the user clicks the button/link                       css = .govuk-button:contains("Edit")  # Click Edit
+    Given the user clicks the button/link                       jQuery = .govuk-button:contains("Edit")  # Click Edit
     When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
     Then the user selects the option from the drop-down menu    Sector    id = competitionTypeId
-    When the user clicks the button/link                        css = button[class = "button"]  # Click Done
+    When the user clicks the button/link                        css = button[class = "govuk-button"]  # Click Done
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]    HappyPath
     Given the user clicks the button/link            jQuery = .govuk-button:contains("Edit")
     When the user enters multiple innovation areas
-    And the user clicks the button/link              jQuery = button:contains("Done")
+    And the user clicks the button/link              jQuery = button[class = "govuk-button"]
     Then The user should see the text in the page    Space technology
     And The user should see the text in the page     Creative industries
 
@@ -533,10 +533,31 @@ Application: Finances
 Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
     [Tags]  Happypath
-    Given The user clicks the button/link     css=button.button  #Done button
-    Then The user should not see the element  css=button.button
+    Given The user clicks the button/link     css = button[class = "govuk-button"]  # Done button
+    Then The user should not see the element  css = button[class = "govuk-button"]  # Done button
     When The user clicks the button/link      link=Return to setup overview
     Then the user should see the element      jQuery=li:contains("Application") .task-status-complete
+
+Documents in project setup: The competition admin adds document requirements
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link        link = Documents in project setup
+    And the user clicks the button/link          link = Add document type
+    When the user enters text to a text field    id = title    Test document type
+    And the user clicks the button/link          jQuery = span:contains("PDF")
+    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+    And the user enters text to a text field     css = .editor    Guidance test.
+    And the user clicks the button/link          css = button[type = "submit"]
+    And the user should see the element          jQuery = span:contains("Test document type")
+
+Documents in project setup: The competition admin removes a document
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ span:contains("Edit")
+    When the user clicks the button/link        css = button[name = "removeDocument"]
+    And the user clicks the button/link         jQuery = button:contains("Confirm")
+    Then the user should not see the element    jQuery = span:contains("Test document type")
+    And the user clicks the button/link         link = Competition setup
 
 Public content is required for a Competition to be setup
     [Documentation]
