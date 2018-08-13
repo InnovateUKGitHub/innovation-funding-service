@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'" />
 </head>
-<body class="project-detail">
+<body class="govuk-template__body project-detail">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-project-details" />
@@ -11,187 +11,197 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
 
-    <p th:if="${model.userLeadPartner and !model.allProjectDetailsFinanceContactsAndProjectLocationsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
-    <p th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
 
-<h2 class="heading-medium">Project information</h2>
-<p th:if="${model.userLeadPartner}">You are providing these details as the lead on behalf of the overall project.</p>
-<p th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
+        <p class="govuk-body" th:if="${model.userLeadPartner and !model.allProjectDetailsFinanceContactsAndProjectLocationsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+        <p class="govuk-body" th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
 
-    <table id="project-details">
-        <thead>
-            <tr>
-                <th scope="col" class="larger-cols">Question</th>
-                <th scope="col">Answer</th>
-                <th scope="col" class="smaller-col">Complete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
-                </td>
-                <td id="start-date">
-                    <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
-                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
-                </td>
-                <td>
-                    <span th:if="${model.project.targetStartDate == null}" id="start-date-status" class="no">No</span>
-                    <span th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="yes">Yes</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project address</th:block>
-                </td>
-                <td id="project-address">
-                    <th:block th:if="${model.project.address.id == null}">-</th:block>
-                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Project address</th:block>
-                </td>
-                <td>
-                    <span th:if="${model.project.address.id == null}" id="project-address-status" class="no">No</span>
-                    <span th:unless="${model.project.address.id == null}" id="project-address-status" class="yes">Yes</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project Manager</th:block>
-                </td>
-                <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
-                <td id="no-project-manager" th:if="${model.projectManager == null}">-</td>
-                <td>
-                    <span th:if="${model.projectManager == null}" id="project-manager-status" class="no">No</span>
-                    <span th:unless="${model.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
-                </td>
-            </tr>
+        <h2 class="govuk-heading-m">Project information</h2>
+        <p class="govuk-body" th:if="${model.userLeadPartner}">You are providing these details as the lead on behalf of the overall project.</p>
+        <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
 
-        </tbody>
-    </table>
-
-    <!--/* If project setup location is enabled */-->
-    <th:block th:if="${model.competition.locationPerPartner}">
-        <h2 class="heading-medium">Partner details</h2>
-        <p>Each partner must provide a finance contact and a project location. We will contact the assigned person with any finance queries and assign the Monitoring Officer based on the location.</p>
-
-        <table id="project-details-finance">
-            <thead>
-                <tr>
-                    <th scope="col" class="larger-cols">Partner</th>
-                    <th scope="col">Finance contact</th>
-                    <th scope="col">Project location</th>
+        <table class="govuk-table" id="project-details">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header larger-cols">Question</th>
+                    <th class="govuk-table__header" scope="col">Answer</th>
+                    <th scope="col" class="govuk-table__header smaller-col">Complete</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr th:each="organisation: ${model.organisations}">
-                    <td>
-                        <th:block th:text="${organisation.name}">organisation name</th:block>
-                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}" class="govuk-link">Target start date</a>
+                        <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
                     </td>
-                    <td>
+                    <td class="govuk-table__cell" id="start-date">
+                        <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
+                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <span th:if="${model.project.targetStartDate == null}" id="start-date-status" class="no">No</span>
+                        <span th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="yes">Yes</span>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Project address</a>
+                        <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project address</th:block>
+                    </td>
+                    <td class="govuk-table__cell" id="project-address">
+                        <th:block th:if="${model.project.address.id == null}">-</th:block>
+                        <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Project address</th:block>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <span th:if="${model.project.address.id == null}" id="project-address-status" class="no">No</span>
+                        <span th:unless="${model.project.address.id == null}" id="project-address-status" class="yes">Yes</span>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}" class="govuk-link">Project Manager</a>
+                        <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project Manager</th:block>
+                    </td>
+                    <td class="govuk-table__cell" id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
+                    <td class="govuk-table__cell" id="no-project-manager" th:if="${model.projectManager == null}">-</td>
+                    <td class="govuk-table__cell">
+                        <span th:if="${model.projectManager == null}" id="project-manager-status" class="no">No</span>
+                        <span th:unless="${model.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <!--/* If project setup location is enabled */-->
+        <th:block th:if="${model.competition.locationPerPartner}">
+            <h2 class="govuk-heading-m">Partner details</h2>
+            <p class="govuk-body">Each partner must provide a finance contact and a project location. We will contact the assigned person with any finance queries and assign the Monitoring Officer based on the location.</p>
+
+            <table class="govuk-table" id="project-details-finance">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header larger-cols">Partner</th>
+                        <th class="govuk-table__header" scope="col">Finance contact</th>
+                        <th class="govuk-table__header" scope="col">Project location</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="organisation: ${model.organisations}">
+                        <td class="govuk-table__cell">
+                            <th:block th:text="${organisation.name}">organisation name</th:block>
+                            <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                    <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                                       th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}"
+                                       class="govuk-link">finance contact name</a>
+                                </th:block>
+
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                   <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
+                                </th:block>
+
+                            </th:block>
+
+                            <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                    <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                                       class="govuk-link">Select finance contact</a>
+                                </th:block>
+
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                    <span>-</span>
+                                </th:block>
+
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
+                                       th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}"
+                                       class="govuk-link">post code</a>
+                                </th:block>
+
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                    <span th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}" />
+                                </th:block>
+
+                            </th:block>
+
+                            <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
+
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
+                                       class="govuk-link">Select project location</a>
+                                </th:block>
+
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                    <span>-</span>
+                                </th:block>
+
+                            </th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <th:block th:unless="${model.competition.locationPerPartner}">
+            <h2 class="govuk-heading-m">Finance contacts</h2>
+            <p class="govuk-body">Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+
+            <table class="govuk-table" id="project-details-finance2">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header larger-cols">Partner</th>
+                    <th scope="col" class="govuk-table__header larger-cols">Finance contact</th>
+                    <th scope="col" class="govuk-table__header smaller-col">Submitted</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="organisation: ${model.organisations}">
+                    <td class="govuk-table__cell">
+                        <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                            <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                               th:text="${organisation.name}"
+                               class="govuk-link">organisation name</a>
+                            <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                        </th:block>
+                        <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                            <th:block th:text="${organisation.name}">organisation name</th:block>
+                            <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                        </th:block>
+                    </td>
+                    <td class="govuk-table__cell">
                         <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                                <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
-                                th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}">finance contact name</a>
-                            </th:block>
-
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                               <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
-                            </th:block>
-
+                            <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
                         </th:block>
-
                         <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
-
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                                <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}">Select finance contact</a>
-                            </th:block>
-
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                                <span>-</span>
-                            </th:block>
-
+                            <span>-</span>
                         </th:block>
                     </td>
-                    <td>
-                        <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
-                                <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
-                                   th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}">post code</a>
-                            </th:block>
-
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
-                                <span th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}" />
-                            </th:block>
-
-                        </th:block>
-
-                        <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
-
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
-                                <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}">Select project location</a>
-                            </th:block>
-
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
-                                <span>-</span>
-                            </th:block>
-
-                        </th:block>
+                    <td class="govuk-table__cell">
+                        <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
+                        <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </th:block>
+                </tbody>
+            </table>
+        </th:block>
 
-    <th:block th:unless="${model.competition.locationPerPartner}">
-        <h2 class="heading-medium">Finance contacts</h2>
-        <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
-
-        <table id="project-details-finance2">
-            <thead>
-            <tr>
-                <th scope="col" class="larger-cols">Partner</th>
-                <th scope="col" class="larger-cols">Finance contact</th>
-                <th scope="col" class="smaller-col">Submitted</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="organisation: ${model.organisations}">
-                <td>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                        <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                    </th:block>
-                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                        <th:block th:text="${organisation.name}">organisation name</th:block>
-                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                    </th:block>
-                </td>
-                <td>
-                    <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
-                        <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
-                    </th:block>
-                    <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
-                        <span>-</span>
-                    </th:block>
-                </td>
-                <td>
-                    <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
-                    <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </th:block>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

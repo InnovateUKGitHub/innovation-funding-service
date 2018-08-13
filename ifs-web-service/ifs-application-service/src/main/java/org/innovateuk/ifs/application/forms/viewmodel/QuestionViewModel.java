@@ -22,6 +22,7 @@ public class QuestionViewModel extends AbstractApplicationFormViewModel<Applican
         return getNavigationViewModel();
     }
 
+    @Override
     public NavigationViewModel getNavigationViewModel() {
         return navigationViewModel;
     }

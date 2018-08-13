@@ -45,9 +45,7 @@ public class AbstractAcceptInviteController {
     }
 
     protected final boolean loggedInAsNonInviteUser(ApplicationInviteResource invite, UserResource loggedInUser) {
-        if (loggedInUser == null){
-            return false;
-        } else if (invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
+        if (loggedInUser == null || invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
             return false;
         }
         return true;

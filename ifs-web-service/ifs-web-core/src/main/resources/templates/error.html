@@ -1,46 +1,50 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"  th:with="pageTitle=${title != null ? title : 'Internal Server Error'}" />
 
 </head>
-<body class="error">
+<body class="govuk-template__body error">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
 
-<main tabindex="-1" id="content">
-    <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
-    <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
-  <!--/*
-    <p th:if="${timestamp}" id='created'>
-        <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
-    </p> */-->
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <h1 class="govuk-heading-l" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
+        <h1 class="govuk-heading-l" th:unless="${title != null}">Internal Server Error</h1>
 
-    <p th:if="${status}">
-        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
-            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
-    </p>
+        <p class="govuk-body" th:if="${url}">
+            <b>Page:</b> <span th:text="${url}">Page URL</span>
+        </p>
+      <!--/*
+        <p class="govuk-body" th:if="${timestamp}" id='created'>
+            <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
+        </p> */-->
 
-    <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
-           ${exception} or ${message} are set internally by Spring Boot. */-->
+        <p class="govuk-body" th:if="${status}">
+            <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+                th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+        </p>
 
-    <div>
-      We are unable to complete your request.
-      This could be because something went wrong at our end, or you are trying to perform an action that does not exist.
-      You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}">Innovation Funding Service sign in page</a>.
-    </div>
+        <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
+               ${exception} or ${message} are set internally by Spring Boot. */-->
 
-    <p th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">
-        Stack trace will be printed here when using the "debug" active profile
-    </p>
+        <p class="govuk-body">
+          We are unable to complete your request.
+          This could be because something went wrong at our end, or you are trying to perform an action that does not exist.
+          You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}" class="govuk-link">Innovation Funding Service sign in page</a>.
+        </p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <p class="govuk-body" th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">
+            Stack trace will be printed here when using the "debug" active profile
+        </p>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

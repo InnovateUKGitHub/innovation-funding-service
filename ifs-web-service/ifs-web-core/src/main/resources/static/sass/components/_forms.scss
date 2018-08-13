@@ -1,7 +1,7 @@
 %read-only {
-  color: $black;
-  background: $grey-4;
-  border-color: $border-colour;
+  color: govuk-colour("black");
+  background: govuk-colour("grey-4");
+  border-color: $govuk-border-colour;
   cursor: default;
 }
 
@@ -28,9 +28,11 @@ div {
   &.readonly {
     @extend %read-only;
 
-    &.form-control-error {
+    &.govuk-input--error,
+    &.govuk-select--error,
+    &.govuk-textarea--error {
       @include box-shadow(none);
-      border: 4px solid $error-colour;
+      border: 4px solid $govuk-error-colour;
     }
   }
 }
@@ -62,7 +64,7 @@ input {
   }
 }
 
-.form-group {
+.govuk-form-group {
   .form-finances-subcontracting-cost {
     text-align: right;
   }
@@ -77,7 +79,7 @@ input {
 
 td,
 tr {
-  &.form-group {
+  &.govuk-form-group {
     float:none;
     width:auto;
     padding-left:0;
@@ -87,15 +89,17 @@ tr {
       vertical-align: top;
     }
 
-    &.form-group-error {
+    &.govuk-form-group--error {
       border-left:none;
     }
   }
 }
 
-.form-control-error {
+.govuk-input--error,
+.govuk-select--error,
+.govuk-textara--error{
   @include box-shadow(none);
-  border: 4px solid $error-colour;
+  border: 4px solid $govuk-error-colour;
 }
 
 table {
@@ -110,14 +114,6 @@ table {
       font-weight: 700;
     }
 
-    &.numeric {
-      text-align: right;
-
-      input {
-        text-align: right;
-      }
-    }
-
     &.cta {
       vertical-align: bottom;
     }
@@ -126,86 +122,52 @@ table {
       padding-left: 20px;
     }
 
-    .buttonlink {
+    .button-clear {
       margin: 0;
     }
 
-    .button {
+    .govuk-button {
       margin: 0 0 1px 0;
     }
   }
 
   .cell-border-right {
-    border-right:1px solid $border-colour;
+    border-right:1px solid $govuk-border-colour;
   }
 }
 
-.width-extra-small {
-  width: 65px;
-}
-
-.width-small {
-  width: 80px;
-}
-
-.width-small-medium {
-  width: 100px;
-}
-
-.width-medium {
-  width: 150px;
-}
-
-.width-large {
-  width: 200px;
-}
-
-.width-full {
-  width: 100%;
-
-  .app-form & {
-    min-width: 100px;
-  }
-
-}
-
-.width-x-large{
-  width:60%;
-}
-
-select {
-  &.form-control {
-    &.width-x-large {
-      width:60%;
-    }
-  }
-}
-
-input,
-select {
-  &.form-control {
-    + button {
-      &.button {
-        @include media (mobile) {
-          margin-top:15px;
-        }
-
-        line-height:1.15;
+.govuk-input,
+.govuk-select{
+  + button {
+    &.govuk-button {
+      @include govuk-media-query(mobile) {
+        margin-top:15px;
       }
+
+      line-height:1.15;
     }
 
-    &.form-control-error {
-      + button {
-        &.button {
-          line-height:1.35;
-        }
+    &.button-secondary {
+      @include govuk-media-query(mobile) {
+        margin-top:0px;
+      }
+
+      line-height:1.15;
+    }
+  }
+
+  &.govuk-input--error,
+  &.govuk-select--error{
+    + button {
+      &.govuk-button {
+        line-height:1.35;
       }
     }
   }
 }
 
 .date-group {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     margin-right: 5%;
   }
 
@@ -213,6 +175,7 @@ select {
     float: left;
     margin-right: 3.5%;
     width: auto;
+    min-width: 60px;
   }
 
   select {
@@ -223,12 +186,12 @@ select {
 
 tr {
   &.form-group-row-validated {
-    &.form-group-error {
+    &.govuk-form-group--error {
       td {
         vertical-align: bottom;
 
         &:first-child {
-          border-left: 5px solid $error-colour;
+          border-left: 5px solid $govuk-error-colour;
           padding-left: 15px;
         }
       }
@@ -236,32 +199,32 @@ tr {
   }
 
   &.form-group-row {
-    &.form-group-error {
+    &.govuk-form-group--error {
       border:none;
       background-position: 4px 50%;
 
-      .error-message {
-        @extend .visually-hidden
+      .govuk-error-message {
+        @include govuk-visually-hidden;
       }
 
       > * {
         &:first-child {
-          background: $grey-4 url('../images/ifs-images/icons/icon-alert.png') no-repeat;
+          background: govuk-colour("grey-4") url('../images/ifs-images/icons/icon-alert.png') no-repeat;
           background-position: 10px 50%;
           background-size: 16px;
           padding-left: 40px;
           margin: auto;
           white-space: nowrap;
-          border-left: 5px solid $red;
-          border-bottom: 1px solid $border-colour;
-          color: $red;
+          border-left: 5px solid $govuk-error-colour;
+          border-bottom: 1px solid $govuk-border-colour;
+          color: $govuk-error-colour;
           border-right:none;
         }
       }
 
       td,
       th {
-        background: $highlight-colour;
+        background: govuk-colour("grey-4");
       }
     }
   }
@@ -273,10 +236,10 @@ tr {
 }
 
 .question {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   margin-bottom: 30px;
 
-  .heading-medium {
+  .govuk-heading-m {
     margin: 0.8em 0 0.4em 0;
     display: inline-block;
   }
@@ -295,10 +258,10 @@ tr {
   position: relative;
 
   .textarea-header {
-    font-size: 14px;
-    border: 2px solid $border-colour;
+    @include govuk-font(14);
+    border: 2px solid $govuk-border-colour;
     border-bottom: none;
-    background: $grey-4 0 0 no-repeat;
+    background: govuk-colour("grey-4") 0 0 no-repeat;
     min-height:60px;
 
     + textarea,
@@ -335,10 +298,10 @@ tr {
   }
 
   .textarea-footer {
-    font-size:16px;
+    @include govuk-font(16);
     padding: 10px 0px;
 
-    .buttonlink {
+    .button-clear {
       vertical-align:top;
       padding: 0 10px 0 0;
     }
@@ -349,7 +312,7 @@ tr {
   [contenteditable="true"] {
     &.editor {
       @include box-shadow(none);
-      border: 4px solid $error-colour;
+      border: 4px solid $govuk-error-colour;
     }
   }
 
@@ -357,21 +320,21 @@ tr {
     textarea {
       &.field-group-error {
         @include box-shadow(none);
-        border: 4px solid $error-colour;
+        border: 4px solid $govuk-error-colour;
       }
     }
   }
 
   select {
     @include box-shadow(none);
-    border: 4px solid $error-colour;
+    border: 4px solid $govuk-error-colour;
   }
 }
 
 td {
   &.autosave-info {
-    color: $grey-1;
-    font-size:14px;
+    @include govuk-font(14);
+    color: $govuk-secondary-text-colour;
     min-width:70px;
   }
 }
@@ -381,20 +344,20 @@ td {
   .autosave-info {
     padding:2px 0;
     float:right;
-    color: $grey-1;
+    color: $govuk-secondary-text-colour;
     clear:right;
   }
 }
 
 .count-label {
   .negative {
-    color: $orange;
+    color: govuk-colour("orange");
     font-weight: 700;
   }
 
   .word-count-reached {
     .count-down{
-      color: $orange;
+      color: govuk-colour("orange");
       font-weight: 700;
     }
   }
@@ -403,7 +366,7 @@ td {
 .feedback {
   .textarea-wrapped {
     textarea{
-      border: 1px solid $border-colour;
+      border: 1px solid $govuk-border-colour;
     }
   }
 }
@@ -412,7 +375,7 @@ td {
 
 .upload-section {
   overflow: hidden;
-  background: $grey-4;
+  background: govuk-colour("grey-4");
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
 
@@ -447,8 +410,8 @@ td {
 .no-js {
   .upload-section {
     .inputfile {
+      @include govuk-font(16);
       margin:16px 0;
-      font-size:17px;
 
       + label {
         visibility: hidden;
@@ -475,7 +438,7 @@ td {
   }
 }
 
-.form-group {
+.govuk-form-group {
   &.download {
     padding: 10px 0 10px 50px;
     background: url(../images/ifs-images/icons/icon-download.png) no-repeat;
@@ -485,7 +448,7 @@ td {
 // ------- progressive group select -------- //
 
 .js-progressive-group-select {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     display: inline-block;
     margin: 0 1em 0 0;
   }
@@ -495,29 +458,29 @@ td {
 }
 
 .js-progressive-group-select {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     max-width: 40%;
   }
 }
 
 .js-enabled {
   [data-progressive-group-select] {
-    @include media (tablet) {
+    @include govuk-media-query(tablet) {
       max-width: 40%;
     }
   }
 }
 
 .agree-to-terms-container {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   padding-left: 1em;
 }
 
 .form-footer {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   clear: both;
-  color: $text-colour;
-  background: $grey-4;
+  color: $govuk-text-colour;
+  background: govuk-colour("grey-4");
   padding: 0.8em;
   margin: 0;
 
@@ -527,7 +490,7 @@ td {
   }
 
   &__info {
-    @include core-16;
+    @include govuk-font(16);
     min-height: 1em;
     float: right;
   }
@@ -542,12 +505,24 @@ td {
     }
   }
 
-  .buttonlink {
+  .button-clear {
     margin-bottom: 0;
+
+    &.disabled,
+    &[disabled] {
+      text-decoration: none;
+      color: $govuk-secondary-text-colour;
+      background: transparent;
+    }
+
+    &:hover {
+      color: $govuk-link-hover-colour;
+      text-decoration: underline;
+    }
   }
 
   .autosave-info {
-    color: $text-colour;
+    color: $govuk-text-colour;
     padding: 0;
     float: none;
     font-weight: bold;
@@ -568,7 +543,7 @@ td {
     }
   }
 
-  .buttonlink {
+  .button-clear {
     @include media-down(mobile) {
       margin: 0.5em;
     }

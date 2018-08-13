@@ -56,7 +56,7 @@ Invite Assessors
 Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
-    When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
+    When The user clicks the button/link    jQuery=.govuk-button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
     [Teardown]  Reset competition's milestone
 
@@ -75,15 +75,15 @@ Get The expected values from the invite page
     The user clicks the button/link    link=Competition
 
 the counts of the key statistics of the closed competition should be correct
-    ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
+    ${INVITED_COUNT}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Assessors invited") .govuk-heading-l
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
-    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .heading-large
+    ${ACCEPTED_COUNT}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Invitations accepted") .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
+    ${APPLICATIONS_PER_ASSESSOR}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Applications per assessor") .govuk-heading-l
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
-    ${APPLICATIONS_REQ}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
+    ${APPLICATIONS_REQ}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Applications requiring additional assessors") .govuk-heading-l
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}
-    ${Assessor_without_app}=    Get text     css=ul:nth-child(3)> li:nth-child(3) > div > span
+    ${Assessor_without_app}=    Get text     jQuery=.govuk-grid-column-one-third:contains("Assessors without applications") .govuk-heading-l
     Should Be Equal As Integers    ${Assessor_without_app}   10
 
 Reset competition's milestone

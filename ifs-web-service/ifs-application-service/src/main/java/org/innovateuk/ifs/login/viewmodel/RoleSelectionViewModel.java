@@ -15,4 +15,8 @@ import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 public final class RoleSelectionViewModel {
     public static final List<Role> ACCEPTED_ROLES = unmodifiableList(asList(ASSESSOR, APPLICANT));
 
+    public RoleSelectionViewModel() {
+        // no-arg constructor
+    }
+
 }

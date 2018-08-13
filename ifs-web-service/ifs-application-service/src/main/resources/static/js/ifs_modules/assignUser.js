@@ -35,7 +35,7 @@ IFS.application.progressiveSelect = (function () {
       el.next('button').remove()
       var children = el.children('option')
       var name = el.attr('name')
-      var html = '<ul class="bullet list-bullet">'
+      var html = '<ul class="govuk-list govuk-list--bullet">'
       children.each(function () {
         var inst = jQuery(this)
         var content = inst.html()
@@ -44,7 +44,7 @@ IFS.application.progressiveSelect = (function () {
         if (inst.is('[disabled]')) {
           html += '<li>' + content + '</li>'
         } else {
-          html += '<li><button id="assign-' + value + '" value="' + value + '" name="' + name + '" class="buttonlink">' + content + '</button></li>'
+          html += '<li><button id="assign-' + value + '" value="' + value + '" name="' + name + '" class="button-clear">' + content + '</button></li>'
         }
       })
       html += '</ul>'
