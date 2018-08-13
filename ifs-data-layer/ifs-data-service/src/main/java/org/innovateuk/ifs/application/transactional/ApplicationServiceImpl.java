@@ -279,7 +279,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 );
         return serviceSuccess(applicationResults);
     }
-
+//
     @Override
     public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
         return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
@@ -338,7 +338,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
+        applicationResource.setLeadOrganisationId(leadOrganisation.getId());
         return applicationResource;
     }
 }
