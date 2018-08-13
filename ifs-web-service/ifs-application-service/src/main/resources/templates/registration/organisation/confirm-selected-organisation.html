@@ -1,55 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.addressForm.*}') and  (organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch))}" />
 </head>
-<body class="create-application-organisation">
+<body class="govuk-template__body create-application-organisation">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-    <div class="message-alert">
-        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='govuk-heading-xl'" />
 
-    <p th:if="${isLeadApplicant}" class="extra-margin">This organisation will lead the application.</p>
-    <p th:unless="${isLeadApplicant}" class="extra-margin">This is the organisation that you will join the application with.</p>
+        <div class="message-alert">
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
+        </div>
 
-    <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
+        <p th:if="${isLeadApplicant}" class="extra-margin">This organisation will lead the application.</p>
+        <p th:unless="${isLeadApplicant}" class="extra-margin">This is the organisation that you will join the application with.</p>
 
-    <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="extra-margin">
-        <input type="hidden" th:field="*{searchOrganisationId}" />
+        <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
-        <h2 class="heading-medium no-margin">Operating address</h2>
-        <p class="form-hint">This is the address your organisation works from</p>
+        <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="govuk-!-margin-top-6">
+            <input type="hidden" th:field="*{searchOrganisationId}" />
 
-        <fieldset>
-            <legend id="useSearchResultAddress">
-                <span class="visuallyhidden">Operating address</span>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useSearchResultAddress">
+                    <h2 class="govuk-fieldset__heading">Operating address</h2>
+                </legend>
+                <span class="govuk-hint">This is the address your organisation works from</span>
                 <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
                 </th:block>
-            </legend>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
-                <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
-                    <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
-                    <label for="address-same">
-                        The operating address is the same as the registered organisation address
-                    </label>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'govuk-form-group--error'">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" data-target="manual-company-input" data-target-inverted="true">
+                            <input id="address-same"
+                                   class="govuk-checkboxes__input"
+                                   th:field="*{useSearchResultAddress}"
+                                   type="checkbox"
+                                   value="yes" />
+                            <label for="address-same"
+                                   class="govuk-label govuk-checkboxes__label">
+                                The operating address is the same as the registered organisation address
+                            </label>
+                        </div>
+                    </div>
+                  </label>
+              </div>
+
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
 
-        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />
-        <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save and continue</button>
-    </form>
+            <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />
+            <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

@@ -58,12 +58,12 @@ Filter assessors
     [Documentation]    IFS-399
     [Tags]
     Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
-    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    And the user clicks the button/link                        jQuery=.govuk-button:contains("Filter")
     Then the user should not see the element                   jQuery=td:contains("Paul Plum")
     And the user should see the element                        jQuery=td:contains("Felix Wilson")
     And the user should see the element                        jQuery=td:contains("Jenna Diaz")
     Then the user selects the option from the drop-down menu   Academic  id=businessType
-    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    And the user clicks the button/link                        jQuery=.govuk-button:contains("Filter")
     Then the user should see the element                       jQuery=td:contains("Felix Wilson")
     And the user should not see the element                    jQuery=td:contains("Jenna Diaz")
     [Teardown]    the user clicks the button/link  link=Clear all filters
@@ -171,7 +171,7 @@ Review the application
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
+    Then the user should see the element  jQuery=.govuk-table__header:contains("Assessor")
     And the user clicks the button/link   link=21 to 40
     And the available assessors information is correct
 
@@ -218,7 +218,7 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link           jQuery=a:contains("Manage applications")
     And the user clicks the button/link           jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     When the user clicks the button/link          jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
-    And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
+    And the user clicks the button/link           jQuery=.button-clear:contains("Cancel")
     And the user should not see the element       jQuery=button:contains("Remove assessor")
     And the user clicks the button/link           jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
     And the user clicks the button/link           jQuery=button:contains("Remove assessor")

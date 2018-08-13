@@ -1,43 +1,47 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Query Responses'" />
 </head>
-<body class="competition-management project-management">
+<body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkUrl=@{~/management/dashboard/project-setup}" />
 
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='govuk-heading-xl'" />
 
-    <th:block th:if="${model.openQueries.size() > 0}">
-        <div>
-            <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
-                <thead>
-                    <tr>
-                        <th scope="col">Application number</th>
-                        <th scope="col">Project title</th>
-                        <th scope="col">Response</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="query : ${model.openQueries}">
-                        <td th:text="${query.applicationId}" />
-                        <td th:text="${query.projectName}"/>
-                        <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </th:block>
-    <th:block th:unless="${model.openQueries.size() > 0}">
-        <p>There are no outstanding queries.</p>
-    </th:block>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+
+        <th:block th:if="${model.openQueries.size() > 0}">
+            <div>
+                <table id="table-project-organisation-query-status" class="govuk-table table-overview govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Application number</th>
+                            <th class="govuk-table__header" scope="col">Project title</th>
+                            <th class="govuk-table__header" scope="col">Response</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="query : ${model.openQueries}">
+                            <td class="govuk-table__cell" th:text="${query.applicationId}" />
+                            <td class="govuk-table__cell" th:text="${query.projectName}"/>
+                            <td class="govuk-table__cell"><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" class="govuk-link" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+        <th:block th:unless="${model.openQueries.size() > 0}">
+            <p class="govuk-body">There are no outstanding queries.</p>
+        </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

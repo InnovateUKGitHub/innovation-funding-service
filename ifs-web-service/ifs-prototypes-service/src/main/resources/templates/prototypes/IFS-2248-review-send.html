@@ -20,81 +20,81 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Notify assessor'}, ${null})" />
 
-    <h2 class="heading-large" th:text="${name}">ASSESSOR NAME</h2>
+    <h2 class="govuk-heading-l" th:text="${name}">ASSESSOR NAME</h2>
 
-    <p>Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor. </p>
+    <p class="govuk-body">Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor. </p>
 
-    <div class="grid-row sorting extra-margin">
-        <span class="heading-xlarge no-margin">4</span>
-        <span class="heading-small">applications</span>
+    <div class="govuk-grid-row sorting extra-margin">
+        <span class="govuk-heading-xl govuk-!-margin-0">4</span>
+        <span class="govuk-heading-s">applications</span>
     </div>
 
     <form>
 
         <div class="table-overflow">
             <th:block th:if="${param.status == null or param.status[0] != 'resendInvites'}">
-                <table>
-                    <thead>
-                        <tr>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
                             <th class="width-small">Application number</th>
-                            <th>Project title</th>
-                            <th>Lead organisation</th>
+                            <th class="govuk-table__header" scope="col">Project title</th>
+                            <th class="govuk-table__header" scope="col">Lead organisation</th>
                             <th class="numeric">Assessors</th>
-                            <th class="alignright"><span class="visuallyhidden">Remove</span></th>
+                            <th class="alignright"><span class="govuk-visually-hidden">Remove</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">114</a></td>
-                            <td>Electronics, sensors &#38; photonics, Materials</td>
-                            <td>Ooba</td>
-                            <td class="numeric">1</td>
-                            <td class="alignright"><a href="#">Remove</a></td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="#">114</a></td>
+                            <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                            <td class="govuk-table__cell">Ooba</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                            <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
 
                         </tr>
-                        <tr>
-                            <td><a href="#">269</a></td>
-                            <td>Healthcare, Regentative medicine, Stratified medicine</td>
-                            <td>Empire Ltd</td>
-                            <td class="numeric">1</td>
-                            <td class="alignright"><a href="#">Remove</a></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="#">269</a></td>
+                            <td class="govuk-table__cell">Healthcare, Regentative medicine, Stratified medicine</td>
+                            <td class="govuk-table__cell">Empire Ltd</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                            <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                         </tr>
-                        <tr>
-                            <td><a href="#">171</a></td>
-                            <td>Healthcare, Analytical science</td>
-                            <td>Ideas</td>
-                            <td class="numeric">1</td>
-                            <td class="alignright"><a href="#">Remove</a></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="#">171</a></td>
+                            <td class="govuk-table__cell">Healthcare, Analytical science</td>
+                            <td class="govuk-table__cell">Ideas</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                            <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                         </tr>
-                        <tr>
-                            <td><a href="#">265</a></td>
-                            <td>Architectures and operating systems</td>
-                            <td>Wordpedia</td>
-                            <td class="numeric">1</td>
-                            <td class="alignright"><a href="#">Remove</a></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="#">265</a></td>
+                            <td class="govuk-table__cell">Architectures and operating systems</td>
+                            <td class="govuk-table__cell">Wordpedia</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                            <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                         </tr>
                     </tbody>
                 </table>
             </th:block>
 
             <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Application</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th>Date assigned</th>
-                        <th>Additional feedback</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Application</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header" scope="col">Date assigned</th>
+                        <th class="govuk-table__header" scope="col">Additional feedback</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td><a href="#">114</a></td>
-                        <td>Electronics, sensors &#38; photonics, Materials</td>
-                        <td>Ooba</td>
-                        <td>01/09/2017</td>
-                        <td><a href="#">114-feedback.pdf</a> (opens in a new window)</td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">114</a></td>
+                        <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                        <td class="govuk-table__cell">Ooba</td>
+                        <td class="govuk-table__cell">01/09/2017</td>
+                        <td class="govuk-table__cell"><a href="#">114-feedback.pdf</a> (opens in a new window)</td>
                     </tr>
                     </tbody>
                 </table>
@@ -104,15 +104,15 @@
 
         <fieldset class="extra-margin">
 
-            <legend class="visuallyhidden">Email assessor</legend>
+            <legend class="govuk-visually-hidden">Email assessor</legend>
 
-            <div class="form-group">
-                <label class="form-label-bold" for="subject">Email subject</label>
-                <input class="form-control width-full" id="subject" type="text" value="Applications for interview panel for [competition name]" />
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="subject">Email subject</label>
+                <input class="govuk-input width-full" id="subject" type="text" value="Applications for interview panel for [competition name]" />
             </div>
 
-              <h3 class="heading-small">Message</h3>
-              <p class="form-hint" style="white-space: pre-wrap">
+              <h3 class="govuk-heading-s">Message</h3>
+              <p class="govuk-hint" style="white-space: pre-wrap">
 Dear [recipient name]
 
 Thank you for accepting the invite to the interview panel for the [competition name] competition.
@@ -122,17 +122,17 @@ You have now been assigned applications.
 Please visit the online Innovation Funding Service before the panel to review the applications and associated feedback.
               </p>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label-bold" for="message">Additional text</label>
                 <textarea id="message" rows="8" class="width-full">
               </textarea>
             </div>
 
-            <p class="form-hint">
+            <p class="govuk-hint">
               Yours sincerely,
             </p>
 
-            <p class="form-hint extra-margin">
+            <p class="govuk-hint extra-margin">
               Competitions Team <br>
               Innovate UK <br>
               Tel: 0300 321 4357 <br>
@@ -140,8 +140,8 @@ Please visit the online Innovation Funding Service before the panel to review th
             </p>
 
             <div class="extra-margin">
-                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assigned&#38;name='} + ${name}" class="button">Notify</a>
-                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assignedd&#38;name='} + ${name}" class="button button-clear">Cancel</a>
+                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assigned&#38;name='} + ${name}" class="govuk-button">Notify</a>
+                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assignedd&#38;name='} + ${name}" class="govuk-button button-clear">Cancel</a>
             </div>
 
         </fieldset>

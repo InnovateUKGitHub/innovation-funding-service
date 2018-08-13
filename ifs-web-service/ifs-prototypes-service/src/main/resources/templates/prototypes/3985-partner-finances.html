@@ -19,28 +19,28 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" />
 
-	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
+	<p class="govuk-body">Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
 
-	<h2 class="heading-medium">Overview</h2>
+	<h2 class="govuk-heading-m">Overview</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
-					<th scope="col">Total costs</th>
-					<th scope="col" class="numeric">% grant</th>
-					<th scope="col" class="numeric">Funding sought</th>
-					<th scope="col" class="numeric">Other public sector funding</th>
-					<th scope="col" class="numeric">Contribution to project</th>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<th class="govuk-table__header" scope="col">Total costs</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">% grant</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>&pound;286,283</td>
-					<td class="numeric">55%</td>
-					<td class="numeric">&pound;180,399</td>
-					<td class="numeric">20,000</td>
-					<td class="numeric">&pound;85,885</td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">&pound;286,283</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">55%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;180,399</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
@@ -50,8 +50,8 @@
 		<a href="/prototypes/3986-view-finance-changes">Review all changes to project finances</a>
 	</div>
 
-	<!-- <div class="panel">
-		<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
+	<!-- <div class="govuk-body panel">
+		<h3 class="govuk-heading-m govuk-!-margin-top-0">% Grant has been reduced from 55% to 40% </h3>
 		<dl class="standard-definition-list">
 			<dt>Funding sought</dt>
 			<dd>&pound;180,399</dd>
@@ -61,8 +61,8 @@
 		</dl>
 	</div> -->
 
-	<h2 class="heading-medium">Detailed finances</h2>
-	<p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+	<h2 class="govuk-heading-m">Detailed finances</h2>
+	<p class="govuk-body">Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
 
 	<div class="collapsible section-overview extra-margin">
 
@@ -104,9 +104,9 @@
 	</div>
 
 
-	<h3 class="heading-medium">Other funding</h3>
+	<h3 class="govuk-heading-m">Other funding</h3>
 
-	<p>Details of other applicable public sector funding received or applied for is shown here. You must inform us if you know of any applicable funding that is not listed here.</p>
+	<p class="govuk-body">Details of other applicable public sector funding received or applied for is shown here. You must inform us if you know of any applicable funding that is not listed here.</p>
 
 	<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" />
 

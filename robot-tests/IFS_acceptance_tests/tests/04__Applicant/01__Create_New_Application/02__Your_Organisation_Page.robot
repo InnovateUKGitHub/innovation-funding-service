@@ -61,8 +61,8 @@ Manually add the details and pass to the confirmation page
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
     And the user enters text to a text field      id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link           jQuery = .button:contains("Find UK address")
-    And the user clicks the button/link           jQuery = .button:contains("Find UK address")
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element          css=#select-address-block
     And the user clicks the button/link           css=#select-address-block > button
     And the user clicks the button/link           jQuery = button:contains("Continue")

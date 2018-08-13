@@ -1,56 +1,62 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Profile'" />
 </head>
-<body class="user-profile">
+<body class="govuk-template__body user-profile">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Profile',size='heading-large'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Profile',size='govuk-heading-l'" />
 
-    <hr/>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-    <h2 class="heading-medium no-margin-bottom">Your details <small class="list-indent"><a href="/profile/edit"> Edit your details</a></small></h2>
-    <h3 class="heading-small">Your name</h3>
-    <p>
-        <th:block th:text="${model.name}" />
-    </p>
-    <h3 class="heading-small">Phone number</h3>
-    <p th:text="${model.phoneNumber}" />
-    <h3 class="heading-small">Email address</h3>
-    <p th:text="${model.emailAddress}" />
-    <h3 class="heading-small">Email preferences</h3>
-    <p th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
-    <p th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Your details <small class="list-indent"><a href="/profile/edit" class="govuk-link"> Edit your details</a></small></h2>
 
-    <th:block th:unless="${model.organisations.isEmpty()}">
-        <h2 class="heading-medium no-margin-bottom">Your organisation details</h2>
-        <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
-                    <th class="width-small">Organisation name</th>
-                    <th>Organisation type</th>
-                    <th>Registration number</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="organisation : ${model.organisations}">
-                    <td th:text="${organisation.name}"></td>
-                    <td th:text="${organisation.type}"></td>
-                    <td th:text="${organisation.registrationNumber}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </th:block>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <h3 class="govuk-heading-s">Your name</h3>
+        <p class="govuk-body">
+            <th:block th:text="${model.name}" />
+        </p>
+
+        <h3 class="govuk-heading-s">Phone number</h3>
+        <p class="govuk-body" th:text="${model.phoneNumber}" />
+        <h3 class="govuk-heading-s">Email address</h3>
+        <p class="govuk-body" th:text="${model.emailAddress}" />
+        <h3 class="govuk-heading-s">Email preferences</h3>
+        <p class="govuk-body" th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
+        <p class="govuk-body" th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
+
+        <th:block th:unless="${model.organisations.isEmpty()}">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Your organisation details</h2>
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="width-small">Organisation name</th>
+                        <th>Organisation type</th>
+                        <th>Registration number</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="organisation : ${model.organisations}">
+                        <td th:text="${organisation.name}"></td>
+                        <td th:text="${organisation.type}"></td>
+                        <td th:text="${organisation.registrationNumber}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

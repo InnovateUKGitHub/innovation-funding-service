@@ -61,7 +61,7 @@ IFS.core.tabs = (function () {
         //     defaultIndex = parseInt(parameter) - 1
         //   }
         // }
-        if (location.hash && jQuery(this).children().find('#' + window.location.hash.substring(1))) {
+        if (window.location.hash && jQuery(this).children().find('#' + window.location.hash.substring(1))) {
           defaultIndex = jQuery(this).find('#' + window.location.hash.substring(1)).index() - 1
         }
 
@@ -80,7 +80,7 @@ IFS.core.tabs = (function () {
       // define current, previous and next (possible) tabs
       var original = jQuery(element)
       var originalParent = original.parent()
-      var tabsLength = originalParent.siblings().length ++
+      var tabsLength = originalParent.siblings().length++
       var prev = originalParent.index() === 0 ? originalParent.siblings().eq(tabsLength - 1).children('[role="tab"]') : originalParent.prev().children('[role="tab"]')
       var next = originalParent.index() === tabsLength ? originalParent.siblings().eq(0).children('[role="tab"]') : originalParent.next().children('[role="tab"]')
       var target

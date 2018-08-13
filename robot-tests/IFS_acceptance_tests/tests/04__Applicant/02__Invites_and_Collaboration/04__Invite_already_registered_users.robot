@@ -39,7 +39,7 @@ The user should see the correct content in the confirm page
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Confirm and accept invitation")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Confirm and accept invitation")
     Then the user should see the text in the page  Application overview
 
 The user edits the name this should be changed in the View team page
@@ -66,28 +66,28 @@ the user enters profile details
 
 the user should see the change in the view team members page
     The user clicks the button/link  link=Dashboard
-    The user clicks the button/link  css=#content section:nth-of-type(1) li:nth-child(2) h3 a
+    The user clicks the button/link  css=#main-content section:nth-of-type(1) li:nth-child(2) h3 a
     The user clicks the button/link  link=Application team
     The user should see the element  jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
-    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
         the user selects the radio button      organisationTypeId  1
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
         the user enters text to a text field       id = organisationSearchName    Innovate
         the user clicks the button/link            id=org-search
         the user clicks the button/link            link=INNOVATE LTD
         the user clicks the button/link            jQuery=button:contains("Enter address manually")
         the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
         the user clicks the button/link            css=#select-address-block > button
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
+        the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
     The user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud

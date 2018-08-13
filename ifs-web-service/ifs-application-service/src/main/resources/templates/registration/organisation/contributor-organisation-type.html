@@ -1,50 +1,61 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Join application',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <div class="message-alert extra-margin-bottom">
-        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
-    </div>
-    
-    <p class="extra-margin">This is the organisation that you will join the application with.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='govuk-heading-xl'" />
 
-    <h2 class="heading-medium">Choose your organisation type</h2>
-
-    <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/contributor-organisation-type}" method="POST">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'form-group-error'">
-            <fieldset>
-                <legend id="organisationType">
-                    <span class="visuallyhidden">Please select your organisation type</span>
-                    <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
-                    </th:block>
-                </legend>
-                <div class="multiple-choice" th:each="type : ${model.types}">
-                    <input th:id="'radio-'+ ${type.id}" type="radio" th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}" th:field="*{organisationType}" required="required" th:value="${type.id}" />
-                    <label th:for="'radio-'+ ${type.id}">
-                        <span th:text="${type.name}"></span>
-                        <span class="form-hint" th:text="${type.description}"></span>
-                    </label>
-                </div>
-            </fieldset>
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
-        <p>
-            If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
-        </p>
-        <button id="organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
-    </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <p class="govuk-!-margin-top-6 gov-uk-body">This is the organisation that you will join the application with.</p>
+
+        <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/contributor-organisation-type}" method="POST">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset__legend govuk-fieldset__legend--m" class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="organisationType">
+                        <h2 class="govuk-fieldset__heading">Choose your organisation type</h2>
+                    </legend>
+                    <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" th:each="type : ${model.types}">
+                            <input th:id="'radio-'+ ${type.id}"
+                                   type="radio"
+                                   class="govuk-radios__input"
+                                   th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                                   th:field="*{organisationType}"
+                                   required="required"
+                                   th:value="${type.id}" />
+                            <label th:for="'radio-'+ ${type.id}"
+                                   class="govuk-label govuk-radios__label">
+                                <span th:text="${type.name}"></span>
+                                <span class="govuk-hint" th:text="${type.description}"></span>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <p class="govuk-body">
+                If your organisation type is not listed contact the <a th:href="@{/info/contact}" class="govuk-link">customer support service</a>.
+            </p>
+            <button id="organisation-type-cta" class="govuk-button govuk-!-margin-top-6" name="select-company-type" type="submit">Continue</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

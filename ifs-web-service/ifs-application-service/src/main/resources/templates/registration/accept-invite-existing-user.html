@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Join an application'" />
     </head>
-    <body class="create-application-eligibility">
+    <body class="govuk-template__body create-application-eligibility">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
-            <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
-            <div>
-                <h1 class="heading-large">Application details</h1>
-                <dl class="extra-margin-bottom">
-                    <dt>Lead organisation:</dt>
-                    <dd th:text="${model.leadOrganisationName}"></dd>
-                    <dt>Lead applicant:</dt>
-                    <dd th:text="${model.leadApplicantName}"></dd>
-                </dl>
-                <p>You are invited to collaborate in this application with: <strong th:text="${model.inviteOrganisationName}"></strong></p>
-                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a>.</p>
 
-                <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
 
-                <h2 class="heading-medium">We have found an account with the invited email address</h2>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='govuk-heading-xl'" />
+                <p class="govuk-body">You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}" class="govuk-link"></a>'.</p>
+                <div>
+                    <h1 class="govuk-heading-l">Application details</h1>
+                    <dl class="govuk-!-margin-bottom-6">
+                        <dt>Lead organisation:</dt>
+                        <dd th:text="${model.leadOrganisationName}"></dd>
+                        <dt>Lead applicant:</dt>
+                        <dd th:text="${model.leadApplicantName}"></dd>
+                    </dl>
+                    <p class="govuk-body">You are invited to collaborate in this application with: <strong th:text="${model.inviteOrganisationName}"></strong></p>
+                    <p class="govuk-body">If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}" class="govuk-link"></a>.</p>
+
+                    <p class="govuk-body">Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" class="govuk-link" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
+
+                <h2 class="govuk-heading-m">We have found an account with the invited email address</h2>
                 <a th:href="${model.inviteOrganisationExists} ? @{/accept-invite-authenticated/confirm-invited-organisation} : @{/accept-invite-authenticated/confirm-new-organisation}" class="button">Continue</a>
-                <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
+                <p class="govuk-body">If you do not wish to accept this invitation, please let the lead applicant know.</p>
             </div>
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
