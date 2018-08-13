@@ -17,6 +17,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private String researchCategory;
     private boolean userLeadApplicant;
     private String leadApplicantName;
+    private boolean useSelectState;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      Long applicationId,
@@ -67,6 +68,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public String getLeadApplicantName() {
         return leadApplicantName;
+    }
+
+    public boolean getUseSelectState() {
+        return availableResearchCategories.size() > 1;
     }
 
     @Override
