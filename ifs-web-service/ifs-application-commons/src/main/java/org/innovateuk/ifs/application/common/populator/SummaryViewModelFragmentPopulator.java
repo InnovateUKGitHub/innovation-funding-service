@@ -24,6 +24,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -38,6 +39,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -143,6 +145,8 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
 
         boolean showApplicationTeamLink = applicationService.showApplicationTeam(application.getId(), user.getId());
 
+        boolean isAssessor = user.hasRole(ASSESSOR);
+
         return new SummaryViewModel(
                 application,
                 getSections(competition.getId()),
@@ -158,7 +162,8 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
                 applicationResearchParticipationViewModelPopulator.populate(applicationId),
                 getCompletedDetails(application, userOrganisation),
                 getFormInputViewModel(sectionQuestions, applicantId, application, competition),
-                showApplicationTeamLink
+                showApplicationTeamLink,
+                isAssessor
         );
     }
 

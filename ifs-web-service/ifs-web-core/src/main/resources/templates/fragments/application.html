@@ -32,7 +32,7 @@
                                              or (question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM
                                                     and !isApplicant)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY
-                                                    and !isApplicant and !isCompAdmin)}">
+                                                    and !isApplicant and isAssessor)}">
                 <h3>
                     <th:block
                         th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"/>

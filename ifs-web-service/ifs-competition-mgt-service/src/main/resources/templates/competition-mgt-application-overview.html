@@ -56,7 +56,7 @@
               method="post" enctype="multipart/form-data"
               th:object="${form}" class="form-serialize-js section-overview">
 
-        <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, isCompAdmin = true, hideDetails = false, supportUserAndSummaryPage = false, isCompManagementDownload = true, queryParams = ${model.queryParams})" />
+        <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = false, supportUserAndSummaryPage = false, isCompManagementDownload = true, queryParams = ${model.queryParams})" />
     </form>
 
         <div class="govuk-body govuk-!-margin-top-6">
