@@ -16,7 +16,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-    <th:block th:with="orgTitle=${organisationType.name}">
+        <th:block th:with="orgTitle=${organisationType.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
         </th:block>
 
@@ -28,7 +28,7 @@
         </th:block>
         <th:block th:if="${organisationForm.research}">
             <div class="message-alert">
-                <pclass="govuk-body">Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
+                <p class="govuk-body">Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
             </div>
         </th:block>
 

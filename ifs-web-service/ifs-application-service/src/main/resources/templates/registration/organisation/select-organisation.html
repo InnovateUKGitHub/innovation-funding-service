@@ -32,13 +32,20 @@
 
         <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
             <th:block th:if="${model.canSelectOrganisation()}">
-                <div class="form-group">
-                    <div class="multiple-choice" th:each="choice : ${model.choices}">
-                        <input th:field="*{selectedOrganisationId}" th:value="${choice.id}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                        <label th:for="${#ids.prev('selectedOrganisationId')}">
-                            <span class="form-label-bold" th:text="${choice.name}" />
-                            <span class="form-hint" th:text="${choice.type}" />
-                        </label>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" th:each="choice : ${model.choices}">
+                            <input class="govuk-checkboxes__input"
+                                   th:field="*{selectedOrganisationId}"
+                                   th:value="${choice.id}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                            <label th:for="${#ids.prev('selectedOrganisationId')}">
+                                <span class="govuk-label--s" th:text="${choice.name}" />
+                                <span class="govuk-hint" th:text="${choice.type}" />
+                            </label>
+                        </div>
                     </div>
                 </div>
             </th:block>
