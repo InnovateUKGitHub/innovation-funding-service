@@ -16,7 +16,7 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details'" />
 
-                <p th:if="${!model.compAdminUser}">These details will be used for all accounts linked to your email address.</p>
+                <p class="govuk-body" th:if="${!model.compAdminUser}">These details will be used for all accounts linked to your email address.</p>
                 <h2 th:unless="${!model.compAdminUser}" class="govuk-heading-m">Assessor details</h2>
 
                 <dl class="govuk-list">
@@ -49,8 +49,8 @@
                     <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.assessorProfileDetailsViewModel.businessType))}" />
                 </dl>
 
-                <div class="form-footer" th:if="${!model.compAdminUser}">
-                    <div id="editDetails" class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
+                <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
+                    <div id="editDetails" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/details/edit}">Edit</a></div>
                 </div>
 
                 <ul class="govuk-list inline-nav govuk-!-margin-top-6">
@@ -66,30 +66,27 @@
 
                 <h3 class="govuk-heading-m">Innovation areas</h3>
 
-                <div class="govuk-!-margin-top-6">
-                    <table class="govuk-table" th:each="innovationSector : ${model.innovationAreas}">
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
-                            </tr>
-                        </thead>
-                        <tbody class="govuk-table__head">
-                            <tr class="govuk-table__row" th:each="innovationArea : ${innovationSector.value}">
-                                <td class="govuk-table__cell" th:text="${innovationArea}">digital sciences</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="govuk-table" th:each="innovationSector : ${model.innovationAreas}">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__head">
+                        <tr class="govuk-table__row" th:each="innovationArea : ${innovationSector.value}">
+                            <td class="govuk-table__cell" th:text="${innovationArea}">digital sciences</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <h3 class="govuk-heading-m">Skill areas</h3>
                 <p class="govuk-body" th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
 
-
-                <div class="form-footer" th:if="${!model.compAdminUser}">
+                <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
                     <div id="editSkills" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/skills/edit}">Edit</a></div>
                 </div>
 
-                <div class="extra-margin" th:if="${!model.compAdminUser}">
+                <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
                     <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
                 </div>
 

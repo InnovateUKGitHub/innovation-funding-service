@@ -50,7 +50,7 @@
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.assessorProfileDetailsViewModel.businessType))}" />
             </dl>
 
-            <div class="form-footer" th:if="${!model.compAdminUser}">
+            <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
                 <div id="editDetails" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/details/edit}">Edit</a></div>
             </div>
 
@@ -105,7 +105,7 @@
                 None declared
             </p>
 
-            <h2 class="govuk-heading-m goviuk-!-margin-bottom-0">Other financial interests</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other financial interests</h2>
 
             <p class="govuk-body" th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
             <p th:unless="${model.financialInterests}"
@@ -114,7 +114,7 @@
                 None declared
             </p>
 
-            <h2 class="govuk-heading-m goviuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
             <table class="govuk-table govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
                 <thead class="govuk-head">
                 <tr class="govuk-table__header">
@@ -145,7 +145,7 @@
                 None declared
             </p>
 
-            <div class="form-footer" th:if="${!model.compAdminUser}">
+            <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
                 <div id="editDOI" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/declaration/edit}">Edit</a></div>
             </div>
 
