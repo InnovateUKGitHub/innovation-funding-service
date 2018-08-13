@@ -20,10 +20,10 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='govuk-heading-xl'" />
 
-        <p class="gov-uk-body">To continue with your application, you need to create an account with the Innovation Funding Service.</p>
+        <p class="govuk-body">To continue with your application, you need to create an account with the Innovation Funding Service.</p>
 
         <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
                     First name
                 </label>
