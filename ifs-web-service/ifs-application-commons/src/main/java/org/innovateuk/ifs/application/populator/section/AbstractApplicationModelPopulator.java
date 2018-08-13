@@ -12,10 +12,10 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 public abstract class AbstractApplicationModelPopulator {
 
@@ -35,7 +35,7 @@ public abstract class AbstractApplicationModelPopulator {
         List<QuestionResource> questions = questionService.findByCompetition(competitionId);
 
         return parentSections.stream()
-                .collect(Collectors.toMap(
+                .collect(toMap(
                         SectionResource::getId,
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
@@ -98,6 +98,8 @@ public abstract class AbstractApplicationModelPopulator {
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource>
             questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
+        return questions.stream().filter(q -> questionIds.contains(q.getId()))
+                .sorted(Comparator.comparing(QuestionResource::getPriority))
+                .collect(toList());
     }
 }
