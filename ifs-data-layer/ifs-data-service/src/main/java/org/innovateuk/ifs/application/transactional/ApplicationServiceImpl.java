@@ -279,7 +279,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 );
         return serviceSuccess(applicationResults);
     }
-//
+
     @Override
     public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
         return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
