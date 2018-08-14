@@ -726,13 +726,13 @@ The Applicant is able to apply to the competition once is Open
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}
 
-The Applicant see the selected research cartegories
+The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
-    When the user clicks the button/link     link=Research category
+    When the user clicks the button/link     link = Research category
     Then the user should see the element     css = label[for="researchCategory1"]
     And the user should see the element      css = label[for="researchCategory2"]
-    When the user clicks the button twice    jQuery=label:contains("Feasibility studies")
-    And the user clicks the button/link      id=application-question-save
+    When the user clicks the button twice    jQuery = label:contains("Feasibility studies")
+    And the user clicks the button/link      id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182

@@ -44,6 +44,7 @@ the user marks every section but one as complete
 the user selects Research category
     [Arguments]  ${res_category}
     the user clicks the button/link   link=Research category
+    # checking here applicant should see only one research category set while creating EOI compeition(IFS-2941)
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery=h1 span:contains("EOI Application")
     Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
     ...    AND             the user should not see the element   css = label[for="researchCategory3"]
