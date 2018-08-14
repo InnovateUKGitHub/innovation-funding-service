@@ -233,7 +233,9 @@ public class Competition implements ProcessActivity {
     }
 
     @JsonIgnore
-    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+    public boolean inProjectSetup() {
+        return PROJECT_SETUP.equals(getCompetitionStatus());
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -345,7 +347,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone(milestoneType,this);
+            Milestone m = new Milestone(milestoneType, this);
             milestones.add(m);
             return m;
         });
@@ -508,7 +510,7 @@ public class Competition implements ProcessActivity {
         }
 
         researchCategories.forEach(this::addResearchCategory);
-	}
+    }
 
     public List<Milestone> getMilestones() {
         return milestones;
@@ -670,7 +672,7 @@ public class Competition implements ProcessActivity {
         this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isHasInterviewStage(){
+    public Boolean isHasInterviewStage() {
         return hasInterviewStage;
     }
 
