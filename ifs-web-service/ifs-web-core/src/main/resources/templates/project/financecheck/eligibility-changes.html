@@ -102,8 +102,6 @@
             </div>
         </th:block>
 
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-
         <a th:if="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
         <a th:unless="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
 
