@@ -29,10 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationRestService.getOrganisationByUserId(user.getId()).getSuccess(); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
-            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (!userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
-                    return true;
-                }
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && !userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                return true;
             }
             return false;
         }).orElse(false);
@@ -43,10 +41,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationRestService.getOrganisationByUserId(user.getId()).getSuccess(); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
-            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
-                    return true;
-                }
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                return true;
             }
             return false;
         }).orElse(false);

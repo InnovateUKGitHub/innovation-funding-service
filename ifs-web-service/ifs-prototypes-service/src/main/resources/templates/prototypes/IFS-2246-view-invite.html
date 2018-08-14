@@ -21,26 +21,26 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Review invite email'}, ${null})" />
 
     <div class="table-overflow">
-        <table>
-            <thead>
-                <tr>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th class="width-small">Application number</th>
-                    <th>Project title</th>
-                    <th>Lead organisation</th>
-                    <th>Date assigned</th>
-                    <th>Additional feedback</th>
+                    <th class="govuk-table__header" scope="col">Project title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
+                    <th class="govuk-table__header" scope="col">Date assigned</th>
+                    <th class="govuk-table__header" scope="col">Additional feedback</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">114</a></td>
-                    <td>Electronics, sensors &#38; photonics, Materials</td>
-                    <td>Ooba</td>
-                    <td>01/09/2017</td>
-                    <td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">114</a></td>
+                    <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                    <td class="govuk-table__cell">Ooba</td>
+                    <td class="govuk-table__cell">01/09/2017</td>
+                    <td class="govuk-table__cell">
                         <div class="upload-section">
                             <a class="uploaded-file-1" href="#" target="_blank">Uploaded-file.pdf</a>
-                            <p class="form-hint">(opens in a new window)</p>
+                            <p class="govuk-hint">(opens in a new window)</p>
                             <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
                         </div>
                     </td>
@@ -49,22 +49,22 @@
         </table>
     </div>
 
-    <h2 class="heading-medium">Email subject</h2>
+    <h2 class="govuk-heading-m">Email subject</h2>
 
-    <p>Please attend an interview for an Innovate UK funding competition</p>
+    <p class="govuk-body">Please attend an interview for an Innovate UK funding competition</p>
 
-    <h3 class="heading-small">Message</h3>
+    <h3 class="govuk-heading-s">Message</h3>
 
-    <p class="form-hint" style="white-space: pre-wrap">Competition: [competition title]
+    <p class="govuk-hint" style="white-space: pre-wrap">Competition: [competition title]
 Application number: [application number]
 Project title: [project title]
     </p>
 
-    <h3 class="heading-small">Additional text</h3>
+    <h3 class="govuk-heading-s">Additional text</h3>
 
-    <p>Any additional text that has been added can be placed here.</p>
+    <p class="govuk-body">Any additional text that has been added can be placed here.</p>
 
-    <p>Yours sincerely,</p>
+    <p class="govuk-body">Yours sincerely,</p>
 
     <p class=" extra-margin">
         Innovate UK, part of UK Research and Innovation <br />
@@ -73,8 +73,8 @@ Project title: [project title]
     </p>
 
     <div class="extra-margin">
-        <a href="/prototypes/IFS-2246-review-send?status=resendInvites" class="button">Edit and resend invite</a>
-        <a href="/prototypes//IFS-2246-assign-applications?tab=assign" class="button button-clear">Cancel</a>
+        <a href="/prototypes/IFS-2246-review-send?status=resendInvites" class="govuk-button">Edit and resend invite</a>
+        <a href="/prototypes//IFS-2246-assign-applications?tab=assign" class="govuk-button button-clear">Cancel</a>
     </div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

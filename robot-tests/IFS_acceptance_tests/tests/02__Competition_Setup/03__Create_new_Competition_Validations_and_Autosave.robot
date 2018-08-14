@@ -35,7 +35,7 @@ Initial details: server-side validations
     [Documentation]  INFUND-2982 IFUND-3888
     [Tags]    HappyPath
     Given the user navigates to the page   ${CA_UpcomingComp}
-    And the user clicks the button/link    jQuery=.button:contains("Create competition")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
     When the user clicks the button/link   jQuery=button:contains("Done")
     Then the user should see an error    Please enter a title.
@@ -86,7 +86,7 @@ Initial details: should not allow dates in the past
     And the user enters text to a text field    id=openingDateYear    2015
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then The user should not see the element    jQuery=.button:contains("Edit")
+    Then The user should not see the element    jQuery=.govuk-button:contains("Edit")
     [Teardown]    #the user enters text to a text field    id=openingDateYear    2017
 
 Initial details: mark as done
@@ -95,7 +95,7 @@ Initial details: mark as done
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the element    jQuery=.button:contains("Edit")
+    Then the user should see the element    jQuery=.govuk-button:contains("Edit")
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
@@ -111,7 +111,7 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Generate code")
+    When the user clicks the button/link    id=generate-code
     Then the user should not see the error any more    Please generate a competition code.
     When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
@@ -274,8 +274,8 @@ the user fills the empty question fields
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    jQuery=.button[value="Save and close"]
-    Wait Until Element Is Not Visible Without Screenshots    css=error-message
+    focus    jQuery=.govuk-button[value="Save and close"]
+    Wait Until Element Is Not Visible Without Screenshots    css=.govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user fills the milestones with invalid data
@@ -457,4 +457,4 @@ the user should not see the error any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Done")
     Wait for autosave
-    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}

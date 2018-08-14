@@ -17,6 +17,7 @@ import java.util.List;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.inOrder;
 
@@ -35,12 +36,12 @@ public class SectionTemplatePersistorImplTest extends BaseServiceUnitTest<Sectio
     private QuestionTemplatePersistorImpl questionTemplatePersistorMock;
 
     @Test
-    public void persistByParentEntity_noSectionsShouldReturnNull() throws Exception {
+    public void persistByParentEntity_noSectionsShouldReturnEmpty() throws Exception {
         Competition template = newCompetition().withSections(null).build();
 
         List<Section> sections = service.persistByParentEntity(template);
 
-        assertNull(sections);
+        assertTrue(sections.isEmpty());
     }
 
     @Test

@@ -157,12 +157,12 @@ IFS.core.formValidation = (function () {
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
-          formGroup.removeClass('form-group-error')
-          field.removeClass('form-control-error')
+          formGroup.removeClass('govuk-form-group--error')
+          field.removeClass('govuk-input--error')
           //  clear tooWeakPassword message as this is validated in the back end.
           IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
           // clear the customError if it has been set by a server validation error
@@ -170,8 +170,8 @@ IFS.core.formValidation = (function () {
             field[0].setCustomValidity('')
           }
         } else {
-          formGroup.addClass('form-group-error')
-          field.addClass('form-control-error')
+          formGroup.addClass('govuk-form-group--error')
+          field.addClass('govuk-input--error')
         }
       }
       return confirmsToPasswordPolicy
@@ -249,6 +249,17 @@ IFS.core.formValidation = (function () {
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
         var validEmail = emailRegex.test(email)
+
+        // If server response finds email already invited then cancel error msg on change of email details
+        // Get value of error msg
+        // If email is changed then remove error msg
+
+        var currentServerError = field.closest('tr').find('.govuk-error-message').text()
+        var currentServerMsgCheck = 'An invite has already been created for this email address.'
+
+        if (currentServerError === currentServerMsgCheck) {
+          IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
+        }
 
         // check if email address is invalid
         if (!validEmail) {
@@ -398,7 +409,7 @@ IFS.core.formValidation = (function () {
           return true
         } else if (field.is('select')) {
           // check if we are a group of select elements
-          var selectGroup = field.closest('.form-group').find('select')
+          var selectGroup = field.closest('.govuk-form-group').find('select')
           var valid = true
           if (selectGroup.length > 1) {
             // a group of select elements
@@ -545,7 +556,7 @@ IFS.core.formValidation = (function () {
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
       var required = (d.attr('required') && m.attr('required') && y.attr('required'))
       var empty = ((d.val().length === 0) && (m.val().length === 0) && (y.val().length === 0))
-      var errorSummary = jQuery('.error-summary')
+      var errorSummary = jQuery('.govuk-error-summary')
 
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
       allFields.attr({
@@ -764,8 +775,7 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var name = IFS.core.formValidation.getName(field)
@@ -775,41 +785,41 @@ IFS.core.formValidation = (function () {
 
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroup.addClass('form-group-error') }
-        var errorEl = formGroup.find('.error-message:contains("' + message + '")')
+        if (visuallyhidden === false) { formGroup.addClass('govuk-form-group--error') }
+        var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('form-control-error') }
-          formGroup.find('legend,label').first().append('<span class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          if (visuallyhidden === false) { field.addClass('govuk-input--error') }
+          formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
 
       if (formGroupRowValidated) {
-        if (visuallyhidden === false) { formGroupRowValidated.addClass('form-group-error') }
+        if (visuallyhidden === false) { formGroupRowValidated.addClass('govuk-form-group--error') }
       }
-
       if (formGroupRow.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroupRow.addClass('form-group-error') }
+        if (visuallyhidden === false) { formGroupRow.addClass('govuk-form-group--error') }
 
         var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (linkedErrorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('form-control-error') }
-          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          if (visuallyhidden === false) { field.addClass('govuk-input--error') }
+          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
 
       if (id.length) {
-        if (jQuery('.error-summary-list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
-          jQuery('.error-summary-list').append('<li><a href="#' + id + '">' + message + '</a></li>')
+        if (jQuery('.govuk-error-summary__list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
+          jQuery('.govuk-error-summary__list').append('<li><a href="#' + id + '">' + message + '</a></li>')
         }
       } else {
-        if (jQuery('.error-summary-list li:contains(' + message + ')').length === 0) {
-          jQuery('.error-summary-list').append('<li>' + message + '</li>')
+        if (jQuery('.govuk-error-summary__list li:contains(' + message + ')').length === 0) {
+          jQuery('.govuk-error-summary__list').append('<li>' + message + '</li>')
         }
       }
 
-      jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
+      jQuery('.govuk-error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
       jQuery(window).trigger('updateWysiwygPosition')
+      IFS.core.sortingErrors.sortList()
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
@@ -817,63 +827,62 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
-      var errorSummary = jQuery('.error-summary-list')
+      var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
 
-      // if it is a .form-group we assume the basic form structure with just one field per group
+      // if it is a .govuk-form-group we assume the basic form structure with just one field per group
       // i.e.
-      // <div class="form-group">
-      //      <label for="field1">
-      //          <span>FieldLabel</span>
-      //          <span class="error-message">This field cannot be empty</span>
+      // <div class="govuk-form-group">
+      //      <label class="govuk-label" for="field1">
+      //          FieldLabel
       //      </label>
-      //      <input class="form-control form-control-error" name="field1" id="field1" required />
+      //      <span class="govuk-error-message">This field cannot be empty</span>
+      //      <input class="govuk-input govuk-input--error" name="field1" id="field1" required />
       // </div>
       if (formGroup.length) {
-        formGroup.find('.error-message:contains("' + message + '")').remove()
+        formGroup.find('.govuk-error-message:contains("' + message + '")').remove()
         // if this was the last error we remove the error styling
-        if (formGroup.find('.error-message').length === 0) {
-          formGroup.removeClass('form-group-error')
-          field.removeClass('form-control-error')
+        if (formGroup.find('.govuk-error-message').length === 0) {
+          formGroup.removeClass('govuk-form-group--error')
+          field.removeClass('govuk-input--error')
           // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
             jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
           }
         }
       }
-      if (formGroupRowValidated.length && formGroupRowValidated.find('.form-control-error').length === 0) {
-        formGroupRowValidated.removeClass('form-group-error')
+      if (formGroupRowValidated.length && formGroupRowValidated.find('.govuk-input--error').length === 0) {
+        formGroupRowValidated.removeClass('govuk-form-group--error')
       }
 
       // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
       // the template has to output server side error messages linked to the field
       // i.e. a table
-      // <tr class="form-group-row form-group-error">
+      // <tr class="form-group-row govuk-form-group--error">
       //     <th scope="row" id="rowlabel">
       //          <span>The label of this row</span>
-      //          <span class="error-message" data-errorfield="field1">This field cannot be empty</span>
-      //          <span class="error-message" data-errorfield="field2">This field cannot be empty</span>
+      //          <span class="govuk-error-message" data-errorfield="field1">This field cannot be empty</span>
+      //          <span class="govuk-error-message" data-errorfield="field2">This field cannot be empty</span>
       //    </th>
-      //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="form-control form-control-error" required /></td>
-      //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
+      //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="govuk-input govuk-input--error" required /></td>
+      //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="govuk-input govuk-input--error" required /></td>
       // </tr>
       if (formGroupRow.length) {
         formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
         if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {
-          field.removeClass('form-control-error')
+          field.removeClass('govuk-input--error')
         }
         if ((formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) && (s.html5validationMode)) {
           jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
         }
         if (formGroupRow.find('[data-errorfield]').length === 0) {
-          formGroupRow.removeClass('form-group-error')
+          formGroupRow.removeClass('govuk-form-group--error')
         }
       }
-
       // updating the error summary
       if (errorSummary.length) {
         if (id.length) {
@@ -881,9 +890,9 @@ IFS.core.formValidation = (function () {
         } else {
           errorSummary.find('li:contains(' + message + ')').remove()
         }
-        if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
-          jQuery('.error-summary-list li.list-header').remove()
-          jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
+        if (jQuery('.govuk-error-summary__list li:not(.list-header)').length === 0) {
+          jQuery('.govuk-error-summary__list li.list-header').remove()
+          jQuery('.govuk-error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
       }
 
@@ -892,25 +901,25 @@ IFS.core.formValidation = (function () {
     setSectionValid: function (section) {
       section = jQuery(section)
       section.removeClass('error')
-      var inputs = section.find('.form-control-error')
+      var inputs = section.find('.govuk-input--error')
 
       //  remove error messages from section + error summary
-      section.find('.error-message').each(function () {
+      section.find('.govuk-error-message').each(function () {
         var errorMessage = jQuery(this)
         var content = errorMessage.text()
-        jQuery('.error-summary-list li:contains(' + content + ')').first().remove()
+        jQuery('.govuk-error-summary__list li:contains(' + content + ')').first().remove()
         errorMessage.remove()
       })
 
       jQuery.each(inputs, function () {
-        jQuery(this).removeClass('form-control-error').val('')
+        jQuery(this).removeClass('govuk-input--error').val('')
         if (s.html5validationMode) {
           this.setCustomValidity('')
         }
       })
     },
     setStatus: function (field, type, status) {
-      var formGroup = field.closest('.form-group,tr.form-group-row')
+      var formGroup = field.closest('.govuk-form-group,tr.form-group-row')
       var statusAttribute = 'data-' + type + '-validationStatus'
       var statusElements = formGroup.find('[' + statusAttribute + ']')
       status = status.toString()
@@ -979,12 +988,12 @@ IFS.core.formValidation = (function () {
     },
     initFocusActions: function () {
       // If there is an error summary, set focus to the summary
-      var errorSummary = jQuery('.error-summary')
+      var errorSummary = jQuery('.govuk-error-summary')
       if (errorSummary.length) {
         errorSummary.focus()
       } else {
         // Otherwise, set focus to the field with the error
-        jQuery('.form-group-error input:not([type="hidden"])').first().focus()
+        jQuery('.govuk-form-group--error input:not([type="hidden"])').first().focus()
       }
     },
     errorSummaryLinksClick: function (el) {

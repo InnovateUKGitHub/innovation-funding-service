@@ -147,8 +147,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccess();
             } else {
-                messages.getSuccess().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
+                messages.getSuccess().getErrors()
+                        .forEach(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccess();
             }
         }
@@ -260,12 +260,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
+        updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
 
-    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "projectLocation":

@@ -10,9 +10,9 @@
 
 <th:block th:fragment="project-status-table(status, columnType)">
     <th:block th:switch="${status.name()}">
-        <td th:case="'COMPLETE'" class="status ok">
+        <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
           <th:block th:if="${url}">
-              <a th:href="${url}">
+              <a th:href="${url}" class="govuk-link">
                   <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
               </a>
           </th:block>
@@ -20,9 +20,9 @@
             <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
           </th:block>
         </td>
-        <td th:case="'ACTION_REQUIRED'" class="status action">
+        <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
             <th:block th:if="${url}">
-                <a th:href="${url}">
+                <a th:href="${url}" class="govuk-link">
                   <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
                   <th:block th:if="${columnType == 'MO'}">Assign</th:block>
                   <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
@@ -34,15 +34,15 @@
               <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
             </th:block>
         </td>
-        <td th:case="'NOT_STARTED'" class="status">
-            <span class="visuallyhidden">Stage is not yet available</span>
+        <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
+            <span class="govuk-visually-hidden">Stage is not yet available</span>
         </td>
-        <td th:case="'NOT_REQUIRED'" class="status na">
-            <span class="visuallyhidden">Not required for this partner</span>
+        <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na">
+            <span class="govuk-visually-hidden">Not required for this partner</span>
         </td>
-        <td th:case="'PENDING'" class="status waiting">
+        <td th:case="'PENDING'" class="govuk-table__cell status waiting">
           <th:block th:if="${url}">
-              <a th:href="${url}">
+              <a th:href="${url}" class="govuk-link">
                 <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
@@ -50,31 +50,31 @@
               <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
-        <td th:case="'REJECTED'" class="status rejected">
+        <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
             <th:block th:if="${url}">
-                <a th:href="${url}">Rejected</a>
+                <a th:href="${url}" class="govuk-link">Rejected</a>
             </th:block>
             <th:block th:unless="${url}">Rejected</th:block>
         </td>
-        <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
+        <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </th:block>
 
 <div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
-    <ul class="inline-nav cf">
+    <ul class="govuk-list inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
-            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}">All projects</a>
+            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}" class="govuk-link">All projects</a>
         </li>
 
         <th:block th:if="${showAllTabs}">
             <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'"></a>
+                <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'" class="govuk-link"></a>
             </li>
         </th:block>
 
         <th:block th:if="${showAllTabs}">
             <li id="section-3" th:class="${selectedTab == 'spend-profile' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"></a>
+                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'" class="govuk-link"></a>
             </li>
         </th:block>
     </ul>

@@ -13,9 +13,6 @@ public class ProfileSkillsResource extends ProfileSkillsBaseResource {
 
     private List<InnovationAreaResource> innovationAreas;
 
-    public ProfileSkillsResource() {
-    }
-
     public List<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
     }

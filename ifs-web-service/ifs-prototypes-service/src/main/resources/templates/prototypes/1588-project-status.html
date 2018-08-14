@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Set up your project'})" />
 
-	<dl class="font-xsmall extra-margin-bottom">
+	<dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
 		<dt>Project number:</dt>
 		<dd>194741</dd>
 		<dt>Competition:</dt>
@@ -28,21 +28,21 @@
 		<dd>Innovate UK</dd>
 	</dl>
 
-	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
+	<p class="govuk-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'setup-complete'}">
-		<div class="success-alert extra-margin-bottom">
+		<div class="success-alert govuk-!-margin-bottom-6">
 			The project is live, you can review progress at <a href="#">_connect</a>
 		</div>
 
-		<p>The following steps have been completed by all partners. The project can now start.</p>
+		<p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
 	</th:block>
 
-	<div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
-    <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
-    <p>For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>
-    <p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>
-    <p><a href="/prototypes/4242-register-no-companies-house">Business has no legal repsonsibility to register with Companies House</a></p>
+	<div class="warning-alert govuk-!-margin-bottom-6" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
+    <h2 class="govuk-heading-s govuk-!-margin-0">Your business is not currently linked with Companies House</h2>
+    <p class="govuk-body">For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>
+    <p class="govuk-body"><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>
+    <p class="govuk-body"><a href="/prototypes/4242-register-no-companies-house">Business has no legal repsonsibility to register with Companies House</a></p>
   </div>
 
 	<strong th:unless="${param.status != null and param.status[0] == 'setup-complete'}"><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
@@ -51,9 +51,9 @@
 	  <ul th:classappend="${(param.status != null and param.status[0] == 'setup-complete' ? 'setup-complete' : '' )}" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
 	    <li class="complete">
         <div class="task">
-          <h2 class="heading-small">Successful application</h2>
-          <p>The application <strong>Machine learning in robots</strong> has been successful in the <strong>Technology inspired</strong> competition.</p>
-          <p class="no-margin">
+          <h2 class="govuk-heading-s">Successful application</h2>
+          <p class="govuk-body">The application <strong>Machine learning in robots</strong> has been successful in the <strong>Technology inspired</strong> competition.</p>
+          <p class="govuk-body govuk-!-margin-0">
             <a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback" class="extra-margin-right">View application and feedback</a>
 	          <a href="#">View terms and conditions of grant offer</a>
           </p>
@@ -67,11 +67,11 @@
 
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'require-action' : 'positive')}">
         <div class="task">
-          <h2 class="heading-small">
+          <h2 class="govuk-heading-s">
 	          <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead' : '/prototypes/1575-project-details')}" th:unless="${param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.status != null and param.status[0] == 'setup-complete'}">Project details</a>
 	          <a href="/prototypes/1575-project-details-submitted" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Project details</a>
 	        </h2>
-          <p class="no-margin">The contact details, start date and location of the project.</p>
+          <p class="govuk-body govuk-!-margin-0">The contact details, start date and location of the project.</p>
         </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -88,15 +88,15 @@
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'read-only' : 'positive')}">
 
         <div class="task">
-          <h2 class="heading-small">
+          <h2 class="govuk-heading-s">
             <a th:href="${(param.stage == null or param.stage[0] == 'level1' ? '/prototypes/2484-mo-partner?status=noMo' : '/prototypes/2484-mo-partner')}" th:unless="${param.stage == null or param.stage[0] == 'level1'}">
               Monitoring Officer
             </a>
             <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">Monitoring Officer</th:block>
           </h2>
 
-          <p class="no-margin" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your Monitoring Officer for this project is Tom Evans.</p>
-	        <p class="no-margin" th:unless="${param.stage != null and param.stage[0] != 'level1'}">
+          <p class="govuk-!-margin-0" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your Monitoring Officer for this project is Tom Evans.</p>
+	        <p class="govuk-!-margin-0" th:unless="${param.stage != null and param.stage[0] != 'level1'}">
 	          Innovate UK will assign you a Monitoring Officer
 	        </p>
         </div>
@@ -117,14 +117,14 @@
 
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'read-only' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
-	        <h2 class="heading-small">
+	        <h2 class="govuk-heading-s">
             <a href="/prototypes/1578-bank-details" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Bank details</a>
             <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
               Bank details
             </th:block>
           </h2>
 
-          <p class="no-margin">We need bank details for each consortium member so that we can pay the grant.</p>
+          <p class="govuk-body govuk-!-margin-0">We need bank details for each consortium member so that we can pay the grant.</p>
 	      </div>
         <th:block th:if="${param.stage != null and param.stage[0] == 'level2'}">
           <div class="status">
@@ -137,8 +137,8 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
-	        <p class="no-margin">The bank details submitted for your organisation.</p>
+	        <h2 class="govuk-heading-s"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
+	        <p class="govuk-body govuk-!-margin-0">The bank details submitted for your organisation.</p>
 	      </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -149,13 +149,13 @@
 
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' or param.stage[0] == 'level3' or param.stage[0] == 'level4' ? 'read-only' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
-	        <h2 class="heading-small">
+	        <h2 class="govuk-heading-s">
             <a href="/prototypes/3813-finance-check-landing" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Finance checksA</a>
             <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
                 Finance checks
             </th:block>
           </h2>
-	        <p class="no-margin">We will review all project costs and contact you if we have any queries.</p>
+	        <p class="govuk-body govuk-!-margin-0">We will review all project costs and contact you if we have any queries.</p>
 	      </div>
         <th:block th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4'}">
           <div class="status">
@@ -166,8 +166,8 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level2'}" class="require-action" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing">Finance checks</a></h2>
-	        <p class="no-margin">We will review all project costs and contact you if we have any queries.</p>
+	        <h2 class="govuk-heading-s"><a href="/prototypes/3813-finance-check-landing">Finance checks</a></h2>
+	        <p class="govuk-body govuk-!-margin-0">We will review all project costs and contact you if we have any queries.</p>
 	      </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -178,8 +178,8 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive">
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checks</a></h2>
-	        <p class="no-margin">A record of your initial project costs and queries raised.</p>
+	        <h2 class="govuk-heading-s"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checks</a></h2>
+	        <p class="govuk-body govuk-!-margin-0">A record of your initial project costs and queries raised.</p>
 	      </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -190,13 +190,13 @@
 
 	    <li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : 'read-only')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
-	        <h2 class="heading-small">
+	        <h2 class="govuk-heading-s">
             <a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}" th:unless="${param.stage == null or param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}">Spend profileA</a>
             <th:block th:if="${param.stage == null or param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}">
               Spend profile
             </th:block>
           </h2>
-	        <p class="no-margin">Once we have approved your financial information, we will produce a spend profile.</p>
+	        <p class="govuk-body govuk-!-margin-0">Once we have approved your financial information, we will produce a spend profile.</p>
 	      </div>
         <th:block th:if="${param.stage != null and param.stage[0] == 'level3'}">
           <div class="status">
@@ -209,8 +209,8 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
-	        <p class="no-margin">The spend profile created for your project.</p>
+	        <h2 class="govuk-heading-s"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
+	        <p class="govuk-body govuk-!-margin-0">The spend profile created for your project.</p>
 	      </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -222,21 +222,21 @@
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'read-only' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
 	        <div th:unless="${param.user != null}" th:remove="tag">
-	          <h2 class="heading-small">
+	          <h2 class="govuk-heading-s">
               <a th:href="${(param.status != null and param.status[0] == 'docs-reject' ? '/prototypes/1590-document-upload?status=reject' : '/prototypes/1590-document-upload')}" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Other documentsA</a>
               <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
                 Other documents
               </th:block>
             </h2>
-	          <p class="no-margin">As Project Manager in the consortium you will need to upload the following documents:</p>
+	          <p class="govuk-body govuk-!-margin-0">As Project Manager in the consortium you will need to upload the following documents:</p>
 	        </div>
 
 	        <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-	          <h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
-	          <p class="no-margin">The Project Manager of the consortium will need to upload the following documents:</p>
+	          <h2 class="govuk-heading-m"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
+	          <p class="govuk-body govuk-!-margin-0">The Project Manager of the consortium will need to upload the following documents:</p>
 	        </div>
 
-	        <ul class="list list-bullet no-margin">
+	        <ul class="govuk-list govuk-list--bullet govuk-!-margin-0">
 	          <li>a collaboration agreement</li>
 	          <li>exploitation plan</li>
 	        </ul>
@@ -254,16 +254,16 @@
 	    <li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive">
 	      <div class="task">
 	        <div th:unless="${param.user != null}" th:remove="tag">
-	          <h2 class="heading-small"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
-	          <p class="no-margin">Supporting documents uploaded by the Project Manager.</p>
+	          <h2 class="govuk-heading-s"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
+	          <p class="govuk-body govuk-!-margin-0">Supporting documents uploaded by the Project Manager.</p>
 	        </div>
 
 	        <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-	          <h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead&#38;status=submitted">Other documents</a></h2>
-	          <p class="no-margin">Supporting documents uploaded by the Project Manager.</p>
+	          <h2 class="govuk-heading-m"><a href="/prototypes/1590-document-upload?user=nonLead&#38;status=submitted">Other documents</a></h2>
+	          <p class="govuk-body govuk-!-margin-0">Supporting documents uploaded by the Project Manager.</p>
 	        </div>
 
-	        <ul class="list list-bullet no-margin">
+	        <ul class="govuk-list govuk-list--bullet govuk-!-margin-0">
 	          <li>collaboration agreement</li>
 	          <li>exploitation plan</li>
 	        </ul>
@@ -278,7 +278,7 @@
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' or param.stage[0] == 'level2' or param.stage[0] == 'level3' or param.stage[0] == 'level4' or param.stage[0] == 'level5' ? 'read-only' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
 	        <div th:unless="${param.user != null}" th:remove="tag">
-	          <h2 class="heading-small">
+	          <h2 class="govuk-heading-s">
               <a href="/prototypes/1594-gol-partner-view" th:unless="${param.stage == null or param.stage[0] == 'level1' or param.stage[0] == 'level2' or param.stage[0] == 'level3' or param.stage[0] == 'level4' or param.stage[0] == 'level5'}">Grant offer letter</a>
               <th:block th:if="${param.stage == null or param.stage[0] == 'level1' or param.stage[0] == 'level2' or param.stage[0] == 'level3' or param.stage[0] == 'level4' or param.stage[0] == 'level5'}">
                 Grant offer letter
@@ -286,9 +286,9 @@
             </h2>
 	        </div>
 	        <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-	          <h2 class="heading-small"><a href="/prototypes/1594-gol-partner-view?user=nonLead">Grant offer letter</a></h2>
+	          <h2 class="govuk-heading-s"><a href="/prototypes/1594-gol-partner-view?user=nonLead">Grant offer letter</a></h2>
 	        </div>
-	        <p class="no-margin">Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead partner has returned the letter to us, you can begin the project.</p>
+	        <p class="govuk-body govuk-!-margin-0">Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead partner has returned the letter to us, you can begin the project.</p>
 	      </div>
         <th:block th:if="${param.stage != null and param.stage[0] == 'level6'}">
           <div class="status">
@@ -302,12 +302,12 @@
 	    <li th:if="${param.stage != null and param.stage[0] == 'level7'}" class="positive">
 	      <div class="task">
 	        <div th:unless="${param.user != null}" th:remove="tag">
-	          <h2 class="heading-small"><a href="/prototypes/1594-gol-partner-view">Grant offer letter</a></h2>
+	          <h2 class="govuk-heading-s"><a href="/prototypes/1594-gol-partner-view">Grant offer letter</a></h2>
 	        </div>
 	        <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-	          <h2 class="heading-small"><a href="/prototypes/1594-gol-partner-view?user=nonLead">Grant offer letter</a></h2>
+	          <h2 class="govuk-heading-s"><a href="/prototypes/1594-gol-partner-view?user=nonLead">Grant offer letter</a></h2>
 	        </div>
-	        <p>A copy of the grant offer letter that was signed by the Project Manager, completing project setup.</p>
+	        <p class="govuk-body">A copy of the grant offer letter that was signed by the Project Manager, completing project setup.</p>
 	      </div>
         <div class="status">
           <div class="status-msg msg-progress">
@@ -321,46 +321,46 @@
 	<ul class="application-progress-list extra-margin" th:if="${param.status != null and param.status[0] == 'noCompHouse'}">
 		<li>
 			<span>
-				<h2 class="heading-medium">Successful application</h2>
-				<p>The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
+				<h2 class="govuk-heading-m">Successful application</h2>
+				<p class="govuk-body">The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Project details</h2>
-				<p>Confirm the contact details, proposed start date and location of the project.</p>
+				<h2 class="govuk-heading-m">Project details</h2>
+				<p class="govuk-body">Confirm the contact details, proposed start date and location of the project.</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Monitoring officer</h2>
-				<p>Innovate UK will assign you a Monitoring Officer.</p>
+				<h2 class="govuk-heading-m">Monitoring officer</h2>
+				<p class="govuk-body">Innovate UK will assign you a Monitoring Officer.</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Bank details</h2>
-				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+				<h2 class="govuk-heading-m">Bank details</h2>
+				<p class="govuk-body">We need bank details for each consortium member so that we can pay the grant.</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Finance checks</h2>
-				<p>We will review all project costs and contact you if we have any queries.</p>
+				<h2 class="govuk-heading-m">Finance checks</h2>
+				<p class="govuk-body">We will review all project costs and contact you if we have any queries.</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Spend profile</h2>
-				<p>Once we have approved your financial information, we will produce a spend profile.</p>
+				<h2 class="govuk-heading-m">Spend profile</h2>
+				<p class="govuk-body">Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Other documents</h2>
-				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
-				<p>The lead partner of the consortium will need to upload documents including:</p>
-				<ul class="list list-bullet">
+				<h2 class="govuk-heading-m">Other documents</h2>
+				<p class="govuk-body">When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+				<p class="govuk-body">The lead partner of the consortium will need to upload documents including:</p>
+				<ul class="govuk-list govuk-list--bullet">
 					<li>a collaboration agreement</li>
 					<li>exploitation plan</li>
 					<li>project plan</li>
@@ -369,8 +369,8 @@
 		</li>
 		<li>
 			<span>
-				<h2 class="heading-medium">Grant offer letter</h2>
-				<p>Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead partner has returned the letter to us, you can begin the project.</p>
+				<h2 class="govuk-heading-m">Grant offer letter</h2>
+				<p class="govuk-body">Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead partner has returned the letter to us, you can begin the project.</p>
 			</span>
 		</li>
 	</ul>

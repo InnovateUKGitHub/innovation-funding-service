@@ -75,7 +75,6 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.getApplication() == null){
             return null;
         } else {
-            Long id = project.getApplication();
             ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
             return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
         }

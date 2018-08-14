@@ -96,7 +96,7 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
 
     @Override
     public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId,  long userId, Long questionId, FinanceRowType costType) {
-
+        //does nothing
     }
 
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
