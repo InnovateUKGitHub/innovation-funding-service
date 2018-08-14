@@ -26,6 +26,12 @@ public class SurveyRestServiceImpl extends BaseRestService implements SurveyRest
 
     public RestResult<Void> saveFallback(SurveyResource surveyResource, Throwable e) {
 
+        /*
+         * Hystrix command will time out on first request due to the time it
+         * takes to initialise.
+         *
+         * A solution to this will be covered under IFS-4163
+         */
        if(e.getClass().equals(HystrixTimeoutException.class)) {
             return RestResult.restSuccess();
         }
