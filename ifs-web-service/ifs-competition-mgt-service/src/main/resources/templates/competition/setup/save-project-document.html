@@ -9,7 +9,7 @@
       <th:block th:insert="fragments/layout :: global-header" />
       <div class="govuk-width-container">
          <th:block th:insert="fragments/layout :: phase-banner" />
-         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkUrl=@{/competition/setup/{competitionId}/section/project-document/landing-page(competitionId=${model.general.competition.id})}" />
+         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents in project setup',linkUrl=@{/competition/setup/{competitionId}/section/project-document/landing-page(competitionId=${model.general.competition.id})}" />
 
          <main class="govuk-main-wrapper" id="main-content" role="main">
 
