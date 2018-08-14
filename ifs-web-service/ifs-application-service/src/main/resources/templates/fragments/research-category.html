@@ -4,9 +4,9 @@
 <th:block th:fragment="research_category(model)">
     <form
         th:action="@{/application/{applicationId}/form/question/{questionId}/research-category(applicationId=${model.applicationId},questionId=${model.questionId})}"
-          method="post"
-          th:object="${form}"
-          novalidate="novalidate">
+        method="post"
+        th:object="${form}"
+        novalidate="novalidate">
 
         <div class="question">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'govuk-form-group--error'">
@@ -110,7 +110,7 @@
             <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             <!--/* 'Return and edit' link */-->
             <th:block th:if="${model.canMarkAsComplete}"
-                th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+                      th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
         </div>
     </div>
 </th:block>
