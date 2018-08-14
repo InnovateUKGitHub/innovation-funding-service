@@ -36,7 +36,8 @@ public enum Role implements Identifiable {
 
     PANEL_ASSESSOR              (16, "panel_assessor",              "Panel Assessor"),
     INTERVIEW_ASSESSOR          (17, "interview_assessor",          "Interview Assessor"),
-    INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",    "Interview Lead Applicant");
+    INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",    "Interview Lead Applicant"),
+    MONITORING_OFFICER          (19, "monitoring_officer",       "Monitoring Officer",        "applicant/dashboard");
 
     final long id;
     final String name;
