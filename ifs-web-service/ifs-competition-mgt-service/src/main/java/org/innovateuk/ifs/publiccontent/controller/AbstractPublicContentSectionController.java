@@ -66,19 +66,18 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return markAsComplete(competitionId, model, form, validationHandler);
     }
 
-    protected String readOnly(Long competitionId, Model model, Optional<F> form) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-        return getPage(publicContent, model, form, true);
+    protected String readOnly(long competitionId, Model model, Optional<F> form) {
+        return getPage(competitionId, model, form, true);
     }
 
-    protected String edit(Long competitionId, Model model, Optional<F> form) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-        return getPage(publicContent, model, form, false);
+    protected String edit(long competitionId, Model model, Optional<F> form) {
+        return getPage(competitionId, model, form, false);
     }
 
-    protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(publicContent.getCompetitionId())
-                .getSuccess();
+    protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())) {
             return "redirect:/competition/setup/" + competition.getId();
@@ -93,7 +92,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return TEMPLATE_FOLDER + "public-content-form";
     }
 
-    protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
+    protected String markAsComplete(long competitionId, Model model, F form, ValidationHandler validationHandler) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccess();
 
@@ -101,10 +100,10 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-        Supplier<String> successView = () -> getPage(publicContent, model, Optional.of(form), true);
-        Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
+        Supplier<String> successView = () -> getPage(competitionId, model, Optional.of(form), true);
+        Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
 
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
     }
 
