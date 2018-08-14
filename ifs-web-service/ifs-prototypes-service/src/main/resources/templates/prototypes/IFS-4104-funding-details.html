@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body"
+      th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+
+                <h1 class="govuk-heading-xl">
+                    Funding details
+                </h1>
+
+                <th:block th:unless="${param.status != null and param.status[0] == 'readonly'}">
+
+
+                    <form action="/prototypes/IFS-4104-funding-dashboard">
+
+                        <fieldset class="govuk-fieldset">
+
+                            <legend class="govuk-fieldset__legend">
+                                <h2 class="govuk-fieldset__heading">
+                                    Provide details of the funding your organisation receives through Horizon 2020.
+                                </h2>
+                            </legend>
+
+                            <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                            <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                            <input type="hidden" id="section3" name="section3" value="true">
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="call-name">
+                                    Call name
+                                </label>
+                                <span id="call-name-hint" class="govuk-hint">
+                                    The call that your original proposal was in response to.
+                                </span>
+                                <input class="govuk-input" id="call-name" name="call-name" type="text" aria-describedby="call-name-hint" th:value="${edit ? 'Industrialisation of artificial intelligence' : ''}" required="required">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="call-id">
+                                    Call ID
+                                </label>
+                                <span id="call-id-hint" class="govuk-hint">
+                                    The call that your original proposal was in response to.
+                                </span>
+                                <input class="govuk-input govuk-input--width-10" id="call-id" name="call-id" type="text" aria-describedby="call-id-hint" th:value="${edit ? '123456' : ''}" required="required">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="project-name">
+                                    Project name
+                                </label>
+                                <span id="project-name-hint" class="govuk-hint">
+                                    The call that your original proposal was in response to.
+                                </span>
+                                <input class="govuk-input" id="project-name" name="project-name" type="text" aria-describedby="project-name-hint" th:value="${edit ? 'My EU project name' : ''}" required="required">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="file-upload-proposal-doc">
+                                    Proposal document
+                                </label>
+                                <input class="govuk-file-upload" id="file-upload-proposal-doc" name="file-upload-proposal-doc" type="file">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                        Project commencement date
+                                    </legend>
+                                    <div class="govuk-date-input">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="start-month">
+                                                    Month
+                                                </label>
+                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2 " id="start-month" name="start-month" type="number" pattern="[0-9]*" th:value="${edit ? '09' : ''}" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="start-year">
+                                                    Year
+                                                </label>
+                                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="start-year" name="start-year" type="number" pattern="[0-9]*" th:value="${edit ? '2017' : ''}" required="required">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                        Project completion date
+                                    </legend>
+                                    <div class="govuk-date-input">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="end-month">
+                                                    Month
+                                                </label>
+                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2 " id="end-month" name="end-month" type="number" pattern="[0-9]*" th:value="${edit ? '03' : ''}" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="end-year">
+                                                    Year
+                                                </label>
+                                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="end-year" name="end-year" type="number" pattern="[0-9]*" th:value="${edit ? '2019' : ''}" required="required">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="funding-committed">
+                                    Funding committed
+                                </label>
+                                <span id="funding-committed-hint" class="govuk-hint">
+                                    The total amount that your organisation was granted.
+                                </span>
+                                <span class="govuk-body govuk-!-padding-right-1">&pound;</span><input class="govuk-input govuk-input--width-10" id="funding-committed" name="funding-committed" type="text" aria-describedby="funding-committed-hint" th:value="${edit ? '&pound;100,000' : ''}" required="required">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="grant-agreement-number">
+                                    Grant agreement number
+                                </label>
+                                <input class="govuk-input govuk-input--width-10" id="grant-agreement-number" name="grant-agreement-number" type="text" th:value="${edit ? '123456' : ''}" required="required">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--s" for="file-upload-grant-agreement-doc">
+                                    Grant agreement doc
+                                </label>
+                                <input class="govuk-file-upload" id="file-upload-grant-agreement-doc" name="file-upload-grant-agreement-doc" type="file">
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                        Is your organisation the consortium lead on this project?
+                                    </legend>
+                                    <div class="govuk-radios" data-module="radios">
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="consortium-lead-yes" name="consortium-lead" type="radio" value="yes" required="required">
+                                            <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
+                                                Yes
+                                            </label>
+                                        </div>
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="consortium-lead-no" name="consortium-lead" type="radio" value="no" data-aria-controls="consortium-lead-details" th:checked="${edit}" required="required">
+                                            <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
+                                                No
+                                            </label>
+                                        </div>
+                                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="consortium-lead-details">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label" for="consortium-lead-name">
+                                                    Lead organisation name
+                                                </label>
+                                                <input class="govuk-input" id="consortium-lead-name" name="consortium-lead-name" type="text" th:value="${edit ? 'World industries Ltd' : ''}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <button class="govuk-button" type="submit">Save and return</button>
+
+                        </fieldset>
+
+                    </form>
+
+                </th:block>
+
+                <th:block th:if="${param.status != null and param.status[0] == 'readonly'}">
+                    <dl class="govuk-list">
+                        <dt>Call name</dt>
+                        <dd>Industrialisation of artificial intelligence</dd>
+                        <dt class="govuk-!-margin-top-6">Call ID</dt>
+                        <dd>My EU project name</dd>
+                        <dt class="govuk-!-margin-top-6">Proposal document</dt>
+                        <dd><a class="govuk-link" href="#">My-EU-proposal.doc</a></dd>
+                        <dt class="govuk-!-margin-top-6">Project commencement date</dt>
+                        <dd>August 2017</dd>
+                        <dt class="govuk-!-margin-top-6">Project completion date</dt>
+                        <dd>March 2019</dd>
+                        <dt class="govuk-!-margin-top-6">Funding committed</dt>
+                        <dd>&pound;100,000</dd>
+                        <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
+                        <dd>123456</dd>
+                        <dt class="govuk-!-margin-top-6">Grant agreement document</dt>
+                        <dd><a class="govuk-link" href="#">My-EU-project.doc</a></dd>
+                        <dt class="govuk-!-margin-top-6">Is your organisation the consortium lead on this project?</dt>
+                        <dd>No</dd>
+                        <dd>Lead: World Industries Ltd</dd>
+
+                    </dl>
+                    <a class="govuk-button" href="/prototypes/IFS-4104-funding-details?status=edit">Edit funding details</a>
+                </th:block>
+
+            </div>
+        </div>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
+    <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+    <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+    <script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+    </script>
+
+
+</body>
+
+</html>

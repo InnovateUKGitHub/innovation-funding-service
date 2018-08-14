@@ -34,27 +34,28 @@
 
                     <form action="/prototypes/IFS-4104-funding-dashboard">
 
-                        <input type="hidden" id="section2" name="section2" value="complete">
+                        <input type="hidden" id="section1" name="section1" value="true">
+                        <input type="hidden" id="section2" name="section2" value="true">
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="name">
                                 Name
                             </label>
-                            <input class="govuk-input" id="name" name="name" type="text" th:value="${edit ? 'Joe Bloggs' : ''}">
+                            <input class="govuk-input" id="name" name="name" type="text" th:value="${edit ? 'Joe Bloggs' : ''}" required>
                         </div>
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="email">
                                 Email
                             </label>
-                            <input class="govuk-input" id="email" name="email" type="text">
+                            <input class="govuk-input" id="email" name="email" type="email" th:value="${edit ? 'joebloggs@gmail.com' : ''}" required>
                         </div>
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="telephone">
                                 Telephone
                             </label>
-                            <input class="govuk-input" id="telephone" name="telephone" type="text">
+                            <input class="govuk-input" id="telephone" name="telephone" type="text" th:value="${edit ? '07986543211' : ''}" required>
                         </div>
 
                         <button class="govuk-button" type="submit">Save and return</button>
