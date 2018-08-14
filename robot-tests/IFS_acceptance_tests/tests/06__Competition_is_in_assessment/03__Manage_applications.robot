@@ -78,7 +78,7 @@ Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
     [Tags]
     Given the user clicks the button/link  link=Review assessor
-    Then the user should see the element   jQuery=h3:contains("Name") + p:contains("Paul Plum")
+    Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Paul Plum")
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
