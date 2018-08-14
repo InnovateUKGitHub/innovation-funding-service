@@ -144,7 +144,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : financeDetails.entrySet()) {
             FinanceRowType rowType = entry.getKey();
             if (rowType.getType().equals(FinanceRowType.LABOUR.getType())) {
-                return ((LabourCostCategory) entry).getWorkingDaysPerYearCostItem();
+                return ((LabourCostCategory) entry.getValue()).getWorkingDaysPerYearCostItem();
             }
         }
         throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
