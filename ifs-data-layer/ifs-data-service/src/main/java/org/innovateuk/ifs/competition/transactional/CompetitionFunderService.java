@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 
 /**
  * Service for operations around the usage and processing of Competition Co Funders
