@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 @Component
-public class RemoteUserUidSupplier implements UidSupplier {
+public class RemoteUserHeaderUidSupplier implements UidSupplier {
 
     @Override
     public String getUid(HttpServletRequest request) {
-        return request.getRemoteUser();
+        return request.getHeader("x-remote-user");
     }
 }

@@ -205,7 +205,7 @@ ShibCompatValidUser On
   RewriteEngine On
   RewriteCond %{REMOTE_USER} (.+)
   RewriteRule . - [E=RU:%1]
-  RequestHeader set REMOTE_USER %{RU}e
+  RequestHeader set X-Remote-User %{REMOTE_USER}s
   ProxyPass /Shibboleth.sso !
   ProxyPass /Logout !
 
