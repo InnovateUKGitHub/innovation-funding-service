@@ -4,6 +4,8 @@ Documentation   Suite description
 ...             IFS-2192 As a Portfolio manager I am able to create an EOI competition
 ...
 ...             IFS-2196 As an applicant I am able to apply for an EOI competition
+...
+...             IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Force Tags      compAdmin  Applicant  Assessor
@@ -31,7 +33,7 @@ Applicant applies to newly created EOI competition
     Then Lead Applicant applies to the new created competition   ${comp_name}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2196
+    [Documentation]  IFS-2196  IFS-2941
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}

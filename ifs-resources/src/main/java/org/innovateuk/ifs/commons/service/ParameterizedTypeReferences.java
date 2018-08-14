@@ -317,4 +317,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
         return new ParameterizedTypeReference<Map<Long, Boolean>>() {};
     }
+
+    public static ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>> competitionResearchCategoryLinkList() {
+        return new ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>>() {};
+    }
 }
