@@ -29,7 +29,7 @@
 
         <th:block th:unless="${param.status != null and param.status[0] == 'readonly'}">
             <h1 class="govuk-heading-xl">
-                Confirm organisation details
+                Confirm your organisation
             </h1>
 
             <h2 class="govuk-heading-m">
@@ -69,7 +69,7 @@
         </th:block>
 
         <th:block th:unless="${param.status != null and param.status[0] == 'readonly'}">
-            <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-dashboard?section1=complete'}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-dashboard?section1=true'}">Save and continue</a>
         </th:block>
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->
