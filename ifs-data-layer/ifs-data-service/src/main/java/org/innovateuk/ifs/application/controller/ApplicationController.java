@@ -80,6 +80,7 @@ public class ApplicationController {
     @PutMapping("/updateApplicationState")
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
                                                    @RequestParam("state") final ApplicationState state) {
+
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {

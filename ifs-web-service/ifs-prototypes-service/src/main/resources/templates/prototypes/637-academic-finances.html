@@ -23,21 +23,21 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, ${'University of Bristol finances'})" />
 
 	<!--<div class="hgroup" style="padding-top: 20px">-->
-		<!--<p class="subtitle no-margin">Technology inspired</p>-->
-		<!--<h1 class="heading-xlarge no-margin-top">University of Bristol finances</h1>-->
+		<!--<p class="subtitle govuk-!-margin-0">Technology inspired</p>-->
+		<!--<h1 class="govuk-heading-xl govuk-!-margin-top-0">University of Bristol finances</h1>-->
 	<!--</div>-->
 
 
-	<h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
+	<h2 class="govuk-heading-m govuk-!-margin-0">Provide your organisation's finances</h2>
 
-	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team.</p>
+	<p class="govuk-body">Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team.</p>
 
 
 	<th:block th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner" />
 
 
 	<div class="alignright-button extra-margin">
-		<button type="submit" name="mark_as_complete" class="button" formaction="/prototypes/635-application-question3" value="1">Mark as complete
+		<button type="submit" name="mark_as_complete" class="govuk-button" formaction="/prototypes/635-application-question3" value="1">Mark as complete
 		</button>
 	</div>
 

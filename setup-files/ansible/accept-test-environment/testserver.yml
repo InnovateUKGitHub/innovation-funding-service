@@ -10,3 +10,4 @@
     - mysql-cli
     - prebuild
     - build
+    - test

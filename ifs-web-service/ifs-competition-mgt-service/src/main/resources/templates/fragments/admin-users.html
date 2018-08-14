@@ -1,28 +1,28 @@
 <th:block th:fragment="active(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
-    <h2 class="heading-medium">Active</h2>
-    <p>
-        <span class="heading-xlarge no-margin" th:text="${count}">38</span>
-        <span class="heading-small">active internal users</span>
+    <h2 class="govuk-heading-m">Active</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
+        <span class="govuk-heading-s">active internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
 <th:block th:fragment="inactive(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
-    <h2 class="heading-medium">Inactive</h2>
-    <p>
-        <span class="heading-xlarge no-margin" th:text="${count}">10</span>
-        <span class="heading-small">inactive internal users</span>
+    <h2 class="govuk-heading-m">Inactive</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
+        <span class="govuk-heading-s">inactive internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
 <th:block th:fragment="pending(invites, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
-    <h2 class="heading-medium">Pending</h2>
-    <p>
-        <span class="heading-xlarge no-margin" th:text="${count}">10</span>
-        <span class="heading-small">pending internal users</span>
+    <h2 class="govuk-heading-m">Pending</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
+        <span class="govuk-heading-s">pending internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
@@ -30,24 +30,24 @@
 
 <th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role profile</th>
-                <th scope="col">Email address</th>
-                <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Role profile</th>
+                <th class="govuk-table__header" scope="col">Email address</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="invite : ${invites}">
-                <td><th:block th:text="${invite.name}"/></td>
-                <td th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
-                <td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="invite : ${invites}">
+                <td class="govuk-table__cell"><th:block th:text="${invite.name}"/></td>
+                <td class="govuk-table__cell" th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell">
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
-                                class="button button-secondary"
+                                class="button-secondary"
                                 data-js-modal="modal-resend-internal-user"
                                 th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},data-modal-input-invite-id=${invite.id}">Resend invite</button>
                     </form>
@@ -60,21 +60,21 @@
 
 <th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role profile</th>
-                <th scope="col">Email address</th>
-                <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Role profile</th>
+                <th class="govuk-table__header" scope="col">Email address</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
-                <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
-                <td><span class="form-hint"></span></td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="user : ${users}">
+                <td class="govuk-table__cell"><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                <td class="govuk-table__cell" th:text="${user.getRolesString()}">IFS Admin</td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell"><span class="govuk-hint"></span></td>
             </tr>
             </tbody>
         </table>

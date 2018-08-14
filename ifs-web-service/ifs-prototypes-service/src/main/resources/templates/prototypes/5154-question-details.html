@@ -18,89 +18,89 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
-		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin">
+		<p class="subtitle govuk-!-margin-0">Connected digital additive manufacturing</p>
+		<h1 class="govuk-heading-xl govuk-!-margin-0">
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">Edit 'Business opportunity'</th:block>
 			<th:block th:if="${param.status == null}">Business opportunity</th:block>
 		</h1>
 	</div>
 
-	<p class="extra-margin">Make changes to the question'Business opportunity'. You can amend how this is presented, and also the wording and guidance assessors are given for scoring the question.</p>
+	<p class="govuk-body extra-margin">Make changes to the question'Business opportunity'. You can amend how this is presented, and also the wording and guidance assessors are given for scoring the question.</p>
 
 	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Application question</legend>
-			<h2 class="heading-medium extra-margin">Application question</h2>
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Application question</legend>
+			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
 			<th:block th:if="${param.status == null}">
-				<dl class="application-question-list grid-row">
-					<dt class="column-third">Question heading</dt>
+				<dl class="application-question-list govuk-grid-row">
+					<dt class="govuk-grid-column-one-third">Question heading</dt>
 					<dd class="column-two-thirds">Business opportunity</dd>
-					<dt class="column-third">Question title</dt>
+					<dt class="govuk-grid-column-one-third">Question title</dt>
 					<dd class="column-two-thirds">What is the business opportunity this project addresses?</dd>
-					<dt class="column-third">Question subtitle</dt>
+					<dt class="govuk-grid-column-one-third">Question subtitle</dt>
 					<dd class="column-two-thirds">None</dd>
-					<dt class="column-third">Guidance title</dt>
+					<dt class="govuk-grid-column-one-third">Guidance title</dt>
 					<dd class="column-two-thirds">What should I include in the business opportunity section?</dd>
-					<dt class="column-third">Guidance</dt>
+					<dt class="govuk-grid-column-one-third">Guidance</dt>
 					<dd class="column-two-thirds">You should describe:
-						<ul class="list list-bullet">
+						<ul class="govuk-list govuk-list--bullet">
 							<li>the business opportunity you have identified and how you plan to take advantage of it</li>
 							<li>the customer needs you have identified and how your project will meet them</li>
 							<li>the challenges you expect to face and how you will overcome them</li>
 						</ul>
 					</dd>
-					<dt class="column-third">Max word count</dt>
+					<dt class="govuk-grid-column-one-third">Max word count</dt>
 					<dd class="column-two-thirds">400</dd>
-					<dt class="column-third">Appendix</dt>
+					<dt class="govuk-grid-column-one-third">Appendix</dt>
 					<dd class="column-two-thirds">No</dd>
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
-					<label class="form-label" for="question-heading">
-						<span class="form-label-bold">Question heading</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="question-heading">
+						<span class="govuk-label">Question heading</span>
 					</label>
 					<input class="form-control" id="question-heading" name="question-heading" value="Business opportunity" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="question-title">
-						<span class="form-label-bold">Question title</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="question-title">
+						<span class="govuk-label">Question title</span>
 					</label>
 					<input class="form-control" id="question-title" name="question-title" value="What is the business opportunity this project addresses?" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="question-subtitle">
-						<span class="form-label-bold">Question subtitle</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="question-subtitle">
+						<span class="govuk-label">Question subtitle</span>
 					</label>
 					<input class="form-control" id="question-subtitle" name="question-subtitle" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="guidance-title">
-						<span class="form-label-bold">Guidance title</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="guidance-title">
+						<span class="govuk-label">Guidance title</span>
 					</label>
 					<input class="form-control" id="guidance-title" name="guidance-title" value="What should I include in the business opportunity section?" type="text" />
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="guidance">
-						<span class="form-label-bold">Guidance</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="guidance">
+						<span class="govuk-label">Guidance</span>
 					</label>
-					<textarea class="form-control width-full" id="guidance" rows="5" name="guidance">You should describe:
+					<textarea class="govuk-textarea width-full" id="guidance" rows="5" name="guidance">You should describe:
 - the business opportunity you have identified and how you plan to take advantage of it
 - the customer needs you have identified and how your project will meet them
 - the challenges you expect to face and how you will overcome them
 					</textarea>
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="word-count">
-						<span class="form-label-bold">Max word count</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="word-count">
+						<span class="govuk-label">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input govuk-input--width-10" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<fieldset class="inline">
-						<h3 class="heading-small">Appendix</h3>
-						<legend class="visuallyhidden">Appendix</legend>
+				<div class="govuk-form-group">
+					<fieldset class=govuk-fieldset "inline">
+						<h3 class="govuk-heading-s">Appendix</h3>
+						<legend class="govuk-visually-hidden">Appendix</legend>
 						<label class="block-label selection-button-radio" for="appendix-yes">
 							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -113,21 +113,21 @@
 				</div>
 			</th:block>
 		</fieldset>
-		<fieldset>
-			<legend class="visuallyhidden">Assessment of this question</legend>
-			<h2 class="heading-medium extra-margin">Assessment of this question</h2>
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Assessment of this question</legend>
+			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 			<th:block th:if="${param.status == null}">
 
-				<dl class="application-question-list grid-row">
-					<dt class="column-third">Scored</dt>
+				<dl class="application-question-list govuk-grid-row">
+					<dt class="govuk-grid-column-one-third">Scored</dt>
 						<dd class="column-two-thirds">Yes</dd>
-					<dt class="column-third">Out of</dt>
+					<dt class="govuk-grid-column-one-third">Out of</dt>
 						<dd class="column-two-thirds">10</dd>
-					<dt class="column-third">Written feedback</dt>
+					<dt class="govuk-grid-column-one-third">Written feedback</dt>
 						<dd class="column-two-thirds">Yes</dd>
-					<dt class="column-third">Guidance</dt>
+					<dt class="govuk-grid-column-one-third">Guidance</dt>
 						<dd class="column-two-thirds">Your score should be based on the following:
-							<dl class="grid-row extra-margin">
+							<dl class="govuk-grid-row extra-margin">
 								<dt class="column-quarter">9-10</dt>
 									<dd class="column-three-quarters">The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.</dd>
 								<dt class="column-quarter">7-8</dt>
@@ -140,15 +140,15 @@
 									<dd class="column-three-quarters">The plan is totally unrealistic or fails to meet the objectives of the project.</dd>
 							</dl>
 						</dd>
-					<dt class="column-third">Words</dt>
+					<dt class="govuk-grid-column-one-third">Words</dt>
 						<dd class="column-two-thirds">400</dd>
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
-					<fieldset class="inline">
-						<h3 class="heading-small">Scored</h3>
-						<legend class="visuallyhidden">Scored</legend>
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset inline">
+						<h3 class="govuk-heading-s">Scored</h3>
+						<legend class="govuk-visually-hidden">Scored</legend>
 						<label class="block-label selection-button-radio" for="scored-yes">
 							<input id="scored-yes" name="scored-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -159,16 +159,16 @@
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="out-of">
-						<span class="form-label-bold">Max word count</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="out-of">
+						<span class="govuk-label">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input govuk-input--width-10" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<fieldset class="inline">
-						<h3 class="heading-small">Written feedback</h3>
-						<legend class="visuallyhidden">Written feedback</legend>
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset inline">
+						<h3 class="govuk-heading-s">Written feedback</h3>
+						<legend class="govuk-visually-hidden">Written feedback</legend>
 						<label class="block-label selection-button-radio" for="feedback-yes">
 							<input id="feedback-yes" name="feedback-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -179,24 +179,24 @@
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="assessment-guidance">
-						<span class="form-label-bold">Guidance</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="assessment-guidance">
+						<span class="govuk-label-bold">Guidance</span>
 					</label>
 					<input class="form-control" id="assessment-guidance" name="assessment-guidance" value="Your score should be based on the following:" type="text" />
 				</div>
-				<div class="form-group">
-					<h3 class="heading-small">Guidance table</h3>
-					<table>
-						<thead>
-							<tr>
-								<th>Score<span class="visuallyhidden"> from</span></th>
-								<th><span class="visuallyhidden">Score to</span></th>
-								<th>Justification</th>
-								<th><span class="visuallyhidden">Action</span></th>
+				<div class="govuk-form-group">
+					<h3 class="govuk-heading-s">Guidance table</h3>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th class="govuk-table__header" scope="col">Score<span class="govuk-visually-hidden"> from</span></th>
+								<th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Score to</span></th>
+								<th class="govuk-table__header" scope="col">Justification</th>
+								<th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody class="govuk-table__body">
 							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=1,scoreFrom=${'9'},scoreTo=${'10'},justification=${'The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.'}" />
 							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=2,scoreFrom=${'7'},scoreTo=${'8'},justification=${'The plan is well described and complete. There is a reasonable chance it will meet the objectives if the project.'}" />
 							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=3,scoreFrom=${'5'},scoreTo=${'6'},justification=${'The plan is not completely described or there may be some deficiencies in some aspects. More work will be required before the plan can be said to be realistic.'}" />
@@ -208,17 +208,17 @@
 						<a href="#" class="add-new-group">+ add new score group</a>
 					</p>
 				</div>
-				<div class="form-group">
-					<label class="form-label" for="max-word-count">
-						<span class="form-label-bold">Max word count</span>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="max-word-count">
+						<span class="govuk-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input govuk-input--width-10" id="max-word-count" name="max-word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 			</th:block>
 		</fieldset>
 		<div class="extra-margin">
-			<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process' : '/prototypes/5154-question-details?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
-			<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5154-question-details?status=edit&amp;compStatus=ready')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+			<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process' : '/prototypes/5154-question-details?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+			<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5154-question-details?status=edit&amp;compStatus=ready')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
 
 		</div>
 		<div th:if="${param.status == null}" class="extra-margin">

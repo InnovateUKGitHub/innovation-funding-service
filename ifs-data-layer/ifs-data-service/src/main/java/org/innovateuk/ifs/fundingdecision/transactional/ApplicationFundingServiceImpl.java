@@ -2,7 +2,6 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
@@ -60,9 +59,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
@@ -100,7 +96,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 success -> {
 
                     Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess(), APPLICATION_FUNDING);
-                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
+                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(

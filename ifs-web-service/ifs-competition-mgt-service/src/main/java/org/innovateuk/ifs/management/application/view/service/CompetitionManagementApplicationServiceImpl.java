@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.application.view.service;
 
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -92,7 +92,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         SummaryViewModel viewModel = summaryPopulator.populate(application.getId(), user, form);
 
         model.addAttribute("model", new ManageApplicationViewModel(viewModel, backUrl, queryParam,
-                readOnly, canReinstate, ineligibility,  getAppendices(application.getId(), responses, model)));
+                readOnly, canReinstate, ineligibility,  getAppendices(application.getId(), responses)));
         model.addAttribute("form", form);
         return "competition-mgt-application-overview";
     }
@@ -138,7 +138,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         }
     }
 
-    private List<AppendixResource> getAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
+    private List<AppendixResource> getAppendices(Long applicationId, List<FormInputResponseResource> responses) {
         return responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();

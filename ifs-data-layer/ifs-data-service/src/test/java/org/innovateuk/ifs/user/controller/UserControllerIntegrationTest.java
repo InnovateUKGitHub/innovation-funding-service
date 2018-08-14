@@ -2,15 +2,11 @@ package org.innovateuk.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -28,11 +24,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VER
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Integration tests for {@link UserController}.
- * <p>
- * Created by dwatson on 02/10/15.
- */
 public class UserControllerIntegrationTest extends BaseControllerIntegrationTest<UserController> {
 
     public static final String EMAIL = "steve.smith@empire.com";
@@ -42,18 +33,6 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
     }
-
-    @Autowired
-    private AgreementRepository agreementRepository;
-
-    @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -79,8 +58,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         // Assert that we've got the users we were expecting
         //
         List<String> emailAddresses = users.stream().map(UserResource::getEmail).collect(toList());
-        List<String> expectedUsers = ALL_USERS_EMAIL;
-        assertTrue(emailAddresses.containsAll(expectedUsers));
+        assertTrue(emailAddresses.containsAll(ALL_USERS_EMAIL));
     }
 
     @Test

@@ -89,7 +89,7 @@ User can create a new competition
     [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725, IFS-1104
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
-    When the user clicks the button/link       jQuery=.button:contains("Create competition")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Create competition")
     And The user should see the element        css=#compCTA[disabled]
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
@@ -121,12 +121,12 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page     Space technology
     And the user should see the text in the page     Sector
     And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
-    And the user should see the element              jQuery=.button:contains("Edit")
+    And the user should see the element              jQuery=.govuk-button:contains("Edit")
 
 Initial details - Innovation sector of Open should be visible
     [Documentation]    INFUND-9152
     [Tags]    HappyPath
-    Given the user clicks the button/link                               jQuery=.button:contains("Edit")
+    Given the user clicks the button/link                               jQuery=.govuk-button:contains("Edit")
     Then the user should see the element                                jQuery=button:contains("+ add another innovation area")
     When the user selects the option from the drop-down menu            Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu             Open    id=innovationSectorCategoryId
@@ -138,12 +138,12 @@ Initial details - Innovation sector of Open should be visible
     When the user clicks the button/link                                jQuery=button:contains("Done")
     Then the user should see the text in the page                       Open
     And the user should see the text in the page                        Biosciences
-    And the user should see the element                                 jQuery=.button:contains("Edit")
+    And the user should see the element                                 jQuery=.govuk-button:contains("Edit")
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    Given the user clicks the button/link            jQuery=.button:contains("Edit")
+    Given the user clicks the button/link            jQuery=.govuk-button:contains("Edit")
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery=button:contains("Done")
     Then The user should see the text in the page    Space technology
@@ -152,7 +152,7 @@ Initial details - Competitions allow multiple innovation areas
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]
-    Given the user clicks the button/link  jQuery=.button:contains("Edit")
+    Given the user clicks the button/link  jQuery=.govuk-button:contains("Edit")
     And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
     When the user clicks the button/link   jQuery=button:contains("Done")
     Then the user should not see the text in the page  Space technology
@@ -160,7 +160,7 @@ Initial Details - User can remove an innovation area
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905
     [Tags]    HappyPath
-    [Setup]    the user clicks the button/link    jQuery=.button:contains("Edit")
+    [Setup]    the user clicks the button/link    jQuery=.govuk-button:contains("Edit")
     When the user should see the option in the drop-down menu    John Doe    name=executiveUserId
     And the user should see the option in the drop-down menu    Robert Johnson    name=executiveUserId
 
@@ -202,7 +202,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Tags]  HappyPath
     Given the user clicks the button/link    link=Terms and conditions
     When the user selects the option from the drop-down menu    5  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
-    And the user clicks the button/link      css=button.button  #Done
+    And the user clicks the button/link      css=button.govuk-button  #Done
     Then the user should see the element     link=Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link=Competition setup
     And the user should see the element      jQuery=li:contains("Terms and conditions") .task-status-complete
@@ -232,7 +232,7 @@ Funding information: calculations
     [Tags]    HappyPath
     [Setup]    the user clicks the button/link  link=${competitionTitle}
     Given the user clicks the button/link    link=Funding information
-    And the user clicks the button/link    jQuery=.button:contains("Generate code")
+    And the user clicks the button/link    id=generate-code
     And the user enters text to a text field    id=funders[0].funder    FunderName
     And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
@@ -263,7 +263,7 @@ Funding information: can be saved
 Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Edit")
     And the user enters text to a text field    id=funders[0].funder    testFunder
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
@@ -280,46 +280,51 @@ Funding information: should have a green check
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Eligibility
+    Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
-    Then the user should see the element    jQuery=label:contains("Single or Collaborative")
-    When the user should see the element    jQuery=label:contains("Collaborative")
-    And the user should see the element    jQuery=label:contains("Business")
-    And the user should see the element    jQuery=label[for="lead-applicant-type-2"]:contains("Research")
-    And the user should see the element    jQuery=label:contains("Research and technology organisation")
-    And the user should see the element    jQuery=label:contains("Public sector")
-    And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
-    And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains("Feasibility studies")
-    And the user should see the element    jQuery=label:contains("Industrial research")
-    And the user should see the element    jQuery=label:contains("Experimental development")
+    Then the user should see the element   jQuery = label:contains("Single or Collaborative")
+    When the user should see the element   jQuery = label:contains("Collaborative")
+    And the user should see the element    jQuery = label:contains("Business")
+    And the user should see the element    jQuery = label[for="lead-applicant-type-2"]:contains("Research")
+    And the user should see the element    jQuery = label:contains("Research and technology organisation")
+    And the user should see the element    jQuery = label:contains("Public sector")
+    And the user should see the element    css = label[for="comp-resubmissions-yes"]
+    And the user should see the element    css = label[for="comp-resubmissions-no"]
+    And the user should see the element    jQuery = label:contains("Feasibility studies")
+    And the user should see the element    jQuery = label:contains("Industrial research")
+    And the user should see the element    jQuery = label:contains("Experimental development")
+    And the user should see the element    css = label[for="comp-overrideFundingRules-yes"]
+    And the user should see the element    css = label[for="comp-overrideFundingRules-no"]
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
     [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
     [Tags]    HappyPath
-    Given the user selects the checkbox    research-categories-33
-    And the user selects the checkbox    research-categories-34
-    And the user selects the checkbox    research-categories-35
+    Given the user selects the checkbox      research-categories-33
+    And the user selects the checkbox        research-categories-34
+    And the user selects the checkbox        research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the checkbox   lead-applicant-type-1  # business
-    And the user selects the checkbox   lead-applicant-type-3  # RTOs
+    And the user selects the checkbox        lead-applicant-type-1  # business
+    And the user selects the checkbox        lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
-    When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the element    jQuery=dt:contains("Project type") ~ dd:contains("Single")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Feasibility studies")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Industrial research")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Experimental development")
-    And the user should see the element     jQuery=dt:contains("Lead applicant") ~ dd:contains("Business")
-    And the user should see the element     jQuery=dt:contains("Research participation") ~ dd:contains("50%")
-    And the user should see the element     jQuery=dt:contains("Are resubmissions allowed") ~ dd:contains("No")
-    And The user should not see the element    id=streamName
-    When the user clicks the button/link    link=Competition setup
-    When the user clicks the button/link    link=Eligibility
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    And the user moves focus and waits for autosave
+    And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
+    And the user moves focus and waits for autosave
+    When the user clicks the button/link     jQuery = button:contains("Done")
+    Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Industrial research")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Experimental development")
+    And the user should see the element      jQuery = dt:contains("Lead applicant") ~ dd:contains("Business")
+    And the user should see the element      jQuery = dt:contains("Research participation") ~ dd:contains("50%")
+    And the user should see the element      jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
+    And the user should see the element      jQuery = dt:contains("Override funding rules") ~ dd:contains("No")
+    And The user should not see the element  id = streamName
+    When the user clicks the button/link     link = Competition setup
+    When the user clicks the button/link     link = Eligibility
+    And the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
+    And the user clicks the button/link      jQuery = button:contains("Done")
 
 Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
@@ -382,7 +387,7 @@ Application - Application process Page
     And the user should see the element   jQuery=a:contains("Risks")
     And the user should see the element   jQuery=a:contains("Additionality")
     And the user should see the element   jQuery=a:contains("Costs and value for money")
-    And the user should see the element   jQuery=.buttonlink:contains("Add question")
+    And the user should see the element   jQuery=.button-clear:contains("Add question")
     And the user should see the element   link=Finances
 
 Application: Application details validations
@@ -395,10 +400,10 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button     useResubmissionQuestion  true
-    Then the user should see the element       jQuery=[for="minProjectDuration"] .error-message:contains("This field cannot be left blank.")
-    And the user should see the element        jQuery=[for="maxProjectDuration"] .error-message:contains("This field cannot be left blank.")
+    Then the user should see the element       jQuery=label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    And the user should see the element        jQuery=label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
     When the user clicks the button/link       css=button[type="submit"]
-    Then the user should see the element       css=.error-summary-list
+    Then the user should see the element       css=.govuk-error-summary__list
 
     When the user enters text to a text field  id=minProjectDuration  -2
     And the user enters text to a text field   id=maxProjectDuration  -3
@@ -553,8 +558,8 @@ Application: Finances
 Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
     [Tags]  Happypath
-    Given The user clicks the button/link     css=button.button  #Done button
-    Then The user should not see the element  css=button.button
+    Given The user clicks the button/link     css=button.govuk-button  #Done button
+    Then The user should not see the element  css=button.govuk-button
     When The user clicks the button/link      link=Return to setup overview
     Then the user should see the element      jQuery=li:contains("Application") .task-status-complete
 
@@ -584,7 +589,7 @@ Moving competition to Ready to Open state
     [Tags]
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link  css=#compCTA
-    Then the user clicks the button/link  jQuery=.button:contains("Done")
+    Then the user clicks the button/link  jQuery=.govuk-button:contains("Done")
     When the user navigates to the page   ${CA_UpcomingComp}
     Then the user should see the element  jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -599,7 +604,7 @@ Ready To Open button is visible when the user re-opens a section
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}
     When The user clicks the button/link     link=Initial details
-    And the user clicks the button/link      jQuery=.button:contains("Edit")
+    And the user clicks the button/link      jQuery=.govuk-button:contains("Edit")
     And The user clicks the button/link      link=Competition setup
     Then the user should see the element     css=#compCTA[disabled="disabled"]
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial details
@@ -625,11 +630,11 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    And the user clicks the button/link      css=button.button
+    And the user clicks the button/link      css=button.govuk-button
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
     And the user should see the element      jQuery=li:contains("Application") .task-status-complete
     When the user clicks the button/link     css=#compCTA
-    Then the user clicks the button/link     jQuery=.button:contains("Done")
+    Then the user clicks the button/link     jQuery=.govuk-button:contains("Done")
     When the user clicks the button/link     link=Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
@@ -659,7 +664,7 @@ Assessor: Mark as Done then Edit again
     And the user should see the element        jQuery=dt:contains("How much do assessors receive") + dd:contains("100")
     And the user should see the element        jQuery=dt:contains("assessment panel") + dd:contains("No")
     And the user should see the element        jQuery=dt:contains("interview stage") + dd:contains("No")
-    When the user clicks the button/link       jQuery=.button:contains("Edit")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit")
     Then the user selects the radio button     hasInterviewStage  hasInterviewStage-0
     When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("interview stage") + dd:contains("Yes")
@@ -670,7 +675,7 @@ Assessor: Should have a Green Check
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css=#compCTA
-    And the user clicks the button/link     jQuery=.button:contains("Done")
+    And the user clicks the button/link     jQuery=.govuk-button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -736,7 +741,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=button:contains("Done")
-    Wait Until Element Contains Without Screenshots    css=p.no-margin  ${Total}
+    Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -782,27 +787,27 @@ the user fills the milestones with valid data
     wait for autosave
 
 the weekdays should be correct
-    element should contain    css=tr:nth-child(1) td:nth-child(3)    Thu
-    element should contain    css=tr:nth-child(2) td:nth-child(3)    Fri
-    element should contain    css=tr:nth-child(3) td:nth-child(3)    Sat
-    element should contain    css=tr:nth-child(4) td:nth-child(3)    Sun
-    element should contain    css=tr:nth-child(5) td:nth-child(3)    Mon
-    element should contain    css=tr:nth-child(6) td:nth-child(3)    Tue
-    element should contain    css=tr:nth-child(7) td:nth-child(3)    Wed
-    element should contain    css=tr:nth-child(8) td:nth-child(3)    Thu
-    element should contain    css=tr:nth-child(9) td:nth-child(3)    Fri
-    element should contain    css=tr:nth-child(10) td:nth-child(3)    Sat
-    element should contain    css=tr:nth-child(11) td:nth-child(3)    Sun
-    element should contain    css=tr:nth-child(12) td:nth-child(3)    Mon
-    element should contain    css=tr:nth-child(13) td:nth-child(3)    Tue
+    element should contain    css = tr:nth-child(1) td:nth-child(3)     Thu
+    element should contain    css = tr:nth-child(2) td:nth-child(3)     Fri
+    element should contain    css = tr:nth-child(3) td:nth-child(3)     Sat
+    element should contain    css = tr:nth-child(4) td:nth-child(3)     Sun
+    element should contain    css = tr:nth-child(5) td:nth-child(3)     Mon
+    element should contain    css = tr:nth-child(6) td:nth-child(3)     Tue
+    element should contain    css = tr:nth-child(7) td:nth-child(3)     Wed
+    element should contain    css = tr:nth-child(8) td:nth-child(3)     Thu
+    element should contain    css = tr:nth-child(9) td:nth-child(3)     Fri
+    element should contain    css = tr:nth-child(10) td:nth-child(3)    Sat
+    element should contain    css = tr:nth-child(11) td:nth-child(3)    Sun
+    element should contain    css = tr:nth-child(12) td:nth-child(3)    Mon
+    element should contain    css = tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
-    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Thu
-    ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .width-small
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Thu
+    ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
-    ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
+    ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field
     Should Be Equal As Strings    ${MONTH}    1
-    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
+    ${DAY} =    Get Value         css = #milestoneWeekdayEntry-OPEN_DATE ~ .day .govuk-input--width-4    #Get the value within the DAY field
     Should Be Equal As Strings    ${DAY}    10
 
 the resubmission should not have a default selection
@@ -871,9 +876,9 @@ Custom suite setup
     Set suite variable  ${nextyear}
 
 the user enters multiple innovation areas
-    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user clicks the button/link    jQuery=.button-clear:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Space technology    name=innovationAreaCategoryIds[1]
-    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user clicks the button/link    jQuery=.button-clear:contains("+ add another innovation area")
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[2]"]    Space technology
     the user selects the option from the drop-down menu    Creative industries    name=innovationAreaCategoryIds[2]
 

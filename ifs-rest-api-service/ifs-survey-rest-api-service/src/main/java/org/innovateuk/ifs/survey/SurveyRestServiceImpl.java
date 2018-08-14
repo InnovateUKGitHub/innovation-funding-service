@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SurveyRestServiceImpl extends BaseRestService implements SurveyRestService {
 
+    @Override
     @Value("${ifs.survey.data.service.baseURL}")
     public void setServiceUrl(String serviceUrl) {
         this.serviceUrl = serviceUrl;

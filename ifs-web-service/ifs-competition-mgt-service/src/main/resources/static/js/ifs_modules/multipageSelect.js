@@ -9,7 +9,7 @@ IFS.competitionManagement.multipageSelect = (function () {
       submitEl: '[data-multipage-select] [data-submit-el]',
       totalListSizeEl: '[data-multipage-select][data-total-checkboxes]',
       selectionLimitExceededElement: '[data-selection-limit-exceeded-block]',
-      limitExceededMessage: '<div class="warning-alert extra-margin-bottom"><p>Cannot select additional items, selection limit of 500 exceeded.</p></div>',
+      limitExceededMessage: '<div class="warning-alert govuk-!-margin-bottom-6"><p class="govuk-body">Cannot select additional items, selection limit of 500 exceeded.</p></div>',
       totalListSize: 0
     },
     init: function () {
@@ -70,7 +70,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           }
         }).fail(function (data) {
           var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-          checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
+          checkbox.closest('fieldset').find('legend').after('<span class="govuk-error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
         })

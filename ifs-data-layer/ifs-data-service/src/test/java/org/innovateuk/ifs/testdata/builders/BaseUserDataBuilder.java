@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -76,8 +75,6 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withPassword("Passw0rd").
                 build()).
                 getSuccess();
-
-        registrationService.sendUserVerificationEmail(created, empty());
 
         return created;
     }
