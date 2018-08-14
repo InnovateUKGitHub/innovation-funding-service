@@ -50,7 +50,8 @@ public class ApplicationTeamManagementModelPopulator {
     public ApplicationTeamManagementModelPopulator(InviteOrganisationRestService inviteOrganisationRestService,
                                                    ApplicationService applicationService,
                                                    QuestionRestService questionRestService,
-                                                   UserRestService userRestService, UserService userService) {
+                                                   UserRestService userRestService,
+                                                   UserService userService) {
         this.inviteOrganisationRestService = inviteOrganisationRestService;
         this.applicationService = applicationService;
         this.questionRestService = questionRestService;

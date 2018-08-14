@@ -175,10 +175,6 @@ public class RegistrationController {
         return false;
     }
 
-    private OrganisationResource getOrganisation(HttpServletRequest request) {
-        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request)).getSuccess();
-    }
-
     @PostMapping("/register")
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
