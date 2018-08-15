@@ -15,22 +15,29 @@
         <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
         </form>
-        <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-        <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
-            <h2 class="govuk-heading-m"
-                th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
-            <ul class="govuk-list list-overview">
-                <li class="govuk-grid-row" th:each="competition : ${previousComps}">
-                    <th:block
-                        th:insert="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                            customLink='/competition/'+${competition.id}+'/applications/previous'"/>
-                </li>
-            </ul>
-        </section>
+        <div class="govuk-tabs" data-module="tabs">
+            <h2 class="govuk-tabs__title">
+                Previous competitions
+            </h2>
+            <th:block  th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
+
+            <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}"
+                     class="govuk-tabs__panel">
+                <h2 class="govuk-heading-m"
+                    th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
+                <ul class="govuk-list list-overview">
+                    <li class="govuk-grid-row" th:each="competition : ${previousComps}">
+                        <th:block
+                            th:insert="competition/dashboard :: dashboard-row"
+                            th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
+                                customLink='/competition/'+${competition.id}+'/applications/previous'"/>
+                    </li>
+                </ul>
+            </section>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

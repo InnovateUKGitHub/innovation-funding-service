@@ -15,49 +15,54 @@
         <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
         </form>
-        <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'projectSetup'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-        <th:block th:if="${model.counts.projectSetupCount == 0}">
-            <p class="govuk-body">There are no competitions assigned to you.</p>
-        </th:block>
+        <div class="govuk-tabs" data-module="tabs">
+            <h2 class="govuk-tabs__title">
+                Project setup competitions
+            </h2>
+            <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'projectSetup'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-        <th:block th:if="${model.counts.projectSetupCount > 0}">
-            <section th:with="
-                        projectSetupComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)},
-                        informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)},
-                        panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
-                <h2 class="govuk-heading-m" th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
-
-                <th:block th:if="${model.projectFinanceUser}">
-                    <a href="/project-setup-management/competitions/status/pending-bank-details-approvals" class="govuk-link"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a>
+            <section class="govuk-tabs__panel">
+                <th:block th:if="${model.counts.projectSetupCount == 0}">
+                    <p class="govuk-body">There are no competitions assigned to you.</p>
                 </th:block>
 
-                <ul class="govuk-list list-overview govuk-!-margin-top-6">
-                    <!-- Deliberate separation from PS list.  Check with BAs if this should be categorised like in live tab for clarity of status -->
-                    <li class="govuk-grid-row" th:each="competition : ${panelComps}">
-                        <th:block
-                            th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                            th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4=${competition.projectsCount + ' projects'}"/>
-                    </li>
-                    <li class="govuk-grid-row" th:each="competition : ${informComps}">
-                        <th:block
-                            th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                            th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4=${competition.projectsCount + ' projects'}"/>
-                    </li>
-                    <li class="govuk-grid-row" th:each="competition : ${projectSetupComps}">
-                        <th:block
-                            th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                            th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4=${competition.projectsCount + ' projects'}"/>
-                    </li>
-                </ul>
+                <th:block th:if="${model.counts.projectSetupCount > 0}"
+                          th:with="projectSetupComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)},
+                                   informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)},
+                                   panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
+                    <h2 class="govuk-heading-m" th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
+
+                    <th:block th:if="${model.projectFinanceUser}">
+                        <a href="/project-setup-management/competitions/status/pending-bank-details-approvals" class="govuk-link"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a>
+                    </th:block>
+
+                    <ul class="govuk-list list-overview govuk-!-margin-top-6">
+                        <!-- Deliberate separation from PS list.  Check with BAs if this should be categorised like in live tab for clarity of status -->
+                        <li class="govuk-grid-row" th:each="competition : ${panelComps}">
+                            <th:block
+                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
+                                th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.projectsCount + ' projects'}"/>
+                        </li>
+                        <li class="govuk-grid-row" th:each="competition : ${informComps}">
+                            <th:block
+                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
+                                th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.projectsCount + ' projects'}"/>
+                        </li>
+                        <li class="govuk-grid-row" th:each="competition : ${projectSetupComps}">
+                            <th:block
+                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
+                                th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.projectsCount + ' projects'}"/>
+                        </li>
+                    </ul>
+                </th:block>
             </section>
-        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

@@ -15,25 +15,28 @@
         <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
         </form>
-        <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-        <section>
-            <h2 class="govuk-heading-m"
-                th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
-            <ul class="govuk-list list-overview">
-                <li class="govuk-grid-row" th:each="competition : ${model.getAllCompetitions()}">
-                    <th:block
-                        th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
-                        th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4=${competition.publishDate == null ? '' : 'Last published ' + #temporals.format(competition.publishDate, 'd MMMM yyyy')}"/>
-                </li>
-            </ul>
-        </section>
+        <div class="govuk-tabs" data-module="tabs">
+            <h2 class="govuk-tabs__title">
+                Non-IFS competitions
+            </h2>
+            <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-
-        <a th:href="@{/non-ifs-competition/create}" class="govuk-button govuk-!-margin-top-6">Create non-IFS competition</a>
-
+            <section class="govuk-tabs__panel">
+                <h2 class="govuk-heading-m"
+                    th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
+                <ul class="govuk-list list-overview">
+                    <li class="govuk-grid-row" th:each="competition : ${model.getAllCompetitions()}">
+                        <th:block
+                            th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
+                            th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.publishDate == null ? '' : 'Last published ' + #temporals.format(competition.publishDate, 'd MMMM yyyy')}"/>
+                    </li>
+                </ul>
+                <a th:href="@{/non-ifs-competition/create}" class="govuk-button govuk-!-margin-top-6">Create non-IFS competition</a>
+            </section>
+        </div>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

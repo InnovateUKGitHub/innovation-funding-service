@@ -23,25 +23,25 @@
 </div>
 
 <div th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
-    <ul class="govuk-list inline-nav cf">
-        <li id="section-1" th:class="${selectedTab == 'live' ? 'selected' : ''}" th:if="${tabs.live()}">
-            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-link"></a>
+    <ul class="govuk-tabs__list">
+        <li id="section-1" class="govuk-tabs__list-item" th:if="${tabs.live()}">
+            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'live' ? true : false}"></a>
         </li>
 
-        <li id="section-2" th:class="${selectedTab == 'upcoming' ? 'selected' : ''}" th:if="${tabs.upcoming()}">
-            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'" class="govuk-link"></a>
+        <li id="section-2" class="govuk-tabs__list-item" th:if="${tabs.upcoming()}">
+            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'upcoming' ? true : false}"></a>
         </li>
 
-        <li id="section-3" th:class="${selectedTab == 'non-ifs' ? 'selected' : ''}" th:if="${tabs.nonIFS()}">
-            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'" class="govuk-link"></a>
+        <li id="section-3" class="govuk-tabs__list-item" th:if="${tabs.nonIFS()}">
+            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'non-ifs' ? true : false}"></a>
         </li>
 
-        <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}" th:if="${tabs.projectSetup()}">
-            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'" class="govuk-link"></a>
+        <li id="section-4" class="govuk-tabs__list-item" th:if="${tabs.projectSetup()}">
+            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'projectSetup' ? true : false}"></a>
         </li>
 
-        <li id="section-5" th:class="${selectedTab == 'previous' ? 'selected' : ''}" th:if="${tabs.previous()}">
-            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'" class="govuk-link"></a>
+        <li id="section-5" class="govuk-tabs__list-item" th:if="${tabs.previous()}">
+            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'previous' ? true : false}"></a>
         </li>
     </ul>
 </div>
