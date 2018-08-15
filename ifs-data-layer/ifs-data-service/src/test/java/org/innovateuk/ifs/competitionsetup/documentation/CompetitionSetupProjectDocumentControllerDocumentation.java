@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupProjectDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
+import org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -91,10 +92,10 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
                 .andDo(document("competition/setup/project-document/{method-name}",
                         requestFields(
                                 fieldWithPath("[]").description("List of Project Documents to save")
-                        ),
+                        ).andWithPrefix("[].", ProjectDocumentResourceDocs.projectDocumentResourceFields),
                         responseFields(
                                 fieldWithPath("[]").description("List of Project Documents which were just saved to the database")
-                        )
+                        ).andWithPrefix("[].", ProjectDocumentResourceDocs.projectDocumentResourceFields)
                 ));
 
         verify(competitionSetupProjectDocumentServiceMock, only()).saveAll(projectDocumentResources);
@@ -142,7 +143,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of Project Documents which were just saved to the database")
-                        )
+                        ).andWithPrefix("[].", ProjectDocumentResourceDocs.projectDocumentResourceFields)
                 ));
 
         verify(competitionSetupProjectDocumentServiceMock, only()).findByCompetitionId(competitionId);
