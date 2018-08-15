@@ -22,7 +22,7 @@ Comp Admin creates an ATI competition
     [Tags]  HappyPath
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
-    When the user clicks the button/link           link=Create competition
+    When the user clicks the button/link           link = Create competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
@@ -31,12 +31,13 @@ Comp Admin creates an ATI competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
-    When the user clicks the button/link           link=Public content
+    And the user fills in the CS Documents in other projects
+    When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  ATI
-    When the user clicks the button/link           link=Return to setup overview
-    Then the user should see the element           jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link           jQuery=a:contains("Complete")
-    Then the user clicks the button/link           css=button[type="submit"]
+    When the user clicks the button/link           link = Return to setup overview
+    Then the user should see the element           jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link           jQuery = a:contains("Complete")
+    Then the user clicks the button/link           css = button[type = "submit"]
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -98,7 +99,7 @@ Requesting Project ID of this Project
 
 User fills in funding overide
     the user clicks the button/link   link = Eligibility
-    the user clicks the button/link   css = .button[type=submit]
+    the user clicks the button/link   css = .govuk-button[type=submit]
     the user clicks the button twice  css = label[for="comp-overrideFundingRules-yes"]
     the user selects the option from the drop-down menu  100%  id = fundingLevelPercentage
     the user clicks the button/link   jQuery = button:contains("Done")
@@ -109,7 +110,7 @@ the user checks the override value is applied
     the user clicks the button/link     link = Your finances
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     css = button[type=submit]
-    the user should see the element     jQuery = .form-label:contains("maximum 100%")
+    the user should see the element     jQuery = .govuk-label:contains("maximum 100%")
     then the user selects the checkbox  agree-terms-page
     the user clicks the button/link     css = button[name=mark_section_as_complete]
     the user clicks the button/link     link = Application overview

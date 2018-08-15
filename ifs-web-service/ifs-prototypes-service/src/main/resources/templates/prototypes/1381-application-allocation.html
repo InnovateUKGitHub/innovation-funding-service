@@ -45,7 +45,7 @@
 			<div th:if="${param.sendAssignments != null}" th:remove="tag">
 			    <div class="highlight-panel">
 			        <div id="added-assessors">
-						<a href="/prototypes/1385-application-allocation-confirm" class="button">Confirm assignments</a>
+						<a href="/prototypes/1385-application-allocation-confirm" class="govuk-button">Confirm assignments</a>
 					</div>
 				</div>
 			</div>
@@ -53,12 +53,12 @@
 		</div>
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 		<div class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Application list</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" />
 
