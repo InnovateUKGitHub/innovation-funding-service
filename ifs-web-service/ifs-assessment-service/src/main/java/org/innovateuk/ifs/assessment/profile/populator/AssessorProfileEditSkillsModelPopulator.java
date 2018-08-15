@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.populator;
 
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
+import org.innovateuk.ifs.populator.AssessorProfileBaseSkillsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.springframework.stereotype.Component;
 
