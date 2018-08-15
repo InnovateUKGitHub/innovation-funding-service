@@ -435,6 +435,22 @@
     </div>
 </th:block>
 
+
+<!-- Confirmation of removing document in project setup-->
+<th:block th:fragment="modal-confirm-document-remove">
+    <div class="modal-confirm-document-remove" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Remove this document type</h2>
+        <hr />
+        <div>
+            <button class="govuk-button" name="removeDocument">Confirm</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+
+
 <!-- Confirmation of eligibility-->
 <th:block th:fragment="modal-confirm-eligibility">
     <div class="modal-confirm-eligibility" role="dialog" aria-hidden="true">
