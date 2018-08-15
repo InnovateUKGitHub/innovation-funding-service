@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.viewmodel;
 
+import org.innovateuk.ifs.viewmodel.AssessorProfileBaseSkillsViewModel;
+
 import java.util.List;
 import java.util.Map;
 

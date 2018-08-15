@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details'" />
+    </head>
+    <body class="govuk-template__body">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
+            <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{${backUrl}}" />
+
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details'" />
+
+                <p class="govuk-body" th:if="${!model.compAdminUser}">These details will be used for all accounts linked to your email address.</p>
+                <h2 th:unless="${!model.compAdminUser}" class="govuk-heading-m">Assessor details</h2>
+
+                <dl class="govuk-list">
+                    <dt>Name</dt>
+                    <dd>
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.name}" />
+                    </dd>
+
+                    <dt th:if="${model.assessorProfileDetailsViewModel.address}">Address</dt>
+                    <dd th:if="${model.assessorProfileDetailsViewModel.address}">
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine1}" /><br />
+                        <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine2)}">
+                            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine2}" /><br />
+                        </th:block>
+                        <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine3)}">
+                            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine3}" /><br />
+                        </th:block>
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.town}" /><br />
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.county}" /><br />
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.postcode}" />
+                    </dd>
+
+                    <dt th:if="${model.assessorProfileDetailsViewModel.phoneNumber}">Phone number</dt>
+                    <dd th:if="${model.assessorProfileDetailsViewModel.phoneNumber}" th:text="${model.assessorProfileDetailsViewModel.phoneNumber}" />
+
+                    <dt>Email address</dt>
+                    <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
+
+                    <dt>Assessor type</dt>
+                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.assessorProfileDetailsViewModel.businessType))}" />
+                </dl>
+
+                <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
+                    <div id="editDetails" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/details/edit}">Edit</a></div>
+                </div>
+
+                <ul class="govuk-list inline-nav govuk-!-margin-top-6">
+                    <li class="selected">
+                        <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/skills}">Skills</a>
+                        <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">Skills</a>
+                    </li>
+                    <li class="not-selected">
+                        <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/declaration}">DOI</a>
+                        <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">DOI</a>
+                    </li>
+                </ul>
+
+                <h3 class="govuk-heading-m">Innovation areas</h3>
+
+                <table class="govuk-table" th:each="innovationSector : ${model.innovationAreas}">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__head">
+                        <tr class="govuk-table__row" th:each="innovationArea : ${innovationSector.value}">
+                            <td class="govuk-table__cell" th:text="${innovationArea}">digital sciences</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="govuk-heading-m">Skill areas</h3>
+                <p class="govuk-body" th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
+
+                <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
+                    <div id="editSkills" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/skills/edit}">Edit</a></div>
+                </div>
+
+                <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
+                    <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                </div>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
+    </body>
+</html>
