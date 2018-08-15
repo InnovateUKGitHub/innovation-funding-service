@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -57,7 +58,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
                     projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
 
-            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
+            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentRepository.saveAll(projectDocuments);
             return serviceSuccess(simpleMap(savedProjectDocuments, savedProjectDocument -> projectDocumentMapper.mapToResource(savedProjectDocument)));
         });
     }
@@ -72,8 +73,8 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     @Override
     @Transactional
     public ServiceResult<ProjectDocumentResource> findOne(long id) {
-        ProjectDocument projectDocument = projectDocumentRepository.findOne(id);
-        return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+        Optional<ProjectDocument> projectDocument = projectDocumentRepository.findById(id);
+        return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument.orElse(null)));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     @Override
     @Transactional
     public ServiceResult<Void> delete(long id) {
-        projectDocumentRepository.delete(id);
+        projectDocumentRepository.deleteById(id);
         return serviceSuccess();
     }
 }

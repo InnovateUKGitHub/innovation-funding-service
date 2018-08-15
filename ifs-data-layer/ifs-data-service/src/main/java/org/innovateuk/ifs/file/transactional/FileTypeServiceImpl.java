@@ -30,7 +30,7 @@ public class FileTypeServiceImpl extends BaseTransactionalService implements Fil
     @Transactional
     public ServiceResult<FileTypeResource> findOne(long id) {
 
-        return find(fileTypeRepository.findOne(id), notFoundError(FileType.class, id))
+        return find(fileTypeRepository.findById(id), notFoundError(FileType.class, id))
                 .andOnSuccessReturn(fileType -> fileTypeMapper.mapToResource(fileType));
     }
 

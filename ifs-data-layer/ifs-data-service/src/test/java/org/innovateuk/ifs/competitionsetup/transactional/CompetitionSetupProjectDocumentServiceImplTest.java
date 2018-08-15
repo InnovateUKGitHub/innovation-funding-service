@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
@@ -82,7 +83,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
-        verify(projectDocumentRepositoryMock, never()).save(any(List.class));
+        verify(projectDocumentRepositoryMock, never()).saveAll(any(List.class));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
 
         when(projectDocumentMapperMock.mapToDomain(projectDocumentResources.get(0))).thenReturn(projectDocument1);
         when(projectDocumentMapperMock.mapToDomain(projectDocumentResources.get(1))).thenReturn(projectDocument2);
-        when(projectDocumentRepositoryMock.save(projectDocuments)).thenReturn(projectDocuments);
+        when(projectDocumentRepositoryMock.saveAll(projectDocuments)).thenReturn(projectDocuments);
         when(projectDocumentMapperMock.mapToResource(projectDocument1)).thenReturn(projectDocumentResources.get(0));
         when(projectDocumentMapperMock.mapToResource(projectDocument2)).thenReturn(projectDocumentResources.get(1));
 
@@ -112,7 +113,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         assertEquals(projectDocumentResources.get(0), result.getSuccess().get(0));
         assertEquals(projectDocumentResources.get(1), result.getSuccess().get(1));
 
-        verify(projectDocumentRepositoryMock).save(projectDocuments);
+        verify(projectDocumentRepositoryMock).saveAll(projectDocuments);
     }
 
     @Test
@@ -123,7 +124,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         ProjectDocument projectDocument = new ProjectDocument();
         ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource();
 
-        when(projectDocumentRepositoryMock.findOne(projectDocumentId)).thenReturn(projectDocument);
+        when(projectDocumentRepositoryMock.findById(projectDocumentId)).thenReturn(Optional.of(projectDocument));
         when(projectDocumentMapperMock.mapToResource(projectDocument)).thenReturn(projectDocumentResource);
 
         ServiceResult<ProjectDocumentResource> result = service.findOne(projectDocumentId);
@@ -131,7 +132,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         assertTrue(result.isSuccess());
         assertEquals(projectDocumentResource, result.getSuccess());
 
-        verify(projectDocumentRepositoryMock).findOne(projectDocumentId);
+        verify(projectDocumentRepositoryMock).findById(projectDocumentId);
     }
 
     @Test
@@ -168,6 +169,6 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         ServiceResult<Void> result = service.delete(projectDocumentId);
 
         assertTrue(result.isSuccess());
-        verify(projectDocumentRepositoryMock).delete(projectDocumentId);
+        verify(projectDocumentRepositoryMock).deleteById(projectDocumentId);
     }
 }
