@@ -38,8 +38,8 @@ public class AssessorLookupStrategy {
     @PermissionEntityLookupStrategy
     public AssessorProfileResource getAssessorProfile(final Long assessorId) {
 
-        UserResource userResource = userMapper.mapToResource(userRepository.findOne(assessorId));
-        ProfileResource profileResource = assessorProfileMapper.mapToResource(profileRepository.findOne(assessorId));
+        UserResource userResource = userMapper.mapToResource(userRepository.findById(assessorId).orElse(null));
+        ProfileResource profileResource = assessorProfileMapper.mapToResource(profileRepository.findById(assessorId).orElse(null));
 
         if (userResource == null || profileResource == null){
             return null;
