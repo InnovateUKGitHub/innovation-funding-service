@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.profile.viewmodel;
+package org.innovateuk.ifs.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

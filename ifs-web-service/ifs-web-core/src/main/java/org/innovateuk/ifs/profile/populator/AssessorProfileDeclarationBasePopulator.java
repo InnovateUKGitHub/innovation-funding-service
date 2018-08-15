@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.profile.populator;
+package org.innovateuk.ifs.profile.populator;
 
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;

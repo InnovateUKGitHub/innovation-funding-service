@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkillsModelPopulator;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
@@ -27,13 +27,13 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * Controller to manage the Assessor Profile Skills page
+ * Controller to manage the editing of the Assessor Profile Skills page
  */
 @Controller
 @RequestMapping("/profile/skills")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileSkillsController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can edit their skills", securedType = AssessorProfileSkillsEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessorProfileSkillsController {
+public class AssessorProfileSkillsEditController {
 
     @Autowired
     private ProfileRestService profileRestService;
@@ -47,11 +47,8 @@ public class AssessorProfileSkillsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
-    public String getReadonlySkills(Model model,
-                                    UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
-        return "profile/skills";
+    public String getReadonlySkills() {
+        return "redirect:/profile/details/skills";
     }
 
     @GetMapping("/edit")

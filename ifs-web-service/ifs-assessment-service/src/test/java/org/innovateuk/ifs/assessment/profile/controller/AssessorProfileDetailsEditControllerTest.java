@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.profile.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCTest<AssessorProfileDetailsController> {
+public class AssessorProfileDetailsEditControllerTest extends BaseControllerMockMVCTest<AssessorProfileDetailsEditController> {
     @Spy
     @InjectMocks
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
@@ -51,20 +51,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     private Validator validator;
 
     @Override
-    protected AssessorProfileDetailsController supplyControllerUnderTest() {
-        return new AssessorProfileDetailsController();
-    }
-
-    @Test
-    public void getDetails() throws Exception {
-        UserResource user = buildTestUser();
-        setLoggedInUser(user);
-
-        when(profileRestService.getUserProfile(user.getId())).thenReturn(restSuccess(buildTestUserProfile()));
-
-        mockMvc.perform(get("/profile/details"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/details"));
+    protected AssessorProfileDetailsEditController supplyControllerUnderTest() {
+        return new AssessorProfileDetailsEditController();
     }
 
     @Test

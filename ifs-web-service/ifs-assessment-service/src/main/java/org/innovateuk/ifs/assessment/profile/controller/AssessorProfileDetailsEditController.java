@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,13 +26,13 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * Controller to manage the Assessor Profile Skills page
+ * Controller to manage the editing of the Assessors Profile details page
  */
 @Controller
 @RequestMapping("/profile/details")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDetailsController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can edit their details", securedType = AssessorProfileDetailsEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessorProfileDetailsController {
+public class AssessorProfileDetailsEditController {
 
     @Autowired
     private AssessorProfileDetailsModelPopulator assessorDetailsModelPopulator;
@@ -46,9 +46,8 @@ public class AssessorProfileDetailsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
-    public String getDetails(Model model,
-                             UserResource loggedInUser) {
-        return doViewYourDetails(loggedInUser, model);
+    public String getDetails() {
+        return "redirect:/profile/details/skills";
     }
 
     @GetMapping("/edit")
@@ -79,11 +78,6 @@ public class AssessorProfileDetailsController {
             return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
-    }
-
-    private String doViewYourDetails(UserResource loggedInUser, Model model) {
-        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser));
-        return "profile/details";
     }
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
