@@ -5,7 +5,7 @@ apply plugin: 'idea'
 
 buildscript {
 
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+    ext['thymeleaf.version'] = '3.0.9.RELEASE'
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
@@ -20,9 +20,8 @@ group 'innovateuk'
 version project.version
 
 
-bootRepackage {
-    enabled = false
-}
+bootJar.enabled=false
+jar.enabled=true
 
 configurations {
     testArtifacts
