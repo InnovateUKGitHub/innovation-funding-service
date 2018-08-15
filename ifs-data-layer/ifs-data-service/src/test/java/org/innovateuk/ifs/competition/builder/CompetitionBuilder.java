@@ -267,4 +267,20 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
     }
+
+    public CompetitionBuilder withCreatedBy(User... users) {
+        return withArraySetFieldByReflection("createdBy", users);
+    }
+
+    public CompetitionBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArraySetFieldByReflection("createdOn", createdOns);
+    }
+
+    public CompetitionBuilder withModifiedBy(User... users) {
+        return withArraySetFieldByReflection("modifiedBy", users);
+    }
+
+    public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
+    }
 }

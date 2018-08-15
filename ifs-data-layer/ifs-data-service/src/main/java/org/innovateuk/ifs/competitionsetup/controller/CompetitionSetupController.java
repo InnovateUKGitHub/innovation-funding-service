@@ -37,8 +37,8 @@ public class CompetitionSetupController {
     public RestResult<Void> updateCompetitionInitialDetails(@Valid @RequestBody CompetitionResource competitionResource,
                                                             @PathVariable("id") final long id) {
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccess();
-        return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
-    }
+            return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
+        }
 
     @PostMapping("/{id}/initialise-form/{competitionTypeId}")
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId,

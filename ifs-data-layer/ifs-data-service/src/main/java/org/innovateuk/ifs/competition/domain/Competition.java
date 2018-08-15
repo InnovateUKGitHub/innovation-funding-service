@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -21,16 +22,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
