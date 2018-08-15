@@ -49,8 +49,7 @@ public abstract class Thread {
     Thread() {
     }
 
-    Thread(Long id, Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
-        this.id = id;
+    Thread(Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
         this.classPk = classPk;
         this.className = className;
         this.posts = ofNullable(posts).map(ArrayList::new).orElse(new ArrayList<>());

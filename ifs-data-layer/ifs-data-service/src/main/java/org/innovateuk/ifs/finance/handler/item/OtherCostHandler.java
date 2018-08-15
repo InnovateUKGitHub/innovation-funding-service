@@ -15,12 +15,12 @@ public class OtherCostHandler extends FinanceRowHandler<OtherCost> {
 
     @Override
     public ApplicationFinanceRow toCost(OtherCost otherCost) {
-        return new ApplicationFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+        return new ApplicationFinanceRow(COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
     }
 
     @Override
     public ProjectFinanceRow toProjectCost(OtherCost otherCost) {
-        return new ProjectFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+        return new ProjectFinanceRow(COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
     }
 
     @Override

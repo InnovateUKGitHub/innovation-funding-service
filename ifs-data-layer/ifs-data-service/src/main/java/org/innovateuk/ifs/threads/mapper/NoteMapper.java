@@ -25,7 +25,7 @@ public abstract class NoteMapper extends BaseMapper<Note, NoteResource, Long> {
 
     @Override
     public Note mapToDomain(NoteResource noteResource) {
-        return new Note(noteResource.id, noteResource.contextClassPk, simpleMap(noteResource.posts, postMapper::mapToDomain),
+        return new Note(noteResource.contextClassPk, simpleMap(noteResource.posts, postMapper::mapToDomain),
                 noteResource.title, noteResource.createdOn);
     }
 }

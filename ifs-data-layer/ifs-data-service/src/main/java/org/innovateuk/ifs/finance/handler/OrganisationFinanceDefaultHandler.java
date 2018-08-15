@@ -113,7 +113,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             Long organisationId = cost.getTarget().getOrganisation().getId();
             ApplicationFinance applicationFinance =
                     applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getName(), cost.getItem(), cost.getDescription(),
                     cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
 
             applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
@@ -392,7 +392,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     private Optional<ApplicationFinanceRow> toFinanceRow(Optional<? extends FinanceRow> optionalCost,
                                                                   ApplicationFinance applicationFinance) {
         return optionalCost.map(cost -> {
-            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(),
+            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getName(),
                     cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
             applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
             return applicationFinanceRow;

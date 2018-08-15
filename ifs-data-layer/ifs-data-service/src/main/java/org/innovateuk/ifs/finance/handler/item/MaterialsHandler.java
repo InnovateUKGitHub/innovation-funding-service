@@ -23,12 +23,12 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
 
     @Override
     public ApplicationFinanceRow toCost(Materials materials) {
-        return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
+        return new ApplicationFinanceRow(COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override
     public ProjectFinanceRow toProjectCost(Materials materials) {
-        return new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
+        return new ProjectFinanceRow(COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override

@@ -33,11 +33,6 @@ public abstract class Finance {
         this.organisation = organisation;
     }
 
-    public Finance(Long id, Organisation organisation) {
-        this.id = id;
-        this.organisation = organisation;
-    }
-
     public Finance() {
     }
 

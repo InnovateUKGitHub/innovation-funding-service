@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
 public class QueryTest {
 
     private Query query;
-    private Long id;
     private Long classPk;
     private String className;
     private List<Post> posts;
@@ -34,7 +33,6 @@ public class QueryTest {
 
     @Before
     public void setUp() throws Exception {
-        id = 0L;
         classPk = 22L;
         className = "org.innovateuk.ifs.class";
         posts = new ArrayList<>();
@@ -42,12 +40,11 @@ public class QueryTest {
         title = "Test Query Title";
         createdOn = ZonedDateTime.now();
 
-        query = new Query(id, classPk, className, posts, section, title, createdOn);
+        query = new Query(classPk, className, posts, section, title, createdOn);
     }
 
     @Test
     public void testItReturnsValuesAsTheyWereDefined() throws Exception {
-        assertEquals(query.id(), id);
         assertEquals(query.contextClassPk(), classPk);
         assertEquals(query.contextClassName(), className);
         assertEquals(query.posts(), posts);
@@ -63,8 +60,8 @@ public class QueryTest {
 
     @Test
     public void testItReturnsLatestAddedPostCorrectly() {
-        final Post p1 = new Post(33L, null, null, null, null);
-        final Post p2 = new Post(44L, null, null, null, null);
+        final Post p1 = new Post(null, null, null, null);
+        final Post p2 = new Post(null, null, null, null);
         query.addPost(p1);
         query.addPost(p2);
         assertEquals(query.latestPost(), of(p2));
@@ -98,7 +95,7 @@ public class QueryTest {
 
     private void addPostWithUserHavingRole(Role role) {
         final User user = newUser().withRoles(singleton(role)).build();
-        final Post p1 = new Post(33L, user, null, null, null);
+        final Post p1 = new Post(user, null, null, null);
         query.addPost(p1);
     }
 }

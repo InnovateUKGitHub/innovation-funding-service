@@ -68,11 +68,6 @@ public abstract class FinanceRow<FinanceType extends Finance> {
         this.question = question;
     }
 
-    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost, Question question) {
-        this(name, item ,description, quantity, cost, question);
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }

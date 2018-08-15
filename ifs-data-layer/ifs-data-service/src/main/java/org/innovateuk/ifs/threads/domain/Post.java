@@ -41,8 +41,7 @@ public class Post {
     private Thread thread;
 
     public Post(){}
-    public Post(Long id, User author, String body, List<Attachment> attachments, ZonedDateTime createdOn) {
-        this.id = id;
+    public Post(User author, String body, List<Attachment> attachments, ZonedDateTime createdOn) {
         this.author = author;
         this.body = body;
         this.attachments = ofNullable(attachments).map(ArrayList::new).orElse(new ArrayList<>());

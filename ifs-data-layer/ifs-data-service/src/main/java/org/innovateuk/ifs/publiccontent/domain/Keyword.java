@@ -21,7 +21,6 @@ public class Keyword {
 
     private String keyword;
 
-
     public Long getId() {
         return id;
     }

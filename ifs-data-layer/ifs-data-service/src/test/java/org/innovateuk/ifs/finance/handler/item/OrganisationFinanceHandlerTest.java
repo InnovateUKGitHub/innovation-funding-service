@@ -94,22 +94,22 @@ public class OrganisationFinanceHandlerTest {
 
         capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20);
         capitalUsageCost = handler.costItemToCost(capitalUsage);
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3l, "existing", "String"), "Yes"));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(5l, "utilisation", "Integer"), String.valueOf(20)));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("existing", "String"), "Yes"));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("utilisation", "Integer"), String.valueOf(20)));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(null, "Integer"), String.valueOf(20)));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         capitalUsageCost.setQuestion(costTypeQuestion.get(FinanceRowType.CAPITAL_USAGE));
         costs.add((ApplicationFinanceRow) capitalUsageCost);
 
         subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
         subContractingCost = handler.costItemToCost(subContracting);
-        subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
+        subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField("country", "france"), "frane"));
         subContractingCost.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
         costs.add((ApplicationFinanceRow)subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
         FinanceRow subContractingCost2 = handler.costItemToCost(subContracting2);
-        subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
+        subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField("country", "france"), "frane"));
         subContractingCost2.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
         costs.add((ApplicationFinanceRow)subContractingCost2);
 

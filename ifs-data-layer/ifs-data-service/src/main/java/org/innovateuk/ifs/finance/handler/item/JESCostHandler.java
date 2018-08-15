@@ -25,12 +25,12 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
     @Override
     public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {
         return academicCostItem != null ?
-                new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(),null, null, academicCostItem.getTotal(), null, null) : null;
+                new ApplicationFinanceRow(academicCostItem.getName(), academicCostItem.getItem(),null, null, academicCostItem.getTotal(), null, null) : null;
     }
 
     @Override
     public ProjectFinanceRow toProjectCost(AcademicCost costItem) {
-        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getItem(), null, null, costItem.getTotal(), null, null);
+        return new ProjectFinanceRow(costItem.getName(), costItem.getItem(), null, null, costItem.getTotal(), null, null);
     }
 
     @Override

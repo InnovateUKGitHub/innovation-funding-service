@@ -158,7 +158,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     private Query query() {
-        return new Query(92L, 1993L, "", null, null, "", ZonedDateTime.now());
+        return new Query(1993L, "", null, null, "", ZonedDateTime.now());
     }
 
     private Attachment asDomain(AttachmentResource attachmentResource, Long uploaderId) {

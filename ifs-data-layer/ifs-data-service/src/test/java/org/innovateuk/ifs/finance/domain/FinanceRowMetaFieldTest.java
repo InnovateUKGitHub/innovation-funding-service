@@ -12,16 +12,15 @@ public class FinanceRowMetaFieldTest {
 
     @Before
     public void setUp() throws Exception {
-        id = 123456L;
         title = "field title";
         type = "field type";
-        financeRowMetaField = new FinanceRowMetaField(id, title, type);
+        financeRowMetaField = new FinanceRowMetaField(title, type);
     }
 
     @Test
     public void constructorsShouldCreateInstanceOnValidInput() throws Exception{
         new FinanceRowMetaField();
-        new FinanceRowMetaField(1234L, "title", "Type");
+        new FinanceRowMetaField("title", "Type");
     }
 
     @Test

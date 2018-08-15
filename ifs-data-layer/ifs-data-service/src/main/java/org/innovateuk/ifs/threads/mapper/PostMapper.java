@@ -46,7 +46,7 @@ public abstract class PostMapper extends BaseMapper<Post, PostResource, Long> {
 
     @Override
     public Post mapToDomain(PostResource postResource) {
-        return new Post(postResource.id, userMapper.mapToDomain(postResource.author),
+        return new Post(userMapper.mapToDomain(postResource.author),
                 postResource.body, simpleMap(postResource.attachments, attachmentMapper::mapToDomain), postResource.createdOn);
     }
 

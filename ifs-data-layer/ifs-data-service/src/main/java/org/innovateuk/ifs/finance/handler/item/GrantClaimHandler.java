@@ -35,12 +35,12 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     @Override
     public ApplicationFinanceRow toCost(GrantClaim grantClaim) {
-        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+        return new ApplicationFinanceRow(COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
     }
 
     @Override
     public ProjectFinanceRow toProjectCost(GrantClaim costItem) {
-        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+        return new ProjectFinanceRow(COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
     }
 
     @Override
