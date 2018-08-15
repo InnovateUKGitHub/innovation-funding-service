@@ -33,6 +33,7 @@ public class SummaryViewModel {
     private final ApplicationCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
     private final boolean showApplicationTeamLink;
+    private final boolean isAssessor;
 
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
@@ -48,7 +49,8 @@ public class SummaryViewModel {
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             ApplicationCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
-                            boolean showApplicationTeamLink) {
+                            boolean showApplicationTeamLink,
+                            boolean isAssessor) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
@@ -64,6 +66,7 @@ public class SummaryViewModel {
         this.completedViewModel = completedViewModel;
         this.formInputViewModels = formInputViewModels;
         this.showApplicationTeamLink = showApplicationTeamLink;
+        this.isAssessor = isAssessor;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -124,5 +127,9 @@ public class SummaryViewModel {
 
     public boolean isShowApplicationTeamLink() {
         return showApplicationTeamLink;
+    }
+
+    public boolean isIsAssessor() {
+        return isAssessor;
     }
 }

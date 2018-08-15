@@ -7,7 +7,10 @@
 
 </head>
 
-<body class="govuk-template__body">
+<body class="govuk-template__body" th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -15,8 +18,7 @@
 
 <div class="govuk-width-container">
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-business?user='} + ${user} + '&#38;type=' + ${type})"/>
-
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-business?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
     <main class="govuk-main-wrapper" id="content">
 
         <!-- HARDCODED PROTOTYPE HTML -->
