@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -24,6 +24,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -38,10 +39,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
@@ -95,7 +97,7 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
         this.userService = userService;
     }
 
-    public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
+    public SummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -143,6 +145,8 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
 
         boolean showApplicationTeamLink = applicationService.showApplicationTeam(application.getId(), user.getId());
 
+        boolean isAssessor = user.hasRole(ASSESSOR);
+
         return new SummaryViewModel(
                 application,
                 getSections(competition.getId()),
@@ -158,7 +162,8 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
                 applicationResearchParticipationViewModelPopulator.populate(applicationId),
                 getCompletedDetails(application, userOrganisation),
                 getFormInputViewModel(sectionQuestions, applicantId, application, competition),
-                showApplicationTeamLink
+                showApplicationTeamLink,
+                isAssessor
         );
     }
 

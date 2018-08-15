@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
@@ -7,239 +7,80 @@
 
 </head>
 
-<body class="app-dashboard">
+<body class="govuk-template__body app-dashboard">
 
     <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
     <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
 
-    <header role="banner" id="global-header" class="">
-        <div class="header-wrapper">
-            <div class="header-global">
-                <div th:include="fragments/elements :: header-logo"></div>
-            </div>
-        </div>
-    </header>
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="content">
 
-    <main id="content">
+            <!-- HARDCODED PROTOTYPE HTML -->
 
+            <th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='eu2020'"/>
 
-        <!-- HARDCODED PROTOTYPE HTML -->
+            <h1 class="govuk-heading-l">EU funding data capture</h1>
 
-        <th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='decouple'" />
+            <h2 class="govuk-heading-m">
+                EU2020 application transfer
+                <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-4104">IFS-4104</a>
+            </h2>
 
-        <h1 class="govuk-heading-l">Decoupling lead journeys</h1>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    <a class="govuk-link govuk-heading-s" href="/prototypes/IFS-4104-funding-dashboard">Funding dashboard</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-org">Your organisation</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-business">Business</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-org-selected">Confirm your business</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-org-selected?status=readonly&section1=true">Edit your organisation</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="govuk-link govuk-heading-s" href="/prototypes/IFS-4104-funding-dashboard?section1=true&section2=true">Funding dashboard with section1 complete</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-contact-details?section1=true">Contact details</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-contact-details?status=readonly&section1=true&section2=true">Edit contact details</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="govuk-link govuk-heading-s" href="/prototypes/IFS-4104-funding-dashboard?section1=true&section2=true">Funding dashboard with section1 and section2 complete</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-details?section1=true&section2=true">Your funding</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-details?status=readonly&section1=true&section2=true&section3=true">Edit funding details</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="govuk-link govuk-heading-s" href="/prototypes/IFS-4104-funding-dashboard?section1=true&section2=true&section3=true">Funding dashboard with all sections complete</a>
+                </li>
+                <li>
+                    <a class="govuk-link govuk-heading-s" href="/prototypes/IFS-4104-email">Confirmation email</a>
+                </li>
+            </ul>
 
-        <h2 class="govuk-heading-m">
-            1. Lead starts application with no account (create account later)
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3598">IFS-3598</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3598-comp-overview">Competition overview</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-signin">Sign in / Create account (Choose create account)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-choose-org">Choose org type</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-details">Enter org details</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected">Confirm org (companies house)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?entry=manual">Confirm org (manual)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-your-details">Your details</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-verify-email">Verify email</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-email">Email</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-verified">Verfied</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-signin-dashboard">Sign in page</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-dashboard">Dashboard</a>
-            </li>
-        </ul>
-
-        <h2 class="govuk-heading-m">
-            2. Lead starts application with an account
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3598">IFS-3598</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3598-comp-overview">Competion overview</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-signin">Sign in / Create account (Choose sign in)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-signin-new-acc">Sign in</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-choose-org?user=existing">Choose org type</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-details/?user=existing">Enter org details / search companies house</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?user=existing">Confirm org details</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?user=existing&#38;entry=manual">Confirm org details (manual)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-application-team">Application team page</a>
-            </li>
-        </ul>
-
-        <h2 class="govuk-heading-m">
-            2. Lead starts application when signed in
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3598">IFS-3598</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3598-comp-overview?status=signedIn">Competion overview</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-application-team">Application team</a>
-            </li>
-        </ul>
-
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />>
-
-        <h1 class="govuk-heading-l">Decoupling invite journeys</h1>
-
-        <h2 class="govuk-heading-m">
-            1. Invited with organisation (e.g. first applicant) (no account)
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3599">IFS-3599</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3599-full-application-team">
-                    <strong>Lead view</strong> - application team page</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-add-organisation">
-                    <strong>Lead view</strong> - lead adds a collaborator organisation</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-invite-to-collaborate?type=collbaorator&#38;user=new">Invitation to collaborate</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-choose-org?type=collaborator">Choose org type</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-details?type=collaborator">Search on companies house</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?user=new&#38;type=collaborator">Confirm org</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?user=new&#38;type=collaborator&#38;entry=manual">Confirm org manual</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-your-detail?user=new&#38;type=collaborator">Create account (details)</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-verify-email?user=new&#38;type=collaborator">Verify email</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-signin-dashboard?type=collaborator">Sign in</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-dashboard?type=collaborator">Dashboard</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-collaborator-application?type=collaborator">Start application</a>
-            </li>
-        </ul>
+            <!-- END OF HARDCODED PROTOTYPE HTML -->
 
 
-        <h2 class="govuk-heading-m">
-            2. Invited as contributor e.g. (as part of an org) (no account)
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3599">IFS-3599</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3599-collaborate-email">Contributor receives email</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-invite-to-collaborate?type=collaborator&#38;user=new&#38;status=orgAdded">Contributor invitation</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=new&#38;status=orgAdded">Confirm your organisation</a>
-            </li>
-        </ul>
-
-        <h2 class="govuk-heading-m">
-            3. Invited with organisation (with account)
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3599">IFS-3599</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3599-invite-to-collaborate?type=collaborator&#38;user=existing&#38;status=orgNotAdded">Invitation to collaborate</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-signin-collab-without-org?type=collaborator&#38;user=existing&#38;status=orgNotAdded">Sign in</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-choose-org?type=collaborator&#38;user=existing&#38;status=orgNotAdded">Choose org type</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-details?type=collaborator&#38;user=existing&#38;status=orgNotAdded">Enter org details / search companies house</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=existing&#38;status=orgNotAdded">Confirm org details</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=existing&#38;status=orgNotAdded&#38;entry=manual">Confirm org details (manual)</a>
-            </li>
-        </ul>
-
-
-
-        <h2 class="govuk-heading-m">
-            4. Invited as contributor (with account)
-            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3599">3599</a>
-        </h2>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                <a href="/prototypes/IFS-3599-invite-to-collaborate?type=collaborator&user=existing&status=orgAdded">Invitation to collaborate</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3599-signin-collab-with-org?type=collaborator&#38;user=existing&#38;status=orgAdded">Sign in</a>
-            </li>
-            <li>
-                <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=existing&#38;status=orgAdded">Confirm org details</a>
-            </li>
-        </ul>
-
-
-
-        <!-- END OF HARDCODED PROTOTYPE HTML -->
-
-
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
-    </main>
+            <th:block th:insert="fragments/layout :: main-content-end"/>
+        </main>
+    </div>
 
     <th:block th:insert="fragments/layout :: body-end" />
     <th:block th:insert="prototypes/fragments/layout :: prototype-js" />
