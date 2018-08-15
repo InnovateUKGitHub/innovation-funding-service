@@ -112,8 +112,6 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     @ExceptionHandler(value = {MaxUploadSizeExceededException.class, MultipartException.class, PayloadTooLargeException.class})
     public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, MultipartException e){
         LOG.debug("ErrorController payloadTooLarge", e );
-        // TODO: Check if we can include more information by checking root cause as follows:
-        // if(e.getRootCause() != null && e.getRootCause() instanceof FileUploadBase.FileSizeLimitExceededException)
         return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.PAYLOAD_TOO_LARGE, "413");
     }
 

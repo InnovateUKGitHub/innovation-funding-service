@@ -18,20 +18,20 @@
     <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to Technology inspired'}, ${'/prototypes/871-assessor-comp-dashboard'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin">Accept application</h1>
+	<div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="govuk-heading-l govuk-!-margin-0">Accept application</h1>
     </div>
 
     <section class="boxed">
 
-        <div class="grid-row">
-            <div class="column-half">
-                <h2 class="heading-small no-margin">Title:</h2>
-                <p>Using natural gas to heat homes</p>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Title:</h2>
+                <p class="govuk-body">Using natural gas to heat homes</p>
             </div>
-            <div class="column-half">
-                <h2 class="heading-small no-margin">Partners:</h2>
-                <ul class="list list-bullet">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Partners:</h2>
+                <ul class="govuk-list govuk-list--bullet">
                     <li>Empire ltd <strong>(Lead)</strong></li>
                     <li>Ludlow</li>
                     <li>EGG</li>
@@ -39,16 +39,16 @@
             </div>
         </div>
 
-        <h2 class="heading-small no-margin">Project summary:</h2>
-        <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+        <h2 class="govuk-heading-s govuk-!-margin-0">Project summary:</h2>
+        <p class="govuk-body">The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
     </section>
 
 
 
     <section>
 
-        <h3 class="heading-small">Review the project summary above to make sure:</h3>
-        <ul class="list list-bullet">
+        <h3 class="govuk-heading-s">Review the project summary above to make sure:</h3>
+        <ul class="govuk-list govuk-list--bullet">
             <li>you do not have a conflict of interest with this application</li>
             <li>the application fits within your area of expertise</li>
             <li>you have time to assess this application</li>
@@ -57,12 +57,12 @@
     </section>
 
 	<form>
-        <fieldset>
-            <legend class="visuallyhidden">Are you able to assess this application?</legend>
-            <h2 class="heading-medium">Are you able to assess this application?</h2>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Are you able to assess this application?</legend>
+            <h2 class="govuk-heading-m">Are you able to assess this application?</h2>
 
-            <a class="button large extra-margin" href="/prototypes/871-assessor-comp-dashboard?status=accept">Accept</a>
-            <a role="button" tabindex="0" class="button button-warning large extra-margin" href="#" data-js-modal="modal-reject-assessment">Reject</a>
+            <a class="govuk-button large extra-margin" href="/prototypes/871-assessor-comp-dashboard?status=accept">Accept</a>
+            <a role="button" tabindex="0" class="govuk-button button-warning large extra-margin" href="#" data-js-modal="modal-reject-assessment">Reject</a>
 
         </fieldset>
     </form>

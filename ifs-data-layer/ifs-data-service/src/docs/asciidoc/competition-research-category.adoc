@@ -1,0 +1,10 @@
+=== Find research categories by competition
+==== Request
+include::{snippets}/competition-research-category/find-by-competition/http-request.adoc[]
+
+==== Response
+include::{snippets}/competition-research-category/find-by-competition/http-response.adoc[]
+include::{snippets}/competition-research-category/find-by-competition/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-research-category/find-by-competition/curl-request.adoc[]

@@ -80,5 +80,5 @@ the compAdmin resends the invites for interview panel
     the user clicks the button/link      jQuery=button:contains("Send invite")
 
 Get the total number of submitted applications
-    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
+    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div/table/tbody/tr
     Set Test Variable    ${NUMBER_OF_APPLICATIONS}

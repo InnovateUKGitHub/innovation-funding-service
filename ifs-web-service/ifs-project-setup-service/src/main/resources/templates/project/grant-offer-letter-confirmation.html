@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter Confirmation'" />
 </head>
-<body class="gol-confirm-submit">
+<body class="govuk-template__body gol-confirm-submit">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<main id="content" tabindex="-1">
-    <h1 class="heading-medium">Send to Innovate UK</h1>
-    <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
 
-    <form th:action="@{/project/{id}/offer(id=${projectId})}" method="post">
-        <button class="button" name="confirmSubmit">Confirm submission</button>
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <h1 class="govuk-heading-m">Send to Innovate UK</h1>
+        <p class="govuk-body">Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
+
+        <form th:action="@{/project/{id}/offer(id=${projectId})}" method="post">
+            <button class="govuk-button" name="confirmSubmit">Confirm submission</button>
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

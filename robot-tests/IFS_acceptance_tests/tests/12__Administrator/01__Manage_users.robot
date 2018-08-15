@@ -71,14 +71,14 @@ Client side validations for invite new internal user
     [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  A
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
-    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id=lastName  D
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
-    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your last name should have at least 2 characters.")
     When the user enters text to a text field  id=emailAddress  astle
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter an email address.")
-    And the user should see the element        jQuery=.error-message:contains("Please enter a valid email address.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter an email address.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Please enter a valid email address.")
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
@@ -88,7 +88,7 @@ Administrator can successfully invite a new user
     And the user enters text to a text field                 id=lastName  User
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
-    And the user clicks the button/link                      jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                      jQuery=.govuk-button:contains("Send invite")
     Then the user cannot see a validation error in the page
 
 Administrator can successfully finish the rest of the invitation
@@ -114,7 +114,7 @@ Invited user can receive the invitation
 Account creation validation checks - Blank
     [Documentation]  IFS-643
     [Tags]  HappyPath
-    Given the user clicks the button/link   jQuery=.button:contains("Create account")
+    Given the user clicks the button/link   jQuery=.govuk-button:contains("Create account")
     And the user should see a field and summary error   Please enter a first name.
     And the user should see a field and summary error   Please enter a last name.
     And The user should see a field and summary error   Password must be at least 8 characters
@@ -129,16 +129,16 @@ Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
     [Tags]
     Given the user enters text to a text field  id=password  PASSWORD123
-    When The user clicks the button/link        jQuery=.button:contains("Create account")
+    When The user clicks the button/link        jQuery=.govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css=#password  ${correct_password}
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
     [Tags]   HappyPath
-    Given the user clicks the button/link      jQuery=.button:contains("Create account")
+    Given the user clicks the button/link      jQuery=.govuk-button:contains("Create account")
     Then the user should see the element       jQuery=h1:contains("Your account has been created")
-    When the user clicks the button/link       jQuery=.button:contains("Sign into your account")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Sign into your account")
     Then the invited user logs in
     And the user clicks the button/link        jQuery=a:contains("Manage users")
     And the user clicks the button/link        jQuery=a:contains("New Administrator")
@@ -160,8 +160,8 @@ Inviting the same user for the same role again should give an error
     And the user enters text to a text field       id=lastName  Administrator
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
-    And the user clicks the button/link            jQuery=.button:contains("Send invite")
-    Then the user should see the element           jQuery=.error-summary:contains("This email address is already in use.")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Send invite")
+    Then the user should see the element           jQuery=.govuk-error-summary:contains("This email address is already in use.")
 
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
@@ -171,7 +171,7 @@ Inviting the same user for the different role again should also give an error
     And the user enters text to a text field   id=lastName  Finance
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  Project Finance  id=role
-    And the user clicks the button/link        jQuery=.button:contains("Send invite")
+    And the user clicks the button/link        jQuery=.govuk-button:contains("Send invite")
     Then The user should see a summary error   This email address is already in use.
 
 Administrator can navigate to edit page to edit the internal user details
@@ -200,11 +200,11 @@ Client side validations for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id=firstName  A
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
-    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id=lastName  D
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
-    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your last name should have at least 2 characters.")
 
 Administrator can successfully edit internal user details
     [Documentation]  IFS-18
@@ -216,7 +216,7 @@ Administrator can successfully edit internal user details
     Then the user enters text to a text field                id=lastName  Lead
     # Has to be an Innovation Lead for the next test
     And the user selects the option from the drop-down menu  Innovation Lead  id=role
-    And the user clicks the button/link                      jQuery=.button:contains("Save and return")
+    And the user clicks the button/link                      jQuery=.govuk-button:contains("Save and return")
     Then the user cannot see a validation error in the page
     When the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
@@ -237,7 +237,7 @@ Administrator is able to disable internal users
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the View internal user details  Innovation Lead  active
     And the user clicks the button/link   link=Edit
-    Then the user should see the element  css=.form-group input
+    Then the user should see the element  css=.govuk-form-group input
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
     Then the user clicks the button/link  jQuery=button:contains("Cancel")
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")

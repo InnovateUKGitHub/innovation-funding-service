@@ -1,16 +1,20 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
 .list-overview {
   margin-left: 0;
   padding: 0;
   list-style-type: none;
 
   > li {
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
 
     &:last-child {
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
     }
 
-    &.grid-row {
+    &.govuk-grid-row {
       min-height: 30px;
       margin: 0
     }
@@ -18,13 +22,13 @@
 
   h2,
   h3 {
-    &.heading-small {
+    &.govuk-heading-s {
       margin: 10px 0;
     }
   }
 
   .assign-container {
-    font-size: 14px;
+    @include govuk-font(14);
     padding: 10px 0;
 
     .assign-team {
@@ -33,30 +37,34 @@
     }
   }
 
-  .grid-row {
-    .column-third {
+  .govuk-grid-row {
+    .govuk-grid-column-one-third {
       padding: 12px 15px 0 20px;
     }
 
-    .column-two-thirds {
+    .govuk-grid-column-two-thirds {
       padding-left: 20px;
+    }
+
+    .govuk-body {
+      margin: 5px 0 12px;
     }
   }
 }
 
 .eligibility {
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px 20px 10px 20px;
   margin-top: 20px;
 
   &.warning {
-    border: 1px solid $red;
+    border: 1px solid $govuk-error-colour;
   }
 }
 
 
 .list-eligibility {
-  @include core-24;
+  @include govuk-font(24);
   overflow: auto;
 
   dt {
@@ -78,7 +86,7 @@
     margin-bottom: 0.5em;
 
     &.warning {
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt {
@@ -91,15 +99,12 @@ dl {
   dd {
     display: block;
     margin-bottom:0.5em;
+    -webkit-margin-start: 0;
   }
 
   dt {
     display: block;
     font-weight:bold;
-
-    &.font-small {
-      font-weight:bold;
-    }
   }
 
   &.readonly-data {
@@ -236,7 +241,7 @@ ol {
 }
 
 %definition-list {
-  @include core-19;
+  @include govuk-font(19);
   overflow: auto;
 
   dt {
@@ -259,7 +264,7 @@ ol {
     margin-bottom: 0.5em;
 
     &.warning {
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt {
@@ -302,20 +307,20 @@ ol {
 
 .comp-list {
   li {
-    border-top:1px solid $border-colour;
+    border-top:1px solid $govuk-border-colour;
     overflow: hidden;
   }
 
   li {
     &:last-child {
-      border-bottom:1px solid $border-colour;
+      border-bottom:1px solid $govuk-border-colour;
     }
   }
 
   .status {
     display:block;
-    color: $secondary-text-colour;
-    background: $panel-colour;
+    color: $govuk-secondary-text-colour;
+    background: govuk-colour("grey-3");
     padding: 12px;
     text-align: center;
     margin-top: 1.2em;

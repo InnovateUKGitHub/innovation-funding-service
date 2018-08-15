@@ -19,10 +19,10 @@ Invite a new Assessor to assess a competition
     And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${Assessor_e2e["email"]}
     And the user selects the option from the drop-down menu  Emerging and enabling  css=.js-progressive-group-select
     And the user selects the option from the drop-down menu  Emerging technology  id=grouped-innovation-area
-    And the user clicks the button/link       jQuery=.button:contains("Add assessors to list")
+    And the user clicks the button/link       jQuery=.govuk-button:contains("Add assessors to list")
     When the user clicks the button/link      jQuery=a:contains("Review and send invites")
     And the user enters text to a text field  id=message    This is custom text
-    And the user clicks the button/link       jQuery=.button:contains("Send invite")
+    And the user clicks the button/link       jQuery=.govuk-button:contains("Send invite")
     And The user should see the element       jQuery=h2:contains("View assessors who have not yet responded or have declined the invite.")
 
 Invited User gets an email to assess the competition
@@ -40,7 +40,7 @@ Resend the invite to the assessor again
     And the user clicks the button/link       link=Pending and declined
     And the user clicks the button/link       jQuery=tr:contains("EtoE") label
     When the user clicks the button/link      jQuery=button:contains("Resend invites")
-    And the user clicks the button/link       jQuery=.button:contains("Send invite")
+    And the user clicks the button/link       jQuery=.govuk-button:contains("Send invite")
     [Teardown]  The user closes the browser
 
 Resent email can be read by the invited user
@@ -54,7 +54,7 @@ Invited user accepts the invitation and follows the registration flow
     Given the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
-    When the user clicks the button/link    jQuery=.button:contains("Create account")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Create account")
     And the user should see the text in the page    ${Assessor_e2e["email"]}
     And The user fills and submits the registration form
     And the user clicks the button/link                     jQuery=a:contains("Sign into your account")
@@ -82,7 +82,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Accepted
     When the user clicks the button/link   link=EtoE
-    And the user should see the element    jQuery=.heading-small:contains("Innovation areas") + ul:contains("Emerging technology")
+    And the user should see the element    jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link  link=Dashboard

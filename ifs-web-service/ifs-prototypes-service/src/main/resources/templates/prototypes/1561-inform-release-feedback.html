@@ -25,16 +25,16 @@
 
     <fieldset class="extra-margin-top">
 
-      <legend class="visuallyhidden">Release feedback to applicnats</legend>
+      <legend class="govuk-visually-hidden">Release feedback to applicnats</legend>
 
-      <div class="form-group">
+      <div class="govuk-form-group">
         <label class="form-label-bold" for="notification-subject">Subject</label>
         <input class="form-control" type="text" name="notification-subject" id="notification-subject" value="Feedback for your application into the competition [comp name] is now available" required="required" />
       </div>
 
-      <div class="form-group">
+      <div class="govuk-form-group">
         <label class="form-label-bold" for="notification-message">Message</label>
-        <textarea  class="form-control " name="notification-message" id="notification-message" cols="30" rows="10" required="required">
+        <textarea  class="govuk-textarea" name="notification-message" id="notification-message" cols="30" rows="10" required="required">
 Dear [Full Name],
 
 The feedback for your application [app name] to the competition [comp name] is now available for you to view.
@@ -50,15 +50,15 @@ Yours sincerely,
       <input type="hidden" name="status" value="Inform" />
       <input type="hidden" name="action" value="feedback-sent" />
 
-      <button class="button" formaction="/prototypes/5721-dashboard" >Release feedback</button>
+      <button class="govuk-button" formaction="/prototypes/5721-dashboard" >Release feedback</button>
 
-      <a href="#" class="button-link-style">Cancel</a>
+      <a href="#" class="govuk-button-link-style">Cancel</a>
 
     </fieldset>
 
   </form>
 
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 	<div th:if="${param.filterStatus == null}" th:remove="tag">
 

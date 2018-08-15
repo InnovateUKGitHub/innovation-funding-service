@@ -23,23 +23,23 @@
         <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
             <div class="question" id="form-input-9">
-                <div class="form-group">
-                    <label class="form-label form-label-bold" for="application_details-title">
+                <div class="govuk-form-group">
+                    <label class="form-label govuk-label" for="application_details-title">
                         <span>Project title</span>
-                        <span class="form-hint">Enter the full title of your project</span>
+                        <span class="govuk-hint">Enter the full title of your project</span>
                     </label>
                     <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
                 </div>
-                <fieldset>
-                    <div class="message-alert extra-margin-bottom">
-                        <h2 class="heading-small no-margin">Research area determines funding</h2>
-                        <p>The research area is used to calculate the funding for all collaborators in the application.</p>
-                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
+                <fieldset class="govuk-fieldset">
+                    <div class="message-alert govuk-!-margin-bottom-6">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">Research area determines funding</h2>
+                        <p class="govuk-body">The research area is used to calculate the funding for all collaborators in the application.</p>
+                        <p class="govuk-body">Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <legend>
-                            <span class="heading-medium">Research area</span>
-                            <span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
+                            <span class="govuk-heading-m">Research area</span>
+                            <span class="govuk-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
                         </legend>
                         <label data-target="resubmission-details" class="block-label selected selection-button-radio" for="feasibility-studies">
                             <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
@@ -55,11 +55,11 @@
                         </label>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <div class="form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-form-group">
                         <legend>
-                            <span class="heading-medium">Is this application a resubmission of a previous application?</span>
-                            <span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
+                            <span class="govuk-heading-m">Is this application a resubmission of a previous application?</span>
+                            <span class="govuk-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
                         </legend>
                         <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
                             <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
@@ -72,28 +72,28 @@
                     </div>
                 </fieldset>
                 <div id="resubmission-details">
-                    <div class="form-group">
-                        <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
+                    <div class="govuk-form-group">
+                        <h2 class="govuk-heading-m govuk-!-margin-0">Please provide the details of this previous application</h2>
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
                             <span>Previous application number</span>
                         </label>
                         <input class="form-control width-full" type="text" id="application_details-previousapplicationnumber" name="application.previousApplicationNumber" value="" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label form-label-bold" for="application_details-previousapplicationtitle">
                             <span>Previous application title</span>
                         </label>
                         <input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" name="application.previousApplicationTitle" value="" />
                     </div>
                 </div>
-                <fieldset>
-                    <div class="form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-form-group">
                         <legend>
-                            <span class="heading-medium">Estimated timescales</span>
-                            <span class="form-hint">Project start date</span>
-                            <span class="form-hint">For example: 31 12 2015</span>
+                            <span class="govuk-heading-m">Estimated timescales</span>
+                            <span class="govuk-hint">Project start date</span>
+                            <span class="govuk-hint">For example: 31 12 2015</span>
                         </legend>
                         <div class="date-group" data-future-date="" data-field-group-name="application.startDate" data-field-group-id="application_details-startdate">
                             <input type="hidden" name="application.startDate" id="application_details-startdate" value="application.startDate" />
@@ -113,28 +113,28 @@
                                 <label class="form-label-bold" for="application_details-startdate_year">
                                     <div>Year</div>
                                 </label>
-                                <input class="form-control width-extra-small null " type="number" placeholder="YYYY" id="application_details-startdate_year" name="application.startDate.year" />
+                                <input class="govuk-input width-extra-small null " type="number" placeholder="YYYY" id="application_details-startdate_year" name="application.startDate.year" />
                             </div>
                         </div>
                         <br />
                     </div>
-                    <div class="form-group">
-                        <div class="form-group">
+                    <div class="govuk-form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="application_details-duration">
                                 <div>Duration in months</div>
                             </label>
-                            <input class="form-control width-extra-small null" type="number" id="application_details-duration" name="application.durationInMonths" value="51" />
+                            <input class="govuk-input width-extra-small null" type="number" id="application_details-duration" name="application.durationInMonths" value="51" />
                         </div>
                     </div>
                 </fieldset>
 
-                <div class="form-group">
-                    <h2 class="heading-small no-margin">Lead organisation</h2>
+                <div class="govuk-form-group">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Lead organisation</h2>
                     <div>Empire Ltd</div>
                 </div>
-                <div class="form-group">
-                    <h2 class="heading-small no-margin">Partners</h2>
-                    <ul class="list list-bullet">
+                <div class="govuk-form-group">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Partners</h2>
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>
                             <span>Ludlow</span>
                         </li>
@@ -174,8 +174,8 @@
                 <dd>Worth Internet Systems<small>(pending)</small></dd>
             </dl>
         </th:block>
-        <div class="extra-margin extra-margin-bottom">
-            <!--<button type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>-->
+        <div class="extra-margin govuk-!-margin-bottom-6">
+            <!--<button type="submit" name="mark_as_complete" class="button-clear" value="9">Mark as complete</button>-->
             <a th:href="${param.status != null and param.status[0] == 'readOnly' ? '/prototypes/5452-application-details' : '/prototypes/5452-application-details?status=readOnly'}" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
         </div>
 

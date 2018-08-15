@@ -21,22 +21,22 @@
 
 	<form action="#">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<h2 class="heading-large no-margin-top">Finance contact</h2>
+			<h2 class="govuk-heading-l govuk-!-margin-top-0">Finance contact</h2>
 
-			<legend class="visuallyhidden">Finance contact</legend>
+			<legend class="govuk-visually-hidden">Finance contact</legend>
 
-			<p class="form-hint">Who will be responsible for the project finances in your organisation?</p>
+			<p class="govuk-hint">Who will be responsible for the project finances in your organisation?</p>
 
 			<details>
 			    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
-			    <div class="panel">
-			        <p>This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
+			    <div class="govuk-body panel">
+			        <p class="govuk-body">This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
 			    </div>
 			</details>
 
-			<div class="form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+			<div class="govuk-form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				<label for="finances-name-1" class="block-label selection-button-radio">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
@@ -53,7 +53,7 @@
 				</label>
 			</div>
 
-            <div class="form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
+            <div class="govuk-form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
 
                 <input type="hidden" name="user" value="nonLead">
 
@@ -76,23 +76,23 @@
 		</fieldset>
 
 		<div class="extra-margin">
-			<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+			<button class="button-clear" id="add-finance-contact">Add new team member</button>
 		</div>
 
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" />
 
 
-		<h3 class="heading-medium">Target project start date</h3>
-		<p>23rd March 2016</p>
+		<h3 class="govuk-heading-m">Target project start date</h3>
+		<p class="govuk-body">23rd March 2016</p>
 
-		<h3 class="heading-medium">Project duration</h3>
-		<p>9 months</p>
+		<h3 class="govuk-heading-m">Project duration</h3>
+		<p class="govuk-body">9 months</p>
 
-		<h3 class="heading-medium">Project manager</h3>
-		<p>Bill Bryson (Dyson)</p>
+		<h3 class="govuk-heading-m">Project manager</h3>
+		<p class="govuk-body">Bill Bryson (Dyson)</p>
 
-		<h3 class="heading-medium">Main project address</h3>
-		<p>Algate Solutions <br />
+		<h3 class="govuk-heading-m">Main project address</h3>
+		<p class="govuk-body">Algate Solutions <br />
 			21 Ballygowan Roads<br />
 			Bristol<br />
 			BS2 1RF</p>
@@ -105,7 +105,7 @@
 
 		<div class="extra-margin">
 
-			<a href="#" class="button">Mark as complete</a>
+			<a href="#" class="govuk-button">Mark as complete</a>
 
 		</div>
 

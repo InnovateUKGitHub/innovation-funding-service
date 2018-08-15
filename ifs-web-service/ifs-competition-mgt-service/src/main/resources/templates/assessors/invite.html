@@ -1,255 +1,258 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="competition-management competition-overview">
+    <body class="govuk-template__body competition-management competition-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+                </div>
 
-            <h2 class="heading-medium">Key statistics</h2>
+                <h2 class="govuk-heading-m">Key statistics</h2>
 
-            <div class="grid-row">
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
-                        <small>Invited</small>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">60</span>
+                            <small>Invited</small>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsAccepted}">23</span>
+                            <small>Accepted</small>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsDeclined}">3</span>
+                            <small>Declined</small>
+                        </div>
                     </div>
                 </div>
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
-                        <small>Accepted</small>
+
+                <dl class="standard-definition-list govuk-!-margin-top-6">
+                    <dt>Innovation sector</dt>
+                    <dd th:text="${model.innovationSector}">Health and life sciences</dd>
+
+                    <dt>Innovation area</dt>
+                    <dd th:text="${model.innovationArea}">Agriculture and food</dd>
+                </dl>
+
+
+                <ul class="govuk-list inline-nav">
+                    <li class="not-selected">
+                        <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-link">Find</a>
+                    </li>
+                    <li class="selected">
+                        <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-link">Invite</a>
+                    </li>
+                    <li class="not-selected">
+                        <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-link">Pending and declined</a>
+                    </li>
+                    <li class="not-selected">
+                        <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-link">Accepted</a>
+                    </li>
+                </ul>
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-three-quarters">
+                        <h2 class="govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-6">Invite assessors for this competition.</h2>
                     </div>
                 </div>
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
-                        <small>Declined</small>
-                    </div>
-                </div>
-            </div>
 
-            <dl class="standard-definition-list extra-margin">
-                <dt>Innovation sector</dt>
-                <dd th:text="${model.innovationSector}">Health and life sciences</dd>
+                <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Add a non-registered assessor to your list</span>
+                    </summary>
 
-                <dt>Innovation area</dt>
-                <dd th:text="${model.innovationArea}">Agriculture and food</dd>
-            </dl>
+                    <div class="govuk-details__text">
+                        <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
+                              method="POST"
+                              th:object="${form}"
+                              novalidate="novalidate">
+                            <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
+                            <p class="govuk-body">Enter the new assessor's details below to add them to your invite list.</p>
 
-            <div><br></div>
-
-            <ul class="inline-nav">
-                <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
-                </li>
-                <li class="selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
-                </li>
-                <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
-                </li>
-                <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
-                </li>
-            </ul>
-
-            <div class="grid-row">
-                <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors for this competition.</h2>
-                </div>
-            </div>
-
-            <details class="extra-margin-bottom" th:open="${form.visible}">
-                <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
-
-                <div class="panel">
-                    <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
-                          method="POST"
-                          th:object="${form}"
-                          novalidate="novalidate">
-                        <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
-                        <p>Enter the new assessor's details below to add them to your invite list.</p>
-
-                        <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')} ? 'form-group-error'">
-                            <label for="grouped-innovation-area" class="form-label-bold">
-                                Innovation area
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')} ? 'govuk-form-group--error'">
+                                <label for="grouped-innovation-area" class="govuk-label">
+                                    Innovation area
+                                </label>
+                                <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                                 <th:block th:if="${#fields.hasErrors('selectedInnovationArea')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
                                 </th:block>
-                            </label>
-                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
-                            <select th:field="*{selectedInnovationArea}"
-                                    class="form-control width-full"
-                                    data-progressive-group-select="Innovation sector"
-                                    data-progressive-group-select-instruction="Please select an innovation sector"
-                                    data-progressive-group-select-id="selectedInnovationArea"
-                                    required="required"
-                                    th:errorclass="form-control-error"
-                                    th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required},
-                                             data-progressive-group-select-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
-                                    aria-labelledby="innovation-area"
-                                    id="grouped-innovation-area">
-                                <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
-                                <optgroup th:if="${innovationSector.name != 'Open'}" th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
-                                    <option th:each="innovationArea : ${innovationSector.children}"
-                                            th:value="${innovationArea.id}"
-                                            th:text="${innovationArea.name}"
-                                            th:selected="*{selectedInnovationArea} == ${innovationArea.id}"></option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <table id="invite-table">
-                                <thead>
-                                <tr>
-                                    <th id="invite-label-assessor-name" scope="col">Name</th>
-                                    <th id="invite-label-assessor-email" scope="col">Email</th>
-                                    <th scope="col"><span class="visuallyhidden">Actions</span></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="row, iterStat : *{invites}"
-                                    class="form-group-row-validated"
-                                    th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'form-group-error'">
-                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'form-group-error'">
-                                        <label>
-                                             <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
-                                                 <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
-                                             </th:block>
-                                        </label>
-                                        <input type="text"
-                                               aria-labelledby="invite-label-assessor-name"
-                                               class="form-control width-full"
-                                               required="required"
-                                               minlength="2"
-                                               maxlength="70"
-                                               pattern="\D{2,}"
-                                               th:errorclass="form-control-error"
-                                               th:attr="data-required-errormessage=#{validation.standard.name.required},
-                                                        data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
-                                                        data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
-                                                        data-pattern-errormessage=#{validation.standard.name.invalid}"
-                                               th:name="invites[__${iterStat.index}__].name"
-                                               th:id="invites[__${iterStat.index}__].name"
-                                               th:field="*{invites[__${iterStat.index}__].name}"
-                                        />
-                                    </td>
-                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'form-group-error'">
-                                        <label>
-                                             <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
-                                                 <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
-                                             </th:block>
-                                        </label>
-                                        <input type="email"
-                                               aria-labelledby="invite-label-assessor-email"
-                                               class="form-control width-full"
-                                               required="required"
-                                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                                        data-email-errormessage=#{validation.standard.email.format},
-                                                        data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
-                                               th:errorclass="form-control-error"
-                                               th:name="invites[__${iterStat.index}__].email"
-                                               th:id="invites[__${iterStat.index}__].email"
-                                               th:field="*{invites[__${iterStat.index}__].email}"
-                                        />
-                                    </td>
-                                    <td class="alignright width-20-percent">
-                                        <button class="buttonlink remove-another-row"
-                                                name="removeNewUser"
-                                                th:value="${iterStat.index}"
-                                                type="submit">
-                                            Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <p class="alignright extra-margin">
-                                <button class="buttonlink" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor in this area</button>
-                            </p>
-
-                            <div class="alignright extra-margin-top">
-                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessors to list</button>
+                                <select th:field="*{selectedInnovationArea}"
+                                        class="govuk-select"
+                                        data-progressive-group-select="Innovation sector"
+                                        data-progressive-group-select-instruction="Please select an innovation sector"
+                                        data-progressive-group-select-id="selectedInnovationArea"
+                                        required="required"
+                                        th:errorclass="govuk-select--error"
+                                        th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required},
+                                                 data-progressive-group-select-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
+                                        aria-labelledby="innovation-area"
+                                        id="grouped-innovation-area">
+                                    <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
+                                    <optgroup th:if="${innovationSector.name != 'Open'}" th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                        <option th:each="innovationArea : ${innovationSector.children}"
+                                                th:value="${innovationArea.id}"
+                                                th:text="${innovationArea.name}"
+                                                th:selected="*{selectedInnovationArea} == ${innovationArea.id}"></option>
+                                    </optgroup>
+                                </select>
                             </div>
+                            <div class="govuk-form-group">
+                                <table class="govuk-table" id="invite-table">
+                                    <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th id="invite-label-assessor-name" class="govuk-table__header" scope="col">Name</th>
+                                        <th id="invite-label-assessor-email" class="govuk-table__header" scope="col">Email</th>
+                                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="govuk-table__body">
+                                    <tr class="govuk-table__row form-group-row-validated" th:each="row, iterStat : *{invites}"
+                                        th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'govuk-form-group--error'">
+                                        <td class="govuk-table__cell width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'govuk-form-group--error'">
+                                            <label>
+                                                 <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
+                                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
+                                                 </th:block>
+                                            </label>
+                                            <input type="text"
+                                                   aria-labelledby="invite-label-assessor-name"
+                                                   class="govuk-input"
+                                                   required="required"
+                                                   minlength="2"
+                                                   maxlength="70"
+                                                   pattern="\D{2,}"
+                                                   th:errorclass="govuk-input--error"
+                                                   th:attr="data-required-errormessage=#{validation.standard.name.required},
+                                                            data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
+                                                            data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
+                                                            data-pattern-errormessage=#{validation.standard.name.invalid}"
+                                                   th:name="invites[__${iterStat.index}__].name"
+                                                   th:id="invites[__${iterStat.index}__].name"
+                                                   th:field="*{invites[__${iterStat.index}__].name}"
+                                            />
+                                        </td>
+                                        <td class="govuk-table__cell width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'govuk-form-group--error'">
+                                            <label>
+                                                 <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
+                                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
+                                                 </th:block>
+                                            </label>
+                                            <input type="email"
+                                                   aria-labelledby="invite-label-assessor-email"
+                                                   class="govuk-input"
+                                                   required="required"
+                                                   th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                                            data-email-errormessage=#{validation.standard.email.format},
+                                                            data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
+                                                   th:errorclass="govuk-input--error"
+                                                   th:name="invites[__${iterStat.index}__].email"
+                                                   th:id="invites[__${iterStat.index}__].email"
+                                                   th:field="*{invites[__${iterStat.index}__].email}"
+                                            />
+                                        </td>
+                                        <td class="govuk-table__cell alignright width-20-percent">
+                                            <button class="button-clear remove-another-row"
+                                                    name="removeNewUser"
+                                                    th:value="${iterStat.index}"
+                                                    type="submit">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <p class="alignright govuk-!-margin-top-6">
+                                    <button class="button-clear" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor in this area</button>
+                                </p>
+
+                                <div class="alignright">
+                                    <button type="submit" name="inviteNewUsers" class="govuk-button govuk-!-margin-0">Add assessors to list</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </details>
+
+                <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
+
+                    <div class="govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half">
+                            <span class="govuk-body govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                            <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
                         </div>
-                    </form>
-                </div>
-            </details>
-
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
-
-                <div class="grid-row sorting">
-                    <div class="column-half">
-                        <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                        <span class="heading-small">assessors</span>
+                        <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
+                            <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-bottom-0">Review and send invites</a>
+                        </div>
                     </div>
-                    <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                        <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+
+                    <div class="table-overflow">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Assessor name</th>
+                                <th class="govuk-table__header" scope="col">Email address</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                                <td scope="col" class="govuk-table__header alignright">
+                                    <button name="removeAll" class="button-clear alignright"
+                                            th:if="${!#lists.isEmpty(model.assessors)}">
+                                        Remove all
+                                    </button>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
+                                <td class="govuk-table__cell">
+                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
+                                       th:if="${assessor.id}"
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">John Barnes
+                                    </a>
+                                    <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
+                                </td>
+                                <td class="govuk-table__cell" th:text="${assessor.email}">dave@email.com</td>
+                                <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Earth Observation</td>
+                                <td class="govuk-table__cell">
+                                    <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                                    <span class="no" th:unless="${assessor.compliant}">No</span>
+                                </td>
+                                <td class="govuk-table__cell alignright">
+                                    <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
+                                        Remove <span aria-hidden="true" th:text="${assessor.name}">John Barnes </span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.assessors)}">
+                                <td class="govuk-table__cell" colspan="5">There are no assessors to be invited to this competition.</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-
-                <div class="table-overflow">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col">Innovation area</th>
-                            <th scope="col">Contract and DOI</th>
-                            <td scope="col" class="alignright">
-                                <button name="removeAll" class="buttonlink alignright"
-                                        th:if="${!#lists.isEmpty(model.assessors)}">
-                                    Remove all
-                                </button>
-                            </td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="assessor : ${model.assessors}">
-                            <td>
-                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
-                                   th:if="${assessor.id}"
-                                   th:text="${assessor.name}">John Barnes
-                                </a>
-                                <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
-                            </td>
-                            <td th:text="${assessor.email}">dave@email.com</td>
-                            <td th:text="${assessor.innovationAreas}">Earth Observation</td>
-                            <td>
-                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                                <span class="no" th:unless="${assessor.compliant}">No</span>
-                            </td>
-                            <td class="alignright">
-                                <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
-                                    <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
-                                </button>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(model.assessors)}">
-                            <td colspan="5">There are no assessors to be invited to this competition.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
-
+                </form>
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />
