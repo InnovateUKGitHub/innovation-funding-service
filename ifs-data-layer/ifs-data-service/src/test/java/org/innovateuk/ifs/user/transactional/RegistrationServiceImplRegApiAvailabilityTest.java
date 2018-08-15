@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import opennlp.tools.coref.sim.Gender;
 import org.hibernate.Hibernate;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
@@ -11,7 +12,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -59,9 +59,7 @@ public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthentic
                     withFirstName("Bob").
                     withLastName("Spiggot").
                     withEmail("thebspig@example.com").
-                    withGender(Gender.MALE).
                     withPassword("thebspig").
-                    withEthnicity(newEthnicityResource().build()).
                     withRoles(emptyList()).
                     build();
 
@@ -93,14 +91,13 @@ public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthentic
                     withFirstName("Bob").
                     withLastName("Spiggot").
                     withEmail("thebspig@example.com").
-                    withGender(Gender.MALE).
                     withPassword("thebspig").
                     build();
 
             databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                 // assert that we got a failure indicating that the Registration API was not available
-                ServiceResult<UserResource> result = registrationService.createUserWithCompetitionContext(competition.getId(), registrationInfo);
+                ServiceResult<UserResource> result = registrationService.createUserWithCompetitionContext(competition.getId(), organisation.getId(), registrationInfo);
                 assertThat(result.isFailure()).isTrue();
                 assertThat(result.getFailure().is(new Error(GENERAL_UNEXPECTED_ERROR, SERVICE_UNAVAILABLE))).isTrue();
             });

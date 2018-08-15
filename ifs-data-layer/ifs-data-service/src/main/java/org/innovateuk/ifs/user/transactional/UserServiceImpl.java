@@ -17,7 +17,6 @@ import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -91,9 +90,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private EthnicityMapper ethnicityMapper;
 
     @Autowired
     private UserOrganisationRepository userOrganisationRepository;
@@ -201,9 +197,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
-        existingUser.setGender(updatedUserResource.getGender());
-        existingUser.setDisability(updatedUserResource.getDisability());
-        existingUser.setEthnicity(ethnicityMapper.mapIdToDomain(updatedUserResource.getEthnicity()));
         existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

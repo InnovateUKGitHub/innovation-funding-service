@@ -54,8 +54,8 @@ the applicant completes the application details
     the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
-     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]  # the Edit link
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.button-clear[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.button-clear[name="mark_as_incomplete"]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -114,10 +114,10 @@ the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
-    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
+    the user should see the element            jQuery=input.govuk-input[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-role]:text[value=""]:first    anotherrole
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=button:contains("Labour")
 
 the user fills in Overhead costs
@@ -159,7 +159,7 @@ the user fills in Material
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery=button:contains("Capital usage")
-    the user enters text to a text field  css=textarea.form-control[name^=capital_usage-description]  some description
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=capital_usage-description]  some description
     Click Element                         jQuery=label:contains("New")
     the user enters text to a text field  css=.form-finances-capital-usage-depreciation  10
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
@@ -172,9 +172,9 @@ the user fills in Capital usage
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     the user enters text to a text field  css=.form-finances-subcontracting-company  SomeName
-    the user enters text to a text field  css=input.form-control[name^=subcontracting-country]  Netherlands
-    the user enters text to a text field  css=textarea.form-control[name^=subcontracting-role]  Quality Assurance
-    the user enters text to a text field  css=input.form-control[name^=subcontracting-subcontractingCost]  1000
+    the user enters text to a text field  css=input.govuk-input[name^=subcontracting-country]  Netherlands
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=subcontracting-role]  Quality Assurance
+    the user enters text to a text field  css=input.govuk-input[name^=subcontracting-subcontractingCost]  1000
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -187,8 +187,8 @@ the user fills in Travel and subsistence
 the user fills in Other costs
     the user clicks the button/link       jQuery=button:contains("Other costs")
     the user removes prev costs if there are any
-    the user enters text to a text field  css=textarea.form-control[name^=other_costs-description]  some other costs
-    the user enters text to a text field  css=input.form-control[name^=other_costs-otherCost]  50
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=other_costs-description]  some other costs
+    the user enters text to a text field  css=input.govuk-input[name^=other_costs-otherCost]  50
     the user clicks the button/link       jQuery=button:contains("Other costs")
 
 the user removes prev costs if there are any
@@ -234,7 +234,7 @@ the user fills the organisation details with Project growth table
     the user enters text to a text field                    jQuery=td:contains("Annual profit") + td input    3000
     the user enters text to a text field                    jQuery=td:contains("Annual export") + td input    4000
     the user enters text to a text field                    jQuery=td:contains("Research and development spend") + td input    5660
-    the user enters text to a text field                    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field                    jQuery=.govuk-hint:contains("employees") + input    0
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
 
 the user fills in the organisation information
@@ -244,8 +244,8 @@ the user fills in the organisation information
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
     the user selects the radio button  financePosition-organisationSize  ${org_size}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input   3
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input   3
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
     the user should see the element       jQuery=button:contains("Edit")
@@ -295,11 +295,11 @@ Invite a non-existing collaborator
 
 the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
-    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
+    the user clicks the button/link                 jQuery=.govuk-button:contains("Continue or sign in")
     The guest user inserts user email and password  ${email}  ${password}
     The guest user clicks the log-in button
     the user should see the element                 jQuery=h1:contains("Select organisation")
-    the user clicks the button/link                 css=.button[type="submit"]         #jQuery=.button:contains("Confirm and accept invitation")
+    the user clicks the button/link                 css=.button[type="submit"]
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
@@ -393,8 +393,8 @@ the user navigates to the eligibility of the competition
 the applicant submits the application
     the user clicks the button/link                    link=Review and submit
     the user should not see the element                jQuery=.task-status-incomplete
-    the user clicks the button/link                    jQuery=.button:contains("Submit application")
-    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user clicks the button/link                    jQuery=.govuk-button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  submit
 
 the user applies to competition and enters organisation type

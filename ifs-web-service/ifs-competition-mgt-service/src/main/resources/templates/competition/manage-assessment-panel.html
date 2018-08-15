@@ -1,75 +1,80 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment panel'" />
 </head>
 
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Competition',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
 
-    <div class="no-constrain-width justify-left">
-        <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='govuk-heading-xl'" />
 
-        <div class="grid-row">
-            <div class="column-quarter">
+        <p class="govuk-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
                 <!--/* TODO not sure we actually need to be in a form */-->
                <form th:action="@{/competition}" method="post">
-               <button class="button width-full" type="submit"
+               <button class="govuk-button" type="submit"
                        th:disabled="${!model.pendingReviewNotifications}"
                        th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
                </form>
            </div>
         </div>
 
-        <h2 class="heading-medium">Key statistics</h2>
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
-        <ul class="grid-row">
-            <li class="column-quarter">
+        <ul class="govuk-list govuk-grid-row">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsInvited}"></span><br /><small>Assessors pending</small>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}"></span>
+                    <small>Assessors pending</small>
                 </div>
             </li>
 
-            <li class="column-quarter">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsAccepted}"></span>
+                    <small>Assessors accepted</small>
                 </div>
             </li>
 
-            <li class="column-quarter">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.applicationsInPanel}"></span><br /><small>Applications assigned to panel</small>
+                    <span class="govuk-heading-l  govuk-!-margin-0" th:text="${model.applicationsInPanel}"></span>
+                    <small>Applications assigned to panel</small>
                 </div>
             </li>
         </ul>
 
-        <h2 class="heading-medium">Panel navigation</h2>
+        <h2 class="govuk-heading-m">Panel navigation</h2>
 
-        <ul class="link-list">
+        <ul class="govuk-list link-list">
             <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
 
             <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-                   th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}">
+                   th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}"
+                   class="govuk-link">
                 Assign applications to panel
                 </a>
                 <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-                   class="disabled" aria-disabled="true" >
+                   class="govuk-link disabled" aria-disabled="true" >
                     Assign applications to panel
                 </a>
             </li>
 
-            <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
+            <li><a class="govuk-link disabled" aria-disabled="true">Allocate applications to assessors</a></li>
         </ul>
-    </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

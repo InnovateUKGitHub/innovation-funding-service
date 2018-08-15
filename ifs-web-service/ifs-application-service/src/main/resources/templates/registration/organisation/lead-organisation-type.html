@@ -1,81 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
-<body class="create-application-organisation">
+<body class="govuk-template__body create-application-organisation">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-    <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-      <ul class="error-summary-list">
-          <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
-              <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-              <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
-          </li>
-      </ul>
-    </div>
-
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">Start new application</span>
-        Choose organisation type
-    </h1>
-
-    <div class="message-alert extra-margin-bottom">
-        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
-    </div>
-
-    <p class="extra-margin">This is the organisation that will lead the application.</p>
-
-    <form id="lead-organisation-type-form"
-          th:object="${organisationForm}"
-          th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
-            <fieldset>
-                <legend class="extra-margin-bottom" id="organisationTypeId">
-                    <span class="visuallyhidden">Please select your organisation type</span>
-                    <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
-                    </th:block>
-                </legend>
-                <th:block th:each="type : ${model.types}">
-                    <div class="multiple-choice" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
-                        <input th:id="'radio-'+ ${type.id}" type="radio"
-                               th:field="*{organisationTypeId}"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
-                               th:value="${type.id}" />
-                        <label th:for="'radio-'+ ${type.id}">
-                            <span th:text="${type.name}"></span>
-                            <span class="form-hint" th:text="${type.description}"></span>
-                        </label>
-                    </div>
-                    <div th:if="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="panel">
-                        <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
-                        <ul class="list-bullet">
-                            <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
-                            <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
-                        </ul>
-                    </div>
-                </th:block>
-
-            </fieldset>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                  <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
+                      <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
+                      <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                  </li>
+                </ul>
+            </div>
         </div>
 
+        <h1 class="govuk-heading-xl">
+            <span class="govuk-caption-xl">Start new application</span>
+            Choose your organisation type
+        </h1>
 
-        <p>
-            If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
-        </p>
-        <button id="lead-organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Save and continue</button>
-    </form>
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
+        </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <p class="govuk-body govuk-!-margin-top-6">This is the organisation that will lead the application.</p>
+
+         <form id="lead-organisation-type-form"
+               th:object="${organisationForm}"
+               th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
+             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'govuk-form-group--error'">
+                 <fieldset class="govuk-fieldset">
+                     <legend class="govuk-fieldset__legend govuk-visually-hidden" id="organisationTypeId">
+                        <span class="govuk-fieldset__heading">Please select your organisation type</span>
+                     </legend>
+                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
+                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
+                     </th:block>
+                     <div class="govuk-radios">
+                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}" th:each="type : ${model.types}">
+                            <input th:id="'radio-'+ ${type.id}" type="radio"
+                                   class="govuk-radios__input"
+                                   th:field="*{organisationTypeId}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                                   th:value="${type.id}" />
+                            <label th:for="'radio-'+ ${type.id}"
+                                   class="govuk-label govuk-radios__label">
+                                <span th:text="${type.name}"></span>
+                                <span class="govuk-hint" th:text="${type.description}"></span>
+                            </label>
+                            <div th:if="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
+                                <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
+                                    <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+            <p class="govuk-body">
+                If your organisation type is not listed contact the <a th:href="@{/info/contact}" class="govuk-link">customer support service</a>.
+            </p>
+            <button id="lead-organisation-type-cta" class="govuk-button govuk-!-margin-top-6" name="select-company-type" type="submit">Save and continue</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

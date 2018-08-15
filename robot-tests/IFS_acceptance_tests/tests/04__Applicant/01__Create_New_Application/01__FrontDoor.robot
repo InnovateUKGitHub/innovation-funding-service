@@ -83,7 +83,7 @@ Guest user can see the public information of an unopened competition
     And the user should see the element    jQuery=li:contains("Friday 16 April 2018")
     And the user should see the text in the page    This competition has not yet opened.
     And the user should not see the text in the page    Or sign in to continue an existing application
-    And the user should see the element    jQuery=.button:contains("Start new application")
+    And the user should see the element    jQuery=.govuk-button:contains("Start new application")
 
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
@@ -104,7 +104,7 @@ Guest user can see the public information of a competition
     And the user should see the element    jQuery=li:contains("Competition closes")
     And the user should see the element    jQuery=li:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}")
     And the user should see the text in the page    Or sign in to continue an existing application.
-    And the user should see the element    jQuery=.button:contains("Start new application")
+    And the user should see the element    jQuery=.govuk-button:contains("Start new application")
 
 Guest user can see the public Summary of the competition
     [Documentation]    INFUND-6923
@@ -160,8 +160,8 @@ Guest user can apply to a competition
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
-    Then the user should see the element    jQuery=.button:contains("Sign in")
-    And the user should see the element     link=Continue without an account
+    Then the user should see the element    jQuery=.govuk-button:contains("Sign in")
+    And the user should see the element    jQuery=.govuk-button:contains("Continue without an account")
 
 *** Keywords ***
 Close survey window

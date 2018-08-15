@@ -3,11 +3,14 @@
 
 <!-- ===========================Place: <HEAD>=========================== -->
 <th:block th:fragment="head">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
     <!--/* deal with null hasFormErrors for pages that don't have forms */-->
     <th:block th:with="hasFormErrors=${hasFormErrors != null ? hasFormErrors : false}">
-        <title th:text="|${hasFormErrors ? 'Error: ' : ''} ${pageTitle} - Innovation Funding Service|"></title>
+      <title th:text="|${hasFormErrors ? 'Error: ' : ''} ${pageTitle} - Innovation Funding Service|"></title>
     </th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="blue" />
+
     <script type="text/javascript">
       if (!window.console) console = {log: function() {}, warn: function(){}};
     </script>
@@ -15,59 +18,47 @@
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
     </script>
 
-    <!--[if gt IE 9]><!--><link href="/css/screen.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
-    <!--[if IE 7]><link href="/css/ie7.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie7.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 8]><link href="/css/ie8.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 9]><link href="/css/ie9.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie9.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/images/govuk-mask-icon.svg" color="blue">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/govuk-apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/govuk-apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/govuk-apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" href="/images/govuk-apple-touch-icon.png">
 
-    <!--[if gte IE 9]><!-->
-        <script type="text/javascript">
-        <!--//--><![CDATA[//><!--
-            !function(){"use strict";function e(e,t,c){e.addEventListener?e.addEventListener(t,c,!1):e.attachEvent&&e.attachEvent("on"+t,c)}function t(e){return window.localStorage&&localStorage.font_css_cache&&localStorage.font_css_cache_file===e}function c(){if(window.localStorage&&window.XMLHttpRequest)if(t(o))n(localStorage.font_css_cache);else{var e=new XMLHttpRequest;e.open("GET",o,!0),e.onreadystatechange=function(){4===e.readyState&&(n(e.responseText),localStorage.font_css_cache=e.responseText,localStorage.font_css_cache_file=o)},e.send()}else{var c=document.createElement("link");c.href=o,c.rel="stylesheet",c.type="text/css",document.getElementsByTagName("head")[0].appendChild(c),document.cookie="font_css_cache"}}function n(e){var t=document.createElement("style");t.setAttribute("type","text/css"),t.styleSheet?t.styleSheet.cssText=e:t.innerHTML=e,document.getElementsByTagName("head")[0].appendChild(t)}var o="/css/fonts.css";window.localStorage&&localStorage.font_css_cache||document.cookie.indexOf("font_css_cache")>-1?c():e(window,"load",c)}();
-        //--><!]]>
-        </script>
+    <!--[if !IE 8]><!-->
+    <link th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}}" rel="stylesheet"  media="all" />
     <!--<![endif]-->
 
-    <!--[if lt IE 9]>
-        <script src="/js/vendor/govuk/ie.js" th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/vendor/govuk/ie.js')}}" type="text/javascript"></script>
+    <!--[if IE 8]>
+    <link th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}}" rel="stylesheet"  media="all" />
     <![endif]-->
 
-    <link rel="shortcut icon" href="/images/favicon.ico" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/favicon.ico')}" type="image/x-icon" />
+    <!--[if lt IE 9]>
+    <script th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/vendor/html5shiv/html5shiv.js')}}"></script>
+    <![endif]-->
 
-    <!-- Size for iPad and iPad mini (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/apple-touch-icon-152x152.png" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/apple-touch-icon-152x152.png')}"/>
-    <!-- Size for iPhone and iPod touch (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/images/apple-touch-icon-120x120.png" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/apple-touch-icon-120x120.png')}"/>
-    <!-- Size for iPad 2 and iPad mini (standard resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/images/apple-touch-icon-76x76.png" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/apple-touch-icon-76x76.png')}"/>
-    <!-- Default non-defined size, also used for Android 2.1+ devices -->
-    <link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-60x60.png" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/apple-touch-icon-60x60.png')}"/>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:image" content="/images/opengraph-image.png" th:content="${@mvcResourceUrlProvider.getForLookupPath('/images/opengraph-image.png')}"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta property="og:image" th:content="${@mvcResourceUrlProvider.getForLookupPath('/images/govuk-opengraph-image.png')}">
 
     <script type="text/javascript" th:inline="javascript" th:if="${dataLayer}">
-        dataLayer = [ [[${dataLayer}]] ];
+      dataLayer = [ [[${dataLayer}]] ];
     </script>
 
     <!-- Google Tag Manager -->
     <script type="text/javascript" th:inline="javascript" th:if="${GoogleAnalyticsTrackingID}">
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer',/*[[${GoogleAnalyticsTrackingID}]]*/);
+      })(window,document,'script','dataLayer',/*[[${GoogleAnalyticsTrackingID}]]*/);
     </script>
     <!-- End Google Tag Manager -->
-
 </th:block>
 
 <!-- ===========================Place: <body> start =========================== -->
 
 <th:block th:fragment="body-start">
     <!--/* Changes body class from no-js to js when js is enabled */-->
-    <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <!-- Google Tag Manager (noscript) -->
     <noscript th:if="${GoogleAnalyticsTrackingID}"><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
@@ -87,112 +78,143 @@
 <!-- ===========================Place: main <header>  =========================== -->
 
 <th:block th:fragment="global-header">
-    <header role="banner" id="global-header" class="with-proposition">
-      <th:block th:insert="fragments/elements :: notification" />
-      <div class="header-wrapper">
-            <div class="header-global">
-                <th:block th:insert="fragments/elements :: header-logo" />
-            </div>
-            <div class="header-proposition">
-              <div class="content">
-                <a href="#proposition-links" class="js-header-toggle menu" th:unless="${hidePropositionLinks}">Menu</a>
+    <header class="govuk-header" role="banner" data-module="header">
+        <th:block th:insert="fragments/elements :: notification" />
+        <div class="govuk-header__container govuk-width-container">
+            <div class="govuk-header__logo">
+                <a href="https://www.gov.uk/" class="govuk-header__link govuk-header__link--homepage">
+                    <span class="govuk-header__logotype">
+                        <svg
+                            role="presentation"
+                            focusable="false"
+                            class="govuk-header__logotype-crown"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewbox="0 0 132 97"
+                            height="32"
+                            width="36"
+                        >
+                            <path
+                                fill="currentColor" fill-rule="evenodd"
+                                d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z"
+                            ></path>
 
-                <nav id="proposition-menu">
-                    <div th:insert="fragments/elements :: header-links" th:with="hideDashboardLink=${hideDashboardLink}, hidePropositionLinks=${hidePropositionLinks}"></div>
-                </nav>
-              </div>
+                            <image th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/govuk-logotype-crown.png')}" class="govuk-header__logotype-crown-fallback-image"></image>
+                        </svg>
+                        <span class="govuk-header__logotype-text">
+                            GOV.UK
+                        </span>
+                    </span>
+                </a>
+            </div><div class="govuk-header__content">
+
+                <a href="/competition/search" class="govuk-header__link govuk-header__link--service-name">
+                    Innovation Funding Service
+                </a>
+
+                <button role="button"
+                        class="govuk-header__menu-button js-header-toggle"
+                        aria-controls="navigation"
+                        aria-label="Show or hide Top Level Navigation"
+                        th:unless="${hidePropositionLinks}">Menu</button>
+                <th:block th:include="fragments/elements :: header-links"
+                          th:with="hideDashboardLink=${hideDashboardLink},
+                                   loggedIn=${#authentication} ? ${#authorization.expression('isAuthenticated()')} : false"
+                          th:unless="${hidePropositionLinks}"></th:block>
             </div>
         </div>
     </header>
+</th:block>
 
-    <div class="grid-container phase-banner" th:classappend="${fullwidth != null} ? 'full-width'">
-      <p>
-        <strong class="phase-tag">BETA</strong>
-        <span>This is a new service – your <a target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.</span>
-      </p>
+<!-- ===========================Place: <main> phase-banner =========================== -->
+
+<th:block th:fragment="phase-banner">
+    <div class="govuk-phase-banner">
+        <p class="govuk-phase-banner__content">
+            <strong class="govuk-tag govuk-phase-banner__content__tag ">
+                BETA
+            </strong>
+            <span class="govuk-phase-banner__text">
+                This is a new service – your <a class="govuk-link" target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.
+            </span>
+        </p>
     </div>
 </th:block>
 
 <!-- ===========================Place: <main> content-end =========================== -->
 
 <th:block th:fragment="main-content-end">
-    <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
+    <p class="govuk-body govuk-!-margin-top-9 govuk-!-font-weight-bold user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
 </th:block>
 
 
 <!-- ===========================Place: main <footer>  =========================== -->
 
 <th:block th:fragment="footer">
+    <footer class="govuk-footer" role="contentinfo">
+        <div class="govuk-width-container">
+            <div class="govuk-footer__meta">
+                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+                    <h2 class="govuk-visually-hidden">Support links</h2>
+                    <ul class="govuk-footer__inline-list">
+                        <li class="govuk-footer__inline-list-item"><a href="https://www.gov.uk/government/organisations/innovate-uk" target="_blank" class="govuk-footer__link">Innovate UK</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="https://www.gov.uk/guidance/innovation-apply-for-a-funding-award" target="_blank" class="govuk-footer__link">Innovation funding advice</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="https://connect.innovateuk.org/events" target="_blank" class="govuk-footer__link">Events</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="https://www.gov.uk/guidance/innovation-get-support-and-advice" target="_blank" class="govuk-footer__link">Connect to innovation experts</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="https://innovateuk.blog.gov.uk/" target="_blank" class="govuk-footer__link">Innovate UK blog</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="https://www.gov.uk/help/accessibility" target="_blank" class="govuk-footer__link">GOV.UK accessibility</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="/info/terms-and-conditions" class="govuk-footer__link">Terms and conditions</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="/info/contact" class="govuk-footer__link">Contact us</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="http://info.innovateuk.org/emailpref" target="_blank" class="govuk-footer__link">Sign up for competition updates</a></li>
+                        <li class="govuk-footer__inline-list-item"><a href="/competition/search" class="govuk-footer__link">Latest funding opportunities</a></li>
+                    </ul>
+                    <p class="govuk-!-margin-top-6">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-footer__link">Find out more about cookies</a>.</p>
 
-  <footer class="group js-footer" id="footer" role="contentinfo">
-
-      <div class="footer-wrapper">
-
-        <div class="footer-meta">
-          <div class="footer-meta-inner">
-            <h2 class="visuallyhidden">Support links</h2>
-            <ul>
-              <li><a href="https://www.gov.uk/government/organisations/innovate-uk" target="_blank">Innovate UK</a></li>
-              <li><a href="https://www.gov.uk/guidance/innovation-apply-for-a-funding-award" target="_blank">Innovation funding advice</a></li>
-              <li><a href="https://connect.innovateuk.org/events" target="_blank">Events</a></li>
-              <li><a href="https://www.gov.uk/guidance/innovation-get-support-and-advice" target="_blank">Connect to innovation experts</a></li>
-              <li><a href="https://innovateuk.blog.gov.uk/" target="_blank">Innovate UK blog</a></li>
-              <li><a href="https://www.gov.uk/help/accessibility" target="_blank">GOV.UK accessibility</a></li>
-              <li><a href="/info/terms-and-conditions">Terms and conditions</a></li>
-              <li><a href="/info/contact">Contact us</a></li>
-              <li><a href="http://info.innovateuk.org/emailpref" target="_blank">Sign up for competition updates</a></li>
-              <li><a href="/competition/search">Latest funding opportunities</a></li>
-              <li><div class="extra-margin">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a>.</div></li>
-            </ul>
-            <div class="open-government-licence">
-              <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-              <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+                    <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">
+                        <path
+                            fill="currentColor"
+                            d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+                        />
+                    </svg>
+                    <span class="govuk-footer__licence-description">
+                    All content is available under the
+                    <a class="govuk-footer__link"
+                       href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+                       rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+                    </span>
+                </div>
+                <div class="govuk-footer__meta-item">
+                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+                </div>
             </div>
-          </div>
-
-          <div class="copyright">
-            <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">&copy; Crown copyright</a>
-          </div>
         </div>
-      </div>
     </footer>
 </th:block>
+
 <!-- =========================== Element : page-title =========================== -->
 <th:block th:fragment="page-title">
-    <h1 th:class="${#strings.isEmpty(size)} ? 'heading-large' : ${size}">
-        <span class="heading-secondary" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
+    <h1 th:class="${#strings.isEmpty(size)} ? 'govuk-heading-l' : ${size}">
+        <span class="govuk-caption-l" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
         <th:block th:text="${pageTitle}" />
         <small th:unless="${#strings.isEmpty(smallText)}" th:text="${smallText}"></small>
     </h1>
 </th:block>
 
-
-
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
     <div class="sub-header">
-        <nav>
-            <span th:if="${javascriptBackLink}"
-                  th:attr="data-javascript-back-link=${linkTitle}"></span>
-            <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
-               th:class="${linkClass != null ? linkClass : ''}"
-               th:href="${linkUrl}"
-               th:text="${linkTitle}" />
-        </nav>
-        <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}"><th:block th:text="${currentCompetition.getDaysLeft()}" /> days left to submit</div>
-    </div>
-</th:block>
-
-
-<th:block th:fragment="header-sub-generic">
-    <div class="sub-header">
-        <div class="deadline">
-            <th:block th:text="${deadlineText}" />
-            <span th:text="${daysLeft}"></span>
+        <span th:if="${javascriptBackLink}"
+              class="govuk-back-link"
+              th:attr="data-javascript-back-link=${linkTitle}"></span>
+        <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
+           class="govuk-back-link"
+           th:href="${linkUrl}"
+           th:text="${linkTitle}" />
+        <div class="deadline"
+             th:if="${currentCompetition != null && currentCompetition.open}">
+            <th:block th:text="${currentCompetition.getDaysLeft()}" />
+            days left to submit
         </div>
-        <strong th:text="${title}" />
     </div>
 </th:block>
-
 
 </html>

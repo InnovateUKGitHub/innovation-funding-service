@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
 </head>
-<body class="create-application-organisation">
+<body class="govuk-template__body create-application-organisation">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Start new application',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-    <div class="message-alert">
-        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='govuk-heading-xl'" />
 
-    <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
+        <div class="message-alert">
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
+        </div>
 
-    <form method="post" th:action="@{/organisation/create/save-organisation}">
-        <button name="save-organisation" class="button extra-margin">Save and continue</button>
-    </form>
+        <p th:if="${isLeadApplicant}" class="govuk-body govuk-!-margin-top-6">This organisation will lead the application.</p>
+        <p th:unless="${isLeadApplicant}" class="govuk-body govuk-!-margin-top-6">This is the organisation that you will join the application with.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
+
+        <form method="post" th:action="@{/organisation/create/save-organisation}">
+            <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

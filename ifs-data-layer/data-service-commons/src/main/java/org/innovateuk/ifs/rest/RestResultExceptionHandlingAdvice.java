@@ -26,22 +26,27 @@ public class RestResultExceptionHandlingAdvice {
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public void requestMapping() {
+        // does nothing
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void getMapping() {
+        // does nothing
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public void postMapping() {
+        // does nothing
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
     public void putMapping() {
+        // does nothing
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
     public void deleteMapping() {
+        // does nothing
     }
 
     @Around("(requestMapping() || getMapping() || postMapping() || putMapping() || deleteMapping())" +

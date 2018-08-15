@@ -72,8 +72,8 @@ Guidance in the your project costs
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
     When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link     css=#collapsible-0 summary
-    Then the user should see the element    css=#details-content-0 p
+    And the user clicks the button/link     css=.govuk-details summary
+    Then the user should see the element    css=.govuk-details__text p
     And the user should see the element     css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
@@ -97,11 +97,11 @@ Non-academic partner finance section
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    And The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    And The user should see the element      JQuery=.govuk-details__summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     When the user clicks the button/link    link=Your funding
-    Then the user should see the element    jQuery=.list li:contains("the lead applicant must select a research category")
+    Then the user should see the element    jQuery=.govuk-list li:contains("the lead applicant must select a research category")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
@@ -122,7 +122,7 @@ Academic partner can upload file for field J-es PDF
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
-    then the user should see the element       css=label[class="button-secondary extra-margin"]
+    then the user should see the element       jQuery=label.button-secondary
     and the user uploads the file  css=.upload-section input  ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
@@ -176,7 +176,7 @@ the user adds three material rows
     the user expands the section          Materials
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
     ${pagination}=  Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css=#material-costs-table tr:nth-of-type(2)
-    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .buttonlink:contains("Remove")
+    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .button-clear:contains("Remove")
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
@@ -206,8 +206,8 @@ the user navigates to another page
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093
-    the user should see the element           css=#details-content-0 p
+    the user should see the element           css=.govuk-details__text p
 
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
-    the user should not see the element           css=#details-content-0 p
+    the user should not see the element           css=.govuk-details__text p

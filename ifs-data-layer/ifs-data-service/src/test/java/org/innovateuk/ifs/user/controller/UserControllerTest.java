@@ -112,11 +112,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void createUserWithCompetitionId() throws Exception {
-        final Long organisationId = 9999L;
-        final Long competitionId = 8888L;
+        final long organisationId = 9999L;
+        final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, userResource);
+        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, organisationId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 

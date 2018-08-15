@@ -40,7 +40,7 @@ Bank details section is read-only
     When the user clicks the button/link    link=Bank details
     Then the user should not see the element    name=accountNumber
     And the user should not see the element    name=sortCode
-    And the user should not see the element    jQuery=.button:contains("Submit bank account details")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit bank account details")
     [Teardown]    the user goes back to the previous page
 
 Spend profile section is read-only
@@ -48,15 +48,15 @@ Spend profile section is read-only
     [Tags]
     When the user clicks the button/link    link=Spend profile
     And the user clicks the button/link    link=${Cogilith_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Kazio_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Gabtype_NAME}
-    Then the user should not see the element    jQuery=.button:contains("edit spend profile")
+    Then the user should not see the element    jQuery=.govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
 
@@ -67,7 +67,7 @@ Other documents section is read-only
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -75,7 +75,7 @@ Grant offer letter section is read-only
     [Documentation]    INFUND-6376
     [Tags]
     When the user clicks the button/link    link=Grant offer letter
-    Then the user should not see the element    jQuery=.button:contains("Send signed offer letter")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Send signed offer letter")
     And the user should not see the text in the page    Remove
     And the user should not see the element   name=signedGrantOfferLetter
 
@@ -114,7 +114,7 @@ Bank details section is read-only for industrial partner
     When the user clicks the button/link    link=Bank details
     Then the user should not see the element    name=accountNumber
     And the user should not see the element    name=sortCode
-    And the user should not see the element    jQuery=.button:contains("Submit bank account details")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit bank account details")
     [Teardown]    the user goes back to the previous page
 
 Spend profile section is read-only for industrial partner
@@ -122,15 +122,15 @@ Spend profile section is read-only for industrial partner
     [Tags]
     When the user clicks the button/link    link=Spend profile
     And the user clicks the button/link    link=${Cogilith_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Kazio_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Gabtype_NAME}
-    Then the user should not see the element    jQuery=.button:contains("edit spend profile")
+    Then the user should not see the element    jQuery=.govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
 
@@ -141,7 +141,7 @@ Other documents section is read-only for industrial partner
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -149,7 +149,7 @@ Grant offer letter section is read-only for industrial partner
     [Documentation]    INFUND-6376
     [Tags]
     When the user clicks the button/link    link=Grant offer letter
-    Then the user should not see the element    jQuery=.button:contains("Send signed offer letter")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Send signed offer letter")
     And the user should not see the text in the page    Remove
     And the user should not see the element   name=signedGrantOfferLetter
 
@@ -189,7 +189,7 @@ Bank details section is read-only for academic partner
     When the user clicks the button/link    link=Bank details
     Then the user should not see the element    name=accountNumber
     And the user should not see the element    name=sortCode
-    And the user should not see the element    jQuery=.button:contains("Submit bank account details")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit bank account details")
     [Teardown]    the user goes back to the previous page
 
 Spend profile section is read-only for academic partner
@@ -197,15 +197,15 @@ Spend profile section is read-only for academic partner
     [Tags]
     When the user clicks the button/link    link=Spend profile
     And the user clicks the button/link    link=${Cogilith_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Kazio_Name}
-    Then the user should not see the element    jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element    jQuery=.button:contains("Allow edits")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user should not see the element    jQuery=.govuk-button:contains("Allow edits")
     And the user goes back to the previous page
     When the user clicks the button/link    link=${Gabtype_NAME}
-    Then the user should not see the element    jQuery=.button:contains("edit spend profile")
+    Then the user should not see the element    jQuery=.govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
 
@@ -216,7 +216,7 @@ Other documents section is read-only for academic partner
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -224,7 +224,7 @@ Grant offer letter section is read-only for academic partner
     [Documentation]    INFUND-6376
     [Tags]
     When the user clicks the button/link    link=Grant offer letter
-    Then the user should not see the element    jQuery=.button:contains("Send signed offer letter")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Send signed offer letter")
     And the user should not see the text in the page    Remove
     And the user should not see the element   name=signedGrantOfferLetter
 
@@ -252,7 +252,7 @@ grant offer letter is sent to users
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     the user clicks the button/link  id=send-gol
-    the user clicks the button/link  jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    the user clicks the button/link  jQuery=.modal-accept-send-gol .govuk-button:contains("Publish to project team")
 
 users upload signed grant offer letter and submit
     log in as a different user       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
@@ -267,4 +267,4 @@ grant offer letter is approved
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     the user selects the radio button  approvalType  acceptGOL
     the user clicks the button/link    id=submit-button
-    the user clicks the button/link    jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
+    the user clicks the button/link    jQuery=.modal-accept-signed-gol .govuk-button:contains("Accept signed grant offer letter")

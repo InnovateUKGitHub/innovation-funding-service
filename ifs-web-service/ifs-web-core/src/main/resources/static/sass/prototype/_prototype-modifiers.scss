@@ -31,7 +31,7 @@
 /*--- Text colour ---*/
 
 .standard-text-colour{
-  color: $text-colour;
+  color: $govuk-text-colour;
 }
 
 /*--- Extra margins ---*/
@@ -67,8 +67,8 @@
 /*--- Borders ---*/
 
 .section-divide{
-  border-top: 1px solid $border-colour;
-  padding-top: $gutter-half;
+  border-top: 1px solid $govuk-border-colour;
+  padding-top: $govuk-gutter-half;
 }
 
 /*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/
@@ -98,7 +98,7 @@ $columns: 20;
 /*--- Dark headers ---*/
 
 .dark-view{
-  background: $secondary-text-colour;
+  background: $govuk-secondary-text-colour;
   color: white;
 }
 
@@ -141,7 +141,7 @@ h2.dark-view{
 
 /*---  ---*/
 .total-cost{
-  .heading-medium{
+  .govuk-heading-m{
     margin-left: 20px;
   	}
 }
@@ -155,27 +155,27 @@ h2.dark-view{
 /*--- Table modifications ---*/
 
 .cell-border-right{
-  border-right: 1px solid $grey-2;
+  border-right: 1px solid govuk-colour("grey-2");
 }
 
 tr.cell-border-right{
   td,
   th{
-    border-right: 1px solid $grey-2;
+    border-right: 1px solid govuk-colour("grey-2");
  	}
 }
 
 .cell-border-top-divide{
   th,
   td{
-    border-top: 1px solid $black;
+    border-top: 1px solid govuk-colour("black");
   }
 }
 
 .cell-border-bottom-divide{
   th,
   td{
-    border-bottom: 1px solid $black;
+    border-bottom: 1px solid govuk-colour("black");
   }
 }
 
@@ -197,7 +197,7 @@ td{
 
 table{
   tfoot{
-    border-top: 3px solid $black;
+    border-top: 3px solid govuk-colour("black");
   }
 }
 
@@ -253,7 +253,7 @@ table{
     //.hgroup,
     .centralise{
       //@extend %site-width-container;
-      //@extend %contain-floats;
+      //@include govuk-clearfix;
       box-sizing: border-box;
     }
 
@@ -288,7 +288,7 @@ table{
 /*--- Boxed content ---*/
 
 .boxed{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px;
   clear: both;
   overflow: auto;
@@ -297,15 +297,15 @@ table{
 /*--- highlight content ---*/
 
 .highlight-panel{
-  background: $highlight-colour;
+  background: govuk-colour("grey-4");
   //padding: 20px 0;
 
-  .button{
+  .govuk-button{
     margin-right: 20px !important;
   }
 }
 
-.grid-row{
+.govuk-grid-row{
   &.highlight-panel{
     margin: 0;
 
@@ -313,7 +313,7 @@ table{
       @extend .extra-margin;
     }
 
-    .button{
+    .govuk-button{
       margin-right: 10px;
     }
 	 }
@@ -343,7 +343,7 @@ table{
 
 .dashboard-internal{
   .dashboard-actions{
-    .button{
+    .govuk-button{
       //padding: em(10) em(15) em(5) em(15);
       //min-height: 80px;
       text-align: center;
@@ -359,21 +359,21 @@ table{
   }
 }
 
-.heading-large{
+.govuk-heading-l{
   &.underline{
-    border-bottom: 4px solid $black;
+    border-bottom: 4px solid govuk-colour("black");
   }
 }
 
-.heading-medium{
+.govuk-heading-m{
   &.underline{
-    border-bottom: 1px solid $black;
+    border-bottom: 1px solid govuk-colour("black");
   }
 }
 
 ul.underline{
   li{
-    border-top: 1px solid $black;
+    border-top: 1px solid govuk-colour("black");
 
     &:first-child{
       border-top: none;
@@ -448,14 +448,14 @@ ul.underline{
 
 /*---Example code areas = taken from style guide---*/
 .result{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   margin-bottom: 15px;
   margin-top: 15px;
   padding: 45px 30px 30px;
   position: relative;
 
   &:before{
-    background: $border-colour;
+    background: $govuk-border-colour;
     color: white;
     content: "EXAMPLE";
     font-size: 15px;
@@ -473,9 +473,9 @@ ul.underline{
 [role="dialog"]{
  &.warning-alert{
   border-left: none;
-  border-top: 10px solid $red;
+  border-top: 10px solid $govuk-error-colour;
   background-position: 20px 2.2em;
-  color: $text-colour;
+  color: $govuk-text-colour;
   padding-left: 60px;
  }
 }
@@ -495,7 +495,7 @@ ul.underline{
   }
 }
 
-.column-one{
+.govuk-grid-column-full{
   padding: 0;
 
   &.select-all{

@@ -1,37 +1,40 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Do you have an account?',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please sign in or create an account',size='govuk-heading-xl'" />
 
-    <div class="grid-row">
+        <div class="govuk-grid-row">
 
-        <section class="column-half extra-margin" th:with="redirectAfterLogin='/application/create-authenticated/'+${competitionId}">
-            <h2 class="heading-large no-margin">Yes</h2>
-            <p>Please sign into your Innovation Funding Service account.</p>
+        <section class="govuk-grid-column-one-half" th:with="redirectAfterLogin='/application/create-authenticated/'+${competitionId}">
+            <h2 class="govuk-heading-l govuk-!-margin-0">Yes</h2>
+            <p class="govuk-body">Please sign into your Innovation Funding Service account.</p>
 
-            <a th:href="${redirectAfterLogin}" class="button">Sign in</a>
+            <a th:href="${redirectAfterLogin}" class="govuk-button">Sign in</a>
         </section>
 
-        <section class="column-half extra-margin" th:with="createUrl='/organisation/create/initialize'">
-            <h2 class="heading-large no-margin">No</h2>
-            <p>You will be asked to create an account later.</p>
+        <section class="govuk-grid-column-one-half" th:with="createUrl='/organisation/create/initialize'">
+            <h2 class="govuk-heading-l govuk-!-margin-0">No</h2>
+            <p class="govuk-body">Please create a new account to start your application.</p>
 
-            <a th:href="${createUrl}" class="button">Continue without an account</a>
-        </section>
-    </div>
+                <a th:href="${createUrl}" class="govuk-button" value="create-account" type="submit">Continue and create an account</a>
+            </section>
+        </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

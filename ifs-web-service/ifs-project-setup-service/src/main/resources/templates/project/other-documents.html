@@ -1,231 +1,239 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="project-other-documents">
+<body class="govuk-template__body project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:if="${model.collaborationAgreementRequired}" th:insert="fragments/modals :: modal-partner-documents" />
 <th:block th:unless="${model.collaborationAgreementRequired}" th:insert="fragments/modals :: modal-partner-document" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
-    <div th:if="${model.isShowApprovedMessage()}" class="success-alert">
-        <th:block th:if="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small no-margin">These documents have been approved by Innovate UK.</h2>
-        </th:block>
-        <th:block th:unless="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small no-margin">This document has been approved by Innovate UK.</h2>
-        </th:block>
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-    <div th:if="${model.isShowGenericRejectionMessage()}" class="warning-alert">
-        <th:block th:if="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small no-margin">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
-        </th:block>
-        <th:block th:unless="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small no-margin">We are unable to approve your document and have returned it to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
-        </th:block>
-    </div>
+        <div th:if="${model.isShowApprovedMessage()}" class="success-alert">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">These documents have been approved by Innovate UK.</h2>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">This document has been approved by Innovate UK.</h2>
+            </th:block>
+        </div>
 
-    <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
-        <th:block th:if="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small">These documents have been returned to the project team, the following reason was
-                given;</h2>
-        </th:block>
-        <th:block th:unless="${model.collaborationAgreementRequired}">
-            <h2 class="heading-small">This document has been returned to the project team, the following reason was
-                given;</h2>
-        </th:block>
-        <ul class="list list-bullet">
-            <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}"/>
-        </ul>
-    </div>
+        <div th:if="${model.isShowGenericRejectionMessage()}" class="warning-alert">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">We are unable to approve your document and have returned it to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
+            </th:block>
+        </div>
 
-    <th:block th:if="${model.isShowGuidanceInformation()}">
-        <th:block th:if="${model.collaborationAgreementRequired}">
-            <p>Only the Project Manager can upload and submit additional documents to support your grant application.</p>
-            <p>These documents are:</p>
-            <ul class="list list-bullet">
-                <li>the collaboration agreement</li>
-                <li>the exploitation plan</li>
+        <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s">These documents have been returned to the project team, the following reason was
+                    given;</h2>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <h2 class="govuk-heading-s">This document has been returned to the project team, the following reason was
+                    given;</h2>
+            </th:block>
+            <ul class="govuk-list govuk-list--bullet">
+                <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}"/>
             </ul>
-            <p>You should review these documents with the other partners in the project.</p>
-        </th:block>
-        <th:block th:unless="${model.collaborationAgreementRequired}">
-            <p>Only the Project Manager can upload and submit the exploitation plan to support your grant application.</p>
-        </th:block>
-    </th:block>
+        </div>
 
-    <th:block th:if="${model.isShowDocumentsBeingReviewedMessage()}">
-        <th:block th:if="${model.collaborationAgreementRequired}">
-            <p>The documents submitted below are now being reviewed. We will contact the Project Manager
-            if we need any further information.</p>
+        <th:block th:if="${model.isShowGuidanceInformation()}">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <p class="govuk-body">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
+                <p class="govuk-body">These documents are:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>the collaboration agreement</li>
+                    <li>the exploitation plan</li>
+                </ul>
+                <p class="govuk-body">You should review these documents with the other partners in the project.</p>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <p class="govuk-body">Only the Project Manager can upload and submit the exploitation plan to support your grant application.</p>
+            </th:block>
         </th:block>
-        <th:block th:unless="${model.collaborationAgreementRequired}">
-            <p>The document submitted below is now being reviewed. We will contact the Project Manager
+
+        <th:block th:if="${model.isShowDocumentsBeingReviewedMessage()}">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <p class="govuk-body">The documents submitted below are now being reviewed. We will contact the Project Manager
                 if we need any further information.</p>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <p class="govuk-body">The document submitted below is now being reviewed. We will contact the Project Manager
+                    if we need any further information.</p>
+            </th:block>
         </th:block>
-    </th:block>
 
-    <div th:if="${model.collaborationAgreementRequired}" class="upload-section">
-        <h2 class="heading-medium no-margin">Collaboration agreement</h2>
-        <p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It
-            must be signed by all partners.</p>
-        <details>
-            <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
-            <div class="panel">
-                <p>This is an agreement between project partners and will cover how the project will operate. It will
-                    also include details of how you will exploit the results of the project. Please allow enough time to
-                    complete this process before your project start date.</p>
-                <p>The following partners need to sign this collaboration agreement:</p>
+        <div th:if="${model.collaborationAgreementRequired}" class="upload-section">
+            <h2 class="govuk-heading-m govuk-!-margin-0">Collaboration agreement</h2>
+            <p class="govuk-hint">The collaboration agreement covers how the consortium will work together on the project. It
+                must be signed by all partners.</p>
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">What should I include in the collaboration agreement?</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">This is an agreement between project partners and will cover how the project will operate. It will
+                        also include details of how you will exploit the results of the project. Please allow enough time to
+                        complete this process before your project start date.</p>
+                    <p class="govuk-body">The following partners need to sign this collaboration agreement:</p>
 
-                <ul class="list list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
-                    <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
-                </ul>
-                <p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert
-                    Agreement website</a>.</p>
-                <p>The uploaded collaboration agreement must:</p>
-                <ul class="list list-bullet">
-                    <li>be in portable document format (PDF)</li>
-                    <li>be legible at 100% magnification</li>
-                    <li>be less than 1mb in file size</li>
-                </ul>
-            </div>
-        </details>
+                    <ul class="govuk-list govuk-list--bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+                        <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+                    </ul>
+                    <p class="govuk-body">An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert" class="govuk-link">Lambert
+                        Agreement website</a>.</p>
+                    <p class="govuk-body">The uploaded collaboration agreement must:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>be in portable document format (PDF)</li>
+                        <li>be legible at 100% magnification</li>
+                        <li>be less than 1mb in file size</li>
+                    </ul>
+                </div>
+            </details>
 
 
-        <!--/* allowed to edit */-->
-        <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}"
-              th:if="${model.isEditable()}"
-              th:object="${form}"
-              method="post"
-              enctype="multipart/form-data"
-              th:with="viewmode='edit',
-                       downloadUrl=@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})},
-                       filename=${model.collaborationAgreementFileDetails?.filename},
-                       inputField='collaborationAgreement',
-                       validationField=${inputField},
-                       mayRemove=true,
-                       removeName='removeCollaborationAgreementClicked',
-                       saveName='uploadCollaborationAgreementClicked'">
-            <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-        </form>
-        <!--/* not allowed to edit */-->
-        <th:block th:unless="${model.isEditable()}"
-                  th:with="viewmode='readonly',
+            <!--/* allowed to edit */-->
+            <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}"
+                  th:if="${model.isEditable()}"
+                  th:object="${form}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:with="viewmode='edit',
                            downloadUrl=@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})},
                            filename=${model.collaborationAgreementFileDetails?.filename},
-                           inputField='',
+                           inputField='collaborationAgreement',
                            validationField=${inputField},
-                           mayRemove=false,
-                           removeName='',
-                           saveName=''">
-             <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-             <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
-        </th:block>
-    </div>
+                           mayRemove=true,
+                           removeName='removeCollaborationAgreementClicked',
+                           saveName='uploadCollaborationAgreementClicked'">
+                <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+            </form>
+            <!--/* not allowed to edit */-->
+            <th:block th:unless="${model.isEditable()}"
+                      th:with="viewmode='readonly',
+                               downloadUrl=@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})},
+                               filename=${model.collaborationAgreementFileDetails?.filename},
+                               inputField='',
+                               validationField=${inputField},
+                               mayRemove=false,
+                               removeName='',
+                               saveName=''">
+                 <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+            </th:block>
+        </div>
 
-    <div class="upload-section">
-        <h2 class="heading-medium no-margin">Exploitation plan</h2>
-        <p class="form-hint">This is a confirmation of the business plan that your project hopes to achieve.
-            You should describe the partner activities that will exploit the results of the project.</p>
-        <details>
-            <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
-            <div class="panel">
-                <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
-                    business case for the project. It should also describe partner activities that will exploit the
-                    results of the project so that:</p>
-                <ul class="list list-bullet">
-                    <li>changes in the commercial environment can be monitored and accounted for</li>
-                    <li>adequate resources are committed to exploitation</li>
-                    <li>exploitation can be monitored by the stakeholders</li>
-                </ul>
+        <div class="upload-section">
+            <h2 class="govuk-heading-m govuk-!-margin-0">Exploitation plan</h2>
+            <p class="govuk-hint">This is a confirmation of the business plan that your project hopes to achieve.
+                You should describe the partner activities that will exploit the results of the project.</p>
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">What should I include in the exploitation plan?</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
+                        business case for the project. It should also describe partner activities that will exploit the
+                        results of the project so that:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>changes in the commercial environment can be monitored and accounted for</li>
+                        <li>adequate resources are committed to exploitation</li>
+                        <li>exploitation can be monitored by the stakeholders</li>
+                    </ul>
 
-                <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a>.</p>
-                <p>The uploaded exploitation plan must:</p>
-                <ul class="list list-bullet">
-                    <li>be in portable document format (PDF)</li>
-                    <li>be legible at 100% magnification</li>
-                    <li>be less than 1mb in file size</li>
-                </ul>
-            </div>
-        </details>
+                    <p class="govuk-body">A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc" class="govuk-link">download</a>.</p>
+                    <p class="govuk-body">The uploaded exploitation plan must:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>be in portable document format (PDF)</li>
+                        <li>be legible at 100% magnification</li>
+                        <li>be less than 1mb in file size</li>
+                    </ul>
+                </div>
+            </details>
 
-        <!--/* allowed to edit */-->
-        <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}"
-              th:if="${model.isEditable()}"
-              th:object="${form}"
-              method="post"
-              enctype="multipart/form-data"
-              th:with="viewmode='edit',
-                       downloadUrl=@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})},
-                       filename=${model.exploitationPlanFileDetails?.filename},
-                       inputField='exploitationPlan',
-                       validationField=${inputField},
-                       mayRemove=true,
-                       removeName='removeExploitationPlanClicked',
-                       saveName='uploadExploitationPlanClicked'">
-
-            <!--/* file is not uploaded */-->
-            <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-        </form>
-        <!--/* not allowed to edit */-->
-        <th:block th:unless="${model.isEditable()}"
-                  th:with="viewmode='readonly',
+            <!--/* allowed to edit */-->
+            <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}"
+                  th:if="${model.isEditable()}"
+                  th:object="${form}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:with="viewmode='edit',
                            downloadUrl=@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})},
                            filename=${model.exploitationPlanFileDetails?.filename},
-                           inputField='',
-                           validationField='',
-                           mayRemove=false,
-                           removeName='',
-                           saveName=''">
-             <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-             <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
-        </th:block>
-    </div>
-    <th:block th:if="${model.collaborationAgreementRequired}">
-        <th:block th:if="${model.projectManager}">
-            <p>You need to upload the documents and submit them to us.</p>
-        </th:block>
-        <th:block th:unless="${model.projectManager}">
-            <p>Your Project Manager needs to upload the documents and submit them to us.</p>
-        </th:block>
-    </th:block>
-    <th:block th:unless="${model.collaborationAgreementRequired}">
-        <th:block th:if="${model.projectManager}">
-            <p>You need to upload the document and submit it to us.</p>
-        </th:block>
-        <th:block th:unless="${model.projectManager}">
-            <p>Your Project Manager needs to upload the document and submit it to us.</p>
-        </th:block>
-    </th:block>
+                           inputField='exploitationPlan',
+                           validationField=${inputField},
+                           mayRemove=true,
+                           removeName='removeExploitationPlanClicked',
+                           saveName='uploadExploitationPlanClicked'">
 
-    <th:block th:if="${model.isShowSubmitDocumentsButton()}">
+                <!--/* file is not uploaded */-->
+                <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+            </form>
+            <!--/* not allowed to edit */-->
+            <th:block th:unless="${model.isEditable()}"
+                      th:with="viewmode='readonly',
+                               downloadUrl=@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})},
+                               filename=${model.exploitationPlanFileDetails?.filename},
+                               inputField='',
+                               validationField='',
+                               mayRemove=false,
+                               removeName='',
+                               saveName=''">
+                 <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+            </th:block>
+        </div>
         <th:block th:if="${model.collaborationAgreementRequired}">
-            <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
-            data-js-modal="modal-partner-documents">Submit documents</a>
+            <th:block th:if="${model.projectManager}">
+                <p class="govuk-body">You need to upload the documents and submit them to us.</p>
+            </th:block>
+            <th:block th:unless="${model.projectManager}">
+                <p class="govuk-body">Your Project Manager needs to upload the documents and submit them to us.</p>
+            </th:block>
         </th:block>
         <th:block th:unless="${model.collaborationAgreementRequired}">
-            <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
-               data-js-modal="modal-partner-document">Submit document</a>
+            <th:block th:if="${model.projectManager}">
+                <p class="govuk-body">You need to upload the document and submit it to us.</p>
+            </th:block>
+            <th:block th:unless="${model.projectManager}">
+                <p class="govuk-body">Your Project Manager needs to upload the document and submit it to us.</p>
+            </th:block>
         </th:block>
-    </th:block>
 
-     <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-         <th:block th:if="${model.collaborationAgreementRequired}">
-            <button disabled="disabled" class="button extra-margin">Submit documents</button>
+        <th:block th:if="${model.isShowSubmitDocumentsButton()}">
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="govuk-button govuk-!-margin-top-6"
+                data-js-modal="modal-partner-documents">Submit documents</a>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="govuk-button govuk-!-margin-top-6"
+                   data-js-modal="modal-partner-document">Submit document</a>
+            </th:block>
+        </th:block>
+
+         <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
+             <th:block th:if="${model.collaborationAgreementRequired}">
+                <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit documents</button>
+             </th:block>
+             <th:block th:unless="${model.collaborationAgreementRequired}">
+                 <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit document</button>
+             </th:block>
          </th:block>
-         <th:block th:unless="${model.collaborationAgreementRequired}">
-             <button disabled="disabled" class="button extra-margin">Submit document</button>
-         </th:block>
-     </th:block>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

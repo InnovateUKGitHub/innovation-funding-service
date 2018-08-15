@@ -26,10 +26,10 @@ Non registered users non companies house route
     And the user clicks the button/link            jQuery=a:contains("Start new application")
     And the user clicks the button/link            link=Continue without an account
     And the user selects the radio button          organisationTypeId    radio-1
-    And the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     When the user clicks the Not on company house link
     Then the user fills in the non CH address
-    And the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     Then The user should see the element           jQuery=h1:contains("Your details")
 
 The email address does not stay in the cookie
@@ -77,7 +77,7 @@ the user edits the application title
     the user clicks the button/link         link=Application details
     The project start date is blank
     The user enters text to a text field    css=[id="application.name"]    ${test_title}
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Save and return")
 
 the progress indicator should show 0
     Element Should Contain  css=.progress-indicator    0

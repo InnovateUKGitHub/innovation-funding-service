@@ -1,20 +1,16 @@
-package org.innovateuk.ifs.profile;
+package org.innovateuk.ifs.profile.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
-import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
+import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
+import static java.util.Optional.ofNullable;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -45,61 +40,45 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
-    @Autowired
     private UserService userService;
-    
-    @Autowired
+
     private OrganisationService organisationService;
 
-    @Autowired
-    private EthnicityRestService ethnicityRestService;
+    private UserAuthenticationService userAuthenticationService;
+
+    private UserProfilePopulator userProfilePopulator;
+
+    ProfileController() {}
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    public ProfileController(UserService userService, OrganisationService organisationService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
+        this.userService = userService;
+        this.organisationService = organisationService;
+        this.userAuthenticationService = userAuthenticationService;
+        this.userProfilePopulator = userProfilePopulator;
+    }
 
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
+        model.addAttribute("model", userProfilePopulator.populate(userResource));
         return "profile/user-profile";
     }
 
     private void populateUserDetailsForm(Model model, UserResource userResource){
-        final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
-        UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
+        UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
     
-	private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation){
+	private UserDetailsForm buildUserDetailsForm(final UserResource user){
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
         form.setPhoneNumber(user.getPhoneNumber());
         form.setAllowMarketingEmails(user.getAllowMarketingEmails());
-
-        if(organisation == null) {
-        	LOG.warn("No organisation retrieved for user" + user.getId());
-			return form;
-		}
-		form.setOrganisationName(organisation.getName());
-		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
-		
-		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
-		
-		if(organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
-			AddressResource address = organisationAddress.get().getAddress();
-			
-			form.setAddressLine1(address.getAddressLine1());
-			form.setAddressLine2(address.getAddressLine2());
-			form.setAddressLine3(address.getAddressLine3());
-			form.setCounty(address.getCounty());
-			form.setPostcode(address.getPostcode());
-			form.setTown(address.getTown());
-		}
 		return form;
     }
 
@@ -128,12 +107,7 @@ public class ProfileController {
     public String editUserProfile(UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private void setFormActionURL(UserDetailsForm userDetailsForm) {
@@ -146,11 +120,8 @@ public class ProfileController {
                 loggedInUser.getEmail(),
                 userDetailsForm.getFirstName(),
                 userDetailsForm.getLastName(),
-                userDetailsForm.getTitle(),
+                ofNullable(loggedInUser.getTitle()).map(Title::getDisplayName).orElse(null),
                 userDetailsForm.getPhoneNumber(),
-                userDetailsForm.getGender(),
-                Long.parseLong(userDetailsForm.getEthnicity()),
-                userDetailsForm.getDisability(),
                 userDetailsForm.getAllowMarketingEmails());
     }
 
