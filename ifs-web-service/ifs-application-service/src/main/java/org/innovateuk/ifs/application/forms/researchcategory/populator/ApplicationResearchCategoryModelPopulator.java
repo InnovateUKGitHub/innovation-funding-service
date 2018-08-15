@@ -7,7 +7,8 @@ import org.innovateuk.ifs.application.populator.researchCategory.AbstractLeadOnl
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
+import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Populates the research category selection viewmodel.
@@ -22,17 +26,17 @@ import java.util.Optional;
 @Component
 public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyModelPopulator {
 
-    private CategoryRestService categoryRestService;
+    private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
     private FinanceService financeService;
     private UserService userService;
 
     public ApplicationResearchCategoryModelPopulator(final ApplicantRestService applicantRestService,
-                                                     final CategoryRestService categoryRestService,
+                                                     final CompetitionResearchCategoryRestService competitionResearchCategoryRestService,
                                                      final FinanceService financeService,
                                                      final QuestionRestService questionRestService,
                                                      final UserService userService) {
         super(applicantRestService, questionRestService);
-        this.categoryRestService = categoryRestService;
+        this.competitionResearchCategoryRestService = competitionResearchCategoryRestService;
         this.financeService = financeService;
         this.userService = userService;
     }
@@ -42,7 +46,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                                               Long questionId,
                                               boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
+
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
         boolean complete = isComplete(applicationResource, loggedInUserId);
         boolean allReadonly = !userIsLeadApplicant || complete;
@@ -53,7 +57,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
                 applicationResource.getId(),
                 questionId,
-                researchCategories,
+                getResearchCategories(applicationResource.getCompetition()),
                 hasApplicationFinances,
                 useNewApplicantMenu,
                 researchCategoryName,
@@ -80,5 +84,14 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         UserResource user = userService.findById(leadApplicantProcessRole.getUser());
         return user.getName();
+    }
+
+    private List<ResearchCategoryResource> getResearchCategories(Long competitionId) {
+        List<CompetitionResearchCategoryLinkResource> competitionResearchCategories = competitionResearchCategoryRestService.findByCompetition(
+                competitionId).handleSuccessOrFailure(failure -> emptyList(), success -> success);
+
+        return competitionResearchCategories.stream()
+                .map(CompetitionResearchCategoryLinkResource::getCategory)
+                .collect(Collectors.toList());
     }
 }

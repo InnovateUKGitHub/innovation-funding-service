@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body"
+      th:with="section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+    section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+    section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE},
+    allComplete=${section1 and section2 and section3 ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+
+                <h1 class="govuk-heading-xl">Horizon 2020: UK funding</h1>
+
+                <p class="govuk-body">
+                    UK Research and Innovation will make sure there is no interruption to the funding of your Horizon 2020
+                    project after Brexit. To make this possible please provide us with your organisation's details.
+                </p>
+
+                <ul class="govuk-body task-list">
+                    <li class="govuk-!-padding-left-0">
+                        <div class="task">
+                            <a class="govuk-link govuk-!-font-weight-bold"
+                               th:href="${section1 ? 'IFS-4104-funding-org-selected?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-org?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Your organisation</a>
+                        </div>
+                        <div th:class="${section1 ? 'task-status-complete' : 'task-status-incomplete'}">
+                            <span th:text="${section1 ? 'Complete' : 'Incomplete'}">Incomplete</span>
+                        </div>
+                    </li>
+                    <li class="govuk-!-padding-left-0">
+                        <div class="task">
+                            <a class="govuk-link govuk-!-font-weight-bold"
+                               th:href="${section2 ? '/prototypes/IFS-4104-funding-contact-details?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-contact-details?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Contact details</a>
+                        </div>
+                        <div th:class="${section2 ? 'task-status-complete' : 'task-status-incomplete'}">
+                            <span th:text="${section2 ? 'Complete' : 'Incomplete'}">Incomplete</span>
+                        </div>
+                    </li>
+                    <li class="govuk-!-padding-left-0">
+                        <div class="task">
+                            <a class="govuk-link govuk-!-font-weight-bold"
+                               th:href="${section3 ? '/prototypes/IFS-4104-funding-details?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-details?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Funding details</a>
+                        </div>
+                        <div th:class="${section3 ? 'task-status-complete' : 'task-status-incomplete'}">
+                            <span th:text="${section3 ? 'Complete' : 'Incomplete'}">Incomplete</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <form action="test">
+
+                    <th:block th:if="${allComplete}">
+                        <div class="govuk-form-group">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                            </legend>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input id="termsAndConditions" class="govuk-checkboxes__input" value="1" type="checkbox" required="required" data-required-errormessage="To create a new account you must agree to the website terms and conditions." name="termsAndConditions"><input type="hidden" name="_termsAndConditions" value="on">
+                                    <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a>.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+
+                    <button type="button" class="govuk-button" th:disabled="${!allComplete}" data-js-modal="registration-modal">
+                        Submit
+                    </button>
+
+                    <div class="registration-modal" role="dialog" aria-hidden="true" >
+                        <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+                        <h2 class="govuk-heading-m">Submit registration</h2>
+                        <p class="govuk-body">Your details will be checked and further steps will be required to complete the process. The email address you provided will receive confirmation of registration and next steps.</p>
+                        <hr />
+                        <div>
+                            <button type="submit" class="govuk-button">Submit</button>
+                            <a class="button-clear js-close" href="#" aria-label="Close Popup">Cancel</a>
+                        </div>
+                    </div>
+
+                    <div class="modal-overlay" aria-hidden="true"></div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>
