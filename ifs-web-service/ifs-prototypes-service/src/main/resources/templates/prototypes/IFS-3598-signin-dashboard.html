@@ -16,7 +16,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
     <main id="content">
-        <h1 class="heading-large">
+        <h1 class="govuk-heading-l">
             <span class="heading-secondary">Innovation Funding Service</span>
             Sign in
         </h1>
@@ -27,13 +27,13 @@
             <input type="hidden" name="type" th:value="${type}" />
 
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label for="username">
                     <span class="form-label">Email address</span>
                 </label>
                 <input class="form-control" id="username" name="j_username" type="email" value="" required="required" data-required-errormessage="Please enter your email address." data-email-errormessage="Please enter a valid email address.">
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label for="password">
                     <span class="form-label">Password</span>
                 </label>
@@ -49,16 +49,16 @@
                 <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">Need help signing in or creating an account?</span></summary>
                 <div class="panel panel-border-narrow" id="details-content-0" aria-hidden="true">
 
-                    <h2 class="heading-small">My email and/or password isn't working</h2>
-                    <p>If you applied previously using the old service, you will need to create a new account.</p>
-                    <p><a href="https://ifs.local-dev/login/reset-password">Forgotten your password?</a></p>
-                    <h2 class="heading-small">I don't have an Innovation Funding Service Account</h2>
-                    <p>Please create a new account by visiting our <a href="https://ifs.local-dev/competition/search">competitions listings page</a>.</p>
+                    <h2 class="govuk-heading-s">My email and/or password isn't working</h2>
+                    <p class="govuk-body">If you applied previously using the old service, you will need to create a new account.</p>
+                    <p class="govuk-body"><a href="https://ifs.local-dev/login/reset-password">Forgotten your password?</a></p>
+                    <h2 class="govuk-heading-s">I don't have an Innovation Funding Service Account</h2>
+                    <p class="govuk-body">Please create a new account by visiting our <a href="https://ifs.local-dev/competition/search">competitions listings page</a>.</p>
                 </div>
             </details>
 
-            <div class="form-group extra-margin">
-                <button class="button" type="submit" name="_eventId_proceed" id="sign-in-cta">Sign in</button>
+            <div class="govuk-form-group extra-margin">
+                <button class="govuk-button" type="submit" name="_eventId_proceed" id="sign-in-cta">Sign in</button>
             </div>
 
         </form>

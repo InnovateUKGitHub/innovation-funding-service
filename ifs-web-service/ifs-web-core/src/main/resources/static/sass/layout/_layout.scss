@@ -1,3 +1,5 @@
+@import "govuk-frontend/settings/all";
+
 //layout
 .header-global {
   .navigation-list  {
@@ -10,7 +12,7 @@
 }
 
 .related-items {
-  border-top:10px solid $link-colour;
+  border-top:10px solid $govuk-link-colour;
 
   h2 {
     margin: 0.3em 0  0.5em;
@@ -35,7 +37,7 @@
   padding: 2px 0;
 }
 
-@include ie-lte(8) {
+@include is-ie8() {
   .header-global {
     #logo {
       white-space: nowrap;
@@ -43,39 +45,17 @@
   }
 }
 
-.grid-container {
-  &.phase-banner{
-    border-top: 10px solid $link-colour;
-  }
-}
-
 .sub-header {
+  @include govuk-font(16);
   clear: both;
-  font-size: 16px;
   line-height:40px;
   overflow: hidden;
   padding: 5px 0px;
   position: relative;
 
-  nav {
-    display: inline;
-  }
-
-  a {
-    @include inline-block;
-    border-bottom: 1px solid $black;
-    color: $black;
-    line-height: 1.25;
-    margin-bottom: $gutter-half;
-    margin-top: $gutter-half;
-    position: relative;
-    text-decoration: none;
-    vertical-align: middle;
-  }
-
   .deadline {
     @include media-down(mobile) {
-      font-size:14px;
+      @include govuk-font(14);
     }
 
     float:right;
@@ -89,14 +69,6 @@ details {
   th {
     box-sizing: border-box;
     min-width: 50px;
-  }
-}
-
-@include ie(8){
-  .header-logo {
-    a {
-      width: image-width('../images/gov.uk_logotype_crown_invert_trans.png');
-    }
   }
 }
 

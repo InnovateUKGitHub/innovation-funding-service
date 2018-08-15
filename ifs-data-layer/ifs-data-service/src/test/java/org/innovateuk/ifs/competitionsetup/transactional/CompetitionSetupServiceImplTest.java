@@ -5,20 +5,25 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -26,6 +31,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -63,6 +69,12 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionSetupServiceImpl service;
     @Mock
     private CompetitionRepository competitionRepository;
+    @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    @Mock
+    private FileTypeRepository fileTypeRepository;
+    @Mock
+    private PublicContentService publicContentService;
     @Mock
     private FormInputRepository formInputRepository;
     @Mock
@@ -469,5 +481,33 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionRepository).findOne(competition.getId());
         verifyNoMoreInteractions(competitionRepository);
+    }
+
+    @Test
+    public void create() {
+        Competition competition = newCompetition().build();
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        GrantTermsAndConditions grantTermsAndConditions = new GrantTermsAndConditions();
+        FileType pdfFileType = new FileType();
+        when(grantTermsAndConditionsRepository.findOneByTemplate(GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME)).thenReturn(grantTermsAndConditions);
+        when(fileTypeRepository.findByName("PDF")).thenReturn(pdfFileType);
+        when(competitionRepository.save(any(Competition.class))).thenReturn(competition);
+        when(publicContentService.initialiseByCompetitionId(competition.getId())).thenReturn(serviceSuccess());
+        when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+
+        ServiceResult<CompetitionResource> result = service.create();
+
+        assertTrue(result.isSuccess());
+
+        ArgumentCaptor<Competition> captor = ArgumentCaptor.forClass(Competition.class);
+        verify(competitionRepository).save(captor.capture());
+        Competition savedCompetition = captor.getValue();
+        assertEquals(false, savedCompetition.getSetupComplete());
+        assertEquals(grantTermsAndConditions, savedCompetition.getTermsAndConditions());
+        assertEquals(2, savedCompetition.getProjectDocuments().size());
+        assertEquals("Collaboration agreement", savedCompetition.getProjectDocuments().get(0).getTitle());
+        assertEquals("Exploitation plan", savedCompetition.getProjectDocuments().get(1).getTitle());
     }
 }

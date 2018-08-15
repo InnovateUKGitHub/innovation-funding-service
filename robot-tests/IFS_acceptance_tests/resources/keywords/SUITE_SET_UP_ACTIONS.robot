@@ -44,6 +44,10 @@ the user marks every section but one as complete
 the user selects Research category
     [Arguments]  ${res_category}
     the user clicks the button/link   link=Research category
+    # checking here applicant should see only one research category set while creating EOI compeition(IFS-2941)
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery=h1 span:contains("EOI Application")
+    Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
+    ...    AND             the user should not see the element   css = label[for="researchCategory3"]
     the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
@@ -91,7 +95,7 @@ check if there is an existing application in progress for this competition
     wait until page contains element    css=body
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
+            ...    AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
 
 create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
@@ -109,13 +113,13 @@ Invite and accept the invitation
     the user fills in the inviting steps no edit                ${test_mailbox_one}+academictest@gmail.com
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
-    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
     the research user finds org in companies house
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 the user fills in the inviting steps no edit
@@ -140,7 +144,7 @@ the user fills in the inviting steps
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
     the user enters text to a text field  id=organisationSearchName  Liv
-    the user clicks the button/link       jQuery=.button:contains("Search")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Search")
     the user clicks the button/link       link= University of Liverpool
     the user clicks the button/link       jQuery=button:contains("Enter address manually")
     the user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    The East Wing
@@ -149,8 +153,8 @@ the research user finds org in companies house
     the user enters text to a text field  id=addressForm.selectedPostcode.town    Poppleton
     the user enters text to a text field  id=addressForm.selectedPostcode.county    Poppleshire
     the user enters text to a text field  id=addressForm.selectedPostcode.postcode    POPPS123
-    the user clicks the button/link       jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link       jQuery=.button:contains("Save and continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Save organisation and continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Save and continue")
 
 The user navigates to the summary page of the Robot test application
     ${id} =  get application id by name  Robot test application
@@ -193,7 +197,7 @@ the user verifies email
     The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
@@ -203,13 +207,13 @@ the user follows the flow to register their organisation
     the user clicks the button/link         jQuery=a:contains("Create account")
     the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
     the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.button:contains("Continue")
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}

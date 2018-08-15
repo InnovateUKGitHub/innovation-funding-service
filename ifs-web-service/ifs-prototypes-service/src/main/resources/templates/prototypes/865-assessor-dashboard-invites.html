@@ -16,14 +16,14 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup">
-        <h1 class="heading-large">Assessor dashboard</h1>
+        <h1 class="govuk-heading-l">Assessor dashboard</h1>
     </div>
 
     <th:block th:if="${param.user != null and param.user[0] == 'assessor'}">
-        <div class="message-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin">Complete your assessor account</h2>
-            <p>You must complete your profile before we can assign you applications.</p>
-            <ul class="list list-bullet extra-margin-top">
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Complete your assessor account</h2>
+            <p class="govuk-body">You must complete your profile before we can assign you applications.</p>
+            <ul class="govuk-list govuk-list--bullet extra-margin-top">
                 <li>
                     <a href="/prototypes/1177-assessor-skills?version=v2">your skills</a>
                 </li>
@@ -39,8 +39,8 @@
     </th:block>
 
     <th:block th:unless="${param.user != null and param.user[0] == 'assessor'}">
-        <div class="success-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin">Assessor account complete</h2>
+        <div class="success-alert govuk-!-margin-bottom-6">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Assessor account complete</h2>
         </div>
     </th:block>
 
@@ -74,7 +74,7 @@
 
     <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-profile" />
 
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

@@ -1,205 +1,217 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="bank-detail">
-  <th:block th:insert="fragments/layout :: body-start" />
-  <th:block th:insert="fragments/layout :: global-header" />
+<body class="govuk-template__body bank-detail">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
-  <th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<main tabindex="-1" id="content">
-  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${project.id})}" />
 
-  <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your bank account details.</h2>
-      <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-  </div>
-
-  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='heading-xlarge'" />
-
-  <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
-
-  <th:block th:unless="${bankDetails == null}" >
-      <p th:unless="${bankDetails.approved}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
-      <div class="success-alert" th:if="${bankDetails.approved}"><p><strong>Your bank details have been approved.</strong></p></div>
-  </th:block>
-
-  <p class="extra-margin" th:if="${bankDetails?.approved}">Your details have been verified and can be used for this project.</p>
-
-  <th:block th:if="${bankDetails == null}">
-    <p class="extra-margin">In order for us to pay your grant we need the bank details of your organisation.</p>
-    <p>The bank account must belong to the organisation listed.</p>
-  </th:block>
-
-
-	<h2 class="heading-medium">Organisation information</h2>
-	<p class="extra-margin">
-        <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
-        <th:block th:if="${organisation.companiesHouseNumber}" th:text="|Company no. ${organisation.companiesHouseNumber}|">02423435</th:block>
-	</p>
-
-    <h2 class="heading-medium no-margin-bottom">Account details</h2>
-    <p th:if="${bankDetails == null}" class="form-hint">Please enter the bank account that you wish to use to receive the grant.</p>
-
-    <!--/* open */-->
-    <th:block th:unless="${readonly}">
-
-      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error' : (${#fields.hasErrors('${form}')} ? 'form-group-error') ">
-        <label for="accountNumber">
-          <span class="form-label-bold">Account number</span>
-          <span class="form-hint">For example: 15481965</span>
-          <th:block th:if="${#fields.hasErrors('accountNumber')}">
-                <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
-          </th:block>
-        </label>
-        <input type="text"
-               th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
-                        data-pattern-errormessage=#{validation.standard.accountnumber.format}"
-               th:errorclass="form-control-error"
-               required="required"
-               pattern="[0-9]{8,}"
-               data-prevent-input-regex="[^0-9]"
-               maxlength="8"
-               minlength="8"
-               id="accountNumber"
-               class="form-control width-medium"
-               th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
-               th:field="*{accountNumber}"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+          <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your bank account details.</h2>
+          <th:block th:insert="fragments/elements :: error-summary-list(form)" />
       </div>
 
-      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error' : (${#fields.hasErrors('${form}')} ? 'form-group-error')">
-        <label for="sortCode">
-          <span class="form-label-bold">Sort code</span>
-          <span class="form-hint">For example: 311212</span>
-          <th:block th:if="${#fields.hasErrors('sortCode')}">
-                <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
-          </th:block>
-        </label>
-        <input type="text"
-               th:attr="data-required-errormessage=#{validation.standard.sortcode.required},
-                        data-pattern-errormessage=#{validation.standard.sortcode.format}"
-               th:errorclass="form-control-error"
-               required="required"
-               pattern="[0-9]{6,}"
-               data-prevent-input-regex="[^0-9]"
-               maxlength="6"
-               minlength="6"
-               id="sortCode"
-               class="form-control width-medium"
-               th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
-               th:field="*{sortCode}"/>
-      </div>
+      <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='govuk-heading-xl'" />
 
-      <div class="form-group"  th:classappend="${#fields.hasErrors('*{addressType}')} ? 'form-group-error'">
-        <fieldset>
-            <legend id="addressType">
-              <h2 class="heading-medium">Billing address</h2>
-              <th:block th:if="${#fields.hasErrors('*{addressType}')}">
-                  <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+      <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
+
+      <th:block th:unless="${bankDetails == null}" >
+          <p class="govuk-body" th:unless="${bankDetails.approved}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
+          <div class="success-alert" th:if="${bankDetails.approved}"><p class="govuk-body"><strong>Your bank details have been approved.</strong></p></div>
+      </th:block>
+
+      <p class="govuk-!-margin-top-6" th:if="${bankDetails?.approved}">Your details have been verified and can be used for this project.</p>
+
+      <th:block th:if="${bankDetails == null}">
+        <p class="govuk-body govuk-!-margin-top-6">In order for us to pay your grant we need the bank details of your organisation.</p>
+        <p class="govuk-body">The bank account must belong to the organisation listed.</p>
+      </th:block>
+
+
+        <h2 class="govuk-heading-m">Organisation information</h2>
+        <p class="govuk-body govuk-!-margin-top-6">
+            <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
+            <th:block th:if="${organisation.companiesHouseNumber}" th:text="|Company no. ${organisation.companiesHouseNumber}|">02423435</th:block>
+        </p>
+
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
+        <p th:if="${bankDetails == null}" class="govuk-body govuk-hint">Please enter the bank account that you wish to use to receive the grant.</p>
+
+        <!--/* open */-->
+        <th:block th:unless="${readonly}">
+
+          <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error') ">
+            <label class="govuk-label" for="accountNumber">
+              Account number
+            </label>
+            <span class="govuk-hint">For example: 15481965</span>
+            <th:block th:if="${#fields.hasErrors('accountNumber')}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
+            </th:block>
+            <input type="text"
+                   th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
+                            data-pattern-errormessage=#{validation.standard.accountnumber.format}"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   pattern="[0-9]{8,}"
+                   data-prevent-input-regex="[^0-9]"
+                   maxlength="8"
+                   minlength="8"
+                   id="accountNumber"
+                   class="govuk-input govuk-input--width-10"
+                   th:classappend="${#fields.hasErrors('${form}')} ? 'govuk-input--error'"
+                   th:field="*{accountNumber}"/>
+          </div>
+
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error')">
+            <label for="sortCode">
+              <span class="govuk-label">Sort code</span>
+              <span class="govuk-hint">For example: 311212</span>
+              <th:block th:if="${#fields.hasErrors('sortCode')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
               </th:block>
-            </legend>
-            <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+            </label>
+            <input type="text"
+                   th:attr="data-required-errormessage=#{validation.standard.sortcode.required},
+                            data-pattern-errormessage=#{validation.standard.sortcode.format}"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   pattern="[0-9]{6,}"
+                   data-prevent-input-regex="[^0-9]"
+                   maxlength="6"
+                   minlength="6"
+                   id="sortCode"
+                   class="govuk-input govuk-input--width-10"
+                   th:classappend="${#fields.hasErrors('${form}')} ? 'govuk-input--error'"
+                   th:field="*{sortCode}"/>
+          </div>
 
-            <th:block th:if="${model.registeredAddress}">
-                <div class="multiple-choice" data-target="registeredAddress">
-                    <input id="address-use-org"
-                           type="radio"
-                           name="bank-address-group"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
-                           value="REGISTERED"
-                           th:field="*{addressType}" />
-                    <label for="address-use-org">
-                        Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
-                    </label>
+          <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{addressType}')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="addressType">
+                  <h2 class="govuk-fieldset__heading">Billing address</h2>
+                </legend>
+                <span class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</span>
+                <th:block th:if="${#fields.hasErrors('*{addressType}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-radios">
+                    <th:block th:if="${model.registeredAddress}">
+                        <div class="govuk-radios__item"
+                             data-target="registeredAddress">
+                            <input id="address-use-org"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   name="bank-address-group"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
+                                   value="REGISTERED"
+                                   th:field="*{addressType}" />
+                            <label for="address-use-org"
+                                   class="govuk-label govuk-radios__label">
+                                Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
+                            </label>
+                        </div>
+                        <div id="registeredAddress" class="govuk-body panel">
+                            <p class="govuk-body">
+                                <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
+                                    <th:block th:text="${addressLine}">An address line</th:block><br />
+                                </th:block>
+                            </p>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${model.operatingAddress}">
+                        <div class="govuk-radios__item" data-target="operatingAddress">
+                            <input id="address-use-operating"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   name="bank-address-group"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
+                                   value="OPERATING"
+                                   th:field="*{addressType}" />
+                            <label for="address-use-operating"
+                                   class="govuk-label govuk-radios__label">
+                                Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
+                            </label>
+                        </div>
+                        <div id="operatingAddress" class="govuk-body panel">
+                            <p class="govuk-body">
+                                <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+                                    <th:block th:text="${addressLine}">An address line</th:block><br />
+                                </th:block>
+                            </p>
+                        </div>
+                    </th:block>
+
+                    <div class="govuk-radios__item" data-target="custom-postcode">
+                        <input id="address-add-bank"
+                               class="govuk-radios__input"
+                               type="radio"
+                               name="bank-address-group"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
+                               value="ADD_NEW"
+                               th:field="*{addressType}" />
+                        <label for="address-add-bank"
+                               class="govuk-label govuk-radios__label">
+                            Enter an alternative billing address
+                        </label>
+                    </div>
+                    <div id="custom-postcode" class="govuk-body panel">
+                        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
+                    </div>
                 </div>
-                <div id="registeredAddress" class="panel">
-                    <p>
-                      <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
-                          <th:block th:text="${addressLine}">An address line</th:block><br />
-                      </th:block>
-                    </p>
-                </div>
-            </th:block>
-            <th:block th:if="${model.operatingAddress}">
-                <div class="multiple-choice" data-target="operatingAddress">
-                    <input id="address-use-operating"
-                           type="radio"
-                           name="bank-address-group"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
-                           value="OPERATING"
-                           th:field="*{addressType}" />
-                    <label for="address-use-operating">
-                        Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
-                    </label>
-                </div>
-                <div id="operatingAddress" class="panel">
-                    <p>
-                      <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
-                          <th:block th:text="${addressLine}">An address line</th:block><br />
-                      </th:block>
-                    </p>
-                </div>
-            </th:block>
 
-            <div class="multiple-choice" data-target="custom-postcode">
-                <input id="address-add-bank"
-                       type="radio"
-                       name="bank-address-group"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
-                       value="ADD_NEW"
-                       th:field="*{addressType}" />
-                <label for="address-add-bank">
-                    Enter an alternative billing address
-                </label>
-            </div>
-            <div id="custom-postcode" class="panel">
-                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
-            </div>
-        </fieldset>
-      </div>
+            </fieldset>
+          </div>
 
-      <th:block th:insert="fragments/modals :: modal-bank-details" />
-      <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
+          <th:block th:insert="fragments/modals :: modal-bank-details" />
+          <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-bank">Submit bank account details</button>
 
 
-    </th:block>
-
-    <!--/* closed readonly */-->
-
-    <th:block th:if="${readonly}">
-      <dl class="standard-definition-list extra-margin">
-    		<dt>Account number</dt>
-
-    		<dd>
-          <th:block th:text="*{'*****'+#strings.substring(accountNumber,5,8)}" />
-    		</dd>
-    		<dt>Sort code</dt>
-        <dd>
-          <th:block th:text="*{'****'+#strings.substring(sortCode,4,6)}" />
-        </dd>
-    	</dl>
-
-      <h2 class="heading-medium no-margin-bottom">Billing address</h2>
-      <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
-
-      <p class="extra-margin" th:if="${bankDetails?.organisationAddress.address}" >
-        <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
-            <th:block th:text="${addressLine+' '}">An address line</th:block><br th:unless="${stats.index == 0}"/>
         </th:block>
-      </p>
 
-    </th:block>
+        <!--/* closed readonly */-->
+
+        <th:block th:if="${readonly}">
+          <dl class="standard-definition-list govuk-!-margin-top-6">
+                <dt>Account number</dt>
+
+                <dd>
+              <th:block th:text="*{'*****'+#strings.substring(accountNumber,5,8)}" />
+                </dd>
+                <dt>Sort code</dt>
+            <dd>
+              <th:block th:text="*{'****'+#strings.substring(sortCode,4,6)}" />
+            </dd>
+            </dl>
+
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
+          <p class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+
+          <p class="govuk-body govuk-!-margin-top-6" th:if="${bankDetails?.organisationAddress.address}" >
+            <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
+                <th:block th:text="${addressLine+' '}">An address line</th:block><br th:unless="${stats.index == 0}"/>
+            </th:block>
+          </p>
+
+        </th:block>
 
 
-	</form>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

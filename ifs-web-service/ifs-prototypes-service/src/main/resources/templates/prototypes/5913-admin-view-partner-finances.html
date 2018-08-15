@@ -20,13 +20,13 @@
 
   <!-- <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" /> -->
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
     <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
     Aptrans Ltd <small>(Lead partner)</small>
   </h1>
 
-	<h2 class="heading-medium">Detailed finances</h2>
-  <p>These finances were orginally submitted by the applicant.</p>
+	<h2 class="govuk-heading-m">Detailed finances</h2>
+  <p class="govuk-body">These finances were orginally submitted by the applicant.</p>
 
 	<div class="collapsible section-overview extra-margin">
 
@@ -68,14 +68,14 @@
 	</div>
 
 
-	<h3 class="heading-medium">Other funding</h3>
+	<h3 class="govuk-heading-m">Other funding</h3>
 
-	<p>This refers to other public funding that you have told us about.</p>
+	<p class="govuk-body">This refers to other public funding that you have told us about.</p>
 
 	<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" />
 
   <th:block th:unless="${param.org != null and param.org[0] == 'growth'}">
-    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+    <dl class="readonly-data extra-margin-top govuk-!-margin-bottom-6">
       <dt>Organisation size</dt>
       <dd>Medium</dd>
 
@@ -88,7 +88,7 @@
   </th:block>
 
   <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+    <dl class="readonly-data extra-margin-top govuk-!-margin-bottom-6">
       <dt>Organisation size</dt>
       <dd>Medium</dd>
     </dl>
@@ -96,34 +96,34 @@
 
   <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
 
-    <h2 class="heading-medium">Organisation's projected growth</h2>
+    <h2 class="govuk-heading-m">Organisation's projected growth</h2>
 
-    <div class="grid-row">
-      <div class="column-half">
-        <div class="table-overflow extra-margin-bottom">
-          <table class="extra-margin-bottom">
-            <thead>
-              <tr>
-                <th scope="col">Section</th>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="table-overflow govuk-!-margin-bottom-6">
+          <table class="govuk-!-margin-bottom-6">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Section</th>
                 <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
                 <td id="annual-turnover">Annual Turnover</td>
-                <td class="numeric">200,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">200,000</td>
               </tr>
-              <tr>
+              <tr class="govuk-table__row">
                 <td id="annual-profit">Annual Profit</td>
-                <td class="numeric">50,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">50,000</td>
               </tr>
-              <tr>
+              <tr class="govuk-table__row">
                 <td id="annual-exports">Annual Exports</td>
-                <td class="numeric">50,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">50,000</td>
               </tr>
-              <tr>
+              <tr class="govuk-table__row">
                 <td id="research">Research and development spend</td>
-                <td class="numeric">20,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">20,000</td>
               </tr>
             </tbody>
           </table>
@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <dl class="readonly-data extra-margin-bottom">
+    <dl class="readonly-data govuk-!-margin-bottom-6">
       <dt>Full time employees</dt>
       <dd>42</dd>
     </dl>

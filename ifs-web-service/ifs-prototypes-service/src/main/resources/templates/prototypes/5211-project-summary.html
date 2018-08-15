@@ -18,71 +18,71 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
-		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin">
+		<p class="subtitle govuk-!-margin-0">Connected digital additive manufacturing</p>
+		<h1 class="govuk-heading-xl govuk-!-margin-0">
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">Edit 'Project summary'</th:block>
 			<th:block th:if="${param.status == null}">Project summary</th:block>
 		</h1>
 	</div>
 
-	<p class="extra-margin">Make changes to the question 'Project summary'. You can amend how this is presented to the applicant, and also the wording and guidance assessors are given for scoring this question.</p>
+	<p class="govuk-body extra-margin">Make changes to the question 'Project summary'. You can amend how this is presented to the applicant, and also the wording and guidance assessors are given for scoring this question.</p>
 
 	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Application question</legend>
-			<h2 class="heading-medium extra-margin">Application question</h2>
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Application question</legend>
+			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
 			<th:block th:if="${param.status == null}">
-				<dl class="application-question-list grid-row">
-					<dt class="column-third">Question heading</dt>
+				<dl class="application-question-list govuk-grid-row">
+					<dt class="govuk-grid-column-one-third">Question heading</dt>
 					<dd class="column-two-thirds">Project summary</dd>
-					<dt class="column-third">Question title</dt>
+					<dt class="govuk-grid-column-one-third">Question title</dt>
 					<dd class="column-two-thirds">Project summary</dd>
-					<dt class="column-third">Question subtitle</dt>
+					<dt class="govuk-grid-column-one-third">Question subtitle</dt>
 					<dd class="column-two-thirds">Please provide a short summary of your project. Make sure you include what is innovative about it.</dd>
-					<dt class="column-third">Guidance title</dt>
+					<dt class="govuk-grid-column-one-third">Guidance title</dt>
 					<dd class="column-two-thirds">What should I include in the project summary?</dd>
-					<dt class="column-third">Guidance</dt>
+					<dt class="govuk-grid-column-one-third">Guidance</dt>
 					<dd class="column-two-thirds">We will not score this summary, but it will give the assessors a useful introduction to your project. It should provide a clear overview of the whole project, including:
-						<ul class="list list-bullet">
+						<ul class="govuk-list govuk-list--bullet">
 							<li>your vision for the project</li>
 							<li>key objectives</li>
 							<li>main areas of focus</li>
 							<li>details of how it is innovative</li>
 						</ul>
 					</dd>
-					<dt class="column-third">Max word count</dt>
+					<dt class="govuk-grid-column-one-third">Max word count</dt>
 					<dd class="column-two-thirds">400</dd>
-					<dt class="column-third">Appendix</dt>
+					<dt class="govuk-grid-column-one-third">Appendix</dt>
 					<dd class="column-two-thirds">No</dd>
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-heading">
 						<span class="form-label-bold">Question heading</span>
 					</label>
 					<input class="form-control" id="question-heading" name="question-heading" value="Project summary" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-title">
 						<span class="form-label-bold">Question title</span>
 					</label>
 					<input class="form-control" id="question-title" name="question-title" value="Project summary" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-subtitle">
 						<span class="form-label-bold">Question subtitle</span>
 					</label>
 					<input class="form-control" id="question-subtitle" name="question-subtitle" value="Please provide a short summary of your project. Make sure you include what is innovative about it." type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance-title">
 						<span class="form-label-bold">Guidance title</span>
 					</label>
 					<input class="form-control" id="guidance-title" name="guidance-title" value="What should I include in the project summary?" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance">
 						<span class="form-label-bold">Guidance</span>
 					</label>
@@ -95,16 +95,16 @@ To show how your project aligns with the scope of this competition, you need to:
 
 					</textarea>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" />
+					<input class="govuk-input width-medium" id="word-count" name="word-count" value="400" type="number" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Appendix</h3>
-						<legend class="visuallyhidden">Appendix</legend>
+						<h3 class="govuk-heading-s">Appendix</h3>
+						<legend class="govuk-visually-hidden">Appendix</legend>
 						<label class="block-label selection-button-radio" for="appendix-yes">
 							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" />
 							Yes
@@ -117,23 +117,23 @@ To show how your project aligns with the scope of this competition, you need to:
 				</div>
 			</th:block>
 		</fieldset>
-		<fieldset>
-			<legend class="visuallyhidden">Assessment of this question</legend>
-			<h2 class="heading-medium extra-margin">Assessment of this question</h2>
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Assessment of this question</legend>
+			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
 			<th:block th:if="${param.status == null}">
-				<dl class="application-question-list grid-row">
-					<dt class="column-third">Scored</dt>
+				<dl class="application-question-list govuk-grid-row">
+					<dt class="govuk-grid-column-one-third">Scored</dt>
 					<dd class="column-two-thirds">No</dd>
-					<dt class="column-third">Written feedback</dt>
+					<dt class="govuk-grid-column-one-third">Written feedback</dt>
 					<dd class="column-two-thirds">No</dd>
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Scored</h3>
-						<legend class="visuallyhidden">Scored</legend>
+						<h3 class="govuk-heading-s">Scored</h3>
+						<legend class="govuk-visually-hidden">Scored</legend>
 						<label class="block-label selection-button-radio" for="scored-yes">
 							<input id="scored-yes" name="scored-group" value="Yes" type="radio" />
 							Yes
@@ -144,10 +144,10 @@ To show how your project aligns with the scope of this competition, you need to:
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Written feedback</h3>
-						<legend class="visuallyhidden">Written feedback</legend>
+						<h3 class="govuk-heading-s">Written feedback</h3>
+						<legend class="govuk-visually-hidden">Written feedback</legend>
 						<label class="block-label selection-button-radio" for="written-feedback-yes">
 							<input id="written-feedback-yes" name="written-feedback-group" value="Yes" type="radio" />
 							Yes
@@ -162,8 +162,8 @@ To show how your project aligns with the scope of this competition, you need to:
 		</fieldset>
 
 		<div class="extra-margin">
-			<a th:if="${param.status == null}" role="button" tabindex="0" class="button" href="/prototypes/5211-project-summary?status=edit">Edit this question</a>
-			<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Save and close</a>
+			<a th:if="${param.status == null}" role="button" tabindex="0" class="govuk-button" href="/prototypes/5211-project-summary?status=edit">Edit this question</a>
+			<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="govuk-button" href="/prototypes/5085-application-process">Save and close</a>
 		</div>
 		<div th:if="${param.status == null}" class="extra-margin">
 			<a href="/prototypes/5085-application-process" class="button-secondary">Return to application questions</a>

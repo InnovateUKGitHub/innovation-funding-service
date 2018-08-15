@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <h2 class="heading-medium no-margin-bottom">Business organisation</h2>
-    <fieldset>
-        <legend class="visuallyhidden">Business organisation</legend>
-        <div class="form-group">
-            <h3 class="heading-small">Organisation name</h3>
-            <p th:text="${organisation.name}">Nomensa</p>
-            <h3 class="heading-small">Registration number</h3>
-            <p th:text="${organisation.companiesHouseNumber}">0123456789</p>
-            <h3 class="heading-small">Address</h3>
-            <div th:text="${organisationAddress?.addressLine1}"></div>
-            <div th:text="${organisationAddress?.addressLine2}"></div>
-            <div th:text="${organisationAddress?.addressLine3}"></div>
-            <div th:text="${organisationAddress?.town}"></div>
-            <div th:text="${organisationAddress?.county}"></div>
-            <div th:text="${organisationAddress?.postcode}"></div>
-        </div>
-    </fieldset>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-l'" />
 
-    <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the lead applicant</a>.</p>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
+                <h2 class="govuk-fieldset__heading">Business organisation</h2>
+            </legend>
+            <div class="govuk-form-group">
+                <h3 class="govuk-heading-s">Organisation name</h3>
+                <p class="govuk-body" th:text="${organisation.name}">Nomensa</p>
+                <h3 class="govuk-heading-s">Registration number</h3>
+                <p class="govuk-body" th:text="${organisation.companiesHouseNumber}">0123456789</p>
+                <h3 class="govuk-heading-s">Address</h3>
+                <div th:text="${organisationAddress?.addressLine1}"></div>
+                <div th:text="${organisationAddress?.addressLine2}"></div>
+                <div th:text="${organisationAddress?.addressLine3}"></div>
+                <div th:text="${organisationAddress?.town}"></div>
+                <div th:text="${organisationAddress?.county}"></div>
+                <div th:text="${organisationAddress?.postcode}"></div>
+            </div>
+        </fieldset>
 
-    <a th:href="${registerUrl}" class="button button-large extra-margin">Continue</a>
+        <p class="govuk-body">If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}" class="govuk-link">email the lead applicant</a>.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <a th:href="${registerUrl}" class="govuk-button govuk-!-margin-top-6">Continue</a>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
