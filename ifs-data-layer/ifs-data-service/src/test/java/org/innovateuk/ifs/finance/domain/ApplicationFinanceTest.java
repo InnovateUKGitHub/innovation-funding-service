@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+
 public class ApplicationFinanceTest {
     ApplicationFinance applicationFinance;
 
@@ -16,7 +18,7 @@ public class ApplicationFinanceTest {
     @Before
     public void setUp() throws Exception {
         id=0L;
-        organisation = new Organisation(1L, "Worth Internet Systems");
+        organisation = newOrganisation().withId(1L).withName("Worth Internet Systems").build();
         application = new Application();
         applicationFinance = new ApplicationFinance(id, application, organisation);
     }

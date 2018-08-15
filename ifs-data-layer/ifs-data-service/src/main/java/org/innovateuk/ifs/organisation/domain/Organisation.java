@@ -54,12 +54,10 @@ public class Organisation {
     public Organisation() {
     }
 
-    public Organisation(Long id, String name) {
-        this.id = id;
+    public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(Long id, String name, String companiesHouseNumber) {
-        this.id = id;
+    public Organisation(String name, String companiesHouseNumber) {
         this.name = name;
         this.companyHouseNumber = companiesHouseNumber;
         this.companiesHouseNumber = companiesHouseNumber;
@@ -67,10 +65,6 @@ public class Organisation {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

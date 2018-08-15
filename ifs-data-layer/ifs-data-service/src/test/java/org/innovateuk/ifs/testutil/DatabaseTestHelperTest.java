@@ -28,19 +28,20 @@ public class DatabaseTestHelperTest extends BaseRepositoryIntegrationTest<Organi
 
     @Test
     public void assertingNoDatabaseChangesOccurFailsWhenChangesOccur() {
+        final String organisationName = "DB Change Organisation";
 
         try {
             databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                 // cause the database to change, thus making the assertingNoDatabaseChangesOccur() wrapper fail
-                repository.save(new Organisation(null, "DB Change Organisation"));
+                repository.save(new Organisation(organisationName));
             });
 
             fail("Should have failed, as database changes occurred");
         } catch (AssertionError e) {
 
             // and clean up after ourselves
-            repository.delete(repository.findByNameOrderById("DB Change Organisation"));
+            repository.delete(repository.findByNameOrderById(organisationName));
         }
     }
 

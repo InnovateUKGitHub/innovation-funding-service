@@ -20,6 +20,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,7 +51,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     public void setUp() {
         application = new ApplicationResource();
         application.setId(1L);
-        organisation = new Organisation(1L, "Worth Internet Systems");
+        organisation = newOrganisation().withId(1L).withName("Worth Internet Systems").build();
         applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 
