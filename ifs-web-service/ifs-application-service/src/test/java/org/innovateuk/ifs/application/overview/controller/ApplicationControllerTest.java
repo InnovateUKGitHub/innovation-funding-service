@@ -6,8 +6,12 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopulator;
+import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewAssignableModelPopulator;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
+import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewSectionModelPopulator;
+import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewUserModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
+import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -17,14 +21,11 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
@@ -92,6 +93,22 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -109,6 +126,9 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -140,7 +160,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Test
-    public void testApplicationDetails() throws Exception {
+    public void applicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
 
@@ -159,15 +179,18 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
 
-        assertEquals(app, viewModel.getCurrentApplication());
+        assertEquals(app.getId(), viewModel.getApplicationId());
+        assertEquals(app.getName(), viewModel.getApplicationName());
+        assertEquals(app.getApplicationState(), viewModel.getApplicationState());
+        assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 0);
     }
 
     @Test
-    public void testApplicationDetailsAssign() throws Exception {
+    public void applicationDetailsAssign() throws Exception {
         ApplicationResource app = applications.get(0);
 
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
@@ -180,146 +203,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Test
-    public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
-        ApplicationResource app = applications.get(0);
-        app.setCompetitionStatus(CompetitionStatus.OPEN);
-
-        Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap<>();
-        mappedSections.put(organisations.get(0).getId(), sections);
-        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
-        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SENT);
-        ApplicationInviteResource inv3 = inviteResource("bones", "teamA", InviteStatus.OPENED);
-
-        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatus.CREATED);
-
-        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
-        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
-
-        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
-
-        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-
-        LOG.debug("Show dashboard for application: " + app.getId());
-        Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-overview"))
-                .andReturn().getModelAndView().getModel();
-
-        ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
-
-        assertEquals(app, viewModel.getCurrentApplication());
-        assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
-
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 3);
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv2));
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv4));
-    }
-
-    @Test
-    public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
-        ApplicationResource app = applications.get(0);
-        app.setCompetitionStatus(CompetitionStatus.OPEN);
-
-        Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap<>();
-        mappedSections.put(organisations.get(0).getId(), sections);
-        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
-
-        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatus.CREATED);
-
-        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
-        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-
-        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
-
-        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-
-        LOG.debug("Show dashboard for application: " + app.getId());
-        Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-overview"))
-                .andReturn().getModelAndView().getModel();
-
-        ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
-
-        assertEquals(app, viewModel.getCurrentApplication());
-        assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
-
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 2);
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv2));
-    }
-
-    @Test
-    public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
-        ApplicationResource app = applications.get(0);
-        app.setCompetitionStatus(CompetitionStatus.OPEN);
-
-        Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap<>();
-        mappedSections.put(organisations.get(0).getId(), sections);
-        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
-        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
-
-        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
-        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-
-        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
-
-        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-
-        LOG.debug("Show dashboard for application: " + app.getId());
-        Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-overview"))
-                .andReturn().getModelAndView().getModel();
-
-        ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
-
-        assertEquals(app, viewModel.getCurrentApplication());
-        assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
-
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 2);
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv2));
-    }
-
-    private InviteOrganisationResource inviteOrganisationResource(ApplicationInviteResource... invs) {
-        InviteOrganisationResource ior = new InviteOrganisationResource();
-        ior.setInviteResources(Arrays.asList(invs));
-        return ior;
-    }
-
-    private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatus status) {
-        ApplicationInviteResource invRes = new ApplicationInviteResource();
-        invRes.setName(name);
-        invRes.setInviteOrganisationName(organisation);
-        invRes.setStatus(status);
-        return invRes;
-    }
-
-    @Test
-    public void testNotExistingApplicationDetails() throws Exception {
+    public void notExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
         when(env.acceptsProfiles("debug")).thenReturn(true);
@@ -336,7 +220,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Test
-    public void testApplicationDetails_applicationStateIsForwardedToOpenWhenLeadApplicationVisitsOverview() throws Exception {
+    public void applicationDetails_applicationStateIsForwardedToOpenWhenLeadApplicationVisitsOverview() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
@@ -355,7 +239,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Test
-    public void testApplicationDetails_applicationStateIsNotForwardedToOpenWhenCollaboratorVisitsOverview() throws Exception {
+    public void applicationDetails_applicationStateIsNotForwardedToOpenWhenCollaboratorVisitsOverview() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
@@ -374,7 +258,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Test
-    public void testTeesAndCees() throws Exception {
+    public void teesAndCees() throws Exception {
 
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));

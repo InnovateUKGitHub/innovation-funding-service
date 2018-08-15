@@ -2,18 +2,22 @@ package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.identity.IdentifiableEnum;
 
-public enum Satisfaction implements IdentifiableEnum<Satisfaction> {
+import java.util.stream.Stream;
 
-    VERY_SATISFIED(5),
-    SATISFIED(4),
-    NEITHER(3),
-    DISSATISFIED(2),
-    VERY_DISSATISFIED(1);
+public enum Satisfaction implements IdentifiableEnum {
+
+    VERY_SATISFIED(5, "Very satisfied"),
+    SATISFIED(4, "Satisfied"),
+    NEITHER(3, "Neither satisfied or dissatisfied"),
+    DISSATISFIED(2, "Dissatisfied"),
+    VERY_DISSATISFIED(1, "Very dissatisfied");
 
     private final long id;
+    private final String displayName;
 
-    Satisfaction(final long id) {
+    Satisfaction(final long id, final String displayName) {
         this.id = id;
+        this.displayName = displayName;
     }
 
     @Override
@@ -21,4 +25,11 @@ public enum Satisfaction implements IdentifiableEnum<Satisfaction> {
         return id;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public static Satisfaction getById (long id) {
+        return Stream.of(values()).filter(satisfaction -> satisfaction.getId() == id).findFirst().get();
+    }
 }

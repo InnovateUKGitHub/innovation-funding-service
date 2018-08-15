@@ -3,14 +3,15 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationsController;
-import org.innovateuk.ifs.management.application.populator.*;
-import org.innovateuk.ifs.management.application.viewmodel.*;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
+import org.innovateuk.ifs.management.application.list.populator.*;
+import org.innovateuk.ifs.management.application.list.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -78,7 +79,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     private ProjectService projectService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @InjectMocks
     @Spy
@@ -100,7 +101,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withAssesorsInvited(30)
                 .build();
 
-        when(competitionService.getById(any())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
+        CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
     }
 
     @Test
@@ -213,6 +215,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/" + COMPETITION_ID + "/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
+        assertEquals(false, model.isSupport());
     }
 
     @Test

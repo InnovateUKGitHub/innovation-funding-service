@@ -1,41 +1,22 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationSizeListType;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Test for {@link OrganisationDetailsRestServiceImpl}
  */
-public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitTest<OrganisationDetailsRestServiceImpl> {
+public class OrganisationDetailsRestServiceImplTest extends
+        BaseRestServiceUnitTest<OrganisationDetailsRestServiceImpl> {
 
-    private static final String organisationSizeUrl = "/organisation-size";
     private static final String projectUrl = "/project";
-
 
     @Override
     protected OrganisationDetailsRestServiceImpl registerRestServiceUnderTest() {
         return new OrganisationDetailsRestServiceImpl();
     }
-
-    @Test
-    public void test_getOrganisationSizes() {
-
-        List<OrganisationSizeResource> returnedResponse = new ArrayList<>();
-
-        setupGetWithRestResultExpectations(organisationSizeUrl, organisationSizeListType(), returnedResponse);
-        List<OrganisationSizeResource> actual = service.getOrganisationSizes().getSuccess();
-        assertNotNull(actual);
-        assertEquals(returnedResponse, actual);
-    }
-
 
     @Test
     public void test_getHeadcount() {
@@ -48,7 +29,7 @@ public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitT
 
         // now run the method under test
         Long actualCount = service.getHeadCount(applicationId, organisationId).getSuccess();
-        assertEquals(actualCount, Long.valueOf(count));
+        assertEquals(actualCount, count);
     }
 
     @Test
@@ -62,7 +43,6 @@ public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitT
 
         // now run the method under test
         Long actualCount = service.getTurnover(applicationId, organisationId).getSuccess();
-        assertEquals(actualCount, Long.valueOf(count));
+        assertEquals(actualCount, count);
     }
-
 }

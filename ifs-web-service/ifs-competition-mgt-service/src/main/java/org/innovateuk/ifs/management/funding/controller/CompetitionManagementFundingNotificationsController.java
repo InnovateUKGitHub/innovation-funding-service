@@ -4,16 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
@@ -63,7 +64,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     protected String getCookieName() {
         return "applicationSelectionForm";
@@ -341,7 +342,8 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private void checkCompetitionIsOpen(long competitionId) {
-        if (!competitionService.getById(competitionId).getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
+        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        if (!competititon.getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
             throw new IncorrectStateForPageException("Competition is not yet open.");
         }
     }

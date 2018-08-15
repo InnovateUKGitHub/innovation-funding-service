@@ -23,17 +23,13 @@ import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +61,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -106,13 +103,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private NotificationTemplateRenderer renderer;
@@ -457,7 +451,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             String customTextHtml = plainTextToHtml(customTextPlain);
 
-            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+            return processAnyFailuresOrSucceed(simpleMap(
                     assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentParticipantRepository.save(
@@ -483,11 +477,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getParticipantByInviteId(inviteId)
-                .andOnSuccess(participant ->
-                        resendInviteNotification(participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
-                )
-                .andOnSuccessReturnVoid();
+        return getParticipantByInviteId(inviteId).andOnSuccess(participant -> {
+            AssessmentInvite updatedInvite = participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now());
+            return resendInviteNotification(updatedInvite, assessorInviteSendResource);
+        }).andOnSuccessReturnVoid();
     }
 
     @Override
@@ -496,7 +489,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
         String customTextHtml = plainTextToHtml(customTextPlain);
 
-        return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+        return processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
                 invite -> {
                     updateParticipantStatus(invite);
@@ -513,7 +506,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private ServiceResult<Notification> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+    private ServiceResult<Void> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
         // Strip any HTML that may have been added to the content by the user.
         String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -528,7 +521,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 "bodyHtml", bodyHtml
         ));
 
-        return notificationSender.sendNotification(notification);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
@@ -553,7 +546,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                         "customTextHtml", customTextHtml
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private void addAssessorRoleToUser(User user) {

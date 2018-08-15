@@ -57,22 +57,17 @@ Assessor dashboard contains the correct competitions
     And The user should see the element       jQuery=h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And The user should see the element       jQuery=h2:contains("Invitations to assess")
 
-Competition brief link can be seen
-    [Documentation]    INFUND-5494
-    [Tags]
-    When the user clicks the button/link        link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then The user opens the link in new window  View competition brief
-
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When The user opens the link in new window  View competition brief
+    When the user clicks the button/link        link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And The user opens the link in new window  View competition brief
     Then The user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the element         jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And the user should see the element         jQuery=li:contains("Competition opens")
     And the user should see the element         jQuery=li:contains("Competition closes")
-    And the user should see the element         jQuery=.button:contains("Start new application")
+    And the user should see the element         jQuery=.govuk-button:contains("Start new application")
     And The user closes the competition brief
     And the user clicks the button/link         link=Assessor dashboard
 
@@ -233,7 +228,7 @@ the assessor should see the correct date
 Close the competition in assessment
     Log in as a different user       &{Comp_admin1_credentials}
     The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    The user clicks the button/link  jQuery=.button:contains("Close assessment")
+    The user clicks the button/link  jQuery=.govuk-button:contains("Close assessment")
 
 The user should get a competition brief window
     Select Window    title=Competition Overview - Innovation Funding Service

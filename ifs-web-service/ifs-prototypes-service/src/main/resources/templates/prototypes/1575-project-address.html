@@ -21,21 +21,21 @@
 
 	<form action="#">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<h2 class="heading-medium">Project location</h2>
+			<h2 class="govuk-heading-m">Project location</h2>
 
-			<legend class="visuallyhidden">Project location</legend>
+			<legend class="govuk-visually-hidden">Project location</legend>
 
-			<p class="form-hint">Please select the address where the majority of work will be carried out.</p>
+			<p class="govuk-hint">Please select the address where the majority of work will be carried out.</p>
 
-			<p>We will assign a Monitoring Officer who will visit your project at this address.</p>
+			<p class="govuk-body">We will assign a Monitoring Officer who will visit your project at this address.</p>
 
 			<th:block th:insert="prototypes/fragments/project-setup :: prototype-select-address" />
 
 		</fieldset>
 
-		<button class="button button-large extra-margin" formaction="/prototypes/1575-project-details">Save</button>
+		<button class="govuk-button button-large extra-margin" formaction="/prototypes/1575-project-details">Save</button>
 
 	</form>
 

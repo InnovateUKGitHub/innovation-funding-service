@@ -37,7 +37,7 @@ Academic finance validations
     And the applicant enters invalid inputs
     And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
-    And the user should see the element  css=.error-summary-list
+    And the user should see the element  css=.govuk-error-summary__list
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
@@ -49,7 +49,7 @@ Academic finance calculations
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
-    Given the user clicks the button/link         jQuery=.buttonlink:contains("Edit your project costs")
+    Given the user clicks the button/link         jQuery=.button-clear:contains("Edit your project costs")
     Then the user clicks the button/link          css=button[name="remove_finance_document"]
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
@@ -85,6 +85,7 @@ Academic partner can view the file on the finances
     [Tags]    HappyPath
     When the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
+    And the user closes the last opened tab
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -212,8 +213,8 @@ Mark academic finances as complete
     the user clicks the button/link  id=mark-all-as-complete
 
 the user should see correct grant percentage
-    the user should see the text in the element   css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user should see the text in the element   css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user should see the text in the element   css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user should see the text in the element   css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
 
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application

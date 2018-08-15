@@ -2,16 +2,16 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +44,7 @@ public class TeamStatusController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_STATUS')")
     @GetMapping
@@ -59,7 +59,7 @@ public class TeamStatusController {
     private void populateProjectTeamStatuses(ProjectTeamStatusResource teamStatus, final Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
 
@@ -119,10 +119,8 @@ public class TeamStatusController {
 
         ProjectPartnerStatusResource leadPartnerStatusResource = teamStatus.getLeadPartnerStatus();
 
-        if (partnerProjectLocationRequired) {
-            if (PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
-                leadPartnerStatusResource.setMonitoringOfficerStatus(NOT_STARTED);
-            }
+        if (partnerProjectLocationRequired && PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
+            leadPartnerStatusResource.setMonitoringOfficerStatus(NOT_STARTED);
         }
     }
 

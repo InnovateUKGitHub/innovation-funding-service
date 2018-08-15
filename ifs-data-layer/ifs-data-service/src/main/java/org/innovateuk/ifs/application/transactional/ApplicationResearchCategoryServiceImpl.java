@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -38,9 +37,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalService implements ApplicationResearchCategoryService {
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private ResearchCategoryRepository researchCategoryRepository;
 
     @Autowired
@@ -73,7 +69,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<ResearchCategory> findResearchCategory(Long researchCategoryId) {
-        return find(researchCategoryRepository.findById(researchCategoryId), notFoundError(ResearchCategory.class));
+        return find(researchCategoryRepository.findOne(researchCategoryId), notFoundError(ResearchCategory.class));
     }
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {

@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.forms.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
@@ -23,6 +23,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -49,11 +50,17 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationSummaryController> {
@@ -64,7 +71,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Spy
     @InjectMocks
-    private SummaryViewModelPopulator summaryViewModelPopulator;
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
 
     @Spy
     @InjectMocks
@@ -108,6 +115,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private InviteService inviteService;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -130,7 +140,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummaryWithProjectWithdrawn() throws Exception {
+    public void applicationSummaryWithProjectWithdrawn() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
@@ -146,7 +156,12 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
+        ApplicationSummaryViewModel model = testApplicationSummary();
+        assertFalse(model.isSupport());
+    }
+
+    private ApplicationSummaryViewModel testApplicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -182,6 +197,8 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertEquals(applicationTeamViewModel, model.getApplicationTeamViewModel());
         assertEquals(researchCategorySummaryViewModel, model.getResearchCategorySummaryViewModel());
         assertTrue(model.isUserIsLeadApplicant());
+
+        return model;
     }
 
     private ApplicationTeamViewModel setupApplicationTeamViewModel() {
@@ -209,5 +226,13 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false);
+    }
+
+    @Test
+    public void applicationSummaryWhenLoggedInAsSupport() throws Exception {
+        setLoggedInUser(support);
+        ApplicationSummaryViewModel model = testApplicationSummary();
+        assertTrue(model.isSupport());
+
     }
 }

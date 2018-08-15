@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="spend-profile">
+<body class="govuk-template__body spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-<main tabindex="-1" id="content" class="no-grid" th:with="project=${model.project}">
-    <div class="grid-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main" th:with="project=${model.project}">
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to send spend profiles.</h2>
-            Please review
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to send spend profiles.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='govuk-heading-xl'" />
         <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
 
             <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -31,77 +31,75 @@
                 <dd th:text="${project.durationInMonths + ' months'}"></dd>
             </dl>
         </div>
-        <h2 class="heading-medium">Project - Spend profile</h2>
-        <p>This is the spend profile for your project.</p>
-    </div>
+        <h2 class="govuk-heading-m">Project - Spend profile</h2>
+        <p class="govuk-body">This is the spend profile for your project.</p>
 
-    <div class="spend-profile-table">
-        <div class="flex-table-before"></div>
-        <div class="flex-table-wrap">
-            <table>
-                <colgroup >
-                    <col />
-                    <th:block th:each="month : ${model.table.getMonths()}">
-                        <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
-                    </th:block>
-                    <col class="total" />
-                    <col class="total"/>
-                </colgroup>
-                <thead>
-                <tr>
-                    <th scope="row" class="fix-left" id="month">Month</th>
-                    <th:block th:each="month,stats : ${model.table.getMonths()}">
-                        <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="${'month'+stats.index}" />
-                    </th:block>
-                    <th scope="col" class="fix-right">Total</th>
-                    <th scope="col" class="fix-right">Eligible project cost</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="form-group-row">
-                    <th scope="row" class="fix-left" th:with="organisationName=${model.table.getOrganisationNameMap().get(row.key)}">
-                        <span th:text="${organisationName}" />
-                        <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
-                    </th>
-                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
-                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
-                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr class="form-group-row">
-                    <th scope="row" class="fix-left">Total</th>
-                    <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
-                        <td th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
-                    </th:block>
-                    <td class="fix-right">
-                        <input th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'DEFAULT')}"
-                               readonly="readonly"
-                               id="spend-profile-total-total" />
-                    </td>
-                    <td class="fix-right">
-                        <input readonly="readonly" th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'DEFAULT')}" />
-                    </td>
-                </tr>
-                </tfoot>
-            </table>
+        <div class="spend-profile-table">
+            <div class="flex-table-before"></div>
+            <div class="flex-table-wrap">
+                <table class="govuk-table">
+                    <colgroup >
+                        <col />
+                        <th:block th:each="month : ${model.table.getMonths()}">
+                            <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
+                        </th:block>
+                        <col class="total" />
+                        <col class="total"/>
+                    </colgroup>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header fix-left" id="month">Month</th>
+                        <th:block th:each="month,stats : ${model.table.getMonths()}">
+                            <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="${'month'+stats.index}" />
+                        </th:block>
+                        <th scope="col" class="govuk-table__header fix-right">Total</th>
+                        <th scope="col" class="govuk-table__header fix-right">Eligible project cost</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="govuk-table__row form-group-row">
+                        <th scope="row" class="govuk-table__header fix-left" th:with="organisationName=${model.table.getOrganisationNameMap().get(row.key)}">
+                            <span th:text="${organisationName}" />
+                            <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
+                        </th>
+                        <td class="govuk-table__cell" th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
+                        <td class="govuk-table__cell fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
+                        <td class="govuk-table__cell fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr class="govuk-table__row form-group-row">
+                        <th scope="row" class="govuk-table__header fix-left">Total</th>
+                        <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
+                            <td class="govuk-table__cell" th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
+                        </th:block>
+                        <td class="govuk-table__cell fix-right">
+                            <input th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'DEFAULT')}"
+                                   readonly="readonly"
+                                   id="spend-profile-total-total" />
+                        </td>
+                        <td class="govuk-table__cell fix-right">
+                            <input readonly="readonly" th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'DEFAULT')}" />
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="flex-table-after"></div>
         </div>
-        <div class="flex-table-after"></div>
-    </div>
-    <div class="grid-container">
-        <h2 class="heading-medium">Project costs for financial year</h2>
-        <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-        <table class="extra-margin-bottom" style="width: 50%;">
-            <thead>
-            <tr>
-                <th scope="col" style="width: 50%">Financial year (April to March)</th>
-                <th scope="col" style="width: 50%">Project spend</th>
+        <h2 class="govuk-heading-m">Project costs for financial year</h2>
+        <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+        <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
+                <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="item : ${model.summary.years}">
-                <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                <td th:attr="data-calculation-fields=${'.apr-'+item.year+',
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                           .may-'+item.year+',
                                                           .jun-'+item.year+',
                                                           .jul-'+item.year+',
@@ -119,9 +117,9 @@
             </tbody>
         </table>
         <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
-           class="button extra-margin" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
-    </div>
-</main>
+           class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

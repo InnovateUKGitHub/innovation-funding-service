@@ -45,6 +45,8 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
 
     @Before
     public void setUp() throws Exception {
+        loginSteveSmith();
+
         List<Organisation> organisations = newOrganisation()
                 .with(idBasedNames("Organisation "))
                 .build(2)

@@ -20,19 +20,19 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin-top">Submitted applications</h1>
+	<h1 class="govuk-heading-xl govuk-!-margin-top-0">Submitted applications</h1>
 
 	<div class="boxed">
-		<div class="grid-row">
-			<div class="column-half">
-				<p><span class="heading-medium">12 April 2016</span> assessment deadline</p>
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-one-half">
+				<p class="govuk-body"><span class="govuk-heading-m">12 April 2016</span> assessment deadline</p>
 			</div>
-			<div class="column-half">
-				<p><span class="heading-medium">4</span> applications submitted</p>
+			<div class="govuk-grid-column-one-half">
+				<p class="govuk-body"><span class="govuk-heading-m">4</span> applications submitted</p>
 			</div>
 		</div>
-		<div class="grid-row">
-			<div class="column-half">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-one-half">
 				<a href="#" class="button-secondary">Export application data(.csv)</a>
 			</div>
 		</div>
@@ -40,36 +40,36 @@
 
 	<div class="search-filters extra-margin">
 		<form action="#" method="GET">
-			<fieldset>
-				<div class="grid-row">
-					<div class="column-half">
-						<legend class="heading-medium no-margin">Filter applications</legend>
+			<fieldset class="govuk-fieldset">
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+						<legend class="govuk-heading-m govuk-!-margin-0">Filter applications</legend>
 					</div>
 				</div>
-				<div class="grid-row">
-					<div class="column-half">
-						<div class="form-group">
-							<label class="form-label" for="filterSearch">Search</label>
-							<input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+						<div class="govuk-form-group">
+							<label class="govuk-label" for="filterSearch">Search</label>
+							<input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
 						</div>
 					</div>
 					<div class="column-quarter">
-						<button class="button">Filter</button>
+						<button class="govuk-button">Filter</button>
 					</div>
 				</div>
 			</fieldset>
 		</form>
 	</div>
 
-	<div class="grid-row sorting">
+	<div class="govuk-grid-row sorting">
 		<div class="column-two-thirds">
-			<h4><span class="heading-xlarge no-margin available">20</span> <strong th:text="${type}">[TYPE]</strong></h4>
+			<h4><span class="govuk-heading-xl govuk-!-margin-0 available">20</span> <strong th:text="${type}">[TYPE]</strong></h4>
 		</div>
 
-		<div class="column-third alignright">
-			<div class="form-group">
+		<div class="govuk-grid-column-one-third alignright">
+			<div class="govuk-form-group">
 				<label for="sort-by">Sort by</label>
-				<select name="sort-by" id="sort-by" class="form-control">
+				<select name="sort-by" id="sort-by" class="govuk-select">
 					<option value="Application no.">Application number</option>
 					<option value="Title">Title</option>
 					<option value="Innovation area">Innovation area</option>

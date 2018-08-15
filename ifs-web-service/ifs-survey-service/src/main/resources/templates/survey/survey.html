@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Satisfaction survey'" />
+</head>
+<body class="govuk-template__body survey">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Satisfaction survey',size='govuk-heading-xl'" />
+
+        <form th:action="@{/{competitionId}/feedback(competitionId=${competitionId})}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        Overall, how did you feel about the service you received today?
+                    </h2>
+                </legend>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{satisfaction}')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend id="satisfaction">
+                            <span class="govuk-visually-hidden">Please select your satisfaction</span>
+                            <th:block th:if="${#fields.hasErrors('*{satisfaction}')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('satisfaction')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item" th:each="satisfaction : ${form.getSatisfactionList()}">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       th:field="*{satisfaction}"
+                                       th:value="${satisfaction.id}"
+                                       th:id="'satisfaction-radio-'+${satisfaction.id}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.standard.satisfaction.selectionrequired}"/>
+                                <label class="govuk-label govuk-radios__label selection-button-radio"
+                                       th:for="'satisfaction-radio-'+${satisfaction.id}"
+                                       th:text="${satisfaction.displayName}"></label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </fieldset>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        How could we improve this service?
+                    </h2>
+                </legend>
+
+                <div th:id="comments">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comments')} ? 'govuk-form-group--error'">
+                        <th:block th:if="${#fields.hasErrors('comments')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('comments')}" th:text="${err}"></span>
+                        </th:block>
+                        <div class="textarea-wrapped word-count">
+                            <textarea
+                                class="govuk-textarea"
+                                cols="30"
+                                rows="3"
+                                maxlength="5000"
+                                data-max_words="400"
+                                data-maxwordslength="400"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 400)}"
+                                th:errorclass="govuk-textarea--error"
+                                th:field="*{comments}"></textarea>
+                            <div class="textarea-footer" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, comments)})" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <p class="govuk-body">Please don't include any personal or financial information, for example your credit card numbers.</p>
+
+            <button class="govuk-button" type="submit">Send feedback</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

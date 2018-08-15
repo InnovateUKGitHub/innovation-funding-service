@@ -10,8 +10,11 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -46,7 +49,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,12 +69,12 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
@@ -84,6 +86,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class SpendProfileServiceImpl extends BaseTransactionalService implements SpendProfileService {
+
+    private static final Log LOG = LogFactory.getLog(SpendProfileServiceImpl.class);
 
     public static final String EMPTY_CELL = "";
     private static final String CSV_MONTH = "Month";
@@ -119,7 +123,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
     @Autowired
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
     @Autowired
@@ -128,8 +132,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private String webBaseUrl;
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
-
-    private static final Log LOG = LogFactory.getLog(SpendProfileServiceImpl.class);
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
@@ -239,7 +243,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
             NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
             Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
-            return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+            Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
         }
         return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }

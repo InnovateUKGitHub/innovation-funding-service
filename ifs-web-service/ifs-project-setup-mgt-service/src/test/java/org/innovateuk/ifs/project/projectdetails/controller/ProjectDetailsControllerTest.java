@@ -2,15 +2,13 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
-import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -18,6 +16,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -55,7 +55,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private OrganisationService organisationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
@@ -130,7 +130,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(partnerOrganisation.getId())).thenReturn(partnerOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(RestResult.restSuccess(partnerOrganisations));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/details"))
@@ -177,7 +177,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/duration"))
                 .andExpect(status().isOk())
@@ -199,7 +199,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(new ProjectDurationForm(), form);
 
         verify(projectService).getById(projectId);
-        verify(competitionService).getById(competitionId);
+        verify(competitionRestService).getCompetitionById(competitionId);
     }
 
     @Test
@@ -214,7 +214,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
 
@@ -258,7 +258,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

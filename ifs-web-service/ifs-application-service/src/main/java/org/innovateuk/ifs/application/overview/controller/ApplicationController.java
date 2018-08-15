@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.overview.controller;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -79,7 +79,6 @@ public class ApplicationController {
         changeApplicationStatusToOpen(application, user);
 
         Long userId = user.getId();
-        model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
         return "application-overview";
     }

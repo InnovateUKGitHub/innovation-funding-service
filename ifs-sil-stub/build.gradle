@@ -1,5 +1,5 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
@@ -16,7 +16,7 @@ processResources.dependsOn applyProfiles
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-sil-resources")
-    compile project(":ifs-security")
+    compile project(":ifs-rest-util")
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail:1.4.7'

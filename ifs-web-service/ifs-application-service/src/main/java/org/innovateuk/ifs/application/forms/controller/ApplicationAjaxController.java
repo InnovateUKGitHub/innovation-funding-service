@@ -8,15 +8,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
@@ -27,6 +27,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
@@ -83,7 +85,7 @@ public class ApplicationAjaxController {
     private UserService userService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
@@ -205,7 +207,7 @@ public class ApplicationAjaxController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
             if (durationInMonth < competition.getMinProjectDuration() || durationInMonth > competition.getMaxProjectDuration()) {
                 String message = MessageFormat.format("validation.project.duration.input.invalid",
                         competition.getMinProjectDuration(), competition.getMaxProjectDuration());
@@ -284,6 +286,12 @@ public class ApplicationAjaxController {
         }
     }
 
+    @GetMapping(value = "/update_time_details")
+    public String updateTimeDetails( Model model ) {
+        model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
+        model.addAttribute("lastUpdatedText", "by you");
+        return "question-type/form-elements :: updateTimeDetails";
+    }
 
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
     public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,

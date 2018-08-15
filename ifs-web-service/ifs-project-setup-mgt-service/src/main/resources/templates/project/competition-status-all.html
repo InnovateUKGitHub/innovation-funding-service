@@ -1,118 +1,130 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Navigation'" />
 </head>
-<body class="competition-management project-management">
+<body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkUrl=@{~/management/dashboard/project-setup}" />
 
-    <form method="GET">
-        <div class="search-filters extra-margin">
-            <fieldset>
-                <legend class="heading-medium no-margin-top">Filter projects</legend>
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <label class="form-label" for="applicationSearchString">Search by application number.</label>
-                        <input type="number" class="form-control" id="applicationSearchString" pattern="[0-9]" data-prevent-input-regex="[^0-9]" name="applicationSearchString" value="">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='govuk-heading-xl'" />
+
+        <form method="GET">
+            <div class="search-filters govuk-!-margin-top-6">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                        <h2 class="govuk-fieldset__heading">Filter projects</h2>
+                    </legend>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
+                            <label class="govuk-label"
+                                   for="applicationSearchString">Search by application number.</label>
+                            <input type="number"
+                                   class="govuk-input"
+                                   id="applicationSearchString"
+                                   pattern="[0-9]"
+                                   data-prevent-input-regex="[^0-9]"
+                                   name="applicationSearchString"
+                                   value="">
+                        </div>
+                        <div class="govuk-grid-column-one-third">
+                            <button class="govuk-button" >Filter</button>
+                        </div>
                     </div>
-                    <div class="column-third">
-                        <button class="button" >Filter</button>
-                    </div>
+                </fieldset>
+                <div class="govuk-!-margin-top-6">
+                    <a href="?" class="govuk-link">Clear all filters</a>
                 </div>
-            </fieldset>
-            <div class="extra-margin">
-                <a href="?">Clear all filters</a>
             </div>
-        </div>
-    </form>
+        </form>
 
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
 
-    <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
-        <hr />
-        <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
-    </th:block>
+        <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
+            <p class="govuk-body">There are currently no active projects in this competition.</p>
+        </th:block>
 
-    <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
-      <div class="table-overflow">
-        <table id="table-project-status" class="icon-table">
-          <thead>
-            <tr>
-              <th scope="col">Project</th>
-              <th class="status" scope="col">Project details</th>
-              <th class="status" scope="col">MO</th>
-              <th class="status" scope="col">Bank details</th>
-              <th class="status" scope="col">Finance checks</th>
-              <th class="status" scope="col">Spend profile</th>
-              <th class="status" scope="col">Other docs</th>
-              <th class="status" scope="col">GOL</th>
-            </tr>
-          </thead>
-          <tbody class="cell-border-right">
-            <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
-                <th scope="row">
-                  <div class="heading-small no-margin" th:text="${project.projectTitle}" />
-                    <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
-                  <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" />
-                  <small>
-                    <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
-                    <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
-                  </small>
-                </th>
-                <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+        <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+          <div class="table-overflow">
+            <table id="table-project-status" class="govuk-table icon-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="col">Project</th>
+                  <th class="govuk-table__header status" scope="col">Project details</th>
+                  <th class="govuk-table__header status" scope="col">MO</th>
+                  <th class="govuk-table__header status" scope="col">Bank details</th>
+                  <th class="govuk-table__header status" scope="col">Finance checks</th>
+                  <th class="govuk-table__header status" scope="col">Spend profile</th>
+                  <th class="govuk-table__header status" scope="col">Other docs</th>
+                  <th class="govuk-table__header status" scope="col">GOL</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body cell-border-right">
+                <tr class="govuk-table__row" th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
+                    <th class="govuk-table__header" scope="row">
+                      <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
+                        <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
+                      <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
+                      <small>
+                        <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
+                        <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
+                      </small>
+                    </th>
+                    <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                          th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                          th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" />
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                              th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                              th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" />
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                          th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                          th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" />
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                              th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                              th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" />
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                          th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                          th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')"/>
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                              th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                              th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')"/>
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                          th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                          th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" />
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                              th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                              th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" />
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                          th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                          th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" />
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                              th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                              th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" />
 
-                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                          th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')"
-                          th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
-                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                          th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')" />
+                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
+                              th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')"
+                              th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
+                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
+                              th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')" />
 
-            </tr>
-          </tbody>
-          <tfoot class="bank-export">
-            <tr th:if="${model.canExportBankDetails}">
-              <td colspan="3"></td>
-              <td class="aligncentre">
-                <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}">Export all bank details</a>
-              </td>
-              <td colspan="4"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </th:block>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+                </tr>
+              </tbody>
+              <tfoot class="govuk-table__foot bank-export">
+                <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
+                  <td class="govuk-table__cell" colspan="3"></td>
+                  <td class="govuk-table__cell aligncentre">
+                    <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
+                  </td>
+                  <td class="govuk-table__cell" colspan="4"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

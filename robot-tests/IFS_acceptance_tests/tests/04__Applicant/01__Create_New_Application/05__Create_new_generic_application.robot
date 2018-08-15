@@ -51,19 +51,20 @@ Custom suite setup
 
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user clicks the button/link  jQuery=.button:contains("Create competition")
-    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_Generic}
+    the user navigates to the page              ${CA_UpcomingComp}
+    the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType_Generic}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
-    the user fills in the CS Milestones   ${month}  ${nextyear}
+    the user fills in the CS Eligibility        ${orgType}  1  # 1 means 30%
+    the user fills in the CS Milestones         ${month}  ${nextyear}
     the user fills in the CS Application section with custom questions  no  Generic
     the user fills in the CS Assessors
-    the user clicks the button/link  link=Public content
+    the user fills in the CS Documents in other projects
+    the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link   link=Return to setup overview
-    the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  css=button[type="submit"]
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user clicks the button/link             link = Return to setup overview
+    the user clicks the button/link             jQuery = a:contains("Complete")
+    the user clicks the button/link             css = button[type = "submit"]
+    the user navigates to the page              ${CA_UpcomingComp}
+    the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")

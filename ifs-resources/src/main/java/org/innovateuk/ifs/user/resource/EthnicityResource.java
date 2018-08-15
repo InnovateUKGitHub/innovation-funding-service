@@ -2,10 +2,12 @@ package org.innovateuk.ifs.user.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 /**
  * DTO for Ethnicity choices.
  */
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityResource {
 
     private Long id;

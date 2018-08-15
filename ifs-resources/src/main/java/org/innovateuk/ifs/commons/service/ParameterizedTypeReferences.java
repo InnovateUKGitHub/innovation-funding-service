@@ -12,7 +12,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -177,9 +176,6 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {
         return new ParameterizedTypeReference<List<FinanceRowItem>>() {};
     }
-    public static ParameterizedTypeReference<List<OrganisationSizeResource>> organisationSizeListType() {
-        return new ParameterizedTypeReference<List<OrganisationSizeResource>>() {};
-    }
 
     public static ParameterizedTypeReference<List<ApplicationFinanceResource>> applicationFinanceResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationFinanceResource>>() {};
@@ -261,10 +257,6 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ReviewResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
-        return new ParameterizedTypeReference<List<EthnicityResource>>() {};
-    }
-
     public static ParameterizedTypeReference<List<AssessorCountOptionResource>> assessorCountOptionResourceListType() {
         return new ParameterizedTypeReference<List<AssessorCountOptionResource>>() {};
     }
@@ -283,6 +275,11 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
+    }
+
+
+    public static ParameterizedTypeReference<List<ProjectDocumentResource>> projectDocumentResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectDocumentResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {
@@ -319,5 +316,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
         return new ParameterizedTypeReference<Map<Long, Boolean>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>> competitionResearchCategoryLinkList() {
+        return new ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>>() {};
     }
 }

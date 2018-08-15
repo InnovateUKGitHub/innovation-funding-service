@@ -4,12 +4,12 @@ import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthentic
 import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -45,7 +45,7 @@ public class ApplicationCreationAuthenticatedController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -119,7 +119,7 @@ public class ApplicationCreationAuthenticatedController {
             return questionRestService
                     .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
                     .handleSuccessOrFailure(
-                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            failure -> format("redirect:/application/%s/team", application.getId()),
                             question -> format("redirect:/application/%s/form/question/%s", application.getId(),
                                     question.getId())
                     );
@@ -134,7 +134,7 @@ public class ApplicationCreationAuthenticatedController {
 
     private boolean isAllowedToLeadApplication(Long userId, Long competitionId) {
         OrganisationResource organisation = organisationService.getOrganisationForUser(userId);
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return competition.getLeadApplicantTypes().contains(organisation.getOrganisationType());
     }

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementMo
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -37,7 +36,7 @@ public abstract class AbstractTeamManagementService {
                                                                           long organisationId,
                                                                           UserResource loggedInUser);
 
-    public abstract ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public abstract ServiceResult<Void> executeStagedInvite(long applicationId,
                                                                                 long organisationId,
                                                                                 ApplicationTeamUpdateForm form);
 

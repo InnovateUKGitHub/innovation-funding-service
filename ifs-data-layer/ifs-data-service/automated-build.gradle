@@ -9,7 +9,6 @@ project.ext['flyway.password']="ifs"
 
 ext.ifsFinanceTotalsEnabled=false
 
-
 // Choose an appropriate location for a location to store uploaded files.
 // It is an OS-specific path, so choose the appropriate format depending on
 // whether you're on a *nix OS or a Windows OS.

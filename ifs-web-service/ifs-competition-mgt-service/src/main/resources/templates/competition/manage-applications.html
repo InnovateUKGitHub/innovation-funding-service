@@ -1,71 +1,81 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications'" />
     </head>
 
-    <body class="competition-management">
+    <body class="govuk-template__body competition-management">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessments',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
 
-            <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
-            <form method="GET">
-                <div class="search-filters extra-margin">
-                    <fieldset>
-                        <legend class="heading-medium no-margin-top">Filter applications</legend>
-                        <div class="grid-row">
-                            <div class="column-two-thirds">
-                                <label class="form-label" for="filterSearch">Search by application number</label>
-                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
+
+                <p class="govuk-body govuk-!-margin-top-6">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
+                <form method="GET">
+                    <div class="search-filters govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                                <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                            </legend>
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-two-thirds">
+                                    <label class="govuk-label"
+                                           for="filterSearch">Search by application number</label>
+                                    <input type="text"
+                                           class="govuk-input"
+                                           id="filterSearch"
+                                           name="filterSearch"
+                                           th:value="${model.filter}"/>
+                                </div>
+                                <div class="govuk-grid-column-one-third">
+                                    <button class="govuk-button">Filter</button>
+                                </div>
                             </div>
-                            <div class="column-third">
-                                <button class="button">Filter</button>
-                            </div>
+                        </fieldset>
+                        <div class="govuk-!-margin-top-6">
+                            <a href="?" class="govuk-body govuk-link">Clear all filters</a>
                         </div>
-                    </fieldset>
-                    <div class="extra-margin">
-                        <a href="?">Clear all filters</a>
                     </div>
+                </form>
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-80" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Title</th>
+                                <th class="govuk-table__header width-150" scope="col">Lead organisation</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assessors</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col" th:if="${model.inAssessment}">Completed</th>
+                                <th class="govuk-table__header width-80" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="app : ${model.applications}">
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}" class="govuk-link" /></td>
+                                <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                                <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.inAssessment}">2</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
+                                <td class="govuk-table__cell">
+                                    <a class="button-secondary govuk-!-margin-0"
+                                       th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
+                                       th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
-            <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="width-small" scope="col">Application number</th>
-                            <th scope="col">Title</th>
-                            <th class="width-medium" scope="col">Lead organisation</th>
-                            <th class="numeric width-small-medium" scope="col">Assessors</th>
-                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
-                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
-                            <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="app : ${model.applications}">
-                            <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
-                            <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                            <td th:text="${app.leadOrganisation}">Wessex University</td>
-                            <td class="numeric" th:text="${app.assessors}">4</td>
-                            <td class="numeric" th:text="${app.accepted}" th:if="${model.inAssessment}">2</td>
-                            <td class="numeric" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
-                            <td>
-                                <a class="button-secondary no-margin"
-                                   th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
-                                   th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
-
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />

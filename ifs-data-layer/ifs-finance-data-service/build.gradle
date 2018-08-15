@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
@@ -68,6 +68,7 @@ prepareDockerBaseInput {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile "org.springframework.boot:spring-boot-starter-security"
     compile 'mysql:mysql-connector-java'
 
 
@@ -77,7 +78,6 @@ dependencies {
 
     compile project(':ifs-data-layer:data-service-commons')
 
-    testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')

@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <div th:fragment="comp-dashboard-header(searchQuery)">
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='heading-large'" />
+                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='govuk-heading-l'" />
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
-                <label class="visuallyhidden" for="searchQuery">Search for:</label>
+                <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
                 <input th:type="${searchType == 'applications' ? 'number' : 'text'}"
                        th:value="${searchQuery}"
                        th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"
@@ -23,55 +23,60 @@
 </div>
 
 <div th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
-    <ul class="inline-nav cf">
+    <ul class="govuk-list inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'live' ? 'selected' : ''}" th:if="${tabs.live()}">
-            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'"></a>
+            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-link"></a>
         </li>
 
         <li id="section-2" th:class="${selectedTab == 'upcoming' ? 'selected' : ''}" th:if="${tabs.upcoming()}">
-            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'"></a>
+            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'" class="govuk-link"></a>
         </li>
 
         <li id="section-3" th:class="${selectedTab == 'non-ifs' ? 'selected' : ''}" th:if="${tabs.nonIFS()}">
-            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'"></a>
+            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'" class="govuk-link"></a>
         </li>
 
         <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}" th:if="${tabs.projectSetup()}">
-            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
+            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'" class="govuk-link"></a>
         </li>
 
         <li id="section-5" th:class="${selectedTab == 'previous' ? 'selected' : ''}" th:if="${tabs.previous()}">
-            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'"></a>
+            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'" class="govuk-link"></a>
         </li>
     </ul>
 </div>
 
 <div th:fragment="dashboard-row">
-    <div class="column-third">
-        <h3 class="heading-small">
+    <div class="govuk-grid-column-one-third">
+        <h3 class="govuk-heading-s">
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
-               th:if="${nonIfs}">
+               th:if="${nonIfs}"
+               class="govuk-link">
                 <th:block th:insert="competition/dashboard :: competition-name" />
             </a>
             <th:block th:unless="${nonIfs}">
                 <th:block th:if="${customLink}">
-                    <a th:href="@{${customLink}}">
+                    <a th:href="@{${customLink}}"
+                       class="govuk-link">
                         <th:block th:insert="competition/dashboard :: competition-name" />
                     </a>
                 </th:block>
                 <th:block th:unless="${customLink}">
                     <th:block th:if="${projectSetup}">
-                        <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}">
+                        <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
+                           class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name" />
                         </a>
                     </th:block>
                     <th:block th:unless="${projectSetup}">
                         <a th:href="@{'/competition/setup/'+${competition.id}}"
-                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
+                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}"
+                           class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name" />
                         </a>
                         <th:block th:if="${competition.competitionStatus.inFlight}">
-                            <a th:href="@{${competition.topLevelNavigationLink}}">
+                            <a th:href="@{${competition.topLevelNavigationLink}}"
+                               class="govuk-link">
                                 <th:block th:insert="competition/dashboard :: competition-name" />
                             </a>
                         </th:block>
@@ -80,13 +85,13 @@
             </th:block>
         </h3>
     </div>
-    <div class="column-two-thirds">
-        <div class="column-third"><p th:text="${competition.competitionTypeName}"></p></div>
-        <div class="column-third">
-            <p th:unless="${competition.innovationAreaNames.size() > 5}" th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
-            <p th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</p>
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${competition.competitionTypeName}"></p></div>
+        <div class="govuk-grid-column-one-third">
+            <p class="govuk-body" th:unless="${competition.innovationAreaNames.size() > 5}" th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
+            <p class="govuk-body" th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</p>
         </div>
-        <div class="column-third"><p th:text="${cell4}"></p></div>
+        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${cell4}"></p></div>
     </div>
 </div>
 

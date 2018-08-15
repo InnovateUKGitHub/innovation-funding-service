@@ -15,6 +15,7 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
     private Long inviteId;
 
     public AssessorInviteOverviewResource() {
+        // no-args constructor
     }
 
     public BusinessType getBusinessType() {

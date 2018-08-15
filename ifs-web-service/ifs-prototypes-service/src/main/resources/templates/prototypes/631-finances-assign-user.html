@@ -17,23 +17,23 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="grid-row">
+	<div class="govuk-grid-row">
 		<div class="column-two-thirds">
             <div class="hgroup" style="padding-top: 20px">
-				<p class="subtitle no-margin">A novel solution to an old problem</p>
-				<h1 class="heading-xlarge no-margin-top">Empire Ltd finances</h1>
+				<p class="subtitle govuk-!-margin-0">A novel solution to an old problem</p>
+				<h1 class="govuk-heading-xl govuk-!-margin-top-0">Empire Ltd finances</h1>
 			</div>
         </div>
-        <div class="column-third competition-details">
+        <div class="govuk-grid-column-one-third competition-details">
             <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress" />
         </div>
     </div>
 
-	<h2 class="heading-medium">Assign a member of your team responsible for submitting for your organisation</h2>
+	<h2 class="govuk-heading-m">Assign a member of your team responsible for submitting for your organisation</h2>
 
 	<form action="/prototypes/631-finances-assigned-to-you">
-		<fieldset>
-			<legend class="visuallyhidden">Assign a member of your team responsible for submitting for your organisation</legend>
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-visually-hidden">Assign a member of your team responsible for submitting for your organisation</legend>
 
 			<div class="form-block">
 				<label class="block-label selection-button-radio" for="radio-1">
@@ -52,7 +52,7 @@
 
 		</fieldset>
 
-		<button class="button button-large extra-margin" name="create-account" type="submit">Assign</button>
+		<button class="govuk-button button-large extra-margin" name="create-account" type="submit">Assign</button>
 	</form>
 
 	<ul class="pagination">

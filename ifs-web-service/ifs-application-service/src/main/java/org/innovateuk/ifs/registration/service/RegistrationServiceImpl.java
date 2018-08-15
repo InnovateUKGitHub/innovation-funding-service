@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -25,10 +25,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
-            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (!userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
-                    return true;
-                }
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && !userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                return true;
             }
             return false;
         }).orElse(false);
@@ -39,10 +37,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
-            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
-                    return true;
-                }
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                return true;
             }
             return false;
         }).orElse(false);
