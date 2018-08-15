@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.project.spendprofile.transactional.ByProjectFin
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;

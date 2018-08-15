@@ -15,8 +15,8 @@ import static org.innovateuk.ifs.AvailabliltyHelperUtils.SERVICE_UNAVAILABLE_RES
 import static org.innovateuk.ifs.AvailabliltyHelperUtils.temporarilySwapOutRestTemplateAdaptor;
 import static org.innovateuk.ifs.util.Either.left;
 import static org.innovateuk.ifs.util.Either.right;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;

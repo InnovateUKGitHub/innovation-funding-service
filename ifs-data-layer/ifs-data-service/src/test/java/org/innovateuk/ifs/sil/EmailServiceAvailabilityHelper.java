@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 import static org.innovateuk.ifs.AvailabliltyHelperUtils.SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE;
 import static org.innovateuk.ifs.AvailabliltyHelperUtils.temporarilySwapOutRestTemplateAdaptor;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

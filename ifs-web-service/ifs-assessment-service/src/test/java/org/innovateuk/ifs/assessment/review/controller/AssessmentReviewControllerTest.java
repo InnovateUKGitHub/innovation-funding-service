@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuild
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
