@@ -63,11 +63,10 @@
                             </div>
                         </div>
                         <div class="govuk-checkboxes" th:unless="${model.useSelectState}">
-                            <div class="govuk-checkboxes__item"
-                                 th:each="item : ${model.availableResearchCategories}">
+                            <div class="govuk-checkboxes__item" data-target-clear-form="true"
+                                 th:with="item=${model.availableResearchCategories.get(0)}">
                                 <input type="checkbox"
                                        class="govuk-checkboxes__input"
-                                       th:field="*{researchCategory}"
                                        required="required"
                                        th:value="${item.id}"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
