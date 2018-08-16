@@ -118,11 +118,11 @@
         </div>
         <div>
             <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-               th:if="${model.complete}"
+               th:if="${model.applicationIsReadOnly}"
                class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
             <button type="submit"
-                    th:unless="${model.complete}"
+                    th:unless="${model.applicationIsReadOnly}"
                     class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
@@ -235,7 +235,7 @@
             </div>
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
-             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.applicationIsReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
     </th:block>
 </th:block>
