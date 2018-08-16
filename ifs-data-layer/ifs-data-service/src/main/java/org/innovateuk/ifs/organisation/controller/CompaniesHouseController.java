@@ -16,20 +16,20 @@ import java.util.List;
  * CompaniesHouseController exposes CompaniesHouse data and operations through a REST API.
  */
 @RestController
-@ZeroDowntime(description = "Remove /companyhouse mapping", reference = "IFS-3195")
+@ZeroDowntime(description = "Migrate remove /companyhouse mapping", reference = "IFS-4194")
 @RequestMapping({ "/companyhouse", "companies-house" })
 public class CompaniesHouseController {
 
     @Autowired
     private CompaniesHouseApiService companiesHouseService;
 
-    @ZeroDowntime(description = "Remove searchCompanyHouse", reference = "IFS-3195")
+    @ZeroDowntime(description = "Migrate: remove searchCompanyHouse", reference = "IFS-4194")
     @GetMapping({ "/searchCompanyHouse/{searchText}", "/search/{searchText}" })
     public RestResult<List<OrganisationSearchResult>> search(@PathVariable("searchText") final String searchText) {
         return companiesHouseService.searchOrganisations(searchText).toGetResponse();
     }
 
-    @ZeroDowntime(description = "Remove getCompanyHouse", reference = "IFS-3195")
+    @ZeroDowntime(description = "Migrate: remove getCompanyHouse", reference = "IFS-4194")
     @GetMapping({ "/getCompanyHouse/{id}",  "/company/{id}"})
     public RestResult<OrganisationSearchResult> getCompany(@PathVariable("id") final String id) {
         return companiesHouseService.getOrganisationById(id).toGetResponse();

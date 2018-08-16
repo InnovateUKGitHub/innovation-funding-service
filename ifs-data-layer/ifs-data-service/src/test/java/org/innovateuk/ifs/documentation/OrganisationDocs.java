@@ -13,7 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class OrganisationDocs {
 
-    @ZeroDowntime(description = "remove companyHouseNumber", reference = "IFS-3195")
+    @ZeroDowntime(description = "Migrate: remove companyHouseNumber", reference = "IFS-4194")
     public static final FieldDescriptor[] organisationResourceFields = {
             fieldWithPath("id").description("Id of the organisation"),
             fieldWithPath("name").description("Name of the organisation"),

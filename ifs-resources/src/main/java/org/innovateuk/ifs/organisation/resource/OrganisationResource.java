@@ -40,7 +40,7 @@ public class OrganisationResource {
         this.name = name;
     }
 
-    @ZeroDowntime(description = "remove", reference = "IFS-3195")
+    @ZeroDowntime(description = "Migrate: remove", reference = "IFS-4194")
     @Deprecated
     public String getCompanyHouseNumber() {
         return getCompaniesHouseNumber();

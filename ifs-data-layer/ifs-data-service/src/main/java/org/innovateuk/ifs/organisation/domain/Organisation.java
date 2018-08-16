@@ -25,7 +25,7 @@ public class Organisation {
     @Column(nullable = false)
     private String name;
 
-    @ZeroDowntime(description = "Remove when contracting", reference = "IFS-3195")
+    @ZeroDowntime(description = "Contract: remove", reference = "IFS-4196")
     @Column(name = "company_house_number")
     private String companyHouseNumber;
 
@@ -88,7 +88,7 @@ public class Organisation {
         return users;
     }
 
-    @ZeroDowntime(description = "change to companiesHouseNumber on migrate", reference = "IFS-3195")
+    @ZeroDowntime(description = "Migrate: change to companiesHouseNumber", reference = "IFS-4194")
     public String getCompaniesHouseNumber() {
         return companyHouseNumber;
     }
