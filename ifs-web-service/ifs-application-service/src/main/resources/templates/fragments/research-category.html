@@ -34,7 +34,7 @@
                 </th:block>
                 <th:block th:if="${!model.allReadOnly}">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="researchCategory">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="researchCategoryLegend">
                             <h2 class="govuk-fieldset__heading" th:text="${model.useSelectState} ? 'Select your research category' : 'Confirm research category'" ></h2>
                         </legend>
                         <span class="govuk-hint">More <a
@@ -63,16 +63,16 @@
                             </div>
                         </div>
                         <div class="govuk-checkboxes" th:unless="${model.useSelectState}">
-                            <div class="govuk-checkboxes__item"
-                                 th:each="item : ${model.availableResearchCategories}">
+                            <div class="govuk-checkboxes__item" data-target-clear-form="true"
+                                 th:with="item=${model.availableResearchCategories.get(0)}">
                                 <input type="checkbox"
                                        class="govuk-checkboxes__input"
-                                       th:field="*{researchCategory}"
+                                       name="researchCategory"
                                        required="required"
                                        th:value="${item.id}"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       id="research-category-choice"/>
-                                <label for="research-category-choice"
+                                       id="researchCategory"/>
+                                <label for="researchCategory"
                                        class="govuk-label govuk-checkboxes__label">[[${item.name}]]</label>
                             </div>
                         </div>
