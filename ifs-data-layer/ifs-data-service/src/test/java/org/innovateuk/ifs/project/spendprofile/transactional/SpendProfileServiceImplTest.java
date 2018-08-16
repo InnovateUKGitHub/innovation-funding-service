@@ -21,7 +21,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
@@ -33,8 +33,8 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
@@ -71,7 +71,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -110,8 +110,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private SpendProfileRepository spendProfileRepositoryMock;
     @Mock
     private ProjectUsersHelper projectUsersHelperMock;
+/*    @Mock
+    private ProjectService projectServiceMock;*/
     @Mock
-    private ProjectService projectServiceMock;
+    private PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     private ProjectRepository projectRepositoryMock;
     @Mock
@@ -129,7 +131,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
 
     @Test
-    public void testGenerateSpendProfile() {
+    public void generateSpendProfile() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -224,7 +226,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileButNotAllViabilityApproved() {
+    public void generateSpendProfileButNotAllViabilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -248,7 +250,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenNotAllEligibilityApproved() {
+    public void generateSpendProfileWhenNotAllEligibilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -274,7 +276,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenSpendProfileAlreadyGenerated() {
+    public void generateSpendProfileWhenSpendProfileAlreadyGenerated() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -306,7 +308,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenSendingEmailFails() {
+    public void generateSpendProfileWhenSendingEmailFails() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
         Project project = generateSpendProfileData.getProject();
@@ -363,7 +365,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileSendEmailFailsDueToNoFinanceContact() {
+    public void generateSpendProfileSendEmailFailsDueToNoFinanceContact() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -399,7 +401,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileNotReadyToGenerate() {
+    public void generateSpendProfileNotReadyToGenerate() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -430,9 +432,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
 
         // setup expectations for getting project users to infer the partner organisations
-        List<ProjectUserResource> projectUsers =
-                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
+/*        List<ProjectUserResource> projectUsers =
+                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);*/
+        List<PartnerOrganisationResource> partnerOrganisationResources =
+                newPartnerOrganisationResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
+        //when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
@@ -449,7 +454,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileForPartnerOrganisation() {
+    public void generateSpendProfileForPartnerOrganisation() {
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
@@ -544,7 +549,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileCSV() {
+    public void generateSpendProfileCSV() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -582,7 +587,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileCSVWithCategoryGroupLabelEmpty() {
+    public void generateSpendProfileCSVWithCategoryGroupLabelEmpty() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -988,7 +993,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewSuccess() {
+    public void completeSpendProfilesReviewSuccess() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -1005,7 +1010,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
+    public void completeSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -1020,7 +1025,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
+    public void completeSpendProfilesReviewFailureWhenAlreadySubmitted() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(ZonedDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
