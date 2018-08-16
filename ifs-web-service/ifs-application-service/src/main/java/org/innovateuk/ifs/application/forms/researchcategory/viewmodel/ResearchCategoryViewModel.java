@@ -17,7 +17,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private String researchCategory;
     private boolean userLeadApplicant;
     private String leadApplicantName;
-    private boolean useSelectState;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      Long applicationId,
