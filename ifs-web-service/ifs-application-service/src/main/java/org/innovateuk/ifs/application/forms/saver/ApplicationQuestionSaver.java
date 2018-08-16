@@ -33,20 +33,29 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
 
-    @Autowired
     private UserRestService userRestService;
-    @Autowired
     private ApplicationService applicationService;
-    @Autowired
     private UserService userService;
-    @Autowired
     private QuestionService questionService;
-    @Autowired
     private QuestionRestService questionRestService;
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
+
+    public ApplicationQuestionSaver(UserRestService userRestService,
+                                    ApplicationService applicationService,
+                                    UserService userService,
+                                    QuestionService questionService,
+                                    QuestionRestService questionRestService,
+                                    CookieFlashMessageFilter cookieFlashMessageFilter,
+                                    ApplicationQuestionApplicationDetailsSaver detailsSaver) {
+        this.userRestService = userRestService;
+        this.applicationService = applicationService;
+        this.userService = userService;
+        this.questionService = questionService;
+        this.questionRestService = questionRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.detailsSaver = detailsSaver;
+    }
 
     public ValidationMessages saveApplicationForm(Long applicationId,
                                                   ApplicationForm form,

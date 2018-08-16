@@ -38,8 +38,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -160,16 +162,16 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("inviteAlreadyAccepted"));
     }
 
-//    @Test
-//    public void missingOrganisationGetParameterChangesViewWhenViewingForm() throws Exception {
-//        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
-//
-//        mockMvc.perform(get("/registration/register")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/"));
-//    }
+    @Test
+    public void missingOrganisationGetParameterChangesViewWhenViewingForm() throws Exception {
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
+
+        mockMvc.perform(get("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
 
     @Test
     public void testSuccessUrl() throws Exception {
@@ -215,34 +217,37 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .andExpect(view().name("registration-token-expired"));
     }
 
-//    @Test
-//    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenViewingForm() throws Exception {
-//        mockMvc.perform(get("/registration/register")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .cookie(organisationCookie)
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/"));
-//    }
+    @Test
+    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenViewingForm() throws Exception {
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
+        mockMvc.perform(get("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie(organisationCookie)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
 
-//    @Test
-//    public void missingOrganisationGetParameterChangesViewWhenSubmittingForm() throws Exception {
-//        mockMvc.perform(post("/registration/register")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/"));
-//    }
+    @Test
+    public void missingOrganisationGetParameterChangesViewWhenSubmittingForm() throws Exception {
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
+        mockMvc.perform(post("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
 
-//    @Test
-//    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenSubmittingForm() throws Exception {
-//        mockMvc.perform(post("/registration/register")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .cookie(organisationCookie)
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/"));
-//    }
+    @Test
+    public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenSubmittingForm() throws Exception {
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
+        mockMvc.perform(post("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie(organisationCookie)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
 
     @Test
     public void validButAlreadyExistingEmailInputShouldReturnErrorOnEmailField() throws Exception {

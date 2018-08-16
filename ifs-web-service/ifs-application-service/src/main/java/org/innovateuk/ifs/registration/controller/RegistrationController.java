@@ -141,9 +141,9 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        OrganisationResource organisation = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request)).getSuccess();
-        if (organisation != null) {
-            addOrganisationNameToModel(model, organisation);
+        RestResult<OrganisationResource> result = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
+        if (result.isSuccess()) {
+            addOrganisationNameToModel(model, result.getSuccess());
             return true;
         }
         return false;
