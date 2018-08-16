@@ -3,8 +3,6 @@ package org.innovateuk.ifs.application.forms.researchcategory.controller;
 import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
-import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
-import org.innovateuk.ifs.application.forms.validator.QuestionEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
@@ -55,9 +53,6 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
-
-    @Autowired
     private ResearchCategoryEditableValidator researchCategoryEditableValidator;
 
     @Autowired
@@ -85,7 +80,7 @@ public class ResearchCategoryController {
         checkIfAllowed(questionId, applicationResource);
 
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
-                applicationResource, loggedInUser.getId(), questionId, applicationResource.isUseNewApplicantMenu()));
+                applicationResource, loggedInUser.getId(), questionId));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";
@@ -127,7 +122,7 @@ public class ResearchCategoryController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
                         cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                        return getRedirectUrl(applicationResource, questionId);
+                        return getRedirectUrl(applicationResource);
                     });
         });
     }
@@ -150,16 +145,7 @@ public class ResearchCategoryController {
 
     private void checkIfAllowed(long questionId, ApplicationResource applicationResource)
             throws ForbiddenActionException {
-        if (applicationResource.isUseNewApplicantMenu()) {
-            checkIfAllowed(questionId, applicationResource, researchCategoryEditableValidator);
-        } else {
-            checkIfAllowed(questionId, applicationResource, applicationDetailsEditableValidator);
-        }
-    }
-
-    private void checkIfAllowed(long questionId, ApplicationResource applicationResource,
-                                QuestionEditableValidator questionEditableValidator) throws ForbiddenActionException {
-        if (!questionEditableValidator.questionAndApplicationHaveAllowedState(questionId,
+        if (!researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)) {
             throw new ForbiddenActionException();
         }
@@ -169,11 +155,7 @@ public class ResearchCategoryController {
         return processRoleService.findProcessRole(userId, applicationId).getId();
     }
 
-    private String getRedirectUrl(ApplicationResource applicationResource, long questionId) {
-        if (applicationResource.isUseNewApplicantMenu()) {
-            return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId();
-        } else {
-            return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId() + "/form/question/" + questionId;
-        }
+    private String getRedirectUrl(ApplicationResource applicationResource) {
+        return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId();
     }
 }

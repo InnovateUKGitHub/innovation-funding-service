@@ -204,7 +204,7 @@
     <th:block th:if="${model.fundingSectionLocked}">
         <p class="govuk-body">The following steps must be completed before you can supply funding details:</p>
         <ul class="govuk-list govuk-list--bullet">
-            <th:block th:unless="${model.researchCategoryComplete}">
+            <th:block th:if="${model.researchCategoryRequired}">
                 <th:block th:if="${model.leadApplicant}">
                     <li>you must select a
                         <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}"
@@ -217,7 +217,7 @@
                     <li>the lead applicant must select a research category</li>
                 </th:block>
             </th:block>
-            <th:block th:unless="${model.yourOrganisationComplete}">
+            <th:block th:if="${model.yourOrganisationRequired}">
                 <li>you must state
                     <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}"
                        class="govuk-link">

@@ -90,7 +90,7 @@ public class ApplicationModelPopulator {
         return application;
     }
 
-    public ApplicationResource addApplicationAndSections(ApplicationResource application,
+    ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
                                                          UserResource user,
                                                          Optional<SectionResource> section,
@@ -108,7 +108,7 @@ public class ApplicationModelPopulator {
         return application;
     }
 
-    public ApplicationResource addApplicationDetails(ApplicationResource application,
+    private ApplicationResource addApplicationDetails(ApplicationResource application,
                                                      CompetitionResource competition,
                                                      UserResource user,
                                                      Optional<SectionResource> section,
@@ -143,7 +143,7 @@ public class ApplicationModelPopulator {
     }
 
 
-    public void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
+    private void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
@@ -160,7 +160,7 @@ public class ApplicationModelPopulator {
     }
 
 
-    public void addUserDetails(Model model, UserResource user, List<ProcessRoleResource> userApplicationRoles) {
+    void addUserDetails(Model model, UserResource user, List<ProcessRoleResource> userApplicationRoles) {
 
         ProcessRoleResource leadApplicantProcessRole =
                 simpleFindFirst(userApplicationRoles, role -> role.getRoleName().equals(Role.LEADAPPLICANT.getName())).get();
@@ -177,7 +177,7 @@ public class ApplicationModelPopulator {
         return userService.isLeadApplicant(userId, application);
     }
 
-    public void addOrganisationAndUserFinanceDetails(Long competitionId,
+    void addOrganisationAndUserFinanceDetails(Long competitionId,
                                                      Long applicationId,
                                                      UserResource user,
                                                      Model model,
@@ -200,26 +200,13 @@ public class ApplicationModelPopulator {
         }
     }
 
-    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
+    Optional<OrganisationResource> getUserOrganisation(Long userId,
+                                                               List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId) && uar.getOrganisationId() != null)
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
-    }
-
-    public void addApplicationInputs(ApplicationResource application, Model model) {
-        model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
-        model.addAttribute("applicationTitle", application.getName());
-        model.addAttribute("applicationDuration", application.getDurationInMonths());
-    }
-
-    public void addFeedbackAndScores(Model model, long applicationId) {
-        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                .getSuccess()
-                .getFeedback()
-        );
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
@@ -231,7 +218,7 @@ public class ApplicationModelPopulator {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 
-    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
                                                                  final CompetitionResource competition,
                                                                  final UserResource user,
                                                                  Optional<SectionResource> section,

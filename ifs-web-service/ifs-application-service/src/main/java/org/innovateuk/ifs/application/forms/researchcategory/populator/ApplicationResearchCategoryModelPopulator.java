@@ -43,8 +43,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
-                                              Long questionId,
-                                              boolean useNewApplicantMenu) {
+                                              Long questionId) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
@@ -59,7 +58,6 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                 questionId,
                 getResearchCategories(applicationResource.getCompetition()),
                 hasApplicationFinances,
-                useNewApplicantMenu,
                 researchCategoryName,
                 isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
                 complete,

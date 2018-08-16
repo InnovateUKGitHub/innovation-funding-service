@@ -12,9 +12,9 @@ import java.util.Optional;
  */
 public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
-    private boolean researchCategoryComplete;
-    private boolean yourOrganisationComplete;
-    private long researchCategoryQuestionId;
+    private boolean researchCategoryRequired;
+    private boolean yourOrganisationRequired;
+    private Long researchCategoryQuestionId;
     private long yourOrganisationSectionId;
 
     public YourFundingSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
@@ -30,30 +30,30 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     }
 
     public boolean isFundingSectionLocked() {
-        return !(this.researchCategoryComplete && this.yourOrganisationComplete);
+        return this.researchCategoryRequired || this.yourOrganisationRequired;
     }
 
-    public boolean isResearchCategoryComplete() {
-        return researchCategoryComplete;
+    public boolean isResearchCategoryRequired() {
+        return researchCategoryRequired;
     }
 
-    public void setResearchCategoryComplete(boolean researchCategoryComplete) {
-        this.researchCategoryComplete = researchCategoryComplete;
+    public void setResearchCategoryRequired(final boolean researchCategoryRequired) {
+        this.researchCategoryRequired = researchCategoryRequired;
     }
 
-    public boolean isYourOrganisationComplete() {
-        return yourOrganisationComplete;
+    public boolean isYourOrganisationRequired() {
+        return yourOrganisationRequired;
     }
 
-    public void setYourOrganisationComplete(boolean yourOrganisationComplete) {
-        this.yourOrganisationComplete = yourOrganisationComplete;
+    public void setYourOrganisationRequired(final boolean yourOrganisationRequired) {
+        this.yourOrganisationRequired = yourOrganisationRequired;
     }
 
-    public long getResearchCategoryQuestionId() {
+    public Long getResearchCategoryQuestionId() {
         return researchCategoryQuestionId;
     }
 
-    public void setResearchCategoryQuestionId(long researchCategoryQuestionId) {
+    public void setResearchCategoryQuestionId(Long researchCategoryQuestionId) {
         this.researchCategoryQuestionId = researchCategoryQuestionId;
     }
 
