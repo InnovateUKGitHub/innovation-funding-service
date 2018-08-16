@@ -25,6 +25,11 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<Set<Long>> getGrantClaimMaximumsForCompetition(long competititionId) {
+        return getWithRestResult(grantClaimMaximumRestURL + "/get-for-competition/" + competititionId, longsSetType());
+    }
+
+    @Override
     public RestResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
         return postWithRestResult(grantClaimMaximumRestURL + "/", grantClaimMaximumResource, GrantClaimMaximumResource.class);
     }

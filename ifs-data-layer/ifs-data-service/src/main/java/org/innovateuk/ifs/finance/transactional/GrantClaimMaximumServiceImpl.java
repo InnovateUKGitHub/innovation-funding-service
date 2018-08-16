@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -22,15 +25,17 @@ public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
 
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
     private CompetitionTypeRepository competitionTypeRepository;
+    private CompetitionRepository competitionRepository;
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     private CompetitionMapper competitionMapper;
 
     public GrantClaimMaximumServiceImpl(GrantClaimMaximumRepository grantClaimMaximumRepository,
                                         CompetitionTypeRepository competitionTypeRepository,
-                                        GrantClaimMaximumMapper grantClaimMaximumMapper,
+                                        CompetitionRepository competitionRepository, GrantClaimMaximumMapper grantClaimMaximumMapper,
                                         CompetitionMapper competitionMapper) {
         this.grantClaimMaximumRepository = grantClaimMaximumRepository;
         this.competitionTypeRepository = competitionTypeRepository;
+        this.competitionRepository = competitionRepository;
         this.grantClaimMaximumMapper = grantClaimMaximumMapper;
         this.competitionMapper = competitionMapper;
     }
@@ -47,6 +52,15 @@ public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
                 .andOnSuccess(competitionType -> {
                     CompetitionResource template = competitionMapper.mapToResource(competitionType.getTemplate());
                     return serviceSuccess(template.getGrantClaimMaximums());
+                });
+    }
+
+    @Override
+    public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(Long competitionId) {
+        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccess(competition -> {
+                    CompetitionResource competitionResource = competitionMapper.mapToResource(competition);
+                    return serviceSuccess(competitionResource.getGrantClaimMaximums());
                 });
     }
 

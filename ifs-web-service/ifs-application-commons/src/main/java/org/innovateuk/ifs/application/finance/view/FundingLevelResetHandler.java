@@ -37,7 +37,9 @@ public class FundingLevelResetHandler {
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
 
+
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+
 
         final Optional<ProcessRoleResource> processRole;
         try {
@@ -45,7 +47,7 @@ public class FundingLevelResetHandler {
                     .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
                     .findFirst();
         } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Couldn't reset funding level for user "  + userId, e);
+            LOG.error("Couldn't reset funding level for user " + userId, e);
             return;
         }
 

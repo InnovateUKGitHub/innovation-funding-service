@@ -15,7 +15,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -25,7 +28,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -41,17 +46,23 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
     private final FinanceService financeService;
     private final FundingLevelResetHandler fundingLevelResetHandler;
     private final ApplicationFinanceRestService applicationFinanceRestService;
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     public DefaultFinanceFormHandler(final FinanceService financeService,
                                      final DefaultFinanceRowRestService defaultFinanceRowRestService,
                                      final UnsavedFieldsManager unsavedFieldsManager,
                                      final ApplicationFinanceRestService applicationFinanceRestService,
-                                     final FundingLevelResetHandler fundingLevelResetHandler) {
+                                     final FundingLevelResetHandler fundingLevelResetHandler,
+                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                     OrganisationRestService organisationRestService) {
         super(defaultFinanceRowRestService, unsavedFieldsManager);
         this.financeService = financeService;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.fundingLevelResetHandler = fundingLevelResetHandler;
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     @Override
@@ -159,7 +170,13 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                                               OrganisationSize oldValue,
                                               OrganisationSize newValue) {
         if (null != oldValue  && oldValue != newValue) {
-            fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+            OrganisationResource organisation = organisationRestService.getOrganisationById(applicationFinance.getOrganisation()).getSuccess();
+            Set<Long> templateGcms = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(organisation.getOrganisationType()).getSuccess();
+            Set<Long> competitionGcms = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetition(competitionId).getSuccess();
+
+            if (organisation.getOrganisationType().equals(BUSINESS.getId()) && templateGcms.equals(competitionGcms)) {
+                fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+            }
         }
     }
 
