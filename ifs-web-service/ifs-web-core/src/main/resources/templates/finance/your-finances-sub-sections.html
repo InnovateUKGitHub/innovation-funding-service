@@ -177,11 +177,11 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.total : 0, 0, 'DEFAULT')}" /></strong></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance != null ? model.organisationFinance.grantClaimPercentage : 0}+'%'" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalFundingSought : 0, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalOtherFunding : 0, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalContribution : 0, 0, 'DEFAULT')}" /></td>
             </tr>
             </tbody>
         </table>
