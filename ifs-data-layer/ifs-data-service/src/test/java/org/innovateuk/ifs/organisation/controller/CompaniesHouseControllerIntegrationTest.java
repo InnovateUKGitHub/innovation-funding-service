@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.Assert.*;
 
+@Ignore("Will fail when run against the stub, of if companies house is down")
 public class CompaniesHouseControllerIntegrationTest extends BaseControllerIntegrationTest<CompaniesHouseController> {
 
     private static final String COMPANY_ID = "04658986";
