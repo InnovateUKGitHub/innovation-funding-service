@@ -6,7 +6,6 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,8 +18,14 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 @Service
 public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
 
-    @Autowired
     private SectionService sectionService;
+
+    public ApplicationSectionFinanceSaver(ApplicationQuestionFileSaver fileSaver,
+                                          ApplicationQuestionNonFileSaver nonFileSaver,
+                                          SectionService sectionService) {
+        super(fileSaver, nonFileSaver);
+        this.sectionService = sectionService;
+    }
 
     public void handleMarkAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())

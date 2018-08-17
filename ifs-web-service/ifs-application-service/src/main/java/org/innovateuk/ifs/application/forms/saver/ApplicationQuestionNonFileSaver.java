@@ -5,7 +5,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +22,17 @@ import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
 @Service
 public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
 
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private FormInputRestService formInputRestService;
+
+    public ApplicationQuestionNonFileSaver(ApplicationQuestionFileSaver fileSaver,
+                                           ApplicationQuestionNonFileSaver nonFileSaver,
+                                           FormInputResponseRestService formInputResponseRestService,
+                                           FormInputRestService formInputRestService) {
+        super(fileSaver, nonFileSaver);
+        this.formInputResponseRestService = formInputResponseRestService;
+        this.formInputRestService = formInputRestService;
+    }
 
     public ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                          HttpServletRequest request,

@@ -59,6 +59,11 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     @Autowired
     private ApplicationSectionFinanceSaver financeSaver;
 
+    public ApplicationSectionSaver(ApplicationQuestionFileSaver fileSaver,
+                                   ApplicationQuestionNonFileSaver nonFileSaver) {
+        super(fileSaver, nonFileSaver);
+    }
+
     public ValidationMessages saveApplicationForm(ApplicationResource application,
                                                   Long competitionId,
                                                   ApplicationForm form,

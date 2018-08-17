@@ -41,13 +41,17 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
 
+
     public ApplicationQuestionSaver(UserRestService userRestService,
                                     ApplicationService applicationService,
                                     UserService userService,
                                     QuestionService questionService,
                                     QuestionRestService questionRestService,
                                     CookieFlashMessageFilter cookieFlashMessageFilter,
-                                    ApplicationQuestionApplicationDetailsSaver detailsSaver) {
+                                    ApplicationQuestionApplicationDetailsSaver detailsSaver,
+                                    ApplicationQuestionFileSaver fileSaver,
+                                    ApplicationQuestionNonFileSaver nonFileSaver) {
+        super(fileSaver, nonFileSaver);
         this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.userService = userService;

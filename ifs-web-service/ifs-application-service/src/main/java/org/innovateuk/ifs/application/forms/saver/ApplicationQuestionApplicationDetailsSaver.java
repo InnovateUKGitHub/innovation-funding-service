@@ -20,6 +20,11 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicationSaver {
 
+    public ApplicationQuestionApplicationDetailsSaver(ApplicationQuestionFileSaver fileSaver,
+                                                      ApplicationQuestionNonFileSaver nonFileSaver) {
+        super(fileSaver, nonFileSaver);
+    }
+
     public ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> validationMessagesList) {
 
         List<Error> fieldErrors = validationMessagesList

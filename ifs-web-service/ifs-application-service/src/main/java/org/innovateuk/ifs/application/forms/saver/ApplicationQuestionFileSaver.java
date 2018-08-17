@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -36,13 +35,19 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
 
     private static final Log LOG = LogFactory.getLog(ApplicationQuestionFileSaver.class);
 
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private FormInputRestService formInputRestService;
 
     private FileUploadErrorTranslator fileUploadErrorTranslator = new ValidMediaTypesFileUploadErrorTranslator();
+
+    public ApplicationQuestionFileSaver(ApplicationQuestionFileSaver fileSaver,
+                                        ApplicationQuestionNonFileSaver nonFileSaver,
+                                        FormInputResponseRestService formInputResponseRestService,
+                                        FormInputRestService formInputRestService) {
+        super(fileSaver, nonFileSaver);
+        this.formInputResponseRestService = formInputResponseRestService;
+        this.formInputRestService = formInputRestService;
+    }
 
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,

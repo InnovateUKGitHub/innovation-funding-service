@@ -15,11 +15,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 abstract class AbstractApplicationSaver {
 
-    @Autowired
     private ApplicationQuestionFileSaver fileSaver;
-
-    @Autowired
     private ApplicationQuestionNonFileSaver nonFileSaver;
+
+    public AbstractApplicationSaver(ApplicationQuestionFileSaver fileSaver,
+                                    ApplicationQuestionNonFileSaver nonFileSaver) {
+        this.fileSaver = fileSaver;
+        this.nonFileSaver = nonFileSaver;
+    }
 
     public static final String MARKED_AS_COMPLETE_KEY = "application.validation.MarkAsCompleteFailed";
 
