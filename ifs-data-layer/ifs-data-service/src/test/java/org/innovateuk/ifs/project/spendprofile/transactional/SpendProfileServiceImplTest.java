@@ -110,8 +110,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private SpendProfileRepository spendProfileRepositoryMock;
     @Mock
     private ProjectUsersHelper projectUsersHelperMock;
-/*    @Mock
-    private ProjectService projectServiceMock;*/
     @Mock
     private PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
