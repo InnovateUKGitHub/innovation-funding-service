@@ -20,29 +20,30 @@
 
             <!--/* Summary view */-->
             <th:block th:if="${model.summary}">
-                <div class="extra-margin"
+                <div class="govuk-!-margin-top-6"
                      th:each="organisation : ${model.organisations}">
 
-                    <div class="heading-small" role="heading" aria-level="4">
+                    <div class="govuk-heading-s" role="heading" aria-level="4">
                         <th:block th:text="${organisation.name}">Organisation name</th:block>
                         <th:block th:if="${organisation.lead}"> (Lead)</th:block>
                         <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
                     </div>
-                    <div class="font-xsmall" role="heading" aria-level="5"><strong>Organisation type</strong></div>
-                    <p class="font-xsmall" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
-                    <table class="table-overflow">
-                        <thead>
-                        <tr>
-                            <th class="width-30-percent" scope="col">Applicant</th>
-                            <th class="width-50-percent" scope="col">Email</th>
-                            <th scope="col"><span class="visually-hidden">Additional details</span></th>
+                    <div class="govuk-body govuk-!-font-size-16" role="heading" aria-level="5"><strong>Organisation type</strong></div>
+                    <p class="govuk-body govuk-!-font-size-16" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+                    <table class="govuk-table table-overflow">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header width-30-percent" scope="col">Applicant</th>
+                            <th class="govuk-table__header width-50-percent" scope="col">Email</th>
+                            <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Additional details</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="applicant : ${organisation.applicants}">
-                            <td th:text="${applicant.name}">Steve Smith</td>
-                            <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                        <tbody class="govuk-table__body">
+                        <tr th:each="applicant : ${organisation.applicants}"
+                            class="govuk-table__row">
+                            <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
+                            <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
+                            <td class="govuk-table__cell" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                         </tr>
                         </tbody>
                     </table>
@@ -50,7 +51,7 @@
             </th:block>
 
             <!--/* Applicant buttons */-->
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block
                   th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
@@ -67,17 +68,15 @@
         </div>
 
         <th:block th:unless="${model.summary}">
-            <th:block th:if="${applicationIsReadOnly}">
-                <a th:href="${backURL}" class="button-secondary"
+                <a th:if="${model.allReadOnly}"
+                   th:href="${backURL}" class="button-secondary"
                    th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-            </th:block>
-            <th:block th:unless="${applicationIsReadOnly}">
-                <button id="application-question-save"
-                        type="submit"
-                        class="button app-submit-btn"
-                        name="submit-section">Save and return to application overview
+                <button th:unless="${model.allReadOnly}"
+                    id="application-question-save"
+                    type="submit"
+                    class="govuk-button app-submit-btn"
+                    name="submit-section">Save and return to application overview
                 </button>
-            </th:block>
         </th:block>
     </form>
 </th:block>

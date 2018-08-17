@@ -164,7 +164,7 @@ public class ApplicationDownloadController {
             row = createCellWithValue(row, String.valueOf(a.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size()));
             row = createCellWithValue(row, projectSummaryString);
             row = createCellWithValue(row, totalFormatted);
-            row = createCellWithValue(row, fundingSoughtFormatted);
+            createCellWithValue(row, fundingSoughtFormatted);
         }
 
         for (int i = 0; i < headerCount; i++) {

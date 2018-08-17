@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body"
+      th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard'})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+
+                <h1 class="govuk-heading-xl">Choose your organisation type</h1>
+
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">Your organisation must be UK based to receive funding.</p>
+                </div>
+
+                <form id="lead-organisation-type-form" action="/prototypes/IFS-4104-funding-business" method="GET" novalidate="novalidate">
+
+                    <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                    <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                    <input type="hidden" id="section3" name="section3" th:value="${section3}">
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-visually-hidden">
+                                Please select your organisation type
+                            </legend>
+
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="radio-1" type="radio" required="required" value="1"
+                                           data-required-errormessage="Please select an organisation type."
+                                           name="organisationTypeId">
+                                    <label class="govuk-label govuk-radios__label" for="radio-1">
+                                        <span>Business</span>
+                                        <span class="govuk-hint">UK based business.</span>
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="radio-2" type="radio" required="required" value="2"
+                                           data-required-errormessage="Please select an organisation type."
+                                           name="organisationTypeId">
+                                    <label class="govuk-label govuk-radios__label" for="radio-2">
+                                        <span>Research</span>
+                                        <span class="govuk-hint">Higher education and organisations registered with Je-S.</span>
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item" data-target="rto-guidance">
+                                    <input class="govuk-radios__input"
+                                           id="radio-3" type="radio" required="required" value="3"
+                                           data-required-errormessage="Please select an organisation type."
+                                           name="organisationTypeId">
+                                    <label class="govuk-label govuk-radios__label" for="radio-3">
+                                        <span>Research and technology organisation (RTO)</span>
+                                        <span class="govuk-hint">Organisations which solely promote and conduct collaborative research and innovation.</span>
+                                    </label>
+                                </div>
+
+                                <div id="rto-guidance" class="govuk-body panel" aria-hidden="true">
+                                    <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the
+                                        following rules are met:</h2>
+                                    <ul class="list-bullet">
+                                        <li>you must prove within the scope section of your application that you are the
+                                            best placed consortium partner to lead this project
+                                        </li>
+                                        <li>your project is essential to lay the foundations for the growth of an early
+                                            stage industry
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="radio-4" type="radio" required="required" value="4"
+                                           data-required-errormessage="Please select an organisation type."
+                                           name="organisationTypeId">
+                                    <label class="govuk-label govuk-radios__label" for="radio-4">
+                                        <span>Public sector, charity or non Je-S registered research organisation</span>
+                                        <span class="govuk-hint">A not-for-profit public sector body or charity working on innovation.</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <p class="govuk-body">
+                            If your organisation type is not listed contact the <a href="#">customer support service</a>
+                        </p>
+                    </div>
+
+                    <button type="submit" class="govuk-button">
+                        Save and continue
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>

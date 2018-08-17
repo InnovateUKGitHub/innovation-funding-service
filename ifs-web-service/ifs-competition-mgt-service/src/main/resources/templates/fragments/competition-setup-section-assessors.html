@@ -1,132 +1,156 @@
 
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-content">
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='govuk-heading-xl'" />
 
     <form th:action="@{(${model.general.editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="assessors">
         <th:block th:if="${model.general.editable}" id="section-assessors-edit">
-            <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
-                <fieldset>
-                    <legend class="heading-small">
-                        How many assessors are required for each application?
-                        <th:block th:if="${#fields.hasErrors('assessorCount')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">How many assessors are required for each application?</h2>
                     </legend>
-                    <div class="multiple-choice" th:each="assessorOption : ${model.assessorOptions}">
-                        <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
-                               th:value="${assessorOption.optionValue}" type="radio"
-                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
-                               th:disabled="${model.setupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.assessorCount.required}"/>
-                        <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
-                            <th:block th:text="${assessorOption.optionName}" />
-                        </label>
+                    <th:block th:if="${#fields.hasErrors('assessorCount')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" th:each="assessorOption : ${model.assessorOptions}">
+                            <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
+                                   class="govuk-radios__input"
+                                   th:value="${assessorOption.optionValue}" type="radio"
+                                   th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
+                                   th:disabled="${model.setupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorCount.required}"/>
+                            <label th:for="${'assessors-' + '__${assessorOption.id}__'}"
+                                   th:text="${assessorOption.optionName}"
+                                   class="govuk-label govuk-radios__label">
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'form-group-error'">
-                <label class="form-label" for="assessorPay">
-                    <span class="form-label-bold">How much do assessors receive per application?</span>
-                    <span class="form-hint">This information will be available in the assessor invites.</span>
-                     <th:block th:if="${#fields.hasErrors('assessorPay')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
-                    </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" for="assessorPay">
+                    How much do assessors receive per application?
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
-                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
+                <span class="govuk-hint">This information will be available in the assessor invites.</span>
+                <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-input--width-10"
+                       id="assessorPay"
+                       name="assessorPay"
+                       type="number"
+                       min="0"
+                       max="99999999"
+                       th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:readonly="${model.general.state.setupAndLive}"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend class="heading-small">
-                        Enable assessment panel for this competition?
-                        <th:block th:if="${#fields.hasErrors('hasAssessmentPanel')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Enable assessment panel for this competition?</h2>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="hasAssessmentPanel-0"
-                               type="radio"
-                               th:field="${competitionSetupForm.hasAssessmentPanel}"
-                               value="1"
-                               th:errorclass="field-error"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                        <label for="hasAssessmentPanel-0">
-                            Yes
-                        </label>
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="hasAssessmentPanel-1"
-                               type="radio"
-                               th:field="${competitionSetupForm.hasAssessmentPanel}"
-                               th:errorclass="field-error"
-                               required="required"
-                               value="0"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                        <label for="hasAssessmentPanel-1">
-                            No
-                        </label>
+                    <th:block th:if="${#fields.hasErrors('hasAssessmentPanel')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
+                    </th:block>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input id="hasAssessmentPanel-0"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.hasAssessmentPanel}"
+                                   value="1"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                            <label for="hasAssessmentPanel-0"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="hasAssessmentPanel-1"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.hasAssessmentPanel}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="0"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                            <label for="hasAssessmentPanel-1"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('hasInterviewStage')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend class="heading-small">
-                        Enable interview stage for this competition?
-                        <th:block th:if="${#fields.hasErrors('hasInterviewStage')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasInterviewStage')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Enable interview stage for this competition?</h2>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="hasInterviewStage-0"
-                               type="radio"
-                               th:field="${competitionSetupForm.hasInterviewStage}"
-                               value="1"
-                               th:errorclass="field-error"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                        <label for="hasInterviewStage-0">
-                            Yes
-                        </label>
+                    <th:block th:if="${#fields.hasErrors('hasInterviewStage')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
+                    </th:block>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input id="hasInterviewStage-0"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.hasInterviewStage}"
+                                   value="1"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
+                            <label for="hasInterviewStage-0"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="hasInterviewStage-1"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.hasInterviewStage}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="0"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
+                            <label for="hasInterviewStage-1"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="multiple-choice">
-                        <input id="hasInterviewStage-1"
-                               type="radio"
-                               th:field="${competitionSetupForm.hasInterviewStage}"
-                               th:errorclass="field-error"
-                               required="required"
-                               value="0"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                        <label for="hasInterviewStage-1">
-                            No
-                        </label>
-                    </div>
+
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend class="heading-small">
-                        Assessor view of finances
-                        <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Assessor view of finances</h2>
                     </legend>
-                    <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
-                        <div class="multiple-choice">
+                    <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
+                    </th:block>
+                    <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
+                         class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
                             <input id="assessorFinanceView-0"
+                                   class="govuk-radios__input"
                                    type="radio"
                                    th:field="${competitionSetupForm.assessorFinanceView}"
                                    th:checked="${competitionSetupForm.assessorFinanceView == 'OVERVIEW'}"
@@ -134,19 +158,22 @@
                                    th:errorclass="field-error"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                            <label for="assessorFinanceView-0">
+                            <label for="assessorFinanceView-0"
+                                   class="govuk-label govuk-radios__label">
                                 Overview
                             </label>
                         </div>
-                        <div class="multiple-choice">
+                        <div class="govuk-radios__item">
                             <input id="assessorFinanceView-1"
+                                   class="govuk-radios__input"
                                    type="radio"
                                    th:field="${competitionSetupForm.assessorFinanceView}"
                                    th:errorclass="field-error"
                                    required="required"
                                    value="DETAILED"
                                    th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                            <label for="assessorFinanceView-1">
+                            <label for="assessorFinanceView-1"
+                                   class="govuk-label govuk-radios__label">
                                 Detailed
                             </label>
                         </div>
@@ -159,7 +186,7 @@
                 </div>
             </div>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </th:block>
 
        <th:block th:unless="${model.general.editable}" id="section-assessors-readonly">
@@ -180,12 +207,12 @@
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>
             </dl>
 
-           <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+           <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
     </form>
 
 
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">

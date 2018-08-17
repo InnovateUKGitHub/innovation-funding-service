@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;

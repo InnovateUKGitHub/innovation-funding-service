@@ -32,7 +32,7 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
     @Override
     public List<Section> persistByParentEntity(Competition template) {
         if (template.getSections() == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<Section> sectionsWithoutParentSections = getTopLevelSections(template);

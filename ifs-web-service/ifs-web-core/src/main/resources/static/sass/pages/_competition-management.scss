@@ -1,69 +1,13 @@
+@import "../layout/grid";
+
 //Competition management admin pages require extra page width to prevent admin data tables from horizontal scrolling
-
-$wide-page-width: 1400px;
-
-.wide-page,
 .competition-management{
-
-  #global-header{
-    .header-wrapper{
-      max-width: $wide-page-width + $gutter;
-    }
-  }
-
-  #content{
-
-    @include media-down(mobile){
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    @include media(tablet){
-      margin: 0;
-    }
-
-    @media (min-width: $wide-page-width + ($gutter * 2)){
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 auto;
-    }
-
-    max-width: $wide-page-width;
-    padding-left: $gutter;
-    padding-right: $gutter;
-
-  }
-
-  %wide-page-margins{
-    @include media-down(mobile){
-      margin-left: $gutter-half;
-      margin-right: $gutter-half;
-    }
-
-    @media (min-width: $wide-page-width + ($gutter * 2)){
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    max-width: $wide-page-width;
-    margin-left: $gutter;
-    margin-right: $gutter;
-  }
-
-  .phase-banner{
-    @extend %wide-page-margins;
-  }
-
-  #footer{
-    .footer-wrapper{
-      @extend %wide-page-margins;
-    }
-  }
+  @extend %wide-page;
 }
 
-.grid-row {
+.govuk-grid-row {
   &.sort-by {
-    border-bottom:1px solid $grey-1;
+    border-bottom:1px solid $govuk-secondary-text-colour;
     padding: 30px 0 5px;
     margin: 0 0 5px;
 
@@ -108,7 +52,7 @@ $wide-page-width: 1400px;
 
 @media (min-width: 1200px){
   .info-area {
-    .button,
+    .govuk-button,
     .button-secondary {
       display:block;
     }
@@ -145,18 +89,18 @@ $wide-page-width: 1400px;
 }
 
 .button-dashboard{
-  background: $grey-4;
+  background: govuk-colour("grey-4");
   padding: 20px 20px 15px 20px;
   display: block;
   min-height: 110px;
   text-decoration: none;
 
   &:hover{
-    background: $highlight-colour;
+    background: govuk-colour("grey-4");
   }
 
   &.highlight{
-    background: $button-colour;
+    background: $govuk-button-colour;
     color: white;
   }
 }
@@ -165,7 +109,7 @@ $wide-page-width: 1400px;
   &.competition-setup {
     .inline-nav {
       a {
-        font-size:15px;
+        @include govuk-font(16);
       }
     }
   }
@@ -180,7 +124,7 @@ $wide-page-width: 1400px;
 
           &.selected {
             a {
-              border-bottom: 1px solid $border-colour;
+              border-bottom: 1px solid $govuk-border-colour;
             }
           }
         }
@@ -226,23 +170,19 @@ $wide-page-width: 1400px;
   dd {
     margin-bottom: 15px;
     min-height: 25px;
-
-    &.no-margin {
-      margin: 0;
-    }
   }
 
   .dt-title {
-    font-size: 24px;
+    @include govuk-font(24);
   }
 }
 
 .competition-setup {
   select {
     &[disabled] {
-      background:  $grey-4;
-      border: 1px solid $border-colour;
-      color: $black;
+      background:  govuk-colour("grey-4");
+      border: 1px solid $govuk-border-colour;
+      color: govuk-colour("black");
     }
   }
 }
@@ -258,9 +198,9 @@ $wide-page-width: 1400px;
 }
 
 .contentGroup {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   padding: 30px 0;
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
   clear:both;
 
   &:first-child {
@@ -270,22 +210,26 @@ $wide-page-width: 1400px;
 
   &:last-child {
     margin-bottom: 30px;
-    border-bottom: 1px solid $border-colour;
+    border-bottom: 1px solid $govuk-border-colour;
   }
 }
 
 .select-all {
   padding-top: 12px;
 
-  .form-hint {
+  .govuk-checkboxes {
+    float: left;
+  }
+
+  .govuk-hint {
     @include media-down(mobile) {
       display: block;
       text-align: center;
     }
 
     display:inline-block;
-    margin: 8px 10px 0;
     text-align: left;
+    margin: 8px 10px 0;
   }
 }
 

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -20,7 +19,6 @@ import org.mapstruct.Mappings;
         uses = {
                 AddressMapper.class,
                 AffiliationMapper.class,
-                EthnicityMapper.class,
                 InnovationAreaMapper.class
         }
 )

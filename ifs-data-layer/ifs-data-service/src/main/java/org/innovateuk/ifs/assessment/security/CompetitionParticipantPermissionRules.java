@@ -38,11 +38,9 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
     }
 
     private static boolean isSameUser(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        if (isSameParticipant(competitionParticipant, user)) {
-            return true;
-        } else if (competitionParticipant.getUserId() == null &&
+        if (isSameParticipant(competitionParticipant, user) || (competitionParticipant.getUserId() == null &&
                 competitionParticipant.getInvite() != null &&
-                user.getEmail().equals(competitionParticipant.getInvite().getEmail())) {
+                user.getEmail().equals(competitionParticipant.getInvite().getEmail()))) {
             return true;
         }
         return false;

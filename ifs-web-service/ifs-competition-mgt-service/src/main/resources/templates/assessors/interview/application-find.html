@@ -1,146 +1,158 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign applications to panel'"/>
 </head>
 
-<body class="competition-management competition-overview invite-applications">
+<body class="govuk-template__body competition-management competition-overview invite-applications">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-    <h2 class="heading-medium">Key statistics</h2>
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
-    <div class="grid-row">
-        <div class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
-                <small>Applications in competition</small>
-            </div>
-        </div>
-        <div class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
-                <small>Assigned to interview panel</small>
-            </div>
-        </div>
-    </div>
-
-    <dl class="standard-definition-list extra-margin">
-        <dt>Innovation sector</dt>
-        <dd th:text="${model.innovationSector}">Health and life sciences</dd>
-
-        <dt>Innovation area</dt>
-        <dd th:text="${model.innovationArea}">Agriculture and food</dd>
-    </dl>
-
-    <ul class="inline-nav extra-margin">
-        <li class="selected">
-            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
-        </li>
-        <li class="not-selected">
-            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
-        </li>
-        <li class="not-selected">
-            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
-        </li>
-    </ul>
-
-    <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
-        <p th:text="#{competition.management.limit.warning}"></p>
-    </div>
-    <div data-selection-limit-exceeded-block=""></div>
-
-    <div class="grid-row sorting">
-        <div class="column-one">
-            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-            <span class="heading-small">applications not yet invited</span>
-        </div>
-    </div>
-
-    <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${interviewAssignmentApplicationSelectionForm}"
-          data-multipage-select=""
-          autocomplete="off"
-          th:attr="data-total-checkboxes=${model.pagination.totalCount}">
-
-        <div class="grid-row sorting">
-            <div class="column-half select-all">
-                <div class="multiple-choice">
-                    <input type="checkbox"
-                           data-select-all=""
-                           id="select-all-check"
-                           th:checked="${interviewAssignmentApplicationSelectionForm.getAllSelected()}"
-                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
-                    <label for="select-all-check">
-                        Select all applications
-                    </label>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInCompetition}">45</span>
+                    <small>Applications in competition</small>
                 </div>
-                <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
-                </span>
             </div>
-            <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
-                    Add selected to invite list
-                </button>
+            <div class="govuk-grid-column-one-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInPanel}">23</span>
+                    <small>Assigned to interview panel</small>
+                </div>
             </div>
         </div>
 
-        <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col">Select</th>
-                    <th scope="col" class="width-small">Application number</th>
-                    <th scope="col">Project title</th>
-                    <th scope="col">Lead organisation</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="app, index : ${model.applications}">
-                    <td>
-                        <div class="multiple-choice">
+        <dl class="standard-definition-list govuk-!-margin-top-6">
+            <dt>Innovation sector</dt>
+            <dd th:text="${model.innovationSector}">Health and life sciences</dd>
+
+            <dt>Innovation area</dt>
+            <dd th:text="${model.innovationArea}">Agriculture and food</dd>
+        </dl>
+
+        <ul class="govuk-list inline-nav govuk-!-margin-top-6">
+            <li class="selected">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
+            </li>
+            <li class="not-selected">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
+            </li>
+            <li class="not-selected">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
+            </li>
+        </ul>
+
+        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
+            <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
+        </div>
+        <div data-selection-limit-exceeded-block=""></div>
+
+        <div class="govuk-body govuk-grid-row sorting">
+            <div class="column-one">
+                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications not yet invited</span>
+            </div>
+        </div>
+
+        <form method="POST"
+              th:action="@{/assessment/interview/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
+              th:object="${interviewAssignmentApplicationSelectionForm}"
+              data-multipage-select=""
+              autocomplete="off"
+              th:attr="data-total-checkboxes=${model.pagination.totalCount}">
+
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
                             <input type="checkbox"
-                                   th:id="|assessor-row-${index.count}|"
-                                   th:field="*{selectedIds}"
-                                   th:value="${app.id}"/>
-                            <label th:for="|assessor-row-${index.count}|">
-                                <span class="invisible">Add</span>
+                                   class="govuk-checkboxes__input"
+                                   data-select-all=""
+                                   id="select-all-check"
+                                   th:checked="${interviewAssignmentApplicationSelectionForm.getAllSelected()}"
+                                   th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                            <label for="select-all-check"
+                                   class="govuk-label govuk-checkboxes__label">
+                                Select all applications
                             </label>
                         </div>
-                    </td>
-                    <td>
-                        <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.id})} + ${originQuery}"
-                           th:text="${app.id}">123
-                        </a>
-                    </td>
-                    <td>
-                        <span th:text="${app.name}">project name</span>
-                    </td>
-                    <td>
-                        <span th:text="${app.leadOrganisation}">Lead organisation</span>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(model.applications)}">
-                    <td colspan="5">No available applications found.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
+                    </div>
+                    <span class="govuk-hint">
+                        <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
+                    </span>
+                </div>
+                <div class="govuk-grid-column-one-half select-all alignright">
+                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
+                        Add selected to invite list
+                    </button>
+                </div>
+            </div>
 
-    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Select</th>
+                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app, index : ${model.applications}">
+                        <td class="govuk-table__cell">
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:id="|assessor-row-${index.count}|"
+                                           th:field="*{selectedIds}"
+                                           th:value="${app.id}"/>
+                                    <label th:for="|assessor-row-${index.count}|"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        <span class="govuk-visually-hidden">Add</span>
+                                    </label>
+                                </div>
+                            </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.id})} + ${originQuery}"
+                               th:text="${app.id}"
+                               class="govuk-link">123
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <span th:text="${app.name}">project name</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <span th:text="${app.leadOrganisation}">Lead organisation</span>
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row"  th:if="${#lists.isEmpty(model.applications)}">
+                        <td class="govuk-table__cell" colspan="5">No available applications found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
 
+        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

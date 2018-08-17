@@ -11,10 +11,10 @@ ol.list-style-type-roman{
   list-style-type: none;
 
   /*li{
-  	border-bottom: 1px solid $border-colour;
+  	border-bottom: 1px solid $govuk-border-colour;
 
       &:first-child{
-         border-top: 1px solid $border-colour;
+         border-top: 1px solid $govuk-border-colour;
       }
   }*/
 
@@ -24,7 +24,7 @@ ol.list-style-type-roman{
     }
   }
 
-  .grid-row{
+  .govuk-grid-row{
     //overflow: auto;
     //margin: 2px 0 2px 0;
     //border-left: 5px solid red;
@@ -37,7 +37,7 @@ ol.list-style-type-roman{
     h3{
       padding: 10px 0px 10px 20px;
 
-      &.heading-small{
+      &.govuk-heading-s{
         margin: 0;
       }
     }
@@ -53,7 +53,7 @@ ol.list-style-type-roman{
       }
     }
 
-    .column-third{
+    .govuk-grid-column-one-third{
       padding: 12px 0 0 20px;
       @include media-down(mobile) {
         padding: 0 0 10px 35px;
@@ -62,8 +62,8 @@ ol.list-style-type-roman{
   }
 
   .assigned-to-me{
-    .grid-row{
-      //border-left: 5px solid $light-blue;
+    .govuk-grid-row{
+      //border-left: 5px solid govuk-colour("light-blue");
       //@extend %icon-assigned;
     }
   }
@@ -106,10 +106,10 @@ ol.list-style-type-roman{
 
 .list-overview{
   &.application-questions{
-    .heading-medium{
+    .govuk-heading-m{
       margin: 0.5em 0 0.4em 0;
     }
-    .button{
+    .govuk-button{
       margin-top: 10px;
     }
     .question{
@@ -119,22 +119,11 @@ ol.list-style-type-roman{
         margin-bottom: 60px;
       }
     }
-    .grid-row{
+    .govuk-grid-row{
       h3{
         padding-top: 5px;
       }
     }
-  }
-}
-
-/*-------- Companies House results panel example -------------*/
-
-li.type-company{
-  padding: 0 0 25px 0;
-
- .meta.crumbtrail{
-    margin: 0;
-    padding: 0;
   }
 }
 
@@ -151,7 +140,7 @@ dl{
 
 dl.standard-definition-list{
   overflow: auto;
-  @include core-19;
+  @include govuk-font(19);
 
   dt{
     display: block;
@@ -173,7 +162,7 @@ dl.standard-definition-list{
     margin-bottom: 0.5em;
 
     &.warning{
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt{
@@ -217,17 +206,17 @@ dl.standard-definition-list{
 /*----- Eligibility criteria for finances ----*/
 
 .eligibility{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px 20px 10px 20px;
 
   &-warning{
-    border: 1px solid $red;
+    border: 1px solid $govuk-error-colour;
   }
 }
 
 .list-eligibility{
   overflow: auto;
-  @include core-24;
+  @include govuk-font(24);
 
   dt{
     display: block;
@@ -247,7 +236,7 @@ dl.standard-definition-list{
     margin-bottom: 0.5em;
 
     &.warning{
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt{
@@ -260,8 +249,8 @@ dl.standard-definition-list{
 
 .comp-timeline-status{
   li{
-    border-top: 1px solid $secondary-text-colour;
-    color: $secondary-text-colour;
+    border-top: 1px solid $govuk-secondary-text-colour;
+    color: $govuk-secondary-text-colour;
 
     h3{
       margin: 10px 0 0 0;
@@ -276,8 +265,8 @@ dl.standard-definition-list{
     }
 
     &.done{
-      border-top: 1px solid $text-colour;
-      color: $text-colour;
+      border-top: 1px solid $govuk-text-colour;
+      color: $govuk-text-colour;
       @extend %icon-tick;
       background-position: right 1em;
 
@@ -286,7 +275,7 @@ dl.standard-definition-list{
       }
     }
 
-    .button{
+    .govuk-button{
       width: 100%;
     }
   }
@@ -307,12 +296,12 @@ dl.standard-definition-list{
     span{
       margin-left: 100px;
       padding: 20px;
-      border: 3px solid $grey-2;
+      border: 3px solid govuk-colour("grey-2");
       border-radius: 5px;
       display: block;
       margin-bottom: 10px;
 
-      .heading-medium{
+      .govuk-heading-m{
         margin: 0;
       }
 
@@ -321,7 +310,7 @@ dl.standard-definition-list{
         position: absolute;
         margin-left: -56px;
         border: 18px solid transparent;
-        border-right: 18px solid $grey-2;
+        border-right: 18px solid govuk-colour("grey-2");
       }
     }
 
@@ -333,7 +322,7 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $grey-4;
+        background: govuk-colour("grey-4");
       }
     }
 
@@ -353,11 +342,11 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $link-colour;
-        color: $white;
+        background: $govuk-link-colour;
+        color: govuk-colour("white");
 
         a{
-          color: $white;
+          color: govuk-colour("white");
         }
       }
     }
@@ -370,11 +359,11 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $link-colour;
-        color: $white;
+        background: $govuk-link-colour;
+        color: govuk-colour("white");
 
         a{
-          color: $white;
+          color: govuk-colour("white");
         }
       }
     }
@@ -410,7 +399,7 @@ dl.standard-definition-list{
 %tabular-row{
   display: block;
   clear: both;
-  border-bottom: 1px solid $border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
   @extend .cf;
 }
 
@@ -538,7 +527,7 @@ ol.navigation-list {
   }
   //right aligned
   &.navigation-right {
-    @extend %contain-floats;
+    @include govuk-clearfix;
     float: right;
     li { margin: 0 0 0 10px;}
     li:first-child {

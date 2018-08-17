@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
-import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
@@ -32,14 +31,13 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
  * view model for the application overview page
  */
 @Component
-public class ApplicationOverviewModelPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
     private CompetitionRestService competitionRestService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private ProjectService projectService;
     private SectionService sectionService;
-    private QuestionService questionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
     private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
@@ -67,7 +65,7 @@ public class ApplicationOverviewModelPopulator extends FinanceOverviewSectionPop
         this.applicationOverviewUserModelPopulator = applicationOverviewUserModelPopulator;
     }
 
-    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId, ApplicationForm form){
+    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
