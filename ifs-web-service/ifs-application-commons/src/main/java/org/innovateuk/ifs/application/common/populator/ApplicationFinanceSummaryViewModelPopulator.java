@@ -173,7 +173,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
     private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
         boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
-        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
+        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER);
         boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
 
         return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
@@ -186,7 +186,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
         OrganisationResource userOrganisation = null;
 
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+        if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR)) {
             ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
             userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
         }

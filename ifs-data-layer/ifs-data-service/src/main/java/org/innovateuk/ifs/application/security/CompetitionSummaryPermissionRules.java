@@ -7,6 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -18,8 +19,8 @@ public class CompetitionSummaryPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Internal users (except innovation leads) can view competition summary of any competition.")
+    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Internal users (except innovation leads and stakeholders) can view competition summary of any competition.")
     public boolean allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeads(CompetitionResource competition, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 }

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -53,6 +55,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private InnovationLeadRepository innovationLeadRepository;
 
     @Autowired
+    private StakeholderRepository stakeholderRepository;
+
+    @Autowired
     private ProjectProcessRepository projectProcessRepository;
 
     protected boolean isPartner(long projectId, long userId) {
@@ -92,6 +97,11 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId) {
         List<InnovationLead> competitionParticipants = innovationLeadRepository.findInnovationsLeads(competitionId);
+        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+    }
+
+    protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
+        List<Stakeholder> competitionParticipants = stakeholderRepository.findStakeholders(competitionId);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 

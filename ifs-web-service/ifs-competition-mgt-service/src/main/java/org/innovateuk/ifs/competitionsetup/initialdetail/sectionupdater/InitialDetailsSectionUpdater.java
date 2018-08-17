@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -204,7 +205,11 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                     "competition.setup.invalid.comp.exec"));
         }
 
-        if (userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), INNOVATION_LEAD)) {
+        //TODO - Please confirm that we should NOT be doing this and then I can delete that commented out code.
+        // That is, the lead technologist should still be an innovation lead. He cannot be a Stakeholder.
+        if (userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), INNOVATION_LEAD)
+                //|| userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), STAKEHOLDER)
+                ) {
             competition.setLeadTechnologist(initialDetailsForm.getInnovationLeadUserId());
         } else if (initialDetailsForm.getInnovationLeadUserId() != null) {
             return asList(fieldError("innovationLeadUserId",

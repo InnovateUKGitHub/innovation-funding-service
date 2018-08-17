@@ -37,7 +37,8 @@ public enum Role implements Identifiable {
     PANEL_ASSESSOR              (16, "panel_assessor",              "Panel Assessor"),
     INTERVIEW_ASSESSOR          (17, "interview_assessor",          "Interview Assessor"),
     INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",    "Interview Lead Applicant"),
-    MONITORING_OFFICER          (19, "monitoring_officer",       "Monitoring Officer",        "applicant/dashboard");
+    MONITORING_OFFICER          (19, "monitoring_officer",       "Monitoring Officer",        "applicant/dashboard"),
+    STAKEHOLDER                 (20, "stakeholder",               "Stakeholder",              "management/dashboard");
 
     final long id;
     final String name;
@@ -107,7 +108,7 @@ public enum Role implements Identifiable {
     public static List<Role> applicantProcessRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR); }
 
     public static Set<Role> internalRoles(){
-        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER));
     }
 
     public static Set<Role> externalApplicantRoles(){

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
@@ -26,9 +27,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return !COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
 
-    @PermissionRule(value = "READ", description = "Internal users other than innovation lead users can see all competitions")
+    @PermissionRule(value = "READ", description = "Internal users other than innovation lead users and stakeholders can see all competitions")
     public boolean internalUserCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can view competitions that are assigned to them")
@@ -36,9 +37,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Internal users other than innovation leads can see all competition search results")
+    @PermissionRule(value = "READ", description = "Internal users other than innovation leads and stakeholders can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation lead users can see competitions that are assigned to them")
@@ -51,9 +52,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user);
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Internal users, barring innovation leads, and IFS Admin can view unsuccessful applications")
+    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders) and IFS Admin can view unsuccessful applications")
     public boolean internalUsersAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
-        return (isInternal(user) && !isInnovationLead(user)) || isIFSAdmin(user);
+        return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || isIFSAdmin(user);
     }
     @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
     public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
