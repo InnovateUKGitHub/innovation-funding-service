@@ -53,7 +53,8 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum {
             INELIGIBLE,
             INELIGIBLE_INFORMED,
             REJECTED,
-            WITHDRAWN
+            WITHDRAWN,
+            APPROVED
     );
 
     public static final ImmutableSet<ApplicationState> ineligibleStates = Sets.immutableEnumSet(
