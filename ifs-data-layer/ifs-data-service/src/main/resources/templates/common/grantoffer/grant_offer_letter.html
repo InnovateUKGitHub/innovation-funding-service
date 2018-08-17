@@ -16,7 +16,7 @@
       <p>
           <#if LeadContact?has_content>${LeadContact}<br/></#if>
           <#if LeadOrgName?has_content>${LeadOrgName}<br/></#if>
-          <#if Address1?has_content>${Address1} </#if>
+          <#if Address1?has_content>${Address1}<br/></#if>
           <#if Address2?has_content>${Address2}<br/></#if>
           <#if Address3?has_content>${Address3}<br/></#if>
           <#if TownCity?has_content>${TownCity}<br/></#if>
@@ -35,16 +35,16 @@
       <p>We are pleased to confirm your grant award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service. This includes any additional terms and conditions attached to this notice.</p>
       <p>Your individual grant allocations are detailed in the attached annexes. These allocations are final and not subject to further negotiation or amendment.</p>
       <p class="bold">Accepting your award</p>
-      <p>To confirm you want to accept, please complete and sign annex 1 attached to this notice. You should return this through the Innovation Funding Service.</p>
+      <p>To confirm you want to accept, please complete and sign the annex attached to this notice. You should return this through the Innovation Funding Service.</p>
       <p>Acceptance includes confirming your project start and end dates. Once your acceptance is approved, these can only be changed by submitting a request through your Monitoring Officer. </p>
       <p>Your award will be withdrawn if you do not confirm your start date within one calendar month of this letter. Any costs incurred before that start date will be ineligible for grant unless you have made other arrangements.</p>
       <p>We wish you every success with your project.</p>
       <p>Yours sincerely</p>
-      <p><br/>
+      <p><br/><br/>
           Ben Morris<br/>
           Delivery and Insight Manager
       </p>
-      <p class="textcenter"><br/>
+      <p class="textcenter"><br/><br/><br/><br/><br/><br/>
           Innovate UK is part of UK Research and Innovation <br/>
           Innovate UK, Polaris House, North Star Avenue, Swindon SN2 1FL <br/>
           Tel:+44 (0)1793 442 700 <br/>
@@ -71,12 +71,12 @@
       <p class="signature">Signed: ………………………………………………………….</p>
       <p>Project Manager for and on behalf of Empire Ltd</p>
       <p><br/></p>
-      <p class="signature">* Print name:.……………………………………......................... </p>
+      <p class="signature">Print name:.……………………………………......................... </p>
       <p>Date: …………………………………………………………….</p>
   </div>
   <div class="page">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+        <p><span class="bold">Project finances:</span> costs summary</p>
         <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -92,9 +92,9 @@
             <thead>
             <tr>
                 <th scope="col">Industry costs</th>
-                <th scope="col">Total eligible costs</th>
-                <th scope="col">Rate of grant</th>
-                <th scope="col">Total grant</th>
+                <th scope="col">Total eligible costs (£)</th>
+                <th scope="col">Rate of grant (%)</th>
+                <th scope="col">Total grant (£)</th>
             </tr>
             </thead>
             <tbody>
@@ -124,9 +124,9 @@
             <thead>
             <tr>
                 <th scope="col" class="bold">Academic costs</th>
-                <th scope="col">Total eligible costs</th>
-                <th scope="col">Rate of grant</th>
-                <th scope="col">Total grant</th>
+                <th scope="col">Total eligible costs (£)</th>
+                <th scope="col">Rate of grant (%)</th>
+                <th scope="col">Total grant (£)</th>
             </tr>
             </thead>
             <tbody>
@@ -168,7 +168,7 @@
   <#if industrialFinanceTable?? && industrialFinanceTable.organisations??>
       <div class="page landscape">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+        <p><span class="bold">Project finances:</span> industry costs</p>
         <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -179,13 +179,13 @@
             <thead>
             <tr>
                 <th scope="col" class="bold">Industry costs</th>
-                <th scope="col">Labour</th>
-                <th scope="col">Overheads</th>
-                <th scope="col">Materials</th>
-                <th scope="col">Capital usage</th>
-                <th scope="col">Subcontract</th>
-                <th scope="col">Travel and subsistence</th>
-                <th scope="col">Other costs</th>
+                <th scope="col">Labour (£)</th>
+                <th scope="col">Overheads (£)</th>
+                <th scope="col">Materials (£)</th>
+                <th scope="col">Capital usage (£)</th>
+                <th scope="col">Subcontract (£)</th>
+                <th scope="col">Travel and subsistence (£)</th>
+                <th scope="col">Other costs (£)</th>
             </tr>
             </thead>
             <tbody>
@@ -218,7 +218,7 @@
   <#if academicFinanceTable?? && academicFinanceTable.organisations??>
       <div class="page landscape">
             <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #2</h2>
-            <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+            <p><span class="bold">Project finances:</span> academic costs</p>
             <p>
               <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
               <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -236,18 +236,18 @@
                 </tr>
                 <tr>
                     <td scope="col"></td>
-                    <td scope="col">Staff</td>
-                    <td scope="col">Travel and subs</td>
-                    <td scope="col">Equipment</td>
-                    <td scope="col">Other costs</td>
-                    <td scope="col">Investigations</td>
-                    <td scope="col">Estates</td>
-                    <td scope="col">Other DA</td>
-                    <td scope="col">Indirect costs</td>
-                    <td scope="col">Staff</td>
-                    <td scope="col">Travel and subs</td>
-                    <td scope="col">Equipment</td>
-                    <td scope="col">Other costs</td>
+                    <td scope="col">Staff (£)</td>
+                    <td scope="col">Travel and subs (£)</td>
+                    <td scope="col">Equipment (£)</td>
+                    <td scope="col">Other costs (£)</td>
+                    <td scope="col">Investigations (£)</td>
+                    <td scope="col">Estates (£)</td>
+                    <td scope="col">Other DA (£)</td>
+                    <td scope="col">Indirect costs (£)</td>
+                    <td scope="col">Staff (£)</td>
+                    <td scope="col">Travel and subs (£)</td>
+                    <td scope="col">Equipment (£)</td>
+                    <td scope="col">Other costs (£)</td>
                 </tr>
                 </thead>
                 <tbody>
