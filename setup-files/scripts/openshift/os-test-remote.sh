@@ -52,7 +52,7 @@ function fileFixtures() {
 }
 
 function copyNecessaryFiles() {
-    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
+    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests/docker-build.gradle
 }
 
 function navigateToRoot(){
@@ -67,7 +67,7 @@ cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures
 tailorToAppInstance
-copyNecessaryFiles
+#copyNecessaryFiles
 buildAndPushTestImages
 deployTests
 cleanUp
