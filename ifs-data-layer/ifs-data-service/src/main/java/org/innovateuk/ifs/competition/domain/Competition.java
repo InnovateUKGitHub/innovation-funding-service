@@ -397,6 +397,10 @@ public class Competition implements ProcessActivity {
         this.academicGrantPercentage = academicGrantPercentage;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public User getExecutive() {
         return executive;
     }

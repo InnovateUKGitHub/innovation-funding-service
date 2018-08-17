@@ -40,6 +40,10 @@ public abstract class Finance {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Organisation getOrganisation() {
         return organisation;
     }

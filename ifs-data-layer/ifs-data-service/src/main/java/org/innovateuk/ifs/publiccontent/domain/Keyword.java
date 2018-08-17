@@ -25,6 +25,10 @@ public class Keyword {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public PublicContent getPublicContent() {
         return publicContent;
     }

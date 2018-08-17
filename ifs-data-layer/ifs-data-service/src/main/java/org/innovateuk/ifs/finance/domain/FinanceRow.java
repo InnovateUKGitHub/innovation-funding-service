@@ -138,4 +138,8 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     public abstract void setTarget(FinanceType target);
 
     public abstract FinanceType getTarget();
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
