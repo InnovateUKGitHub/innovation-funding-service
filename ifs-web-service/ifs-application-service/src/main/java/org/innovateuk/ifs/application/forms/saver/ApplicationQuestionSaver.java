@@ -11,7 +11,6 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     private QuestionRestService questionRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
-
+    private ApplicationQuestionFileSaver fileSaver;
+    private ApplicationQuestionNonFileSaver nonFileSaver;
 
     public ApplicationQuestionSaver(UserRestService userRestService,
                                     ApplicationService applicationService,
@@ -51,7 +51,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                     ApplicationQuestionApplicationDetailsSaver detailsSaver,
                                     ApplicationQuestionFileSaver fileSaver,
                                     ApplicationQuestionNonFileSaver nonFileSaver) {
-        super(fileSaver, nonFileSaver);
         this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.userService = userService;
@@ -59,6 +58,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         this.questionRestService = questionRestService;
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
         this.detailsSaver = detailsSaver;
+        this.fileSaver = fileSaver;
+        this.nonFileSaver = nonFileSaver;
     }
 
     public ValidationMessages saveApplicationForm(Long applicationId,
@@ -79,7 +80,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         ApplicationResource updatedApplication = form.getApplication();
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {
-            errors.addAll(saveQuestionResponses(request, questionList, userId, processRole.getId(), application.getId(), ignoreEmpty));
+            errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questionList, request, userId, applicationId, ignoreEmpty));
+            errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questionList, request.getParameterMap(), request, applicationId, processRole.getId()));
         }
 
         detailsSaver.setApplicationDetails(application, updatedApplication);

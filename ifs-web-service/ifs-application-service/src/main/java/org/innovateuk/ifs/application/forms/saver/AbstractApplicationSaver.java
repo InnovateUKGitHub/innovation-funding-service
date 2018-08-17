@@ -15,15 +15,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 abstract class AbstractApplicationSaver {
 
-    private ApplicationQuestionFileSaver fileSaver;
-    private ApplicationQuestionNonFileSaver nonFileSaver;
-
-    public AbstractApplicationSaver(ApplicationQuestionFileSaver fileSaver,
-                                    ApplicationQuestionNonFileSaver nonFileSaver) {
-        this.fileSaver = fileSaver;
-        this.nonFileSaver = nonFileSaver;
-    }
-
     public static final String MARKED_AS_COMPLETE_KEY = "application.validation.MarkAsCompleteFailed";
 
     protected ValidationMessages sortValidationMessages(ValidationMessages validationMessages) {
@@ -44,13 +35,4 @@ abstract class AbstractApplicationSaver {
         return "formInput[cost-" + formInputId + "]";
     }
 
-    protected ValidationMessages saveQuestionResponses(HttpServletRequest request, List<QuestionResource> questions, Long userId,
-                                                       Long processRoleId, Long applicationId, boolean ignoreEmpty) {
-        ValidationMessages errors = new ValidationMessages();
-
-        errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
-        errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRoleId));
-
-        return errors;
-    }
 }

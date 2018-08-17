@@ -20,10 +20,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
 
     private SectionService sectionService;
 
-    public ApplicationSectionFinanceSaver(ApplicationQuestionFileSaver fileSaver,
-                                          ApplicationQuestionNonFileSaver nonFileSaver,
-                                          SectionService sectionService) {
-        super(fileSaver, nonFileSaver);
+    public ApplicationSectionFinanceSaver(SectionService sectionService) {
         this.sectionService = sectionService;
     }
 

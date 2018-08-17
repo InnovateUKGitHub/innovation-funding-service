@@ -157,7 +157,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
-            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
+            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(),
+                    questionRestService.findByCompetition(currentSection.get().getCompetition()).getSuccess());
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()

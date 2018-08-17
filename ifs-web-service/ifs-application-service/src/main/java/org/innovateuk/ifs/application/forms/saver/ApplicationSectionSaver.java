@@ -35,33 +35,37 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
-    @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Autowired
     private UserRestService userRestService;
-
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
     private QuestionRestService questionRestService;
-
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
     private OverheadFileSaver overheadFileSaver;
-
-    @Autowired
     private ApplicationSectionFinanceSaver financeSaver;
+    private ApplicationQuestionFileSaver fileSaver;
+    private ApplicationQuestionNonFileSaver nonFileSaver;
 
-    public ApplicationSectionSaver(ApplicationQuestionFileSaver fileSaver,
+    public ApplicationSectionSaver(OrganisationService organisationService,
+                                   FinanceViewHandlerProvider financeViewHandlerProvider,
+                                   UserRestService userRestService,
+                                   SectionService sectionService,
+                                   QuestionRestService questionRestService,
+                                   CookieFlashMessageFilter cookieFlashMessageFilter,
+                                   OverheadFileSaver overheadFileSaver,
+                                   ApplicationSectionFinanceSaver financeSaver,
+                                   ApplicationQuestionFileSaver fileSaver,
                                    ApplicationQuestionNonFileSaver nonFileSaver) {
-        super(fileSaver, nonFileSaver);
+        this.organisationService = organisationService;
+        this.financeViewHandlerProvider = financeViewHandlerProvider;
+        this.userRestService = userRestService;
+        this.sectionService = sectionService;
+        this.questionRestService = questionRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.overheadFileSaver = overheadFileSaver;
+        this.financeSaver = financeSaver;
+        this.fileSaver = fileSaver;
+        this.nonFileSaver = nonFileSaver;
     }
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
@@ -92,7 +96,8 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                     .map(questionId -> questionRestService.findById(questionId).getSuccess())
                     .collect(Collectors.toList());
 
-            errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
+            errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
+            errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRole.getId()));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
             ValidationMessages saveErrors = financeViewHandlerProvider.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);
