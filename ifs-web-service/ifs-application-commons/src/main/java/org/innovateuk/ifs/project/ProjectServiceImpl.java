@@ -99,10 +99,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId) {
 
-        //List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         List<PartnerOrganisationResource> partnerOrganisationResources = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
 
-        //List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, projectUserResource -> projectUserResource.getOrganisation()));
         List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
         List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationId -> organisationRestService.getOrganisationById(organisationId));
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);

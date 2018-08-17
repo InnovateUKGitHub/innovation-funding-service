@@ -21,7 +21,6 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -37,7 +36,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
@@ -105,8 +103,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
 
-/*    @Autowired
-    private ProjectService projectService;*/
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
     @Autowired
@@ -145,11 +141,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
         return getProject(projectId)
                 .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
-                        //.andOnSuccess(() -> projectService.getProjectUsers(projectId)
                         .andOnSuccess(() -> partnerOrganisationService.getProjectPartnerOrganisations(projectId)
-                                //.andOnSuccess(projectUsers -> {
                                 .andOnSuccess(partnerOrganisationResources -> {
-                                    //List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, projectUserResource -> projectUserResource.getOrganisation()));
                                     List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))

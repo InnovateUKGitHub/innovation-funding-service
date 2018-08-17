@@ -431,12 +431,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
         CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
 
-        // setup expectations for getting project users to infer the partner organisations
-/*        List<ProjectUserResource> projectUsers =
-                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);*/
         List<PartnerOrganisationResource> partnerOrganisationResources =
                 newPartnerOrganisationResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        //when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
