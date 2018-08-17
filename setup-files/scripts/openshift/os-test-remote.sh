@@ -67,7 +67,7 @@ cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures
 tailorToAppInstance
-# copyNecessaryFiles
+copyNecessaryFiles
 buildAndPushTestImages
 deployTests
 cleanUp
