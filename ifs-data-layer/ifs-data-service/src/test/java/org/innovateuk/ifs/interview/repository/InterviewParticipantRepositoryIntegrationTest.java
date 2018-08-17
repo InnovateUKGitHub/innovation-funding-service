@@ -18,7 +18,6 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
@@ -64,9 +63,6 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
     private ProfileRepository profileRepository;
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
@@ -92,8 +88,18 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        loginCompAdmin();
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("innovation area").build());
+
+        setLoggedInUser(null);
+
         user = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
     }

@@ -109,8 +109,19 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        loginCompAdmin();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("innovation area").build());
+
+        setLoggedInUser(null);
+
         user = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
     }
@@ -418,6 +429,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
     @Test
     public void getByInviteEmail() {
+        loginCompAdmin();
         List<Competition> competitions = newCompetition()
                 .with(id(null))
                 .build(2);

@@ -66,8 +66,18 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        loginCompAdmin();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("innovation area")
+                .build());
+
         user = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
     }
@@ -154,8 +164,6 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
-        loginSteveSmith();
-
         User acceptedUser = newUser()
                 .withId()
                 .withEmailAddress("ah@test2.com")
@@ -218,8 +226,6 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void findByUserIdAndRole() {
-        loginSteveSmith();
-
         Competition competition = newCompetition()
                 .with(id(null))
                 .build();
