@@ -67,7 +67,7 @@
                                  th:with="item=${model.availableResearchCategories.get(0)}">
                                 <input type="checkbox"
                                        class="govuk-checkboxes__input"
-                                       th:field="*{researchCategory}"
+                                       th:name="researchCategory"
                                        required="required"
                                        th:value="${item.id}"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
