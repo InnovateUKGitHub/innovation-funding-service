@@ -98,7 +98,7 @@ virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
 virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
 
-postcodeLookupKey=`sed '/^\#/d' ${dataServiceCodeDir}/docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
+#postcodeLookupKey=`sed '/^\#/d' ${dataServiceCodeDir}/docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 
 echo "scriptDir:                    ${scriptDir}"
 echo "rootDir:                      ${rootDir}"
