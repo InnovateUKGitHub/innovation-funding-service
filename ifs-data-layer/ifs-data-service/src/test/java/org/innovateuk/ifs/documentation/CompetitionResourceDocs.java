@@ -69,7 +69,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
             fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old " +
                     "menu view are complete"),
-            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition")
+            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition"),
+            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Component
-public class ApplicationFeedbackViewModelPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private ApplicationService applicationService;

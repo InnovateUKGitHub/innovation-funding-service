@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
  * view model for the application overview page
  */
 @Component
-public class ApplicationOverviewModelPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
     private CompetitionRestService competitionRestService;
     private UserRestService userRestService;

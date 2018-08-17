@@ -36,6 +36,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -156,9 +157,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
-            List<QuestionResource> competitionQuestions = questionRestService.findByCompetition(currentSection.get().getCompetition()).getSuccess();
-            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), competitionQuestions);
-            questions.sort(Comparator.comparing(QuestionResource::getPriority));
+            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
@@ -252,9 +251,10 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        List<QuestionResource> questionResources = simpleFilter(questions, q -> questionIds.contains(q.getId()));
-        Collections.sort(questionResources);
-        return questionResources;
+        return questions.stream()
+                .filter(q -> questionIds.contains(q.getId()))
+                .sorted()
+                .collect(toList());
     }
 
     private Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
