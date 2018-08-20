@@ -17,38 +17,38 @@
 
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Your details <small class="list-indent"><a href="/profile/edit" class="govuk-link"> Edit your details</a></small></h2>
+        <h2 class="govuk-heading-m">Your details <small class="list-indent"><a href="/profile/edit" class="govuk-link"> Edit your details</a></small></h2>
 
-        <h3 class="govuk-heading-s">Your name</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Your name</h3>
         <p class="govuk-body">
             <th:block th:text="${model.name}" />
         </p>
 
-        <h3 class="govuk-heading-s">Phone number</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Phone number</h3>
         <p class="govuk-body" th:text="${model.phoneNumber}" />
-        <h3 class="govuk-heading-s">Email address</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Email address</h3>
         <p class="govuk-body" th:text="${model.emailAddress}" />
-        <h3 class="govuk-heading-s">Email preferences</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Email preferences</h3>
         <p class="govuk-body" th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
         <p class="govuk-body" th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
 
         <th:block th:unless="${model.organisations.isEmpty()}">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Your organisation details</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Your organisation details</h2>
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="width-small">Organisation name</th>
-                        <th>Organisation type</th>
-                        <th>Registration number</th>
-                    </tr>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header width-small">Organisation name</th>
+                            <th class="govuk-table__header">Organisation type</th>
+                            <th class="govuk-table__header">Registration number</th>
+                        </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="organisation : ${model.organisations}">
-                        <td th:text="${organisation.name}"></td>
-                        <td th:text="${organisation.type}"></td>
-                        <td th:text="${organisation.registrationNumber}"></td>
-                    </tr>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="organisation : ${model.organisations}">
+                            <td class="govuk-table__cell" th:text="${organisation.name}"></td>
+                            <td class="govuk-table__cell" th:text="${organisation.type}"></td>
+                            <td class="govuk-table__cell" th:text="${organisation.registrationNumber}"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
