@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-    <main tabindex="-1" id="content">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.canSelectOrganisation() ? 'Select your organisation' : 'Your organisation'},subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}"
