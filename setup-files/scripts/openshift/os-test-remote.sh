@@ -17,7 +17,7 @@ echo "Deploying tests to the current oc project ($PROJECT)"
 
 function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
-    echo "Starting to copy os-files to ${getBuildLocation}" 
+    echo "Starting to copy os-files to ${getBuildLocation}"
     cp -r os-files $(getBuildLocation)
     sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/robot-tests/*.yml
@@ -55,7 +55,7 @@ function fileFixtures() {
 }
 
 function copyNecessaryFiles() {
-    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests/ifs-data-service/docker-build.gradle
+    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
 }
 
 function navigateToRoot(){
@@ -70,7 +70,7 @@ cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures
 tailorToAppInstance
-#copyNecessaryFiles
+copyNecessaryFiles
 buildAndPushTestImages
 deployTests
 cleanUp
