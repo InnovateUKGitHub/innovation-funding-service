@@ -19,7 +19,7 @@ function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
     echo "Starting to copy os-files to $(getBuildLocation)"
     mkdir -p $(getBuildLocation)
-    cp -r os-files $(getBuildLocation)
+    cp -r os-files/* $(getBuildLocation)
     echo "running ls"
     ls -la $(getBuildLocation)/os-files/robot-tests/
     echo "running ls end"
