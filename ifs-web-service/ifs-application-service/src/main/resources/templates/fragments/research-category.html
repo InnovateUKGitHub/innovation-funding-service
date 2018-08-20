@@ -103,6 +103,7 @@
             <button th:unless="${model.allReadOnly}"
                     id="application-question-save"
                     type="submit"
+                    th:formaction="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
                     class="govuk-button app-submit-btn"
                     name="save-research-category">Save and return to application overview
             </button>
