@@ -62,6 +62,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return leadApplicantName;
     }
 
+    public boolean getUseSelectState() {
+        return availableResearchCategories.size() > 1;
+    }
+
     @Override
     public boolean isSummary() {
         return false;
