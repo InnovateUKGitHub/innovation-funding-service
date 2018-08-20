@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -40,6 +41,9 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
     @Mock
     private CompetitionMapper competitionMapper;
+
+    @Mock
+    private CompetitionRepository competitionRepository;
 
     @Mock
     private GrantClaimMaximumMapper grantClaimMaximumMapper;

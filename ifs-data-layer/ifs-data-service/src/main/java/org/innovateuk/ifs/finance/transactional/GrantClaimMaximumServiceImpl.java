@@ -31,7 +31,8 @@ public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
 
     public GrantClaimMaximumServiceImpl(GrantClaimMaximumRepository grantClaimMaximumRepository,
                                         CompetitionTypeRepository competitionTypeRepository,
-                                        CompetitionRepository competitionRepository, GrantClaimMaximumMapper grantClaimMaximumMapper,
+                                        CompetitionRepository competitionRepository,
+                                        GrantClaimMaximumMapper grantClaimMaximumMapper,
                                         CompetitionMapper competitionMapper) {
         this.grantClaimMaximumRepository = grantClaimMaximumRepository;
         this.competitionTypeRepository = competitionTypeRepository;

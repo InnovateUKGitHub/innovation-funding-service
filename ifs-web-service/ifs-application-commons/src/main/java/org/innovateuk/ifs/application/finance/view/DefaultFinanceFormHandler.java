@@ -46,8 +46,8 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
     private final FinanceService financeService;
     private final FundingLevelResetHandler fundingLevelResetHandler;
     private final ApplicationFinanceRestService applicationFinanceRestService;
-    private GrantClaimMaximumRestService grantClaimMaximumRestService;
-    private OrganisationRestService organisationRestService;
+    private final GrantClaimMaximumRestService grantClaimMaximumRestService;
+    private final OrganisationRestService organisationRestService;
 
     @Autowired
     public DefaultFinanceFormHandler(final FinanceService financeService,
@@ -55,8 +55,8 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                                      final UnsavedFieldsManager unsavedFieldsManager,
                                      final ApplicationFinanceRestService applicationFinanceRestService,
                                      final FundingLevelResetHandler fundingLevelResetHandler,
-                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
-                                     OrganisationRestService organisationRestService) {
+                                     final GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                     final OrganisationRestService organisationRestService) {
         super(defaultFinanceRowRestService, unsavedFieldsManager);
         this.financeService = financeService;
         this.applicationFinanceRestService = applicationFinanceRestService;
