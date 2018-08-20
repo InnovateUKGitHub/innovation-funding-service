@@ -1,4 +1,7 @@
 <#ftl output_format="HTML" auto_esc=true>
+<#macro number_format number>
+  ${number?round}
+</#macro>
 <?xml version="1.0" encoding="UTF-8"?>
 <html dir="ltr" lang="en">
 <#import "include/css.html" as css>
@@ -101,16 +104,16 @@
             <#list financeTotalsTable.industrialOrgs as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                    <td><@number_format number=financeTotalsTable.getTotalEligibleCosts(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getGrantClaim(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getTotalGrant(org)/></td>
                 </tr>
             </#list>
             <tr>
                 <td class="bold">Total (industry)</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -133,16 +136,16 @@
             <#list financeTotalsTable.academicOrgs as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                    <td><@number_format number=financeTotalsTable.getTotalEligibleCosts(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getGrantClaim(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getTotalGrant(org)/></td>
                 </tr>
             </#list>
             <tr>
                 <td class="bold">Total (academic)</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -157,9 +160,9 @@
             <tbody>
             <tr>
                 <td class="bold">Total (all)</td>
-                <td class="bold">${financeTotalsTable.getAllTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getAllTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getAllTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -192,24 +195,24 @@
             <#list industrialFinanceTable.organisations as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${industrialFinanceTable.getLabour(org)}</td>
-                    <td>${industrialFinanceTable.getOverheads(org)}</td>
-                    <td>${industrialFinanceTable.getMaterials(org)}</td>
-                    <td>${industrialFinanceTable.getCapitalUsage(org)}</td>
-                    <td>${industrialFinanceTable.getSubcontract(org)}</td>
-                    <td>${industrialFinanceTable.getTravel(org)}</td>
-                    <td>${industrialFinanceTable.getOtherCosts(org)}</td>
+                    <td><@number_format number=industrialFinanceTable.getLabour(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getOverheads(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getMaterials(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getCapitalUsage(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getSubcontract(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getTravel(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getOtherCosts(org)/></td>
                 </tr>
             </#list>
             <tr>
                 <td class="bold">Total (industry)</td>
-                <td class="bold">${industrialFinanceTable.getLabourTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getOverheadsTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getMaterialsTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getCapitalUsageTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getSubcontractTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getTravelTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getOtherCostsTotal()}</td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getLabourTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getOverheadsTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getMaterialsTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getCapitalUsageTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getSubcontractTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getTravelTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getOtherCostsTotal()/></td>
             </tr>
             </tbody>
         </table>
@@ -254,34 +257,34 @@
                 <tr>
                     <#list academicFinanceTable.organisations as org>
                         <td>${org}</td>
-                        <td>${academicFinanceTable.getIncurredStaff(org)}</td>
-                        <td>${academicFinanceTable.getIncurredTravelSubsistence(org)}</td>
-                        <td>${academicFinanceTable.getIncurredEquipment(org)}</td>
-                        <td>${academicFinanceTable.getIncurredOtherCosts(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedInvestigators(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedEstateCosts(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedOtherCosts(org)}</td>
-                        <td>${academicFinanceTable.getIndirectCosts(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsStaff(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsTravelSubsistence(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsEquipment(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsOtherCosts(org)}</td>
+                        <td><@number_format number=academicFinanceTable.getIncurredStaff(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredTravelSubsistence(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredEquipment(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredOtherCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedInvestigators(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedEstateCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedOtherCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIndirectCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsStaff(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsTravelSubsistence(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsEquipment(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsOtherCosts(org)/></td>
                     </#list>
                 </tr>
                 <tr>
                     <td class="bold">Total (academic)</td>
-                    <td class="bold">${academicFinanceTable.getIncurredStaffTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredTravelSubsistenceTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredEquipmentTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredOtherCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedInvestigatorsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedEstateCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedOtherCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIndirectCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsStaffTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsTravelSubsistenceTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsEquipmentTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsOtherCostsTotal()}</td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredStaffTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredTravelSubsistenceTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredEquipmentTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredOtherCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedInvestigatorsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedEstateCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedOtherCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIndirectCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsStaffTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsTravelSubsistenceTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsEquipmentTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsOtherCostsTotal()/></td>
                 </tr>
                 </tbody>
             </table>
