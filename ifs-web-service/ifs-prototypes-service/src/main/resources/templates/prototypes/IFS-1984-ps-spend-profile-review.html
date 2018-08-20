@@ -21,7 +21,7 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Spend profile'}, ${null})" />
 
-    <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+    <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
     <dl class="standard-definition-list">
         <dt>Project start date</dt>
         <dd>
@@ -30,13 +30,13 @@
         <dt>Duration</dt>
         <dd>3 months</dd>
     </dl>
-    <h2 class="heading-medium">Electric Sounds Ltd - Spend profile</h2>
-    <p>We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
+    <h2 class="govuk-heading-m">Electric Sounds Ltd - Spend profile</h2>
+    <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
     <form>
         <div class="spend-profile-table">
             <div class="flex-table-before"></div>
             <div class="flex-table-wrap">
-                <table>
+                <table class="govuk-table">
                     <colgroup>
                         <col>
                         <col>
@@ -44,8 +44,8 @@
                         <col>
                         <col class="total">
                     </colgroup>
-                    <thead>
-                    <tr>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="row" id="month">Month</th>
                         <th scope="col" id="month-0">Oct 2020</th>
                         <th scope="col" id="month-1">Nov 2020</th>
@@ -54,14 +54,14 @@
                         <th scope="col" class="fix-right">Eligible project cost</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="govuk-table__body">
                     <tr class="form-group-row">
                         <th scope="row">
                             <span>Labour</span>
                         </th>
-                        <td>1,027</td>
-                        <td>1,027</td>
-                        <td>1,027</td>
+                        <td class="govuk-table__cell">1,027</td>
+                        <td class="govuk-table__cell">1,027</td>
+                        <td class="govuk-table__cell">1,027</td>
                         <td class="fix-right">
                             £3,081
                         </td>
@@ -73,9 +73,9 @@
                         <th scope="row">
                             <span>Overheads</span>
                         </th>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td class="govuk-table__cell">0</td>
+                        <td class="govuk-table__cell">0</td>
+                        <td class="govuk-table__cell">0</td>
                         <td class="fix-right">£0</td>
                         <td class="fix-right">£0</td>
                     </tr>
@@ -83,9 +83,9 @@
                         <th scope="row">
                             <span>Materials</span>
                         </th>
-                        <td>33,400</td>
-                        <td>33,400</td>
-                        <td>33,400</td>
+                        <td class="govuk-table__cell">33,400</td>
+                        <td class="govuk-table__cell">33,400</td>
+                        <td class="govuk-table__cell">33,400</td>
                         <td class="fix-right">£100,200</td>
                         <td class="fix-right">£100,200</td>
                     </tr>
@@ -93,9 +93,9 @@
                         <th scope="row">
                             <span>Capital usage</span>
                         </th>
-                        <td>184</td>
-                        <td>184</td>
-                        <td>184</td>
+                        <td class="govuk-table__cell">184</td>
+                        <td class="govuk-table__cell">184</td>
+                        <td class="govuk-table__cell">184</td>
                         <td class="fix-right">£552</td>
                         <td class="fix-right">£552</td>
                     </tr>
@@ -103,9 +103,9 @@
                         <th scope="row">
                             <span>Subcontracting</span>
                         </th>
-                        <td>30,000</td>
-                        <td>30,000</td>
-                        <td>30,000</td>
+                        <td class="govuk-table__cell">30,000</td>
+                        <td class="govuk-table__cell">30,000</td>
+                        <td class="govuk-table__cell">30,000</td>
                         <td class="fix-right">£90,000</td>
                         <td class="fix-right">£90,000</td>
                     </tr>
@@ -113,9 +113,9 @@
                         <th scope="row">
                             <span>Travel and subsistence</span>
                         </th>
-                        <td>1,990</td>
-                        <td>1,990</td>
-                        <td>1,990</td>
+                        <td class="govuk-table__cell">1,990</td>
+                        <td class="govuk-table__cell">1,990</td>
+                        <td class="govuk-table__cell">1,990</td>
                         <td class="fix-right">£5,970</td>
                         <td class="fix-right">£5,970</td>
                     </tr>
@@ -123,9 +123,9 @@
                         <th scope="row">
                             <span>Other costs</span>
                         </th>
-                        <td>368</td>
-                        <td>366</td>
-                        <td>366</td>
+                        <td class="govuk-table__cell">368</td>
+                        <td class="govuk-table__cell">366</td>
+                        <td class="govuk-table__cell">366</td>
                         <td class="fix-right">£1,100</td>
                         <td class="fix-right">£1,100</td>
                     </tr>
@@ -158,19 +158,19 @@
         </div>
 
         <div class="grid-container">
-            <h2 class="heading-medium">Project costs for financial year</h2>
-            <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-            <table class="extra-margin-bottom" style="width: 50%;">
-                <thead>
-                <tr>
+            <h2 class="govuk-heading-m">Project costs for financial year</h2>
+            <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+            <table class="govuk-!-margin-bottom-6" style="width: 50%;">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th scope="col" style="width: 50%">Financial year (April to March)</th>
                     <th scope="col" style="width: 50%">Project spend</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>2020 to 2021</td>
-                    <td>£200,903</td>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">2020 to 2021</td>
+                    <td class="govuk-table__cell">£200,903</td>
                 </tr>
                 </tbody>
             </table>
@@ -178,10 +178,10 @@
         </div>
     </form>
     <div class="grid-container">
-        <a class="button button-secondary extra-margin" href="#">Edit spend profile</a>
-        <p class="extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
+        <a class="govuk-button button-secondary extra-margin" href="#">Edit spend profile</a>
+        <p class="govuk-body extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
         <form>
-            <button id="prototype-cta" class="button" name="mark-as-complete">Mark as complete</button>
+            <button id="prototype-cta" class="govuk-button" name="mark-as-complete">Mark as complete</button>
         </form>
     </div>
 

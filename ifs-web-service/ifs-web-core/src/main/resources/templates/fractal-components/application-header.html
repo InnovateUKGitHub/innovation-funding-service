@@ -1,44 +1,46 @@
-<h1 class="heading-xlarge">Table header</h1>
+<h1 class="govuk-heading-xl">Table header</h1>
 
-<div class="grid-row sorting">
-  <div class="column-half">
-    <p><span class="heading-xlarge no-margin">2</span>
-      <span class="heading-small">applications</span>
+<div class="govuk-grid-row sorting">
+  <div class="govuk-grid-column-one-half">
+    <p class="govuk-body"><span class="govuk-heading-xl govuk-!-margin-0">2</span>
+      <span class="govuk-heading-s">applications</span>
     </p>
   </div>
-  <div class="column-half alignright">
+  <div class="govuk-grid-column-one-half alignright">
     <label for="sort-by">Sort by</label>
-    <select id="sort-by" name="sort" class="js-auto-submit form-control">
+    <select id="sort-by"
+            name="sort"
+            class="js-auto-submit govuk-select">
       <option value="Column 1">Column 1</option>
       <option value="Column 2">Column 2</option>
       <option value="Column 3">Column 3</option>
     </select>
-    <button type="submit" class="button button-secondary no-margin js-hidden visuallyhidden">Sort</button>
+    <button type="submit" class="button-secondary govuk-!-margin-0 js-hidden govuk-visually-hidden">Sort</button>
   </div>
 </div>
 
 <div class="table-overflow">
-  <table>
-    <thead>
-    <tr>
-      <th scope="col">Column 1</th>
-      <th scope="col">Column 2</th>
-      <th scope="col">Column 3</th>
-      <th scope="col">Column 4</th>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="col">Column 1</th>
+      <th class="govuk-table__header" scope="col">Column 2</th>
+      <th class="govuk-table__header" scope="col">Column 3</th>
+      <th class="govuk-table__header" scope="col">Column 4</th>
     </tr>
     </thead>
-    <tbody>
-    <tr>
-      <td>Example</td>
-      <td>Example</td>
-      <td>Example</td>
-      <td>Example</td>
+    <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
     </tr>
-    <tr>
-      <td>Example</td>
-      <td>Example</td>
-      <td>Example</td>
-      <td>Example</td>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
+      <td class="govuk-table__cell">Example</td>
     </tr>
     </tbody>
   </table>

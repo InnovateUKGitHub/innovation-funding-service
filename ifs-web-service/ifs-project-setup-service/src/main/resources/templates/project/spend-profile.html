@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:if="${form != null}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
@@ -9,63 +9,65 @@
     </th:block>
 </head>
 
-<body class="project spend-profile">
+<body class="govuk-template__body project spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-submit" />
 <th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})" />
 
-<main tabindex="-1" id="content" class="no-grid">
-    <div class="grid-container">
-        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
-        <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
-
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+    <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+</div>
+<main class="govuk-main-wrapper" id="main-content" role="main">
+    <div class="govuk-width-container">
         <th:block th:if="${form != null}">
-            <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit spend profile.</h2>
-                Please review
+            <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit spend profile.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
         </th:block>
 
         <th:block th:if="${form == null}">
-          <div class="error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-              <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
-              Please review
-              <ul class="list list-bullet">
-                  <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
-              </ul>
+          <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+              <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+              <div class="govuk-error-summary__body">
+                  <ul class="govuk-list govuk-error-summary__list">
+                      <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
+                  </ul>
+              </div>
           </div>
         </th:block>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block
             th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
-            <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
                 </p>
             </div>
         </th:block>
         <th:block
             th:if="${model.markedAsComplete and !model.submitted and model.leadPartner and form == null and model.userPartOfThisOrganisation}">
-            <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
             </div>
         </th:block>
         <th:block
             th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
-            <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile has been completed.</p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has been completed.</p>
             </div>
         </th:block>
         <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
-            <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile has now been accepted by Innovate UK.</p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has now been accepted by Innovate UK.</p>
             </div>
         </th:block>
-        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
             <dt>Project start date</dt>
             <dd>
@@ -75,17 +77,16 @@
             <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
         </dl>
 
-        <h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
-        <p>We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
+        <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
+        <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
     </div>
-
     <th:block th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off" novalidate="novalidate"
               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">
             <div class="spend-profile-table" th:classappend="${model.usingJesFinances ? 'academic':''}">
                 <div class="flex-table-before"></div>
                 <div class="flex-table-wrap">
-                    <table>
+                    <table class="govuk-table">
                         <colgroup>
                             <col/>
                             <th:block th:each="month : ${model.table.getMonths()}">
@@ -93,61 +94,63 @@
                             </th:block>
                             <col class="total" />
                         </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
-                            <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
+                            <th class="govuk-table__header" scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
-                                <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="|month-${stats.index}|" />
+                                <th class="govuk-table__header" scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="|month-${stats.index}|" />
                             </th:block>
-                            <th scope="col" class="fix-right">Total</th>
-                            <th scope="col" class="fix-right">Eligible project cost</th>
+                            <th scope="col" class="govuk-table__header fix-right">Total</th>
+                            <th scope="col" class="govuk-table__header fix-right">Eligible project cost</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="govuk-table__body">
                         <!--/* non-academic */-->
                         <th:block th:unless="${model.usingJesFinances}">
                             <!--/* readonly */-->
                             <th:block th:if="${readonly}">
-                                <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
-                                    class="form-group-row"
-                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
-                                    <th scope="row">
+                                <tr class="govuk-table__row" th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
+                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
+                                    <th class="govuk-table__header" scope="row">
                                         <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                              class="error-message">Your total costs are higher than your eligible costs</span>
+                                              class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                     </th>
-                                    <td th:each="cost : ${row.value}"
+                                    <td class="govuk-table__cell"
+                                        th:each="cost : ${row.value}"
                                         th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
-                                    <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
+                                    <td class="govuk-table__cell fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                         &pound;<th:block th:text="${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"/>
                                     </td>
-                                    <td class="fix-right">
+                                    <td class="govuk-table__cell fix-right">
                                         &pound;<th:block th:text="${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}" />
                                     </td>
                                 </tr>
                             </th:block>
                             <!--/* edit */-->
                             <th:block th:unless="${readonly}" th:object="${form}">
-                                <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row"
-                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'form-group-error' : ''}">
-                                    <th scope="row"
+                                <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="govuk-table__row form-group-row"
+                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'govuk-form-group--error' : ''}">
+                                    <th class="govuk-table__header"
+                                        scope="row"
                                         th:id="|row-${row.key}|">
                                         <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                               th:attr="data-errorfield=|row-total-${row.key}|"
-                                              class="error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
+                                              class="govuk-error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
                                         <th:block th:if="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}">
-                                            <span class="error-message"
+                                            <span class="govuk-error-message"
                                                   th:each="error : ${#fields.detailedErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}"
                                                   th:attr="data-errorfield=${error.fieldName}"
                                                   th:text="${error.message}"></span>
                                         </th:block>
                                     </th>
-                                    <td th:each="cost, status : ${row.value}">
+                                    <td class="govuk-table__cell"
+                                        th:each="cost, status : ${row.value}">
                                         <input
-                                            th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'form-control-error'"
-                                            th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' form-control'}"
+                                            th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'govuk-input--error'"
+                                            th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' govuk-input'}"
                                             th:attr="aria-labelledby=|row-${row.key} month-${status.index}|,
                                                      data-required-errormessage=#{validation.spend.profile.cost.should.not.be.null},
                                                      data-number-errormessage=#{validation.spend.profile.cost.should.not.be.fractional},
@@ -159,7 +162,7 @@
                                             min="0"
                                             required="required" />
                                     </td>
-                                    <td class="fix-right"
+                                    <td class="govuk-table__cell fix-right"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                         <input
                                             th:value="${'&pound;'+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"
@@ -169,7 +172,7 @@
                                             th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},
                                                      data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                     </td>
-                                    <td class="fix-right">
+                                    <td class="govuk-table__cell fix-right">
                                         <input readonly="readonly"
                                                th:value="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}"
                                                th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
@@ -183,37 +186,40 @@
                                 <th:block th:each="rowList,iteration : ${section.value}">
                                     <!--/* readonly */-->
                                     <th:block th:if="${readonly}">
-                                        <tr th:each="row : ${rowList}" class="form-group-row"
-                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
-                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
-                                            <th scope="row">
+                                        <tr th:each="row : ${rowList}" class="govuk-table__row form-group-row"
+                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
+                                            <th class="govuk-table__header" scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
+                                            <th class="govuk-table__header" scope="row">
                                                 <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                 <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                                      class="error-message">Your total costs are higher than your eligible costs</span>
+                                                      class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                             </th>
-                                            <td th:each="cost : ${row.value}"
+                                            <td class="govuk-table__cell"
+                                                th:each="cost : ${row.value}"
                                                 th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
-                                            <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
+                                            <td class="govuk-table__cell fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                                 &pound;<th:block th:text="${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}" />
                                             </td>
-                                            <td class="total eligible fix-right">
+                                            <td class="govuk-table__cell total eligible fix-right">
                                                 &pound;<th:block th:text="${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}" />
                                             </td>
                                         </tr>
                                     </th:block>
                                     <!--/* edit  */-->
                                     <th:block th:unless="${readonly}">
-                                        <tr th:each="row : ${rowList}" class="form-group-row"
-                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
-                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
-                                            <th scope="row"
+                                        <tr th:each="row : ${rowList}" class="govuk-table__row form-group-row"
+                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
+                                            <th class="govuk-table__header" scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
+                                            <th class="govuk-table__header"
+                                                scope="row"
                                                 th:id="|row-${row.key}|">
                                                 <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                 <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                                      class="error-message">Your total costs are higher than your eligible costs</span>
+                                                      class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                             </th>
-                                            <td th:each="cost, status : ${row.value}">
-                                                <input class="form-control"
+                                            <td class="govuk-table__cell"
+                                                th:each="cost, status : ${row.value}">
+                                                <input class="govuk-input"
                                                        th:classappend="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))}"
                                                        th:attr="aria-labelledby=|row-${row.key} month-${status.index}|"
                                                        th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
@@ -223,7 +229,7 @@
                                                        min="0"
                                                        required="required" />
                                             </td>
-                                            <td class="fix-right"
+                                            <td class="govuk-table__cell fix-right"
                                                 th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                                 <input readonly="readonly"
                                                        th:value="${'&pound;'+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"
@@ -231,7 +237,7 @@
                                                        th:id="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
                                                        th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                             </td>
-                                            <td class="fix-right">
+                                            <td class="govuk-table__cell fix-right">
                                                 <input readonly="readonly"
                                                        th:value="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}"
                                                        th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
@@ -243,18 +249,19 @@
                         </th:block>
                         <!--/* end academic */-->
                         </tbody>
-                        <tfoot>
-                        <tr class="form-group-row">
-                            <th scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">
+                        <tfoot class="govuk-table__foot">
+                        <tr class="govuk-table__row form-group-row">
+                            <th class="govuk-table__header" scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">
                                 <span>Total</span>
                             </th>
                             <th:block th:each="monthTotal,status : ${model.totalForEachMonth}">
-                                <td th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
+                                <td class="govuk-table__cell"
+                                    th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
                                     data-calculation-operations="+">
                                     &pound;<th:block th:text="${#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
                                 </td>
                             </th:block>
-                            <td class="fix-right">
+                            <td class="govuk-table__cell fix-right">
                                 <input
                                     th:value="${'&pound;'+#numbers.formatInteger(model.totalOfAllActualTotals,1,'DEFAULT')}"
                                     readonly="readonly"
@@ -262,7 +269,7 @@
                                     id="spend-profile-total-total"
                                     data-calculation-fields="input[id*=row-total-]" />
                             </td>
-                            <td class="fix-right">
+                            <td class="govuk-table__cell fix-right">
                                 <input readonly="readonly"
                                        th:value="${'&pound;'+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'DEFAULT')}"
                                        th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}" />
@@ -273,21 +280,21 @@
                 </div>
                 <div class="flex-table-after"></div>
             </div>
-
-            <div class="grid-container">
-                <h2 class="heading-medium">Project costs for financial year</h2>
-                <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-                <table class="extra-margin-bottom" style="width: 50%;">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 50%">Financial year (April to March)</th>
-                        <th scope="col" style="width: 50%">Project spend</th>
+            <div class="govuk-width-container">
+                <h2 class="govuk-heading-m">Project costs for financial year</h2>
+                <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+                <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" style="width: 50%">Financial year (April to March)</th>
+                        <th class="govuk-table__header" scope="col" style="width: 50%">Project spend</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="item : ${model.summary.years}">
-                        <td th:text="${item.year + ' to ' + (item.year + 1)}"></td>
-                        <td data-calculation-operations="+"
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                        <td class="govuk-table__cell" th:text="${item.year + ' to ' + (item.year + 1)}"></td>
+                        <td class="govuk-table__cell"
+                            data-calculation-operations="+"
                             th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                           .may-'+item.year+',
                                                           .jun-'+item.year+',
@@ -305,50 +312,51 @@
                     </tr>
                     </tbody>
                 </table>
-                <button th:unless="${readonly}" class="button button-secondary extra-margin">Save and return to spend profile overview</button>
+                <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
             </div>
         </form>
 
+        <div class="govuk-width-container">
+            <th:block th:if="${readonly and !model.submitted}">
 
-        <div class="grid-container" th:if="${readonly and !model.submitted}">
+                <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
+                    <a class="button-secondary govuk-!-margin-top-6"
+                       th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-            <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
-                <a class="button button-secondary extra-margin"
-                   th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
-
-                <p class="extra-margin">Once you are satisfied with your spend profile please submit to the lead partner.</p>
-                <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
-                <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
+                    <p class="govuk-body govuk-!-margin-top-6">Once you are satisfied with your spend profile please submit to the lead partner.</p>
+                    <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
+                    <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                       class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
+                    </th:block>
+                    <th:block th:if="${#lists.size(model.table.validationMessages.errors) > 0}">
+                        <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit to lead partner</button>
+                    </th:block>
                 </th:block>
-                <th:block th:if="${#lists.size(model.table.validationMessages.errors) > 0}">
-                    <button disabled="disabled" class="button extra-margin">Submit to lead partner</button>
+
+                <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
+                    <a class="button-secondary govuk-!-margin-top-6"
+                       th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
+
+                    <th:block th:if="${!model.markedAsComplete}">
+                        <p class="govuk-body govuk-!-margin-top-6">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
+                        <form method="post"
+                              th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
+                            <button class="govuk-button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
+                        </form>
+                    </th:block>
                 </th:block>
-            </th:block>
 
-            <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
-                <a class="button button-secondary extra-margin"
-                   th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
-
-                <th:block th:if="${!model.markedAsComplete}">
-                    <p class="extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
-                    <form method="post"
-                          th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                        <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
-                    </form>
+                <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
+                    <p class="govuk-body govuk-!-margin-top-6">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                    <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                        class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
+                    </a>
                 </th:block>
-            </th:block>
 
-            <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
-                <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
-                <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                    class="button extra-margin" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
-                </a>
-            </th:block>
 
+            </th:block>
             <th:block th:insert="fragments/layout :: main-content-end" />
         </div>
-
     </th:block>
 </main>
 

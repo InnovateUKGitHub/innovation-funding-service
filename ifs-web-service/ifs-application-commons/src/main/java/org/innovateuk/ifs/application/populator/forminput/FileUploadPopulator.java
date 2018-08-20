@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.populator.forminput;
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.FileUploadInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
