@@ -1,21 +1,23 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
-import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -23,15 +25,16 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,10 +50,12 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -70,6 +75,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     protected FormInputRestService formInputRestService;
 
     @Mock
+    protected ApplicantRestService applicantRestService;
+
+    @Mock
     private FormInputResponseService formInputResponseService;
 
     @Mock
@@ -77,6 +85,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Mock
     protected QuestionService questionService;
+
+    @Mock
+    protected QuestionRestService questionRestService;
 
     @Mock
     protected ProcessRoleService processRoleService;
@@ -96,15 +107,21 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Mock
     private InviteService inviteService;
 
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Test
     public void testAddMappedSectionsDetails() {
         CompetitionResource competition = newCompetitionResource().build();
         ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+        List<QuestionResource> questions = newQuestionResource().build(2);
         Long organisationId = 3L;
         List<SectionResource> allSections = newSectionResource().build(3);
         SectionResource parentSection = newSectionResource()
-                .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
+                .withChildSections(simpleMap(allSections, SectionResource::getId))
+                .withQuestions(asList(questions.get(0).getId(), questions.get(1).getId())).build();
         UserResource user = newUserResource().build();
+        ApplicantQuestionResource applicantQuestion = newApplicantQuestionResource().build();
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId).build();
@@ -115,8 +132,12 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Model model = mock(Model.class);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
         when(sectionService.filterParentSections(allSections)).thenReturn(asList(parentSection));
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questions));
+
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION)).thenReturn(restSuccess(
-                newFormInputResource().build(1)));
+                newFormInputResource().withQuestion(questions.get(0).getId()).build(1)));
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestion);
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
@@ -240,7 +261,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     public void testAddSectionDetails() {
         Model model = mock(Model.class);
         long competitionId = 1L;
-        List<QuestionResource> sectionQuestions = QuestionResourceBuilder.newQuestionResource().build(1);
+        List<QuestionResource> sectionQuestions = newQuestionResource().build(1);
         SectionResource currentSection = newSectionResource()
                 .withCompetition(competitionId)
                 .withQuestions(simpleMap(sectionQuestions, QuestionResource::getId)).build();
@@ -249,7 +270,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Map<Long, List<QuestionResource>> currentSectionQuestions = new HashMap<>();
         currentSectionQuestions.put(currentSection.getId(), sectionQuestions);
 
-        when(questionService.findByCompetition(competitionId)).thenReturn(sectionQuestions);
+        when(questionRestService.findByCompetition(competitionId)).thenReturn(restSuccess(sectionQuestions));
         when(formInputRestService.getByQuestionIdAndScope(sectionQuestions.get(0).getId(), APPLICATION)).thenReturn(restSuccess(responses));
 
         target.addSectionDetails(model, Optional.of(currentSection));

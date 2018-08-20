@@ -5,23 +5,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.CookieTestUtil;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -45,6 +46,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -67,7 +69,10 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     private ProjectService projectService;
 
     @Mock
-    private OrganisationService organisationService;
+    private ProjectRestService projectRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
@@ -96,10 +101,10 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
     }
@@ -140,7 +145,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -335,7 +340,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -377,7 +382,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewQueryFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
                 .andExpect(status().isNotFound())

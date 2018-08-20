@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.registration.controller.OrganisationCreationSaveContro
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
@@ -57,7 +57,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     private InviteOrganisationRestService inviteOrganisationRestService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
@@ -100,7 +100,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
         when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(anyLong())).thenReturn(restSuccess(newInviteOrganisationResource().build()));
-        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(2L).build());
+        when(organisationRestService.createAndLinkByInvite(any(), any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/organisation/create/save-organisation")
@@ -116,14 +116,14 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.empty());
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(organisationService.createOrMatch(any())).thenReturn(newOrganisationResource().withId(2L).build());
+        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register"));
 
-        verify(organisationService, times(1)).createOrMatch(any());
-        verify(organisationService, times(0)).createAndLinkByInvite(any(), any());
+        verify(organisationRestService, times(1)).createOrMatch(any());
+        verify(organisationRestService, times(0)).createAndLinkByInvite(any(), any());
     }
 
     @Test
@@ -132,15 +132,15 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(2L).build());
+        when(organisationRestService.createAndLinkByInvite(any(), any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation")
                 .param("searchOrganisationId", "123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register"));
 
-        verify(organisationService, times(0)).createOrMatch(any());
-        verify(organisationService, times(1)).createAndLinkByInvite(any(), any());
+        verify(organisationRestService, times(0)).createOrMatch(any());
+        verify(organisationRestService, times(1)).createAndLinkByInvite(any(), any());
     }
 
     @Test

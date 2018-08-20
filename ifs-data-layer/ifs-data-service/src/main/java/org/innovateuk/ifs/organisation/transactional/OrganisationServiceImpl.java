@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,10 +80,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> findById(final long organisationId) {
-        Optional<Organisation> org = organisationRepository.findById(organisationId);
-        return find(org, notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(o ->
-            organisationMapper.mapToResource(o)
-        );
+        return find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId))
+                .andOnSuccess(organisation -> serviceSuccess(organisationMapper.mapToResource(organisation)));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -29,13 +31,16 @@ import static org.mockito.Mockito.when;
 public class QuestionFormPopulatorTest {
 
     @InjectMocks
-	private QuestionFormPopulator populator;
+    private QuestionFormPopulator populator;
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Mock
     private QuestionService questionService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Mock
     private SectionService sectionService;
@@ -46,12 +51,12 @@ public class QuestionFormPopulatorTest {
     private CompetitionResource competitionResource;
 
 
-	@Test
+    @Test
     public void testPopulateFormWithoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionResource = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionResource);
 
@@ -67,7 +72,7 @@ public class QuestionFormPopulatorTest {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionWithOneQuestion = newSectionResource().withQuestions(Arrays.asList(1L)).build();
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionWithOneQuestion);
 
@@ -81,7 +86,7 @@ public class QuestionFormPopulatorTest {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionWithMultipleQuestions = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionWithMultipleQuestions);
 

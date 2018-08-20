@@ -251,7 +251,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
-        when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questions));
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(restSuccess(assessorResponses));
         when(formInputResponseRestService.getResponsesByApplicationId(APPLICATION_ID)).thenReturn(restSuccess(applicantResponses));
@@ -345,11 +345,11 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
 
-        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionService,
+        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(questionRestService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
@@ -388,7 +388,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(asList(assessorRole));
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
         when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
         when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
 
@@ -451,7 +451,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         when(formInputViewModelGenerator.fromSection(section, costSection, form, true)).thenReturn(asList(formInputViewModel));
@@ -528,7 +528,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
@@ -606,11 +606,11 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         assertTrue(bindingResult.hasFieldErrors("rejectReason"));
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
-        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionService,
+        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(questionRestService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
@@ -649,11 +649,11 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionService,
+        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(questionRestService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
@@ -692,11 +692,11 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionService,
+        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(questionRestService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
@@ -734,13 +734,13 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionService,
+        InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getRejectableById(assessment.getId());
         inOrder.verify(assessmentService).rejectInvitation(assessment.getId(), reason, comment);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(questionRestService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
@@ -762,7 +762,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
 
 
-        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(asList(assessorRole));
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
@@ -779,7 +779,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(processRoleService).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService).findProcessRole(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }

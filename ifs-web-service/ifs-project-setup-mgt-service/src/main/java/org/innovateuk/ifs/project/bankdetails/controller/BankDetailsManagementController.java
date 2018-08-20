@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewMod
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +45,7 @@ public class BankDetailsManagementController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ProjectService projectService;
@@ -75,7 +75,7 @@ public class BankDetailsManagementController {
             @P("projectId")@PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccess();
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
@@ -92,7 +92,7 @@ public class BankDetailsManagementController {
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
 
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
@@ -124,7 +124,7 @@ public class BankDetailsManagementController {
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser,
             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
@@ -142,7 +142,7 @@ public class BankDetailsManagementController {
             @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
@@ -156,7 +156,7 @@ public class BankDetailsManagementController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
-                        organisationService.updateNameAndRegistration(updatedOrganisationResource);
+                        organisationRestService.updateNameAndRegistration(updatedOrganisationResource);
                         return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
                     });
         });

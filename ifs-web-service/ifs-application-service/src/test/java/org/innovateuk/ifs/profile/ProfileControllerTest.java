@@ -4,13 +4,13 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -45,7 +46,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     }
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private UserAuthenticationService userAuthenticationService;
@@ -78,8 +79,8 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withCompanyHouseNumber("companyhousenumber")
                 .withAddress(asList(addressResources))
                 .build();
-        when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(organisation);
+        when(organisationRestService.getOrganisationById(6L)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(organisation));
     }
 
     private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
@@ -169,6 +170,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
     @Test
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {
+        when(organisationRestService.getOrganisationByUserId(1L)).thenReturn(restSuccess(newOrganisationResource().build()));
         mockMvc.perform(get("/profile/edit"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
@@ -224,12 +226,13 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
-
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), nullable(String.class),
                 eq(user.getPhoneNumber()),
                 anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUserResource().build());
+        UserResource newUser = newUserResource().build();
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUser);
+        when(organisationRestService.getOrganisationByUserId(newUser.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())
                 .param("firstName", user.getFirstName())

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -45,24 +46,27 @@ public class LandingModelPopulatorTest {
     private static final Long QUESTION_ID = 100L;
 
     @InjectMocks
-	private LandingModelPopulator populator;
+    private LandingModelPopulator populator;
 
-	@Mock
-	private QuestionService questionService;
+    @Mock
+    private QuestionService questionService;
 
-	@Mock
-	private QuestionSetupRestService questionSetupRestService;
+    @Mock
+    private QuestionRestService questionRestService;
 
-	@Mock
+    @Mock
+    private QuestionSetupRestService questionSetupRestService;
+
+    @Mock
     private CompetitionSetupRestService competitionSetupRestService;
 
-	@Mock
-	private FormInputRestService formInputRestService;
+    @Mock
+    private FormInputRestService formInputRestService;
 
-	@Mock
-	private SectionService sectionService;
+    @Mock
+    private SectionService sectionService;
 
-	@Before
+    @Before
     public void setup() {
         when(questionSetupRestService.getQuestionStatuses(COMPETITION_ID, CompetitionSetupSection.APPLICATION_FORM))
                 .thenReturn(restSuccess(asMap(QUESTION_ID, Boolean.FALSE)));
@@ -72,38 +76,38 @@ public class LandingModelPopulatorTest {
                         CompetitionSetupSubsection.FINANCES, Optional.empty())));
     }
 
-	@Test
-	public void testSectionToPopulateModel() {
-		CompetitionSetupSection result = populator.sectionToPopulateModel();
+    @Test
+    public void testSectionToPopulateModel() {
+        CompetitionSetupSection result = populator.sectionToPopulateModel();
 
-		assertEquals(CompetitionSetupSection.APPLICATION_FORM, result);
-	}
-	
-	@Test
-	public void testPopulateModel() {
-		CompetitionResource competition = newCompetitionResource()
-				.withCompetitionCode("code")
-				.withName("name")
-				.withId(COMPETITION_ID)
-				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-				.build();
+        assertEquals(CompetitionSetupSection.APPLICATION_FORM, result);
+    }
 
-		List<SectionResource> sections = newSectionResource().build(1);
-		when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
-		List<QuestionResource> questionResources = asList(newQuestionResource().withId(QUESTION_ID).build());
-		when(questionService.findByCompetition(competition.getId())).thenReturn(questionResources);
+    @Test
+    public void testPopulateModel() {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(COMPETITION_ID)
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .build();
 
-		List<FormInputResource> formInputResources = newFormInputResource().withScope(APPLICATION).build(1);
-		when(formInputRestService.getByQuestionIdAndScope(QUESTION_ID, APPLICATION)).thenReturn(restSuccess(formInputResources));
-		List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(ASSESSMENT).build(1);
-		when(formInputRestService.getByQuestionIdAndScope(QUESTION_ID, ASSESSMENT)).thenReturn(restSuccess(formInputResourcesAssessment));
+        List<SectionResource> sections = newSectionResource().build(1);
+        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
+        List<QuestionResource> questionResources = asList(newQuestionResource().withId(QUESTION_ID).build());
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questionResources));
 
-		LandingViewModel viewModel = (LandingViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
-		
-		assertEquals(new ArrayList(), viewModel.getQuestions());
-		assertEquals(new ArrayList(), viewModel.getProjectDetails());
+        List<FormInputResource> formInputResources = newFormInputResource().withScope(APPLICATION).build(1);
+        when(formInputRestService.getByQuestionIdAndScope(QUESTION_ID, APPLICATION)).thenReturn(restSuccess(formInputResources));
+        List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(ASSESSMENT).build(1);
+        when(formInputRestService.getByQuestionIdAndScope(QUESTION_ID, ASSESSMENT)).thenReturn(restSuccess(formInputResourcesAssessment));
+
+        LandingViewModel viewModel = (LandingViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
+
+        assertEquals(new ArrayList(), viewModel.getQuestions());
+        assertEquals(new ArrayList(), viewModel.getProjectDetails());
         assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
-	}
+    }
 
     @Test
     public void testPopulateModelWithQuestions() {
@@ -122,7 +126,7 @@ public class LandingModelPopulatorTest {
                 .build(1);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
         List<QuestionResource> questionResources = asList(newQuestionResource().withId(questionId).build());
-        when(questionService.findByCompetition(competition.getId())).thenReturn(questionResources);
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questionResources));
 
         List<FormInputResource> formInputResources = newFormInputResource().withScope(APPLICATION).build(1);
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(formInputResources));
@@ -136,7 +140,7 @@ public class LandingModelPopulatorTest {
         assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
     }
 
-	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-		return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE);
-	}
+    private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
+        return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE);
+    }
 }

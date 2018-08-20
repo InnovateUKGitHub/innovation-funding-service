@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -21,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -42,7 +44,7 @@ public class FinanceFormPopulatorTest {
     private SectionService sectionService;
 
     @Mock
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Test
     public void testSectionToFill() {
@@ -75,10 +77,10 @@ public class FinanceFormPopulatorTest {
 
         when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(csfr);
         when(sectionService.getSectionsForCompetitionByType(compId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
-        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
+        when(questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(restSuccess(newQuestionResource()
                 .withName("FINANCE_OVERVIEW", null)
                 .withDescription("", fundingRules)
-                .build(2));
+                .build(2)));
 
         CompetitionSetupForm result = populator.populateForm(competition, Optional.empty());
 

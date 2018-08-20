@@ -34,7 +34,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -58,11 +57,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -177,6 +176,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ResearchCategorySummaryViewModel researchCategorySummaryViewModel = setupResearchCategorySummaryViewModel();
         when(researchCategorySummaryModelPopulator.populate(app, loggedInUser.getId(), true)).thenReturn
                 (researchCategorySummaryViewModel);
+
+        when(applicationRestService.isApplicationReadyForSubmit(app.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(app.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
 
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
