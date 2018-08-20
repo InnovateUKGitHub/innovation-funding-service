@@ -19,7 +19,7 @@ function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
     echo "Starting to copy os-files to $(getBuildLocation)"
     echo "create dir:"
-    mkdir $(getBuildLocation)
+    mkdir -p $(getBuildLocation)
     echo "current dir done"
     cp -r os-files $(getBuildLocation)
     sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
