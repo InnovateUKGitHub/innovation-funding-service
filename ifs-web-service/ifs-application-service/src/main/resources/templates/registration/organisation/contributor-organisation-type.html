@@ -18,11 +18,11 @@
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
-        <p class="govuk-!-margin-top-6 gov-uk-body">This is the organisation that you will join the application with.</p>
+        <p class="govuk-!-margin-top-6 govuk-body">This is the organisation that you will join the application with.</p>
 
         <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/contributor-organisation-type}" method="POST">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset__legend govuk-fieldset__legend--m" class="govuk-fieldset">
+                <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="organisationType">
                         <h2 class="govuk-fieldset__heading">Choose your organisation type</h2>
                     </legend>
