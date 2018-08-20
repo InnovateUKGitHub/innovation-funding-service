@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
@@ -24,5 +21,5 @@ public interface GrantClaimMaximumService {
     ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(final Long competitionTypeId);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ_GRANT_CLAIM_MAXIMUM')")
-    ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(Long competitionId);
+    ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(final Long competitionId);
 }
