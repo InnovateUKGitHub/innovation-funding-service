@@ -57,6 +57,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -115,15 +116,17 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private OrganisationRestService organisationRestService;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
+
         when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
         when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
