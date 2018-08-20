@@ -1,0 +1,19 @@
+ext.activeProfile="local"
+
+ext.ifsDatasourceHost = "ifs-database"
+ext.ifsDatasourceUrl="jdbc:mysql://eu-grant-registration-database:3306/eu_grant_registration"
+ext.ifsDatasourceUsername="root"
+ext.ifsDatasourcePassword="password"
+ext.ifsFlywayLocations="db/migration"
+
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3309/eu_grant_registration"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
+
+project.ext['flyway.url']='jdbc:mysql://ifs-database:3309?characterEncoding=utf8'
+project.ext['flyway.schemas']='eu_grant_registration'
+project.ext['flyway.user']='root'
+project.ext['flyway.password']="password"
+
+def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration"

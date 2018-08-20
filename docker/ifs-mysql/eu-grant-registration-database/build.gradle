@@ -1,0 +1,17 @@
+apply from: rootProject.file("docker/ifs-mysql/mysql-support.gradle")
+
+ext.sqlContainer = "eu-grant-registration-database"
+ext.testSchema = "eu_grant_registration_test"
+
+buildscript {
+    repositories { jcenter() }
+}
+
+createContainer.containerName = "eu-grant-registration-database"
+createContainer.containerId = "eu-grant-registration-database"
+createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=eu_grant_registration"]
+createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
+createContainer.portBindings = ['3309:3306']
+createContainer.hostName = "eu-grant-registration-database"
+
+startDbIfNotStarted.containerId = "eu-grant-registration-database"

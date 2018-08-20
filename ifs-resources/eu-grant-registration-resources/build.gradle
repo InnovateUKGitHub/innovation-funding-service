@@ -1,0 +1,18 @@
+apply from: rootProject.file("gradle-support/java.gradle")
+
+dependencies {
+    compile project(':ifs-resources')
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+}
+
+configurations {
+    testArtifacts
+}
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
