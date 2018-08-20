@@ -309,7 +309,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
+    public void findPreviousApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
         int pageSize = 20;
@@ -319,15 +319,15 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPageResource));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPageResource));
 
-        mockMvc.perform(get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
+        mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)))
                 .andDo(document(
                         "application/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                                parameterWithName("id").description("The competition for which previous applications need to be found")
                         ),
                         requestParameters(
                                 parameterWithName("page").description("The page number to be retrieved"),
@@ -338,7 +338,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         responseFields(PageResourceDocs.pageResourceFields)
                 ));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
+        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
 
     }
 

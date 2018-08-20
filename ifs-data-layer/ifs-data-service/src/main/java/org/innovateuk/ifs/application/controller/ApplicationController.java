@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ApplicationController {
 
     private static final String DEFAULT_SORT_BY = "id";
 
-    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
+    private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
 
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
@@ -142,13 +143,23 @@ public class ApplicationController {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
 
+    @ZeroDowntime(description = "delete this controller", reference = "IFS-2471")
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                            @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter) {
-        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
+                                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                        @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                        @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/previous-applications")
+    public RestResult<ApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                        @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                        @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/getLatestEmailFundingDate/{competitionId}")

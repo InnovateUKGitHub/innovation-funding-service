@@ -39,7 +39,7 @@ public class CompetitionManagementApplicationsController {
 
     private static final String DEFAULT_SORT_BY = "id";
 
-    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
+    private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
@@ -62,7 +62,7 @@ public class CompetitionManagementApplicationsController {
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
     @Autowired
-    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
+    private PreviousApplicationsModelPopulator previousApplicationsModelPopulator;
 
     @Autowired
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
@@ -132,20 +132,20 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of unsuccessful applications to a competition")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of previous applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead')")
     @GetMapping("/previous")
-    public String unsuccessfulApplications(Model model,
-                                           @PathVariable("competitionId") long competitionId,
-                                           @RequestParam MultiValueMap<String, String> queryParams,
-                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
-                                           @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
-                                           @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter,
-                                           UserResource loggedInUser) {
+    public String previousApplications(Model model,
+                                       @PathVariable("competitionId") long competitionId,
+                                       @RequestParam MultiValueMap<String, String> queryParams,
+                                       @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
+                                       @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
+                                       @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter,
+                                       UserResource loggedInUser) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(NavigationOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
+        String originQuery = buildOriginQueryString(NavigationOrigin.PREVIOUS_APPLICATIONS, queryParams);
+        model.addAttribute("model", previousApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/previous-applications";

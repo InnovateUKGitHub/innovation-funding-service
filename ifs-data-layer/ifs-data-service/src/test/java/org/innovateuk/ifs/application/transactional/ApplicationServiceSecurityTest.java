@@ -158,15 +158,15 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
+    public void findPreviousApplications() {
         Long competitionId = 1L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
 
-        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, "", "ALL"), () -> {
-            verify(competitionRules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
-            verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+        assertAccessDenied(() -> classUnderTest.findPreviousApplications(competitionId, 0, 0, "", "ALL"), () -> {
+            verify(competitionRules).internalUsersAndIFSAdminCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(competitionRules).innovationLeadForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
     }

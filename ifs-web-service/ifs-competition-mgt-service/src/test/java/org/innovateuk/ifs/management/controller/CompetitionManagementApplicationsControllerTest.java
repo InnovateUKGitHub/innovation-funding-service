@@ -67,7 +67,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
     @Mock
-    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
+    private PreviousApplicationsModelPopulator previousApplicationsModelPopulator;
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -553,7 +553,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     }
 
     @Test
-    public void unsuccessfulApplications() throws Exception {
+    public void previousApplications() throws Exception {
 
         Long competitionId = 1L;
         int pageIndex = 0;
@@ -562,12 +562,12 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         String filter = "ALL";
 
         String competitionName = "Competition One";
-        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        List<ApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
-        UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
-                competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new Pagination(applicationPageResource, ""));
+        PreviousApplicationsViewModel viewModel = new PreviousApplicationsViewModel(competitionId,
+                competitionName, true, previousApplications, previousApplications.size(), new Pagination(applicationPageResource, ""));
 
-        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), eq(filter), any(UserResource.class), any()))
+        when(previousApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), eq(filter), any(UserResource.class), any()))
                 .thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}&filter={filter}",
@@ -600,7 +600,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(view().name("redirect:/competition/{competitionId}/applications/previous"))
                 .andReturn();
 
-        verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
+        verify(previousApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
         verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
         verify(projectService).createProjectFromApplicationId(anyLong());
         verifyNoMoreInteractions(applicationFundingDecisionService, projectService);

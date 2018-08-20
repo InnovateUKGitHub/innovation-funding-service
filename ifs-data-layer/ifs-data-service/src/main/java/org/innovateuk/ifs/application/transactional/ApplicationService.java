@@ -81,6 +81,6 @@ public interface ApplicationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
-    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PREVIOUS_APPLICATIONS')")
+    ServiceResult<ApplicationPageResource> findPreviousApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
 }

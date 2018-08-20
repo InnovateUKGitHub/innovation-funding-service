@@ -556,7 +556,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWhenNoneFound() {
+    public void findPreviousApplicationsWhenNoneFound() {
 
         Long competitionId = 1L;
 
@@ -568,16 +568,16 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getSize()).thenReturn(0);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
-        assertTrue(unsuccessfulApplicationsPage.getContent().isEmpty());
+        ApplicationPageResource previousApplicationsPage = result.getSuccess();
+        assertTrue(previousApplicationsPage.getContent().isEmpty());
 
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
+    public void findPreviousApplications() {
 
         Long competitionId = 1L;
 
@@ -602,15 +602,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withProcessRoles(leadProcessRole)
                 .build();
 
-        List<Application> unsuccessfulApplications = new ArrayList<>();
-        unsuccessfulApplications.add(application1);
-        unsuccessfulApplications.add(application2);
+        List<Application> previousApplications = new ArrayList<>();
+        previousApplications.add(application1);
+        previousApplications.add(application2);
 
         ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
         ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
 
         Page<Application> pagedResult = mock(Page.class);
-        when(pagedResult.getContent()).thenReturn(unsuccessfulApplications);
+        when(pagedResult.getContent()).thenReturn(previousApplications);
         when(pagedResult.getTotalElements()).thenReturn(2L);
         when(pagedResult.getTotalPages()).thenReturn(1);
         when(pagedResult.getNumber()).thenReturn(0);
@@ -621,25 +621,25 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
-        assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
-        assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
-        assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
-        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
+        ApplicationPageResource previousApplicationsPage = result.getSuccess();
+        assertTrue(previousApplicationsPage.getSize() == 2);
+        assertEquals(applicationResource1, previousApplicationsPage.getContent().get(0));
+        assertEquals(applicationResource2, previousApplicationsPage.getContent().get(1));
+        assertEquals(leadOrganisationName, previousApplicationsPage.getContent().get(0).getLeadOrganisationName());
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWithIneligibleFilter() {
+    public void findPreviousApplicationsWithIneligibleFilter() {
 
         Long competitionId = 1L;
 
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "INELIGIBLE");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "INELIGIBLE");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any());
@@ -647,14 +647,14 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWithRejectedFilter() {
+    public void findPreviousApplicationsWithRejectedFilter() {
 
         Long competitionId = 1L;
 
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "REJECTED");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "REJECTED");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any());
@@ -662,14 +662,14 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWithWithdrawnFilter() {
+    public void findPreviousApplicationsWithWithdrawnFilter() {
 
         Long competitionId = 1L;
 
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "WITHDRAWN");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
@@ -677,32 +677,32 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWithAllFilter() {
+    public void findPreviousApplicationsWithAllFilter() {
 
         Long competitionId = 1L;
 
         Page<Application> pagedResult = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());
 
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWithInvalidFilter() {
+    public void findPreviousApplicationsWithInvalidFilter() {
 
         Long competitionId = 1L;
 
         Page<Application> pagedResult = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "wrongFilter");
+        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "wrongFilter");
         assertTrue(result.isSuccess());
 
-        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());
 
     }
 }

@@ -28,5 +28,5 @@ public interface ApplicationRestService {
     RestResult<Void> withdrawApplication(long applicationId);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
-    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
+    RestResult<ApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
 }

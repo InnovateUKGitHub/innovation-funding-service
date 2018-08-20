@@ -286,20 +286,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
-                                                                               int pageIndex,
-                                                                               int pageSize,
-                                                                               String sortField,
-                                                                               String filter) {
+    public ServiceResult<ApplicationPageResource> findPreviousApplications(Long competitionId,
+                                                                           int pageIndex,
+                                                                           int pageSize,
+                                                                           String sortField,
+                                                                           String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
+        List<ApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
@@ -325,7 +325,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             case "ALL":
             default:
-                applicationStates = ApplicationState.unsuccessfulStates;
+                applicationStates = ApplicationState.previousStates;
                 break;
         }
 
