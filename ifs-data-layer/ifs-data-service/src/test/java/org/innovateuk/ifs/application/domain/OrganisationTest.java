@@ -23,13 +23,13 @@ public class OrganisationTest {
     public void setUp() throws Exception {
         name = "test organisation";
         processRoles = new ArrayList<>();
-        organisation = new Organisation( name);
+        organisation = new Organisation(name);
         organisationType = new OrganisationType("Business", "Description of the current organisationtype", null);
         organisation.setOrganisationType(organisationType);
     }
 
     @Test
-    public void organisationShouldReturnCorrectAttributeValues() throws Exception {
+    public void organisationShouldReturnCorrectAttributeValues() {
         Assert.assertEquals(organisation.getName(), name);
         Assert.assertEquals(organisation.getProcessRoles(), processRoles);
         Assert.assertEquals(organisation.getOrganisationType(), organisationType);
