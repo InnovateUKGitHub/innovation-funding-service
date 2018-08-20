@@ -18,10 +18,12 @@ echo "Deploying tests to the current oc project ($PROJECT)"
 function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
     echo "Starting to copy os-files to $(getBuildLocation)"
-    echo "create dir:"
     mkdir -p $(getBuildLocation)
-    echo "current dir done"
     cp -r os-files $(getBuildLocation)
+    echo "running ls"
+    ls -la $(getBuildLocation)
+    ls -la $(getBuildLocation)/robot-tests/
+    echo "running ls end"
     sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/robot-tests/*.yml
 
