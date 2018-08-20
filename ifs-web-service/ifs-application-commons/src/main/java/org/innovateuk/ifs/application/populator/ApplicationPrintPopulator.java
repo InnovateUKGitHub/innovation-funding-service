@@ -13,7 +13,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -33,7 +33,7 @@ public class ApplicationPrintPopulator {
     private QuestionRestService questionRestService;
     private FormInputResponseService formInputResponseService;
     private FormInputResponseRestService formInputResponseRestService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
@@ -45,7 +45,7 @@ public class ApplicationPrintPopulator {
                                      QuestionRestService questionRestService,
                                      FormInputResponseService formInputResponseService,
                                      FormInputResponseRestService formInputResponseRestService,
-                                     ProcessRoleService processRoleService,
+                                     UserRestService userRestService,
                                      ApplicationModelPopulator applicationModelPopulator,
                                      ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator,
                                      OrganisationDetailsModelPopulator organisationDetailsModelPopulator,
@@ -56,7 +56,7 @@ public class ApplicationPrintPopulator {
         this.questionRestService = questionRestService;
         this.formInputResponseService = formInputResponseService;
         this.formInputResponseRestService = formInputResponseRestService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.applicationModelPopulator = applicationModelPopulator;
         this.applicationSectionAndQuestionModelPopulator = applicationSectionAndQuestionModelPopulator;
         this.organisationDetailsModelPopulator = organisationDetailsModelPopulator;
