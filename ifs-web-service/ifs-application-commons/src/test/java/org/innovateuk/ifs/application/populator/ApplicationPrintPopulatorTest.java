@@ -12,16 +12,18 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -59,7 +61,7 @@ public class ApplicationPrintPopulatorTest {
     private FormInputResponseService formInputResponseService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
@@ -96,7 +98,7 @@ public class ApplicationPrintPopulatorTest {
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(QuestionResourceBuilder
                 .newQuestionResource().build()));
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(userApplicationRoles));
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(emptyMap());

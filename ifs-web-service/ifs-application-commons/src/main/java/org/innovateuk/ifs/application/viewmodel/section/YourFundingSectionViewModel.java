@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+
 /**
  * View model for your funding section.
  */
@@ -30,7 +32,8 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     }
 
     public boolean isFundingSectionLocked() {
-        return this.researchCategoryRequired || this.yourOrganisationRequired;
+        return !getCompetition().getCompetitionStatus().isLaterThan(OPEN) &&
+                this.researchCategoryRequired || this.yourOrganisationRequired;
     }
 
     public boolean isResearchCategoryRequired() {

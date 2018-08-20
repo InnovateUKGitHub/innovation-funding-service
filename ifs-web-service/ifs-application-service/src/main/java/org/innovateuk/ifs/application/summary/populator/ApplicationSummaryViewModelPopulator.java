@@ -5,6 +5,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationSummaryViewModelPopulator {
 
     private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private UserService userService;
     private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
@@ -29,6 +31,7 @@ public class ApplicationSummaryViewModelPopulator {
     private ProjectService projectService;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
+                                                ApplicationRestService applicationRestService,
                                                 CompetitionRestService competitionRestService,
                                                 UserService userService,
                                                 SummaryViewModelFragmentPopulator summaryViewModelPopulator,
@@ -36,6 +39,7 @@ public class ApplicationSummaryViewModelPopulator {
                                                 ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator,
                                                 ProjectService projectService) {
         this.applicationService = applicationService;
+        this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.userService = userService;
         this.summaryViewModelPopulator = summaryViewModelPopulator;
@@ -60,7 +64,7 @@ public class ApplicationSummaryViewModelPopulator {
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
-                applicationService.isApplicationReadyForSubmit(application.getId()),
+                applicationRestService.isApplicationReadyForSubmit(application.getId()).getSuccess(),
                 summaryViewModelPopulator.populate(applicationId, user, form),
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,

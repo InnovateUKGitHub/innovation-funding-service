@@ -39,7 +39,13 @@ public class ApplicationModelPopulator {
     protected UserService userService;
 
     @Autowired
+    protected UserRestService userRestService;
+
+    @Autowired
     protected QuestionService questionService;
+
+    @Autowired
+    protected QuestionRestService questionRestService;
 
     @Autowired
     protected ProcessRoleService processRoleService;
@@ -52,6 +58,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected OrganisationService organisationService;
+
+    @Autowired
+    protected OrganisationRestService organisationRestService;
 
     @Autowired
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -80,8 +89,8 @@ public class ApplicationModelPopulator {
     }
 
     public ApplicationResource addApplicationWithoutDetails(ApplicationResource application,
-                                                         CompetitionResource competition,
-                                                         Model model) {
+                                                            CompetitionResource competition,
+                                                            Model model) {
 
         model.addAttribute("completedQuestionsPercentage", application.getCompletion());
         model.addAttribute("currentApplication", application);
@@ -90,7 +99,7 @@ public class ApplicationModelPopulator {
         return application;
     }
 
-    ApplicationResource addApplicationAndSections(ApplicationResource application,
+    public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
                                                          UserResource user,
                                                          Optional<SectionResource> section,
@@ -123,7 +132,7 @@ public class ApplicationModelPopulator {
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
-        if(form == null){
+        if (form == null) {
             form = new ApplicationForm();
         }
         form.setApplication(application);
@@ -147,11 +156,11 @@ public class ApplicationModelPopulator {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
+        if (application.getStartDate() == null) {
             formInputs.put("application_details-startdate_day", "");
             formInputs.put("application_details-startdate_month", "");
             formInputs.put("application_details-startdate_year", "");
-        }else{
+        } else {
             formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
@@ -167,7 +176,7 @@ public class ApplicationModelPopulator {
 
         boolean userIsLeadApplicant = leadApplicantProcessRole.getUser().equals(user.getId());
 
-        UserResource leadApplicant = userIsLeadApplicant ? user : userService.findById(leadApplicantProcessRole.getUser());
+        UserResource leadApplicant = userIsLeadApplicant ? user : userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
@@ -187,13 +196,13 @@ public class ApplicationModelPopulator {
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
 
-        if(hasFinanceSection) {
+        if (hasFinanceSection) {
             Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
-            List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
+            List<QuestionResource> costsQuestions = questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST).getSuccess();
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
-            if(!form.isAdminMode() || optionalOrganisationId.isPresent()) {
+            if (!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 financeViewHandlerProvider.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
@@ -205,19 +214,28 @@ public class ApplicationModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId) && uar.getOrganisationId() != null)
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
-                                                                 final CompetitionResource competition,
-                                                                 final UserResource user, final Model model,
-                                                                 final ApplicationForm form,
-                                                                 List<ProcessRoleResource> userApplicationRoles,
-                                                                 final Optional<Boolean> markAsCompleteEnabled) {
+                                                                final CompetitionResource competition,
+                                                                final UserResource user, final Model model,
+                                                                final ApplicationForm form,
+                                                                List<ProcessRoleResource> userApplicationRoles,
+                                                                final Optional<Boolean> markAsCompleteEnabled) {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 
+    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                final CompetitionResource competition,
+                                                                final UserResource user,
+                                                                Optional<SectionResource> section,
+                                                                Optional<Long> currentQuestionId,
+                                                                final Model model,
+                                                                final ApplicationForm form,
+                                                                List<ProcessRoleResource> userApplicationRoles,
+                                                                final Optional<Boolean> markAsCompleteEnabled) {
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
                                                                  final CompetitionResource competition,
                                                                  final UserResource user,

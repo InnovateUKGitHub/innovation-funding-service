@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
@@ -21,18 +22,21 @@ public abstract class AbstractApplicationModelPopulator {
 
     private SectionService sectionService;
     private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     protected AbstractApplicationModelPopulator(SectionService sectionService,
-                                                QuestionService questionService) {
+                                                QuestionService questionService,
+                                                QuestionRestService questionRestService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
+        this.questionRestService = questionRestService;
     }
 
     protected Map<Long, List<QuestionResource>> getSectionQuestions(Long competitionId) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
-        List<QuestionResource> questions = questionService.findByCompetition(competitionId);
+        List<QuestionResource> questions = questionRestService.findByCompetition(competitionId).getSuccess();
 
         return parentSections.stream()
                 .collect(toMap(

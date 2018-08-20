@@ -38,7 +38,7 @@ public class ApplicationPrintPopulator {
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
-    
+
     public ApplicationPrintPopulator(ApplicationService applicationService,
                                      SectionService sectionService,
                                      CompetitionRestService competitionRestService,
@@ -74,7 +74,7 @@ public class ApplicationPrintPopulator {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("researchCategoryRequired", researchCategoryRequired(competition.getId()));
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 

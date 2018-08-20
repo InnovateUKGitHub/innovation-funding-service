@@ -17,7 +17,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +44,7 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -66,7 +66,7 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
                 .filter(ApplicantResource::isLead)
                 .map(ApplicantResource::getProcessRole)
                 .map(ProcessRoleResource::getUser)
-                .map(userId -> userService.retrieveUserById(userId))
+                .map(userId -> userRestService.retrieveUserById(userId).getSuccess())
                 .findAny().orElse(null);
         viewModel.setUserIsLeadApplicant(userIsLeadApplicant);
         viewModel.setLeadApplicant(leadApplicant);

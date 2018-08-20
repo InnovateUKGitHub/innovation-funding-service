@@ -13,7 +13,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -54,7 +54,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
     private ApplicationService applicationService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private QuestionService questionService;
@@ -277,7 +277,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(processRoleService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
         when(applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
                 researchCategoryId, processRole.getId())).thenReturn(restSuccess(newApplicationResource().build()));
 
@@ -288,13 +288,13 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
                 .andExpect(status().is3xxRedirection());
 
-        InOrder inOrder = inOrder(processRoleService, applicationService, researchCategoryEditableValidator,
+        InOrder inOrder = inOrder(userRestService, applicationService, researchCategoryEditableValidator,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
                 applicationResearchCategoryRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(processRoleService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(userRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
         inOrder.verify(applicationResearchCategoryRestService).setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
                 researchCategoryId, processRole.getId());
         inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
@@ -323,7 +323,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 "Steve Smith");
 
-        when(processRoleService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
@@ -337,9 +337,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk());
 
-        InOrder inOrder = inOrder(processRoleService, questionService, applicationService, researchCategoryEditableValidator,
+        InOrder inOrder = inOrder(userRestService, questionService, applicationService, researchCategoryEditableValidator,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, applicationResearchCategoryRestService);
-        inOrder.verify(processRoleService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(userRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
         inOrder.verify(questionService).markAsIncomplete(questionId, applicationResource.getId(), processRole.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,

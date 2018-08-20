@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -63,6 +64,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
     @Mock
     private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
 
+    @Mock
+    private UserRestService userRestService;
+
     @Test
     public void populateWithApplicationFinances() {
         long loggedInUserId = 1L;
@@ -110,7 +114,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId());
@@ -172,7 +176,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId());
@@ -242,7 +246,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId());
