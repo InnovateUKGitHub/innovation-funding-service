@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.queries;
+package org.innovateuk.ifs.project.queries.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -63,6 +63,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -121,15 +122,17 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Mock
     private OrganisationRestService organisationRestService;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
+
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
         when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
