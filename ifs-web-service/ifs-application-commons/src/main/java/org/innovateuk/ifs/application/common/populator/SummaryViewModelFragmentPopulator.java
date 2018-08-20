@@ -3,13 +3,11 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -24,9 +22,10 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -38,16 +37,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
+public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private OrganisationService organisationService;
     private FormInputRestService formInputRestService;
     private FormInputResponseRestService formInputResponseRestService;
@@ -59,12 +59,13 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
     private ApplicantRestService applicantRestService;
     private FormInputViewModelGenerator formInputViewModelGenerator;
     private UserService userService;
+    private ApplicationRestService applicationRestService;
 
     public SummaryViewModelFragmentPopulator(ApplicationService applicationService,
                                              CompetitionRestService competitionRestService,
                                              SectionService sectionService,
                                              QuestionService questionService,
-                                             ProcessRoleService processRoleService,
+                                             UserRestService userRestService,
                                              OrganisationService organisationService,
                                              FormInputRestService formInputRestService,
                                              FormInputResponseRestService formInputResponseRestService,
@@ -75,13 +76,15 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
                                              ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
                                              ApplicantRestService applicantRestService,
                                              FormInputViewModelGenerator formInputViewModelGenerator,
-                                             UserService userService) {
-        super(sectionService, questionService);
+                                             UserService userService,
+                                             ApplicationRestService applicationRestService,
+                                             QuestionRestService questionRestService) {
+        super(sectionService, questionService, questionRestService);
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.questionService = questionService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.organisationService = organisationService;
         this.formInputRestService = formInputRestService;
         this.formInputResponseRestService = formInputResponseRestService;
@@ -93,16 +96,17 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
         this.applicantRestService = applicantRestService;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
         this.userService = userService;
+        this.applicationRestService = applicationRestService;
     }
 
-    public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
+    public SummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
@@ -141,7 +145,9 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
         );
         form.setFormInput(values);
 
-        boolean showApplicationTeamLink = applicationService.showApplicationTeam(application.getId(), user.getId());
+        boolean showApplicationTeamLink = applicationRestService.showApplicationTeam(application.getId(), user.getId()).getSuccess();
+
+        boolean isAssessor = user.hasRole(ASSESSOR);
 
         return new SummaryViewModel(
                 application,
@@ -158,7 +164,8 @@ public class SummaryViewModelFragmentPopulator extends FinanceOverviewSectionPop
                 applicationResearchParticipationViewModelPopulator.populate(applicationId),
                 getCompletedDetails(application, userOrganisation),
                 getFormInputViewModel(sectionQuestions, applicantId, application, competition),
-                showApplicationTeamLink
+                showApplicationTeamLink,
+                isAssessor
         );
     }
 

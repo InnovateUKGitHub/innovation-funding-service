@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -146,7 +146,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
-                                     @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             List<Long> existingApplicantIds = teamManagementService.getInviteIds(applicationId, organisationId);

@@ -7,7 +7,11 @@
 
 </head>
 
-<body class="govuk-template__body">
+<body class="govuk-template__body"
+      th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -15,7 +19,8 @@
 
 <div class="govuk-width-container">
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard'})" />
+    <th:block th:unless="${edit}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
+    <th:block th:if="${edit}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-org-selected?status=readonly&#38;section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
 
     <main class="govuk-main-wrapper" id="content">
 
@@ -31,6 +36,12 @@
                 </div>
 
                 <form id="lead-organisation-type-form" action="/prototypes/IFS-4104-funding-business" method="GET" novalidate="novalidate">
+
+                    <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                    <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                    <input type="hidden" id="section3" name="section3" th:value="${section3}">
+                    <input type="hidden" id="status" name="status" th:value="${status}">
+
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">

@@ -21,7 +21,7 @@
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
-            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id}: $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 
@@ -56,6 +56,12 @@
                 <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='assessors')}">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title">Assessors</span>
+                </a>
+            </li>
+            <li class="next">
+                <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='project-document')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Documents</span>
                 </a>
             </li>
         </ul>

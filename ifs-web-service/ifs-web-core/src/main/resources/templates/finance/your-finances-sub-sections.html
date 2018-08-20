@@ -118,11 +118,11 @@
         </div>
         <div>
             <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-               th:if="${model.complete}"
+               th:if="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
             <button type="submit"
-                    th:unless="${model.complete}"
+                    th:unless="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                     class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
@@ -177,11 +177,11 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.total : 0, 0, 'DEFAULT')}" /></strong></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance != null ? model.organisationFinance.grantClaimPercentage : 0}+'%'" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalFundingSought : 0, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalOtherFunding : 0, 0, 'DEFAULT')}" /></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance != null ? model.organisationFinance.totalContribution : 0, 0, 'DEFAULT')}" /></td>
             </tr>
             </tbody>
         </table>
@@ -238,7 +238,7 @@
             </div>
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
-             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.applicationIsReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
     </th:block>
 </th:block>
