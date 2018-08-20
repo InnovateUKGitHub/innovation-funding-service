@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,6 +43,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.util.ReflectionUtils.*;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -110,7 +112,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
+
+        Competition existingCompetition = competitionRepository.findOne(competitionResource.getId());
+
         Competition competition = competitionMapper.mapToDomain(competitionResource);
+        competition = setCompetitionAuditableFields(competition, existingCompetition);
 
         saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
@@ -375,5 +381,16 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
         return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
                 false, true, fileTypes);
+    }
+
+    private Competition setCompetitionAuditableFields(Competition competition, Competition existingCompetition) {
+        Field createdBy = findField(Competition.class, "createdBy");
+        Field createdOn = findField(Competition.class, "createdOn");
+        makeAccessible(createdBy);
+        makeAccessible(createdOn);
+        setField(createdBy, competition, existingCompetition.getCreatedBy());
+        setField(createdOn, competition, existingCompetition.getCreatedOn());
+
+        return competition;
     }
 }
