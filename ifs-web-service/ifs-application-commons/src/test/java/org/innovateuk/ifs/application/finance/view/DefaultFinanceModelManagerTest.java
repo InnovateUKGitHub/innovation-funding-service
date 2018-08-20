@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.MapFunctions;
@@ -51,8 +52,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultFinanceModelManagerTest {
 
-	@InjectMocks
-	private DefaultFinanceModelManager manager;
+    @InjectMocks
+    private DefaultFinanceModelManager manager;
 
     @Mock
     private FinanceService financeService;
@@ -67,6 +68,9 @@ public class DefaultFinanceModelManagerTest {
     private OrganisationService organisationService;
 
     @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
     private FormInputRestService formInputRestService;
 
     @Mock
@@ -74,7 +78,7 @@ public class DefaultFinanceModelManagerTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
-	
+
     private Model model;
     private Long applicationId;
     private List<QuestionResource> costsQuestions;
@@ -82,97 +86,97 @@ public class DefaultFinanceModelManagerTest {
     private Form form;
     private Long competitionId;
     private Long organisationId;
-    
+
     @Before
     public void setUp() {
-		model = new ExtendedModelMap();
-		applicationId = 1L;
-		costsQuestions = newQuestionResource().build(1);
-		userId = 2L;
-		form = new Form();
-		competitionId = 3L;
-		organisationId = 4L;
+        model = new ExtendedModelMap();
+        applicationId = 1L;
+        costsQuestions = newQuestionResource().build(1);
+        userId = 2L;
+        form = new Form();
+        competitionId = 3L;
+        organisationId = 4L;
     }
-    
-	@Test
-	public void testAddOrganisationFinanceDetailsClosedCompetitionNotSubmittedApplication() {
 
-		ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
-		
-		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
-		
-		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
-				financeFormHandler);
-		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
-		
-		assertEquals(8, model.asMap().size());
-		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
-	}
-	
-	@Test
-	public void testAddOrganisationFinanceDetailsOpenCompetitionSubmittedApplication() {
+    @Test
+    public void testAddOrganisationFinanceDetailsClosedCompetitionNotSubmittedApplication() {
 
-		ApplicationResource application = newApplicationResource().withCompetition(competitionId).withApplicationState(ApplicationState.SUBMITTED).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
-		
-		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
-		
-		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
-				financeFormHandler);
-		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
-		
-		assertEquals(8, model.asMap().size());
-		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
-	}
-	
-	@Test
-	public void testAddOrganisationFinanceDetailsOpenCompetitionNotSubmittedApplication() {
-		
-		ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
-		
-		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
-		
-		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
-				financeFormHandler);
-		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
+        ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
 
-		assertEquals(8, model.asMap().size());
-		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
-	}
+        FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
 
-	private void setupStubs(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Long competitionId,
-			Long organisationId, ApplicationResource application, CompetitionResource competition,
-			FinanceFormHandler financeFormHandler) {
-		when(applicationService.getById(applicationId)).thenReturn(application);
-		when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-	
-		ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().withOrganisation(organisationId).build();
-		Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
-		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
-		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
-		
-		Long organisationType = 1L;
-		String organisationTypeName = "Business";
+        setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
+                financeFormHandler);
 
-		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationTypeName).build();
+        manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 
-		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
+        assertEquals(8, model.asMap().size());
+        verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
+    }
 
-		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
-		
-		when(financeViewHandlerProvider.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
-		
-    	when(formInputRestService.getByQuestionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(newFormInputResource().withType(FormInputType.LABOUR).build())));
+    @Test
+    public void testAddOrganisationFinanceDetailsOpenCompetitionSubmittedApplication() {
 
-		FinanceRowItem costItem = new LabourCost();
-		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
+        ApplicationResource application = newApplicationResource().withCompetition(competitionId).withApplicationState(ApplicationState.SUBMITTED).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
 
-		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
-		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
-	}
+        FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
+
+        setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
+                financeFormHandler);
+
+        manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
+
+        assertEquals(8, model.asMap().size());
+        verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
+    }
+
+    @Test
+    public void testAddOrganisationFinanceDetailsOpenCompetitionNotSubmittedApplication() {
+
+        ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
+
+        setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
+                financeFormHandler);
+
+        manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
+
+        assertEquals(8, model.asMap().size());
+        verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
+    }
+
+    private void setupStubs(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Long competitionId,
+                            Long organisationId, ApplicationResource application, CompetitionResource competition,
+                            FinanceFormHandler financeFormHandler) {
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().withOrganisation(organisationId).build();
+        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
+        applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
+        when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
+
+        Long organisationType = 1L;
+        String organisationTypeName = "Business";
+
+        OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationTypeName).build();
+
+        when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
+
+        when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
+
+        when(financeViewHandlerProvider.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
+
+        when(formInputRestService.getByQuestionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(newFormInputResource().withType(FormInputType.LABOUR).build())));
+
+        FinanceRowItem costItem = new LabourCost();
+        when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+    }
 }
