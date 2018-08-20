@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

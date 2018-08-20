@@ -10,8 +10,7 @@ import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
-import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,14 +26,17 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 public class
 InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
+    private UserRestService userRestService;
     private CategoryRestService categoryRestService;
+
+    public InitialDetailsModelPopulator(CompetitionRestService competitionRestService,
+                                        UserRestService userRestService,
+                                        CategoryRestService categoryRestService) {
+        this.competitionRestService = competitionRestService;
+        this.userRestService = userRestService;
+        this.categoryRestService = categoryRestService;
+    }
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
@@ -44,11 +46,11 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         return new InitialDetailsViewModel(generalViewModel,
-                userService.findUserByType(COMP_ADMIN),
+                userRestService.findByUserRole(COMP_ADMIN).getSuccess(),
                 categoryRestService.getInnovationSectors().getSuccess(),
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
-                userService.findUserByType(INNOVATION_LEAD));
+                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess());
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

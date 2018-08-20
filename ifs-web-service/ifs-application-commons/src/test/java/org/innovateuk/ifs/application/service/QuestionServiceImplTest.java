@@ -8,17 +8,16 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.*;
 import java.util.concurrent.Future;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -31,18 +30,13 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     @Mock
     private QuestionStatusRestService questionStatusRestService;
 
+    @Mock
+    private UserRestService userRestService;
+
     @Override
-    protected QuestionService supplyServiceUnderTest() { return new QuestionServiceImpl(); }
-
-    @Test
-    public void testGetQuestionsByType() {
-    	QuestionResource section = newQuestionResource().build();
-    	when(questionRestService.getQuestionsBySectionIdAndType(1L, QuestionType.COST)).thenReturn(restSuccess(asList(section)));
-
-    	List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST);
-
-    	assertEquals(1, result.size());
-    	assertEquals(section, result.get(0));
+    protected QuestionService supplyServiceUnderTest() {
+        return new QuestionServiceImpl(questionRestService,
+                questionStatusRestService, userRestService);
     }
 
     @Test
@@ -106,18 +100,6 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     }
 
     @Test
-    public void testFindByCompetition() throws Exception {
-        Long competitionId = 1L;
-        List<QuestionResource> questions = Lists.newArrayList(new QuestionResource());
-        when(questionRestService.findByCompetition(competitionId)).thenReturn(restSuccess(questions));
-
-        List<QuestionResource> returnedQuestions = service.findByCompetition(competitionId);
-
-        assertEquals(questions, returnedQuestions);
-    }
-
-
-    @Test
     public void testGetNotificationsForUser() throws Exception {
         Long userId = 1L;
         QuestionStatusResource notUserStatus = new QuestionStatusResource();
@@ -126,7 +108,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionStatusResource notifiedStatus = new QuestionStatusResource();
         notifiedStatus.setAssigneeUserId(userId);
         notifiedStatus.setNotified(true);
-        QuestionStatusResource notNotifiedStatus =  new QuestionStatusResource();
+        QuestionStatusResource notNotifiedStatus = new QuestionStatusResource();
         notNotifiedStatus.setAssigneeUserId(userId);
         notNotifiedStatus.setNotified(false);
         Collection<QuestionStatusResource> questionStatuses = Lists.newArrayList(notUserStatus, notifiedStatus, notNotifiedStatus);
@@ -168,17 +150,6 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     }
 
     @Test
-    public void testGetById() throws Exception {
-        Long questionId = 1L;
-        QuestionResource question = new QuestionResource();
-        when(questionRestService.findById(questionId)).thenReturn(restSuccess(question));
-
-        QuestionResource returnedQuestion = service.getById(questionId);
-
-        assertEquals(question, returnedQuestion);
-    }
-
-    @Test
     public void testGetByIdAndAssessmentId() throws Exception {
         Long questionId = 1L;
         Long assessmentId = 2L;
@@ -198,7 +169,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getNextQuestion(questionId)).thenReturn(restSuccess(question));
 
-        Optional<QuestionResource> result =  service.getNextQuestion(questionId);
+        Optional<QuestionResource> result = service.getNextQuestion(questionId);
 
         assertTrue(result.isPresent());
         assertEquals(question, result.get());
@@ -210,7 +181,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getPreviousQuestion(questionId)).thenReturn(restSuccess(question));
 
-        Optional<QuestionResource> result =  service.getPreviousQuestion(questionId);
+        Optional<QuestionResource> result = service.getPreviousQuestion(questionId);
 
         assertTrue(result.isPresent());
         assertEquals(question, result.get());
@@ -222,7 +193,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getNextQuestionBySection(sectionId)).thenReturn(restSuccess(question));
 
-        Optional<QuestionResource> result =  service.getNextQuestionBySection(sectionId);
+        Optional<QuestionResource> result = service.getNextQuestionBySection(sectionId);
 
         assertTrue(result.isPresent());
         assertEquals(question, result.get());
@@ -234,7 +205,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getPreviousQuestionBySection(sectionId)).thenReturn(restSuccess(question));
 
-        Optional<QuestionResource> result =  service.getPreviousQuestionBySection(sectionId);
+        Optional<QuestionResource> result = service.getPreviousQuestionBySection(sectionId);
 
         assertTrue(result.isPresent());
         assertEquals(question, result.get());
@@ -263,7 +234,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         status2.setQuestion(question2);
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId)).thenReturn(restSuccess(Lists.newArrayList(status1, status2)));
 
-        Map<Long, QuestionStatusResource>  result =  service.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
+        Map<Long, QuestionStatusResource> result = service.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
 
         assertEquals(status1, result.get(question1));
         assertEquals(status2, result.get(question2));
@@ -277,7 +248,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionStatusResource status = new QuestionStatusResource();
         when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId)).thenReturn(restSuccess(Lists.newArrayList(status)));
 
-        QuestionStatusResource  result =  service.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+        QuestionStatusResource result = service.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
 
         assertEquals(result, status);
     }
@@ -295,7 +266,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         List<Long> questionIds = Lists.newArrayList(question1, question2);
         when(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, userOrganisationId)).thenReturn(restSuccess(Lists.newArrayList(status1, status2)));
 
-        Map<Long, QuestionStatusResource>  result =  service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, userOrganisationId);
+        Map<Long, QuestionStatusResource> result = service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, userOrganisationId);
 
         assertEquals(status1, result.get(question1));
         assertEquals(status2, result.get(question2));
@@ -313,28 +284,5 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         List<QuestionStatusResource> result = service.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
 
         assertEquals(statuses, result);
-    }
-
-    @Test
-    public void getQuestionsByAssessment() throws Exception {
-        Long assessmentId = 1L;
-        List<QuestionResource> questions = newQuestionResource().build(2);
-
-        when(questionRestService.getQuestionsByAssessment(assessmentId)).thenReturn(restSuccess(questions));
-        List<QuestionResource> result = service.getQuestionsByAssessment(assessmentId);
-
-        assertEquals(questions, result);
-    }
-
-    @Test
-    public void testSave() throws Exception {
-        QuestionResource question = newQuestionResource().build();
-
-        when(questionRestService.save(question)).thenReturn(restSuccess(question));
-        QuestionResource result = service.save(question);
-
-        assertEquals(question, result);
-
-        verify(questionRestService, only()).save(question);
     }
 }
