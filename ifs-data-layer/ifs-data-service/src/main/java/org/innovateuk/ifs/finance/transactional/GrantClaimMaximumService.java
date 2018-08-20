@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -19,9 +20,9 @@ public interface GrantClaimMaximumService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#competitionTypeId, 'org.innovateuk.ifs.competition.resource.CompetitionTypeResource', 'READ_GRANT_CLAIM_MAXIMUM')")
     ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(final Long competitionTypeId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ_GRANT_CLAIM_MAXIMUM')")
     ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(Long competitionId);
 }
