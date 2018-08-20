@@ -12,6 +12,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
+...
+...            IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
@@ -77,7 +79,7 @@ Create new Application for this Competition
     Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
 
 Applicant visits his Finances
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-3938
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
@@ -352,7 +354,7 @@ the user should see the dates in full format
 
 the user should see that the funding depends on the research area
     the user clicks the button/link  link=Your funding
-    the user should see the element  jQuery=li:contains("you must select a") a:contains("research category")
+    the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link=Your finances
 
 

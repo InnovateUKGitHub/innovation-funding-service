@@ -16,6 +16,8 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Set predefined date variables
 Suite Teardown    The user closes the browser
 Test Teardown
@@ -168,13 +170,13 @@ Collaborator can see that Research area is not selected
     Then The user should see the element  jQuery=.govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Lead selects Research category
-    [Documentation]  INFUND-6823
+    [Documentation]  INFUND-6823  IFS-3938
     [Tags]  Email
     [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
     And the user clicks the button/link   link=Your funding
-    Then the user should see the element  jQuery=li:contains("you must select a"):contains("research category")
+    Then the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user clicks the button/link  link=Assign test
     When the user selects Research category  Feasibility studies
