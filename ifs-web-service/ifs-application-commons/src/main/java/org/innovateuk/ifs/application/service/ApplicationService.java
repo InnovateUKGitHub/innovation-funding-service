@@ -11,10 +11,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 public interface ApplicationService {
     ApplicationResource getById(Long applicationId);
 
-    Boolean isApplicationReadyForSubmit(Long applicationId);
-
-    ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
-
     ServiceResult<Void> save(ApplicationResource application);
 
     OrganisationResource getLeadOrganisation(Long applicationId);
@@ -22,6 +18,4 @@ public interface ApplicationService {
     ServiceResult<Void> removeCollaborator(Long applicationInviteId);
 
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
-
-    Boolean showApplicationTeam(Long applicationId, Long userid);
 }

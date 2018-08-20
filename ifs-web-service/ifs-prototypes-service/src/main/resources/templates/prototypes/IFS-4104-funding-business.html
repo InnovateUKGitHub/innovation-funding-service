@@ -7,7 +7,11 @@
 
 </head>
 
-<body class="govuk-template__body">
+<body class="govuk-template__body"
+      th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -15,7 +19,7 @@
 
 <div class="govuk-width-container">
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-4104-funding-org'})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-4104-funding-org?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
 
     <main class="govuk-main-wrapper" id="content">
 
@@ -47,54 +51,21 @@
                                 Enter your organisation name or registration number.
                             </label>
                             <input class="govuk-input govuk-!-width-one-half" type="text" value="" id="organisationSearchName" name="organisationSearchName">
-                            <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
+                            <button type="button" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0" data-aria-controls="org-results-list">Search</button>
                         </div>
 
                         <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
                         <p class="govuk-body govuk-hint">Select your organisation from the options below</p>
-                        <ul id="org-results" class="govuk-list results-list panel" style="display: block">
-                            <th:block th:unless="${type == 'collaborator'}">
-                                <li class="type-company">
-                                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                                        <a th:href="${'/prototypes/IFS-4104-funding-org-selected?user='} + ${user} + '&#38;type=' + ${type}" title="View organisation">CERCIS LIMITED</a>
-                                    </h3>
-                                    <p class="govuk-body meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
-                                    <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
+                        <ul id="org-results-list" class="govuk-list results-list panel">
+                            <li class="type-company">
+                                <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                                    <a th:href="${'/prototypes/IFS-4104-funding-org-selected?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3}" title="View organisation">CERCIS LIMITED</a>
+                                </h3>
+                                <p class="govuk-body meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
+                                <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
 
-                                </li>
-                                <li class="type-company">
-                                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                                        <a href="#" title="View organisation">CERCIS SERVICES LTD</a>
-                                    </h3>
-                                    <p class="govuk-body meta crumbtrail">10626442 - Incorporated on 17 February 2017</p>
-                                    <p class="govuk-body">Stamford Square, London, SW15 2BF</p>
+                            </li>
 
-                                </li>
-                                <li class="type-company">
-                                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                                        <a href="#" title="View organisation">CERCIS TRAINING AND CONSULTANCY LTD</a>
-                                    </h3>
-                                    <p class="govuk-body meta crumbtrail">10105978 - Incorporated on 6 April 2016</p>
-                                    <p class="govuk-body">Westergate Close, Worthing, BN12 5DD</p>
-
-                                </li>
-                            </th:block>
-                            <th:block th:if="${type == 'collaborator'}">
-                                <li class="type-company">
-                                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                                        <a th:href="${'/prototypes/IFS-4104-funding-org-selected?user='} + ${user} + '&#38;type=' + ${type} + '&#38;status=' + ${status}" title="View organisation">SPOONS</a>
-                                    </h3>
-                                    <p class="govuk-body meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
-                                    <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
-                                </li>
-                                <li class="type-company">
-                                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                                        <a href="#" title="View organisation">SPOONSAFE LTD</a>
-                                    </h3>
-                                    <p class="govuk-body meta crumbtrail">10105978 - Incorporated on 6 April 2016</p>
-                                    <p class="govuk-body">Westergate Close, Worthing, BN12 5DD</p>
-                                </li>
-                            </th:block>
                         </ul>
                     </fieldset>
 
@@ -132,9 +103,10 @@
                                             <button type="submit" id="postcode-lookup" class="govuk-button" name="search-address">Find UK address</button>
                                         </div>
 
-                                        <input type="hidden" name="entry" value="manual" />
-                                        <input type="hidden" name="status" th:value="${status}" />
-                                        <input type="hidden" name="type" th:value="${type}" />
+                                        <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                                        <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                                        <input type="hidden" id="section3" name="section3" th:value="${section3}">
+                                        <input type="hidden" id="status" name="status" th:value="${status}">
 
 
                                         <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>

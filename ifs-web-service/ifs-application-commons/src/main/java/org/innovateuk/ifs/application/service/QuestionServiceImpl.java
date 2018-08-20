@@ -8,11 +8,9 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +29,17 @@ public class QuestionServiceImpl implements QuestionService {
     private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
     private static final String ASSIGN_QUESTION_PARAM = "assign_question";
 
-    @Autowired
     private QuestionRestService questionRestService;
-
-    @Autowired
     private QuestionStatusRestService questionStatusRestService;
+    private UserRestService userRestService;
 
-    @Autowired
-    private ProcessRoleService processRoleService;
+    public QuestionServiceImpl(QuestionRestService questionRestService,
+                               QuestionStatusRestService questionStatusRestService,
+                               UserRestService userRestService) {
+        this.questionRestService = questionRestService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.userRestService = userRestService;
+    }
 
     @Override
     public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
@@ -64,12 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private boolean isApplicationTeamQuestion(Long questionId) {
-        return getById(questionId).getQuestionSetupType() == APPLICATION_TEAM;
-    }
-
-    @Override
-    public List<QuestionResource> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId).getSuccess();
+        return questionRestService.findById(questionId).getSuccess().getQuestionSetupType() == APPLICATION_TEAM;
     }
 
     @Override
@@ -103,11 +99,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionStatusRestService.getMarkedAsComplete(applicationId, organisationId);
-    }
-
-    @Override
-    public QuestionResource getById(Long questionId) {
-        return questionRestService.findById(questionId).getSuccess();
     }
 
     @Override
@@ -159,21 +150,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-        return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccess();
-    }
-
-    @Override
-    public QuestionResource save(QuestionResource questionResource) {
-        return questionRestService.save(questionResource).getSuccess();
-    }
-
-    @Override
-    public List<QuestionResource> getQuestionsByAssessment(long assessmentId) {
-        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccess();
-    }
-
-    @Override
     public void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy) {
 
         Map<String, String[]> params = request.getParameterMap();
@@ -187,7 +163,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void assignQuestion(Long applicationId, UserResource user, HttpServletRequest request) {
-        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         assignQuestion(applicationId, request, assignedBy);
     }
 
