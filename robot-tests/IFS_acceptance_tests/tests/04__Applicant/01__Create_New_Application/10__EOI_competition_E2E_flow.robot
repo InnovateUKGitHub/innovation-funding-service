@@ -168,5 +168,5 @@ logged in user applies to competition
     the user clicks the Not on company house link
     the user fills in the address details
     the user selects the checkbox        agree
-    the user clicks the button/link      css=.button[type="submit"]    #Continue
+    the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
     the user clicks the button/link      id=application-question-save

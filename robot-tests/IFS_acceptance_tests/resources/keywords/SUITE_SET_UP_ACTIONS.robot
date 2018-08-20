@@ -215,7 +215,7 @@ the user verifies email
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
-    the user clicks the button/link         link=Continue without an account
+    the user clicks the button/link         link = Continue and create an account
     the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
@@ -223,7 +223,7 @@ the user follows the flow to register their organisation
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
     the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
 
 the user enters the details and clicks the create account

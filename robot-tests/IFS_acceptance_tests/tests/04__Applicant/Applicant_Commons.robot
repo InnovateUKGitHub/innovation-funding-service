@@ -430,7 +430,7 @@ the applicant completes Application Team
 the user clicks the Not on company house link
     the user clicks the button/link       jQuery=summary:contains("Enter details manually")
     The user enters text to a text field  name=organisationName    org2
-    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user clicks the button/link       jQuery=button:contains("Continue")
 
 the user fills in the address info
    [Arguments]  ${organisationType}
@@ -441,14 +441,14 @@ the user fills in the address info
 
 the user fills in the address details
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery = button:contains("Find UK address")
+    the user clicks the button/link            css = #select-address-block > button
+    the user clicks the button/link            jQuery = button:contains("Continue")
+    the user clicks the button/link            jQuery = button:contains("Save and continue")
 
 the user fills in the research address details
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
     the user clicks the button/link            jQuery=button:contains("Save organisation and continue")
 
