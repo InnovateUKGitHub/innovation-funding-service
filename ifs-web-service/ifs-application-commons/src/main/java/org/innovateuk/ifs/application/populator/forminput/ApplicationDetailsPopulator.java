@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.populator.forminput;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
+import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
