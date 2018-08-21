@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.researchcategory.viewmodel;
+package org.innovateuk.ifs.application.viewmodel.researchCategory;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,20 +7,27 @@ import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel {
 
     private String researchCategory;
+    private boolean useSelectState;
 
     public ResearchCategorySummaryViewModel(Long applicationId,
                                             Long questionId,
                                             String researchCategory,
+                                            boolean useSelectState,
                                             boolean closed,
                                             boolean complete,
                                             boolean canMarkAsComplete,
                                             boolean allReadonly) {
         super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.researchCategory = researchCategory;
+        this.useSelectState = useSelectState;
     }
 
     public String getResearchCategory() {
         return researchCategory;
+    }
+
+    public boolean getUseSelectState() {
+        return useSelectState;
     }
 
     @Override
@@ -42,6 +49,7 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
 
         return new EqualsBuilder()
                 .append(researchCategory, that.researchCategory)
+                .append(useSelectState, that.useSelectState)
                 .isEquals();
     }
 
@@ -49,6 +57,7 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(researchCategory)
+                .append(useSelectState)
                 .toHashCode();
     }
 }
