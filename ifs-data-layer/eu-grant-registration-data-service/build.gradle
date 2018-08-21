@@ -11,11 +11,11 @@ apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
-project.version = externalFundingDataServiceVersion
-tagDocker.tag = externalFundingDataServiceVersion
-osStageRemote.tag = externalFundingDataServiceVersion
-tagDockerLocal.tag = externalFundingDataServiceVersion
-osStageLocal.tag = externalFundingDataServiceVersion
+project.version = euGrantRegistrationDataServiceVersion
+tagDocker.tag = euGrantRegistrationDataServiceVersion
+osStageRemote.tag = euGrantRegistrationDataServiceVersion
+tagDockerLocal.tag = euGrantRegistrationDataServiceVersion
+osStageLocal.tag = euGrantRegistrationDataServiceVersion
 
 def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->

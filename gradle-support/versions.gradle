@@ -5,7 +5,7 @@ ext.dataServiceVersion = project.properties['data-service.version'] ?: project.v
 ext.financeDataServiceVersion=project.properties['finance-data-service.version'] ?:project.version
 ext.alertServiceVersion = project.properties['alerts-service.version'] ?: project.version
 ext.surveyDataServiceVersion=project.properties['survey-data-service.version'] ?:project.version
-ext.externalFundingDataServiceVersion=project.properties['eu-grant-registration-data-service.version'] ?:project.version
+ext.euGrantRegistrationDataServiceVersion=project.properties['eu-grant-registration-data-service.version'] ?:project.version
 
 ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
 ext.surveyServiceVersion = project.properties['survey-service.version'] ?: project.version

@@ -91,5 +91,5 @@ The errorKey and the arguments are "machine-readable" fields that can be used by
 The errorMessage on the other hand is an optional "human-readable" field that can be used to provide some helpful understandable information to API client developers.
 
 [[address]]
-== Survey
-include::survey.adoc[]
+== Eu Grant Registration
+include::eu-grant.adoc[]
