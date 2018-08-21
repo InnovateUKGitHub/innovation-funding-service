@@ -59,15 +59,15 @@ public class PreviousApplicationsViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PreviousApplicationsViewModel viewModel = (PreviousApplicationsViewModel) o;
+        PreviousApplicationsViewModel that = (PreviousApplicationsViewModel) o;
 
         return new EqualsBuilder()
-                .append(previousApplicationsSize, viewModel.previousApplicationsSize)
-                .append(competitionId, viewModel.competitionId)
-                .append(competitionName, viewModel.competitionName)
-                .append(isIfsAdmin, viewModel.isIfsAdmin)
-                .append(previousApplications, viewModel.previousApplications)
-                .append(previousApplicationsPagination, viewModel.previousApplicationsPagination)
+                .append(previousApplicationsSize, that.previousApplicationsSize)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(isIfsAdmin, that.isIfsAdmin)
+                .append(previousApplications, that.previousApplications)
+                .append(previousApplicationsPagination, that.previousApplicationsPagination)
                 .isEquals();
     }
 

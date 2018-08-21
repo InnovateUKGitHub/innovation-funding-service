@@ -55,7 +55,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean internalUsersAndIFSAdminCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return (isInternal(user) && !isInnovationLead(user)) || isIFSAdmin(user);
     }
-    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Innovation leads for the competitin can view previous applications")
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Innovation leads for the competition can view previous applications")
     public boolean innovationLeadForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
