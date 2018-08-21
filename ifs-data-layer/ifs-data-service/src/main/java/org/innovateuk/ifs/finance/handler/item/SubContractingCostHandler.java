@@ -59,7 +59,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
 
     private ProjectFinanceRow mapSubContractingToProjectCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
-        ProjectFinanceRow cost =  new ProjectFinanceRow(costItem.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
+        ProjectFinanceRow cost =  new ProjectFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));

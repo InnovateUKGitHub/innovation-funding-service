@@ -80,7 +80,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         } else {
             item = otherFunding.getSecuredDate();
         }
-        return new ProjectFinanceRow(costItem.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+        return new ProjectFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override
