@@ -5,12 +5,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
@@ -70,7 +71,7 @@ public class ApplicationFinance extends Finance {
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum, boolean researchCategoryRequired) {
         return isMatchingOrganisationType(grantClaimMaximum)
                 && isMatchingOrganisationSize(grantClaimMaximum)
-                && !researchCategoryRequired || isMatchingResearchCategory(grantClaimMaximum);
+                && (!researchCategoryRequired || isMatchingResearchCategory(grantClaimMaximum));
     }
 
     private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
@@ -92,6 +93,6 @@ public class ApplicationFinance extends Finance {
 
     private boolean isResearchCategoryRequired() {
         return getApplication().getCompetition().getQuestions().stream()
-                .anyMatch(question -> question.getQuestionSetupType().equals(QuestionSetupType.RESEARCH_CATEGORY));
+                .anyMatch(question -> RESEARCH_CATEGORY == question.getQuestionSetupType());
     }
 }
