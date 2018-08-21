@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -58,7 +58,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
     @Autowired
-    private ApplicationFundingDecisionService applicationFundingService;
+    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -98,7 +98,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> applicationFundingService.sendFundingNotifications(fundingNotificationResource));
+                () -> applicationFundingDecisionRestService.sendApplicationFundingDecisions(fundingNotificationResource));
     }
 
     private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {

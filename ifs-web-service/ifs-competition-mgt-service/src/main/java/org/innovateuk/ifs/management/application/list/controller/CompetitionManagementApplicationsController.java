@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
-import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +47,7 @@ public class CompetitionManagementApplicationsController {
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Autowired
-    private ProjectService projectService;
+    private ProjectRestService projectRestService;
 
     @Autowired
     private ApplicationsMenuModelPopulator applicationsMenuModelPopulator;
@@ -159,7 +159,7 @@ public class CompetitionManagementApplicationsController {
                                               @PathVariable("applicationId") long applicationId)  {
         checkCompetitionIsOpen(competitionId);
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
-        projectService.createProjectFromApplicationId(applicationId).getSuccess();
+        projectRestService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/applications/previous";
     }

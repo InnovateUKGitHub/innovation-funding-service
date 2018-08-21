@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.application.list.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Mock
-    private ProjectService projectService;
+    private ProjectRestService projectRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -592,8 +593,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
                 .thenReturn(ServiceResult.serviceSuccess());
-        when(projectService.createProjectFromApplicationId(anyLong()))
-                .thenReturn(ServiceResult.serviceSuccess(projectResource));
+        when(projectRestService.createProjectFromApplicationId(anyLong()))
+                .thenReturn(restSuccess(projectResource));
 
         mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
                 .andExpect(status().is3xxRedirection())
@@ -602,8 +603,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(previousApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
         verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
-        verify(projectService).createProjectFromApplicationId(anyLong());
-        verifyNoMoreInteractions(applicationFundingDecisionService, projectService);
+        verify(projectRestService).createProjectFromApplicationId(anyLong());
+        verifyNoMoreInteractions(applicationFundingDecisionService, projectRestService);
 
     }
 

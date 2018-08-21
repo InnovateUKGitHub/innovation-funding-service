@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditable
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -16,10 +17,12 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
@@ -29,6 +32,9 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
     @Mock
     private QuestionService questionService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Test
     public void questionAndApplicationHaveAllowedState_shouldReturnTrueWhenApplicationIsOpenAndDetailsNotMarkedAsComplete() throws Exception {
@@ -43,7 +49,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(questionResource));
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)).thenReturn(questionStatusResources);
 
         boolean result = applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,applicationResource);
@@ -64,7 +70,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(questionResource));
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)).thenReturn(questionStatusResources);
 
         boolean result = applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,applicationResource);
@@ -85,7 +91,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)).thenReturn(questionStatusResources);
 
         boolean result = applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,applicationResource);
@@ -106,7 +112,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)).thenReturn(questionStatusResources);
 
         boolean result = applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,applicationResource);
@@ -127,7 +133,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)).thenReturn(questionStatusResources);
 
         boolean result = applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,applicationResource);
