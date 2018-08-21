@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.team.controller;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
