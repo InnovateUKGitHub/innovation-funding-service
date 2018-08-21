@@ -72,7 +72,7 @@ function startPybot() {
     fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs --xunit \
+    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
