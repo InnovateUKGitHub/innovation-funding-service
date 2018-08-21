@@ -59,7 +59,7 @@ public class FundingLevelResetHandlerTest {
     private DefaultFinanceRowRestService financeRowRestService;
 
     @Test
-    public void tetsResetFundingAndMarkAsIncomplete() throws ExecutionException, InterruptedException {
+    public void testResetFundingAndMarkAsIncomplete() throws ExecutionException, InterruptedException {
 
         Long applicationId = 1L;
         Long competitionId = 3L;

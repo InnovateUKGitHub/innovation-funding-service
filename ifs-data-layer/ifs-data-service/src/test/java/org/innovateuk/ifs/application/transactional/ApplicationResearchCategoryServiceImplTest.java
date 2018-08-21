@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
-import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -33,7 +32,6 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

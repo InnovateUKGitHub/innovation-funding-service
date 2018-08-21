@@ -6,12 +6,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Permission rules for {@link GrantClaimMaximum} for permissioning
