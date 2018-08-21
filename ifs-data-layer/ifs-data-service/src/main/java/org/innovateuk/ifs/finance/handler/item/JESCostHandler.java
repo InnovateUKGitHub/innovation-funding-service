@@ -30,7 +30,7 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
 
     @Override
     public ProjectFinanceRow toProjectCost(AcademicCost costItem) {
-        return new ProjectFinanceRow(costItem.getName(), costItem.getItem(), null, null, costItem.getTotal(), null, null);
+        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getItem(), null, null, costItem.getTotal(), null, null);
     }
 
     @Override

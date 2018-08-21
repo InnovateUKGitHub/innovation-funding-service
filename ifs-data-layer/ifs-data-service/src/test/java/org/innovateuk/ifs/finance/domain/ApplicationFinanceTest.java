@@ -16,7 +16,7 @@ public class ApplicationFinanceTest {
     @Before
     public void setUp() throws Exception {
         id=0L;
-        organisation = new Organisation( "Worth Internet Systems");
+        organisation = new Organisation("Worth Internet Systems");
         application = new Application();
         applicationFinance = new ApplicationFinance(id, application, organisation);
     }
@@ -26,7 +26,6 @@ public class ApplicationFinanceTest {
         new ApplicationFinance();
         new ApplicationFinance(application, organisation);
         new ApplicationFinance(1234132434L, application, organisation);
-
     }
 
     @Test

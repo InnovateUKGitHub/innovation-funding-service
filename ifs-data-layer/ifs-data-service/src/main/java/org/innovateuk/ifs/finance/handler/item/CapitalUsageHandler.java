@@ -74,7 +74,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     }
 
     private ProjectFinanceRow mapCapitalUsageToProjectCost(CapitalUsage capitalUsage) {
-        ProjectFinanceRow capitalUsageCost = new ProjectFinanceRow(COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
+        ProjectFinanceRow capitalUsageCost = new ProjectFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),

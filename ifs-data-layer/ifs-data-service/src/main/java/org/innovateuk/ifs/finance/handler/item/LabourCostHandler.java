@@ -44,6 +44,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     @Override
     public ProjectFinanceRow toProjectCost(LabourCost costItem) {
         return new ProjectFinanceRow(
+                    costItem.getId(),
                     costItem.getName(),
                     costItem.getRole(),
                     costItem.getDescription(),

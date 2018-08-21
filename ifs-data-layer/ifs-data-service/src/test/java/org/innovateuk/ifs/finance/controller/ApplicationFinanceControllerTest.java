@@ -50,7 +50,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     public void setUp() {
         application = new ApplicationResource();
         application.setId(1L);
-        organisation = new Organisation( "Worth Internet Systems");
+        organisation = new Organisation("Worth Internet Systems");
         applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 

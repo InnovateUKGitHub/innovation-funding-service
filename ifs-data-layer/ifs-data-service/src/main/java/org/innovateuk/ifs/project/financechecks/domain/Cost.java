@@ -46,7 +46,7 @@ public class Cost {
         this(cost.id, cost.value, cost.costGroup, cost.costTimePeriod, cost.costCategory);
     }
 
-    private Cost(Long Id, BigDecimal value, CostGroup costGroup, CostTimePeriod costTimePeriod, CostCategory costCategory) {
+    private Cost(Long id, BigDecimal value, CostGroup costGroup, CostTimePeriod costTimePeriod, CostCategory costCategory) {
         this.id = id;
         this.value = value;
         this.costGroup = costGroup;

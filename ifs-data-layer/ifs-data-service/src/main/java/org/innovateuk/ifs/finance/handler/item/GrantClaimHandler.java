@@ -40,7 +40,7 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     @Override
     public ProjectFinanceRow toProjectCost(GrantClaim costItem) {
-        return new ProjectFinanceRow(COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
     }
 
     @Override

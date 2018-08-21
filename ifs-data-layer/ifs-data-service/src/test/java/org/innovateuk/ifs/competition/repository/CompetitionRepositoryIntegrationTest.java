@@ -95,7 +95,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndInformed() {
+    public void fundedAndInformed() {
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
@@ -121,7 +121,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testMultipleFundedAndInformed() {
+    public void multipleFundedAndInformed() {
 
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
@@ -166,7 +166,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndNotInformed() {
+    public void fundedAndNotInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
@@ -180,7 +180,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testNotFundedAndInformed() {
+    public void notFundedAndInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
@@ -206,7 +206,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testSearch() {
+    public void search() {
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
@@ -608,7 +608,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void testCountLiveForInnovationLead() {
+    public void countLiveForInnovationLead() {
         // TODO: Improve once IFS-2222 is done.
         long innovationLead1Id = 51L;
         long innovationLead2Id = 52L;
@@ -634,7 +634,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     // IFS-2263 -- ensure milestone dates aren't rounded up
     @Test
     @Rollback
-    public void testMilestoneDatesTruncated() {
+    public void milestoneDatesTruncated() {
         final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
         final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
 
