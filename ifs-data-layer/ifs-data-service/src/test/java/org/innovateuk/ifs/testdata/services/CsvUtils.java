@@ -611,7 +611,7 @@ public class CsvUtils {
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 19;
+            int i = line.size() - 16;
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
