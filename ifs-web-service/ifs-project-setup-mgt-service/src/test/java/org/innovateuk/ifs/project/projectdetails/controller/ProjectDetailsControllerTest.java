@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -52,7 +52,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private ProjectService projectService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -127,8 +127,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
-        when(organisationService.getOrganisationById(partnerOrganisation.getId())).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+        when(organisationRestService.getOrganisationById(partnerOrganisation.getId())).thenReturn(restSuccess(partnerOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(RestResult.restSuccess(partnerOrganisations));

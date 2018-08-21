@@ -49,6 +49,10 @@ IFS.core.formValidation = (function () {
         fields: '[required]:not([data-date],[readonly],[name="password"])',
         messageInvalid: 'This field cannot be left blank.'
       },
+      requiredGroup: {
+        fields: '[data-required-group]:not([data-date],[readonly],[name="password"])',
+        messageInvalid: 'This field cannot be left blank.'
+      },
       minlength: {
         fields: '[minlength]:not([readonly],[name="password"])',
         messageInvalid: 'This field should contain at least %minlength% characters.'
@@ -121,6 +125,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.max.fields, function () { IFS.core.formValidation.checkMax(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.range.fields, function () { IFS.core.formValidation.checkRange(jQuery(this)) })
       jQuery('body').on('blur change ifsValidate', s.required.fields, function () { IFS.core.formValidation.checkRequired(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.requiredGroup.fields, function () { IFS.core.formValidation.checkRequired(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minlength.fields, function () { IFS.core.formValidation.checkMinLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
@@ -249,6 +254,17 @@ IFS.core.formValidation = (function () {
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
         var validEmail = emailRegex.test(email)
+
+        // If server response finds email already invited then cancel error msg on change of email details
+        // Get value of error msg
+        // If email is changed then remove error msg
+
+        var currentServerError = field.closest('tr').find('.govuk-error-message').text()
+        var currentServerMsgCheck = 'An invite has already been created for this email address.'
+
+        if (currentServerError === currentServerMsgCheck) {
+          IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
+        }
 
         // check if email address is invalid
         if (!validEmail) {
@@ -381,17 +397,27 @@ IFS.core.formValidation = (function () {
       if (field.val() !== null) {
         var value = field.val()
         if (field.is(':checkbox,:radio')) {
-          var name = field.attr('name')
-          if (typeof (name) !== 'undefined') {
-            var fieldGroup = jQuery('[name="' + name + '"]')
-            if (jQuery('[name="' + name + '"]:checked').length === 0) {
-              fieldGroup.each(function () { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage, displayValidationMessages) })
-              return false
-            } else {
-              fieldGroup.each(function () { IFS.core.formValidation.setValid(jQuery(this), errorMessage, displayValidationMessages) })
-              return true
-            }
+          var groupID
+          var groupIDtype
+          if (typeof (field.attr('data-required-group')) !== 'undefined') {
+            groupID = field.attr('data-required-group')
+            groupIDtype = 'data-required-group'
+          } else if (typeof (field.attr('name')) !== 'undefined') {
+            groupID = field.attr('name')
+            groupIDtype = 'name'
+          } else {
+            return
           }
+
+          var fieldGroup = jQuery('[' + groupIDtype + '="' + groupID + '"]')
+          if (jQuery('[' + groupIDtype + '="' + groupID + '"]:checked').length === 0) {
+            fieldGroup.each(function () { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage, displayValidationMessages) })
+            return false
+          } else {
+            fieldGroup.each(function () { IFS.core.formValidation.setValid(jQuery(this), errorMessage, displayValidationMessages) })
+            return true
+          }
+
         // HTML5 number input will return "" as val() if invalid number.
         } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
@@ -935,7 +961,8 @@ IFS.core.formValidation = (function () {
         // Ifn it is a radio/checkbox group (so more than one)
         // Then we use the legend as id otherwise just the field id
         var name = el.attr('name')
-        if (jQuery('[name="' + name + '"]').length > 1) {
+        var linkedGroupName = el.attr('data-required-group')
+        if (jQuery('[name="' + name + '"]').length > 1 || jQuery('[data-required-group="' + linkedGroupName + '"]').length > 1) {
           el = el.closest('fieldset').find('legend')
         }
       }
