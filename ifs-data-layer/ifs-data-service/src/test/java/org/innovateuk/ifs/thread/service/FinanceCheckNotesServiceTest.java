@@ -38,22 +38,23 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
     private PostMapper postMapper;
 
     @Test
-    public void test_findOne() throws Exception {
-        Note note = new Note(null, null, null, null, null);
-        NoteResource noteResource = new NoteResource(note.id(), null, null, null, null);
-        when(noteRepositoryMock.findOne(note.id())).thenReturn(note);
+    public void findOne() throws Exception {
+        Long noteId = 1L;
+        Note note = new Note(noteId, null, null, null, null, null);
+        NoteResource noteResource = new NoteResource(noteId, null, null, null, null);
+        when(noteRepositoryMock.findOne(noteId)).thenReturn(note);
         when(noteMapper.mapToResource(note)).thenReturn(noteResource);
 
-        NoteResource response = service.findOne(note.id()).getSuccess();
+        NoteResource response = service.findOne(noteId).getSuccess();
 
         assertEquals(noteResource, response);
     }
 
     @Test
-    public void test_findAll() throws Exception {
+    public void findAll() throws Exception {
         Long contextId = 22L;
-        Note note1 = new Note(null, null, null, null, null);
-        Note note2 = new Note(null, null, null, null, null);
+        Note note1 = new Note(1L, null, null, null, null, null);
+        Note note2 = new Note(2L, null, null, null, null, null);
         List<Note> notes = asList(note1, note2);
 
         NoteResource noteResource1 = new NoteResource(1L, null, null, null,
@@ -73,12 +74,12 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         NoteResource noteToCreate = new NoteResource(null, 22L, null, null, null);
-        Note noteToCreateAsDomain = new Note(22L, ProjectFinance.class.getName(), null, null, null);
+        Note noteToCreateAsDomain = new Note(null, 22L, ProjectFinance.class.getName(), null, null, null);
         when(noteMapper.mapToDomain(noteToCreate)).thenReturn(noteToCreateAsDomain);
 
-        Note savedNote = new Note(22L, ProjectFinance.class.getName(), null, null, null);
+        Note savedNote = new Note(1L, 22L, ProjectFinance.class.getName(), null, null, null);
         when(noteRepositoryMock.save(noteToCreateAsDomain)).thenReturn(savedNote);
 
         NoteResource createdNote = new NoteResource(1L, 22L, null, null, null);
@@ -87,20 +88,20 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
 
         Long result = service.create(noteToCreate).getSuccess();
 
-        assertEquals(result, noteToCreate.id);
+        assertEquals(result, Long.valueOf(1L));
     }
 
     @Test
-    public void test_addPost() throws Exception {
+    public void addPost() throws Exception {
+        Long noteId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).build(), null, null, null);
-        Post mappedPost = new Post(newUser().withId(33L).build(), null, null, null);
-        Note targetedNote = new Note(null, null, null, null, null);
-        when(noteRepositoryMock.findOne(targetedNote.id())).thenReturn(targetedNote);
+        Post mappedPost = new Post(null, newUser().withId(33L).build(), null, null, null);
+        Note targetedNote = new Note(noteId, null, null, null, null, null);
+        when(noteRepositoryMock.findOne(noteId)).thenReturn(targetedNote);
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
-        assertTrue(service.addPost(post, targetedNote.id()).isSuccess());
+        assertTrue(service.addPost(post, noteId).isSuccess());
     }
-
 
 }

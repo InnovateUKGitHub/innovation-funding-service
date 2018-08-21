@@ -29,9 +29,9 @@ public class ApplicationFinanceRow extends FinanceRow<ApplicationFinance> {
         this.target = target;
     }
 
-    public ApplicationFinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost,
+    public ApplicationFinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
                                  ApplicationFinance applicationFinance, Question question) {
-        super(name, item, description, quantity, cost, question);
+        super(id, name, item, description, quantity, cost, question);
         this.target = applicationFinance;
     }
 

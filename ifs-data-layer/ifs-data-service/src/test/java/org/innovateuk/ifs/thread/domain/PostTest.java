@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class PostTest {
 
     private Post post;
+    private Long id;
     private User author;
     private String body;
     private List<Attachment> attachments;
@@ -24,15 +25,17 @@ public class PostTest {
 
     @Before
     public void setup() {
+        id = 23L;
         author = newUser().withId(43L).build();
         body = "Post body";
         attachments = new ArrayList<>();
         createdOn = ZonedDateTime.now();
-        post = new Post(author, body, attachments, createdOn);
+        post = new Post(id, author, body, attachments, createdOn);
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() {
+    public void itReturnsValuesAsTheyWereDefined() {
+        assertEquals(post.id(), id);
         assertEquals(post.author(), author);
         assertEquals(post.body(), body);
         assertEquals(post.attachments(), attachments);
@@ -40,9 +43,9 @@ public class PostTest {
     }
 
     @Test
-    public void testItReturnsAttachmentInSameOrderAsDefined() {
+    public void itReturnsAttachmentInSameOrderAsDefined() {
         attachments = nOf(3, new Attachment());
-        Post currentPost = new Post(author, body, attachments, createdOn);
+        Post currentPost = new Post(id, author, body, attachments, createdOn);
         assertEquals(currentPost.attachments(), attachments);
     }
 }

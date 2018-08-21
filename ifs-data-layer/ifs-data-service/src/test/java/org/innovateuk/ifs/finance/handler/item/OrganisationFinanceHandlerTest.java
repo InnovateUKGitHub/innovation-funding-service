@@ -94,22 +94,22 @@ public class OrganisationFinanceHandlerTest {
 
         capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20);
         capitalUsageCost = handler.costItemToCost(capitalUsage);
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("existing", "String"), "Yes"));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField("utilisation", "Integer"), String.valueOf(20)));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(null, "Integer"), String.valueOf(20)));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3l, "existing", "String"), "Yes"));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(5l, "utilisation", "Integer"), String.valueOf(20)));
+        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         capitalUsageCost.setQuestion(costTypeQuestion.get(FinanceRowType.CAPITAL_USAGE));
         costs.add((ApplicationFinanceRow) capitalUsageCost);
 
         subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
         subContractingCost = handler.costItemToCost(subContracting);
-        subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField("country", "france"), "frane"));
+        subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
         subContractingCost.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
         costs.add((ApplicationFinanceRow)subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
         FinanceRow subContractingCost2 = handler.costItemToCost(subContracting2);
-        subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField("country", "france"), "frane"));
+        subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
         subContractingCost2.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
         costs.add((ApplicationFinanceRow)subContractingCost2);
 
@@ -146,7 +146,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testGetOrganisationFinancesMaterials() throws Exception {
+    public void getOrganisationFinancesMaterials() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
 
         assertEquals("Testing equality for: " + FinanceRowType.MATERIALS.getType(),
@@ -154,24 +154,24 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testGetOrganisationFinancesOtherCosts() throws Exception {
+    public void getOrganisationFinancesOtherCosts() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(FinanceRowType.OTHER_COSTS).getTotal());
     }
 
     @Test
-    public void testGetOrganisationFinancesCapitalUsage() throws Exception {
+    public void getOrganisationFinancesCapitalUsage() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.CAPITAL_USAGE.getType(), new BigDecimal(20000).setScale(2), organisationFinances.get(FinanceRowType.CAPITAL_USAGE).getTotal().setScale(2));
     }
     @Test
-    public void testGetOrganisationFinancesSubcontractingCost() throws Exception {
+    public void getOrganisationFinancesSubcontractingCost() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.SUBCONTRACTING_COSTS.getType(), new BigDecimal(11).setScale(2), organisationFinances.get(FinanceRowType.SUBCONTRACTING_COSTS).getTotal().setScale(2));
     }
 
     @Test
-    public void testGetOrganisationFinancesLabour() throws Exception {
+    public void getOrganisationFinancesLabour() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         LabourCostCategory labourCategory = (LabourCostCategory) organisationFinances.get(FinanceRowType.LABOUR);
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
@@ -182,7 +182,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testCostItemToCost() throws Exception {
+    public void costItemToCost() throws Exception {
         FinanceRow materialCostTmp = handler.costItemToCost(material);
         assertEquals(new BigDecimal(100), materialCostTmp.getCost());
         assertEquals("", materialCostTmp.getDescription());
@@ -191,7 +191,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testCostItemToProjectCost() throws Exception {
+    public void costItemToProjectCost() throws Exception {
         FinanceRow materialCostTmp = handler.costItemToProjectCost(material);
         assertEquals(new BigDecimal(100), materialCostTmp.getCost());
         assertEquals("", materialCostTmp.getDescription());
@@ -200,7 +200,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testGetHandlerMatches() throws Exception {
+    public void getHandlerMatches() throws Exception {
         asList( Pair.of(MATERIALS, MaterialsHandler.class),
                 Pair.of(LABOUR, LabourCostHandler.class),
                 Pair.of(TRAVEL, TravelCostHandler.class),
@@ -217,7 +217,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testCostToCostItem() throws Exception {
+    public void costToCostItem() throws Exception {
         final FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
         assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
         assertEquals(costItem.getName(), materialCost.getName());
@@ -225,7 +225,7 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testGetProjectOrganisationFinanceChanges() throws Exception {
+    public void getProjectOrganisationFinanceChanges() throws Exception {
     //TODO
     }
 

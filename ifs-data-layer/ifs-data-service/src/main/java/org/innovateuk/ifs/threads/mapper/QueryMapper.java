@@ -35,7 +35,7 @@ public abstract class QueryMapper extends BaseMapper<Query, QueryResource, Long>
 
     @Override
     public Query mapToDomain(QueryResource queryResource) {
-        Query query = new Query(queryResource.contextClassPk, simpleMap(queryResource.posts, postMapper::mapToDomain),
+        Query query = new Query(queryResource.id, queryResource.contextClassPk, simpleMap(queryResource.posts, postMapper::mapToDomain),
                 queryResource.section, queryResource.title, queryResource.createdOn);
 
         if (queryResource.closedBy != null) {

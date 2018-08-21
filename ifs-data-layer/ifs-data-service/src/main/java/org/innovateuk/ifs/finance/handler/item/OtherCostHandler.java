@@ -15,7 +15,7 @@ public class OtherCostHandler extends FinanceRowHandler<OtherCost> {
 
     @Override
     public ApplicationFinanceRow toCost(OtherCost otherCost) {
-        return new ApplicationFinanceRow(COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+        return new ApplicationFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
     }
 
     @Override

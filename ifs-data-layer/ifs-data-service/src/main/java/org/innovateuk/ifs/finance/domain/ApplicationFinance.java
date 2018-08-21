@@ -34,6 +34,11 @@ public class ApplicationFinance extends Finance {
         this.application = application;
     }
 
+    public ApplicationFinance(long id, Application application, Organisation organisation) {
+        super(id, organisation);
+        this.application = application;
+    }
+
     @JsonIgnore
     public Application getApplication() {
         return application;

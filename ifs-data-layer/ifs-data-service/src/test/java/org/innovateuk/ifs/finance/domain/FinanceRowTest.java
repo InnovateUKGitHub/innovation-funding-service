@@ -21,6 +21,7 @@ public class FinanceRowTest {
 
     @Before
     public void setUp() throws Exception {
+        id = 0L;
         item = "cost item";
         name = "labour";
         description = "description of cost item";
@@ -29,11 +30,12 @@ public class FinanceRowTest {
         applicationFinance = new ApplicationFinance();
         question = new Question();
         financeType = new FinanceType();
-        costItem = new ApplicationFinanceRow(name, item, description, quantity, cost, applicationFinance, question);
+        costItem = new ApplicationFinanceRow(id, name, item, description, quantity, cost, applicationFinance, question);
     }
 
     @Test
     public void costShouldReturnCorrectAttributeValues() throws Exception {
+        Assert.assertEquals(costItem.getId(), id);
         Assert.assertEquals(costItem.getName(), name);
         Assert.assertEquals(costItem.getItem(), item);
         Assert.assertEquals(costItem.getDescription(), description);
@@ -46,7 +48,7 @@ public class FinanceRowTest {
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
         BigDecimal value = new BigDecimal(2.2);
         new ApplicationFinanceRow();
-        new ApplicationFinanceRow("key", "item2","description2",1,value,applicationFinance, question);
+        new ApplicationFinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
     }
 
     @Test

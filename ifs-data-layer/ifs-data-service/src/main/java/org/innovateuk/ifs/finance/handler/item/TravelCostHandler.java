@@ -19,7 +19,7 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     public ApplicationFinanceRow toCost(TravelCost travel) {
         ApplicationFinanceRow applicationFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
-            applicationFinanceRow = new ApplicationFinanceRow(COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
         }
         return applicationFinanceRow;
     }

@@ -63,7 +63,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
 
     private ApplicationFinanceRow mapCapitalUsage(FinanceRowItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
-        ApplicationFinanceRow capitalUsageCost = new ApplicationFinanceRow(COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
+        ApplicationFinanceRow capitalUsageCost = new ApplicationFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),

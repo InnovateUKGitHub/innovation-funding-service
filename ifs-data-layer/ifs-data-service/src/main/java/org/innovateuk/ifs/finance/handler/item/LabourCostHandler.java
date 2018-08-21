@@ -32,6 +32,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     @Override
     public ApplicationFinanceRow toCost(LabourCost labourCostItem) {
         return labourCostItem != null ? new ApplicationFinanceRow(
+                                            labourCostItem.getId(),
                                             labourCostItem.getName(),
                                             labourCostItem.getRole(),
                                             labourCostItem.getDescription(),

@@ -69,7 +69,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         } else {
             item = otherFunding.getSecuredDate();
         }
-        return new ApplicationFinanceRow(COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+        return new ApplicationFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     private ProjectFinanceRow mapOtherFundingToProjectCost(FinanceRowItem costItem) {

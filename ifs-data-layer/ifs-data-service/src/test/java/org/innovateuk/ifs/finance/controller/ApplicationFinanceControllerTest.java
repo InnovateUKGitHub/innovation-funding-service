@@ -158,7 +158,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testFinanceDetails() throws Exception {
+    public void financeDetails() throws Exception {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
         when(financeServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
@@ -171,7 +171,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testGetFinanceDetailsForApplication() throws Exception {
+    public void getFinanceDetailsForApplication() throws Exception {
         List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().build(3);
 
         when(financeServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));

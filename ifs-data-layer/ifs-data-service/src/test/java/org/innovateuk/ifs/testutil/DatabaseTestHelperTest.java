@@ -33,7 +33,7 @@ public class DatabaseTestHelperTest extends BaseRepositoryIntegrationTest<Organi
             databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                 // cause the database to change, thus making the assertingNoDatabaseChangesOccur() wrapper fail
-                repository.save(new Organisation("", "DB Change Organisation"));
+                repository.save(new Organisation(null, "DB Change Organisation"));
             });
 
             fail("Should have failed, as database changes occurred");

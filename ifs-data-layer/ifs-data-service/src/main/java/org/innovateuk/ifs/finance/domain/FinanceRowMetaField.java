@@ -24,7 +24,8 @@ public class FinanceRowMetaField {
     	// no-arg constructor
     }
 
-    public FinanceRowMetaField(String title, String type) {
+    public FinanceRowMetaField(Long id, String title, String type) {
+        this.id = id;
         this.title = title;
         this.type = type;
     }

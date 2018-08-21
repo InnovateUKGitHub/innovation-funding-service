@@ -20,15 +20,15 @@ public final class Query extends Thread {
     public Query() {
         super();
     }
-    public Query(Long classPk, String className, List<Post> posts, FinanceChecksSectionType sectionType,
+    public Query(Long id, Long classPk, String className, List<Post> posts, FinanceChecksSectionType sectionType,
                        String title, ZonedDateTime createdOn) {
-        super(classPk, className, posts, title, createdOn);
+        super(id, classPk, className, posts, title, createdOn);
         this.section = sectionType;
     }
 
-    public Query(Long classPk, List<Post> posts, FinanceChecksSectionType sectionType,
+    public Query(Long id, Long classPk, List<Post> posts, FinanceChecksSectionType sectionType,
                  String title, ZonedDateTime createdOn) {
-        super(classPk, null, posts, title, createdOn);
+        super(id, classPk, null, posts, title, createdOn);
         this.section = sectionType;
     }
 

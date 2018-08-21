@@ -25,7 +25,7 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
     @Override
     public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {
         return academicCostItem != null ?
-                new ApplicationFinanceRow(academicCostItem.getName(), academicCostItem.getItem(),null, null, academicCostItem.getTotal(), null, null) : null;
+                new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(),null, null, academicCostItem.getTotal(), null, null) : null;
     }
 
     @Override

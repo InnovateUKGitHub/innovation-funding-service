@@ -15,6 +15,7 @@ import static java.util.Optional.of;
 
 public class NoteTest {
     private Note note;
+    private Long id;
     private Long classPk;
     private String className;
     private List<Post> posts;
@@ -23,17 +24,19 @@ public class NoteTest {
 
     @Before
     public void setUp() throws Exception {
+        id = 0L;
         classPk = 22L;
         className = "org.innovateuk.ifs.class";
         posts = new ArrayList<>();
         title = "Test Note Title";
         createdOn = ZonedDateTime.now();
 
-        note = new Note(classPk, className, posts, title, createdOn);
+        note = new Note(id, classPk, className, posts, title, createdOn);
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() throws Exception {
+    public void itReturnsValuesAsTheyWereDefined() throws Exception {
+        Assert.assertEquals(note.id(), id);
         Assert.assertEquals(note.contextClassPk(), classPk);
         Assert.assertEquals(note.contextClassName(), className);
         Assert.assertEquals(note.posts(), posts);
@@ -42,14 +45,14 @@ public class NoteTest {
     }
 
     @Test
-    public void testItReturnsOptionalEmptyWhenNoPosts() {
+    public void itReturnsOptionalEmptyWhenNoPosts() {
         Assert.assertEquals(note.latestPost(), Optional.empty());
     }
 
     @Test
-    public void testItReturnsLatestAddedPostCorrectly() {
-        final Post p1 = new Post(null, null, null, null);
-        final Post p2 = new Post(null, null, null, null);
+    public void itReturnsLatestAddedPostCorrectly() {
+        final Post p1 = new Post(33L, null, null, null, null);
+        final Post p2 = new Post(44L, null, null, null, null);
         note.addPost(p1);
         note.addPost(p2);
         Assert.assertEquals(note.latestPost(), of(p2));
