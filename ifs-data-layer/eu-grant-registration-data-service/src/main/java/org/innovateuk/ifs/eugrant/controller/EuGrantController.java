@@ -12,16 +12,16 @@ import java.util.UUID;
 public class EuGrantController {
 
     @Autowired
-    private EuGrantService fundingService;
+    private EuGrantService euGrantService;
 
     @PostMapping("/eu-grant")
-    public RestResult<EuGrantResource> saveSurvey(@RequestBody EuGrantResource euGrant) {
-        return fundingService.save(euGrant).toPostCreateResponse();
+    public RestResult<EuGrantResource> saveEuGrant(@RequestBody EuGrantResource euGrant) {
+        return euGrantService.save(euGrant).toPostCreateResponse();
     }
 
     @GetMapping("/eu-grant/{uuid}")
-    public RestResult<EuGrantResource> saveSurvey(@PathVariable("uuid") UUID uuid) {
-        return fundingService.get(uuid).toGetResponse();
+    public RestResult<EuGrantResource> getEuGrant(@PathVariable("uuid") UUID uuid) {
+        return euGrantService.findById(uuid).toGetResponse();
     }
 
 }

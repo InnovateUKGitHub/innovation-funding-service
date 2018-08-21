@@ -6,8 +6,6 @@ import org.innovateuk.ifs.eugrant.EuGrantResource;
 import java.util.UUID;
 
 public interface EuGrantService {
-
     ServiceResult<EuGrantResource> save(EuGrantResource externalFundingResource);
-    ServiceResult<EuGrantResource> get(UUID id);
-
+    ServiceResult<EuGrantResource> findById(UUID id);
 }

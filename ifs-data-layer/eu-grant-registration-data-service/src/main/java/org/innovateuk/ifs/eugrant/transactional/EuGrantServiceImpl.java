@@ -15,21 +15,21 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class EuGrantServiceImpl implements EuGrantService {
 
     @Autowired
-    private EuGrantMapper fundingMapper;
+    private EuGrantMapper euGrantMapper;
 
     @Autowired
-    private EuGrantRepository fundingRepository;
+    private EuGrantRepository euGrantRepository;
 
     @Override
     public ServiceResult<EuGrantResource> save(EuGrantResource euGrant) {
-        return serviceSuccess(fundingMapper.mapToResource(
-                fundingRepository.save(
-                        fundingMapper.mapToDomain(euGrant))));
+        return serviceSuccess(euGrantMapper.mapToResource(
+                euGrantRepository.save(
+                        euGrantMapper.mapToDomain(euGrant))));
     }
 
     @Override
-    public ServiceResult<EuGrantResource> get(UUID id) {
-        return serviceSuccess(fundingMapper.mapToResource(
-                fundingRepository.findOne(id)));
+    public ServiceResult<EuGrantResource> findById(UUID id) {
+        return serviceSuccess(euGrantMapper.mapToResource(
+                euGrantRepository.findOne(id)));
     }
 }
