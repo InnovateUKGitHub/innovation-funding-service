@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.survey.builder;
+package org.innovateuk.ifs.eugrant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
