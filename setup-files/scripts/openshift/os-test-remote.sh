@@ -20,9 +20,7 @@ function tailorToAppInstance() {
     echo "Starting to copy os-files to $(getBuildLocation)"
     mkdir -p $(getBuildLocation)
     cp -r os-files/* $(getBuildLocation)
-    echo "running ls"
     ls -la $(getBuildLocation)/robot-tests/
-    echo "running ls end"
     sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/robot-tests/*.yml
 
