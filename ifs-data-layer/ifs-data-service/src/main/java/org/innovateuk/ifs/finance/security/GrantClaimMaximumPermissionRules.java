@@ -22,7 +22,7 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_GRANT_CLAIM_MAXIMUM",
             description = "An Internal user can see the grant claim maximums for his competition or competition type")
-    public boolean internalUserCanSeeGrantClaimMaximumsForCompetitionType(CompetitionTypeResource competitionTypeResource, UserResource user) {
+    public boolean userCanSeeGrantClaimMaximumsForCompetitionType(CompetitionTypeResource competitionTypeResource, UserResource user) {
         return user.getRoles().contains(LEADAPPLICANT) ||
                 user.getRoles().contains(COLLABORATOR) ||
                 user.getRoles().contains(APPLICANT) ||
@@ -31,7 +31,7 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_GRANT_CLAIM_MAXIMUM",
             description = "An Internal user can see the grant claim maximums for his competition or competition type")
-    public boolean internalUserCanSeeGrantClaimMaximumsForCompetition(CompetitionResource competitionResource, UserResource user) {
+    public boolean userCanSeeGrantClaimMaximumsForCompetition(CompetitionResource competitionResource, UserResource user) {
         return user.getRoles().contains(LEADAPPLICANT) ||
                 user.getRoles().contains(COLLABORATOR) ||
                 user.getRoles().contains(APPLICANT);

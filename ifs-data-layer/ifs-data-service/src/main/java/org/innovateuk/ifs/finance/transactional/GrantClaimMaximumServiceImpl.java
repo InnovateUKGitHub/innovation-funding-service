@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -58,7 +56,7 @@ public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
 
     @Override
     public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(Long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+        return find(competitionRepository.findOne(competitionId), notFoundError(CompetitionResource.class, competitionId))
                 .andOnSuccess(competition -> {
                     CompetitionResource competitionResource = competitionMapper.mapToResource(competition);
                     return serviceSuccess(competitionResource.getGrantClaimMaximums());

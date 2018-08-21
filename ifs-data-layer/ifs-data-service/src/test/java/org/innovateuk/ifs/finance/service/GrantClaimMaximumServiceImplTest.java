@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.transactional;
+package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumServiceImpl;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -96,6 +97,23 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         when(competitionMapper.mapToResource(competitionType.getTemplate())).thenReturn(competitionResource);
 
         ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccess(), CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()));
+    }
+
+    @Test
+    public void testGetGrantClaimMaximumsForCompetition() {
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
+                .build(2);
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .build();
+        Competition competition = newCompetition().build();
+
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionMapper.mapToResource(competition)).thenReturn(competitionResource);
+
+        ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetition(competition.getId());
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()));
     }
