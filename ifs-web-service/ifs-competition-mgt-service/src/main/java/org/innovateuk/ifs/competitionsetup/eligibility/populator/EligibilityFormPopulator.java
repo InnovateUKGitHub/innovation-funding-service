@@ -8,9 +8,14 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -18,38 +23,85 @@ import java.util.List;
 @Service
 public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
-	@Override
-	public CompetitionSetupSection sectionToFill() {
-		return CompetitionSetupSection.ELIGIBILITY;
-	}
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-	@Override
-	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-		EligibilityForm competitionSetupForm = new EligibilityForm();
-		
-		competitionSetupForm.setResearchCategoryId(competitionResource.getResearchCategories());
-		
-		ResearchParticipationAmount amount = ResearchParticipationAmount.fromAmount(competitionResource.getMaxResearchRatio());
-		if(amount != null) {
-			competitionSetupForm.setResearchParticipationAmountId(amount.getId());
-		}
+    public EligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService) {
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+    }
 
-		competitionSetupForm.setMultipleStream("no");
+    @Override
+    public CompetitionSetupSection sectionToFill() {
+        return CompetitionSetupSection.ELIGIBILITY;
+    }
 
-		CollaborationLevel level = competitionResource.getCollaborationLevel();
-		if(level != null) {
-			competitionSetupForm.setSingleOrCollaborative(level.getCode());
-		}
+    @Override
+    public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
+        EligibilityForm competitionSetupForm = new EligibilityForm();
 
-		List<Long> organisationTypes = competitionResource.getLeadApplicantTypes();
-        if(organisationTypes != null) {
-			competitionSetupForm.setLeadApplicantTypes(organisationTypes);
-		}
+        competitionSetupForm.setResearchCategoryId(competitionResource.getResearchCategories());
+
+        ResearchParticipationAmount amount = ResearchParticipationAmount.fromAmount(competitionResource.getMaxResearchRatio());
+        if (amount != null) {
+            competitionSetupForm.setResearchParticipationAmountId(amount.getId());
+        }
+
+        competitionSetupForm.setMultipleStream("no");
+
+        CollaborationLevel level = competitionResource.getCollaborationLevel();
+        if (level != null) {
+            competitionSetupForm.setSingleOrCollaborative(level.getCode());
+        }
+
+        List<Long> organisationTypes = competitionResource.getLeadApplicantTypes();
+        if (organisationTypes != null) {
+            competitionSetupForm.setLeadApplicantTypes(organisationTypes);
+        }
 
         competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.getResubmission()));
 
-		return competitionSetupForm;
-	}
+        Boolean overrideFundingRuleSet = getOverrideFundingRulesSet(competitionResource, competitionSetupForm);
+        competitionSetupForm.setOverrideFundingRules(overrideFundingRuleSet);
 
+        if (overrideFundingRuleSet != null && overrideFundingRuleSet) {
+            competitionSetupForm.setFundingLevelPercentage(getFundingLevelPercentage(competitionResource));
+        }
+
+        return competitionSetupForm;
+    }
+
+    private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
+                                               EligibilityForm eligibilityForm) {
+        if (isFirstTimeInForm(eligibilityForm)) {
+            return fundingRulesAreOverriden(competitionResource);
+        }
+
+        return null;
+    }
+
+    private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
+        return (eligibilityForm.getMultipleStream() != null) &&
+                (!eligibilityForm.getResearchCategoryId().isEmpty() && eligibilityForm.getResearchCategoryId() != null) &&
+                (eligibilityForm.getSingleOrCollaborative() != null) &&
+                (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
+                (eligibilityForm.getResubmission() != null);
+    }
+
+    private boolean fundingRulesAreOverriden(CompetitionResource competitionResource) {
+        Set<Long> templateGrantClaimMaximums = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
+                competitionResource.getCompetitionType()).getSuccess();
+
+        Set<Long> currentGrantClaimMaximums = competitionResource.getGrantClaimMaximums();
+        return !currentGrantClaimMaximums.equals(templateGrantClaimMaximums);
+    }
+
+    private Integer getFundingLevelPercentage(CompetitionResource competition) {
+        Optional<GrantClaimMaximumResource> overriddenGcm = competition.getGrantClaimMaximums()
+                .stream()
+                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
+                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
+                .findFirst();
+
+        return overriddenGcm.get().getMaximum();
+    }
 
 }

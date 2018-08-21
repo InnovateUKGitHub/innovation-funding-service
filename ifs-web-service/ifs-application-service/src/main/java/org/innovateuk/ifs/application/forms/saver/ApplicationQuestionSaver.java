@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -99,7 +99,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
         if (errorsSoFar.hasFieldErrors(String.valueOf(questionId))) {
             applicationMessages.add(new ValidationMessages(
-                    fieldError(questionId + "", "", MARKED_AS_COMPLETE_INVALID_DATA_KEY)));
+                    fieldError(Long.toString(questionId), "", MARKED_AS_COMPLETE_INVALID_DATA_KEY)));
         }
 
         ValidationMessages combinedMessages = collectValidationMessages(applicationMessages);

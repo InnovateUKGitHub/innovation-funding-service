@@ -168,28 +168,28 @@ Support User can see the read only finance summary
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
-    Given the user clicks the button/link  link=Your project costs
+    Given the user clicks the button/link  link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
 
 Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
-    When the user clicks the button/link           jQuery=a:contains("Your finances")
+    When the user clicks the button/link           jQuery = a:contains("Your finances")
     Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
-    When the user clicks the button/link           link=Your organisation
-    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
-    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("0")
+    When the user clicks the button/link           link = Your organisation
+    Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
+    And the user should see the element            jQuery = dt:contains("Turnover") + dd:contains("0")
 
 Support User can see the read only view of Your funding
     [Documentation]  IFS-401
     [Tags]  Support
     Given the user navigates to the page  ${server}/management/competition/${openCompetitionRTO}/application/${application_ids["Water balance creates a threshold in soil pH at the global scale"]}
     And the user expands the section      Finances summary
-    Then the user clicks the button/link  link=View finances
-    When the user clicks the button/link  jQuery=a:contains("Your funding")
-    Then the user should see the element  jQuery=dt:contains("Funding level") + dd:contains("30%")
-    And the user should see the element   jQuery=th:contains("Lottery") ~ td:contains("£2,468")
+    Then the user clicks the button/link  link = View finances
+    When the user clicks the button/link  jQuery = a:contains("Your funding")
+    Then the user should see the element  jQuery = dt:contains("Funding level") + dd:contains("30%")
+    And the user should see the element   jQuery = th:contains("Lottery") ~ td:contains("£2,468")
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
@@ -282,33 +282,33 @@ the finance Funding breakdown calculations should be correct
 
 the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the finance summary table in Your Finances has correct values for collaborator
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  0
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  0
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
     Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/ifs-images/icons/icon-tick"]
@@ -319,7 +319,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link                   link=Your project costs
-    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.buttonlink:contains("Edit")
+    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.button-clear:contains("Edit")
     the user clicks the button/link                   jQuery=button:contains("Labour")
     the user should see the element                   name=add_cost
     the user clicks the button/link                   jQuery=button:contains('Add another role')

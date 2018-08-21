@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'" />
 </head>
-<body class="competition-management project-management project-detail">
+<body class="govuk-template__body competition-management project-management project-detail">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-project-details" />
@@ -11,127 +11,130 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
 
-    <h2 class="heading-medium">Project details</h2>
-    <p>These project details were supplied by the lead partner on behalf of the project.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='govuk-heading-xl'" />
 
-    <table id="project-details">
-        <thead>
-            <tr>
-                <th scope="col" class="larger-cols">Question</th>
-                <th scope="col">Answer</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    Target start date
-                </td>
-                <td id="start-date">
-                    <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
-                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Project address
-                </td>
-                <td id="project-address">
-                    <th:block th:if="${model.project.address.id == null}">Not yet completed</th:block>
-                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}"></th:block>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Project Manager
-                </td>
-                <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
-                <td id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>
-            </tr>
+        <h2 class="govuk-heading-m">Project details</h2>
+        <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
 
-        </tbody>
-    </table>
-
-    <!--/* If project setup location is enabled */-->
-    <th:block th:if="${model.locationPerPartnerRequired}">
-        <h2 class="heading-medium">Partner details</h2>
-
-        <p>Each partner must provide a finance contact and a project location.</p>
-
-        <table id="project-details-finance">
-            <thead>
-            <tr>
-                <th scope="col" class="larger-cols">Partner</th>
-                <th scope="col">Finance contact</th>
-                <th scope="col">Project location</th>
-            </tr>
+        <table class="govuk-table" id="project-details">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header larger-cols">Question</th>
+                    <th class="govuk-table__header" scope="col">Answer</th>
+                </tr>
             </thead>
-            <tbody>
-            <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
-
-                <td>
-                    <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
-                    <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
-                </td>
-                <td>
-                    <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
-                    <th:block th:if="${organisationFinanceContact.value == null}">
-                        Not yet completed
-                    </th:block>
-                </td>
-                <td>
-                    <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
-                              th:text="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
-                    <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
-                        Not yet completed
-                    </th:block>
-                </td>
-            </tr>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        Target start date
+                    </td>
+                    <td class="govuk-table__cell" id="start-date">
+                        <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
+                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        Project address
+                    </td>
+                    <td class="govuk-table__cell" id="project-address">
+                        <th:block th:if="${model.project.address.id == null}">Not yet completed</th:block>
+                        <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}"></th:block>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        Project Manager
+                    </td>
+                    <td class="govuk-table__cell" id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
+                    <td class="govuk-table__cell" id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>
+                </tr>
 
             </tbody>
         </table>
-    </th:block>
 
-    <th:block th:unless="${model.locationPerPartnerRequired}">
-        <h2 class="heading-medium">Partner finance contacts</h2>
+        <!--/* If project setup location is enabled */-->
+        <th:block th:if="${model.locationPerPartnerRequired}">
+            <h2 class="govuk-heading-m">Partner details</h2>
 
-        <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+            <p class="govuk-body">Each partner must provide a finance contact and a project location.</p>
 
-        <table id="project-details-finance2">
-            <thead>
-                <tr>
-                    <th scope="col" class="larger-cols">Partner</th>
-                    <th scope="col" class="larger-cols">Finance contact</th>
+            <table class="govuk-table" id="project-details-finance">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header larger-cols">Partner</th>
+                    <th class="govuk-table__header" scope="col">Finance contact</th>
+                    <th class="govuk-table__header" scope="col">Project location</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
 
-                    <td>
+                    <td class="govuk-table__cell">
                         <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
                         <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
                     </td>
-                    <td>
-                      <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
-                      <th:block th:if="${organisationFinanceContact.value == null}">
+                    <td class="govuk-table__cell">
+                        <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                        <th:block th:if="${organisationFinanceContact.value == null}">
                             Not yet completed
-                      </th:block>
+                        </th:block>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
+                                  th:text="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
+                        <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
+                            Not yet completed
+                        </th:block>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </th:block>
-        <th:block th:if="${model.showWithdrawLink}">
-            <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
-                <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+
+                </tbody>
+            </table>
         </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:unless="${model.locationPerPartnerRequired}">
+            <h2 class="govuk-heading-m">Partner finance contacts</h2>
 
+            <p class="govuk-body">Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+
+            <table class="govuk-table" id="project-details-finance2">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header larger-cols">Partner</th>
+                        <th scope="col" class="govuk-table__header larger-cols">Finance contact</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
+
+                        <td class="govuk-table__cell">
+                            <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
+                            <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                          <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                          <th:block th:if="${organisationFinanceContact.value == null}">
+                                Not yet completed
+                          </th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+            <th:block th:if="${model.showWithdrawLink}">
+                <a data-js-modal="modal-withdraw-project" class="button-clear govuk-!-margin-top-6">Withdraw project</a>
+                    <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+            </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

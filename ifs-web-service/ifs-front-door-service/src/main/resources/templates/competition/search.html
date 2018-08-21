@@ -1,92 +1,96 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:include="fragments/layout :: head" th:with="pageTitle='Innovation competitions'" />
 </head>
-<body class="public-content">
+<body class="govuk-template__body public-content">
     <th:block th:include="fragments/layout :: body-start" />
     <th:block th:include="fragments/layout :: global-header" />
-    <main tabindex="-1" id="content">
-        <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Innovate UK',linkClass='link-back',linkUrl=@{https://www.gov.uk/government/organisations/innovate-uk}"></th:block>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation competitions',size='heading-large'" />
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
+        <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Innovate UK',linkUrl=@{https://www.gov.uk/government/organisations/innovate-uk}"></th:block>
 
-        <div class="grid-row">
-            <div class="column-third">
-                <form method="GET">
-                    <div class="form-group">
-                        <fieldset>
-                            <legend>
-                                Filter competitions
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation competitions',size='govuk-heading-l'" />
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                    <form method="GET">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-0">
+                                <h2 class="govuk-fieldset__heading">
+                                    Filter competitions
+                                </h2>
                             </legend>
-                            <hr class="no-margin" />
-                            <div class="form-group extra-margin">
-                                <label class="form-label" for="keywords">Keywords</label>
-                                <input th:value="${model.searchKeywords}" class="form-control width-full" id="keywords" name="keywords" type="text" />
+                            <hr class="govuk-section-break govuk-section-break--visible" />
+                            <div class="govuk-form-group govuk-!-margin-top-6">
+                                <label class="govuk-label" for="keywords">Keywords</label>
+                                <input th:value="${model.searchKeywords}" class="govuk-input" id="keywords" name="keywords" type="text" />
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="innovation-area">Innovation area</label>
-                                <select class="form-control width-full" id="innovation-area" name="innovationAreaId">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="innovation-area">Innovation area</label>
+                                <select class="govuk-select" id="innovation-area" name="innovationAreaId">
                                     <option value="" >Any</option>
                                     <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:attr="selected=${innovationArea.id.equals(model.selectedInnovationAreaId) ? 'selected' : null}" th:value="${innovationArea.id}">Innovation Area</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <button class="button">Update results</button>
+                            <div class="govuk-form-group">
+                                <button class="govuk-button">Update results</button>
                             </div>
                         </fieldset>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }"></h2>
+                    <th:block th:if="${model.totalResults == 0}">
+                        <div class="govuk-!-margin-bottom-6">
+                            <h2 class="govuk-heading-l">Please try:</h2>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>searching again using different words</li>
+                                <li>removing your filters</li>
+                            </ul>
+                        </div>
+                    </th:block>
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+                    <ul class="govuk-list" th:unless="${model.totalResults == 0}">
+                       <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
+                           <h2 class="govuk-heading-m govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+                               <a class="govuk-link" th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
+                           </h2>
+                           <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</div>
+                           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Eligibility:</h3>
+                           <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.eligibilitySummary}"></div>
+                           <h3 class="govuk-heading-s govuk-!-margin-bottom-0" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
+                           <dl class="date-definition-list govuk-!-margin-top-0">
+                                <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
+                                <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
+                                <dt>Closes:</dt>
+                                <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
+                            </dl>
+                            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" th:unless="${iteration.last}"/>
+                        </li>
+                    </ul>
+                    <ul class="pagination" th:if="${model.hasPreviousPage() || model.hasNextPage()}">
+                        <li th:if="${model.hasPreviousPage()}" class="prev">
+                            <a class="govuk-link" th:href="'?' + ${model.previousPageLink}" rel="prev" title="Navigate to previous part">
+                                <span class="pagination-label">Previous</span>
+                                <span class="pagination-part-title"><th:block th:text="${model.previousPageStart}"/> to <th:block th:text="${model.previousPageEnd}"/></span>
+                            </a>
+                        </li>
+                        <li th:if="${model.hasNextPage()}" class="next">
+                            <a class="govuk-link" th:href="'?' + ${model.nextPageLink}" rel="next" title="Navigate to next part">
+                                <span class="pagination-label">Next</span>
+                                <span class="pagination-part-title"><th:block th:text="${model.nextPageStart}"/> to <th:block th:text="${model.nextPageEnd}"/></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="column-two-thirds">
-                <p class="no-margin" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }"></p>
-                <th:block th:if="${model.totalResults == 0}">
-                    <div class="extra-margin-bottom">
-                        <h2 class="heading-large">Please try:</h2>
-                        <ul class="list list-bullet">
-                            <li>searching again using different words</li>
-                            <li>removing your filters</li>
-                        </ul>
-                    </div>
-                </th:block>
-                <hr class="no-margin-top" />
-                <ul th:unless="${model.totalResults == 0}">
-                   <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
-                       <h2 class="heading-medium no-margin-top extra-margin-bottom">
-                           <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
-                       </h2>
-                       <div class="wysiwyg-styles" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</div>
-                       <h3 class="heading-small">Eligibility:</h3>
-                       <div class="wysiwyg-styles" ifs:utext="${publicContentItem.eligibilitySummary}"></div>
-                       <h3 class="heading-small" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
-                       <dl class="date-definition-list">
-                            <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
-                            <dt>Closes:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
-                        </dl>
-                        <hr th:unless="${iteration.last}"/>
-                    </li>
-                </ul>
-                <ul class="pagination" th:if="${model.hasPreviousPage() || model.hasNextPage()}">
-                    <li th:if="${model.hasPreviousPage()}" class="prev">
-                        <a th:href="'?' + ${model.previousPageLink}" rel="prev" title="Navigate to previous part">
-                            <span class="pagination-label">Previous</span>
-                            <span class="pagination-part-title"><th:block th:text="${model.previousPageStart}"/> to <th:block th:text="${model.previousPageEnd}"/></span>
-                        </a>
-                    </li>
-                    <li th:if="${model.hasNextPage()}" class="next">
-                        <a th:href="'?' + ${model.nextPageLink}" rel="next" title="Navigate to next part">
-                            <span class="pagination-label">Next</span>
-                            <span class="pagination-part-title"><th:block th:text="${model.nextPageStart}"/> to <th:block th:text="${model.nextPageEnd}"/></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
-    </main>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+    </div>
     <th:block th:insert="fragments/layout :: footer" />
     <th:block th:insert="fragments/layout :: body-end" />
 </body>

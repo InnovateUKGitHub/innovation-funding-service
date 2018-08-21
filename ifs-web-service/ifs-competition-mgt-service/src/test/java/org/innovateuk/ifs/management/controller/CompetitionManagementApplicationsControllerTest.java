@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -215,6 +215,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/" + COMPETITION_ID + "/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
+        assertEquals(false, model.isSupport());
     }
 
     @Test

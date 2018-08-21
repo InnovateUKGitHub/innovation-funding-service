@@ -12,4 +12,7 @@ public interface NotificationService {
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Void> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
+
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<Void> sendNotificationWithFlush(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
 }

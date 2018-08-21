@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,6 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 public class ApplicationQuestionFeedbackController {
 
     private ApplicationRestService applicationRestService;
-    private ProcessRoleService processRoleService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
@@ -34,9 +32,8 @@ public class ApplicationQuestionFeedbackController {
     }
 
     @Autowired
-    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, ProcessRoleService processRoleService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
+    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
         this.applicationRestService = applicationRestService;
-        this.processRoleService = processRoleService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.assessorQuestionFeedbackPopulator = assessorQuestionFeedbackPopulator;
     }
@@ -47,7 +44,8 @@ public class ApplicationQuestionFeedbackController {
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user,
-                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin
+                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                                      @RequestParam MultiValueMap<String, String> queryParams
                                                       ) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
@@ -58,8 +56,7 @@ public class ApplicationQuestionFeedbackController {
             return "redirect:/application/" + applicationId + "/summary";
         }
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), params);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, originQuery));
         return "application-assessor-feedback";

@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
@@ -39,7 +38,6 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private OrganisationService organisationService;
     private ProjectService projectService;
     private SectionService sectionService;
-    private QuestionService questionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
     private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
@@ -67,7 +65,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
         this.applicationOverviewUserModelPopulator = applicationOverviewUserModelPopulator;
     }
 
-    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId, ApplicationForm form){
+    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);

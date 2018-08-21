@@ -42,10 +42,10 @@ the user fills in the CS Initial details
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
 the user selects the Terms and Conditions
-    the user clicks the button/link      link=Terms and conditions
-    the user clicks the button/link      css=button.button  #Done
-    the user clicks the button/link      link=Competition setup
-    the user should see the element      jQuery=li:contains("Terms and conditions") .task-status-complete
+    the user clicks the button/link      link = Terms and conditions
+    the user clicks the button/link      css = button.govuk-button  #Done
+    the user clicks the button/link      link = Competition setup
+    the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
@@ -63,16 +63,17 @@ the user fills in the CS Funding Information
 
 the user fills in the CS Eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}
-    the user clicks the button/link   link=Eligibility
-    the user clicks the button twice  css=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button twice  css=label[for="research-categories-33"]
-    the user clicks the button twice  css=label[for="lead-applicant-type-${organisationType}"]
+    the user clicks the button/link   link = Eligibility
+    the user clicks the button twice  css = label[for="single-or-collaborative-collaborative"]
+    the user clicks the button twice  css = label[for="research-categories-33"]
+    the user clicks the button twice  css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
-    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
-    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
-    the user clicks the button/link  jQuery=button:contains("Done")
-    the user clicks the button/link  link=Competition setup
-    the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
+    the user clicks the button/link   css = label[for="comp-resubmissions-yes"]
+    the user clicks the button twice  css = label[for="comp-resubmissions-yes"]
+    the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
+    the user clicks the button/link   jQuery = button:contains("Done")
+    the user clicks the button/link   link = Competition setup
+    the user should see the element   jQuery = div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
 the user selects Research Participation if required
@@ -83,16 +84,27 @@ the user selects Research Participation if required
 
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
-    the user clicks the button/link       link=Milestones
+    the user clicks the button/link              link = Milestones
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.day input  ${i}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.month input  ${month}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.month input  ${month}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
       \    ${i} =   Evaluate   ${i} + 1
-    the user clicks the button/link       jQuery=button:contains("Done")
-    the user clicks the button/link       link=Competition setup
-    the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              link = Competition setup
+    the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
+
+the user fills in the CS Documents in other projects
+    the user clicks the button/link          link = Documents in project setup
+    the user clicks the button/link          link = Add document type
+    the user enters text to a text field     id = title    Test document type
+    the user clicks the button/link          jQuery = span:contains("PDF")
+    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+    the user enters text to a text field     css = .editor    Guidance test.
+    the user clicks the button/link          css = button[type = "submit"]
+    the user should see the element          jQuery = span:contains("Test document type")
+    the user clicks the button/link          link = Competition setup
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -122,7 +134,7 @@ the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
     the user clicks the button/link   link=Application
     # Removing questions from the Assessed questions
-    Remove previous rows              jQuery=.no-margin-bottom li:last-of-type button[type="submit"]:contains("Remove")
+    Remove previous rows              jQuery=.govuk-heading-s:contains("Assessed questions") ~ ul li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
     the user is able to configure the new question  How innovative is your project?
     the user clicks the button/link   css=button[name="createQuestion"]
@@ -138,13 +150,13 @@ the user fills in the CS Application section with custom questions
 
 the user marks the Finance section as complete if it's present
     [Arguments]  ${growthTable}
-    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.heading-small a:contains("Finances")
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.govuk-heading-s a:contains("Finances")
     Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link=Finances
     the user selects the radio button  applicationFinanceType  NONE
-    the user clicks the button/link    jQuery=.button:contains("Done")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -203,7 +215,7 @@ the user fills in the Public content and publishes
     the user selects the radio button       publishSetting  public
     the user enters text to a text field    id=keywords  Search, Testing, Robot, ${extraKeyword}
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
     # Fill in the Summary
     the user clicks the button/link         link=Summary
@@ -211,40 +223,40 @@ the user fills in the Public content and publishes
     the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id=projectSize   10 millions
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Summary") ~ .task-status-complete
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
     the user enters text to a text field    id=contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link=Scope
     the user enters text to a text field    id=contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Scope") ~ .task-status-complete
     # Save the dates
     the user clicks the button/link  link=Dates
     the user clicks the button/link  jQuery=button:contains("Save and review")
-    the user clicks the button/link  jQuery=.button:contains("Return to public content")
+    the user clicks the button/link  jQuery=.govuk-button:contains("Return to public content")
     the user should see the element  jQuery=div:contains("Dates") ~ .task-status-complete
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=contentGroups[0].heading    Heading 1
     the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=contentGroups[0].heading    Heading 1
     the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
-    the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish content")

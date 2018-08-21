@@ -1,180 +1,182 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management project-management assign-mo">
+<body class="govuk-template__body competition-management project-management assign-mo">
     <th:block th:insert="fragments/modals :: modal-overlay" />
 
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
-    <main tabindex="-1" id="content">
-        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to assign a Monitoring officer.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-        </div>
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to assign a Monitoring officer.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId}: $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId}: ${model.competitionSummary.competitionName}|">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId}: $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId}: ${model.competitionSummary.competitionName}|">
+                        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
+                    </th:block>
+                </div>
+                <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
+                    <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
+                </div>
+            </div>
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+            <th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
+                <div class="success-alert">
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">A Monitoring Officer has been assigned.</h2>
+                </div>
+            </th:block>
+
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-l">Monitoring Officer</h2>
+                <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="firstName">
+                            First name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input id="firstName"
+                               type="text"
+                               pattern="\D{2,}"
+                               minlength="2"
+                               maxlength="70"
+                               th:errorclass="govuk-input--error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
+                               class="govuk-input"
+                               th:readonly="${readonly}"
+                               th:field="*{firstName}" />
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="lastName">
+                            Last name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input id="lastName"
+                               type="text"
+                               pattern="\D{2,}"
+                               minlength="2"
+                               maxlength="70"
+                               th:errorclass="govuk-input--error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.lastname.required},data-pattern-errormessage=#{validation.standard.lastname.invalid},data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)}"
+                               class="govuk-input"
+                               th:readonly="${readonly}"
+                               th:field="*{lastName}" />
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="emailAddress">
+                            Email
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('emailAddress')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
+                        </th:block>
+                        <input id="emailAddress"
+                               type="email"
+                               th:errorclass="govuk-input--error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.invite.email.required}"
+                               class="govuk-input"
+                               th:readonly="${readonly}"
+                               th:field="*{emailAddress}" />
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="phoneNumber">
+                            Phone number
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                        </th:block>
+                        <input type="tel"
+                               th:errorclass="govuk-input--error"
+                               class="govuk-input govuk-grid-column-one-half"
+                               th:readonly="${readonly}"
+                               th:field="*{phoneNumber}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                    </div>
+
+                    <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
+                        Change Monitoring Officer
+                    </a>
+                    <div class="govuk-form-group">
+                        <button data-js-modal="modal-assign-mo" type="submit" class="govuk-button govuk-!-margin-top-6" th:if="${model.displayAssignMonitoringOfficerButton}">
+                            Assign Monitoring Officer
+                        </button>
+                    </div>
+                    <th:block th:insert="fragments/modals :: modal-assign-mo" />
+                </form>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-l">Supporting information</h2>
+
+                <th:block th:if="${model.projectTitle}">
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project title</h3>
+                    <p class="govuk-body" th:text="${model.projectTitle}">Technology inspired</p>
+                </th:block>
+
+                <th:block th:if="${model.area}">
+                <h3 class="govuk-heading-m govuk-!-margin-0">Area</h3>
+                <p class="govuk-body" th:text="${model.area}">Technology</p>
+                </th:block>
+
+                <th:block th:if="${model.primaryAddressLines}">
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Primary address</h3>
+                    <p class="govuk-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+                    <p class="govuk-body">
+                        <th:block th:each="addressLine : ${model.primaryAddressLines}">
+                        <th:block th:text="${addressLine}">An address line</th:block><br />
+                      </th:block>
+                    </p>
+                </th:block>
+
+                <th:block th:if="${model.targetProjectStartDate}">
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Target project start date</h3>
+                    <p class="govuk-hint">Planned start date for the project.</p>
+                    <p class="govuk-body" th:if="${model.targetProjectStartDate}">
+                      <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
+                      <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
+                    </p>
+                </th:block>
+
+                <th:block th:if="${model.projectManagerName}">
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project Manager</h3>
+                    <p class="govuk-hint">Project Manager for the project, designated by the lead organisation.</p>
+                    <p class="govuk-body" th:text="${model.projectManagerName}">David Smith</p>
+                </th:block>
+
+                <th:block th:if="${model.partnerOrganisationNames}">
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project partners</h3>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li th:each="organisationName : ${model.partnerOrganisationNames}">
+                            <th:block th:text="${organisationName}">organisation name</th:block>
+                            <th:block th:if="${organisationName.equals(model.leadOrganisationName)}"> (Lead)</th:block>
+                        </li>
+                    </ul>
                 </th:block>
             </div>
-            <div class="column-third alignright extra-margin">
-                <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
-            </div>
-        </div>
-
-        <hr/>
-
-        <th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
-            <div class="success-alert">
-                <h2 class="heading-small no-margin-top">A Monitoring Officer has been assigned.</h2>
-            </div>
-        </th:block>
-
-        <div class="column-half">
-            <h2 class="heading-large">Monitoring Officer</h2>
-            <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
-                    <label class="form-label" for="firstName">
-                        <span class="form-label-bold">First name</span>
-                          <th:block th:if="${#fields.hasErrors('firstName')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input id="firstName"
-                           type="text"
-                           pattern="\D{2,}"
-                           minlength="2"
-                           maxlength="70"
-                           th:errorclass="form-control-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
-                           class="form-control width-full"
-                           th:readonly="${readonly}"
-                           th:field="*{firstName}" />
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
-                    <label class="form-label" for="lastName">
-                        <span class="form-label-bold">Last name</span>
-                        <th:block th:if="${#fields.hasErrors('lastName')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input id="lastName"
-                           type="text"
-                           pattern="\D{2,}"
-                           minlength="2"
-                           maxlength="70"
-                           th:errorclass="form-control-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.lastname.required},data-pattern-errormessage=#{validation.standard.lastname.invalid},data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)}"
-                           class="form-control width-full"
-                           th:readonly="${readonly}"
-                           th:field="*{lastName}" />
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'form-group-error'">
-                    <label class="form-label" for="emailAddress">
-                        <span class="form-label-bold">Email</span>
-                        <th:block th:if="${#fields.hasErrors('emailAddress')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input id="emailAddress"
-                           type="email"
-                           th:errorclass="form-control-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.invite.email.required}"
-                           class="form-control width-full"
-                           th:readonly="${readonly}"
-                           th:field="*{emailAddress}" />
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
-                    <label class="form-label" for="phoneNumber">
-                        <span class="form-label-bold">Phone number</span>
-                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input type="tel"
-                           th:errorclass="form-control-error"
-                           class="form-control"
-                           th:readonly="${readonly}"
-                           th:field="*{phoneNumber}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
-                </div>
-
-                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
-                    Change Monitoring Officer
-                </a>
-
-                <button data-js-modal="modal-assign-mo" type="submit" class="button" th:if="${model.displayAssignMonitoringOfficerButton}">
-                    Assign Monitoring Officer
-                </button>
-
-                <th:block th:insert="fragments/modals :: modal-assign-mo" />
-            </form>
-        </div>
-        <div class="column-half">
-            <h2 class="heading-large">Supporting information</h2>
-
-            <th:block th:if="${model.projectTitle}">
-                <h3 class="heading-medium no-margin">Project title</h3>
-                <p th:text="${model.projectTitle}">Technology inspired</p>
-            </th:block>
-
-            <th:block th:if="${model.area}">
-            <h3 class="heading-medium no-margin">Area</h3>
-            <p th:text="${model.area}">Technology</p>
-            </th:block>
-
-            <th:block th:if="${model.primaryAddressLines}">
-                <h3 class="heading-medium no-margin">Primary address</h3>
-                <p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
-                <p>
-                    <th:block th:each="addressLine : ${model.primaryAddressLines}">
-                    <th:block th:text="${addressLine}">An address line</th:block><br />
-                  </th:block>
-                </p>
-            </th:block>
-
-            <th:block th:if="${model.targetProjectStartDate}">
-                <h3 class="heading-medium no-margin">Target project start date</h3>
-                <p class="form-hint">Planned start date for the project.</p>
-                <p th:if="${model.targetProjectStartDate}">
-                  <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-                  <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
-                </p>
-            </th:block>
-
-            <th:block th:if="${model.projectManagerName}">
-                <h3 class="heading-medium no-margin">Project Manager</h3>
-                <p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
-                <p th:text="${model.projectManagerName}">David Smith</p>
-            </th:block>
-
-            <th:block th:if="${model.partnerOrganisationNames}">
-                <h3 class="heading-medium no-margin">Project partners</h3>
-                <ul class="list list-bullet">
-                    <li th:each="organisationName : ${model.partnerOrganisationNames}">
-                        <th:block th:text="${organisationName}">organisation name</th:block>
-                        <th:block th:if="${organisationName.equals(model.leadOrganisationName)}"> (Lead)</th:block>
-                    </li>
-                </ul>
-            </th:block>
-        </div>
-        <th:block th:insert="fragments/layout :: main-content-end" />
-    </main>
-
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+    </div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

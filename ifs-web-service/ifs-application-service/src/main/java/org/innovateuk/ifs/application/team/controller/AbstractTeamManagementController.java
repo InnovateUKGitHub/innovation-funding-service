@@ -10,7 +10,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -98,7 +97,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<InviteResultsResource> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
+                ServiceResult<Void> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
 
                 return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                         .failNowOrSucceedWith(failureView, () -> redirectToOrganisationTeamPage(applicationId, organisationId));
@@ -147,7 +146,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
-                                     @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             List<Long> existingApplicantIds = teamManagementService.getInviteIds(applicationId, organisationId);

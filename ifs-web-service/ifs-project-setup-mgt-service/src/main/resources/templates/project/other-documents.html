@@ -1,101 +1,104 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management project-management">
+<body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}" />
 
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
-
-    <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />
-        <hr/>
-
-        <div class="success-alert" th:if="${model.isApproved()}">
-            <th:block th:if="${model.collaborationAgreementRequired}">
-                <p class="heading-small no-margin-top">The documents provided have been approved.</p>
-            </th:block>
-            <th:block th:unless="${model.collaborationAgreementRequired}">
-                <p class="heading-small no-margin-top">The document provided has been approved.</p>
-            </th:block>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <div class="warning-alert" th:if="${model.isRejected()}">
-            <th:block th:if="${model.collaborationAgreementRequired}">
-                <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
-            </th:block>
-            <th:block th:unless="${model.collaborationAgreementRequired}">
-                <p class="heading-small no-margin-top">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
-            </th:block>
-        </div>
+        <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
 
-        <h2 class="heading-medium" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
-        <ul class="list list-bullet">
-            <li th:text="${model.leadPartnerOrganisationName}" />
-            <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
-              <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
-            </th:block>
-        </ul>
-        <p>
-            <th:block th:unless="${#strings.isEmpty(model.projectManagerName)}">
-              <th:block th:text="${model.projectManagerName}"/><br/>
-            </th:block>
-            <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
-              <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" /><br/>
-            </th:block>
-            <th:block th:unless="${#strings.isEmpty(model.projectManagerTelephone)}">
-              <th:block th:text="${model.projectManagerTelephone}"/>
-            </th:block>
-        </p>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-        <th:block th:if="${(!(model.collaborationAgreementRequired) or model.collaborationAgreementFileDetails != null) and model.exploitationPlanFileDetails != null}">
-
-            <th:block th:if="${model.collaborationAgreementRequired}">
-                <h2 class="heading-medium">Collaboration agreement</h2>
-                <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-                class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-            </th:block>
-
-            <h2 class="heading-medium">Exploitation plan</h2>
-            <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
-             class="uploaded-file"
-             th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-
-            <th:block th:if="${model.isShowApproveRejectButtons()}">
+            <div class="success-alert" th:if="${model.isApproved()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <h2 class="heading-medium">Review documents</h2>
-                    <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
-                    <button id="accept-documents" data-js-modal="modal-accept-docs" class="button">Accept documents</button>
-                    <button id="reject-documents" data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
-                    <th:block th:insert="fragments/modals :: modal-overlay" />
-                    <th:block th:insert="fragments/modals :: modal-accept-docs" />
-                    <th:block th:insert="fragments/modals :: modal-reject-docs" />
+                    <p class="govuk-heading-s govuk-!-margin-top-0">The documents provided have been approved.</p>
                 </th:block>
                 <th:block th:unless="${model.collaborationAgreementRequired}">
-                    <h2 class="heading-medium">Review document</h2>
-                    <p>Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
-                    <button id="accept-document" data-js-modal="modal-accept-doc" class="button">Accept document</button>
-                    <button id="reject-document" data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>
-                    <th:block th:insert="fragments/modals :: modal-overlay" />
-                    <th:block th:insert="fragments/modals :: modal-accept-doc" />
-                    <th:block th:insert="fragments/modals :: modal-reject-doc" />
+                    <p class="govuk-heading-s govuk-!-margin-top-0">The document provided has been approved.</p>
                 </th:block>
+            </div>
+
+            <div class="warning-alert" th:if="${model.isRejected()}">
+                <th:block th:if="${model.collaborationAgreementRequired}">
+                    <p class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+                </th:block>
+                <th:block th:unless="${model.collaborationAgreementRequired}">
+                    <p class="govuk-heading-s govuk-!-margin-top-0">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
+                </th:block>
+            </div>
+
+            <h2 class="govuk-heading-m" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
+            <ul class="govuk-list govuk-list--bullet">
+                <li th:text="${model.leadPartnerOrganisationName}" />
+                <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+                  <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+                </th:block>
+            </ul>
+            <p class="govuk-body">
+                <th:block th:unless="${#strings.isEmpty(model.projectManagerName)}">
+                  <th:block th:text="${model.projectManagerName}"/><br/>
+                </th:block>
+                <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
+                  <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" class="govuk-link" /><br/>
+                </th:block>
+                <th:block th:unless="${#strings.isEmpty(model.projectManagerTelephone)}">
+                  <th:block th:text="${model.projectManagerTelephone}"/>
+                </th:block>
+            </p>
+
+            <th:block th:if="${(!(model.collaborationAgreementRequired) or model.collaborationAgreementFileDetails != null) and model.exploitationPlanFileDetails != null}">
+
+                <th:block th:if="${model.collaborationAgreementRequired}">
+                    <h2 class="govuk-heading-m">Collaboration agreement</h2>
+                    <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+                    class="uploaded-file govuk-link" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                </th:block>
+
+                <h2 class="govuk-heading-m govuk-!-padding-top-7">Exploitation plan</h2>
+                <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
+                 class="uploaded-file govuk-body govuk-link"
+                 th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+
+                <th:block th:if="${model.isShowApproveRejectButtons()}">
+                    <th:block th:if="${model.collaborationAgreementRequired}">
+                        <h2 class="govuk-heading-m govuk-!-margin-top-6">Review documents</h2>
+                        <p class="govuk-body">Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+                        <button id="accept-documents" data-js-modal="modal-accept-docs" class="govuk-button govuk-!-margin-right-4">Accept documents</button>
+                        <button id="reject-documents" data-js-modal="modal-reject-docs" class="govuk-button button-warning">Reject documents</button>
+                        <th:block th:insert="fragments/modals :: modal-overlay" />
+                        <th:block th:insert="fragments/modals :: modal-accept-docs" />
+                        <th:block th:insert="fragments/modals :: modal-reject-docs" />
+                    </th:block>
+                    <th:block th:unless="${model.collaborationAgreementRequired}">
+                        <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
+                        <p class="govuk-body">Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
+                        <button id="accept-document" data-js-modal="modal-accept-doc" class="govuk-button govuk-!-margin-right-4">Accept document</button>
+                        <button id="reject-document" data-js-modal="modal-reject-doc" class="govuk-button button-warning">Reject document</button>
+                        <th:block th:insert="fragments/modals :: modal-overlay" />
+                        <th:block th:insert="fragments/modals :: modal-accept-doc" />
+                        <th:block th:insert="fragments/modals :: modal-reject-doc" />
+                    </th:block>
+                </th:block>
+
             </th:block>
+        </form>
 
-        </th:block>
-    </form>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

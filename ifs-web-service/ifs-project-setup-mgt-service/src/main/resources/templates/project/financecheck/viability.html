@@ -1,117 +1,139 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management project-management">
+<body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to update viability.</h2>
-        Please review
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${competitionTitle},size='heading-xlarge',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
-    <hr/>
-
-    <th:block th:if="${model.isShowApprovalMessage()}">
-        <div class="success-alert">
-            <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update viability.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-    </th:block>
 
-    <table class="table-overview">
-      <thead>
-        <tr>
-          <th scope="col">Total costs</th>
-          <th scope="col" class="numeric">% Grant</th>
-          <th scope="col" class="numeric">Total project cost</th>
-          <th scope="col" class="numeric">Grant applied for (&pound;)</th>
-          <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
-          <td th:text="${model.percentageGrant+'%'}" class="numeric"></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
-          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
-          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-        </tr>
-      </tbody>
-    </table>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${competitionTitle}|,size='govuk-heading-xl',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-    <h2 class="heading-medium">Organisation information</h2>
-    <dl class="standard-definition-list">
-
-      <dt>Company name</dt>
-      <dd th:text="${model.organisationName}">Aptrans Ltd</dd>
-
-      <dt>Company registration number</dt>
-      <dd th:text="${model.companyRegistrationNumber}">0123456789</dd>
-
-      <dt>Turnover</dt>
-      <dd th:text="${model.turnover != null ? model.turnover : '-'}">0123456789</dd>
-
-      <dt>Head count</dt>
-      <dd th:text="${model.headCount != null ? model.headCount : '-'}">0</dd>
-
-      <dt>Organisation size</dt>
-      <dd th:text="${model.organisationSizeDescription != null ? model.organisationSizeDescription : '-'}">Medium</dd>
-    </dl>
-
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
-
-        <h2 class="heading-medium">Credit report</h2>
-        <div class="form-group">
-            <div class="multiple-choice">
-                <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />
-                <label for="costs-reviewed">
-                    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
-                </label>
+        <th:block th:if="${model.isShowApprovalMessage()}">
+            <div class="success-alert">
+                <p class="govuk-body">The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
             </div>
-      </div>
-      <div class="extra-margin">
-          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
-          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button button-secondary">Notes</a>
-      </div>
-      <th:block th:unless="${model.isReadOnly()}">
-          <h2 class="heading-medium">Approve viability</h2>
-          <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
-          <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
-          <div class="form-group">
-              <div class="multiple-choice" data-target="add-rag-rating">
-                  <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" />
-                  <label for="project-viable">
-                      <th:block th:text="${model.organisationName}" /> is viable for this project
-                  </label>
-              </div>
-          </div>
-          <div class="form-group" id="add-rag-rating">
-            <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-            <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
-              <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
-              <option value="GREEN">Green</option>
-              <option value="AMBER">Amber</option>
-              <option value="RED">Red</option>
-            </select>
-          </div>
-          <button type="button" data-js-modal="modal-confirm-viability" class="button" id="confirm-button">Confirm viability</button>
-          <th:block th:insert="fragments/modals :: modal-confirm-viability" />
-      </th:block>
-      <hr/>
-      <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
-      <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
-    </form>
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <table class="govuk-table table-overview">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col">Total costs</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
+              <td th:text="${model.percentageGrant+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 class="govuk-heading-m">Organisation information</h2>
+        <dl class="standard-definition-list">
+
+          <dt>Company name</dt>
+          <dd th:text="${model.organisationName}">Aptrans Ltd</dd>
+
+          <dt>Company registration number</dt>
+          <dd th:text="${model.companyRegistrationNumber}">0123456789</dd>
+
+          <dt>Turnover</dt>
+          <dd th:text="${model.turnover != null ? model.turnover : '-'}">0123456789</dd>
+
+          <dt>Head count</dt>
+          <dd th:text="${model.headCount != null ? model.headCount : '-'}">0</dd>
+
+          <dt>Organisation size</dt>
+          <dd th:text="${model.organisationSizeDescription != null ? model.organisationSizeDescription : '-'}">Medium</dd>
+        </dl>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
+
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Credit report</h2>
+            <div class="govuk-form-group">
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input th:disabled="${model.isReadOnly()}"
+                               id="costs-reviewed"
+                               class="govuk-checkboxes__input"
+                               type="checkbox"
+                               th:field="*{creditReportConfirmed}" />
+                        <label for="costs-reviewed"
+                               class="govuk-label govuk-checkboxes__label">
+                            A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+                        </label>
+                    </div>
+                </div>
+          </div>
+          <div class="govuk-!-margin-top-6">
+              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button-secondary govuk-!-margin-right-4">Queries</a>
+              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button-secondary">Notes</a>
+          </div>
+          <th:block th:unless="${model.isReadOnly()}">
+              <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
+              <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+              <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
+              <div class="govuk-form-group">
+                  <div class="govuk-checkboxes">
+                      <div class="govuk-checkboxes__item" data-target="add-rag-rating">
+                          <input  id="project-viable"
+                                  class="govuk-checkboxes__input"
+                                  type="checkbox"
+                                  th:field="*{confirmViabilityChecked}"
+                                  data-switches-button-status="#confirm-button" />
+                          <label for="project-viable"
+                                 class="govuk-label govuk-checkboxes__label">
+                              <th:block th:text="${model.organisationName}" /> is viable for this project
+                          </label>
+                      </div>
+                  </div>
+
+              </div>
+              <div class="govuk-form-group" id="add-rag-rating">
+                <label for="rag-rating"
+                       class="govuk-label">Please enter the RAG rating for this viability review</label>
+                <select th:field="*{ragStatus}"
+                        id="rag-rating"
+                        class="govuk-select"
+                        data-switches-button-status="#confirm-button">
+                  <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
+                  <option value="GREEN">Green</option>
+                  <option value="AMBER">Amber</option>
+                  <option value="RED">Red</option>
+                </select>
+              </div>
+              <button type="button" data-js-modal="modal-confirm-viability" class="govuk-button" id="confirm-button">Confirm viability</button>
+              <th:block th:insert="fragments/modals :: modal-confirm-viability" />
+          </th:block>
+          <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+          <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+          <a th:if="${model.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

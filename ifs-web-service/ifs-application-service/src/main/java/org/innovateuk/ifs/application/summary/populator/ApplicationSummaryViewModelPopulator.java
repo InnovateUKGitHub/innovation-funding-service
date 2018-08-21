@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
@@ -44,7 +44,7 @@ public class ApplicationSummaryViewModelPopulator {
         this.projectService = projectService;
     }
 
-    public ApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form) {
+    public ApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form, boolean isSupport) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -65,7 +65,8 @@ public class ApplicationSummaryViewModelPopulator {
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,
                 userService.isLeadApplicant(user.getId(), application),
-                isProjectWithdrawn(applicationId));
+                isProjectWithdrawn(applicationId),
+                isSupport);
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

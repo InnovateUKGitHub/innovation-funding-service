@@ -1,51 +1,63 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body>
+<body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title"  id="error-summary-title">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='New website terms and conditions',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='New website terms and conditions',size='govuk-heading-xl'" />
 
-    <p>We have updated our terms and conditions. Please read them and confirm you agree.</p>
+        <p class="govuk-body">We have updated our terms and conditions. Please read them and confirm you agree.</p>
 
-    <form th:action="@{'/info/new-terms-and-conditions'}" method="post" th:object="${form}" novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('agree')} ? 'form-group-error'">
-            <fieldset>
-                <legend>
-                    <span class="visuallyhidden">Website terms and conditions</span>
+        <form th:action="@{'/info/new-terms-and-conditions'}" method="post" th:object="${form}" novalidate="novalidate">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agree')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                        <span class="govuk-fieldset__heading">Website terms and conditions</span>
+                    </legend>
                     <span th:if="${#fields.hasErrors('agree')}"
                           th:errors="*{agree}"
-                          class="error-message">In order to continue you must agree to the terms and conditions.</span>
-                </legend>
-                <div class="multiple-choice">
-                    <input id="agree"
-                           type="checkbox"
-                           th:field="*{agree}"
-                           th:errorclass="form-control-error"
-                           required="required"
-                           data-required-errormessage="In order to continue you must agree to the terms and conditions." />
-                    <label for="agree">I agree to the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window).</label>
-                </div>
-            </fieldset>
-        </div>
-        <button class="button" type="submit">Continue</button>
-    </form>
+                          class="govuk-error-message">In order to continue you must agree to the terms and conditions.</span>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="agree"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{agree}"
+                                   th:errorclass="govuk-input--error"
+                                   required="required"
+                                   data-required-errormessage="In order to continue you must agree to the terms and conditions." />
+                            <label for="agree"
+                                   class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a> (this link will open in a new window).</label>
+                        </div>
+                    </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+                </fieldset>
+            </div>
+            <button class="govuk-button" type="submit">Continue</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

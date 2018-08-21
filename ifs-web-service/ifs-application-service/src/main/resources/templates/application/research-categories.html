@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Research category'" />
 </head>
-<body class="application details innovation-areas">
+<body class="govuk-template__body application details innovation-areas" th:with="model=${researchCategoryModel}">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" th:with="model=${researchCategoryModel}">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:unless="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
     <th:block th:if="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
-    <th:block th:insert="fragments/research-category :: research_category(${model})" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='govuk-heading-xl'" />
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/research-category :: research_category(${model})" />
 
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

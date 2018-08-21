@@ -4,10 +4,17 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
+...
+...               IFS-3941 Introduce date to DOI
+...
+...               IFS-3942 Assessor profile view - Assessor
 Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+
+*** Variables ***
+${assessor_id}          ${user_ids['${test_mailbox_one}+jeremy.alufson@gmail.com']}
 
 *** Test Cases ***
 Back to the dashboard link
@@ -15,21 +22,24 @@ Back to the dashboard link
     ...
     ...    INFUND-5432
     ...
-    ...    INFUND-7060
-    Given The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
-    When the user clicks the button/link    jQuery=h2:contains("Your assessor details") + ul a:contains("your declaration of interest")
-    And The user should see the text in the element    css=p:nth-child(4)    Not answered
-    And The user should see the text in the element    css=p:nth-child(14)    Not answered
+    ...    INFUND-7060  IFS-3942
+    Given The user should see the element  jQuery = ul li a:contains("your declaration of interest")    #this checks the alert message on the top of the page
+    When the user clicks the button/link   link = your details
+    And the user clicks the button/link    link = DOI
+    And The user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
+    And The user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Not answered")
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715  IFS-1947
     ...
-    ...    INFUND-7060
+    ...    INFUND-7060  IFS-3942
     [Tags]    HappyPath
-    Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
+    Given the user clicks the button/link    link = your details
+    And the user clicks the button/link      link = DOI
+    When the user clicks the button/link     id = editDOI
+    When the user clicks the button/link     jQuery = button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages triggered
 
 Server-side when Yes selected at yes/no
@@ -83,9 +93,21 @@ Successful save for the DOI form
     When the user clicks the button/link   jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
-    And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And the user clicks the button/link    jQuery=a:contains("Edit")
+    And the user clicks the button/link    link = your details
+    And the user clicks the button/link    link = DOI
+    When the user clicks the button/link   id = editDOI
     And the user should see the correct inputs in the declaration form
+
+the user checks for the update DOI message
+    [Documentation]  IFS-3941
+    [Tags]
+    [Setup]  Save DOI current modified date
+    Given the user clicks the button/link   link = Dashboard
+    When the user updates the DOI modified date
+    And the user reloads the page
+    Then the user should see the element    jQuery = div li a:contains("your declaration of interest")
+    ${modified_date} =  Save DOI current modified date
+    [Teardown]  Return the DOI modified_on date to initial value   ${modified_date}
 
 *** Keywords ***
 the user correctly fills out the role, principle employer and accurate fields
@@ -111,7 +133,7 @@ the user should see the correct inputs in the declaration form
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    Wait Until Page Contains Element Without Screenshots    css=.error-message
+    Wait Until Page Contains Element Without Screenshots    css=.govuk-error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
 
 the user should see the proper validation messages triggered
@@ -122,3 +144,19 @@ the user should see the proper validation messages triggered
     the user should see a field and summary error    Please tell us if you have any other financial interests.
     the user should see a field and summary error    Please tell us if you have any appointments or directorships.
     the user should see a field and summary error    You must agree that your account is accurate.
+
+Save DOI current modified date
+    Connect to Database  @{database}
+    ${result} =  Query  SELECT DATE_FORMAT(`modified_on`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`affiliation` WHERE `user_id`='${assessor_id}';
+    ${result} =  get from list  ${result}  0
+    ${modified_on} =  get from list  ${result}  0
+    [Return]  ${modified_on}
+
+Return the DOI modified_on date to initial value
+    [Arguments]  ${modified_date}
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '${modified_date}' WHERE `user_id` = '${assessor_id}';
+
+the user updates the DOI modified date
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '2018-04-05 00:00:00' WHERE `user_id` = '${assessor_id}';

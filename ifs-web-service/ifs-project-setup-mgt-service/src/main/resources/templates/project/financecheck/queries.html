@@ -1,181 +1,186 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries',hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
 </head>
 
-<body class="competition-management project-management query-form">
+<body class="govuk-template__body competition-management project-management query-form">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 <th:block th:insert="fragments/modals :: modal-confirm-mark-resolved" />
 
-<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
-    <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
-        <p>Please review:</p>
-        <ul class="error-summary-list">
-            <th:block th:each="err : ${nonFormErrors}">
-                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
-            </th:block>
-        </ul>
-    </div>
-
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
-
-
-    <h2 class="heading-medium">Finance Contact</h2>
-    <p th:if="${model.financeContact.isPresent()}">
-        <th:block th:text="${model.financeContact.get().userName}">Finance Contact</th:block> <br />
-        <th:block th:text="${model.financeContact.get().email}">example@example.com</th:block> <br />
-        <th:block th:text="${model.financeContact.get().phoneNumber}">0</th:block>
-    </p>
-
-    <p th:unless="${model.financeContact.isPresent()}">
-        No assigned contact
-    </p>
-
-    <h2 class="heading-medium">Queries</h2>
-    <p>
-        Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
-    </p>
-    <div class="grid-row extra-margin-bottom">
-        <div class="column-half">
-            <th:block th:if="${model.financeContact.isPresent()}">
-                <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large">Post a new query</a>
-            </th:block>
-
-            <th:block th:unless="${model.financeContact.isPresent()}">
-                <button disabled="disabled" class="button button-large">Post a new query</button>
-            </th:block>
+    <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+        <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem saving your response.</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <th:block th:each="err : ${nonFormErrors}">
+                        <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+                    </th:block>
+                </ul>
+            </div>
         </div>
-        <div class="column-half">
-            <fieldset>
-                <div class="alignright">
-                    <label for="querySection">Query section</label>
-                    <select id="querySection" onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)" class="form-control">
-                        <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
-                        <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
-                        <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
-                    </select>
-                </div>
-            </fieldset>
-        </div>
-    </div>
 
-    <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
-        <th:block th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-internal-query-' + query.getId()}" th:classappend="${'query ' + querySection+'-section'}">
-                <th:block th:text="${query.title}">Query Thread Title</th:block>
-                <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
-            </h2>
-            <div class="collapsible-content" th:classappend="${'query ' + querySection+'-section'}">
-                <h3 class="no-margin">
-                    <span class="heading-small">Section: </span>
-                    <span th:text="${#strings.capitalize(querySection)}">Section title</span>
-                </h3>
-                <th:block th:each="(post, iteration : ${query.viewModelPosts})">
-                    <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                        <div class="heading-small no-margin">
-                            <th:block th:text="${post.username}">Created by user</th:block>
-                            <small>
-                                <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
-                                <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'h:mma'))}"/>
-                            </small>
-                        </div>
-                        <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
-                        <h3 th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</h3>
-                        <ul>
-                            <li th:each="attachment : ${post.attachments}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
-                            </li>
-                        </ul>
-                    </div>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+
+        <h2 class="govuk-heading-m">Finance Contact</h2>
+        <p class="govuk-body" th:if="${model.financeContact.isPresent()}">
+            <th:block th:text="${model.financeContact.get().userName}">Finance Contact</th:block> <br />
+            <th:block th:text="${model.financeContact.get().email}">example@example.com</th:block> <br />
+            <th:block th:text="${model.financeContact.get().phoneNumber}">0</th:block>
+        </p>
+
+        <p class="govuk-body" th:unless="${model.financeContact.isPresent()}">
+            No assigned contact
+        </p>
+
+        <h2 class="govuk-heading-m">Queries</h2>
+        <p class="govuk-body">
+            Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
+        </p>
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
+            <div class="govuk-grid-column-one-half">
+                <th:block th:if="${model.financeContact.isPresent()}">
+                    <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
                 </th:block>
-                <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                    <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="extra-margin button">Respond</a>
-                    <a class="button button-clear width-full no-padding-left"
-                       data-js-modal="modal-confirm-mark-resolved"
-                       th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
-                       th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
-                        Mark as resolved
-                    </a>
-                </th:block>
-                <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                        <h3 class="heading-medium">Respond to query</h3>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
-                            <label for="response">
-                                <span class="form-label-bold">Response</span>
-                                <th:block th:if="${#fields.hasErrors('response')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                </th:block>
-                            </label>
-                            <div class="textarea-wrapped word-count">
-                                <textarea data-editor="md"
-                                  required = "required"
-                                  th:field="*{response}"
-                                  id="response"
-                                  name="response"
-                                  class="form-control"
-                                  th:attr="maxlength=${model.maxQueryCharacters},
-                                           data-max_words=${model.maxQueryWords},
-                                           data-maxwordslength=${model.maxQueryWords},
-                                           data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
-                                           data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
-                                           data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                  th:errorclass="field-group-error"></textarea>
-                                <div class="textarea-footer" th:with="response=*{response}" aria-live="polite" aria-atomic="true" role="status">
-                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="upload-section">
-                            <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                <h3 class="heading-small">Supporting documentation</h3>
-                                <ul>
-                                    <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                        <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
-                                    </li>
-                                </ul>
-                            </th:block>
-                            <h3 class="heading-small no-margin-bottom">Upload supporting documentation in pdf format</h3>
-                            <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
-                                <th:block th:if="${#fields.hasErrors('attachment')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
-                                </th:block>
-                                <input type="file" id="attachment" class="inputfile" name="attachment">
-                                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
-                            </div>
-                        </div>
-                        <input type="hidden" id="action" value="postResponse">
-                        <div class="grid-row">
-                            <div class="column-half">
-                                <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
-                            </div>
-                            <div class="column-half alignright">
-                                <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
-                            </div>
-                        </div>
-                    </form>
-                </th:block>
-                <th:block th:if="${query.isClosed()}">
-                    <div class="message-alert">
-                        <p>This query has been marked as resolved by
-                            <th:block th:text="${query.getClosedBy().getName()}">Name</th:block> on
-                            <th:block th:text="${#temporals.format(query.getClosedDate(), 'd MMMM yyyy')}">Date</th:block>.</p>
-                        <p>If you wish to follow this up, please raise a new query.</p>
-                    </div>
+
+                <th:block th:unless="${model.financeContact.isPresent()}">
+                    <button disabled="disabled" class="govuk-button">Post a new query</button>
                 </th:block>
             </div>
-        </th:block>
-    </div>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <div class="govuk-grid-column-one-half">
+                <fieldset class="govuk-fieldset">
+                    <div class="alignright">
+                        <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
+                        <select id="querySection"
+                                onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
+                                class="govuk-select govuk-!-width-one-half">
+                            <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
+                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
+                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
+            <th:block th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}">
+                <h2 class="govuk-heading-m" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-internal-query-' + query.getId()}" th:classappend="${'query ' + querySection+'-section'}">
+                    <th:block th:text="${query.title}">Query Thread Title</th:block>
+                    <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
+                </h2>
+                <div class="collapsible-content" th:classappend="${'query ' + querySection+'-section'}">
+                    <h3 class="govuk-!-margin-0">
+                        <span class="govuk-heading-s govuk-!-display-inline">Section: </span>
+                        <span th:text="${#strings.capitalize(querySection)}" class="govuk-body">Section title</span>
+                    </h3>
+                    <th:block th:each="(post, iteration : ${query.viewModelPosts})">
+                        <div th:class="${iteration.index == 0} ? '' : 'panel'">
+                            <div class="govuk-heading-s govuk-!-margin-0">
+                                <th:block th:text="${post.username}">Created by user</th:block>
+                                <small>
+                                    <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
+                                    <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'h:mma'))}"/>
+                                </small>
+                            </div>
+                            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${post.body}"></p>
+                            <h3 th:unless="${post.attachments.isEmpty()}" class="govuk-heading-s">Supporting documentation</h3>
+                            <ul>
+                                <li th:each="attachment : ${post.attachments}">
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" class="govuk-link" target="_blank">file</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th:block>
+                    <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
+                        <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a><br />
+                        <a class="button-clear govuk-!-padding-left-0"
+                           data-js-modal="modal-confirm-mark-resolved"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
+                           th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
+                            Mark as resolved
+                        </a>
+                    </th:block>
+                    <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
+                        <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                            <h3 class="govuk-heading-m">Respond to query</h3>
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
+                                <label class="govuk-label" for="response">
+                                    Response
+                                </label>
+                                <th:block th:if="${#fields.hasErrors('response')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                </th:block>
+                                <div class="textarea-wrapped word-count">
+                                    <textarea data-editor="md"
+                                      required = "required"
+                                      th:field="*{response}"
+                                      id="response"
+                                      name="response"
+                                      class="govuk-textarea"
+                                      th:attr="maxlength=${model.maxQueryCharacters},
+                                               data-max_words=${model.maxQueryWords},
+                                               data-maxwordslength=${model.maxQueryWords},
+                                               data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
+                                               data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
+                                               data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                      th:errorclass="govuk-textarea--error"></textarea>
+                                    <div class="textarea-footer" th:with="response=*{response}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="upload-section">
+                                <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
+                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
+                                    <ul>
+                                        <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
+                                            <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
+                                        </li>
+                                    </ul>
+                                </th:block>
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in pdf format</h3>
+                                <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error': ''">
+                                    <th:block th:if="${#fields.hasErrors('attachment')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
+                                    </th:block>
+                                    <input type="file" id="attachment" class="inputfile" name="attachment">
+                                    <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                                    <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="action" value="postResponse">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-half">
+                                    <button class="govuk-button govuk-!-margin-0">Post response</button>
+                                </div>
+                                <div class="govuk-grid-column-one-half alignright">
+                                    <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-link">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </th:block>
+                    <th:block th:if="${query.isClosed()}">
+                        <div class="message-alert">
+                            <p class="govuk-body">This query has been marked as resolved by
+                                <th:block th:text="${query.getClosedBy().getName()}">Name</th:block> on
+                                <th:block th:text="${#temporals.format(query.getClosedDate(), 'd MMMM yyyy')}">Date</th:block>.</p>
+                            <p class="govuk-body">If you wish to follow this up, please raise a new query.</p>
+                        </div>
+                    </th:block>
+                </div>
+            </th:block>
+        </div>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

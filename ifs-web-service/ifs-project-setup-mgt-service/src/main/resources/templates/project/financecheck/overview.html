@@ -1,41 +1,40 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body class="competition-management project-management finance-checks-overview">
+<body class="govuk-template__body competition-management project-management finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.overview.projectId})}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.overview.projectId})}" />
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.applicationId} : ${model.overview.projectName}|,size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.applicationId} : ${model.overview.projectName}|,size='govuk-heading-xl'" />
+            </div>
+            <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
+                <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance checks</h2>
+            </div>
         </div>
-        <div class="column-third alignright extra-margin">
-            <h2 class="bold-small blue-block">Finance checks</h2>
-        </div>
-    </div>
 
-    <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
+        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-    <h3 class="heading-medium">Finances summary</h3>
-    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        <h3 class="govuk-heading-m">Finances summary</h3>
+        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
 
-    <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
+        <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
 
-    <h3 class="heading-medium">Project cost breakdown</h3>
-    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
-
-
-
-</main>
-
+        <h3 class="govuk-heading-m">Project cost breakdown</h3>
+        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

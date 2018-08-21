@@ -19,17 +19,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 @Service
 public class ReviewInviteRestServiceImpl extends BaseRestService implements ReviewInviteRestService {
 
-    private static final String assessmentPanelInviteRestUrl = "/assessment-panel-invite";
+    private static final String ASSESSMENT_PANEL_INVITE_REST_URL = "/assessment-panel-invite";
 
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-all-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-all-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-all-invites-to-resend", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-all-invites-to-resend", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
@@ -39,12 +39,12 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "send-all-invites", competitionId), assessorInviteSendResource, Void.class);
+        return postWithRestResult(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "send-all-invites", competitionId), assessorInviteSendResource, Void.class);
     }
 
     @Override
     public RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "resend-invites");
+        String baseUrl = format("%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "resend-invites");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
@@ -54,7 +54,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-created-invites", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-created-invites", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -64,12 +64,12 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return postWithRestResult(format("%s/%s", assessmentPanelInviteRestUrl, "invite-users"), existingUserStagedInvites, Void.class);
+        return postWithRestResult(format("%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "invite-users"), existingUserStagedInvites, Void.class);
     }
 
     @Override
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-available-assessors", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -79,7 +79,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-available-assessor-ids", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-available-assessor-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -89,7 +89,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<List<ReviewParticipantResource>> getAllInvitesByUser(long userId) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-all-invites-by-user", userId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-all-invites-by-user", userId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -99,7 +99,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-non-accepted-assessor-invite-ids", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-non-accepted-assessor-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -111,7 +111,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
                                                                                 List<ParticipantStatusResource> participantStatuses) {
-        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "get-invitation-overview", competitionId);
+        String baseUrl = format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "get-invitation-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -124,27 +124,27 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<ReviewInviteResource> openInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "open-invite", inviteHash), ReviewInviteResource.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "open-invite", inviteHash), ReviewInviteResource.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash) {
-        return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "accept-invite", inviteHash), Void.class);
+        return postWithRestResult(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "accept-invite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Void> rejectInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "reject-invite", inviteHash), Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "reject-invite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "check-existing-user", inviteHash), Boolean.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "check-existing-user", inviteHash), Boolean.class);
     }
 
     @Override
     public RestResult<Void> deleteInvite(String email, long competitionId) {
-        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "delete-invite");
+        String baseUrl = format("%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "delete-invite");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("competitionId", competitionId)
@@ -155,7 +155,7 @@ public class ReviewInviteRestServiceImpl extends BaseRestService implements Revi
 
     @Override
     public RestResult<Void> deleteAllInvites(long competitionId) {
-        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "delete-all-invites");
+        String baseUrl = format("%s/%s", ASSESSMENT_PANEL_INVITE_REST_URL, "delete-all-invites");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("competitionId", competitionId);

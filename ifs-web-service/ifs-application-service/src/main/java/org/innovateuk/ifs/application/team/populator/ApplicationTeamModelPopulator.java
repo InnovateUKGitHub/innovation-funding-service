@@ -64,10 +64,17 @@ public class ApplicationTeamModelPopulator {
         boolean isComplete = isComplete(applicationId, loggedInUserId, questionId);
         boolean allReadonly = isComplete;
 
-        return new ApplicationTeamViewModel(applicationResource.getId(), questionId, applicationResource.getName(),
+        return new ApplicationTeamViewModel(
+                applicationResource.getId(),
+                questionId,
+                applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin, !isCompetitionOpen(applicationResource),
-                isComplete, userIsLeadApplicant, allReadonly);
+                userIsLeadApplicant,
+                applicationCanBegin,
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
+                isComplete,
+                userIsLeadApplicant,
+                allReadonly);
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
@@ -169,6 +176,10 @@ public class ApplicationTeamModelPopulator {
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {
         return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
+    }
+
+    private boolean isApplicationSubmitted(ApplicationResource applicationResource) {
+        return applicationResource.isSubmitted();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {
