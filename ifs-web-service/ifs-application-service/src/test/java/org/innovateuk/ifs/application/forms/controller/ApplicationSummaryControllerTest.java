@@ -230,6 +230,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false,
+                false,
                 false);
     }
 
