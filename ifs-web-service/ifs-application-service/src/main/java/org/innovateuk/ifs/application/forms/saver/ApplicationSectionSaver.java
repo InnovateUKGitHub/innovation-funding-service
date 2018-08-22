@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -35,29 +35,38 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
-    @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
+    private UserRestService userRestService;
     private SectionService sectionService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
+    private QuestionRestService questionRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
     private OverheadFileSaver overheadFileSaver;
-
-    @Autowired
     private ApplicationSectionFinanceSaver financeSaver;
+    private ApplicationQuestionFileSaver fileSaver;
+    private ApplicationQuestionNonFileSaver nonFileSaver;
+
+    public ApplicationSectionSaver(OrganisationService organisationService,
+                                   FinanceViewHandlerProvider financeViewHandlerProvider,
+                                   UserRestService userRestService,
+                                   SectionService sectionService,
+                                   QuestionRestService questionRestService,
+                                   CookieFlashMessageFilter cookieFlashMessageFilter,
+                                   OverheadFileSaver overheadFileSaver,
+                                   ApplicationSectionFinanceSaver financeSaver,
+                                   ApplicationQuestionFileSaver fileSaver,
+                                   ApplicationQuestionNonFileSaver nonFileSaver) {
+        this.organisationService = organisationService;
+        this.financeViewHandlerProvider = financeViewHandlerProvider;
+        this.userRestService = userRestService;
+        this.sectionService = sectionService;
+        this.questionRestService = questionRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.overheadFileSaver = overheadFileSaver;
+        this.financeSaver = financeSaver;
+        this.fileSaver = fileSaver;
+        this.nonFileSaver = nonFileSaver;
+    }
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
                                                   Long competitionId,
@@ -68,7 +77,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                                                   HttpServletResponse response, Boolean validFinanceTerms) {
 
         Long applicationId = application.getId();
-        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
         SectionResource selectedSection = sectionService.getById(sectionId);
         Map<String, String[]> params = request.getParameterMap();
         boolean ignoreEmpty = !isMarkSectionRequest(params);
@@ -80,8 +89,15 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
-            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
+
+
+            List<QuestionResource> questions = selectedSection.getQuestions()
+                    .stream()
+                    .map(questionId -> questionRestService.findById(questionId).getSuccess())
+                    .collect(Collectors.toList());
+
+            errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
+            errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRole.getId()));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
             ValidationMessages saveErrors = financeViewHandlerProvider.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);

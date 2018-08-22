@@ -15,6 +15,7 @@ import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -59,7 +60,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
     private ReviewRestService reviewRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -96,10 +97,10 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn(restSuccess(asList(participants.get(0))));
+        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn(restSuccess(asList(participants.get(1))));
+        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn(restSuccess(asList(participants.get(2))));
+        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn(restSuccess(asList(participants.get(3))));
 
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
@@ -112,13 +113,13 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionRestService, reviewRestService, applicationService, processRoleService, organisationService);
+        InOrder inOrder = inOrder(competitionRestService, reviewRestService, applicationService, userRestService, organisationService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
 
         assessmentReviews.forEach(assessmentReview -> {
             inOrder.verify(applicationService).getById(assessmentReview.getApplication());
-            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessmentReview.getApplication());
+            inOrder.verify(userRestService).findProcessRole(assessmentReview.getApplication());
             inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
         });
 
@@ -160,7 +161,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);
-        verifyZeroInteractions(processRoleService);
+        verifyZeroInteractions(userRestService);
         verifyZeroInteractions(organisationService);
 
         AssessorCompetitionForPanelDashboardViewModel model = (AssessorCompetitionForPanelDashboardViewModel) result.getModelAndView().getModel().get("model");
