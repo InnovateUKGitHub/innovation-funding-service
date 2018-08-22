@@ -38,25 +38,29 @@
           </div>
         </div>
         */-->
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                Users
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a th:href="active" th:text="|Active (${model.activeCount})|" th:attr="aria-selected=${model.tab == 'active' ? true : false}" class="govuk-tabs__tab">Active (38)</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" th:attr="aria-selected=${model.tab == 'inactive' ? true : false}" class="govuk-tabs__tab">Inactive (10)</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="pending" th:text="|Pending (${model.pendingCount})|" th:attr="aria-selected=${model.tab == 'pending' ? true : false}" class="govuk-tabs__tab">Pending (10)</a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <th:block th:if="${model.tab == 'active'}" th:insert="fragments/admin-users :: active(users=${model.activeUsers}, count=${model.activeCount}, pagination=${model.activeUsersPagination})" />
 
-        <ul class="govuk-list inline-nav cf">
-          <li th:classappend="${model.tab == 'active'} ? 'selected'">
-            <a th:href="active" th:text="|Active (${model.activeCount})|" class="govuk-link">Active (38)</a>
-          </li>
-          <li th:classappend="${model.tab == 'inactive'} ? 'selected'">
-            <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" class="govuk-link">Inactive (10)</a>
-          </li>
-          <li th:classappend="${model.tab == 'pending'} ? 'selected'">
-            <a th:href="pending" th:text="|Pending (${model.pendingCount})|" class="govuk-link">Pending (10)</a>
-          </li>
-        </ul>
+                <th:block th:if="${model.tab == 'inactive'}" th:insert="fragments/admin-users :: inactive(users=${model.inactiveUsers}, count=${model.inactiveCount}, pagination=${model.inactiveUsersPagination})" />
 
-        <th:block th:if="${model.tab == 'active'}" th:insert="fragments/admin-users :: active(users=${model.activeUsers}, count=${model.activeCount}, pagination=${model.activeUsersPagination})" />
-
-        <th:block th:if="${model.tab == 'inactive'}" th:insert="fragments/admin-users :: inactive(users=${model.inactiveUsers}, count=${model.inactiveCount}, pagination=${model.inactiveUsersPagination})" />
-
-        <th:block th:if="${model.tab == 'pending'}" th:insert="fragments/admin-users :: pending(invites=${model.pendingInvites}, count=${model.pendingCount}, pagination=${model.pendingInvitesPagination})" />
-
+                <th:block th:if="${model.tab == 'pending'}" th:insert="fragments/admin-users :: pending(invites=${model.pendingInvites}, count=${model.pendingCount}, pagination=${model.pendingInvitesPagination})" />
+            </section>
+        </div>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

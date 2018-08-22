@@ -49,116 +49,125 @@
             </div>
         </div>
 
-        <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-            <li class="selected">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
-                   th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
-            </li>
-            <li class="not-selected">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
-                   th:text="${'Allocated (' + model.allocatedApplications + ')' }"></a>
-            </li>
-        </ul>
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                Invite assessors to interview panel
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+                       th:text="${'Applications (' + model.unallocatedApplications + ')' }"
+                       aria-selected="true"
+                       class="govuk-tabs__tab"></a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+                       th:text="${'Allocated (' + model.allocatedApplications + ')' }"
+                       class="govuk-tabs__tab"></a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
+                    <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
+                </div>
+                <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
-            <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
-        </div>
-        <div data-selection-limit-exceeded-block=""></div>
-
-        <div class="govuk-body govuk-grid-row sorting">
-            <div class="column-one">
-                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
-            </div>
-        </div>
-
-        <form method="POST"
-              th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}/addSelected(competitionId=${model.competitionId}, userId=${model.user.id})}"
-              th:object="${interviewAllocationSelectionForm}"
-              data-multipage-select=""
-              autocomplete="off"
-              th:attr="data-total-checkboxes=${model.pagination.totalCount}">
-
-            <div class="govuk-grid-row sorting">
-                <div class="govuk-grid-column-one-half select-all">
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input type="checkbox"
-                                   class="govuk-checkboxes__input"
-                                   data-select-all=""
-                                   id="select-all-check"
-                                   th:checked="${interviewAllocationSelectionForm.getAllSelected()}"
-                                   th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
-                            <label for="select-all-check"
-                                   class="govuk-label govuk-checkboxes__label">
-                                Select all applications
-                            </label>
-                        </div>
+                <div class="govuk-body govuk-grid-row sorting">
+                    <div class="column-one">
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
                     </div>
-                    <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
-                    </span>
                 </div>
-                <div class="govuk-grid-column-one-half select-all alignright">
-                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
-                        Allocate
-                    </button>
-                </div>
-            </div>
 
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Select</th>
-                        <th class="govuk-table__header width-80" scope="col">Application number</th>
-                        <th class="govuk-table__header" scope="col">Project title</th>
-                        <th class="govuk-table__header" scope="col">Lead organisation</th>
-                        <th class="govuk-table__header alignright" scope="col">Assessors</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="row, index : ${model.rows}">
-                        <td class="govuk-table__cell">
+                <form method="POST"
+                      th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}/addSelected(competitionId=${model.competitionId}, userId=${model.user.id})}"
+                      th:object="${interviewAllocationSelectionForm}"
+                      data-multipage-select=""
+                      autocomplete="off"
+                      th:attr="data-total-checkboxes=${model.pagination.totalCount}">
+
+                    <div class="govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half select-all">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
                                     <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           th:id="|assessor-row-${index.count}|"
-                                           th:field="*{selectedIds}"
-                                           th:value="${row.id}"/>
-                                    <label th:for="|assessor-row-${index.count}|"
+                                           data-select-all=""
+                                           id="select-all-check"
+                                           th:checked="${interviewAllocationSelectionForm.getAllSelected()}"
+                                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                                    <label for="select-all-check"
                                            class="govuk-label govuk-checkboxes__label">
-                                        <span class="govuk-visually-hidden">Add</span>
+                                        Select all applications
                                     </label>
                                 </div>
                             </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
-                               th:text="${row.id}"
-                               class="govuk-link">123
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <span th:text="${row.name}">project name</span>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <span th:text="${row.leadOrganisation}">Lead organisation</span>
-                        </td>
-                        <td class="govuk-table__cell alignright">
-                            <span th:text="${row.numberOfAssessors}">1</span>
-                        </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(model.rows)}">
-                        <td colspan="5">No available applications found.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </form>
+                            <span class="govuk-hint">
+                        <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
+                    </span>
+                        </div>
+                        <div class="govuk-grid-column-one-half select-all alignright">
+                            <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
+                                Allocate
+                            </button>
+                        </div>
+                    </div>
 
-        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+                    <div class="table-overflow">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Select</th>
+                                <th class="govuk-table__header width-80" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                <th class="govuk-table__header alignright" scope="col">Assessors</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="row, index : ${model.rows}">
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input type="checkbox"
+                                                   class="govuk-checkboxes__input"
+                                                   th:id="|assessor-row-${index.count}|"
+                                                   th:field="*{selectedIds}"
+                                                   th:value="${row.id}"/>
+                                            <label th:for="|assessor-row-${index.count}|"
+                                                   class="govuk-label govuk-checkboxes__label">
+                                                <span class="govuk-visually-hidden">Add</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
+                                       th:text="${row.id}"
+                                       class="govuk-link">123
+                                    </a>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <span th:text="${row.name}">project name</span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <span th:text="${row.leadOrganisation}">Lead organisation</span>
+                                </td>
+                                <td class="govuk-table__cell alignright">
+                                    <span th:text="${row.numberOfAssessors}">1</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(model.rows)}">
+                                <td colspan="5">No available applications found.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+
+                <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+            </section>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

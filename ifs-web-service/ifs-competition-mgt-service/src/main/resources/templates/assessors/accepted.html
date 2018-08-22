@@ -48,66 +48,73 @@
             <dd th:text="${model.innovationArea}">Agriculture and food</dd>
         </dl>
 
-        <ul class="govuk-list inline-nav">
-            <li class="not-selected">
-                <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-link">Find</a>
-            </li>
-            <li class="not-selected">
-                <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-link">Invite</a>
-            </li>
-            <li class="not-selected">
-                <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-link">Pending and declined</a>
-            </li>
-            <li class="selected">
-                <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-link">Accepted</a>
-            </li>
-        </ul>
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                Invite assessors
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Pending and declined</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-tabs__tab" aria-selected="true">Accepted</a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-three-quarters">
+                        <h2 class="govuk-heading-s govuk-!-margin-top-0">View assessors who have accepted the invite to assess this competition.</h2>
+                        <br>
+                    </div>
+                </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">View assessors who have accepted the invite to assess this competition.</h2>
-                <br>
-            </div>
+                <div class="govuk-body govuk-grid-row sorting">
+                    <div class="govuk-grid-column-one-half">
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
+                    </div>
+                </div>
+
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Assessor name</th>
+                        <th class="govuk-table__header" scope="col">Type</th>
+                        <th class="govuk-table__header" scope="col">Innovation area</th>
+                        <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
+                        <td class="govuk-table__cell">
+                            <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
+                               th:text="${assessor.name}"
+                               class="govuk-link">John Barnes
+                            </a>
+                            <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
+                        <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
+                        <td class="govuk-table__cell">
+                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                            <span class="no" th:unless="${assessor.compliant}">No</span>
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.assessors)}">
+                        <td class="govuk-table__cell" colspan="4">There are no assessors invited to this competition.</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+            </section>
         </div>
 
-        <div class="govuk-body govuk-grid-row sorting">
-            <div class="govuk-grid-column-one-half">
-                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
-            </div>
-        </div>
-
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Assessor name</th>
-                <th class="govuk-table__header" scope="col">Type</th>
-                <th class="govuk-table__header" scope="col">Innovation area</th>
-                <th class="govuk-table__header" scope="col">Contract and DOI</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
-                <td class="govuk-table__cell">
-                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
-                       th:text="${assessor.name}"
-                       class="govuk-link">John Barnes
-                    </a>
-                    <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
-                </td>
-                <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
-                <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
-                <td class="govuk-table__cell">
-                    <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                    <span class="no" th:unless="${assessor.compliant}">No</span>
-                </td>
-            </tr>
-            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.assessors)}">
-                <td class="govuk-table__cell" colspan="4">There are no assessors invited to this competition.</td>
-            </tr>
-            </tbody>
-        </table>
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

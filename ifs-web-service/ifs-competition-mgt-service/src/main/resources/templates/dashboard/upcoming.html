@@ -16,9 +16,9 @@
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
         </form>
 
-        <div class="govuk-tabs" data-module="tabs">
+        <div class="govuk-tabs">
             <h2 class="govuk-tabs__title">
-                Non-IFS competitions
+                Upcoming competitions
             </h2>
             <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, tabs=${model.tabs})" />
 

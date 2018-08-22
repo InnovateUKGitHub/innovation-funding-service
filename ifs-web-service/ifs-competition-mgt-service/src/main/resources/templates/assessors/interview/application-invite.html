@@ -46,70 +46,77 @@
                     <dd th:text="${model.innovationArea}">Agriculture and food</dd>
                 </dl>
 
-                <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-                    <li class="not-selected">
-                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
-                    </li>
-                    <li class="selected">
-                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
-                    </li>
-                    <li class="not-selected">
-                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
-                    </li>
-                </ul>
+                <div class="govuk-tabs">
+                    <h2 class="govuk-tabs__title">
+                        Invite assessors to interview panel
+                    </h2>
+                    <ul class="govuk-tabs__list">
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab" aria-selected="true">Invite</a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="govuk-tabs__tab">View status</a>
+                        </li>
+                    </ul>
+                    <section class="govuk-tabs__panel">
+                        <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
 
-                <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
+                            <div class="govuk-grid-row sorting">
+                                <div class="govuk-grid-column-one-half">
+                                    <span class="govuk-body govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                                    <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">applications on invite list</span>
+                                </div>
 
-                    <div class="govuk-grid-row sorting">
-                        <div class="govuk-grid-column-one-half">
-                            <span class="govuk-body govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                            <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">applications on invite list</span>
-                        </div>
+                                <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
+                                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-bottom-0">Review and send invites</a>
+                                </div>
+                            </div>
 
-                        <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-bottom-0">Review and send invites</a>
-                        </div>
-                    </div>
+                            <div class="table-overflow">
+                                <table class="govuk-table">
+                                    <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                                        <th class="govuk-table__header" scope="col">Project title</th>
+                                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                        <td scope="col" class="govuk-table__header alignright">
+                                            <button name="removeAll" class="button-clear alignright"
+                                                    th:if="${!#lists.isEmpty(model.applications)}">
+                                                Remove all
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="govuk-table__body">
+                                    <tr class="govuk-table__row" th:each="app : ${model.applications}">
+                                        <td class="govuk-table__cell">
+                                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
+                                               th:text="${app.applicationId}"
+                                               class="govuk-link">123
+                                            </a>
+                                        </td>
+                                        <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
+                                        <td class="govuk-table__cell alignright">
+                                            <button class="button-clear alignright" name="remove" th:value="${app.applicationId}">
+                                                <span class="govuk-visually-hidden" th:text="${app.applicationName}">John Barnes </span>Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.applications)}">
+                                        <td class="govuk-table__cell" colspan="5">There are no applications to be invited to this panel.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                    </section>
+                </div>
 
-                    <div class="table-overflow">
-                        <table class="govuk-table">
-                            <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th scope="col" class="govuk-table__header width-80">Application number</th>
-                                <th class="govuk-table__header" scope="col">Project title</th>
-                                <th class="govuk-table__header" scope="col">Lead organisation</th>
-                                <td scope="col" class="govuk-table__header alignright">
-                                    <button name="removeAll" class="button-clear alignright"
-                                            th:if="${!#lists.isEmpty(model.applications)}">
-                                        Remove all
-                                    </button>
-                                </td>
-                            </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row" th:each="app : ${model.applications}">
-                                <td class="govuk-table__cell">
-                                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
-                                       th:text="${app.applicationId}"
-                                       class="govuk-link">123
-                                    </a>
-                                </td>
-                                <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
-                                <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
-                                <td class="govuk-table__cell alignright">
-                                    <button class="button-clear alignright" name="remove" th:value="${app.applicationId}">
-                                        <span class="govuk-visually-hidden" th:text="${app.applicationName}">John Barnes </span>Remove
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.applications)}">
-                                <td class="govuk-table__cell" colspan="5">There are no applications to be invited to this panel.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </form>
-                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>
         </div>

@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
+<th:block th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
     <ul class="govuk-tabs__list">
         <li id="section-1" class="govuk-tabs__list-item" th:if="${tabs.live()}">
             <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'live' ? true : false}"></a>
@@ -44,7 +44,7 @@
             <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'previous' ? true : false}"></a>
         </li>
     </ul>
-</div>
+</th:block>
 
 <div th:fragment="dashboard-row">
     <div class="govuk-grid-column-one-third">

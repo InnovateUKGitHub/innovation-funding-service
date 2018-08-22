@@ -14,16 +14,26 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External user list',size='govuk-heading-l'" />
 
-        <ul class="govuk-list inline-nav cf">
-            <li>
-                <a th:href="@{/admin/users/created}">Users with account</a>
-            </li>
-            <li th:classappend="selected">
-                <a th:href="@{/admin/invites}" class="govuk-link">Invited users</a>
-            </li>
-        </ul>
-
-        <th:block th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                External users
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" th:href="@{/admin/users/created}">
+                        Users with account
+                    </a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" th:href="@{/admin/invites}" aria-selected="true">
+                        Invited users
+                    </a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <th:block th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+            </section>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

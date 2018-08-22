@@ -52,7 +52,7 @@
                     </div>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
-                            <a href="?" class="govuk-link">Clear</a>
+                            <a href="?" class="button-clear">Clear</a>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
                             <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="govuk-button govuk-!-margin-0">Search</button>
@@ -61,20 +61,24 @@
                 </fieldset>
             </div>
 
-            <ul class="govuk-list inline-nav cf" th:if="${mode == 'search'}">
-                <li th:classappend="${tab == 'users' ? 'selected' : ''}">
-                    <button type="submit" name="active" class="button-clear">Active accounts</button>
-                </li>
-                <li th:classappend="${tab == 'invites' ? 'selected' : ''}">
-                    <button type="submit" name="pending" class="button-clear">Pending accounts</button>
-                </li>
-            </ul>
+            <div th:if="${mode == 'search'}" class="govuk-tabs">
+                <h2 class="govuk-tabs__title">
+                    External users
+                </h2>
+                <ul class="govuk-tabs__list">
+                    <li class="govuk-tabs__list-item">
+                        <button type="submit" name="active" class="govuk-tabs__tab" th:attr="aria-selected=${tab == 'users' ? true : false}">Active accounts</button>
+                    </li>
+                    <li class="govuk-tabs__list-item">
+                        <button type="submit" name="pending" class="govuk-tabs__tab" th:attr="aria-selected=${tab == 'invites' ? true : false}">Pending accounts</button>
+                    </li>
+                </ul>
+                <section class="govuk-tabs__panel">
+                    <th:block th:unless="${tab == 'invites'}" th:insert="fragments/external-users :: user-list(users=${users})" />
+                    <th:block th:if="${tab == 'invites'}" th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+                </section>
+            </div>
         </form>
-
-        <th:block th:if="${mode == 'search'}">
-            <th:block th:unless="${tab == 'invites'}" th:insert="fragments/external-users :: user-list(users=${users})" />
-            <th:block th:if="${tab == 'invites'}" th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
-        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
