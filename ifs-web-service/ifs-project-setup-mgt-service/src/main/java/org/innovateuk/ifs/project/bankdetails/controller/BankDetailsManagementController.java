@@ -63,6 +63,9 @@ public class BankDetailsManagementController {
             @P("projectId")@PathVariable("projectId") Long projectId,
             UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(COMP_ADMIN));
+        final ProjectResource project = projectService.getById(projectId);
+        model.addAttribute("projectName", project != null ? project.getName() : null);
+
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);

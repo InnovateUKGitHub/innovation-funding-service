@@ -91,7 +91,8 @@ public class ProjectSpendProfileApprovalController {
 
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
+        Long applicationId = project.getApplication();
+        ApplicationResource application = applicationService.getById(applicationId);
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
@@ -99,7 +100,7 @@ public class ProjectSpendProfileApprovalController {
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources);
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources, applicationId, project.getName());
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {

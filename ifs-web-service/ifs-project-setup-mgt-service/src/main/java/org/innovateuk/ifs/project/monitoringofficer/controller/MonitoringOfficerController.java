@@ -162,7 +162,8 @@ public class MonitoringOfficerController {
 
     private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId, boolean editMode, boolean existingMonitoringOfficer, boolean editable) {
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(projectResource.getApplication());
+        Long applicationId = projectResource.getApplication();
+        ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         String projectManagerName = getProjectManagerName(projectResource);
@@ -173,7 +174,7 @@ public class MonitoringOfficerController {
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new MonitoringOfficerViewModel(projectId, projectResource.getName(),
+        return new MonitoringOfficerViewModel(projectId, projectResource.getName(), applicationId,
                 innovationAreas, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, existingMonitoringOfficer, editMode, editable);
     }

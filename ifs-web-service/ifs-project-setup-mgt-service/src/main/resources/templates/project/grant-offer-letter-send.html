@@ -17,9 +17,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId}: $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId}: ${model.competitionSummary.competitionName}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='govuk-heading-xl'" />
-        </th:block>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
