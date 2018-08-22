@@ -72,7 +72,7 @@ function startPybot() {
     fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs --xunit \
+    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -85,7 +85,7 @@ function startPybot() {
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
+    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --xunit --name ${targetDir} ${1} &
 }
 
 function runTests() {
