@@ -28,13 +28,13 @@
 <main id="content">
 
     <!-- HARDCODED PROTOTYPE HTML -->
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle='Home and industrial efficiency programme', size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle='Home and industrial efficiency programme', size='govuk-heading-xl'" />
 
-    <h2 class="heading-medium">Key statistics</h2>
-    <div class="grid-row">
+    <h2 class="govuk-heading-m">Key statistics</h2>
+    <div class="govuk-grid-row">
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large lead-count">1</span><br>
+                <span class="govuk-heading-l lead-count">1</span><br>
                 <small>Innovation leads added</small>
             </div>
         </div>
@@ -48,7 +48,7 @@
         <dd>John Doe</dd>
     </dl>
     <div class="extra-margin">
-        <ul class="inline-nav cf">
+        <ul class="govuk-list inline-nav cf">
           <li class="selected">
             <a href="/prototypes/192-manage-innovation-leads-find.html">Find</a>
           </li>
@@ -57,16 +57,16 @@
           </li>
         </ul>
 
-        <p>Choose a tab to find, add and see an overview of innovation leads.</p>
-        <p class="heading-small">Find innovation leads and add them to this competition.</p>
+        <p class="govuk-body">Choose a tab to find, add and see an overview of innovation leads.</p>
+        <p class="govuk-heading-s">Find innovation leads and add them to this competition.</p>
 
         <!-- filter -->
         <form class="filter-form extra-margin">
             <div class="search-filters">
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-two-thirds">
                         <label for="filter">Innovation Area</label>
-                        <select id="filter" class="form-control extra-margin-bottom">
+                        <select id="filter" class="govuk-select govuk-!-margin-bottom-6">
                             <option value="any">Any</option>
                             <option value="Materials, process and manufacturing design technologies">Materials, process and manufacturing design technologies</option>
                             <option value="Digital manufacturing">Digital manufacturing</option>
@@ -75,8 +75,8 @@
                         </select>
                         <a href="/prototypes/192-manage-innovation-leads-find.html">Clear all filters</a>
                     </div>
-                    <div class="column-third">
-                        <button class="button" id="filter-button">Filter</button>
+                    <div class="govuk-grid-column-one-third">
+                        <button class="govuk-button" id="filter-button">Filter</button>
                     </div>
                 </div>
             </div>
@@ -84,28 +84,28 @@
 
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <!-- list -->
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <p>
-                        <span class="heading-xlarge total-count"></span>
-                        <span class="heading-small">Innovation leads</span>
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
+                    <p class="govuk-body">
+                        <span class="govuk-heading-xl total-count"></span>
+                        <span class="govuk-heading-s">Innovation leads</span>
                     </p>
                 </div>
             </div>
             <div class="table-overflow">
                 <table class="stakeholder-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Innovation lead name</th>
-                            <th scope="col">Innovation area</th>
-                            <th scope="col"><span class="visuallyhidden">Action</span></th>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Innovation lead name</th>
+                            <th class="govuk-table__header" scope="col">Innovation area</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Alexis Kinney</td>
-                            <td>Digital manufacturing</td>
-                            <td><button class="button button-secondary no-margin">Add</button></td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Alexis Kinney</td>
+                            <td class="govuk-table__cell">Digital manufacturing</td>
+                            <td class="govuk-table__cell"><button class="govuk-button button-secondary govuk-!-margin-0">Add</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -243,7 +243,7 @@ jQuery(document).ready(function(){
     }
     function lastRow(){
         if(jQuery('.stakeholder-table tbody tr').length === 0){
-            jQuery('.stakeholder-table tbody').append('<tr><td colspan="3">All innovation leads have been added to this competition.</td></tr>')
+            jQuery('.stakeholder-table tbody').append('<tr class="govuk-table__row"><td colspan="3">All innovation leads have been added to this competition.</td></tr>')
         }
     }
 
@@ -254,7 +254,7 @@ jQuery(document).ready(function(){
         if(this.selected === false){
             var name = this.name;
             var area = this.area;
-            var html = '<tr><td>' + name + '</td><td>' + area + '</td><td><button type="button" class="button button-secondary no-margin">Add</button></td></tr>';
+            var html = '<tr class="govuk-table__row"><td class="govuk-table__cell">' + name + '</td><td class="govuk-table__cell">' + area + '</td><td class="govuk-table__cell"><button type="button" class="govuk-button button-secondary govuk-!-margin-0">Add</button></td></tr>';
             tableRowContainer.append(html);
         }
     });

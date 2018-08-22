@@ -1,78 +1,77 @@
 <!DOCTYPE html>
-<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Applications - ${model.competitionName}|" />
     </head>
 
-    <body class="dashboard-internal wide-page">
-       <th:block th:insert="fragments/layout :: body-start" />
-       <th:block th:insert="fragments/layout :: global-header" />
+    <body class="govuk-template__body dashboard-internal wide-page">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+        <div class="govuk-width-container">
+           <th:block th:insert="fragments/layout :: phase-banner" />
+           <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-            <h2 class="heading-medium">Key statistics</h2>
-            <ul class="grid-row">
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsInvited}">10</span>
-                        <br />
-                        <small>Assessors invited</small>
-                    </div>
-                </li>
+           <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.applicationsInProgress}">6</span>
-                        <br />
-                        <small>Applications beyond 50%</small>
-                    </div>
-                </li>
+                <h2 class="govuk-heading-m">Key statistics</h2>
+                <ul class="govuk-list govuk-grid-row">
+                    <li class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">10</span>
+                            <small>Assessors invited</small>
+                        </div>
+                    </li>
 
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.applicationsSubmitted}">4</span>
-                        <br />
-                        <small>Applications submitted</small>
-                    </div>
-                </li>
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.ineligibleApplications}">0</span>
-                        <br />
-                        <small>Ineligible applications</small>
-                    </div>
-                </li>
-            </ul>
+                    <li class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInProgress}">6</span>
+                            <small>Applications beyond 50%</small>
+                        </div>
+                    </li>
 
-            <h2 class="heading-medium">Applications navigation</h2>
+                    <li class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsSubmitted}">4</span>
+                            <small>Applications submitted</small>
+                        </div>
+                    </li>
+                    <li class="govuk-grid-column-one-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.ineligibleApplications}">0</span>
+                            <small>Ineligible applications</small>
+                        </div>
+                    </li>
+                </ul>
 
-            <ul class="link-list">
+                <h2 class="govuk-heading-m">Applications navigation</h2>
 
-                <li th:unless="${model.innovationLeadView}">
-                    <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
-                </li>
+                <ul class="govuk-list link-list">
 
-                <li>
-                    <a class="" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
-                </li>
+                    <li th:unless="${model.innovationLeadView}">
+                        <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
+                    </li>
 
-                <!--/* TODO: Implement non submitted applications - INFUND-7372
+                    <li>
+                        <a class="" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
+                    </li>
 
-                <li>
-                    <a class="" href="#">Non submitted applications</a>
-                </li>
+                    <!--/* TODO: Implement non submitted applications - INFUND-7372
 
-                */-->
-                <li>
-                    <a class="" th:href="@{/competition/{cid}/applications/ineligible(cid=${model.competitionId})}">Ineligible applications</a>
-                </li>
-            </ul>
+                    <li>
+                        <a class="" href="#">Non submitted applications</a>
+                    </li>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                    */-->
+                    <li>
+                        <a class="" th:href="@{/competition/{cid}/applications/ineligible(cid=${model.competitionId})}">Ineligible applications</a>
+                    </li>
+                </ul>
 
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
     </body>

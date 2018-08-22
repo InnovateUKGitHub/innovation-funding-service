@@ -39,7 +39,10 @@ public class OrganisationSizePopulator extends AbstractFormInputPopulator<Organi
         });
 
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccess();
-        viewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
+
+        if (applicationFinanceResource != null) {
+            viewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
+        }
     }
 
     @Override

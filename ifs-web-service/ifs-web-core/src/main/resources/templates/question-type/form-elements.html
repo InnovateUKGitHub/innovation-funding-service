@@ -3,13 +3,13 @@
 
 <!-- =========================== Form label =========================== -->
 <th:block th:fragment="form-label (name)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+    <label class="govuk-label" th:if="${name}" th:for="${id}">
         <span th:text="${name}"></span>
     </label>
 </th:block>
 <!-- =========================== Form label hidden =========================== -->
 <th:block th:fragment="form-label-hidden (name,id)">
-    <label class="form-label visuallyhidden"
+    <label class="govuk-label govuk-visually-hidden"
     th:if="${name}"
     th:for="${id}"
     th:text="${name}"
@@ -18,49 +18,52 @@
 <!-- =========================== Form validation messages =========================== -->
 <th:block th:fragment="form-validation-messages (id)">
     <th:block th:if="${(form != null) and #fields.hasErrors('${form.formInput[__${id}__]}')}">
-        <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </th:block>
 </th:block>
 
 <th:block th:fragment="form-validation-custom-messages (errorId)">
     <th:block th:if="${(form != null) and #fields.hasErrors('{__${errorId}__}')}">
-        <p class="error-message no-margin" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
     </th:block>
 </th:block>
 <!-- ===========================Form hint =========================== -->
 <th:block th:fragment="form-hint (hint)">
-    <span class="form-hint" th:if="${hint}" ifs:utext="${hint}"></span>
+    <span class="govuk-hint" th:if="${hint}" ifs:utext="${hint}"></span>
 </th:block>
 
 <!-- ========================= Form Guidance =========================== -->
 
 <th:block th:fragment="form-guidance (guidable)">
-    <details th:if="${guidable?.getGuidanceTitle()}">
-        <summary>
-            <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
+    <details th:if="${guidable?.getGuidanceTitle()}"
+             class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text"
+                  th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="govuk-details__text wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </th:block>
 
 <!-- ========================= Form Guidance (Appendix) ===================== -->
 
 <th:block th:fragment="form-guidance-appendix (formInput)">
-    <details th:if="${formInput?.guidanceTitle}">
-        <summary>
-            <span class="summary" th:text="${formInput.guidanceTitle}"/>
+    <details th:if="${formInput?.guidanceTitle}"
+             class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text" th:text="${formInput.guidanceTitle}"/>
         </summary>
-        <div class="panel wysiwyg-styles">
+        <div class="govuk-details__text wysiwyg-styles">
             <th:block ifs:utext="${formInput.guidanceAnswer}">
             </th:block>
 
-            <h4 class="heading-small no-margin">Accepted appendix file types</h4>
+            <h4 class="govuk-heading-s govuk-!-margin-0">Accepted appendix file types</h4>
             <ul>
                 <li th:text="${allowedFileType.getDisplayName()}" th:each="allowedFileType : ${formInput.allowedFileTypes}">
                     PDF
                 </li>
             </ul>
-            <p>It must be less than 1MB in size.</p>
+            <p class="govuk-body">It must be less than 1MB in size.</p>
         </div>
     </details>
 </th:block>
@@ -68,7 +71,7 @@
 <!-- ========================= input field type text =========================== -->
 
 <th:block th:fragment="form-textinput (id, response)">
-    <input class="form-control"
+    <input class="govuk-input"
            th:readonly="${readonly}"
            type="text"
            th:id="${id}"
@@ -84,7 +87,7 @@
 <!-- ========================= input field type number =========================== -->
 
 <th:block th:fragment="form-number (id, response)">
-    <input class="form-control"
+    <input class="govuk-input"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
@@ -104,13 +107,13 @@
     however with the possibility to make 1 field readonly (i.e. day) we need to add the class
     worst case all three of them are readonly and there is a class that does nothing.
       */-->
-    <input class="form-control width-extra-small"
+    <input class="govuk-input govuk-input--width-3"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
            th:field="*{__${field}__}"
-           th:errorclass="form-control-error"
+           th:errorclass="govuk-input--error"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -121,7 +124,7 @@
 <!-- ========================= empty input field type number =========================== -->
 
 <th:block th:fragment="form-number-extra-small-empty (id, field)">
-    <input class="form-control width-extra-small"
+    <input class="govuk-input govuk-input--width-3"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"
@@ -143,7 +146,7 @@
         <th:block th:with="dateFieldPresent=*{__${field}__ != null}">
 
             <div class="day">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
                  </th:block>
@@ -152,7 +155,7 @@
                  </th:block>
             </div>
             <div class="month">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
                 </th:block>
@@ -161,7 +164,7 @@
                 </th:block>
             </div>
             <div class="year">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year')" />
                 <th:block th:if="${dateFieldPresent}">
             		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
@@ -182,13 +185,14 @@
 
 
 <th:block th:fragment="form-percentage (id, title, field)">
-    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" />
+    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id})" />
     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" />
 </th:block>
 <!-- ========================= textarea  =========================== -->
 
 <th:block th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
-		<textarea  class="form-control"
+		<textarea
+                class="govuk-textarea"
                 th:id="|formInput[cost-${id}-${name}]|"
                 th:name="${(id == null) ? type +'-'+name+'-'+question.id : type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
@@ -196,7 +200,7 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'form-control-error'">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'govuk-textarea--error'">
                 >
 		</textarea>
 </th:block>
@@ -209,9 +213,10 @@
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
         <textarea th:id="formInput[__${formInput.id}__]"
+                  class="govuk-textarea"
                   th:name="formInput[__${formInput.id}__]"
                   th:field="*{formInput[__${formInput.id}__]}"
-                  th:errorclass="form-control-error"
+                  th:errorclass="govuk-textarea--error"
                   th:readonly="${model.readonly}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"
@@ -259,7 +264,7 @@
 
 <!-- ========================= read only text for form responses ==================== -->
 <th:block th:fragment="form-text-only (model)" th:with="formInput=${model.formInput}">
-    <div class="wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
+    <div class="govuk-body wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
 </th:block>
 
 <!-- ========================= Current Assignee =========================== -->
@@ -289,7 +294,7 @@
         <button type="submit"
                 name="assign_question"
                 th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
-                th:class="'buttonlink'">Assign to lead for review
+                th:class="'button-clear'">Assign to lead for review
         </button>
       </th:block>
     </th:block>
@@ -321,13 +326,13 @@
 <!-- ========================= Assign - make selection =========================== -->
 <th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
           <th:block th:if="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
           <th:block th:unless="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
         </span>
-        <span class="secondary-notification"
+        <span class="secondary-notification govuk-body"
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
               th:with="name=${model.assignee.name}">
@@ -336,10 +341,10 @@
     </th:block>
 
     <th:block th:if="${model.notAssigned}">
-        <span class="secondary-notification" th:if="${model.currentUserIsLead}">
+        <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
             <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
         </span>
-        <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
+        <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
             Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
         </span>
     </th:block>
@@ -382,7 +387,7 @@
   <th:block th:unless="${model.notAssigned} ">
 
     <th:block th:if="${model.currentUserIsLead}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}"
                       th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
             <th:block th:unless="${model.assignedByLead}"
@@ -391,13 +396,13 @@
     </th:block>
 
     <th:block th:unless="${model.currentUserIsLead}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}">Assigned to you</th:block>
             <th:block th:unless="${model.assignedByLead}">Reassigned to you</th:block>
         </span>
     </th:block>
 
-    <span class="secondary-notification secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
+    <span class="secondary-notification govuk-body secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
         <th:block th:unless="${model.currentUserIsLead}">Assigned to</th:block>
         <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
               th:with="name=${model.assignee.name}">
@@ -408,12 +413,12 @@
   </th:block>
 
   <th:block th:if="${model.notAssigned}">
-    <span class="secondary-notification" th:if="${model.currentUserIsLead}">
+    <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
         <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
                   th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
-    <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
+    <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
       Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
     </span>
   </th:block>
@@ -444,13 +449,13 @@
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${model.questionId}"
-                class="buttonlink">Edit
+                class="button-clear">Edit
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
             type="submit"
             name="mark_as_complete"
-            class="buttonlink"
+            class="button-clear"
             th:value="${model.questionId}">Mark as complete
         </button>
     </th:block>
@@ -466,7 +471,7 @@
                 name="mark_section_as_complete"
                 th:value="${currentSection.getId()}"
                 id="mark-all-as-complete"
-                th:class="button">Mark all as complete
+                th:class="govuk-button">Mark all as complete
         </button>
         <button th:unless="${readonly}"
                 th:if="${completedSections?.contains(currentSection.id)}"
@@ -474,7 +479,7 @@
                 name="mark_section_as_incomplete"
                 th:value="${currentSection.getId()}"
                 id="edit-section"
-                th:class="buttonlink">Edit
+                th:class="button-clear">Edit
         </button>
     </th:block>
 </th:block>
@@ -482,7 +487,7 @@
 <!-- ========================= edit link =========================== -->
 
 <th:block th:fragment="form-edit-question-button (model, question)">
-    <button class="buttonlink"
+    <button class="button-clear"
             type="submit"
             name="edit_question"
             th:unless="${model.closed}"
@@ -504,10 +509,10 @@
 
 
 <!-- ===========================Form: readonly file download link =========================== -->
-<th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
-    <div class="form-group download">
-        <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
-        <a href="#" th:href="${downloadURL}" th:text="${filename + ', ' + filesizeKbytes + ' KB (opens in a new window)'}" target="_blank">filename.pdf, 161.96 KB (opens in a new window)</a>
+<th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="govuk-form-group download govuk-!-margin-top-6">
+    <div class="govuk-form-group download">
+        <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${fileDescription}">View the file:</h3>
+        <a href="#" th:href="${downloadURL}" th:text="${filename + ', ' + filesizeKbytes + ' KB (opens in a new window)'}" class="govuk-link" target="_blank">filename.pdf, 161.96 KB (opens in a new window)</a>
     </div>
 </th:block>
 

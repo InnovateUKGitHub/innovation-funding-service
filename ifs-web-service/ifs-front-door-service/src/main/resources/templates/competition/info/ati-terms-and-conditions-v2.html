@@ -1,160 +1,164 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and Conditions of a UK Aerospace Research and Technology grant'" />
 </head>
-<body class="grant-terms-conditions">
+<body class="govuk-template__body grant-terms-conditions">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Terms and Conditions of a UK Aerospace Research and Technology grant',size='heading-large'" />
-    <ol class="list-number">
-        <li>
-            These terms and conditions, together with the <a href="http://www.ati.org.uk/funding/framework-agreement/">Aerospace Technology Institute (ATI) Framework Agreement</a> and Innovate UK’s policies, apply to organisations who are applying for grant funding either individually or in collaboration with other applicants. Each organisation must accept the terms and conditions before submitting its application.
-        </li>
-        <li>
-            If you are successful, you will receive an award letter confirming any project-specific conditions of the award. This letter must be countersigned and uploaded by the organisation in the correct manner before the project can start.
-        </li>
-    </ol>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <h2 class="heading-small">1. General terms and conditions</h2>
-    <p>Innovate UK reserves the right to change these grant terms and conditions unilaterally and at any time by giving 45 days’ notice.</p>
-    <p>You cannot assign, transfer or sub-contract any of your rights or obligations under this agreement to any third party.</p>
-    <p>Rights and/or remedies under this award, whether exercised or not, remain available throughout the life of the award.</p>
-    <p>An award does not create any partnership or joint venture at law.</p>
-    <p>Innovate UK:</p>
-    <ul class="list list-bullet">
-        <li>accepts no liability for any consequences, whether direct or indirect, that may come about by undertaking the project, using the grant, or ending the award</li>
-        <li>limits its liability to the amount of eligible award for which you can provide evidence</li>
-    </ul>
-    <p>Our awards are subject to the laws of England and Wales.</p>
-    <p>An award cannot be used for any political or lobbying activity or purpose.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Terms and Conditions of a UK Aerospace Research and Technology grant',size='govuk-heading-l'" />
+        <ol class="govuk-list govuk-list--number">
+            <li>
+                These terms and conditions, together with the <a href="http://www.ati.org.uk/funding/framework-agreement/" class="govuk-link">Aerospace Technology Institute (ATI) Framework Agreement</a> and Innovate UK’s policies, apply to organisations who are applying for grant funding either individually or in collaboration with other applicants. Each organisation must accept the terms and conditions before submitting its application.
+            </li>
+            <li>
+                If you are successful, you will receive an award letter confirming any project-specific conditions of the award. This letter must be countersigned and uploaded by the organisation in the correct manner before the project can start.
+            </li>
+        </ol>
 
-    <h2 class="heading-small">2. Duration</h2>
-    <p>These terms and conditions come into effect from the start date until the end date provided in the award letter, or until the award is terminated.</p>
+        <h2 class="govuk-heading-s">1. General terms and conditions</h2>
+        <p class="govuk-body">Innovate UK reserves the right to change these grant terms and conditions unilaterally and at any time by giving 45 days’ notice.</p>
+        <p class="govuk-body">You cannot assign, transfer or sub-contract any of your rights or obligations under this agreement to any third party.</p>
+        <p class="govuk-body">Rights and/or remedies under this award, whether exercised or not, remain available throughout the life of the award.</p>
+        <p class="govuk-body">An award does not create any partnership or joint venture at law.</p>
+        <p class="govuk-body">Innovate UK:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>accepts no liability for any consequences, whether direct or indirect, that may come about by undertaking the project, using the grant, or ending the award</li>
+            <li>limits its liability to the amount of eligible award for which you can provide evidence</li>
+        </ul>
+        <p class="govuk-body">Our awards are subject to the laws of England and Wales.</p>
+        <p class="govuk-body">An award cannot be used for any political or lobbying activity or purpose.</p>
 
-    <h2 class="heading-small">3. Your obligations</h2>
-    <p>As a successful applicant, you will:</p>
-    <ul class="list list-bullet">
-        <li>make sure that the project is managed in accordance with the project proposal and these terms and conditions</li>
-        <li>inform Innovate UK promptly, through your Monitoring Officer (MO), of any issue or material change that may affect the progress, delivery or exploitation of the project</li>
-        <li>complete the Aerospace Technology Institute ‘annual economic monitoring form’ every year, no later than 4 weeks after the anniversary of the project’s start date</li>
-        <li>
-            within 3 months of the end of the project, you will:
-            <ul class="list list-bullet">
-                <li>provide the MO with the final project report and confirmation that the final claim and final independent accountant’s report have been submitted</li>
-                <li>complete the Aerospace Technology Institute ‘close-out form’ within 4 weeks of the end date of the project</li>
-            </ul>
-        </li>
-    </ul>
-    <p>The award is subject to the project starting within 90 days from our email notification to you. Innovate UK reserves the right to withdraw the offer of the award if the partners do not complete their project and bank details within 30 days of notification. This information is needed so that we can start our pre project checks.</p>
+        <h2 class="govuk-heading-s">2. Duration</h2>
+        <p class="govuk-body">These terms and conditions come into effect from the start date until the end date provided in the award letter, or until the award is terminated.</p>
 
-    <h2 class="heading-small">4. Payment of grant</h2>
-    <p>Innovate UK will pay your grant by instalments quarterly and in arrears on submission of a claim, unless otherwise agreed in your grant offer letter. This will be against your net eligible costs incurred and paid over the duration of the project.</p>
-    <p>Your claims must be supported by the following:</p>
-    <ul class="list list-bullet">
-        <li>a revised forecast of eligible project costs which details expected costs for each future claim period and highlights any variations from the last forecast</li>
-        <li>an independent accountant’s report (see paragraph 7)</li>
-    </ul>
-    <p>Claims must be for completed quarters only, except for the final quarter where you may submit a claim for costs incurred but not necessarily paid, provided that the cost is:</p>
-    <ul class="list list-bullet">
-        <li>for labour, overhead and/or travel and subsistence only</li>
-        <li>paid within 30 days of the end of the project</li>
-        <li>included within the final independent accountant’s report</li>
-    </ul>
-    <p>Innovate UK will normally pay the grant within 30 days, unless we need further information to support the claim. We agree to do this within 14 days of receiving the claim.</p>
-    <p>Innovate UK does not have to pay any claim received more than 30 days after the end of the quarter to which it relates. We will not pay any claims received later than 3 months after completion of the project.</p>
-    <p>Innovate UK reserves the right not to consider new applications from organisations who have failed to return required financial reports on any projects funded by Innovate UK.</p>
-    <p>Innovate UK will not pay more than 85&percnt; of the grant until all outstanding claims and supporting information have been received and the final independent accountant’s report has been approved.</p>
-    <p>You are responsible for maintaining detailed records and documentation relating to your award. These should provide evidence that your eligible project costs comply with all state aid rules, as outlined in paragraph 9. These records must be kept for 10 years following the award and must be supplied to the Commission within 20 days if requested.</p>
-    <p>Innovate UK may appoint an auditor to ensure you are complying with the terms and conditions. You agree to give the auditor access to your project records within 2 weeks of notice of their appointment. If the auditor determines that you should repay the grant to Innovate UK, Innovate UK may recover the cost of the auditor’s work from you.</p>
+        <h2 class="govuk-heading-s">3. Your obligations</h2>
+        <p class="govuk-body">As a successful applicant, you will:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>make sure that the project is managed in accordance with the project proposal and these terms and conditions</li>
+            <li>inform Innovate UK promptly, through your Monitoring Officer (MO), of any issue or material change that may affect the progress, delivery or exploitation of the project</li>
+            <li>complete the Aerospace Technology Institute ‘annual economic monitoring form’ every year, no later than 4 weeks after the anniversary of the project’s start date</li>
+            <li>
+                within 3 months of the end of the project, you will:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>provide the MO with the final project report and confirmation that the final claim and final independent accountant’s report have been submitted</li>
+                    <li>complete the Aerospace Technology Institute ‘close-out form’ within 4 weeks of the end date of the project</li>
+                </ul>
+            </li>
+        </ul>
+        <p class="govuk-body">The award is subject to the project starting within 90 days from our email notification to you. Innovate UK reserves the right to withdraw the offer of the award if the partners do not complete their project and bank details within 30 days of notification. This information is needed so that we can start our pre project checks.</p>
 
-    <h2 class="heading-small">5. Monitoring</h2>
-    <p>Your project will be monitored in accordance with Innovate UK's project monitoring framework. You will meet with your assigned Monitoring Officer as often as is specified at the start of the project. You will allow them access to your employees, agents, premises, facilities and records to review your progress, and send them any information, explanations and documents requested within 10 days.</p>
+        <h2 class="govuk-heading-s">4. Payment of grant</h2>
+        <p class="govuk-body">Innovate UK will pay your grant by instalments quarterly and in arrears on submission of a claim, unless otherwise agreed in your grant offer letter. This will be against your net eligible costs incurred and paid over the duration of the project.</p>
+        <p class="govuk-body">Your claims must be supported by the following:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>a revised forecast of eligible project costs which details expected costs for each future claim period and highlights any variations from the last forecast</li>
+            <li>an independent accountant’s report (see paragraph 7)</li>
+        </ul>
+        <p class="govuk-body">Claims must be for completed quarters only, except for the final quarter where you may submit a claim for costs incurred but not necessarily paid, provided that the cost is:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>for labour, overhead and/or travel and subsistence only</li>
+            <li>paid within 30 days of the end of the project</li>
+            <li>included within the final independent accountant’s report</li>
+        </ul>
+        <p class="govuk-body">Innovate UK will normally pay the grant within 30 days, unless we need further information to support the claim. We agree to do this within 14 days of receiving the claim.</p>
+        <p class="govuk-body">Innovate UK does not have to pay any claim received more than 30 days after the end of the quarter to which it relates. We will not pay any claims received later than 3 months after completion of the project.</p>
+        <p class="govuk-body">Innovate UK reserves the right not to consider new applications from organisations who have failed to return required financial reports on any projects funded by Innovate UK.</p>
+        <p class="govuk-body">Innovate UK will not pay more than 85&percnt; of the grant until all outstanding claims and supporting information have been received and the final independent accountant’s report has been approved.</p>
+        <p class="govuk-body">You are responsible for maintaining detailed records and documentation relating to your award. These should provide evidence that your eligible project costs comply with all state aid rules, as outlined in paragraph 9. These records must be kept for 10 years following the award and must be supplied to the Commission within 20 days if requested.</p>
+        <p class="govuk-body">Innovate UK may appoint an auditor to ensure you are complying with the terms and conditions. You agree to give the auditor access to your project records within 2 weeks of notice of their appointment. If the auditor determines that you should repay the grant to Innovate UK, Innovate UK may recover the cost of the auditor’s work from you.</p>
 
-    <h2 class="heading-small">6. Suspension, withdrawal and repayment of grant</h2>
-    <p>Innovate UK may suspend, withdraw or reclaim the grant in whole or in part. We will take appropriate care in how we do this, but in certain circumstances Innovate UK can immediately suspend grant payments.</p>
-    <p>If we have concerns that mean we might need to suspend, withdraw or reclaim the grant we will write to inform you and you will then have 30 days in which to address our concerns. Examples of events that may result in Innovate UK suspending grant payments include:</p>
-    <ul class="list list-bullet">
-        <li>misuse of the grant funds, including in a fraudulent or financially misleading way (or for purposes not related to the project)</li>
-        <li>false statements in any part of your application or project</li>
-        <li>failure to maintain satisfactory progress on the project</li>
-        <li>any material changes to the proposed outcomes of the project</li>
-        <li>failure to comply with all terms and conditions</li>
-    </ul>
-    <p>Examples of events that may result in Innovate UK stopping grant payments include:</p>
-    <ul class="list list-bullet">
-        <li>failure to resolve to Innovate UK's satisfaction, or not being able to resolve, the reasons for suspension</li>
-        <li>being found to have applied for and secured multiple awards for the same or largely interchangeable project scopes</li>
-        <li>being found to have breached any of Innovate UK’s policies</li>
-        <li>becoming insolvent, declared bankrupt, placed into receivership, administration or liquidation, or having a petition presented for winding up, or any similar arrangements that may affect you financially (including any requirements imposed by GBER (see paragraph 9)</li>
-        <li>a change to your legal status which you have failed to declare or have misrepresented to us</li>
-    </ul>
-    <p>If you do not resolve an issue causing suspension or if we stop the grant payments Innovate UK may require you to repay some or all grant.</p>
+        <h2 class="govuk-heading-s">5. Monitoring</h2>
+        <p class="govuk-body">Your project will be monitored in accordance with Innovate UK's project monitoring framework. You will meet with your assigned Monitoring Officer as often as is specified at the start of the project. You will allow them access to your employees, agents, premises, facilities and records to review your progress, and send them any information, explanations and documents requested within 10 days.</p>
 
-    <h2 class="heading-small">7. Financial reporting</h2>
-    <p>You agree to appoint an independent accountant who will inspect your financial statements relating to the grant. They will prepare an independent accountant’s report (IAR) using Innovate UK’s standard template, at the intervals stated in the relevant guidance note. The report will contain an opinion that:</p>
-    <ul class="list list-bullet">
-        <li>the financial information and level of grant claimed are accurate and legitimate</li>
-        <li>eligible costs that you have submitted have been properly incurred and paid</li>
-        <li>you have provided satisfactory explanations for any queries raised by the independent accountant</li>
-    </ul>
-    <p>You must appoint an independent accountant in a manner consistent with Innovate UK’s Standard Terms of Engagement of Accountants.</p>
-    <p>In some circumstances, you may be asked to provide your latest published annual accounts or management accounts, that do not breach of any law, order or regulation restricting such disclosure.</p>
-    <p>Innovate UK may also require you to submit an accountant’s report if any of the following occur:</p>
-    <ul class="list list-bullet">
-        <li>you withdraw from the project</li>
-        <li>the project is terminated</li>
-        <li>you submit a claim disclosing expenditure substantially greater than forecast</li>
-        <li>you are suspected of breaching the terms and conditions</li>
-    </ul>
+        <h2 class="govuk-heading-s">6. Suspension, withdrawal and repayment of grant</h2>
+        <p class="govuk-body">Innovate UK may suspend, withdraw or reclaim the grant in whole or in part. We will take appropriate care in how we do this, but in certain circumstances Innovate UK can immediately suspend grant payments.</p>
+        <p class="govuk-body">If we have concerns that mean we might need to suspend, withdraw or reclaim the grant we will write to inform you and you will then have 30 days in which to address our concerns. Examples of events that may result in Innovate UK suspending grant payments include:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>misuse of the grant funds, including in a fraudulent or financially misleading way (or for purposes not related to the project)</li>
+            <li>false statements in any part of your application or project</li>
+            <li>failure to maintain satisfactory progress on the project</li>
+            <li>any material changes to the proposed outcomes of the project</li>
+            <li>failure to comply with all terms and conditions</li>
+        </ul>
+        <p class="govuk-body">Examples of events that may result in Innovate UK stopping grant payments include:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>failure to resolve to Innovate UK's satisfaction, or not being able to resolve, the reasons for suspension</li>
+            <li>being found to have applied for and secured multiple awards for the same or largely interchangeable project scopes</li>
+            <li>being found to have breached any of Innovate UK’s policies</li>
+            <li>becoming insolvent, declared bankrupt, placed into receivership, administration or liquidation, or having a petition presented for winding up, or any similar arrangements that may affect you financially (including any requirements imposed by GBER (see paragraph 9)</li>
+            <li>a change to your legal status which you have failed to declare or have misrepresented to us</li>
+        </ul>
+        <p class="govuk-body">If you do not resolve an issue causing suspension or if we stop the grant payments Innovate UK may require you to repay some or all grant.</p>
 
-    <h2 class="heading-small">8. Confidentiality and information management</h2>
-    <p>Innovate UK reserves the right to request access to any additional information deemed necessary by Innovate UK in connection with this award. You must provide or allow access to such information within 2 weeks of a request. We will treat your information in accordance with our policies and personal information charter.</p>
+        <h2 class="govuk-heading-s">7. Financial reporting</h2>
+        <p class="govuk-body">You agree to appoint an independent accountant who will inspect your financial statements relating to the grant. They will prepare an independent accountant’s report (IAR) using Innovate UK’s standard template, at the intervals stated in the relevant guidance note. The report will contain an opinion that:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>the financial information and level of grant claimed are accurate and legitimate</li>
+            <li>eligible costs that you have submitted have been properly incurred and paid</li>
+            <li>you have provided satisfactory explanations for any queries raised by the independent accountant</li>
+        </ul>
+        <p class="govuk-body">You must appoint an independent accountant in a manner consistent with Innovate UK’s Standard Terms of Engagement of Accountants.</p>
+        <p class="govuk-body">In some circumstances, you may be asked to provide your latest published annual accounts or management accounts, that do not breach of any law, order or regulation restricting such disclosure.</p>
+        <p class="govuk-body">Innovate UK may also require you to submit an accountant’s report if any of the following occur:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>you withdraw from the project</li>
+            <li>the project is terminated</li>
+            <li>you submit a claim disclosing expenditure substantially greater than forecast</li>
+            <li>you are suspected of breaching the terms and conditions</li>
+        </ul>
 
-    <h2 class="heading-small">9. State aid obligations</h2>
-    <p>Innovate UK awards grant funding through its <a href="http://ec.europa.eu/competition/elojade/isef/case_details.cfm?proc_code=3_SA_34263">Research, Development and Innovation Scheme</a> operating under Commission Regulation (EU) No 651/2014 (“the General Block Exemption Regulation (GBER)”).</p>
-    <p>You must inform Innovate UK of any other public funding applied for or awarded against the eligible costs covered by this offer. It is your responsibility to ensure that the cumulative total of public funding you are receiving for a project does not exceed those limits stated in GBER.</p>
-    <p>Innovate UK will stop grant payments if you become subject to a recovery order that follows on from a previous Commission decision, which declares any aid you have received illegal and incompatible with the internal market.</p>
-    <p>Where you are required by an order of the European Commission to repay any grant to Innovate UK that is found to be unlawful state aid, interest will be charged on the amount being reclaimed from the date of payment at the applicable legislated rate.</p>
-    <p>No subcontract may be made which would constitute a breach of state aid obligations.</p>
+        <h2 class="govuk-heading-s">8. Confidentiality and information management</h2>
+        <p class="govuk-body">Innovate UK reserves the right to request access to any additional information deemed necessary by Innovate UK in connection with this award. You must provide or allow access to such information within 2 weeks of a request. We will treat your information in accordance with our policies and personal information charter.</p>
 
-    <h2 class="heading-small">10. Intellectual property</h2>
-    <p>Any intellectual property rights (IPRs) developed during or as a result of the project are owned by you.You will ensure that you have the necessary rights to use or access third party IPR needed to carry out the project.</p>
+        <h2 class="govuk-heading-s">9. State aid obligations</h2>
+        <p class="govuk-body">Innovate UK awards grant funding through its <a href="http://ec.europa.eu/competition/elojade/isef/case_details.cfm?proc_code=3_SA_34263" class="govuk-link">Research, Development and Innovation Scheme</a> operating under Commission Regulation (EU) No 651/2014 (“the General Block Exemption Regulation (GBER)”).</p>
+        <p class="govuk-body">You must inform Innovate UK of any other public funding applied for or awarded against the eligible costs covered by this offer. It is your responsibility to ensure that the cumulative total of public funding you are receiving for a project does not exceed those limits stated in GBER.</p>
+        <p class="govuk-body">Innovate UK will stop grant payments if you become subject to a recovery order that follows on from a previous Commission decision, which declares any aid you have received illegal and incompatible with the internal market.</p>
+        <p class="govuk-body">Where you are required by an order of the European Commission to repay any grant to Innovate UK that is found to be unlawful state aid, interest will be charged on the amount being reclaimed from the date of payment at the applicable legislated rate.</p>
+        <p class="govuk-body">No subcontract may be made which would constitute a breach of state aid obligations.</p>
 
-    <h2 class="heading-small">11. Collection of economic data</h2>
-    <p>For the UK Aerospace Research and Technology Programme, as stated in paragraph 3, there is a requirement for economic monitoring on an annual basis as well as at close-out.  The close-out monitoring builds on the ‘annual economic monitoring form’, and supplements Innovate UK’s standard qualitative ‘project completion form’, which includes a section on future exploitation plans.</p>
-    <p>The Department for Business, Energy and Industrial Strategy (BEIS) will share Innovate UK and BEIS economic monitoring data on a confidential basis with independent external contractors for future evaluation purposes. No publications will refer to individual projects or partners without the prior agreement of project partners.</p>
+        <h2 class="govuk-heading-s">10. Intellectual property</h2>
+        <p class="govuk-body">Any intellectual property rights (IPRs) developed during or as a result of the project are owned by you.You will ensure that you have the necessary rights to use or access third party IPR needed to carry out the project.</p>
 
-    <h2 class="heading-small">12. Exploitation of project results</h2>
-    <p>For a period of up to 10 years from the end of the project, you should take commercially reasonable steps to exploit the results of the project in the UK or wider European Economic Area.</p>
-    <p>Innovate UK expects you to refine and update your exploitation plan over the project’s lifetime. It will be used by Innovate UK, together with the additional information provided on exploitation plans in the ‘project completion form’, to plan for post-project monitoring.</p>
-    <p>Post-project monitoring will typically be undertaken every 2 to 3 years, for up to 10 years. It will focus on project partners. They are expected to undertake further developments to commercialise the research and technology outcomes for new products and services, without additional UK Aerospace Research and Technology Programme (ART) funding. Where relevant, this monitoring evaluation could be combined across a number of UK ART projects or partners on a suitable portfolio basis. This information will be shared with our sponsor, BEIS, and the Aerospace Technology Institute, with whom we offer this grant.</p>
-    <p>BEIS reserves the right to:</p>
-    <ul class="list list-bullet">
-        <li>use information from this monitoring</li>
-        <li>contact you to inform future evaluations of the UK ART Programme, under the same terms as in paragraphs 5 and 11</li>
-    </ul>
+        <h2 class="govuk-heading-s">11. Collection of economic data</h2>
+        <p class="govuk-body">For the UK Aerospace Research and Technology Programme, as stated in paragraph 3, there is a requirement for economic monitoring on an annual basis as well as at close-out.  The close-out monitoring builds on the ‘annual economic monitoring form’, and supplements Innovate UK’s standard qualitative ‘project completion form’, which includes a section on future exploitation plans.</p>
+        <p class="govuk-body">The Department for Business, Energy and Industrial Strategy (BEIS) will share Innovate UK and BEIS economic monitoring data on a confidential basis with independent external contractors for future evaluation purposes. No publications will refer to individual projects or partners without the prior agreement of project partners.</p>
 
-    <h2 class="heading-small">13. UK statutory framework</h2>
-    <p>Innovate UK is required to comply with all legislation in England and Wales. We particularly draw to your attention the data protection legislation, the Bribery Act 2010, the Fraud Act 2006 and the Modern Slavery Act 2015.</p>
-    <p>Innovate UK expects you to comply with all legislation (including in the devolved administrations) where they apply to you and to act in a way that does not affect our ability to comply.</p>
+        <h2 class="govuk-heading-s">12. Exploitation of project results</h2>
+        <p class="govuk-body">For a period of up to 10 years from the end of the project, you should take commercially reasonable steps to exploit the results of the project in the UK or wider European Economic Area.</p>
+        <p class="govuk-body">Innovate UK expects you to refine and update your exploitation plan over the project’s lifetime. It will be used by Innovate UK, together with the additional information provided on exploitation plans in the ‘project completion form’, to plan for post-project monitoring.</p>
+        <p class="govuk-body">Post-project monitoring will typically be undertaken every 2 to 3 years, for up to 10 years. It will focus on project partners. They are expected to undertake further developments to commercialise the research and technology outcomes for new products and services, without additional UK Aerospace Research and Technology Programme (ART) funding. Where relevant, this monitoring evaluation could be combined across a number of UK ART projects or partners on a suitable portfolio basis. This information will be shared with our sponsor, BEIS, and the Aerospace Technology Institute, with whom we offer this grant.</p>
+        <p class="govuk-body">BEIS reserves the right to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>use information from this monitoring</li>
+            <li>contact you to inform future evaluations of the UK ART Programme, under the same terms as in paragraphs 5 and 11</li>
+        </ul>
 
-    <h2 class="heading-small">14. Publication of information</h2>
-    <p>Innovate UK encourages you to seek your own publicity. Should you wish to publicise the project in any way whatsoever, please consult the Innovate UK guide ‘Publicising your project: guidelines from Innovate UK’, available on request from Innovate UK’s Press Office by emailing <a href="mailto:pressoffice@innovateuk.gov.uk">pressoffice@innovateuk.gov.uk</a>. You must also comply with the Aerospace Technology Institute press and publications guidelines as set out in the <a href="http://www.ati.org.uk/funding/framework-agreement/">Framework Agreement</a>. Please email <a href="mailto:media@ati.org.uk">media@ati.org.uk</a> to discuss any publications you wish to make.</p>
+        <h2 class="govuk-heading-s">13. UK statutory framework</h2>
+        <p class="govuk-body">Innovate UK is required to comply with all legislation in England and Wales. We particularly draw to your attention the data protection legislation, the Bribery Act 2010, the Fraud Act 2006 and the Modern Slavery Act 2015.</p>
+        <p class="govuk-body">Innovate UK expects you to comply with all legislation (including in the devolved administrations) where they apply to you and to act in a way that does not affect our ability to comply.</p>
 
-    <h2 class="heading-small">15. Dispute resolution</h2>
-    <p>In the event where a dispute has not previously been resolved and/or requires escalation, we will escalate it to the appropriate level in your organisation and would advise the appropriate person to contact us to discuss, in good faith, how the matter can be resolved. If a mutually acceptable resolution cannot be found, the parties agree to refer the matter to the London Court of International Arbitration (LCIA), whose decision will be binding.</p>
+        <h2 class="govuk-heading-s">14. Publication of information</h2>
+        <p class="govuk-body">Innovate UK encourages you to seek your own publicity. Should you wish to publicise the project in any way whatsoever, please consult the Innovate UK guide ‘Publicising your project: guidelines from Innovate UK’, available on request from Innovate UK’s Press Office by emailing <a href="mailto:pressoffice@innovateuk.gov.uk" class="govuk-link">pressoffice@innovateuk.gov.uk</a>. You must also comply with the Aerospace Technology Institute press and publications guidelines as set out in the <a href="http://www.ati.org.uk/funding/framework-agreement/">Framework Agreement</a>. Please email <a href="mailto:media@ati.org.uk">media@ati.org.uk</a> to discuss any publications you wish to make.</p>
 
-    <h2 class="heading-small">16. Force majeure</h2>
-    <p>Where an event of force majeure, or a change to the Laws of England and Wales, UK government or devolved administration policy and/or the Legal Acts of the European Union occurs which affects Innovate UK’s ability to continue funding your project, we may terminate the award by giving you as much notice as possible in writing. In such circumstances, Innovate UK will meet any eligible costs you have reasonably incurred and paid prior to the date of termination.</p>
+        <h2 class="govuk-heading-s">15. Dispute resolution</h2>
+        <p class="govuk-body">In the event where a dispute has not previously been resolved and/or requires escalation, we will escalate it to the appropriate level in your organisation and would advise the appropriate person to contact us to discuss, in good faith, how the matter can be resolved. If a mutually acceptable resolution cannot be found, the parties agree to refer the matter to the London Court of International Arbitration (LCIA), whose decision will be binding.</p>
+
+        <h2 class="govuk-heading-s">16. Force majeure</h2>
+        <p class="govuk-body">Where an event of force majeure, or a change to the Laws of England and Wales, UK government or devolved administration policy and/or the Legal Acts of the European Union occurs which affects Innovate UK’s ability to continue funding your project, we may terminate the award by giving you as much notice as possible in writing. In such circumstances, Innovate UK will meet any eligible costs you have reasonably incurred and paid prior to the date of termination.</p>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

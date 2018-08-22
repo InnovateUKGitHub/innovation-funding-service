@@ -46,28 +46,28 @@
 
 			<section class="boxed">
 
-				<div class="grid-row">
+				<div class="govuk-grid-row">
 					<div class="column-one">
-				 		<p><span class="heading-medium">30th March 2016</span> <br />Application deadline</p>
+				 		<p class="govuk-body"><span class="govuk-heading-m">30th March 2016</span> <br />Application deadline</p>
 				 	</div>
 				</div>
 
-				 <div class="grid-row">
+				 <div class="govuk-grid-row">
 
 				 	<div class="column-quarter">
-				 		<p><span class="heading-medium">22</span> <br />Total number of applications</p>
+				 		<p class="govuk-body"><span class="govuk-heading-m">22</span> <br />Total number of applications</p>
 				 	</div>
 
 				 	<div class="column-quarter">
-				 		<p><span class="heading-medium">12</span> <br />Applications started</p>
+				 		<p class="govuk-body"><span class="govuk-heading-m">12</span> <br />Applications started</p>
 				 	</div>
 
 					<div class="column-quarter">
-					 	<p><span class="heading-medium">6</span> <br />Applications in progress <br />(Beyond 50%)</p>
+					 	<p class="govuk-body"><span class="govuk-heading-m">6</span> <br />Applications in progress <br />(Beyond 50%)</p>
 					</div>
 
 					<div class="column-quarter">
-					 	<p><span class="heading-medium">4</span> <br />Applications submitted</p>
+					 	<p class="govuk-body"><span class="govuk-heading-m">4</span> <br />Applications submitted</p>
 					</div>
 
 				 </div>
@@ -79,207 +79,207 @@
 		</div>
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 		<div class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Application list</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='openApplications'" />
 
 			<div class="table-overflow">
 				<table id="application-list">
-					<thead>
-						<tr>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-							<th scope="col">Area</th>
-							<th scope="col">Status</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Application number</th>
+							<th class="govuk-table__header" scope="col">Project title</th>
+							<th class="govuk-table__header" scope="col">Lead</th>
+							<th class="govuk-table__header" scope="col">Area</th>
+							<th class="govuk-table__header" scope="col">Status</th>
 							<th scope="col" class="alignright" style="width: 10%">Percentage complete</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194731</a></td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>HVM</td>
-							<td>Submitted</td>
-							<td class="alignright">100</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194731</a></td>
+							<td class="govuk-table__cell">Machine learning in robots</td>
+							<td class="govuk-table__cell">PWC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Submitted</td>
+							<td class="govuk-table__cell alignright">100</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194732</a></td>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>HVM</td>
-							<td>Submitted</td>
-							<td class="alignright">100</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194732</a></td>
+							<td class="govuk-table__cell">AI in learning</td>
+							<td class="govuk-table__cell">BBC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Submitted</td>
+							<td class="govuk-table__cell alignright">100</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194733</a></td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>HVM</td>
-							<td>Submitted</td>
-							<td class="alignright">100</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194733</a></td>
+							<td class="govuk-table__cell">Machine learning in robots</td>
+							<td class="govuk-table__cell">PWC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Submitted</td>
+							<td class="govuk-table__cell alignright">100</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194734</a></td>
-							<td>Robots that learn</td>
-							<td>Kingfisher</td>
-							<td>HVM</td>
-							<td>Submitted</td>
-							<td class="alignright">100</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194734</a></td>
+							<td class="govuk-table__cell">Robots that learn</td>
+							<td class="govuk-table__cell">Kingfisher</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Submitted</td>
+							<td class="govuk-table__cell alignright">100</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194735</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">100</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194735</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">100</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194736</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">86</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194736</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">86</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194737</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">86</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194737</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">86</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194738</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">84</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194738</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">84</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194739</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">85</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194739</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">85</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194740</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>In progress</td>
-							<td class="alignright">83</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194740</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">In progress</td>
+							<td class="govuk-table__cell alignright">83</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194741</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">42</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194741</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">42</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194742</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">41</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194742</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">41</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194743</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">36</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194743</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">36</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194744</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">35</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194744</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">35</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194745</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">30</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194745</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">30</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194746</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">27</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194746</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">27</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194747</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">25</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194747</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">25</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194748</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">20</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194748</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">20</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194749</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">19</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194749</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">19</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194750</a></td>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td>Started</td>
-							<td class="alignright">10</td>
+							<td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">194750</a></td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell">Started</td>
+							<td class="govuk-table__cell alignright">10</td>
 						</tr>
 
 					</tbody>
