@@ -195,38 +195,21 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
     }
 
     @Test
-    public void submitResearchCategoryChoice_missingChoiceShouldThrowError() throws Exception {
+    public void submitResearchCategoryChoice_missingChoiceWithoutMarkingAsComplete() throws Exception {
         long questionId = 1L;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
-                "test competition",
-                applicationResource.getId(),
-                questionId,
-                newResearchCategoryResource().build(2),
-                false,
-                "Industrial research",
-                false,
-                false,
-                false,
-                false,
-                false,
-                "Steve Smith");
-
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId()))
-                .thenReturn(researchCategoryViewModel);
+        when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(), null))
+                .thenReturn(restSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId))
-                .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
-                .andExpect(view().name("application/research-categories"))
-                .andExpect(status().isOk())
-                .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "researchCategory"));
+                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
+                .andExpect(status().is3xxRedirection());
 
         InOrder inOrder = inOrder(applicationService, researchCategoryEditableValidator,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
@@ -234,9 +217,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
-                questionId);
-        inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, new ResearchCategoryForm());
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(), null);
+        inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
+                same(APPLICATION_SAVED_MESSAGE));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -299,6 +282,54 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 researchCategoryId, processRole.getId());
         inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
                 same(APPLICATION_SAVED_MESSAGE));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitResearchCategoryChoice_markAsCompleteWithMissingChoiceShouldError()
+            throws Exception {
+        long questionId = 1L;
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
+                "test competition",
+                applicationResource.getId(),
+                questionId,
+                newResearchCategoryResource().build(2),
+                false,
+                "Industrial research",
+                false,
+                false,
+                false,
+                false,
+                false,
+                "Steve Smith");
+
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
+                applicationResource)).thenReturn(true);
+        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId()))
+                .thenReturn(researchCategoryViewModel);
+
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId)
+                .param("mark_as_complete", ""))
+                .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
+                .andExpect(view().name("application/research-categories"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "researchCategory"));
+
+        InOrder inOrder = inOrder(userRestService, applicationService, researchCategoryEditableValidator,
+                researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
+                applicationResearchCategoryRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
+                applicationResource);
+        inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
+                questionId);
+        inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, new ResearchCategoryForm());
         inOrder.verifyNoMoreInteractions();
     }
 
