@@ -91,6 +91,8 @@ tr {
 
     &.govuk-form-group--error {
       border-left:none;
+      padding: 10px 20px 10px 0;
+      border-bottom: 1px solid $govuk-border-colour;
     }
   }
 }
@@ -189,6 +191,8 @@ tr {
     &.govuk-form-group--error {
       td {
         vertical-align: bottom;
+        padding: 10px 20px 10px 0;
+        border-bottom: 1px solid $govuk-border-colour;
 
         &:first-child {
           border-left: 5px solid $govuk-error-colour;
@@ -548,4 +552,8 @@ td {
       margin: 0.5em;
     }
   }
+}
+
+.end-label-link {
+  margin-left: 1em;
 }

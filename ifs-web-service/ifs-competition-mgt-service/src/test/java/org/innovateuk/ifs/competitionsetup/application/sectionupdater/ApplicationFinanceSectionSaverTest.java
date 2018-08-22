@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
@@ -24,6 +24,7 @@ import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -46,7 +47,7 @@ public class ApplicationFinanceSectionSaverTest {
     private SectionService sectionService;
 
     @Mock
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Test
     public void testSectionToSave() {
@@ -73,13 +74,13 @@ public class ApplicationFinanceSectionSaverTest {
 
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
                 .thenReturn(asList(overviewFinanceSection));
-        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
+        when(questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
                 .thenReturn(
-                        newQuestionResource()
+                        restSuccess(newQuestionResource()
                                 .withName("FINANCE_OVERVIEW", null)
                                 .withDescription("", fundingRules)
                                 .build(2)
-                );
+                ));
 
         FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
@@ -93,7 +94,7 @@ public class ApplicationFinanceSectionSaverTest {
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
         verify(competitionSetupFinanceService).updateFinance(csfr);
-        verify(questionService, times(1)).save(any(QuestionResource.class));
+        verify(questionRestService, times(1)).save(any(QuestionResource.class));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class ApplicationFinanceSectionSaverTest {
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
         verify(competitionSetupFinanceService, never()).updateFinance(any());
-        verify(questionService, never()).save(any(QuestionResource.class));
+        verify(questionRestService, never()).save(any(QuestionResource.class));
     }
 
     @Test
