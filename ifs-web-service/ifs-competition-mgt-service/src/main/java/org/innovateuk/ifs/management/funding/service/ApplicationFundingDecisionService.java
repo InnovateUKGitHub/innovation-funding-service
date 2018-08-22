@@ -15,6 +15,4 @@ public interface ApplicationFundingDecisionService {
     ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds);
 
     Optional<FundingDecision> getFundingDecisionForString(String fundingDecisionName);
-
-    ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource);
 }

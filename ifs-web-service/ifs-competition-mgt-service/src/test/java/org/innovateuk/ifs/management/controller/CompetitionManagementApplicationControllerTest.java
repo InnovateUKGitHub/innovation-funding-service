@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdo
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
@@ -28,6 +29,7 @@ import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleAp
 import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
+import org.innovateuk.ifs.management.application.view.populator.ManageApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
@@ -105,6 +107,13 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Mock
+    private ApplicationResearchCategorySummaryModelPopulator applicationResearchCategorySummaryModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ManageApplicationModelPopulator manageApplicationModelPopulator;
+
     @Spy
     @InjectMocks
     private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
@@ -158,9 +167,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private UserRestService userRestServiceMock;
-
-    @Mock
     private InviteService inviteService;
 
     @Mock
@@ -178,7 +184,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
+
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
@@ -197,6 +205,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?param1=abc&param2=def%26ghi";
@@ -220,6 +229,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?p1=%26&p2=%3D&p3=%25&p4=%20";
@@ -245,6 +255,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -277,6 +288,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -329,6 +341,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     public void displayApplicationOverview_submittedApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationTeam();
         when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
@@ -344,6 +357,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("MANAGE_APPLICATIONS",
@@ -358,6 +372,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("APPLICATION_PROGRESS",
@@ -372,6 +387,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("FUNDING_APPLICATIONS",
@@ -382,6 +398,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     public void displayApplicationOverview_IneligibleApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationTeam();
         when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
@@ -397,6 +414,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupApplicationResponses();
         this.setupInvites();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
@@ -553,6 +571,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupApplicationWithRoles();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().withReason("coz").build();
@@ -562,7 +581,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
@@ -581,6 +600,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupApplicationWithRoles();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
@@ -589,7 +609,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
 
         MvcResult result = mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
@@ -695,6 +715,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupApplicationWithRoles();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupApplicationTeam();
 
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().withReason(reason).build();
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
@@ -703,7 +724,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
         when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
@@ -730,6 +751,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("PROJECT_SETUP_MANAGEMENT_STATUS",
@@ -783,7 +805,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
@@ -811,7 +833,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
         when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restFailure(GENERAL_NOT_FOUND));
@@ -834,7 +856,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
@@ -853,6 +875,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
@@ -876,6 +899,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupOrganisationTypes();
         this.setupResearchCategories();
         this.setupFinances();
+        this.setupApplicationTeam();
         setupApplicantResource();
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
@@ -905,6 +929,10 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     private void setupEmptyResponses() {
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+    }
+
+    private void setupApplicationTeam() {
+        when(applicationRestService.showApplicationTeam(applications.get(0).getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
     }
 
     private List<ResearchCategoryResource> setupResearchCategories() {

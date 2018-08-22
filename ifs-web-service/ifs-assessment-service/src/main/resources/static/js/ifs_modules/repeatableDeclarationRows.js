@@ -32,15 +32,15 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
-        newRow = jQuery('<tr class="form-group-row-validated">' +
-          '<td class="govuk-form-group">' +
+        newRow = jQuery('<tr class="govuk-table__row form-group-row-validated">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="govuk-input appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.organisation" ' +
           'name="appointments[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
-          '<td class="govuk-form-group">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-pos" class="govuk-input appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.position" ' +
@@ -52,22 +52,22 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr class="form-group-row-validated">' +
-          '<td class="govuk-form-group">' +
+        newRow = jQuery('<tr class="govuk-table__row form-group-row-validated">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label class="govuk-label">Relation</label>' +
           '<input aria-labelledby="aria-family-rel" class="govuk-input family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
           'data-required-errormessage="Please enter a relation." required="required" />' +
           '</td>' +
-          '<td class="govuk-form-group">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label class="govuk-label">Organisation</label>' +
           '<input aria-labelledby="aria-family-org" class="govuk-input family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
-          '<td class="govuk-form-group">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label class="govuk-label">Position</label>' +
           '<input aria-labelledby="aria-family-pos" class="govuk-input family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +

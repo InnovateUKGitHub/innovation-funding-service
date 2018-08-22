@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -86,6 +87,9 @@ public class Competition implements ProcessActivity {
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
+
+    @OneToMany(mappedBy = "competition", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
     private String activityCode;
 
@@ -233,7 +237,9 @@ public class Competition implements ProcessActivity {
     }
 
     @JsonIgnore
-    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+    public boolean inProjectSetup() {
+        return PROJECT_SETUP.equals(getCompetitionStatus());
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -345,7 +351,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone(milestoneType,this);
+            Milestone m = new Milestone(milestoneType, this);
             milestones.add(m);
             return m;
         });
@@ -508,7 +514,15 @@ public class Competition implements ProcessActivity {
         }
 
         researchCategories.forEach(this::addResearchCategory);
-	}
+    }
+
+    public List<ProjectDocument> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
 
     public List<Milestone> getMilestones() {
         return milestones;
@@ -670,7 +684,7 @@ public class Competition implements ProcessActivity {
         this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isHasInterviewStage(){
+    public Boolean isHasInterviewStage() {
         return hasInterviewStage;
     }
 
