@@ -6,7 +6,7 @@ if(target == 'local') {
 
 } else {
     //remote
-    ext.svcAccountClauseServer = "https://console.prod.ifs-test-clusters.com:443"
+    ext.svcAccountClauseServer = "https://console.dev-nige-1.dev.ifs-test-clusters.com"
     ext.internalRegistry = "172.30.80.28:5000"
 }
 
