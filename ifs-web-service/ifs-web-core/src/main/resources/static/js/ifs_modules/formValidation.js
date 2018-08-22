@@ -151,7 +151,7 @@ IFS.core.formValidation = (function () {
       })
 
       IFS.core.formValidation.initFocusActions()
-      jQuery('body').on('click', '.error-summary-list a', function (e) {
+      jQuery('body').on('click', '.govuk-error-summary__list a', function (e) {
         e.preventDefault()
         IFS.core.formValidation.errorSummaryLinksClick(this)
       })
