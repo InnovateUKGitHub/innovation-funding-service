@@ -68,17 +68,15 @@
         </div>
 
         <th:block th:unless="${model.summary}">
-            <th:block th:if="${applicationIsReadOnly}">
-                <a th:href="${backURL}" class="button-secondary"
+                <a th:if="${model.allReadOnly}"
+                   th:href="${backURL}" class="button-secondary"
                    th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-            </th:block>
-            <th:block th:unless="${applicationIsReadOnly}">
-                <button id="application-question-save"
-                        type="submit"
-                        class="govuk-button app-submit-btn"
-                        name="submit-section">Save and return to application overview
+                <button th:unless="${model.allReadOnly}"
+                    id="application-question-save"
+                    type="submit"
+                    class="govuk-button app-submit-btn"
+                    name="submit-section">Save and return to application overview
                 </button>
-            </th:block>
         </th:block>
     </form>
 </th:block>

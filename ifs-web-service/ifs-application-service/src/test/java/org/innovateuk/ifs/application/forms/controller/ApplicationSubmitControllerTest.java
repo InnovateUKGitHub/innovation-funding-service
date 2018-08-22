@@ -4,6 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -113,7 +113,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
                 .param(ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
@@ -130,7 +130,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
                 .param(MARK_AS_COMPLETE, question.getId().toString())
@@ -147,7 +147,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.addError(Error.fieldError("asdf", new Error("as", HttpStatus.BAD_REQUEST)));
         when(questionService.markAsComplete(question.getId(), app.getId(), user.getId())).thenReturn(asList(validationMessages));
