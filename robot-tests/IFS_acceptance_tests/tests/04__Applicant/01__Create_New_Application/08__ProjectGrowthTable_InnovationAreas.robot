@@ -12,6 +12,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
+...
+...            IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
@@ -36,12 +38,13 @@ Comp Admin starts a new Competition
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery=.govuk-button:contains("Create competition")
+    When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
+    And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -77,7 +80,7 @@ Create new Application for this Competition
     Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
 
 Applicant visits his Finances
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-3938
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
@@ -108,7 +111,7 @@ Once the project growth table is selected
     [Tags]
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery=.govuk-button:contains("Create competition")
+    When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
@@ -117,14 +120,15 @@ Once the project growth table is selected
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    When the user clicks the button/link                 link=Public content
+    And the user fills in the CS Documents in other projects
+    When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
-    And the user clicks the button/link                  link=Return to setup overview
-    And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery=a:contains("Complete")
-    Then the user clicks the button/link                 css=button[type="submit"]
+    And the user clicks the button/link                  link = Return to setup overview
+    And the user should see the element                  jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                 jQuery = a:contains("Complete")
+    Then the user clicks the button/link                 css = button[type = "submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
-    Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
@@ -352,7 +356,7 @@ the user should see the dates in full format
 
 the user should see that the funding depends on the research area
     the user clicks the button/link  link=Your funding
-    the user should see the element  jQuery=li:contains("you must select a") a:contains("research category")
+    the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link=Your finances
 
 

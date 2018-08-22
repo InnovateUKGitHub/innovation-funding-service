@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body"
+      th:with="edit=${param.status != null and param.status[0] == 'edit' ? TRUE : FALSE},
+      section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-4104-funding-org?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+
+                <h1 class="govuk-heading-xl">Business</h1>
+
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">Your organisation must be UK based to receive funding.</p>
+                </div>
+
+                <p class="govuk-body">
+                    You can identify your organisation through Companies House or enter your details manually
+                </p>
+
+                <form action="/prototypes/IFS-4104-funding-org-selected" method="get">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h2 class="govuk-fieldset__heading">Search on Companies House</h2>
+                        </legend>
+
+                        <input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label">
+                                Enter your organisation name or registration number.
+                            </label>
+                            <input class="govuk-input govuk-!-width-one-half" type="text" value="" id="organisationSearchName" name="organisationSearchName">
+                            <button type="button" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0" data-aria-controls="org-results-list">Search</button>
+                        </div>
+
+                        <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
+                        <p class="govuk-body govuk-hint">Select your organisation from the options below</p>
+                        <ul id="org-results-list" class="govuk-list results-list panel">
+                            <li class="type-company">
+                                <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                                    <a th:href="${'/prototypes/IFS-4104-funding-org-selected?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3}" title="View organisation">CERCIS LIMITED</a>
+                                </h3>
+                                <p class="govuk-body meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
+                                <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
+
+                            </li>
+
+                        </ul>
+                    </fieldset>
+
+                    <fieldset class="govuk-fieldset">
+                        <input type="hidden" id="manualEntry" name="manualEntry" value="false">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h2 class="govuk-fieldset__heading">Not on Companies House?</h2>
+                        </legend>
+
+                        <p class="govuk-body">Enter your organisation details manually. You may need to supply additional details at a later point.</p>
+
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary" aria-expanded="false" role="button" aria-controls="details-content-0">
+                                <span class="govuk-details__summary-text">Enter details manually</span>
+                            </summary>
+                            <div class="govuk-details__text" id="details-content-0" aria-hidden="true">
+                                <h2 class="govuk-heading-m">Enter your organisation details</h2>
+
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="org-name">
+                                        Organisation name
+                                    </label>
+                                    <input class="govuk-input" id="org-name" type="text" value="" name="organisationName">
+                                </div>
+
+                                <div id="manual-company-input">
+                                    <fieldset class="govuk-fieldset">
+
+                                        <legend class="govuk-visually-hidden">Organisation details</legend>
+                                        <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
+                                                Postcode
+                                            </label>
+                                            <input id="addressForm.postcodeInput" class="form-control" type="text" name="addressForm.postcodeInput" value="">
+                                            <button type="submit" id="postcode-lookup" class="govuk-button" name="search-address">Find UK address</button>
+                                        </div>
+
+                                        <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                                        <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                                        <input type="hidden" id="section3" name="section3" th:value="${section3}">
+                                        <input type="hidden" id="status" name="status" th:value="${status}">
+
+
+                                        <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
+                                    </fieldset>
+
+                                </div>
+
+                                <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
+                            </div>
+                        </details>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>

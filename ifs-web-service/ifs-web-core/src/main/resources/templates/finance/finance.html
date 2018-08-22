@@ -271,7 +271,7 @@
                        class="govuk-heading-m alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
-                       th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal ?: 0, 0, 'DEFAULT')}"/>
             </div>
         </div>
     </th:block>
@@ -320,7 +320,7 @@
         <th:block th:if="${viewmode == 'readonly'}">
             <dl class="standard-definition-list">
                 <dt>Working days per year</dt>
-                <dd th:text="${costCategory.workingDaysPerYear}">232</dd>
+                <dd th:text="${costCategory?.workingDaysPerYear} ?: '0'">232</dd>
             </dl>
             <p class="govuk-body">Number of staff and roles within the project</p>
             <div class="table-overflow">
@@ -335,7 +335,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <th:block th:each="cost, iteration : ${costCategory.costs}">
+                    <th:block th:each="cost, iteration : ${costCategory?.costs}">
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell" th:text="${cost.role}"></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.grossEmployeeCost != null ? #numbers.formatInteger(cost.grossEmployeeCost,0,'DEFAULT') : '0'}"></td>
@@ -348,8 +348,8 @@
                     <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" colspan="4" scope="row">Total labour costs</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric labour-total" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
-                            &pound;<th:block th:text="${costCategory.total != null ? #numbers.formatInteger(costCategory.total, 0, 'DEFAULT') : '0'}" />
+                        <td class="govuk-table__cell govuk-table__cell--numeric labour-total" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
+                            &pound;<th:block th:text="${costCategory?.total != null ? #numbers.formatInteger(costCategory.total, 0, 'DEFAULT') : '0'}" />
                         </td>
                     </tr>
                     </tfoot>
@@ -505,7 +505,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p class="govuk-body" th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
-        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
+        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory == null || costCategory.costs == null || costCategory.costs.isEmpty()} ? null : ${costCategory.costs[0]}, overheadRate=${overheadCosts?.rateType == null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
     <th:block th:fragment="overheads_finances (internalView)">
@@ -840,7 +840,7 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory.costs}">
+                        <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory?.costs}">
                             <td class="govuk-table__cell" th:text="${cost.item}"></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
@@ -850,8 +850,8 @@
                         <tfoot class="govuk-table__foot">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row" colspan="3">Total materials costs</th>
-                            <td th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  class="govuk-table__cell govuk-table__cell--numeric">
-                                &pound;<th:block th:text="${costCategory.total != null ? #numbers.formatInteger(costCategory.total, 0,'DEFAULT') : '0'}" />
+                            <td th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}"  class="govuk-table__cell govuk-table__cell--numeric">
+                                &pound;<th:block th:text="${costCategory?.total != null ? #numbers.formatInteger(costCategory?.total, 0,'DEFAULT') : '0'}" />
                             </td>
                         </tr>
                         </tfoot>
@@ -1006,7 +1006,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory?.costs}">
                         <td class="govuk-table__cell" th:text="${cost.description}"></td>
                         <td class="govuk-table__cell" th:text="${cost.existing}"></td>
                         <td class="govuk-table__cell" th:text="${cost.deprecation}"></td>
@@ -1021,8 +1021,8 @@
                     <tfoot>
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" colspan="6">Total capital usage</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
-                            &pound;<th:block th:text="${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
+                            &pound;<th:block th:text="${costCategory?.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
                     </tfoot>
@@ -1231,7 +1231,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory?.costs}">
                         <td class="govuk-table__cell" th:text="${cost.name}">Mr Francis Bois</td>
                         <td class="govuk-table__cell" th:text="${cost.country}">France</td>
                         <td class="govuk-table__cell" th:text="${cost.role}">Specialist consultant</td>
@@ -1243,8 +1243,8 @@
                     <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" colspan="3" scope="row">Total subcontracting costs</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
-                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">150,000</th:block>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total ?: 0, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
                     </tfoot>
@@ -1264,14 +1264,14 @@
                 Total subcontracting costs
                 <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
-                      th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
+                      th:text="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
             </h4>
             <input type="hidden"
                    th:id="${'section-total-'+subSection.id}"
                    data-calculation-fields="[name^=subcontracting-subcontractingCost]"
                    data-calculation-operations="+"
                    th:attr="data-calculation-rawvalue=${costCategory.total}"
-                   th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
+                   th:value="'£' + ${#numbers.formatInteger(costCategory?.total, 0, 'DEFAULT')}" />
         </th:block>
     </th:block>
 
@@ -1367,7 +1367,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory.costs}">
+                    <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory?.costs}">
                         <td class="govuk-table__cell" th:text="${cost.item}"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.quantity}"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
@@ -1379,8 +1379,8 @@
                     <tfoot>
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row" colspan="3">Total travel and subsistence</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
-                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">1220</th:block>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total ?: 0, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
                     </tfoot>
@@ -1415,7 +1415,7 @@
                     Total travel and subsistence costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
-                          th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
+                          th:text="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
                 </h4>
                 <input type="hidden"
                        data-calculation-fields="[id*=travelCostTotal]"
@@ -1530,7 +1530,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory?.costs}">
                         <td class="govuk-table__cell" th:text="${cost.description}"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">1500</th:block>
@@ -1540,8 +1540,8 @@
                     <tfoot class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Total other costs</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
-                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">1500</th:block>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total ?: 0, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
                     </tfoot>
@@ -1573,7 +1573,7 @@
                     Total other costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
-                          th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
+                          th:text="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
                 </h4>
                 <input type="hidden"
                        th:id="${'section-total-'+subSection.id}"
@@ -1632,10 +1632,10 @@
     <th:block th:fragment="other_funding (model)" th:with="question=${model.question}, costCategory=${model.costCategory}, viewmode=${model.viewmode}, subSection=${model.section}, readonly=${model.readonly}">
         <th:block th:if="${readonly}">
             <h2 class="govuk-heading-m">Other funding for this project</h2>
-            <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
+            <th:block th:if="${costCategory?.otherPublicFunding?.equals('No')}">
                 <p class="govuk-body">No other funding</p>
             </th:block>
-            <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
+            <th:block th:if="${costCategory?.otherPublicFunding?.equals('Yes')}">
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
@@ -1646,16 +1646,16 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
+                        <tr class="govuk-table__row" th:each="cost : ${costCategory?.costs}" th:unless="${cost.fundingAmount == null}">
                             <th class="govuk-table__header" scope="row" th:text="${cost.fundingSource}">National rail</th>
                             <td class="govuk-table__cell" th:text="${cost.securedDate}">17 April 2016</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'DEFAULT') : '0'}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${cost?.fundingAmount != null ? #numbers.formatInteger(cost?.fundingAmount,0,'DEFAULT') : '0'}"></td>
                         </tr>
                         </tbody>
                         <tfoot>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(costCategory?.total, 0, 'DEFAULT')}"></td>
                         </tr>
                         </tfoot>
                     </table>
