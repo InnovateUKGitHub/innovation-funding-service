@@ -72,7 +72,7 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
-                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+                .collect(toMap(QuestionResource::getId, k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 
@@ -112,7 +112,7 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
-                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+                .collect(toMap(QuestionResource::getId, k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
     }
 }

@@ -217,11 +217,11 @@ public class Application implements ProcessActivity {
     }
 
     public User getLeadApplicant() {
-        return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getUser).orElse(null);
     }
 
     public Long getLeadOrganisationId() {
-        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     public List<ApplicationInvite> getInvites() {

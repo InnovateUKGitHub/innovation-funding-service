@@ -76,7 +76,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
                 financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                         fileEntry -> {
                             model.addAttribute("filename", fileEntry.getName());
@@ -107,7 +107,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
                 financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                         fileEntry -> {
                             financeViewModel.setFilename(fileEntry.getName());
@@ -156,7 +156,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     private ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        if(applicationFinanceResource == null) {
+        if (applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
@@ -176,12 +176,12 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     private void mapFinanceToField(AcademicCost cost, AcademicFinance academicFinance) {
         String key = cost.getName();
-        if(key==null) {
+        if (key == null) {
             return;
         }
         BigDecimal total = cost.getTotal();
         String totalValue = "";
-        if(total!=null) {
+        if (total != null) {
             totalValue = total.toPlainString();
         }
 

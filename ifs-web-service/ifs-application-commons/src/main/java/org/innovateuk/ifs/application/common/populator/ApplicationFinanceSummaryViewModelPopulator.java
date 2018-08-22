@@ -94,9 +94,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
         final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(applicationOrganisations);
-        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
-        Map<Long, Boolean> applicantOrganisationsAreAcademic = applicationOrganisations.stream().collect(Collectors.toMap(o -> o.getId(), o -> academicOrganisationIds.contains(o.getId())));
-        Map<Long, Boolean> showDetailedFinanceLink = applicationOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(OrganisationResource::getId)
+                .collect(Collectors.toList());
+        Map<Long, Boolean> applicantOrganisationsAreAcademic = applicationOrganisations.stream()
+                .collect(Collectors.toMap(OrganisationResource::getId, o -> academicOrganisationIds.contains(o.getId())));
+
+        Map<Long, Boolean> showDetailedFinanceLink = applicationOrganisations.stream()
+                .collect(Collectors.toMap(OrganisationResource::getId,
                 organisation -> {
 
                     boolean orgFinancesExist = ofNullable(organisationFinances)
@@ -168,7 +172,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
         boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
         boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
-        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN && application.getApplicationState() != ApplicationState.CREATED;
 
         return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
     }

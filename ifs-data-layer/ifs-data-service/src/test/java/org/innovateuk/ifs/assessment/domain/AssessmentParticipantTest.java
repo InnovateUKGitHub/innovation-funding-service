@@ -173,13 +173,10 @@ public class AssessmentParticipantTest {
         assertEquals("", competitionParticipant.getRejectionReasonComment());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void reject_noComment() throws Exception {
         AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, empty());
-        assertEquals(REJECTED, competitionParticipant.getStatus());
-        assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
-        assertNull(competitionParticipant.getRejectionReasonComment());
+        competitionParticipant.reject(rejectionReason, null);
     }
 }

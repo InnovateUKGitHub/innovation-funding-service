@@ -558,7 +558,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         CompetitionRejectionResource competitionRejectionResource =
                 new CompetitionRejectionResource(newRejectionReasonResource().withId(1L).build(), null);
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
-        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.isFailure());
     }
 
     @Test

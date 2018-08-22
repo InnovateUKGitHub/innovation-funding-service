@@ -653,9 +653,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return
-                    applyInnovationAreaToUserProfile(participant, user)
-                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+            return applyInnovationAreaToUserProfile(participant, user)
+                    .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
         }
     }
 
@@ -713,9 +712,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private void updateParticipantStatus(AssessmentInvite invite){
+    private void updateParticipantStatus(AssessmentInvite invite) {
         AssessmentParticipant assessmentParticipant = assessmentParticipantRepository.getByInviteHash(invite.getHash());
-        if(assessmentParticipant.getStatus() != PENDING){
+        if (assessmentParticipant.getStatus() != PENDING) {
             assessmentParticipant.setStatus(PENDING);
             assessmentParticipantRepository.save(assessmentParticipant);
         }

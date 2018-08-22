@@ -101,7 +101,7 @@ public class AssessmentParticipant extends CompetitionParticipant<AssessmentInvi
         if (rejectionReason == null) {
             throw new NullPointerException("rejectionReason cannot be null");
         }
-        if (rejectionComment == null) {
+        if (!rejectionComment.isPresent()) {
             throw new NullPointerException("rejectionComment cannot be null");
         }
 
