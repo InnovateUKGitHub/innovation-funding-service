@@ -85,7 +85,7 @@ function startPybot() {
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --xunit --name ${targetDir} ${1} &
+    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
 function runTests() {
