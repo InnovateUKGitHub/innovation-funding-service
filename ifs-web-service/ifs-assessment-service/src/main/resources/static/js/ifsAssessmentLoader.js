@@ -33,5 +33,10 @@ IFS.assessment.loadOrder = {
     init: function () {
       IFS.assessment.repeatableDeclarationRows.init()
     }
+  },
+  'assessment-form': {
+    init: function () {
+      IFS.assessment.scopePage.init()
+    }
   }
 }

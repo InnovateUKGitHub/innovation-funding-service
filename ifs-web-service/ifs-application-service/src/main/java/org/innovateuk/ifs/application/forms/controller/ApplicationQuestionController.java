@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -85,9 +84,6 @@ public class ApplicationQuestionController {
     private ApplicantRestService applicantRestService;
 
     @Autowired
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
-
-    @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
 
     @Autowired
@@ -126,7 +122,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete);
     }
 
     @PostMapping(value = {
@@ -161,7 +157,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form);
+                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -212,7 +208,8 @@ public class ApplicationQuestionController {
             Long applicationId,
             Long questionId,
             Model model,
-            ApplicationForm form
+            ApplicationForm form,
+            Optional<Boolean> markAsComplete
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
 
@@ -220,7 +217,12 @@ public class ApplicationQuestionController {
             return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
         } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
             return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+        } else if (APPLICATION_TEAM.equals(question.getQuestion().getQuestionSetupType())) {
+            return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
+                    (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
         }
+
+
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
@@ -228,10 +230,7 @@ public class ApplicationQuestionController {
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
 
-        if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            model.addAttribute("applicationTeamModel",
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
-        } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+        if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
                     applicationResource, user.getId(), questionId));
@@ -267,7 +266,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,

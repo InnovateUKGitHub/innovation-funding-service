@@ -28,13 +28,13 @@ Day field client side
     [Documentation]  INFUND-43 INFUND-2843
     [Tags]
     [Setup]    The applicant inserts a valid date
-    When the user enters text to a text field    id = application_details-startdate_day    32
+    When the user enters text to a text field    id = application.startDate    32
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application_details-startdate_day    0
+    When the user enters text to a text field    id = application.startDate    0
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application_details-startdate_day    -1
+    When the user enters text to a text field    id = application.startDate    -1
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application_details-startdate_day    ${EMPTY}
+    When the user enters text to a text field    id = application.startDate    ${EMPTY}
     Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
@@ -88,7 +88,7 @@ Application details server side
     Given the user should see the element     jQuery = h1:contains("Application details")
     When the user clicks the button/link      jQuery = label:contains(Yes)
     And the user enters text to a text field  id = application.name  ${EMPTY}
-    And the user enters text to a text field  id = application_details-startdate_day  ${EMPTY}
+    And the user enters text to a text field  id = application.startDate  ${EMPTY}
     And the user enters text to a text field  id = application_details-startdate_month  ${EMPTY}
     And the user enters text to a text field  id = application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field  id = application.durationInMonths    ${EMPTY}
@@ -122,16 +122,16 @@ the applicant should not see the validation error any more
     the user should not see the element    css = .govuk-error-message
 
 the applicant inserts a valid date
-    Clear Element Text    id = application_details-startdate_day
-    The user enters text to a text field    id = application_details-startdate_day    12
+    Clear Element Text    id = application.startDate
+    The user enters text to a text field    id = application.startDate    12
     Clear Element Text    id = application_details-startdate_month
     The user enters text to a text field    id = application_details-startdate_month    11
     Clear Element Text    id = application_details-startdate_year
     The user enters text to a text field    id = application_details-startdate_year    2020
 
 the applicant inserts an invalid date
-    Clear Element Text    id = application_details-startdate_day
-    The user enters text to a text field    id = application_details-startdate_day    18
+    Clear Element Text    id = application.startDate
+    The user enters text to a text field    id = application.startDate    18
     Clear Element Text    id = application_details-startdate_year
     The user enters text to a text field    id = application_details-startdate_year    2015
     Clear Element Text    id = application_details-startdate_month
