@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.commons.error.ValidationUtil;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -25,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -67,6 +69,9 @@ public class ResearchCategoryController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private Validator validator;
+
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
@@ -98,7 +103,7 @@ public class ResearchCategoryController {
     }
 
     @PostMapping
-    public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
+    public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm
                                                        researchCategoryForm,
                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                ValidationHandler validationHandler,
@@ -111,13 +116,20 @@ public class ResearchCategoryController {
         Supplier<String> failureView = () -> getResearchCategories(model, loggedInUser, researchCategoryForm,
                 applicationId, questionId);
 
+        boolean markQuestionAsCompleteRequest = isMarkQuestionAsCompleteRequest(request.getParameterMap());
+
+        // Allow invalid form if not marking as complete
+        if (markQuestionAsCompleteRequest) {
+            ValidationUtil.isValid(bindingResult, researchCategoryForm, Default.class);
+        }
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
 
             checkIfAllowed(questionId, applicationResource);
 
             ServiceResult<ApplicationResource> updateResult = saveResearchCategoryChoice(applicationId,
-                    loggedInUser.getId(), researchCategoryForm, request);
+                    loggedInUser.getId(), researchCategoryForm, markQuestionAsCompleteRequest);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
@@ -130,11 +142,10 @@ public class ResearchCategoryController {
     private ServiceResult<ApplicationResource> saveResearchCategoryChoice(long applicationId,
                                                                           long loggedInUserId,
                                                                           ResearchCategoryForm researchCategoryForm,
-                                                                          HttpServletRequest request) {
-        boolean isMarkQuestionAsCompleteRequest = isMarkQuestionAsCompleteRequest(request.getParameterMap());
-        long researchCategory = researchCategoryForm.getResearchCategory();
+                                                                          boolean markQuestionAsCompleteRequest) {
+        Long researchCategory = researchCategoryForm.getResearchCategory();
 
-        RestResult<ApplicationResource> result = isMarkQuestionAsCompleteRequest ?
+        RestResult<ApplicationResource> result = markQuestionAsCompleteRequest ?
                 applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationId,
                         getProcessRoleId(loggedInUserId, applicationId), researchCategory) :
                 applicationResearchCategoryRestService.setResearchCategory(applicationId,
