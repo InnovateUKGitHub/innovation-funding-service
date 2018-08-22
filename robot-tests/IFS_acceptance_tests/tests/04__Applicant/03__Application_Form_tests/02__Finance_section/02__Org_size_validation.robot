@@ -4,6 +4,8 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6394: As an Applicant I will be invited to input my Organisation size within a new ‘Your organisation’ page navigated to from ‘Your finances’
 ...
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Custom Suite Setup
 Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant
@@ -15,11 +17,11 @@ Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Before org size is selected, your funding link is not available
-    [Documentation]    INFUND-6394
+    [Documentation]    INFUND-6394  IFS-3938
     [Tags]
     Given applicant navigates to the finances of the robot application
     When the user clicks the button/link        link=Your funding
-    Then the user should see the element        jQuery=li:contains("you must state"):contains("your organisation size")
+    Then the user should see the element        jQuery=li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
