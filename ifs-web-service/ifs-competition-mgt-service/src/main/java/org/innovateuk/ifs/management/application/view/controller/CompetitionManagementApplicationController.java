@@ -73,7 +73,7 @@ public class CompetitionManagementApplicationController {
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
@@ -89,6 +89,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
+    //TODO - XXX - Do not allow the Stakeholder to do this. Comment will be deleted after review.
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
@@ -154,7 +155,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
@@ -177,7 +178,7 @@ public class CompetitionManagementApplicationController {
      * Printable version of the application
      */
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
@@ -188,7 +189,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/team")
     public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("competitionId") final Long competitionId,

@@ -13,6 +13,7 @@ public class ManageApplicationViewModel {
     private final String queryParams;
     private final boolean readOnly;
     private final boolean canReinstate;
+    private final boolean stakeholder;
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
     private final List<AppendixResource> appendices;
@@ -22,14 +23,17 @@ public class ManageApplicationViewModel {
                                       String queryParams,
                                       boolean readOnly,
                                       boolean canReinstate,
+                                      boolean stakeholder,
                                       ApplicationOverviewIneligibilityViewModel ineligibility,
                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
-                                      List<AppendixResource> appendices) {
+                                      List<AppendixResource> appendices
+                                      ) {
         this.summaryViewModel = summaryViewModel;
         this.backUrl = backUrl;
         this.queryParams = queryParams;
         this.readOnly = readOnly;
         this.canReinstate = canReinstate;
+        this.stakeholder = stakeholder;
         this.ineligibility = ineligibility;
         this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
         this.appendices = appendices;
@@ -53,6 +57,10 @@ public class ManageApplicationViewModel {
 
     public boolean isCanReinstate() {
         return canReinstate;
+    }
+
+    public boolean isStakeholder() {
+        return stakeholder;
     }
 
     public ApplicationOverviewIneligibilityViewModel getIneligibility() {

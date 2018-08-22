@@ -103,6 +103,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can see application resources for competitions assigned to them.")
+    public boolean stakeholderAssignedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
+        return application != null && application.getCompetition() != null && userIsStakeholderInCompetition(application.getCompetition(), user.getId());
+    }
+
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
         List<Role> allApplicantRoles = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
@@ -194,7 +199,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "MARK_AS_INELIGIBLE", description = "Application can be marked as ineligible by internal admin user and innovation lead only until ", particularBusinessState = "competition is in assessment state")
     public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
         Competition competition = competitionRepository.findOne(application.getCompetition());
-        //TODO - Ha ha, quietly skip this for Stakeholder - Comment will be deleted once PR is reviewed.
+        //TODO - XXX - Well done, ha ha skip this for Stakeholder - Comment will be deleted once PR is reviewed.
         return (isInternalAdmin(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
     }
 

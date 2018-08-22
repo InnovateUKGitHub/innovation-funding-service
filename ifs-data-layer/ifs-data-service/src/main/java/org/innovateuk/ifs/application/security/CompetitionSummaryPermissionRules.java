@@ -19,6 +19,11 @@ public class CompetitionSummaryPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Stakeholders can view competition summary of competitions assigned to them.")
+    public boolean stakeholdersCanViewCompetitionSummaryOnAssignedComps(CompetitionResource competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Internal users (except innovation leads and stakeholders) can view competition summary of any competition.")
     public boolean allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeads(CompetitionResource competition, UserResource user) {
         return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);

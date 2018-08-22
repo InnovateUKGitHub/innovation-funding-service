@@ -70,8 +70,8 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the applications menu")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users, Innovation Leads and Stakeholders can view the applications menu")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
         checkCompetitionIsOpen(competitionId);
@@ -79,8 +79,8 @@ public class CompetitionManagementApplicationsController {
         return "competition/applications-menu";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the list of all applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users, Innovation Leads and Stakeholders can view the list of all applications to a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/all")
     public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
@@ -97,8 +97,8 @@ public class CompetitionManagementApplicationsController {
         return "competition/all-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the list of submitted applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users, Innovation Leads and Stakeholders can view the list of submitted applications to a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/submitted")
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
@@ -114,8 +114,8 @@ public class CompetitionManagementApplicationsController {
         return "competition/submitted-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the list of ineligible applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users, Innovation Leads and Stakeholders can view the list of ineligible applications to a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/ineligible")
     public String ineligibleApplications(Model model,
                                          @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) IneligibleApplicationsForm filterForm,
@@ -132,8 +132,9 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of unsuccessful applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users, IFS Admins," +
+            " Innovation leads and Stakeholders can view the list of unsuccessful applications to a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead', 'stakeholder')")
     @GetMapping("/previous")
     public String unsuccessfulApplications(Model model,
                                            @PathVariable("competitionId") long competitionId,

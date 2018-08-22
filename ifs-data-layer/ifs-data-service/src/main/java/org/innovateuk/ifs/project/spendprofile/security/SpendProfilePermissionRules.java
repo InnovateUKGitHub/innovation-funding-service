@@ -36,6 +36,12 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Stakeholders can get the approved status of a Spend Profile for any Project")
+    public boolean assignedStakeholderCanViewSPStatus(ProjectResource project, UserResource user){
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
             description = "Partners can view their own Spend Profile data")
@@ -87,6 +93,14 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     public boolean innovationLeadUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         Project project = projectRepository.findOne(projectOrganisationCompositeId.getProjectId());
         return userIsInnovationLeadOnCompetition(project.getApplication().getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Stakeholders can view Spend Profile data for project on competition assigned to them")
+    public boolean stakeholdersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        Project project = projectRepository.findOne(projectOrganisationCompositeId.getProjectId());
+        return userIsStakeholderInCompetition(project.getApplication().getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(

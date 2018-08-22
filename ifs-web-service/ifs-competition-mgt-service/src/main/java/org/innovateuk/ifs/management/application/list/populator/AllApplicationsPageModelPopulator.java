@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -46,8 +47,8 @@ public class AllApplicationsPageModelPopulator {
                 filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
                 new Pagination(applicationSummaryPageResource, origin),
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "Dashboard" : "Applications",
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "/dashboard/live" : "/competition/" + competitionId + "/applications",
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "Dashboard" : "Applications",
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "/dashboard/live" : "/competition/" + competitionId + "/applications",
                 user.hasRole(SUPPORT)
         );
     }

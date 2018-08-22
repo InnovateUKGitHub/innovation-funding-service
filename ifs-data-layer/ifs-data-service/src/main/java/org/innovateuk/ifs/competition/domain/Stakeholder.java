@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * A {@link InnovationLead} in a {@link Competition}.
+ * A {@link Stakeholder} in a {@link Competition}.
  */
 @Entity
 @Table(name = "competition_user")

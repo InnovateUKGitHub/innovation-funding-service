@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Component
@@ -42,7 +43,8 @@ public class ManageApplicationModelPopulator {
                                                ApplicationForm form) {
 
         boolean readOnly = user.hasRole(SUPPORT);
-        boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD));
+        //TODO - XXX - Do not give permission to Stakeholder to reinstate. Comment will be deleted on review.
+        boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER));
 
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
         SummaryViewModel summaryViewModel = summaryPopulator.populate(application.getId(), user, form);
@@ -54,6 +56,7 @@ public class ManageApplicationModelPopulator {
                 queryParam,
                 readOnly,
                 canReinstate,
+                user.hasRole(STAKEHOLDER),
                 ineligibilityViewModel,
                 researchCategorySummaryViewModel,
                 appendices);

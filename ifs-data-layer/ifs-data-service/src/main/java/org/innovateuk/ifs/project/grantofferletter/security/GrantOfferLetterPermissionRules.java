@@ -45,6 +45,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
+            description = "Stakeholders can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
+    public boolean stakeholdersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
 
@@ -72,6 +80,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     public boolean innovationLeadUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         Application application = applicationRepository.findOne(project.getApplication());
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Stakeholders can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
+    public boolean stakeholdersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(
@@ -136,6 +152,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     public boolean innovationLeadUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         Application application = applicationRepository.findOne(project.getApplication());
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Stakeholders view the send status of Grant Offer Letter for a project from competition assigned to them")
+    public boolean stakeholdersCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(

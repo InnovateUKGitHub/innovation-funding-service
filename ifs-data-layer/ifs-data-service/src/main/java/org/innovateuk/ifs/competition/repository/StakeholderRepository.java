@@ -16,5 +16,9 @@ public interface StakeholderRepository extends CompetitionParticipantRepository<
     default List<Stakeholder> findStakeholders(long competitionId) {
         return getByCompetitionIdAndRole(competitionId, STAKEHOLDER);
     }
+
+    default void deleteAllStakeholders(long competitionId) {
+        deleteByCompetitionIdAndRole(competitionId, STAKEHOLDER);
+    }
 }
 

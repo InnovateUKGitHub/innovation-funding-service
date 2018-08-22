@@ -118,7 +118,7 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                                              BindingResult bindingResult,

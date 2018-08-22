@@ -37,6 +37,11 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can view competitions that are assigned to them")
+    public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "READ", description = "Internal users other than innovation leads and stakeholders can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
         return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
@@ -45,6 +50,11 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Innovation lead users can see competitions that are assigned to them")
     public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can see competitions that are assigned to them")
+    public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
@@ -59,6 +69,11 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
     public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
+    public boolean stakeholderForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "DELETE",
