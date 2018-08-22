@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${competitionTitle}|,size='govuk-heading-xl',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.isShowApprovalMessage()}">

@@ -28,7 +28,7 @@ public class FinanceChecksViabilityViewModel {
     private LocalDate approvalDate;
     private String organisationSizeDescription;
     private Long applicationId;
-
+    private String projectName;
 
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
@@ -36,7 +36,7 @@ public class FinanceChecksViabilityViewModel {
                                            Long turnover, Long headCount,
                                            Long projectId, boolean viabilityConfirmed,
                                            boolean approved, String approverName, LocalDate approvalDate, Long organisationId,
-                                           String organisationSizeDescription, Long applicationId) {
+                                           String organisationSizeDescription, Long applicationId, String projectName) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -56,6 +56,7 @@ public class FinanceChecksViabilityViewModel {
         this.organisationId = organisationId;
         this.organisationSizeDescription = organisationSizeDescription;
         this.applicationId = applicationId;
+        this.projectName = projectName;
     }
 
     public String getOrganisationName() {
@@ -143,5 +144,13 @@ public class FinanceChecksViabilityViewModel {
 
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

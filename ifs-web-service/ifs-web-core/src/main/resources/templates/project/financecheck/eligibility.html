@@ -16,7 +16,7 @@
     <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=|${project.application}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <div class="success-alert">

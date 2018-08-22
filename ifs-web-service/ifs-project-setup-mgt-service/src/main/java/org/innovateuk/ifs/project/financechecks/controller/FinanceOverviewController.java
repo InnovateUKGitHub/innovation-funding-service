@@ -7,6 +7,7 @@ import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummariesViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.ProjectFinanceCostBreakdownViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.ProjectFinanceOverviewViewModel;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -34,6 +35,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class FinanceOverviewController {
 
     @Autowired
+    private ProjectService projectService;
+
+    @Autowired
     private FinanceCheckService financeCheckService;
 
     @Autowired
@@ -56,9 +60,9 @@ public class FinanceOverviewController {
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
         final List<PartnerOrganisationResource> sortedOrganisations
                 = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
-
+        Long applicationId = projectService.getById(projectId).getApplication();
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, sortedOrganisations),
-                getProjectFinanceCostBreakdown(projectId, sortedOrganisations));
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations), applicationId);
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {

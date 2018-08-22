@@ -60,14 +60,14 @@ public class FinanceChecksViabilityController {
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
-                                @PathVariable("organisationId") Long organisationId, Long applicationId, Model model) {
+                                @PathVariable("organisationId") Long organisationId, Model model) {
 
-        return doViewViability(projectId, organisationId, applicationId, model, getViabilityForm(projectId, organisationId));
+        return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
     }
 
     @PostMapping(params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId, Long applicationId,
+                                  @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
@@ -75,12 +75,12 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveViability(projectId, organisationId, applicationId, Viability.REVIEW, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
     }
 
     @PostMapping(params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("organisationId") Long organisationId, Long applicationId,
+                                   @PathVariable("organisationId") Long organisationId,
                                    @ModelAttribute("form") FinanceChecksViabilityForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
@@ -89,13 +89,13 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        return doSaveViability(projectId, organisationId, applicationId, Viability.APPROVED, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, Viability.APPROVED, form, validationHandler, model, successView);
     }
 
-    private String doSaveViability(Long projectId, Long organisationId, Long applicationId, Viability viability, FinanceChecksViabilityForm form,
+    private String doSaveViability(Long projectId, Long organisationId, Viability viability, FinanceChecksViabilityForm form,
                                    ValidationHandler validationHandler, Model model, Supplier<String> successView) {
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, applicationId, model, form);
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
 
         ServiceResult<Void> saveCreditReportResult = financeService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
@@ -124,17 +124,18 @@ public class FinanceChecksViabilityController {
         return statusToSend;
     }
 
-    private String doViewViability(Long projectId, Long organisationId, Long applicationId, Model model, FinanceChecksViabilityForm form) {
-        model.addAttribute("model", getViewModel(projectId, organisationId, applicationId));
+    private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
+        model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
         return "project/financecheck/viability";
     }
 
-    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Long applicationId) {
+    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
 
+        ProjectResource project = projectService.getById(projectId);
+        Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
-        ProjectResource application = projectService.getByApplicationId(applicationId);
 
         if(viability.getViability().isNotApplicable()){
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
@@ -159,12 +160,12 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
+        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(applicationId, organisationId);
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccess();
         }
         Long turnover = null;
-        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
+        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(applicationId, organisationId);
         if (turnOverResult.isSuccess()) {
             turnover = turnOverResult.getSuccess();
         }
@@ -177,7 +178,7 @@ public class FinanceChecksViabilityController {
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
                 companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
                 viabilityConfirmed, approver, approvalDate, organisationId,
-                organisationSizeDescription, applicationId);
+                organisationSizeDescription, applicationId, project.getName());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

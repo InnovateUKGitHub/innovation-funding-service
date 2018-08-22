@@ -15,12 +15,8 @@
               th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block
-            th:with="competitionTitle=${#strings.isEmpty(model.financeCheckSummaryResource.competitionName)} ? |${model.financeCheckSummaryResource.competitionId} : $#{ifs.competition.no_title}| : |${model.financeCheckSummaryResource.competitionId} : ${model.financeCheckSummaryResource.competitionName}|">
-            <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Finance checks',subTitle=${competitionTitle},size='govuk-heading-xl'"/>
-        </th:block>
-
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Finance checks',subTitle=|${model.financeCheckSummaryResource.applicationId}: ${model.financeCheckSummaryResource.projectName}|,size='govuk-heading-xl'" />
         <div th:if="${model.showSpendProfilesGeneratedMessage}" class="success-alert">
             <p class="govuk-body"><strong
                 th:text="|The finance checks have been approved and profiles generated. ${model.financeCheckSummaryResource.spendProfileGeneratedBy}, ${#temporals.format(model.financeCheckSummaryResource.spendProfileGeneratedDate, 'd MMMM yyyy')}|">Generated
