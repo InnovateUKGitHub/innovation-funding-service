@@ -87,6 +87,17 @@
 
             <input type="hidden" id="cacheTest" value=""/>
         </div>
+
+        <a th:href="${backURL}"
+           class="button-secondary"
+           th:if="${model.allReadOnly}"
+           th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+        <button th:unless="${model.allReadOnly}"
+                id="application-question-save"
+                type="submit"
+                class="govuk-button app-submit-btn"
+                name="save-research-category">Save and return to application overview
+        </button>
     </form>
 </th:block>
 
