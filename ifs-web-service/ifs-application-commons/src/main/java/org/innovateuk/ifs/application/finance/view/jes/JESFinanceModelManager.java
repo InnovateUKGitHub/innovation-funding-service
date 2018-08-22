@@ -7,10 +7,8 @@ import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -18,11 +16,13 @@ import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -38,13 +38,13 @@ import static java.util.Arrays.asList;
 public class JESFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private UserRestService userRestService;
 
     @Autowired
     private FinanceService financeService;
@@ -71,8 +71,8 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
@@ -102,8 +102,8 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);

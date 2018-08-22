@@ -2,9 +2,7 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -75,11 +73,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<List<ProjectResource>> findByUser(Long userId) {
-        return projectRestService.findByUserId(userId).toServiceResult();
-    }
-
-    @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
@@ -89,11 +82,6 @@ public class ProjectServiceImpl implements ProjectService {
             ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
             return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
         }
-    }
-
-    @Override
-    public OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccess();
     }
 
     @Override
@@ -141,16 +129,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public final Boolean isProjectManager(Long userId, Long projectId) {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
-    }
-
-    @Override
-    public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
-        return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-    }
-
-    @Override
-    public ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId) {
-        return projectRestService.createProjectFromApplicationId(applicationId).toServiceResult();
     }
 
     @Override
