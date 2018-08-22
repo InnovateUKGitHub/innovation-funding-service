@@ -71,7 +71,8 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    protected String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
+    private String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler,
+                               Supplier<ServiceResult<Void>> action) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccess();
 
