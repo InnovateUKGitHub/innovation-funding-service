@@ -5,24 +5,11 @@ metadata:
 subsets:
 # These addresses must be changed for individual environments
 # Addresses for the current cluster
-  - addresses:
-      - ip: 10.0.0.64
-    ports:
-      - port: 1
-  - addresses:
-      - ip: 10.0.0.31
-    ports:
-      - port: 1
-# Addresses for the new cluster
-#  - addresses:
-#      - ip: 10.0.0.151
-#    ports:
-#      - port: 1
-#  - addresses:
-#      - ip: 10.0.0.168
-#    ports:
-#      - port: 1
-#  - addresses:
-#      - ip: 10.0.0.71
-#    ports:
-#      - port: 1
+- addresses:
+  - ip: 10.0.0.105
+  - ip: 10.0.1.167
+  - ip: 10.0.2.65
+  ports:
+  - port: 1
+    protocol: TCP
+

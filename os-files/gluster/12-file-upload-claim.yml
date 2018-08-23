@@ -11,3 +11,4 @@ spec:
   selector:
     matchLabels:
       dev: "dev"
+  storageClassName: glusterfs
