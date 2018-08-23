@@ -26,6 +26,8 @@
 #if (!$passwordPrincipals or $passwordPrincipals.isEmpty() or $authenticationContext.isAcceptable($passwordPrincipals))
   #set ($passwordEnabled = true)
 #end
+#set ($sys = $request.class.forName("java.lang.System"))
+#set ($date = $sys.currentTimeMillis())
 ##
 <!DOCTYPE html>
 <html lang="en" class="no-js govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
@@ -33,19 +35,19 @@
         <meta charset="utf-8" />
     	<title>Sign in - Innovation Funding Service</title>
 
-    	<link rel="shortcut icon" href="$resourcesDomain//images/favicon.ico" type="image/x-icon" />
-        <link rel="mask-icon" href="$resourcesDomain//images/govuk-mask-icon.svg" color="blue">
-        <link rel="apple-touch-icon" sizes="180x180" href="$resourcesDomain//images/govuk-apple-touch-icon-180x180.png">
-        <link rel="apple-touch-icon" sizes="167x167" href="$resourcesDomain//images/govuk-apple-touch-icon-167x167.png">
-        <link rel="apple-touch-icon" sizes="152x152" href="$resourcesDomain//images/govuk-apple-touch-icon-152x152.png">
-        <link rel="apple-touch-icon" href="$resourcesDomain//images/govuk-apple-touch-icon.png">
+    	<link rel="shortcut icon" href="$resourcesDomain/images/favicon.ico" type="image/x-icon" />
+        <link rel="mask-icon" href="$resourcesDomain/images/govuk-mask-icon.svg" color="blue">
+        <link rel="apple-touch-icon" sizes="180x180" href="$resourcesDomain/images/govuk-apple-touch-icon-180x180.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="$resourcesDomain/images/govuk-apple-touch-icon-167x167.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="$resourcesDomain/images/govuk-apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" href="$resourcesDomain/images/govuk-apple-touch-icon.png">
 
         <!--[if !IE 8]><!-->
-        <link href="$resourcesDomain/css/screen.css" rel="stylesheet"  media="all" />
+        <link href="$resourcesDomain/css/screen.css?$date" rel="stylesheet"  media="all" />
         <!--<![endif]-->
 
         <!--[if IE 8]>
-        <link href="$resourcesDomain/css/ie8.css" rel="stylesheet"  media="all" />
+        <link href="$resourcesDomain/css/ie8.css?$date" rel="stylesheet"  media="all" />
         <![endif]-->
 
         <!--[if gte IE 9]><!-->
