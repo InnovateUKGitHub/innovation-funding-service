@@ -338,7 +338,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
+        applicationResource.setLeadOrganisationId(leadOrganisation.getId());
         return applicationResource;
     }
 }
