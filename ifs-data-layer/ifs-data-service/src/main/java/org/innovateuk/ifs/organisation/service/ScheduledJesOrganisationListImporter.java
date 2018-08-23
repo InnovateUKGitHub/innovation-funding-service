@@ -38,27 +38,34 @@ public class ScheduledJesOrganisationListImporter {
 
     private static final Log LOG = LogFactory.getLog(ScheduledJesOrganisationListImporter.class);
 
-    @Value("${ifs.data.service.jes.organisation.importer.connection.timeout.millis}")
+    private boolean importEnabled;
+    private String jesFileDownloadUrl;
     private int connectionTimeoutMillis = 10000;
-
-    @Value("${ifs.data.service.jes.organisation.importer.read.timeout.millis}")
     private int readTimeoutMillis = 10000;
 
     private AcademicRepository academicRepository;
 
     @Autowired
     ScheduledJesOrganisationListImporter(@Autowired AcademicRepository academicRepository,
+                                         @Value("${ifs.data.service.jes.organisation.importer.download.url}") String jesFileDownloadUrl,
                                          @Value("${ifs.data.service.jes.organisation.importer.connection.timeout.millis}") int connectionTimeoutMillis,
-                                         @Value("${ifs.data.service.jes.organisation.importer.read.timeout.millis}") int readTimeoutMillis) {
+                                         @Value("${ifs.data.service.jes.organisation.importer.read.timeout.millis}") int readTimeoutMillis,
+                                         @Value("${ifs.data.service.jes.organisation.importer.enabled}") boolean importEnabled) {
 
         this.academicRepository = academicRepository;
         this.connectionTimeoutMillis = connectionTimeoutMillis;
         this.readTimeoutMillis = readTimeoutMillis;
+        this.importEnabled = importEnabled;
     }
 
-    @Scheduled(cron = "${ifs.data.service.jes.organisation.importer.cron.expression}")
     @Transactional
+    @Scheduled(cron = "${ifs.data.service.jes.organisation.importer.cron.expression}")
     public void importJesList() {
+
+        if (!importEnabled) {
+            LOG.trace("Je-S organisation list import currently disabled");
+            return;
+        }
 
         LOG.info("Importing Je-S organisation list...");
 
@@ -122,7 +129,7 @@ public class ScheduledJesOrganisationListImporter {
 
     private ServiceResult<URL> getJesFileDownloadUrl() {
         try {
-            return serviceSuccess(new URL("https://je-s.rcuk.ac.uk/file"));
+            return serviceSuccess(new URL(jesFileDownloadUrl));
         } catch (MalformedURLException e) {
             return serviceFailure(new Error(e.getMessage(), INTERNAL_SERVER_ERROR));
         }
@@ -142,10 +149,5 @@ public class ScheduledJesOrganisationListImporter {
         }
 
         return BAD_REQUEST;
-    }
-
-    // TODO DW - remove!
-    public static void main(String[] args) {
-        new ScheduledJesOrganisationListImporter().importJesList();
     }
 }
