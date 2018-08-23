@@ -449,13 +449,13 @@
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${model.questionId}"
-                class="button-clear">Edit
+                class="govuk-button button-clear">Edit
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
             type="submit"
             name="mark_as_complete"
-            class="button-clear"
+            class="govuk-button button-clear"
             th:value="${model.questionId}">Mark as complete
         </button>
     </th:block>
@@ -487,7 +487,7 @@
 <!-- ========================= edit link =========================== -->
 
 <th:block th:fragment="form-edit-question-button (model, question)">
-    <button class="button-clear"
+    <button class="govuk-button button-clear"
             type="submit"
             name="edit_question"
             th:unless="${model.closed}"

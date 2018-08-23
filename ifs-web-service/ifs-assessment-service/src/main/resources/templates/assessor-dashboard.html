@@ -220,9 +220,9 @@
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
-                                        <a class="govuk-heading-s"
-                                           th:href="@{/assessor/dashboard/competition/{competitionId}/interview(competitionId=${interviewPanelAccept.competitionId})}"
-                                           th:text="${interviewPanelAccept.competitionName}"/>
+                                        <a th:href="@{/assessor/dashboard/competition/{competitionId}/interview(competitionId=${interviewPanelAccept.competitionId})}"
+                                           th:text="${interviewPanelAccept.competitionName}"
+                                           class="govuk-link" />
                                     </h3>
 
                                     <p class="govuk-body" th:if="${interviewPanelAccept.awaitingApplications == 0}">Applications awaiting review will be added here.</p>

@@ -260,7 +260,7 @@
 
 
 
-            <p class="govuk-body govuk-!-margin-top-9 govuk-!-font-weight-bold user-feedback"><span>Need help with this service?</span> <a href="$resourcesDomain/info/contact" class="govuk-link">Contact us</a></p>
+            <p class="govuk-body govuk-!-margin-top-9 user-feedback"><span class="govuk-!-font-weight-bold">Need help with this service?</span> <a class="govuk-link" href="$resourcesDomain/info/contact">Contact us</a></p>
          </main>
       </div>
       <footer class="govuk-footer" role="contentinfo">

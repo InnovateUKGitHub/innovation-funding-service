@@ -29,6 +29,11 @@
         background: govuk-colour("grey-4");
       }
 
+      &:focus {
+        outline: 3px solid $govuk-focus-colour;
+        z-index: 1;
+      }
+
       &::-moz-focus-inner {
         padding: 0;
         border: 0;
