@@ -51,7 +51,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     public void setUp() {
         application = new ApplicationResource();
         application.setId(1L);
-        organisation = newOrganisation().withId(1L).withName("Worth Internet Systems").build();
+        organisation = new Organisation("Worth Internet Systems");
         applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 
@@ -159,7 +159,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testFinanceDetails() throws Exception {
+    public void financeDetails() throws Exception {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
         when(financeServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
@@ -172,7 +172,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testGetFinanceDetailsForApplication() throws Exception {
+    public void getFinanceDetailsForApplication() throws Exception {
         List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().build(3);
 
         when(financeServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));

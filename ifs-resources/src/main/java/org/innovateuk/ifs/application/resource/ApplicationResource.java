@@ -49,7 +49,7 @@ public class ApplicationResource {
 
     private IneligibleOutcomeResource ineligibleOutcome;
 
-    private String leadOrganisationName;
+    private Long leadOrganisationId;
 
     private boolean isInAssessmentReviewPanel;
 
@@ -144,14 +144,13 @@ public class ApplicationResource {
         this.ineligibleOutcome = ineligibleOutcome;
     }
 
-    public String getLeadOrganisationName() {
-        return leadOrganisationName;
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
     }
 
-    public void setLeadOrganisationName(String leadOrganisationName) {
-        this.leadOrganisationName = leadOrganisationName;
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
     }
-
 
     public String getCompetitionName() {
         return competitionName;
@@ -276,7 +275,7 @@ public class ApplicationResource {
                 .append(applicationState, that.applicationState)
                 .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
-                .append(leadOrganisationName, that.leadOrganisationName)
+                .append(leadOrganisationId, that.leadOrganisationId)
                 .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
                 .isEquals();
     }
@@ -291,7 +290,7 @@ public class ApplicationResource {
                 .append(applicationState)
                 .append(ineligibleOutcome)
                 .append(competition)
-                .append(leadOrganisationName)
+                .append(leadOrganisationId)
                 .append(isInAssessmentReviewPanel)
                 .toHashCode();
     }
