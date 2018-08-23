@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.eugrant.domain;
 
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
 import javax.persistence.*;
 
@@ -16,10 +16,11 @@ public class EuOrganisation {
     @OneToOne
     private final EuAddress address;
     @Enumerated(STRING)
-    private final OrganisationTypeEnum organisationType;
+    private final EuOrganisationType organisationType;
     private final String companiesHouseNumber;
 
-    public EuOrganisation(final String name, final OrganisationTypeEnum organisationType, final String companiesHouseNumber, final EuAddress address) {
+    public EuOrganisation(final String name, final EuOrganisationType organisationType,
+                          final String companiesHouseNumber, final EuAddress address) {
         if (name == null) {
             throw new NullPointerException("name connect be null");
         }
@@ -42,5 +43,25 @@ public class EuOrganisation {
         this.name = name;
         this.organisationType = organisationType;
         this.address = address;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public EuAddress getAddress() {
+        return address;
+    }
+
+    public EuOrganisationType getOrganisationType() {
+        return organisationType;
+    }
+
+    public String getCompaniesHouseNumber() {
+        return companiesHouseNumber;
     }
 }
