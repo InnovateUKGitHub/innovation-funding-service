@@ -17,7 +17,7 @@ public class RestTemplateAdaptorFactory {
     @Value("${idp.rest.key}")
     private String shibbolethKey = null;
 
-    @Value("${ifs.data.company-house.key}")
+    @Value("${ifs.data.companies-house.key}")
     private String companieshouseKey = null;
 
     @Value("${ifs.finance-totals.baseURL}")

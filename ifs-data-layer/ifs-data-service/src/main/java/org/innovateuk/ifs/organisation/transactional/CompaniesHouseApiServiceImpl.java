@@ -39,7 +39,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final Log LOG = LogFactory.getLog(CompaniesHouseApiServiceImpl.class);
 
-    @Value("${ifs.data.company-house.url}")
+    @Value("${ifs.data.companies-house.url}")
     private String companiesHouseUrl = null;
 
     private static final int SEARCH_ITEMS_MAX = 10;
