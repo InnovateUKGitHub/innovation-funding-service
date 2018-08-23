@@ -24,7 +24,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "A user can see projects that they are partners on")
+    @PermissionRule(value = "READ", description = "A monitoring officer can see projects that they are assigned to")
     public boolean monitoringOfficerOnProjectCanView(final ProjectResource project, final UserResource user) {
         return project != null && isMonitoringOfficer(project.getId(), user.getId());
     }

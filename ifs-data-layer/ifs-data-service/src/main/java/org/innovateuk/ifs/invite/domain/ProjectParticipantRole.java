@@ -48,6 +48,10 @@ public enum ProjectParticipantRole implements ParticipantRole {
         return this == PROJECT_FINANCE_CONTACT;
     }
 
+    public boolean isMonitoringOfficer() {
+        return this == MONITORING_OFFICER;
+    }
+
     public static ProjectParticipantRole getById(Long id) {
         return idMap.get(id);
     }

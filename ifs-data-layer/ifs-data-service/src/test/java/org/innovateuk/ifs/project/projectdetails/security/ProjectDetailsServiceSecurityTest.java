@@ -110,6 +110,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
                             .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
                     verify(projectPermissionRules, times(1))
                             .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .monitoringOfficerOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(projectPermissionRules);
                 }
         );

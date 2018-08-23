@@ -1,7 +1,7 @@
 -- IFS-3978: Create a new project role for Monitoring Officer
 
-insert into project_role
+INSERT INTO project_role
 (name)
-values
+VALUES
 ('MONITORING_OFFICER');
 
