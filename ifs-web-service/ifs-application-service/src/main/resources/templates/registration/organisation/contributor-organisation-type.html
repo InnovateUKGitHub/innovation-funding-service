@@ -23,9 +23,6 @@
         <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/contributor-organisation-type}" method="POST">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="organisationType">
-                        <h2 class="govuk-fieldset__heading">Choose your organisation type</h2>
-                    </legend>
                     <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
                     </th:block>
