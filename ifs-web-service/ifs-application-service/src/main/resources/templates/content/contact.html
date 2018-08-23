@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact'" />
 </head>
-<body class="assessment-review">
+<body class="govuk-template__body assessment-review">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact us',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p>We can provide you with information and advice on Innovate UK competitions. We also provide help and technical support on using the Innovation Funding Service.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact us',size='govuk-heading-xl'" />
 
-    <h2 class="heading-large">Contact our Customer Support Service</h2>
+        <p class="govuk-body">We can provide you with information and advice on Innovate UK competitions. We also provide help and technical support on using the Innovation Funding Service.</p>
 
-    <h3 class="heading-medium">Phone</h3>
-    <p>Call 0300 321 4357 to speak to an adviser (9:00am to 5:30pm, 5 days a week). Calls are free from landlines and most mobile numbers. Find out more about <a href="https://www.gov.uk/call-charges" rel="external">call charges and freephone numbers</a>.</p>
+        <h2 class="govuk-heading-l">Contact our Customer Support Service</h2>
 
-    <h3 class="heading-medium">Email</h3>
-    <p>Send your question or query to <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a> and we'll get back to you as soon as possible.</p>
+        <h3 class="govuk-heading-m">Phone</h3>
+        <p class="govuk-body">Call 0300 321 4357 to speak to an adviser (9:00am to 5:30pm, 5 days a week). Calls are free from landlines and most mobile numbers. Find out more about <a href="https://www.gov.uk/call-charges" class="govuk-link" rel="external">call charges and freephone numbers</a>.</p>
 
-    <h3 class="heading-medium">Assistance</h3>
-    <p>If you need help with the service we can offer telephone, web conference or face to face assistance.</p>
-    <p>Call 0300 321 4357 to speak to an adviser.</p>
-</main>
+        <h3 class="govuk-heading-m">Email</h3>
+        <p class="govuk-body">Send your question or query to <a href="mailto:support@innovateuk.ukri.org" class="govuk-link">support@innovateuk.ukri.org</a> and we'll get back to you as soon as possible.</p>
+
+        <h3 class="govuk-heading-m">Assistance</h3>
+        <p class="govuk-body">If you need help with the service we can offer telephone, web conference or face to face assistance.</p>
+        <p class="govuk-body">Call 0300 321 4357 to speak to an adviser.</p>
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

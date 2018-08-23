@@ -1,33 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
 
-<body class="app-summary panel-assessment">
+<body class="govuk-template__body app-summary panel-assessment">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to panel overview',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{compId}/panel(compId=${model.competition.id})})" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to panel overview',linkUrl=@{/assessor/dashboard/competition/{compId}/panel(compId=${model.competition.id})})" />
 
-    <th:block th:with="applicationName=${#strings.isEmpty(model.summaryViewModel.currentApplication.name)} ? #{ifs.application.no_title} : ${model.summaryViewModel.currentApplication.name}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${model.summaryViewModel.currentApplication.name},size='heading-xlarge'" />
-    </th:block>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
-    <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-          method="post" enctype="multipart/form-data"
-          th:object="${form}" class="form-serialize-js section-overview">
-
-        <h2 class="heading-medium">Details</h2>
-        <th:block ifs:global="${model.feedbackViewModel}">
-            <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+        <th:block th:with="applicationName=${#strings.isEmpty(model.summaryViewModel.currentApplication.name)} ? #{ifs.application.no_title} : ${model.summaryViewModel.currentApplication.name}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${model.summaryViewModel.currentApplication.name},size='govuk-heading-xl'" />
         </th:block>
-    </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="post" enctype="multipart/form-data"
+              th:object="${form}" class="form-serialize-js section-overview">
+            <h2 class="govuk-heading-m">Details</h2>
+            <th:block ifs:global="${model.feedbackViewModel}">
+                <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+            </th:block>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

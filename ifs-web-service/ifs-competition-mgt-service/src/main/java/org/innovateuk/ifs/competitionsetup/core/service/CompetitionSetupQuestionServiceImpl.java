@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private SectionService sectionService;
@@ -97,7 +97,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
     private List<Long> getAllQuestionIds(Long competitionId) {
-        List<QuestionResource> questionResources = questionService.findByCompetition(competitionId);
+        List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionId).getSuccess();
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionId);
 
         Set<SectionResource> parentSections = sections.stream()

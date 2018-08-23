@@ -32,20 +32,20 @@ Non-registered assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
-    Then the user should see the element    jQuery=.button:contains("Create account")
+    Then the user should see the element    jQuery=.govuk-button:contains("Create account")
 
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
-    When the user clicks the button/link           jQuery=.button:contains("Create account")
-    Then the user should see the element           jQuery=.heading-small:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            jQuery=.link-back:contains("Back")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Create account")
+    Then the user should see the element           jQuery=.govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    And the user clicks the button/link            jQuery=.govuk-back-link:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
-    Given the user clicks the button/link  jQuery=.button:contains("Create account")
+    Given the user clicks the button/link  jQuery=.govuk-button:contains("Create account")
     When the user clicks the button/link   jQuery=button:contains("Continue")
     Then the user should see an error      Please enter a first name.
     And the user should see an error       Please enter a last name.
@@ -104,7 +104,7 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
-    Then the user should see the element   jQuery=h3:contains("Innovation areas") ~ ul li:contains("Emerging and enabling") li:contains("Satellite applications")
+    Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
@@ -132,7 +132,7 @@ the user should not see the validation error in the create assessor form
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Continue")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the assessor shouldn't be able to reject the rejected competition
@@ -145,4 +145,4 @@ the assessor shouldn't be able to accept the rejected competition
 
 The assessor is unable to see the invitation
     the user should see the element   jQuery=h1:contains("This invitation is now closed")
-    The user should see the element   jQuery=span:contains("You have already accepted or rejected this invitation.")
+    The user should see the element   jQuery=p:contains("You have already accepted or rejected this invitation.")

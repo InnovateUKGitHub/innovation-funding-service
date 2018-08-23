@@ -19,29 +19,29 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-xlarge no-margin">Terms of contract</h1>
+	<div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Terms of contract</h1>
     </div>
 
-	<p>Please read through all of the terms of service before agreeing.</p>
+	<p class="govuk-body">Please read through all of the terms of service before agreeing.</p>
 
 	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-terms" />
 
-	<ul class="list list-bullet extra-margin">
+	<ul class="govuk-list govuk-list--bullet extra-margin">
 		<li><a href="/prototypes/5645-annex?page=a">Annex A</a></li>
 		<li><a href="/prototypes/5645-annex?page=b">Annex B</a></li>
 		<li><a href="/prototypes/5645-annex?page=c">Annex C</a></li>
 	</ul>
 
-	<p class="form-hint extra-margin">
+	<p class="govuk-hint extra-margin">
 		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.
 	</p>
 
 	<form th:unless="${param.status != null and param.status[0] == 'signed'}">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<legend class="visuallyhidden">Confirm terms and conditions</legend>
+			<legend class="govuk-visually-hidden">Confirm terms and conditions</legend>
 
 			<div class="form-block">
 				<label class="block-label selection-button-checkbox" for="confirm-assessor-terms">
@@ -51,7 +51,7 @@
 			</div>
 
 			<div class="form-block extra-margin">
-				<a class="button disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and return to assessor dashboard</a>
+				<a class="govuk-button disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and return to assessor dashboard</a>
 				<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites')}">Cancel</a>
 			</div>
 		</fieldset>
@@ -59,11 +59,11 @@
 	</form>
 
   <th:block th:if="${param.status != null and param.status[0] == 'signed'}">
-      <p class="extra-margin">You signed the contract on 13 December 2016.</p>
-      <a class="button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
+      <p class="govuk-body extra-margin">You signed the contract on 13 December 2016.</p>
+      <a class="govuk-button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
   </th:block>
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

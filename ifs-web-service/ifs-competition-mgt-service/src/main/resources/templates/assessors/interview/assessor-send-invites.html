@@ -1,75 +1,82 @@
 <!DOCTYPE html>
 
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to interview panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invite to assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invite to assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
-    <h2 class="heading-medium no-margin">Recipients</h2>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
-    <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Recipients</h2>
 
-    <form th:action="@{/assessment/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
-        <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
-            <label class="form-label-bold" th:for="${#ids.next('subject')}">
-                <span>Subject</span>
+        <p class="govuk-body" th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
+
+        <form th:action="@{/assessment/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
+            <div class="govuk-form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="${#ids.next('subject')}">
+                    Subject
+                </label>
                 <th:block th:if="${#fields.hasErrors('subject')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
                 </th:block>
-            </label>
-            <input class="form-control width-full"
-                   id="subject"
-                   type="text"
-                   th:field="*{subject}"
-                   required="required"
-                   th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
-        </div>
-
-        <h3 class="heading-small">Message</h3>
-        <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
-
-        <div class="form-group extra-margin">
-            <label class="form-label-bold" for="message">Additional text</label>
-            <div class="textarea-wrapped">
-                <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
-                </textarea>
+                <input class="govuk-input"
+                       id="subject"
+                       type="text"
+                       th:field="*{subject}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
             </div>
-        </div>
 
-        <p class="form-hint extra-margin">
-            Yours sincerely,
-        </p>
+            <h3 class="govuk-heading-s">Message</h3>
+            <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-        <p class="form-hint extra-margin">
-            Innovate UK, part of UK Research and Innovation <br />
-            Tel: 0300 321 4357 <br />
-            Email: competitions@innovateuk.ukri.org
-        </p>
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <label class="govuk-label" for="message">Additional text</label>
+                <div class="textarea-wrapped">
+                    <textarea id="message"
+                              rows="8"
+                              data-editor="html"
+                              class="govuk-textarea"
+                              th:field="*{content}">
+                    </textarea>
+                </div>
+            </div>
 
-        <div class="extra-margin">
-            <button type="submit" class="button">Send invite</button>
-            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
-               class="button button-clear">Cancel</a>
-        </div>
+            <p class="govuk-hint govuk-!-margin-top-6">
+                Yours sincerely,
+            </p>
 
-    </form>
+            <p class="govuk-hint govuk-!-margin-top-6">
+                Innovate UK, part of UK Research and Innovation <br />
+                Tel: 0300 321 4357 <br />
+                Email: competitions@innovateuk.ukri.org
+            </p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <div class="govuk-body govuk-!-margin-top-6">
+                <button type="submit" class="govuk-button">Send invite</button>
+                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
+                   class="button-clear">Cancel</a>
+            </div>
 
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

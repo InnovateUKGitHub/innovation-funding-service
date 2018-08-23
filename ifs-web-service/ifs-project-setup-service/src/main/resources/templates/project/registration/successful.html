@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Verification email sent'" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please verify your email address',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p>To keep your account and application secure click on the link in the email we have sent you to verify your email address.</p>
-    <p>You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please verify your email address',size='govuk-heading-l'" />
+
+        <p class="govuk-body">To keep your account and application secure click on the link in the email we have sent you to verify your email address.</p>
+        <p class="govuk-body">You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.ukri.org" class="govuk-link">support@innovateuk.ukri.org</a></p>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

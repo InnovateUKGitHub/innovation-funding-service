@@ -120,7 +120,7 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
                 new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation, originQuery);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));

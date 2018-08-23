@@ -1,107 +1,115 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add organisation',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="app-org-invite">
+    <body class="govuk-template__body app-org-invite">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/layout :: header-sub"
-                      th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{${model.backUrl}}" />
-
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
-
-            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add organisation',subTitle=${applicationName},size='heading-xlarge'" />
-            </th:block>
-
-            <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
-
-            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" novalidate="novalidate" method="post">
-                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
-                    <label class="form-label-bold" for="organisationName">
-                        <span>Organisation name</span>
-                        <th:block th:if="${#fields.hasErrors('organisationName')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input type="text"
-                           class="form-control width-full"
-                           th:field="*{organisationName}"
-                           required="required"
-                           th:errorclass="form-control-error"
-                           th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
+                      th:with="linkTitle='Application team',linkUrl=@{${model.backUrl}}" />
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}"
+                     class="govuk-error-summary"
+                     role="alert"
+                     aria-labelledby="error-summary-title"
+                     tabindex="-1"
+                     data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <table id="applicant-table" class="table-overflow">
-                    <thead>
-                        <tr>
-                            <th class="width-30-percent" scope="col">Applicant name</th>
-                            <th class="width-55-percent" scope="col">Email</th>
-                            <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
-                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group-error'">
-                                <label th:for="applicants[__${applicantStat.index}__].name">
-                                    <span class="visually-hidden">Applicant name</span>
+                <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add organisation',subTitle=${applicationName},size='govuk-heading-xl'" />
+                </th:block>
+
+                <p class="govuk-body">Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
+
+                <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" novalidate="novalidate" method="post">
+                    <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label" for="organisationName">
+                            Organisation name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('organisationName')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input type="text"
+                               class="govuk-input"
+                               th:field="*{organisationName}"
+                               required="required"
+                               th:errorclass="govuk-input--error"
+                               th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
+                    </div>
+
+                    <table id="applicant-table" class="govuk-table table-overflow">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-30-percent" scope="col">Applicant name</th>
+                                <th class="govuk-table__header width-55-percent" scope="col">Email</th>
+                                <th class="govuk-table__header width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr th:each="applicant, applicantStat : *{applicants}"
+                                class="govuk-table__row repeatable-row">
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'govuk-form-group--error'">
+                                    <label th:for="applicants[__${applicantStat.index}__].name">
+                                        <span class="govuk-visually-hidden">Applicant name</span>
+                                    </label>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
                                               th:text="${err}"
                                               class="error-message">Please enter a name.</span>
                                     </th:block>
-                                </label>
-                                <input type="text"
-                                       th:id="applicants[__${applicantStat.index}__].name"
-                                       th:field="*{applicants[__${applicantStat.index}__].name}"
-                                       class="form-control width-full"
-                                       th:errorclass="form-control-error"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.standard.name.required}" />
-                            </td>
-                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group-error'">
-                                <label th:for="applicants[__${applicantStat.index}__].email">
-                                    <span class="visually-hidden">Applicant email</span>
+                                    <input type="text"
+                                           th:id="applicants[__${applicantStat.index}__].name"
+                                           th:field="*{applicants[__${applicantStat.index}__].name}"
+                                           class="govuk-input"
+                                           th:errorclass="govuk-input--error"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.standard.name.required}" />
+                                </td>
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'govuk-form-group--error'">
+                                    <label th:for="applicants[__${applicantStat.index}__].email">
+                                        <span class="govuk-visually-hidden">Applicant email</span>
+                                    </label>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
-                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
-                                              th:text="${err}"
-                                              class="error-message"> Please enter an email address.</span>
+                                            <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
+                                                  th:text="${err}"
+                                                  class="error-message"> Please enter an email address.</span>
                                     </th:block>
-                                </label>
-                                <input type="email"
-                                       th:id="applicants[__${applicantStat.index}__].email"
-                                       th:field="*{applicants[__${applicantStat.index}__].email}"
-                                       class="form-control width-full"
-                                       th:errorclass="form-control-error"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                                data-email-errormessage=#{validation.standard.email.format},
-                                                data-email-duplication-errormessage=#{email.already.in.invite}" />
-                            </td>
-                            <td class="alignright"><button class="remove-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                                    <input type="email"
+                                           th:id="applicants[__${applicantStat.index}__].email"
+                                           th:field="*{applicants[__${applicantStat.index}__].email}"
+                                           class="govuk-input"
+                                           th:errorclass="govuk-input--error"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.invite.email.required},
+                                                    data-email-errormessage=#{validation.standard.email.format},
+                                                    data-email-duplication-errormessage=#{email.already.in.invite}" />
+                                </td>
+                                <td class="govuk-table__cell alignright"><button class="remove-another-row button-clear" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <p><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
+                    <p class="govuk-body"><button class="button-clear" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
 
-                <p class="extra-margin">
-                    <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
-                    <a th:href="@{${model.backUrl}}" class="button button-clear">Cancel</a>
-                </p>
-            </form>
+                    <p class="govuk-body govuk-!-margin-top-6">
+                        <button class="govuk-button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+                        <a th:href="@{${model.backUrl}}" class="button-clear">Cancel</a>
+                    </p>
+                </form>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

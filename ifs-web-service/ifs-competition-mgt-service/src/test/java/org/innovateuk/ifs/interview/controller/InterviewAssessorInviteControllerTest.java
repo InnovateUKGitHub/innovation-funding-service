@@ -21,11 +21,11 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsInviteView
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -94,7 +94,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
 
     @Spy
     @InjectMocks
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Spy
     @InjectMocks
