@@ -15,12 +15,11 @@ CREATE TABLE eu_action_type (
   name VARCHAR(255) NOT NULL UNIQUE,
   priority INT(11) NOT NULL UNIQUE
 );
-
 CREATE TABLE eu_organisation (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   company_house_number VARCHAR(255),
-  organisation_type VARCHAR(255)
+  organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL
 );
 
 CREATE TABLE eu_contact (
