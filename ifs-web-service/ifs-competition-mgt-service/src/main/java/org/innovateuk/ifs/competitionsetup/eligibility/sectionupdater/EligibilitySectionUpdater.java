@@ -125,7 +125,6 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         newGcm.setOrganisationSize(oldGCM.getOrganisationSize());
         newGcm.setOrganisationType(oldGCM.getOrganisationType());
         newGcm.setResearchCategory(oldGCM.getResearchCategory());
-        newGcm.setCompetitionType(oldGCM.getCompetitionType());
         newGcm.setMaximum(newValue);
         return newGcm;
     }
