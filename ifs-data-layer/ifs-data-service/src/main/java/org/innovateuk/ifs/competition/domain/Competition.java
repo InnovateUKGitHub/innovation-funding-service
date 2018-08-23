@@ -138,15 +138,13 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id,
-                       List<Question> questions,
+    public Competition(List<Question> questions,
                        List<Section> sections,
                        String name,
                        ZonedDateTime startDate,
                        ZonedDateTime endDate,
                        ZonedDateTime registrationDate,
                        GrantTermsAndConditions termsAndConditions) {
-        this.id = id;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -157,8 +155,7 @@ public class Competition implements ProcessActivity {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
+    public Competition(String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);

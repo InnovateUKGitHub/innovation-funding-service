@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -72,7 +71,8 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    protected String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
+    private String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler,
+                               Supplier<ServiceResult<Void>> action) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccess();
 
@@ -80,13 +80,10 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
+        Supplier<String> successView = () -> getPage(competitionId, model, Optional.empty(), false);
 
-        Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
-        //Pass in the public content resource after saving for success view.
-        Supplier<String> successView = () -> getPage(publicContentService.getCompetitionById(competitionId), model, Optional.empty(), false);
-
-        ServiceResult<Void> result = formSaver().save(form, publicContent);
+        ServiceResult<Void> result = formSaver().save(form, publicContentService.getCompetitionById(competitionId));
 
         validationHandler.addAnyErrors(error(removeDuplicates(result.getErrors())));
 
