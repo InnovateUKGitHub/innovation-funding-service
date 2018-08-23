@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
