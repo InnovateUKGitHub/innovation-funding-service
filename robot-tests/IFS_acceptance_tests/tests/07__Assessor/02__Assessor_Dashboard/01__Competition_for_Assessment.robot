@@ -3,6 +3,7 @@ Documentation     INFUND-5432 As an assessor I want to receive an alert to compl
 Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Assessment should not be visible when the deadline has passed
@@ -12,7 +13,8 @@ Assessment should not be visible when the deadline has passed
     When The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
     And the user reloads the page
     Then The user should not see the element    link=Park living
-    [Teardown]  Reset competition's milestone  ${assessorDeadline}
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2020-09-04' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
+    #[Teardown]  Reset competition's milestone  ${assessorDeadline}
 
 *** Keywords ***
 Save competition's current assessor deadline

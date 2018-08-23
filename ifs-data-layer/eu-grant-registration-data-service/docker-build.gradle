@@ -6,12 +6,12 @@ ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 ext.ifsFlywayLocations="db/migration"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3309/eu_grant_registration"
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3309/eu_grant_registration_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mysql://ifs-database:3309?characterEncoding=utf8'
-project.ext['flyway.schemas']='eu_grant_registration'
+project.ext['flyway.schemas']='eu_grant_registration_test,eu_grant_registration'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
 

@@ -45,6 +45,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -628,7 +629,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
         assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
-        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
+        assertEquals(leadOrganisationId, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationId());
     }
 
     @Test
@@ -704,5 +705,25 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
 
+    }
+
+    @Test
+    public void findLatestEmailFundingDateByCompetitionId() {
+        long competitionId = 1L;
+
+        ZonedDateTime expectedDateTime = ZonedDateTime.of(2018, 8, 1, 1, 0, 0, 0, ZoneId.systemDefault());
+
+        Application application = newApplication()
+                .withManageFundingEmailDate(expectedDateTime)
+                .build();
+
+        when(applicationRepositoryMock.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
+                .thenReturn(application);
+
+        ServiceResult<ZonedDateTime> result = service
+                .findLatestEmailFundingDateByCompetitionId(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expectedDateTime, result.getSuccess());
     }
 }

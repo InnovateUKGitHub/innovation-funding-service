@@ -14,5 +14,5 @@
 
   Innovation Funding Service
         Beta Release
- External Funding Data Service
+EU Grant Registration Data Service
 
