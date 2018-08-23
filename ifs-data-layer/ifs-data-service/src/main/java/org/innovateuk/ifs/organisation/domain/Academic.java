@@ -7,10 +7,20 @@ import javax.persistence.Id;
 
 @Entity
 public class Academic {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
+
+    Academic() {
+        // for ORM
+    }
+
+    public Academic(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.service;
 
 import org.innovateuk.ifs.commons.error.ErrorHolder;
+import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -38,6 +39,8 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> extends Err
     <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>> failureHandler);
 
     <R> R handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends R> failureHandler, ExceptionThrowingFunction<? super SuccessType, ? extends R> successHandler);
+
+    void handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler, ExceptionThrowingConsumer<? super SuccessType> successHandler);
 
     Optional<SuccessType> getOptionalSuccessObject();
 

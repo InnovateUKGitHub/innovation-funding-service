@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.util.Either;
+import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,19 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     public <T1> T1 handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends T1> failureHandler,
                                           ExceptionThrowingFunction<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
+    }
+
+    @Override
+    public void handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler,
+                                          ExceptionThrowingConsumer<? super T> successHandler) {
+
+        handleSuccessOrFailure(failure -> {
+            failureHandler.accept(failure);
+            return null;
+        }, success -> {
+            successHandler.accept(success);
+            return null;
+        });
     }
 
     @Override
