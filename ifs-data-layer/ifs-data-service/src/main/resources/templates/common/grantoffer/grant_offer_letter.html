@@ -182,13 +182,13 @@
             <thead>
             <tr>
                 <th scope="col" class="bold">Industry costs</th>
-                <th scope="col">Labour (£)</th>
-                <th scope="col">Overheads (£)</th>
-                <th scope="col">Materials (£)</th>
-                <th scope="col">Capital usage (£)</th>
-                <th scope="col">Subcontract (£)</th>
-                <th scope="col">Travel and subsistence (£)</th>
-                <th scope="col">Other costs (£)</th>
+                <th scope="col">Labour</th>
+                <th scope="col">Overheads</th>
+                <th scope="col">Materials</th>
+                <th scope="col">Capital usage</th>
+                <th scope="col">Subcontract</th>
+                <th scope="col">Travel and subsistence</th>
+                <th scope="col">Other costs</th>
             </tr>
             </thead>
             <tbody>
@@ -205,7 +205,7 @@
                 </tr>
             </#list>
             <tr>
-                <td class="bold">Total (industry)</td>
+                <td class="bold">Total (£) (industry)</td>
                 <td class="bold"><@number_format number=industrialFinanceTable.getLabourTotal()/></td>
                 <td class="bold"><@number_format number=industrialFinanceTable.getOverheadsTotal()/></td>
                 <td class="bold"><@number_format number=industrialFinanceTable.getMaterialsTotal()/></td>
@@ -216,6 +216,7 @@
             </tr>
             </tbody>
         </table>
+        All figures are in GBP unless otherwise stated.
       </div>
   </#if>
   <#if academicFinanceTable?? && academicFinanceTable.organisations??>
@@ -232,10 +233,10 @@
                 <thead>
                 <tr>
                     <th scope="col" class="bold">Academic costs</th>
-                    <th scope="col" colspan="4" class="textleft">Directly incurred (£)</th>
-                    <th scope="col" colspan="3" class="textleft">Directly allocated (£)</th>
-                    <th scope="col" class="textleft">Indirect costs (£)</th>
-                    <th scope="col" colspan="4" class="textleft">Exceptions (£)</th>
+                    <th scope="col" colspan="4" class="textleft">Directly incurred</th>
+                    <th scope="col" colspan="3" class="textleft">Directly allocated</th>
+                    <th scope="col" class="textleft">Indirect costs</th>
+                    <th scope="col" colspan="4" class="textleft">Exceptions</th>
                 </tr>
                 <tr>
                     <td scope="col"></td>
@@ -272,7 +273,7 @@
                     </#list>
                 </tr>
                 <tr>
-                    <td class="bold">Total (academic)</td>
+                    <td class="bold">Total (£) (academic)</td>
                     <td class="bold"><@number_format number=academicFinanceTable.getIncurredStaffTotal()/></td>
                     <td class="bold"><@number_format number=academicFinanceTable.getIncurredTravelSubsistenceTotal()/></td>
                     <td class="bold"><@number_format number=academicFinanceTable.getIncurredEquipmentTotal()/></td>
@@ -288,6 +289,7 @@
                 </tr>
                 </tbody>
             </table>
+            All figures are in GBP unless otherwise stated.
       </div>
   </#if>
 </body>
