@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
@@ -66,12 +65,12 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean internalUsersAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
         return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || isIFSAdmin(user);
     }
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
+    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competition can view unsuccessful applications")
     public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
+    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Stakeholders for the competition can view unsuccessful applications")
     public boolean stakeholderForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
         return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }

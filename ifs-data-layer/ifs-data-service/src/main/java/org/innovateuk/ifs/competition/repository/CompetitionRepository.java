@@ -45,34 +45,16 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    /* Filters by innovation lead id and in project setup state */
-/*    String INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role = 'INNOVATION_LEAD' " +
-            "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";*/
-
     /* Filters by innovation lead id or stakeholder id and in project setup state */
     String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
             "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
             "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
 
-    /* Filters by innovation lead and in feedback released state */
-/*    String INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
-            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = ap.competition.id) AND " +
-            "ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";*/
-
     /* Filters by innovation lead or stakeholder and in feedback released state */
     String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = ap.competition.id) AND " +
             "ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
-
-    /* Filters by innovation lead and in live state */
-/*    String INNOVATION_LEAD_LIVE_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role = 'INNOVATION_LEAD' " +
-            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = ap.competition.id) " +
-            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = ap.competition.id) " +
-            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";*/
 
     /* Filters by innovation lead or stakeholder and in live state */
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
