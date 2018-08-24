@@ -14,29 +14,35 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='govuk-heading-xl'" />
 
-        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'spend-profile'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
-
-        <th:block th:if="${model.pendingSpendProfiles.size() > 0}">
-            <div>
-                <table id="table-project-organisation-query-status" class="govuk-table table-overview govuk-!-margin-bottom-6">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Application number</th>
-                        <th class="govuk-table__header" scope="col">Project title</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
-                        <td class="govuk-table__cell" th:text="${pendingSpendProfile.applicationId}"></td>
-                        <td class="govuk-table__cell"><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" class="govuk-link"></a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </th:block>
-        <th:block th:unless="${model.pendingSpendProfiles.size() > 0}">
-            There are no outstanding spend profiles to generate.
-        </th:block>
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                Project setup
+            </h2>
+            <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'spend-profile'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+            <section class="govuk-tabs__panel">
+                <th:block th:if="${model.pendingSpendProfiles.size() > 0}">
+                    <div>
+                        <table id="table-project-organisation-query-status" class="govuk-table table-overview govuk-!-margin-bottom-6">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
+                                <td class="govuk-table__cell" th:text="${pendingSpendProfile.applicationId}"></td>
+                                <td class="govuk-table__cell"><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" class="govuk-link"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </th:block>
+                <th:block th:unless="${model.pendingSpendProfiles.size() > 0}">
+                    There are no outstanding spend profiles to generate.
+                </th:block>
+            </section>
+        </div>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

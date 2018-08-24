@@ -20,46 +20,70 @@
 
 
 <!--/* competition management menu */-->
-<th:block th:fragment="competition-mgt-menu(competitionStatus,competitionId)">
+<!--<th:block th:fragment="competition-mgt-menu(competitionStatus,competitionId)">-->
 
-    <th:block th:switch="${competitionStatus}">
+    <!--<th:block th:switch="${competitionStatus}">-->
 
-        <th:block th:case="'OPEN'">
-          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" />
-        </th:block>
+        <!--<th:block th:case="'OPEN'">-->
+          <!--<th:block th:insert="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" />-->
+        <!--</th:block>-->
 
-        <th:block th:case="'IN_ASSESSMENT'">
-          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
-        </th:block>
-        <th:block th:case="'FUNDERS_PANEL'">
-        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
-        </th:block>
-        <th:block th:case="'ASSESSOR_FEEDBACK'">
-        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" />
-        </th:block>
-    </th:block>
-</th:block>
+        <!--<th:block th:case="'IN_ASSESSMENT'">-->
+          <!--<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />-->
+        <!--</th:block>-->
+        <!--<th:block th:case="'FUNDERS_PANEL'">-->
+        	<!--<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />-->
+        <!--</th:block>-->
+        <!--<th:block th:case="'ASSESSOR_FEEDBACK'">-->
+        	<!--<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" />-->
+        <!--</th:block>-->
+    <!--</th:block>-->
+<!--</th:block>-->
 
-<th:block th:fragment="competition-mgt-menu-assessor-feedback(id)">
-  <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-    <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=overview'}" class="govuk-link">Overview</a></li>
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}" class="govuk-link">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}" class="govuk-link">Applications not submitted</a></li>
-  </ul>
-</th:block>
+<!--<th:block th:fragment="competition-mgt-menu-assessor-feedback(id)">-->
+    <!--<ul class="govuk-tabs__list">-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="${'/management/competition/' + id + '/applications?tab=overview'}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'overview'} ? 'true' : 'false'">Overview</a>-->
+        <!--</li>-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'submitted'} ? 'true' : 'false'">Applications submitted</a>-->
+        <!--</li>-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'notSubmitted'} ? 'true' : 'false'">Applications not submitted</a>-->
+        <!--</li>-->
+    <!--</ul>-->
+<!--</th:block>-->
 
-<th:block th:fragment="competition-mgt-menu-assessment(id)">
-  <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}" class="govuk-link">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}" class="govuk-link">Applications not submitted</a></li>
-  </ul>
-</th:block>
+<!--<th:block th:fragment="competition-mgt-menu-assessment(id)">-->
+    <!--<ul class="govuk-tabs__list">-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'submitted'} ? 'true' : 'false'">Applications submitted</a>-->
+        <!--</li>-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'notSubmitted'} ? 'true' : 'false'">Applications not submitted</a>-->
+        <!--</li>-->
+    <!--</ul>-->
+<!--</th:block>-->
 
-<th:block th:fragment="competition-mgt-menu-open(id)">
-  <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}" class="govuk-link">All applications</a></li>
-  </ul>
-</th:block>
+<!--<th:block th:fragment="competition-mgt-menu-open(id)">-->
+    <!--<ul class="govuk-tabs__list">-->
+        <!--<li class="govuk-tabs__list-item">-->
+            <!--<a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}"-->
+               <!--class="govuk-tabs__tab"-->
+               <!--th:attr="aria-selected=${activeTab == 'allApplications'} ? 'true' : 'false'">All applications</a>-->
+        <!--</li>-->
+    <!--</ul>-->
+<!--</th:block>-->
 
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">

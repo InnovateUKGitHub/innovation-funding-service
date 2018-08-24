@@ -38,17 +38,22 @@
                     <dd th:text="${model.executiveName}">Materials and manufacturing</dd>
 
                 </dl>
-                <div class="govuk-!-margin-top-6">
-                    <ul class="govuk-list inline-nav cf">
-                        <li class="selected">
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}">Find</a>
+                <div class="govuk-tabs">
+                    <h2 class="govuk-tabs__title">
+                        Manage innovation leads
+                    </h2>
+                    <ul class="govuk-tabs__list">
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}"
+                               aria-selected="true"
+                               class="govuk-tabs__tab">Find</a>
                         </li>
-                        <li>
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}">Overview</a>
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}"
+                               class="govuk-tabs__tab">Overview</a>
                         </li>
                     </ul>
-
-                        <!-- list -->
+                    <section class="govuk-tabs__panel">
                         <div class="govuk-body govuk-grid-row sorting">
                             <div class="govuk-grid-column-one-half">
                                 <span class="govuk-!-font-size-48 govuk-!-font-weight-bold total-count" th:text="${#lists.size(model.availableInnovationLeads)}"></span>
@@ -65,20 +70,21 @@
                                 </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
-                                    <tr class="govuk-table__row" th:each="innovationLeadUsers : ${model.availableInnovationLeads}">
-                                        <td class="govuk-table__cell" th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
-                                        <td class="govuk-table__cell alignright">
-                                            <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
-                                                <button class="button-secondary govuk-!-margin-0">Add <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <tr class="govuk-table__row" th:if="${#lists.size(model.availableInnovationLeads) == 0} ">
-                                        <td class="govuk-table__cell" colspan="3">All innovation leads have been added to this competition.</td>
-                                    </tr>
+                                <tr class="govuk-table__row" th:each="innovationLeadUsers : ${model.availableInnovationLeads}">
+                                    <td class="govuk-table__cell" th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
+                                    <td class="govuk-table__cell alignright">
+                                        <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
+                                            <button class="button-secondary govuk-!-margin-0">Add <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr class="govuk-table__row" th:if="${#lists.size(model.availableInnovationLeads) == 0} ">
+                                    <td class="govuk-table__cell" colspan="3">All innovation leads have been added to this competition.</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
+                    </section>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

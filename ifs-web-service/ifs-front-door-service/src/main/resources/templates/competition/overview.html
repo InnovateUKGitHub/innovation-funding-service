@@ -77,19 +77,6 @@
                 </th:block>
             </div>
 
-            <!--<div id="competition-overview-tabs" class="tabs">-->
-                <!--<ul class="govuk-list">-->
-                    <!--<th:block th:each="sectionType : ${model.allSections}">-->
-                        <!--<li>-->
-                            <!--<a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}" class="govuk-link"></a>-->
-                        <!--</li>-->
-                    <!--</th:block>-->
-                <!--</ul>-->
-                <!--<th:block th:each="section : ${model.allSections}">-->
-                    <!--<th:block th:insert="competition/section/fragments :: ${section.path} (section=${section}, competitionId=${model.competitionId})"/>-->
-                <!--</th:block>-->
-            <!--</div>-->
-
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
     </div>

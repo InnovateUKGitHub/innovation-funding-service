@@ -60,22 +60,29 @@
     </th:block>
 </th:block>
 
-<div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
-    <ul class="govuk-list inline-nav cf">
-        <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
-            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}" class="govuk-link">All projects</a>
+<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
+    <ul class="govuk-tabs__list">
+        <li id="section-1"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}"
+               class="govuk-tabs__tab"
+               th:attr="aria-selected=${selectedTab == 'all'} ? 'true' : 'false'">All projects</a>
         </li>
-
-        <th:block th:if="${showAllTabs}">
-            <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'" class="govuk-link"></a>
-            </li>
-        </th:block>
-
-        <th:block th:if="${showAllTabs}">
-            <li id="section-3" th:class="${selectedTab == 'spend-profile' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'" class="govuk-link"></a>
-            </li>
-        </th:block>
+        <li th:if="${showAllTabs}"
+            id="section-2"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
+               th:text="'Query responses (' + ${openQueryCount} + ')'"
+               class="govuk-tabs__tab"
+               th:attr="aria-selected=${selectedTab == 'queries'} ? 'true' : 'false'"></a>
+        </li>
+        <li th:if="${showAllTabs}"
+            id="section-3"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}"
+               th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"
+               class="govuk-tabs__tab"
+               th:attr="aria-selected=${selectedTab == 'spend-profile'} ? 'true' : 'false'"></a>
+        </li>
     </ul>
-</div>
+</th:block>
