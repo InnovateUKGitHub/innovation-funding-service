@@ -92,7 +92,7 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
                         <td class="govuk-table__cell">
-                            <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
+                            <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
                                th:text="${assessor.name}"
                                class="govuk-link">John Barnes
                             </a>

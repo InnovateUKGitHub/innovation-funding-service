@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.forms.researchcategory.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.populator.researchCategory.AbstractLeadOnlyModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkRe
 import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -28,16 +30,19 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
     private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
     private FinanceService financeService;
     private UserService userService;
+    private UserRestService userRestService;
 
     public ApplicationResearchCategoryModelPopulator(final ApplicantRestService applicantRestService,
                                                      final CompetitionResearchCategoryRestService competitionResearchCategoryRestService,
                                                      final FinanceService financeService,
                                                      final QuestionRestService questionRestService,
-                                                     final UserService userService) {
+                                                     final UserService userService,
+                                                     final UserRestService userRestService) {
         super(applicantRestService, questionRestService);
         this.competitionResearchCategoryRestService = competitionResearchCategoryRestService;
         this.financeService = financeService;
         this.userService = userService;
+        this.userRestService = userRestService;
     }
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
@@ -81,7 +86,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
     private String getLeadApplicantName(long applicationId) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        UserResource user = userService.findById(leadApplicantProcessRole.getUser());
+        UserResource user = userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
         return user.getName();
     }
 

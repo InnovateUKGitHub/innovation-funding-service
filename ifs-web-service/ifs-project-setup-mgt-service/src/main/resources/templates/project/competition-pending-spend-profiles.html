@@ -13,7 +13,6 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='govuk-heading-xl'" />
-
         <div class="govuk-tabs">
             <h2 class="govuk-tabs__title">
                 Project setup
@@ -39,10 +38,11 @@
                     </div>
                 </th:block>
                 <th:block th:unless="${model.pendingSpendProfiles.size() > 0}">
-                    There are no outstanding spend profiles to generate.
+                    <p class="govuk-body">There are no outstanding spend profiles to generate.</p>
                 </th:block>
             </section>
         </div>
+
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

@@ -8,9 +8,9 @@
 </head>
 
 <body class="govuk-template__body"
-      th:with="section1=${param.section1 != null and param.section1[0] == 'complete' ? TRUE : FALSE},
-    section2=${param.section2 != null and param.section2[0] == 'complete' ? TRUE : FALSE},
-    section3=${param.section3 != null and param.section3[0] == 'complete' ? TRUE : FALSE},
+      th:with="section1=${param.section1 != null and param.section1[0] == 'true' ? TRUE : FALSE},
+    section2=${param.section2 != null and param.section2[0] == 'true' ? TRUE : FALSE},
+    section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE},
     allComplete=${section1 and section2 and section3 ? TRUE : FALSE}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
@@ -24,37 +24,53 @@
         <!-- HARDCODED PROTOTYPE HTML -->
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-grid-column-full">
 
-                <h1 class="govuk-heading-xl">Horizon 2020: UK funding</h1>
+                <h1 class="govuk-heading-xl">Horizon 2020: UK government underwrite guarantee</h1>
 
-                <p class="govuk-body">
-                    UK Research and Innovation will make sure there is no interruption to the funding of your Horizon 2020
-                    project after Brexit. To make this possible please provide us with your organisation's details.
-                </p>
+                <p class="govuk-body">The <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-participation-in-horizon-2020-uk-government-overview">UK government has underwritten</a> the funding (opens in a new window) of Horizon
+                    2020 projects if the UK exits the EU under certain circumstances.</p>
+                <p class="govuk-body">This website is for UK participants who are in receipt of Horizon 2020 funding.
+                    It is also for UK participants in a Euratom Research and Training project or an ongoing Framework
+                    Programme 7 project.</p>
+                <p class="govuk-body">Please enter your details to ensure that UK Research and Innovation:</p>
+
+                <ul class="govuk-list govuk-list__bullet">
+                    <li>has initial information about you and your project to underwrite guarantee payments if
+                        required
+                    </li>
+                    <li>can keep you updated about what you need to do next</li>
+                </ul>
+
+                <p class="govuk-body">Please have your grant agreement to hand before you start. If you do not have a
+                    signed grant agreement yet, please return to this page when you have one.</p>
+                <p class="govuk-body">It takes approximately 10 minutes to register one project. We are unable to save
+                    your progress so you must submit or you will need to start again. Check your details very carefully
+                    before you submit as you will not be able to make changes later.</p>
 
                 <ul class="govuk-body task-list">
-                    <li>
+                    <li class="govuk-!-padding-left-0">
                         <div class="task">
                             <a class="govuk-link govuk-!-font-weight-bold"
-                               th:href="${section1 ? 'IFS-4104-funding-org-selected?status=readonly' : '/prototypes/IFS-4104-funding-org'}">Your organisation</a>
+                               th:href="${section1 ? 'IFS-4104-funding-org-selected?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-org?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Your organisation</a>
                         </div>
                         <div th:class="${section1 ? 'task-status-complete' : 'task-status-incomplete'}">
                             <span th:text="${section1 ? 'Complete' : 'Incomplete'}">Incomplete</span>
                         </div>
                     </li>
-                    <li>
+                    <li class="govuk-!-padding-left-0">
                         <div class="task">
                             <a class="govuk-link govuk-!-font-weight-bold"
-                               th:href="${section2 ? '/prototypes/IFS-4104-funding-contact-details?status=readonly' : '/prototypes/IFS-4104-funding-contact-details'}">Contact details</a>
+                               th:href="${section2 ? '/prototypes/IFS-4104-funding-contact-details?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-contact-details?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Contact details</a>
                         </div>
                         <div th:class="${section2 ? 'task-status-complete' : 'task-status-incomplete'}">
                             <span th:text="${section2 ? 'Complete' : 'Incomplete'}">Incomplete</span>
                         </div>
                     </li>
-                    <li>
+                    <li class="govuk-!-padding-left-0">
                         <div class="task">
-                            <a class="govuk-link govuk-!-font-weight-bold" href="/prototypes/IFS-4104-funding-details">Funding details</a>
+                            <a class="govuk-link govuk-!-font-weight-bold"
+                               th:href="${section3 ? '/prototypes/IFS-4104-funding-details?status=readonly&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3 : '/prototypes/IFS-4104-funding-details?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Funding details</a>
                         </div>
                         <div th:class="${section3 ? 'task-status-complete' : 'task-status-incomplete'}">
                             <span th:text="${section3 ? 'Complete' : 'Incomplete'}">Incomplete</span>
@@ -62,7 +78,14 @@
                     </li>
                 </ul>
 
-                <form action="test">
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">You can only register one project at a time. If you or your organisation is
+                        participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
+                        on 000 000 0000 or email
+                        <a href="mailto:UKRIpublichelpdesk@ukri.org" class="govuk-link">UKRIpublichelpdesk@ukri.org</a>.</p>
+                </div>
+
+                <form action="index.html">
 
                     <th:block th:if="${allComplete}">
                         <div class="govuk-form-group">
@@ -99,6 +122,8 @@
 
             </div>
         </div>
+
+
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->
 

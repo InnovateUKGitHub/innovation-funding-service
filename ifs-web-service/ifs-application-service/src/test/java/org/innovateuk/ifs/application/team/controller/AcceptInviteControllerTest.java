@@ -114,7 +114,8 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
                 .withInviteOrganisation(organisationId)
                 .build()));
         when(inviteRestService.getInviteOrganisationByHash(anyString())).thenReturn(restSuccess(newInviteOrganisationResource().withOrganisation(organisationId).build()));
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(newOrganisationResource()
+                .withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
 
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))

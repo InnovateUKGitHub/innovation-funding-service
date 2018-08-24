@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.survey.Controller.SurveyController;
+import org.innovateuk.ifs.survey.controller.SurveyController;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

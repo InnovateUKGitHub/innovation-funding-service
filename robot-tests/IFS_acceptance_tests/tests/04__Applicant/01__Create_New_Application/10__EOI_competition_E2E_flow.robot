@@ -6,6 +6,8 @@ Documentation   Suite description
 ...             IFS-2196 As an applicant I am able to apply for an EOI competition
 ...
 ...             IFS-2941 As an applicant I am only offered the Research category eligible for the competition
+...
+...             IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Force Tags      compAdmin  Applicant  Assessor
@@ -27,7 +29,7 @@ Comp Admin Creates EOI type competition
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196
+    [Documentation]  IFS-2192  IFS-2196  IFS-4080
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${comp_name}
     Then Lead Applicant applies to the new created competition   ${comp_name}  &{lead_applicant_credentials}
@@ -115,22 +117,23 @@ Custom Suite Setup
 
 The competition admin creates a EOI Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user clicks the button/link  jQuery=.govuk-button:contains("Create competition")
-    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_EOI}
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_EOI}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
-    the user fills in the CS Milestones   ${month}  ${nextyear}
-    the user marks the Application as done  no  ${compType_EOI}
+    the user fills in the CS Eligibility                    ${orgType}  1  # 1 means 30%
+    the user fills in the CS Milestones                     ${month}  ${nextyear}
+    the user marks the Application as done  no              ${compType_EOI}
     the user fills in the CS Assessors
-    the user clicks the button/link  link=Public content
-    the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link   link=Return to setup overview
-    the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  css=button[type="submit"]
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user fills in the CS Documents in other projects
+    the user clicks the button/link                         link = Public content
+    the user fills in the Public content and publishes      ${extraKeyword}
+    the user clicks the button/link                         link = Return to setup overview
+    the user clicks the button/link                         jQuery = a:contains("Complete")
+    the user clicks the button/link                         css = button[type = "submit"]
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
