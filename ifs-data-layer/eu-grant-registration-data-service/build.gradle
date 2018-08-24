@@ -102,3 +102,6 @@ test {
 flywayMigrate.dependsOn processResources
 
 ext.serverPort=8080
+
+//TODO remove when ready of OS deployment
+osStageRemote.enabled = false
