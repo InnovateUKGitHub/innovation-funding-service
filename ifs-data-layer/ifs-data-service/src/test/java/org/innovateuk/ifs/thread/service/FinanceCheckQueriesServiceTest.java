@@ -101,7 +101,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findOne() throws Exception {
+    public void findOne() throws Exception {
 
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
@@ -116,7 +116,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findAll() throws Exception {
+    public void findAll() throws Exception {
 
         Long contextId = 22L;
         Query query1 = new Query(1L, null, null, null, null, null);
@@ -139,7 +139,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -219,7 +219,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_createNoFinanceContact() throws Exception {
+    public void createNoFinanceContact() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -278,7 +278,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_createNotificationNotSent() throws Exception {
+    public void createNotificationNotSent() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -353,7 +353,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_createNoProjectFinance() throws Exception {
+    public void createNoProjectFinance() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -419,7 +419,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPost() throws Exception {
+    public void addPost() throws Exception {
 
         Long queryId = 1L;
 
@@ -501,7 +501,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNotFinanceTeam() throws Exception {
+    public void addPostNotFinanceTeam() throws Exception {
 
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
@@ -517,7 +517,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findOne(targetedQuery.id())).thenReturn(targetedQuery);
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
@@ -530,7 +530,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostSuperAddPostFails() throws Exception {
+    public void addPostSuperAddPostFails() throws Exception {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
@@ -540,7 +540,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNoQueryToAddPostTo() throws Exception {
+    public void addPostNoQueryToAddPostTo() throws Exception {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
@@ -550,7 +550,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNoFinanceContact() {
+    public void addPostNoFinanceContact() {
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
@@ -596,7 +596,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNotificationNotSent() throws Exception {
+    public void addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
 
         User user = newUser()

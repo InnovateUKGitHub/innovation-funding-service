@@ -46,9 +46,16 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="name">
-                                    Name
+                                    Full name
                                 </label>
                                 <input class="govuk-input" id="name" name="name" type="text" th:value="${edit ? 'Joe Bloggs' : ''}" required>
+                            </div>
+
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="jobTitle">
+                                    Job title
+                                </label>
+                                <input class="govuk-input" id="jobTitle" name="jobTitle" type="text" th:value="${edit ? 'Executive' : ''}" required>
                             </div>
 
                             <div class="govuk-form-group">

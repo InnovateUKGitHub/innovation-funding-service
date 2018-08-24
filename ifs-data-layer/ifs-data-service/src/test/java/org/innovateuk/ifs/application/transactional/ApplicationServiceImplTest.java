@@ -45,6 +45,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -247,8 +248,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
         ApplicationResource testApplication3Resource = newApplicationResource().with(id(3L)).withName("testApplication3Name").build();
 
-        Organisation organisation1 = new Organisation(1L, "test organisation 1");
-        Organisation organisation2 = new Organisation(2L, "test organisation 2");
+        Organisation organisation1 = new Organisation("test organisation 1");
+        Organisation organisation2 = new Organisation("test organisation 2");
 
         ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
         ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
@@ -628,7 +629,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
         assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
-        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
+        assertEquals(leadOrganisationId, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationId());
     }
 
     @Test
@@ -704,5 +705,25 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
 
+    }
+
+    @Test
+    public void findLatestEmailFundingDateByCompetitionId() {
+        long competitionId = 1L;
+
+        ZonedDateTime expectedDateTime = ZonedDateTime.of(2018, 8, 1, 1, 0, 0, 0, ZoneId.systemDefault());
+
+        Application application = newApplication()
+                .withManageFundingEmailDate(expectedDateTime)
+                .build();
+
+        when(applicationRepositoryMock.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
+                .thenReturn(application);
+
+        ServiceResult<ZonedDateTime> result = service
+                .findLatestEmailFundingDateByCompetitionId(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expectedDateTime, result.getSuccess());
     }
 }
