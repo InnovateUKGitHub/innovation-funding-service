@@ -237,19 +237,19 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
-            List<UserOrganisation> userOrganisations;
+            Set<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findDistinctUserIdByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findDistinctUserIdByOrganisationNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findDistinctUserIdByUserEmailLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
