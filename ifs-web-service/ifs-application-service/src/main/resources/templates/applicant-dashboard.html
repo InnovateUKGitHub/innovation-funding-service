@@ -23,7 +23,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m">Set up your project</h2>
+                    <h2 class="govuk-heading-m" th:text="${model.projectSetupContainerText}"/>
                     <ul>
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
