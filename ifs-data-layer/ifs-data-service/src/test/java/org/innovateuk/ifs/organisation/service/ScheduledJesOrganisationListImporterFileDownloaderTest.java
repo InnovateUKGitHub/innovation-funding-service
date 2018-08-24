@@ -38,6 +38,7 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
                 "Abriachan Forest Trust");
     }
 
+    // TODO DW - this test will fail if anyone has anything running on localhost
     @Test
     public void downloadFileWithMalformedUrl() throws URISyntaxException, IOException {
 
