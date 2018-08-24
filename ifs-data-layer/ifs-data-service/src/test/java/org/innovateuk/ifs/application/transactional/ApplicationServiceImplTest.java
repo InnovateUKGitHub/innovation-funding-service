@@ -624,8 +624,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = result.getSuccess();
         assertTrue(unsuccessfulApplicationPageResource.getSize() == 2);
-        assertEquals(applicationResource1, unsuccessfulApplicationPageResource.getContent().get(0));
-        assertEquals(applicationResource2, unsuccessfulApplicationPageResource.getContent().get(1));
+        assertEquals(applicationResource1.getId(), unsuccessfulApplicationPageResource.getContent().get(0).getId());
+        assertEquals(applicationResource2.getId(), unsuccessfulApplicationPageResource.getContent().get(1).getId());
         assertEquals(leadOrganisationName, unsuccessfulApplicationPageResource.getContent().get(0).getLeadOrganisationName());
     }
 
