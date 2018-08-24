@@ -95,7 +95,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndInformed() {
+    public void fundedAndInformed() {
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
@@ -121,7 +121,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testMultipleFundedAndInformed() {
+    public void multipleFundedAndInformed() {
 
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
@@ -166,7 +166,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndNotInformed() {
+    public void fundedAndNotInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
@@ -180,7 +180,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testNotFundedAndInformed() {
+    public void notFundedAndInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
@@ -206,14 +206,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testSearch() {
+    public void search() {
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
-        Competition openComp = new Competition(null, null, null, "openComp", null, null, null, termsAndConditions);
+        Competition openComp = new Competition(null, null, "openComp", null, null, null, termsAndConditions);
         openComp.setTermsAndConditions(termsAndConditions);
 
         openComp.setLeadTechnologist(leadTechnologist);
@@ -224,7 +224,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         AssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition earliestOpenComp = new Competition(null, null, null, "earliestOpenComp", null, null, null,
+        Competition earliestOpenComp = new Competition(null, null, "earliestOpenComp", null, null, null,
                 termsAndConditions);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
@@ -235,7 +235,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compWithNoInnovationLead = new Competition(null, null, null, "compWithNoInnovationLead", null,
+        Competition compWithNoInnovationLead = new Competition(null, null, "compWithNoInnovationLead", null,
                 null, null, termsAndConditions);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
@@ -246,7 +246,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInPreparation = new Competition(null, null, null, "compInPreparation", null, null, null,
+        Competition compInPreparation = new Competition(null, null, "compInPreparation", null, null, null,
                 termsAndConditions);
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
@@ -257,7 +257,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compReadyToOpen = new Competition(null, null, null, "compReadyToOpen", null, null, null,
+        Competition compReadyToOpen = new Competition(null, null, "compReadyToOpen", null, null, null,
                 termsAndConditions);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
@@ -268,7 +268,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInInform = new Competition(null, null, null, "compInInform", null, null, null,
+        Competition compInInform = new Competition(null, null, "compInInform", null, null, null,
                 termsAndConditions);
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
@@ -279,7 +279,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInProjectSetup = new Competition(null, null, null, "compInProjectSetup", null, null, null,
+        Competition compInProjectSetup = new Competition(null, null, "compInProjectSetup", null, null, null,
                 termsAndConditions);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
@@ -608,7 +608,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void testCountLiveForInnovationLead() {
+    public void countLiveForInnovationLead() {
         // TODO: Improve once IFS-2222 is done.
         long innovationLead1Id = 51L;
         long innovationLead2Id = 52L;
@@ -634,14 +634,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     // IFS-2263 -- ensure milestone dates aren't rounded up
     @Test
     @Rollback
-    public void testMilestoneDatesTruncated() {
+    public void milestoneDatesTruncated() {
         final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
         final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
 
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
-        Competition competition = new Competition(null, null, null, "comp", dateTime, null, null, termsAndConditions);
+        Competition competition = new Competition(null, null, "comp", dateTime, null, null, termsAndConditions);
 
         Competition savedCompetition = repository.save(competition);
 

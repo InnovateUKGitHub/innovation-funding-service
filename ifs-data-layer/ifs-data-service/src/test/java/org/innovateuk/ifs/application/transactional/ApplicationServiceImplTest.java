@@ -248,8 +248,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
         ApplicationResource testApplication3Resource = newApplicationResource().with(id(3L)).withName("testApplication3Name").build();
 
-        Organisation organisation1 = new Organisation(1L, "test organisation 1");
-        Organisation organisation2 = new Organisation(2L, "test organisation 2");
+        Organisation organisation1 = new Organisation("test organisation 1");
+        Organisation organisation2 = new Organisation("test organisation 2");
 
         ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
         ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
