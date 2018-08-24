@@ -604,8 +604,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         unsuccessfulApplications.add(application1);
         unsuccessfulApplications.add(application2);
 
-        ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
-        ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource applicationResource1 = newApplicationResource()
+                .withId(1L)
+                .withCompetition(1L)
+                .build();
+
+        ApplicationResource applicationResource2 = newApplicationResource()
+                .withId(2L)
+                .withCompetition(2L)
+                .build();
 
         Page<Application> pagedResult = mock(Page.class);
         when(pagedResult.getContent()).thenReturn(unsuccessfulApplications);
@@ -624,8 +631,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = result.getSuccess();
         assertTrue(unsuccessfulApplicationPageResource.getSize() == 2);
-        assertEquals(applicationResource1.getId(), unsuccessfulApplicationPageResource.getContent().get(0).getId());
-        assertEquals(applicationResource2.getId(), unsuccessfulApplicationPageResource.getContent().get(1).getId());
+        assertEquals(applicationResource1.getId().longValue(), unsuccessfulApplicationPageResource.getContent().get(0).getId());
+        assertEquals(applicationResource2.getId().longValue(), unsuccessfulApplicationPageResource.getContent().get(1).getId());
         assertEquals(leadOrganisationName, unsuccessfulApplicationPageResource.getContent().get(0).getLeadOrganisationName());
     }
 

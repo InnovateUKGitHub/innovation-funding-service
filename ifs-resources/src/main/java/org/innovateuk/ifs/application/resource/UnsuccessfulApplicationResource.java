@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UnsuccessfulApplicationResource {
 
-    private Long id;
+    private long id;
     private String name;
     private String leadOrganisationName;
     private ApplicationState applicationState;
-    private Long competition;
+    private long competition;
 
     public UnsuccessfulApplicationResource() {
     }
 
-    public UnsuccessfulApplicationResource(Long id, String name, String leadOrganisationName, ApplicationState applicationState, Long competition) {
+    public UnsuccessfulApplicationResource(long id, String name, String leadOrganisationName, ApplicationState applicationState, long competition) {
         this.id = id;
         this.name = name;
         this.leadOrganisationName = leadOrganisationName;
@@ -21,11 +21,11 @@ public class UnsuccessfulApplicationResource {
         this.competition = competition;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -49,11 +49,11 @@ public class UnsuccessfulApplicationResource {
         return applicationState;
     }
 
-    public Long getCompetition() {
+    public long getCompetition() {
         return competition;
     }
 
-    public void setCompetition(Long competition) {
+    public void setCompetition(long competition) {
         this.competition = competition;
     }
 
