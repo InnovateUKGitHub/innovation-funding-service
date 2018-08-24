@@ -22,7 +22,7 @@ class ScheduledJesOrganisationListImporterFileDownloader {
 
     ServiceResult<File> downloadFile(URL jesFileToDownload, int connectionTimeoutMillis, int readTimeoutMillis) {
 
-        return getTemporaryDownloadFile().andOnSuccess(temporaryDownloadFile -> {
+        return createTemporaryDownloadFile().andOnSuccess(temporaryDownloadFile -> {
 
             try {
                 FileUtils.copyURLToFile(jesFileToDownload, temporaryDownloadFile, connectionTimeoutMillis, readTimeoutMillis);
@@ -33,7 +33,7 @@ class ScheduledJesOrganisationListImporterFileDownloader {
         });
     }
 
-    private ServiceResult<File> getTemporaryDownloadFile() {
+    private ServiceResult<File> createTemporaryDownloadFile() {
         try {
             return serviceSuccess(File.createTempFile("jeslist", "jeslist"));
         } catch (IOException e) {
