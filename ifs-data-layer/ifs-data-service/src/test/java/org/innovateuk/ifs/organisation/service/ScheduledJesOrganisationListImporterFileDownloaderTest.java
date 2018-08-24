@@ -38,12 +38,14 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
                 "Abriachan Forest Trust");
     }
 
-    // TODO DW - this test will fail if anyone has anything running on localhost
     @Test
-    public void downloadFileWithMalformedUrl() throws URISyntaxException, IOException {
+    public void downloadFileWhenFileNotFound() throws URISyntaxException, IOException {
 
         ScheduledJesOrganisationListImporterFileDownloader fileDownloader = new ScheduledJesOrganisationListImporterFileDownloader();
-        URL dummyFileUrl = new URL("http://localhost/does-not-exist");
+
+        String nonExistentFileUrl = File.createTempFile("jestest", "jestest").getAbsolutePath() + "does-not-exist";
+        URL dummyFileUrl = new File(nonExistentFileUrl).toURI().toURL();
+
         ServiceResult<File> fileDownloadResult = fileDownloader.downloadFile(dummyFileUrl, 5000, 500);
 
         assertThat(fileDownloadResult.isFailure()).isTrue();
