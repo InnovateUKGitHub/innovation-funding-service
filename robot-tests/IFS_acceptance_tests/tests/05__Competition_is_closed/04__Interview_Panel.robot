@@ -262,7 +262,7 @@ Assessor can view the list of allocated applications
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery = h1:contains("${CLOSED_COMPETITION_NAME}")
-    And the user should see the element      jQuery = a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
+    And the user should see the element      jQuery = h3 a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
     When the user clicks the button/link     link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     Then the user should see the element     jQuery = h1:contains("Feedback overview")
     And the user should see the element      jQuery = .message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
