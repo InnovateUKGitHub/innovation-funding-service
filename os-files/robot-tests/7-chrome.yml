@@ -20,7 +20,7 @@ items:
             medium: Memory
         containers:
         # - image: selenium/standalone-chrome:3.0.1-dysprosium
-        - image: selenium/standalone-chrome:3.8.1-dubnium
+        - image: selenium/standalone-chrome-debug
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
