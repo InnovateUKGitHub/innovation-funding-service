@@ -195,7 +195,7 @@ the user checks the Appendix guidance
     the user clicks the button/link           jQuery=span:contains("What should I include in the appendix?")
     the user should see the element           jQuery=h4:contains("Accepted appendix file types")
     the user should see the element           jQuery=li:contains("PDF")
-    the user should see the element           jQuery=p:contains("It must be less than 1MB in size.")
+    the user should see the element           jQuery=p:contains("It must be less than 10MB in size.")
 
 The applicant opens the uploaded file
     The user opens the link in new window        ${valid_pdf}
