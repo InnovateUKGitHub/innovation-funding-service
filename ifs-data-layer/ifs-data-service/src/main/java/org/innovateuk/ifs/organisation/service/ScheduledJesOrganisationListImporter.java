@@ -79,9 +79,9 @@ public class ScheduledJesOrganisationListImporter {
         ServiceResult<List<String>> downloadResult = getJesFileDownloadUrl().
                 andOnSuccess(jesFileToDownload -> downloadFile(jesFileToDownload).
                 andOnSuccess(downloadedFile -> readDownloadedFile(downloadedFile).
-                andOnSuccessDo(lines -> logDownloadedOrganisations(lines)).
-                andOnSuccessDo(lines -> deleteExistingAcademicEntries()).
-                andOnSuccessDo(this::importNewAcademicEntries)));
+                andOnSuccessDo(organisationNames -> logDownloadedOrganisations(organisationNames)).
+                andOnSuccessDo(organisationNames -> deleteExistingAcademicEntries()).
+                andOnSuccessDo(organisationNames -> importNewAcademicEntries(organisationNames))));
 
         return downloadResult.handleSuccessOrFailureNoReturn(
                 this::logFailure,
