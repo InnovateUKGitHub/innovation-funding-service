@@ -19,7 +19,8 @@ items:
           emptyDir:
             medium: Memory
         containers:
-        - image: selenium/standalone-chrome:3.0.1-dysprosium
+        # - image: selenium/standalone-chrome:3.0.1-dysprosium
+        - image: selenium/standalone-chrome:3.8.1-dubnium
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
@@ -70,4 +71,3 @@ items:
       deploymentconfig: chrome
   status:
     loadBalancer: {}
-
