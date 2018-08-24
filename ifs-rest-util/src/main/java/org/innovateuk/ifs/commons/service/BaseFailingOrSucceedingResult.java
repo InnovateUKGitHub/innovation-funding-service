@@ -20,17 +20,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.nullSafe;
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder> implements FailingOrSucceedingResult<T, FailureType> {
+public abstract class BaseFailingOrSucceedingResult<T, FailureType extends ErrorHolder> implements FailingOrSucceedingResult<T, FailureType> {
 
-    private static final Log LOG = LogFactory.getLog(BaseEitherBackedResult.class);
+    private static final Log LOG = LogFactory.getLog(BaseFailingOrSucceedingResult.class);
 
     protected Either<FailureType, T> result;
 
-    protected BaseEitherBackedResult(BaseEitherBackedResult<T, FailureType> original) {
+    protected BaseFailingOrSucceedingResult(BaseFailingOrSucceedingResult<T, FailureType> original) {
         this.result = original.result;
     }
 
-    protected BaseEitherBackedResult(Either<FailureType, T> result) {
+    protected BaseFailingOrSucceedingResult(Either<FailureType, T> result) {
         this.result = result;
     }
 
@@ -41,8 +41,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public void handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler,
-                                          ExceptionThrowingConsumer<? super T> successHandler) {
+    public BaseFailingOrSucceedingResult<T, FailureType> handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler,
+                                                                                        ExceptionThrowingConsumer<? super T> successHandler) {
 
         handleSuccessOrFailure(failure -> {
             failureHandler.accept(failure);
@@ -51,6 +51,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
             successHandler.accept(success);
             return null;
         });
+
+        return this;
     }
 
     @Override
@@ -64,20 +66,20 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
+    public <R> BaseFailingOrSucceedingResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
         return map(successHandler);
     }
 
     @Override
-    public BaseEitherBackedResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
+    public BaseFailingOrSucceedingResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
 
         if (isLeft()) {
-            return (BaseEitherBackedResult<Void, FailureType>) this;
+            return (BaseFailingOrSucceedingResult<Void, FailureType>) this;
         }
 
         try {
             successHandler.run();
-            return (BaseEitherBackedResult<Void, FailureType>) this;
+            return (BaseFailingOrSucceedingResult<Void, FailureType>) this;
         } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
@@ -85,7 +87,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public BaseEitherBackedResult<T, FailureType> andOnSuccess(Runnable successHandler) {
+    public BaseFailingOrSucceedingResult<T, FailureType> andOnSuccess(Runnable successHandler) {
 
         if (isLeft()) {
             return this;
@@ -101,7 +103,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public BaseEitherBackedResult<T, FailureType> andOnSuccessDo(Consumer<T> successHandler) {
+    public BaseFailingOrSucceedingResult<T, FailureType> andOnSuccessDo(Consumer<T> successHandler) {
 
         if (isLeft()) {
             return this;
@@ -119,7 +121,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     @Override
     public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, FailureType>> successHandler) {
         if (isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) this;
+            return (BaseFailingOrSucceedingResult<R, FailureType>) this;
         }
 
         try {
@@ -131,10 +133,10 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
+    public <R> BaseFailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
 
         if (isLeft()) {
-            return (BaseEitherBackedResult<R, FailureType>) this;
+            return (BaseFailingOrSucceedingResult<R, FailureType>) this;
         }
 
         try {
@@ -148,14 +150,14 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
 
 
     @Override
-    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
+    public <R> BaseFailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return flatMap(successHandler);
     }
 
     
     public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Function<FailureType, FailingOrSucceedingResult<R, FailureType>> failureHandler) {
         if (isRight()) {
-            return (BaseEitherBackedResult<R, FailureType>) this;
+            return (BaseFailingOrSucceedingResult<R, FailureType>) this;
         }
 
         try {
@@ -174,14 +176,14 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Runnable failureHandler) {
-        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(failure -> {
+        return (BaseFailingOrSucceedingResult<R, FailureType>)andOnFailure(failure -> {
             failureHandler.run();
             return this;
         });
     }
 
     public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Consumer<FailureType> failureHandler) {
-        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(failure -> {
+        return (BaseFailingOrSucceedingResult<R, FailureType>)andOnFailure(failure -> {
             failureHandler.accept(failure);
             return this;
         });
@@ -239,7 +241,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
-    protected <R> BaseEitherBackedResult<R, FailureType> map(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> rFunc) {
+    protected <R> BaseFailingOrSucceedingResult<R, FailureType> map(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> rFunc) {
 
         if (result.isLeft()) {
             return createFailure((FailingOrSucceedingResult<R, FailureType>) this);
@@ -254,7 +256,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         }
     }
 
-    protected <R> BaseEitherBackedResult<R, FailureType> flatMap(ExceptionThrowingFunction<? super T, R> rFunc) {
+    protected <R> BaseFailingOrSucceedingResult<R, FailureType> flatMap(ExceptionThrowingFunction<? super T, R> rFunc) {
 
         if (result.isLeft()) {
             return createFailure((FailingOrSucceedingResult<R, FailureType>) this);
@@ -269,13 +271,13 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         }
     }
 
-    protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(FailingOrSucceedingResult<R, FailureType> success);
+    protected abstract <R> BaseFailingOrSucceedingResult<R, FailureType> createSuccess(FailingOrSucceedingResult<R, FailureType> success);
 
-    protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(R success);
+    protected abstract <R> BaseFailingOrSucceedingResult<R, FailureType> createSuccess(R success);
 
-    protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailureType failure);
+    protected abstract <R> BaseFailingOrSucceedingResult<R, FailureType> createFailure(FailureType failure);
 
-    protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailingOrSucceedingResult<R, FailureType> failure);
+    protected abstract <R> BaseFailingOrSucceedingResult<R, FailureType> createFailure(FailingOrSucceedingResult<R, FailureType> failure);
 
     private boolean isLeft() {
         return result.isLeft();
@@ -295,7 +297,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
 
 
     /**
-     * Function to aggregate a {@link List} of {@link BaseEitherBackedResult}.
+     * Function to aggregate a {@link List} of {@link BaseFailingOrSucceedingResult}.
      *
      * @param input
      * @param failureCollector
@@ -308,8 +310,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
      */
     protected static <Item,
             FailureType extends ErrorHolder,
-            Result extends BaseEitherBackedResult<List<Item>, FailureType>,
-            Input extends BaseEitherBackedResult<Item, FailureType>>
+            Result extends BaseFailingOrSucceedingResult<List<Item>, FailureType>,
+            Input extends BaseFailingOrSucceedingResult<Item, FailureType>>
     Result aggregate(final List<Input> input,
                      final BinaryOperator<FailureType> failureCollector,
                      final Result emptyResult) {
@@ -329,13 +331,13 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         if (failures.isEmpty()) {
             return (Result) firstResult.createSuccess(items);
         } else {
-            final BaseEitherBackedResult<Item, FailureType> failure = firstResult.createFailure(failures.stream().reduce(null, nullSafe(failureCollector)));
+            final BaseFailingOrSucceedingResult<Item, FailureType> failure = firstResult.createFailure(failures.stream().reduce(null, nullSafe(failureCollector)));
             return (Result) failure;
         }
     }
 
 
-    public static <T, FailureType extends ErrorHolder, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
+    public static <T, FailureType extends ErrorHolder, R extends BaseFailingOrSucceedingResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
         return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
     }
 }

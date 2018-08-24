@@ -40,7 +40,7 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> extends Err
 
     <R> R handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends R> failureHandler, ExceptionThrowingFunction<? super SuccessType, ? extends R> successHandler);
 
-    void handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler, ExceptionThrowingConsumer<? super SuccessType> successHandler);
+    FailingOrSucceedingResult<? super SuccessType, FailureType> handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super FailureType> failureHandler, ExceptionThrowingConsumer<? super SuccessType> successHandler);
 
     Optional<SuccessType> getOptionalSuccessObject();
 
