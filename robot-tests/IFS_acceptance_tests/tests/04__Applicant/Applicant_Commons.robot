@@ -295,23 +295,25 @@ Invite a non-existing collaborator
 
 the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
-    the user clicks the button/link                 jQuery=.govuk-button:contains("Continue or sign in")
+    the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
     The guest user inserts user email and password  ${email}  ${password}
     The guest user clicks the log-in button
-    the user should see the element                 jQuery=h1:contains("Select organisation")
-    the user clicks the button/link                 css=.button[type="submit"]
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element   jQuery=h1:contains("Confirm your organisation")
+    Run Keyword If    '${status}' == 'PASS'   the user clicks the button/link   jQuery = .govuk-button:contains("Confirm and accept invitation")
+    Run Keyword If    '${status}' == 'FAIL'  Run keywords    the user should see the element   jQuery=h1:contains("Your organisation")
+    ...                               AND     the user clicks the button/link   jQuery = .govuk-button:contains("Save and continue")
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
-    the user should see the element    jquery=h1:contains("Choose your organisation type")
+    the user should see the element    jquery=h1:contains("Choose organisation type")
     the user completes the new account creation  ${email}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
     the user selects the radio button           organisationType    radio-${organisationType}
-    the user clicks the button/link             jQuery=button:contains("Continue")
+    the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
     the user should see the element             jQuery=h1:contains("Enter organisation details")
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
     the user should be redirected to the correct page    ${SERVER}/registration/register
@@ -406,7 +408,7 @@ the user applies to competition and enters organisation type link
     [Arguments]  ${compId}  ${organisationType}
     the user navigates to the page      ${server}/competition/${compId}/overview
     the user clicks the button/link     link=Start new application
-    The user clicks the button/link     jQuery = a:contains("Continue without an account")
+    The user clicks the button/link     link = Continue and create an account
     the user selects the radio button   organisationTypeId  ${organisationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the Not on company house link
@@ -435,7 +437,7 @@ the user clicks the Not on company house link
 the user fills in the address info
    [Arguments]  ${organisationType}
    the user clicks the button/link        jQuery=a:contains("Start new application")
-   the user clicks the button/link        jQuery = a:contains("Continue without an account")
+   the user clicks the button/link        jQuery = a:contains("Continue and create an account")
    the user selects the radio button      organisationTypeId  ${organisationType}
    the user clicks the button/link        jQuery = button:contains("Save and continue")
 
@@ -454,7 +456,7 @@ the user fills in the research address details
 
 the user fills in the public address details
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Continue")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")

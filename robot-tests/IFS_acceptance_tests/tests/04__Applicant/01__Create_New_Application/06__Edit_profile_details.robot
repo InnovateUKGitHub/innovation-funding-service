@@ -24,7 +24,7 @@ View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042  IFS-951
     [Tags]    HappyPath
     When the user clicks the button/link  link=Profile
-    And the user should see the element   jQuery=h3:contains("Organisation type")+p:contains("Business")
+    And the user should see the element   jQuery = .govuk-table th:contains("Organisation type")
     Then the user should see the element  link=Edit your details
 
 Edit the profile and verify if the changes are saved

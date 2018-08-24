@@ -92,11 +92,11 @@ Create new application with the same user
     the user clicks the button/link            jQuery=summary:contains("Enter details manually")
     The user enters text to a text field       name=organisationName    org2
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            id=application-question-save
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="application.name"]  ${Application_title}
@@ -126,7 +126,7 @@ Invite and accept the invitation
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link                 css = .govuk-button[type="submit"]
     the research user finds org in company house
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address

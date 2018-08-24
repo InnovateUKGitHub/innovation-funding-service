@@ -15,17 +15,17 @@ ${collaboratorId}  ${user_ids['${collaborator1_credentials["email"]}']}
 Lead applicant details should show in the invite page
     [Documentation]    INFUND-1005
     Given the user navigates to the page          ${INVITE_LINK}
+    And the user should see the element           jQuery = p strong:contains("Worth Internet Systems")
     When the user clicks the button/link          jQuery=.govuk-button:contains("Yes, accept invitation")
-    And the user should see the text in the page  Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
     [Documentation]    INFUND-1005, INFUND-1780, INFUND-1166
     [Tags]
     Given browser validations have been disabled
-    When the user clicks the button/link           jQuery=.govuk-button:contains("Continue")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Save and continue")
     Then the user should see the text in the page  Please select an organisation type.
     Given the user selects the radio button        organisationType    3
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
 
 User is able to select only one type
     [Documentation]    INFUND-1005
@@ -39,12 +39,12 @@ The type of organisation navigates to the correct page
     [Tags]
     When the user should see the element           jQuery=.govuk-hint:contains("UK based business.")
     And the user selects the radio button          organisationType    1
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     Then the user should see the text in the page  Enter your organisation name or registration number.
     When the user goes back to the previous page
     And the user should see the element            jQuery=.govuk-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationType    2
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
     And the user enters text to a text field       id=organisationSearchName    zoo
     And the user clicks the button/link            jQuery=button:contains("Search")
@@ -56,12 +56,12 @@ The type of organisation navigates to the correct page
     Given the user clicks the button/link          jQuery=a:contains("Back to choose your organisation type")
     Then the user should see the element           jQuery=.govuk-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     And the user should see the text in the page   Enter your organisation name or registration number.
     When the user goes back to the previous page
     And the user should see the element            jQuery=.govuk-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     And the user should see the text in the page   Enter your organisation name or registration number.
     And the user goes back to the previous page
 
@@ -71,7 +71,7 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     Given the user navigates to the page           ${INVITE_LINK}
     When the user clicks the button/link           jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button          organisationType    3
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     When the user clicks the button/link           jQuery=.govuk-button:contains("Search")
     Then the user should see a field error         Please enter an organisation name to search.
     When the user clicks the button/link           jQuery=summary:contains("Enter details manually")
@@ -107,7 +107,7 @@ User is able to accept new terms and conditions
     [Documentation]  IFS-3093
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
-    When the user clicks the button/link  css=button[type="submit"]
+    When the user clicks the button/link  css= .govuk-button[type="submit"]
     Then the user should see the element  jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
@@ -125,7 +125,7 @@ the user enters organisation details
     the user clicks the button/link            link=INNOVATE LTD
     the user clicks the button/link            jQuery=button:contains("Enter address manually")
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Continue")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
