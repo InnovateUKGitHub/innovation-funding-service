@@ -34,7 +34,7 @@ public class ApplicationDocs {
             fieldWithPath("innovationArea").description("applicable Innovation Area").optional(),
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable").optional(),
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible").optional(),
-            fieldWithPath("leadOrganisationName").description("the name of the lead organisation").optional(),
+            fieldWithPath("leadOrganisationId").description("the id of the lead organisation").optional(),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel").optional(),
             fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old menu view are complete").optional()
     };
@@ -52,5 +52,6 @@ public class ApplicationDocs {
             .withCompletion(new BigDecimal(30L))
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())
+            .withLeadOrganisationId(1L)
             .withNoInnovationAreaApplicable(false);
 }

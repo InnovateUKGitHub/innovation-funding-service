@@ -68,7 +68,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
 
     @Test
-    public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
+    public void findApplicationFinanceByApplicationIdAndOrganisation() {
 
         Organisation organisation = newOrganisation().build();
         Application application = newApplication().build();
@@ -91,7 +91,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
     }
 
     @Test
-    public void testFindApplicationFinanceByApplicationId() {
+    public void findApplicationFinanceByApplicationId() {
 
         Organisation organisation = newOrganisation().build();
         Application application = newApplication().build();
@@ -115,7 +115,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
     }
 
     @Test
-    public void testOrganisationSeeksFunding(){
+    public void organisationSeeksFunding(){
         Long competitionId = 1L;
         Long applicationId = 1L;
         Long organisationId = 1L;
@@ -150,7 +150,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
     }
 
     @Test
-    public void testFindApplicationFinanceDetailsByApplicationId() {
+    public void findApplicationFinanceDetailsByApplicationId() {
 
         List<ApplicationFinanceResource> existingFinances = newApplicationFinanceResource().withApplication(1L).build(3);
         when(applicationFinanceHandlerMock.getApplicationFinances(1L)).thenReturn(existingFinances);

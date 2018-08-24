@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionDashboardModelPopulator;
@@ -15,9 +14,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +45,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -70,16 +67,13 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private UserRestService userRestService;
 
     @Mock
     private ApplicationService applicationService;
-
-    @Mock
-    private OrganisationService organisationService;
 
     @Override
     protected AssessorCompetitionDashboardController supplyControllerUnderTest() {
@@ -113,25 +107,17 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         Role role = Role.LEADAPPLICANT;
         List<OrganisationResource> organisations = buildTestOrganisations();
-        List<ProcessRoleResource> participants = newProcessRoleResource()
-                .withRole(role)
-                .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
-                .build(4);
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
 
-        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn(restSuccess(asList(participants.get(0))));
-        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn(restSuccess(asList(participants.get(1))));
-        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn(restSuccess(asList(participants.get(2))));
-        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn(restSuccess(asList(participants.get(3))));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(3)))).thenReturn(Optional.ofNullable(organisations.get(3)));
         when(assessmentService.getTotalScore(assessments.get(2).getId())).thenReturn(totalScores.get(0));
         when(assessmentService.getTotalScore(assessments.get(3).getId())).thenReturn(totalScores.get(1));
+        when(organisationRestService.getOrganisationById(applications.get(0).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
+        when(organisationRestService.getOrganisationById(applications.get(1).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(1)));
+        when(organisationRestService.getOrganisationById(applications.get(2).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(2)));
+        when(organisationRestService.getOrganisationById(applications.get(3).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(3)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
@@ -139,14 +125,14 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, userRestService, organisationService);
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, organisationRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
             inOrder.verify(applicationService).getById(assessment.getApplication());
-            inOrder.verify(userRestService).findProcessRole(assessment.getApplication());
-            inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
+            inOrder.verify(organisationRestService).getOrganisationById(anyLong());
+
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
                 inOrder.verify(assessmentService).getTotalScore(assessment.getId());
             } else {
@@ -202,25 +188,16 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withTotalScorePossible(100)
                 .build();
 
-        Role role = Role.LEADAPPLICANT;
         List<OrganisationResource> organisations = buildTestOrganisations();
-        List<ProcessRoleResource> participants = newProcessRoleResource()
-                .withRole(role)
-                .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
-                .build(4);
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
-        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn(restSuccess(asList(participants.get(0))));
-        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn(restSuccess(asList(participants.get(1))));
-        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn(restSuccess(asList(participants.get(2))));
-        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn(restSuccess(asList(participants.get(3))));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
-        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(3)))).thenReturn(Optional.ofNullable(organisations.get(3)));
         when(assessmentService.getTotalScore(assessments.get(3).getId())).thenReturn(totalScore);
+        when(organisationRestService.getOrganisationById(applications.get(0).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
+        when(organisationRestService.getOrganisationById(applications.get(1).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(1)));
+        when(organisationRestService.getOrganisationById(applications.get(2).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(2)));
+        when(organisationRestService.getOrganisationById(applications.get(3).getLeadOrganisationId())).thenReturn(restSuccess(organisations.get(3)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
@@ -228,14 +205,14 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, userRestService, organisationService);
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, organisationRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
             inOrder.verify(applicationService).getById(assessment.getApplication());
-            inOrder.verify(userRestService).findProcessRole(assessment.getApplication());
-            inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
+            inOrder.verify(organisationRestService).getOrganisationById(anyLong());
+
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
                 inOrder.verify(assessmentService).getTotalScore(assessment.getId());
             } else {
@@ -287,8 +264,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);
-        verifyZeroInteractions(processRoleService);
-        verifyZeroInteractions(organisationService);
 
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
 
@@ -399,6 +374,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         return newApplicationResource()
                 .withId(11L, 12L, 13L, 14L)
                 .withName("Juggling is fun", "Juggling is very fun", "Juggling is not fun", "Juggling is word that sounds funny to say")
+                .withLeadOrganisationId(1L, 2L, 3L, 4L)
                 .build(4);
     }
 

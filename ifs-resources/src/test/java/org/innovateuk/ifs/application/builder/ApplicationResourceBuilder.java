@@ -85,6 +85,10 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return with(applicationResource -> applicationResource.setInnovationArea(innovationArea));
     }
 
+    public ApplicationResourceBuilder withLeadOrganisationId(Long... leadOrganisationIds) {
+        return withArray((leadOrganisationId, application) -> application.setLeadOrganisationId(leadOrganisationId), leadOrganisationIds);
+    }
+
     public ApplicationResourceBuilder withNoInnovationAreaApplicable(Boolean... noInnovationAreaApplicableArray) {
         return withArray((noInnovationAreaApplicable, application) ->
                 setField("noInnovationAreaApplicable", noInnovationAreaApplicable, application), noInnovationAreaApplicableArray);

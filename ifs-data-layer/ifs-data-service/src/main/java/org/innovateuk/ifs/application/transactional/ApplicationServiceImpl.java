@@ -209,13 +209,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
-        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
-
-        // Only competitions with at least one funded and informed application can be considered as in project setup
-        return serviceSuccess(applicationsForId.stream()
-                .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(Application::getManageFundingEmailDate))
-                .get().getManageFundingEmailDate());
+        return find(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(id),
+                notFoundError(Application.class, id)).andOnSuccessReturn(Application::getManageFundingEmailDate);
     }
 
     @Override
@@ -338,7 +333,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
+        applicationResource.setLeadOrganisationId(leadOrganisation.getId());
         return applicationResource;
     }
 }

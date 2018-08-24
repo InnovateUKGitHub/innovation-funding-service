@@ -74,6 +74,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
+    Application findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
+
     @Query(COMP_STATUS_FILTER)
     Page<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(@Param("compId") long competitionId,
                                                                                        @Param("states") Collection<ApplicationState> applicationStates,
