@@ -26,7 +26,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
         <!-- HARDCODED PROTOTYPE HTML -->
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-grid-column-full">
 
                 <h1 class="govuk-heading-xl">Business</h1>
 
@@ -38,7 +38,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                     You can identify your organisation through Companies House or enter your details manually
                 </p>
 
-                <form action="/prototypes/IFS-4104-funding-org-selected" method="get">
+                <form th:action="${#httpServletRequest.requestURI}">
+
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h2 class="govuk-fieldset__heading">Search on Companies House</h2>
@@ -51,7 +52,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 Enter your organisation name or registration number.
                             </label>
                             <input class="govuk-input govuk-!-width-one-half" type="text" value="" id="organisationSearchName" name="organisationSearchName">
-                            <button type="button" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0" data-aria-controls="org-results-list">Search</button>
+                            <button type="button" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
                         </div>
 
                         <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
@@ -65,8 +66,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
 
                             </li>
-
                         </ul>
+
                     </fieldset>
 
                     <fieldset class="govuk-fieldset">
@@ -85,34 +86,16 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <h2 class="govuk-heading-m">Enter your organisation details</h2>
 
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="org-name">
+                                    <label class="govuk-label" for="organisationName">
                                         Organisation name
                                     </label>
-                                    <input class="govuk-input" id="org-name" type="text" value="" name="organisationName">
+                                    <input class="govuk-input" id="organisationName" type="text" value="" name="organisationName">
                                 </div>
 
-                                <div id="manual-company-input">
-                                    <fieldset class="govuk-fieldset">
-
-                                        <legend class="govuk-visually-hidden">Organisation details</legend>
-                                        <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
-                                                Postcode
-                                            </label>
-                                            <input id="addressForm.postcodeInput" class="form-control" type="text" name="addressForm.postcodeInput" value="">
-                                            <button type="submit" id="postcode-lookup" class="govuk-button" name="search-address">Find UK address</button>
-                                        </div>
-
-                                        <input type="hidden" id="section1" name="section1" th:value="${section1}">
-                                        <input type="hidden" id="section2" name="section2" th:value="${section2}">
-                                        <input type="hidden" id="section3" name="section3" th:value="${section3}">
-                                        <input type="hidden" id="status" name="status" th:value="${status}">
-
-
-                                        <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
-                                    </fieldset>
-
-                                </div>
+                                <input type="hidden" id="section1" name="section1" th:value="${section1}">
+                                <input type="hidden" id="section2" name="section2" th:value="${section2}">
+                                <input type="hidden" id="section3" name="section3" th:value="${section3}">
+                                <input type="hidden" id="status" name="status" th:value="${status}">
 
                                 <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
                             </div>
