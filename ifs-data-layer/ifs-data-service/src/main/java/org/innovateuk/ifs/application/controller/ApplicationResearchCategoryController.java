@@ -38,7 +38,7 @@ public class ApplicationResearchCategoryController {
 
     @PostMapping("/researchCategory/{applicationId}")
     public RestResult<ApplicationResource> setResearchCategory(@PathVariable("applicationId") final long applicationId,
-                                                               @RequestBody long researchCategoryId) {
+                                                               @RequestBody(required = false) Long researchCategoryId) {
         return applicationResearchCategoryService.setResearchCategory(applicationId, researchCategoryId)
                 .toGetResponse();
     }

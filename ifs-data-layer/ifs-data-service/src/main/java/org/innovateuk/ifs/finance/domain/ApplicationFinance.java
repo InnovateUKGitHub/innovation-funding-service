@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
  */
@@ -57,18 +59,19 @@ public class ApplicationFinance extends Finance {
     }
 
     public Integer getMaximumFundingLevel() {
+        boolean researchCategoryRequired = isResearchCategoryRequired();
         return getApplication().getCompetition().getGrantClaimMaximums()
                 .stream()
-                .filter(this::isMatchingGrantClaimMaximum)
-                .findAny()
+                .filter(grantClaimMaximum -> isMatchingGrantClaimMaximum(grantClaimMaximum, researchCategoryRequired))
+                .findFirst()
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
     }
 
-    private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
+    private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum, boolean researchCategoryRequired) {
         return isMatchingOrganisationType(grantClaimMaximum)
                 && isMatchingOrganisationSize(grantClaimMaximum)
-                && isMatchingResearchCategory(grantClaimMaximum);
+                && (!researchCategoryRequired || isMatchingResearchCategory(grantClaimMaximum));
     }
 
     private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
@@ -88,4 +91,8 @@ public class ApplicationFinance extends Finance {
                 grantClaimMaximum.getResearchCategory().getId().equals(getApplication().getResearchCategory().getId());
     }
 
+    private boolean isResearchCategoryRequired() {
+        return getApplication().getCompetition().getQuestions().stream()
+                .anyMatch(question -> RESEARCH_CATEGORY == question.getQuestionSetupType());
+    }
 }

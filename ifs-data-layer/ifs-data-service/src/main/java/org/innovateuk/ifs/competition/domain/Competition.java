@@ -748,8 +748,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public boolean getUseNewApplicantMenu() {
         return questions.stream().anyMatch(
-                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
-        );
+                question -> APPLICATION_TEAM == question.getQuestionSetupType());
     }
 }
 
