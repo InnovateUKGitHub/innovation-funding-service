@@ -13,8 +13,6 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
 
     private ApplicationResource application;
     private CompetitionResource competition;
-    // TODO: IFS-2123 remove selectedResearchCategoryName when all competitions have the new Applicant menu
-    private String selectedResearchCategoryName;
     private String selectedInnovationAreaName;
     private AssignButtonsViewModel assignButtonsViewModel;
 
@@ -39,14 +37,6 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
         this.competition = competition;
     }
 
-    public String getSelectedResearchCategoryName() {
-        return selectedResearchCategoryName;
-    }
-
-    public void setSelectedResearchCategoryName(String selectedResearchCategoryName) {
-        this.selectedResearchCategoryName = selectedResearchCategoryName;
-    }
-
     public String getSelectedInnovationAreaName() {
         return selectedInnovationAreaName;
     }
@@ -66,13 +56,6 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
     /* view model methods */
     public Long getApplicationId() {
         return application.getId();
-    }
-
-    public String getResearchCategoryText() {
-        return selectedResearchCategoryName != null ? "Change your research category" : "Choose your research category";
-    }
-    public boolean isResearchCategoryHasBeenSelected() {
-        return selectedResearchCategoryName != null;
     }
 
     public String getInnovationAreaText() {
