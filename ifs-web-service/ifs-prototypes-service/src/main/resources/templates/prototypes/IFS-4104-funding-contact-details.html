@@ -33,16 +33,18 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
                 <th:block th:unless="${param.status != null and param.status[0] == 'readonly'}">
 
-                    <form class="govuk-form" action="/prototypes/IFS-4104-funding-dashboard">
+                    <form class="govuk-form" th:action="${#httpServletRequest.requestURI}">
 
                         <fieldset class="govuk-fieldset">
 
                             <legend class="govuk-fieldset__legend">
-                                Who should we contact to arrange your continued Horizon 2020 funding?
+                                Who is the most appropriate person for us to contact about your Horizon 2020 project?
+                                We recommend your Legal Entity Appointed Representative (LEAR).
                             </legend>
 
                             <input type="hidden" id="section1" name="section1" value="true">
                             <input type="hidden" id="section2" name="section2" value="true">
+                            <input type="hidden" id="status" name="status" value="readonly">
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="name">
@@ -72,7 +74,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <input class="govuk-input" id="telephone" name="telephone" type="text" th:value="${edit ? '07986543211' : ''}" required>
                             </div>
 
-                            <button class="govuk-button" type="submit">Save and return</button>
+                            <button class="govuk-button" type="submit">Continue</button>
 
                         </fieldset>
 
@@ -82,14 +84,21 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
                 <th:block th:if="${param.status != null and param.status[0] == 'readonly'}">
                     <dl class="govuk-list">
-                        <dt>Name</dt>
+                        <dt>Full name</dt>
                         <dd>Joe Bloggs</dd>
+                        <dt>Job title</dt>
+                        <dd>Executive</dd>
                         <dt>Email</dt>
                         <dd>Joebloggs@gmail.com</dd>
                         <dt>Telephone</dt>
                         <dd>07986543211</dd>
                     </dl>
-                    <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-contact-details?status=edit&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Edit contact details</a>
+                    <p class="govuk-body govuk-!-margin-bottom-6">
+                        <a class="govuk-link" th:href="${'/prototypes/IFS-4104-funding-contact-details?status=edit&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Edit your contact details</a>
+                    </p>
+
+                    <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-dashboard?section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Save and return</a>
+
                 </th:block>
 
             </div>
