@@ -4,17 +4,13 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumServiceImpl;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -23,11 +19,10 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,9 +36,6 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     private CompetitionTypeRepository competitionTypeRepository;
 
     @Mock
-    private CompetitionMapper competitionMapper;
-
-    @Mock
     private CompetitionRepository competitionRepository;
 
     @Mock
@@ -52,15 +44,16 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     @Override
     protected GrantClaimMaximumServiceImpl supplyServiceUnderTest() {
         return new GrantClaimMaximumServiceImpl(grantClaimMaximumRepository, competitionTypeRepository,
-                competitionRepository, grantClaimMaximumMapper, competitionMapper);
+                competitionRepository, grantClaimMaximumMapper);
     }
 
     @Test
-    public void testGetGrantClaimMaximumById() {
+    public void getGrantClaimMaximumById() {
         Integer expectedMaximum = 100;
         Long expectedId = 1L;
         GrantClaimMaximum gcm = newGrantClaimMaximum().withId(expectedId).withMaximum(expectedMaximum).build();
-        GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().withId(expectedId).withMaximum(expectedMaximum).build();
+        GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().withId(expectedId).withMaximum
+                (expectedMaximum).build();
 
         when(grantClaimMaximumRepository.findOne(gcm.getId())).thenReturn(gcm);
         when(grantClaimMaximumMapper.mapToResource(gcm)).thenReturn(gcmResource);
@@ -73,7 +66,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     }
 
     @Test
-    public void testGetNotFoundGrantClaimMaximum() {
+    public void getNotFoundGrantClaimMaximum() {
         GrantClaimMaximum gcm = newGrantClaimMaximum().build();
         ServiceResult<GrantClaimMaximumResource> result = service.getGrantClaimMaximumById(gcm.getId());
         assertTrue(result.isFailure());
@@ -81,45 +74,40 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     }
 
     @Test
-    public void testGetGrantClaimMaximumsForCompetitionType() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
-                .build(2);
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+    public void getGrantClaimMaximumsForCompetitionType() {
+        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
+        Competition competition = newCompetition()
+                .withGrantClaimMaximums(grantClaimMaximums)
                 .build();
-        Competition competition = newCompetition().build();
-        CompetitionType competitionType = newCompetitionType().withTemplate(competition).build();
+        CompetitionType competitionType = newCompetitionType()
+                .withTemplate(competition)
+                .build();
 
         when(competitionTypeRepository.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionMapper.mapToResource(competitionType.getTemplate())).thenReturn(competitionResource);
 
         ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess(), CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()));
+        assertEquals(asLinkedSet(grantClaimMaximums.get(0).getId(), grantClaimMaximums.get(1).getId()), result
+                .getSuccess());
     }
 
     @Test
-    public void testGetGrantClaimMaximumsForCompetition() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .build(2);
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+    public void getGrantClaimMaximumsForCompetition() {
+        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
+        Competition competition = newCompetition()
+                .withGrantClaimMaximums(grantClaimMaximums)
                 .build();
-        Competition competition = newCompetition().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
-        when(competitionMapper.mapToResource(competition)).thenReturn(competitionResource);
 
         ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetition(competition.getId());
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess(), CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()));
+        assertEquals(asLinkedSet(grantClaimMaximums.get(0).getId(), grantClaimMaximums.get(1).getId()), result
+                .getSuccess());
     }
 
     @Test
-    public void testSave() {
+    public void save() {
         GrantClaimMaximum gcm = newGrantClaimMaximum().build();
         GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().build();
 
