@@ -19,6 +19,9 @@ public class EuContact {
     private String jobTitle;
     private String telephone;
 
+    EuContact() {
+    }
+
     public EuContact(String name, String email, String jobTitle, String telephone) {
         this.name = name;
         this.email = email;

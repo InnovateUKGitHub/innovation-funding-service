@@ -22,6 +22,13 @@ public class EuOrganisation {
     private final EuOrganisationType organisationType;
     private final String companiesHouseNumber;
 
+    EuOrganisation() {
+        name = null;
+        address = null;
+        organisationType = null;
+        companiesHouseNumber = null;
+    }
+
     public EuOrganisation(final String name, final EuOrganisationType organisationType,
                           final String companiesHouseNumber, final EuAddress address) {
         if (name == null) {
