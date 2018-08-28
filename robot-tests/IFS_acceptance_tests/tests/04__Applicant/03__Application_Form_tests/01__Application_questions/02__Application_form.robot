@@ -127,7 +127,7 @@ Research section incomplete
 Research category validation
     [Documentation]  IFS-2123
     Given The user clicks the button/link  link=Research category
-    When The user clicks the button/link   id=application-question-save
+    When The user clicks the button/link   id = application-question-complete
     Then The user should see a field and summary error  This field cannot be left blank.
     [Teardown]  the user clicks the button/link  link=Application overview
 

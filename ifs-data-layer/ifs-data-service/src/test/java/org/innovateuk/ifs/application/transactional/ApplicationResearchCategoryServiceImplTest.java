@@ -114,9 +114,6 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Long applicationId = 1L;
         Long researchCategoryId = 2L;
 
-        ResearchCategory researchCategory = newResearchCategory().withId(researchCategoryId).build();
-
-        Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);

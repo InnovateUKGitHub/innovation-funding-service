@@ -101,7 +101,7 @@ Non-academic partner finance section
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     When the user clicks the button/link    link=Your funding
-    Then the user should see the element    jQuery=.govuk-list li:contains("the lead applicant must select a research category")
+    Then the user should see the element    jQuery=.govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522

@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +54,7 @@ public class SetupSectionsPermissionRules {
     private OtherDocumentsService otherDocumentsService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
@@ -200,8 +200,7 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")
     public boolean userCannotMarkOwnSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        OrganisationResource organisation = organisationService.getByUserAndProjectId(user.getId(), projectOrganisationCompositeId.getProjectId());
-
+        OrganisationResource organisation = organisationRestService.getByUserAndProjectId(user.getId(), projectOrganisationCompositeId.getProjectId()).getSuccess();
         return !organisation.getId().equals(projectOrganisationCompositeId.getOrganisationId());
     }
 

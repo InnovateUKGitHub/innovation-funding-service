@@ -8,6 +8,8 @@ Documentation   Suite description
 ...             IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 ...
 ...             IFS-4046 Person to organisation acceptance test updates
+...
+...             IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Force Tags      compAdmin  Applicant  Assessor
@@ -29,7 +31,7 @@ Comp Admin Creates EOI type competition
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196  IFS-4046
+    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
     [Tags]  HappyPath  MySQL
     When the competition is open                 ${comp_name}
     And Log in as a different user               &{assessor2_credentials}

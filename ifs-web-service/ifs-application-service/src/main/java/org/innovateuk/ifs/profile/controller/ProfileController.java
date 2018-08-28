@@ -10,7 +10,6 @@ import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,14 +34,12 @@ import static java.util.Optional.ofNullable;
 
 @Controller
 @RequestMapping("/profile")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ProfileController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
     private UserService userService;
-
-    private OrganisationService organisationService;
 
     private UserAuthenticationService userAuthenticationService;
 
@@ -51,9 +48,8 @@ public class ProfileController {
     ProfileController() {}
 
     @Autowired
-    public ProfileController(UserService userService, OrganisationService organisationService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
+    public ProfileController(UserService userService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
         this.userService = userService;
-        this.organisationService = organisationService;
         this.userAuthenticationService = userAuthenticationService;
         this.userProfilePopulator = userProfilePopulator;
     }
@@ -61,7 +57,6 @@ public class ProfileController {
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-
         model.addAttribute("model", userProfilePopulator.populate(userResource));
         return "profile/user-profile";
     }
@@ -72,7 +67,7 @@ public class ProfileController {
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
     
-	private UserDetailsForm buildUserDetailsForm(final UserResource user){
+    private UserDetailsForm buildUserDetailsForm(final UserResource user) {
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
@@ -89,7 +84,7 @@ public class ProfileController {
                                     HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
 
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
@@ -127,7 +122,7 @@ public class ProfileController {
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-            error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[] {error.getErrorKey()}, null, null))
+                error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[]{error.getErrorKey()}, null, null))
         );
     }
 }

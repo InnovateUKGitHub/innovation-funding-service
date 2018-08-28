@@ -27,15 +27,15 @@
                     <div th:if="${model.complete}" class="success-alert assignee extra-margin-bottom">
                         <p class="govuk-body">Research category is marked as complete</p>
                     </div>
-                    <h2 class="govuk-heading-m">Selected research category</h2>
+                    <h2 th:text="${model.useSelectState} ? 'Selected research category' : 'Confirmed research category'" class="govuk-heading-m"></h2>
                     <p th:text="${model.researchCategory} ?: 'This field has not been completed.'"
                        class="govuk-body"
                        th:classappend="${#strings.isEmpty(model.researchCategory)}? 'govuk-hint'">Experimental development</p>
                 </th:block>
                 <th:block th:if="${!model.allReadOnly}">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="researchCategory">
-                            <h2 class="govuk-fieldset__heading">Select your research category</h2>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="researchCategoryLegend">
+                            <h2 class="govuk-fieldset__heading" th:text="${model.useSelectState} ? 'Select your research category' : 'Confirm research category'" ></h2>
                         </legend>
                         <span class="govuk-hint">More <a
                             href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
@@ -46,7 +46,7 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('researchCategory')}"
                                   th:text="${err}"></span>
                         </th:block>
-                        <div class="govuk-radios">
+                        <div class="govuk-radios" th:if="${model.useSelectState}">
                             <div class="govuk-radios__item"
                                  th:each="item : ${model.availableResearchCategories}">
                                 <input type="radio"
@@ -62,18 +62,25 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="govuk-checkboxes" th:unless="${model.useSelectState}">
+                            <div class="govuk-checkboxes__item" data-target-clear-form="true"
+                                 th:with="item=${model.availableResearchCategories.get(0)}">
+                                <input type="checkbox"
+                                       class="govuk-checkboxes__input"
+                                       th:name="researchCategory"
+                                       required="required"
+                                       th:value="${item.id}"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       id="researchCategory"/>
+                                <label for="researchCategory"
+                                       class="govuk-label govuk-checkboxes__label">[[${item.name}]]</label>
+                            </div>
+                        </div>
                     </fieldset>
                 </th:block>
             </div>
 
-            <div class="govuk-!-margin-top-6" th:unless="${model.useNewApplicantMenu}">
-                <button class="govuk-button" name="save-research-category">Save</button>
-                <a class="button-clear"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
-                </a>
-            </div>
-
-            <div class="govuk-!-margin-top-6" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
+            <div class="govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             </div>
@@ -81,18 +88,16 @@
             <input type="hidden" id="cacheTest" value=""/>
         </div>
 
-        <th:block th:if="${model.useNewApplicantMenu}">
-            <a th:href="${backURL}"
-               class="button-secondary"
-               th:if="${model.allReadOnly}"
-               th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-            <button th:unless="${model.allReadOnly}"
-                    id="application-question-save"
-                    type="submit"
-                    class="govuk-button app-submit-btn"
-                    name="save-research-category">Save and return to application overview
-            </button>
-        </th:block>
+        <a th:href="${backURL}"
+           class="button-secondary"
+           th:if="${model.allReadOnly}"
+           th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+        <button th:unless="${model.allReadOnly}"
+                id="application-question-save"
+                type="submit"
+                class="govuk-button app-submit-btn"
+                name="save-research-category">Save and return to application overview
+        </button>
     </form>
 </th:block>
 
@@ -100,7 +105,7 @@
 
     <div class="question">
         <dl class="govuk-list govuk-!-font-size-16">
-            <dt>Selected research category</dt>
+            <dt th:text="${model.useSelectState} ? 'Selected research category' : 'Confirmed research category'"></dt>
             <dd th:text="${model.researchCategory} ?: 'This field has not been completed.'"
                 th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
             </dd>

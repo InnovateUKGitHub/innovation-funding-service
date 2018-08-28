@@ -4,10 +4,7 @@ import com.google.common.collect.Sets;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -208,13 +205,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
-        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
-
-        // Only competitions with at least one funded and informed application can be considered as in project setup
-        return serviceSuccess(applicationsForId.stream()
-                .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(Application::getManageFundingEmailDate))
-                .get().getManageFundingEmailDate());
+        return find(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(id),
+                notFoundError(Application.class, id)).andOnSuccessReturn(Application::getManageFundingEmailDate);
     }
 
     @Override
@@ -285,20 +277,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
-                                                                               int pageIndex,
-                                                                               int pageSize,
-                                                                               String sortField,
-                                                                               String filter) {
+    public ServiceResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
+                                                                                           int pageIndex,
+                                                                                           int pageSize,
+                                                                                           String sortField,
+                                                                                           String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
+        List<UnsuccessfulApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToUnsuccessfulApplicationResource);
 
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UnsuccessfulApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
@@ -333,11 +325,18 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
     }
 
-    private ApplicationResource convertToApplicationResource(Application application) {
+    private UnsuccessfulApplicationResource convertToUnsuccessfulApplicationResource(Application application) {
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
-        return applicationResource;
+
+        return new UnsuccessfulApplicationResource(
+                applicationResource.getId(),
+                applicationResource.getName(),
+                leadOrganisation.getName(),
+                applicationResource.getApplicationState(),
+                applicationResource.getCompetition()
+        );
+
     }
 }

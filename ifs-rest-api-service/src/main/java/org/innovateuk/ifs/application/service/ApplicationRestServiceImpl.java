@@ -125,7 +125,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
+    public RestResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         if (filter != null) {
@@ -133,6 +133,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         }
 
         String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
+        return getWithRestResult(uriWithParams, UnsuccessfulApplicationPageResource.class);
     }
 }
