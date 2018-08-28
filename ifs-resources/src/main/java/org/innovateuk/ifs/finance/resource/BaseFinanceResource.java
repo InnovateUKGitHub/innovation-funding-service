@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.resource;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
@@ -70,14 +69,6 @@ public abstract class BaseFinanceResource {
 
     public void setTarget(Long target) {
         this.target = target;
-    }
-
-
-    @ZeroDowntime(reference = "IFS-3818", description = "To support instances of older REST clients before " +
-            "the OrganisationSize enum was introduced")
-    @JsonProperty("organisationSize")
-    public Long getOrganisationSizeId() {
-        return organisationSize == null ? null : organisationSize.getId();
     }
 
     @JsonProperty("organisationSizeValue")

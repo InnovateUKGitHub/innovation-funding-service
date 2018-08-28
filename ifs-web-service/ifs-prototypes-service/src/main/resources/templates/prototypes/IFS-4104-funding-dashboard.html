@@ -24,13 +24,38 @@
         <!-- HARDCODED PROTOTYPE HTML -->
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-grid-column-full">
 
-                <h1 class="govuk-heading-xl">Horizon 2020: UK funding</h1>
+                <h1 class="govuk-heading-xl">Horizon 2020: UK government underwrite guarantee</h1>
 
-                <p class="govuk-body">
-                    UK Research and Innovation will make sure there is no interruption to the funding of your Horizon 2020
-                    project after Brexit. To make this possible please provide us with your organisation's details.
+                <p class="govuk-body">The
+                    <a class="govuk-link"
+                       href="https://www.gov.uk/government/publications/uk-participation-in-horizon-2020-uk-government-overview"
+                       target="_blank">UK government has underwritten the funding</a>
+                    (opens in a new window) of Horizon 2020 projects if the UK exits the EU under certain circumstances.
+                </p>
+
+                <p class="govuk-body">This website is for UK participants who are in receipt of Horizon 2020 funding.
+                    It is also for UK participants in a Euratom Research and Training project or an ongoing Framework
+                    Programme 7 project.
+                </p>
+
+                <p class="govuk-body">Please enter your details to ensure that UK Research and Innovation:</p>
+
+                <ul class="govuk-list govuk-list__bullet">
+                    <li>has initial information about you and your project to underwrite guarantee payments if
+                        required
+                    </li>
+                    <li>can keep you updated about what you need to do next</li>
+                </ul>
+
+                <p class="govuk-body">Please have your grant agreement to hand before you start. If you do not have a
+                    signed grant agreement yet, please return to this page when you have one.
+                </p>
+
+                <p class="govuk-body">It takes approximately 10 minutes to register one project. We are unable to save
+                    your progress so you must submit or you will need to start again. Check your details very carefully
+                    before you submit as you will not be able to make changes later.
                 </p>
 
                 <ul class="govuk-body task-list">
@@ -63,7 +88,14 @@
                     </li>
                 </ul>
 
-                <form action="index.html">
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">You can only register one project at a time. If you or your organisation is
+                        participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
+                        on 000 000 0000 or email
+                        <a href="mailto:UKRIpublichelpdesk@ukri.org" class="govuk-link">UKRIpublichelpdesk@ukri.org</a>.</p>
+                </div>
+
+                <form action="IFS-4104-funding-registration-complete.html">
 
                     <th:block th:if="${allComplete}">
                         <div class="govuk-form-group">
@@ -86,7 +118,9 @@
                     <div class="registration-modal" role="dialog" aria-hidden="true" >
                         <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
                         <h2 class="govuk-heading-m">Submit registration</h2>
-                        <p class="govuk-body">Your details will be checked and further steps will be required to complete the process. The email address you provided will receive confirmation of registration and next steps.</p>
+                        <p class="govuk-body">Your details will be checked and verified in due course. UK Research and
+                            Innovation may contact you for more information. You will receive an email confirmation of
+                            your registration.</p>
                         <hr />
                         <div>
                             <button type="submit" class="govuk-button">Submit</button>
@@ -100,6 +134,8 @@
 
             </div>
         </div>
+
+
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->
 

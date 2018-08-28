@@ -35,7 +35,7 @@
             </div>
         </th:block>
         <th:block th:unless="${model.pendingSpendProfiles.size() > 0}">
-            There are no outstanding spend profiles to generate.
+            <p class="govuk-body">There are no outstanding spend profiles to generate.</p>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

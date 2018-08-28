@@ -336,7 +336,7 @@
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
               th:with="name=${model.assignee.name}">
-            <span class="assign-name govuk-body" th:text="${name}">NAME</span>
+            <span class="assign-name" th:text="${name}">NAME</span>
         </span>
     </th:block>
 
@@ -345,7 +345,7 @@
             <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
         </span>
         <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
-            Assigned to <span class="govuk-body" th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+            Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
         </span>
     </th:block>
 
@@ -419,7 +419,7 @@
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
     <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
-      Assigned to <span class="govuk-body" th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
     </span>
   </th:block>
 </th:block>

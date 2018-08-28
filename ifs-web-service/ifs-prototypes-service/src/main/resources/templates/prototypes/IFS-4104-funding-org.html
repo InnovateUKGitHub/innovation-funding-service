@@ -27,12 +27,12 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
         <!-- HARDCODED PROTOTYPE HTML -->
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-grid-column-full">
 
                 <h1 class="govuk-heading-xl">Choose your organisation type</h1>
 
                 <div class="message-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">Your organisation must be UK based to receive funding.</p>
+                    <p class="govuk-body">Your organisation must be identified as a UK partner in the grant agreement to receive funding.</p>
                 </div>
 
                 <form id="lead-organisation-type-form" action="/prototypes/IFS-4104-funding-business" method="GET" novalidate="novalidate">
@@ -107,8 +107,9 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 </div>
                             </div>
                         </fieldset>
-                        <p class="govuk-body">
-                            If your organisation type is not listed contact the <a href="#">customer support service</a>
+                        <p class="govuk-body govuk-!-margin-top-6">
+                            If your organisation type is not listed, please ring 000 000 0000 or email <a
+                            href="mailto:UKRIpublichelpdesk@ukri.org" class="govuk-link">UKRIpublichelpdesk@ukri.org</a>
                         </p>
                     </div>
 
@@ -116,8 +117,10 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                         Save and continue
                     </button>
                 </form>
+
             </div>
         </div>
+
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->
 
