@@ -11,6 +11,11 @@ apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
+apply plugin: 'idea'
+
+group 'innovateuk'
+version project.version
+
 project.version = euGrantRegistrationDataServiceVersion
 tagDocker.tag = euGrantRegistrationDataServiceVersion
 osStageRemote.tag = euGrantRegistrationDataServiceVersion

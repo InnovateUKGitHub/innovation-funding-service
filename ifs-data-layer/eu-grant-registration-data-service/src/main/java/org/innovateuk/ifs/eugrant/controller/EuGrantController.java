@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+/**
+ * Controller for saving and getting eu grant registrations.
+ */
 @RestController
 public class EuGrantController {
 
