@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * A contact for the organisation receiving EU grant funding.
+ */
 @Entity
 public class EuContact {
 

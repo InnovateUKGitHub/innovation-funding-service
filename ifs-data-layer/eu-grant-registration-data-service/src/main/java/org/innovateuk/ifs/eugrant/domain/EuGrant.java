@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
+/**
+ * EU Grant funding for a UK Organisation.
+ */
 @Entity
 public class EuGrant {
 

@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * The address of a UK organisation receiving EU grant funding.
+ */
 @Entity
 public class EuAddress {
 

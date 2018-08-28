@@ -6,6 +6,9 @@ import javax.persistence.*;
 
 import static javax.persistence.EnumType.STRING;
 
+/**
+ * A UK Organisation that receives EU grant funding.
+ */
 @Entity
 public class EuOrganisation {
 

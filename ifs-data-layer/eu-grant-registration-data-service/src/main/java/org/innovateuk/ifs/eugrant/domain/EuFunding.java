@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * The funding details for an {@link EuOrganisation} benefiting from an {@link EuGrant}.
+ */
 @Entity
 public class EuFunding {
 
