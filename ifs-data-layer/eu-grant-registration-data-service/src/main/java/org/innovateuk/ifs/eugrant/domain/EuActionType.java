@@ -15,6 +15,9 @@ public class EuActionType {
     private Long id;
 
     private String name;
+
+    private String description;
+
     private int priority;
 
     public EuActionType() {
@@ -28,6 +31,10 @@ public class EuActionType {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getPriority() {

@@ -30,6 +30,7 @@ CREATE TABLE eu_contact (
 CREATE TABLE eu_action_type (
   id BIGINT(20) PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
+  description VARCHAR(255) NOT NULL,
   priority INT(11) NOT NULL UNIQUE
 );
 
