@@ -58,8 +58,8 @@ public class ApplicationSummaryViewModelPopulator {
         ApplicationTeamViewModel applicationTeamViewModel = competition.getUseNewApplicantMenu() ?
                 applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), application.getCompetition()) : null;
 
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = competition.getUseNewApplicantMenu() ?
-                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant) : null;
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel =
+                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant);
 
         return new ApplicationSummaryViewModel(
                 application,

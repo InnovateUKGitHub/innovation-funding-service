@@ -53,25 +53,6 @@
                                         data-range-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})}" />
                 </div>
 
-                <th:block th:unless="${competition.useNewApplicantMenu}">
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'govuk-form-group--error'">
-                        <label for="application.researchCategory">
-                            <span class="govuk-heading-m">Research category</span>
-                        </label>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
-                        <div th:if="${formInputViewModel.researchCategoryHasBeenSelected}">
-                            <p class="govuk-body">Chosen research category: <th:block th:text="${formInputViewModel.selectedResearchCategoryName}"/></p>
-
-                            <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
-                            <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
-                        </div>
-                        <button id="application.researchCategory" class="button-clear" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
-                            <span th:text="${formInputViewModel.researchCategoryText}">Choose your research category</span>
-                        </button>
-                    </div>
-                </th:block>
-
                 <div class="govuk-form-group"
                      th:if="${formInputViewModel.canSelectInnovationArea}"
                      th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'govuk-form-group--error'">

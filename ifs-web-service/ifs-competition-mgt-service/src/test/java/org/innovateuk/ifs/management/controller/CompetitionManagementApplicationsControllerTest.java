@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.UnsuccessfulApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -563,7 +564,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         String filter = "ALL";
 
         String competitionName = "Competition One";
-        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        List<UnsuccessfulApplicationResource> unsuccessfulApplications = UnsuccessfulApplicationResourceBuilder.newUnsuccessfulApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
                 competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new Pagination(applicationPageResource, ""));
