@@ -28,7 +28,7 @@ Administrator can navigate to manage users page
     [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
     When the user clicks the button/link      link=Manage users
     Then the user should see the element      jQuery=h1:contains("Manage users")
-    And the user should see the element       jQuery=.selected:contains("Active")
+    And the user should see the element       jQuery=a[aria-selected]:contains("Active")
 
 Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
@@ -96,7 +96,7 @@ Administrator can successfully finish the rest of the invitation
     [Tags]  HappyPath
     Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                      jQuery=.selected:contains("Pending")
+    And the user should see the element                      jQuery=a[aria-selected]:contains("Pending")
     When the user resends the invite
     Then the user verifies pending tab content
     When the user clicks the button/link                     jQuery=a:contains("Active")
@@ -220,7 +220,7 @@ Administrator can successfully edit internal user details
     Then the user cannot see a validation error in the page
     When the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                      jQuery=.selected:contains("Active")
+    And the user should see the element                      jQuery=a[aria-selected]:contains("Active")
     And the user should see the element                      jQuery=td:contains("Innovation Lead") + td:contains("Innovation Lead")
     [Teardown]  the user logs out if they are logged in
 
