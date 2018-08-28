@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 public interface ApplicationResearchCategoryRestService {
 
     RestResult<ApplicationResource> setResearchCategory(long applicationId,
-                                                        long researchCategoryId);
+                                                        Long researchCategoryId);
 
     RestResult<ApplicationResource> setResearchCategoryAndMarkAsComplete(long applicationId,
                                                                          long markedAsCompleteById,

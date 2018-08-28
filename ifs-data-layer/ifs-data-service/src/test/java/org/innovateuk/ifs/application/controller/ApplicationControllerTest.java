@@ -5,10 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -231,13 +228,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         String sortField = "id";
         String filter = "ALL";
 
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource();
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(unsuccessfulApplicationPageResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)));
+                .andExpect(content().json(toJson(unsuccessfulApplicationPageResource)));
 
         verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }

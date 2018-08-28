@@ -6,9 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 
-import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.sections.SectionAccess.NOT_REQUIRED;
+import static org.innovateuk.ifs.sections.SectionAccess.*;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access

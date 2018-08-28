@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchC
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
@@ -16,6 +15,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -64,6 +64,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
     @Mock
     private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
 
+    @Mock
+    private UserRestService userRestService;
+
     @Test
     public void populateWithApplicationFinances() {
         long loggedInUserId = 1L;
@@ -111,15 +114,14 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
-                questionResource.getId(), true);
+                questionResource.getId());
 
         assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
         assertEquals(asList(researchCategoryOne, researchCategoryTwo), researchCategoryViewModel.getAvailableResearchCategories());
         assertTrue(researchCategoryViewModel.getHasApplicationFinances());
-        assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
         assertEquals(researchCategoryOne.getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
@@ -174,15 +176,14 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
-                questionResource.getId(), true);
+                questionResource.getId());
 
         assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
         assertEquals(asList(researchCategory), researchCategoryViewModel.getAvailableResearchCategories());
         assertFalse(researchCategoryViewModel.getHasApplicationFinances());
-        assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
         assertEquals(researchCategory.getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
@@ -245,10 +246,10 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
-        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
-                questionResource.getId(), true);
+                questionResource.getId());
 
         assertEquals(asList(researchCategoryOne, researchCategoryTwo), researchCategoryViewModel.getAvailableResearchCategories());
         assertEquals(researchCategoryNameOne, researchCategoryViewModel.getAvailableResearchCategories().get(0).getName());

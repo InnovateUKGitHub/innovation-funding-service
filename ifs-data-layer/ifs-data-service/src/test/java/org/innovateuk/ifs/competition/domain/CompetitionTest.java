@@ -43,13 +43,11 @@ public class CompetitionTest {
 
     @Before
     public void setUp() throws Exception {
-        id = 0L;
 
         name = "testCompetitionName";
         startDate = ZonedDateTime.now().minusDays(5);
         registrationDate = startDate.plusDays(4);
         endDate = startDate.plusDays(15);
-
 
         maxResearchRatio = 10;
         academicGrantPercentage = 30;
@@ -67,10 +65,9 @@ public class CompetitionTest {
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
-        competition = new Competition(id, questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
+        competition = new Competition(questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
-
 
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);

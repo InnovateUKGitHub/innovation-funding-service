@@ -1,26 +1,27 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +62,11 @@ public class FinanceChecksQueriesAddQueryController {
     private static final String UNKNOWN_FIELD = "Unknown";
     private static final String NEW_QUERY_VIEW = "project/financecheck/new-query";
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private ProjectRestService projectRestService;
     @Autowired
     private CookieUtil cookieUtil;
     @Autowired
@@ -81,7 +84,7 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
@@ -184,7 +187,7 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
         if (attachments.contains(attachmentId)) {
@@ -226,7 +229,7 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
         return redirectTo(queriesListView(projectId, organisationId, querySection));
@@ -234,7 +237,7 @@ public class FinanceChecksQueriesAddQueryController {
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
         ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);

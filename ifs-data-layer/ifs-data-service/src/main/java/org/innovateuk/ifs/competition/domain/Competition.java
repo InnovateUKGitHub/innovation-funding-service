@@ -21,10 +21,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -139,15 +138,13 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id,
-                       List<Question> questions,
+    public Competition(List<Question> questions,
                        List<Section> sections,
                        String name,
                        ZonedDateTime startDate,
                        ZonedDateTime endDate,
                        ZonedDateTime registrationDate,
                        GrantTermsAndConditions termsAndConditions) {
-        this.id = id;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -158,8 +155,7 @@ public class Competition implements ProcessActivity {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
+    public Competition(String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
@@ -750,8 +746,7 @@ public class Competition implements ProcessActivity {
 
     public boolean getUseNewApplicantMenu() {
         return questions.stream().anyMatch(
-                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
-        );
+                question -> APPLICATION_TEAM == question.getQuestionSetupType());
     }
 }
 

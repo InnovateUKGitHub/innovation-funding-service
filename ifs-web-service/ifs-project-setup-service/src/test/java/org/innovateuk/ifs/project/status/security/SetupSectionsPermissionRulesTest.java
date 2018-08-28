@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +71,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Mock
     private OrganisationService organisationServiceMock;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private StatusService statusServiceMock;
@@ -301,9 +305,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userResource = newUserResource().withId(userId).build();
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
-        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationByUserId(userId)).thenReturn(restSuccess(organisationResource));
         assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(organisationId), userResource));
-        verify(organisationServiceMock).getOrganisationForUser(userId);
+        verify(organisationRestService).getOrganisationByUserId(userId);
     }
 
     @Test
@@ -314,9 +318,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userResource = newUserResource().withId(userId).build();
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
-        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationByUserId(userId)).thenReturn(restSuccess(organisationResource));
         assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(otherOrganisationId), userResource));
-        verify(organisationServiceMock).getOrganisationForUser(userId);
+        verify(organisationRestService).getOrganisationByUserId(userId);
     }
 
     @Test
