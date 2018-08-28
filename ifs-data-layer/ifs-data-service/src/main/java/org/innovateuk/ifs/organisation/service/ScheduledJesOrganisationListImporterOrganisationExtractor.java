@@ -20,7 +20,8 @@ public class ScheduledJesOrganisationListImporterOrganisationExtractor {
 
     ServiceResult<List<String>> extractOrganisationsFromFile(File downloadedFile) {
         try {
-            return serviceSuccess(FileUtils.readLines(downloadedFile, Charset.defaultCharset()));
+            List<String> organisationNames = FileUtils.readLines(downloadedFile, Charset.defaultCharset());
+            return serviceSuccess(organisationNames.subList(1, organisationNames.size()));
         } catch (IOException e) {
             return createServiceFailureFromIoException(e);
         }
