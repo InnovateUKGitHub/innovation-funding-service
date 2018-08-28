@@ -109,7 +109,7 @@
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
-                        <div class="govuk-radios__item" data-target="funding-level" data-target-clear-form="true">
+                        <div class="govuk-radios__item" data-target="funding-level" data-target-clear-validation="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-overrideFundingRules-yes"
