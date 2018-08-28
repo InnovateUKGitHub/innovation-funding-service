@@ -29,21 +29,9 @@ readonly=${param.status != null and param.status[0] == 'readonly' ? TRUE : FALSE
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
 
-                <th:block th:if="${param.status != null and param.status[0] == 'readonly'}">
-                    <h1 class="govuk-heading-xl">
-                        Your organisation
-                    </h1>
-                </th:block>
-
-                <th:block th:unless="${param.status != null and param.status[0] == 'readonly'}">
-                    <h1 class="govuk-heading-xl">
-                        Confirm your organisation
-                    </h1>
-
-                    <h2 class="govuk-heading-m">
-                        Confirm your organisation details are corrrect
-                    </h2>
-                </th:block>
+                <h1 class="govuk-heading-xl">
+                    Your organisation
+                </h1>
 
                 <th:block th:unless="${status == 'orgAdded'}">
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Organisation type</h3>
@@ -72,13 +60,12 @@ readonly=${param.status != null and param.status[0] == 'readonly' ? TRUE : FALSE
                     </p>
                 </th:block>
 
-                <th:block th:if="${readonly}">
-                    <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-org?status=edit&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Edit</a>
-                </th:block>
+                <p class="govuk-body govuk-!-margin-bottom-6">
+                    <a class="govuk-link" th:href="${'/prototypes/IFS-4104-funding-org?status=edit&#38;section1=' + section1 + '&#38;section2=' + section2 + '&#38;section3=' + section3}">Edit your organisation details</a>
+                </p>
 
-                <th:block th:unless="${readonly}">
-                    <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-dashboard?section1=true&#38;section2=' + section2 + '&#38;section3=' + section3}">Save and continue</a>
-                </th:block>
+                <a class="govuk-button" th:href="${'/prototypes/IFS-4104-funding-dashboard?section1=true&#38;section2=' + section2 + '&#38;section3=' + section3}">Save and continue</a>
+
             </div>
         </div>
 

@@ -13,7 +13,8 @@ public class ProjectFinanceResponseFields {
             fieldWithPath("[].id").description("Id of the ProjectFinance record"),
             fieldWithPath("[].organisation").description("The Organisation id to which the ProjectFinance belongs"),
             fieldWithPath("[].target").description("The id of the project to which the ProjectFinance belongs"),
-            fieldWithPath("[].organisationSize").description("The organisation size of the owning organisation as recorded against their finances"),
+            fieldWithPath("[].organisationSizeValue").description("The organisation size of the owning organisation " +
+                    "as recorded against their finances"),
             fieldWithPath("[].financeOrganisationDetails").description("A detailed breakdown of the organisation's finances"),
     };
 
