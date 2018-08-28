@@ -70,4 +70,16 @@ public class EuGrant {
     public String getShortCode() {
         return shortCode;
     }
+
+    public boolean isOrganisationComplete() {
+        return organisation != null;
+    }
+
+    public boolean isContactComplete() {
+        return contact != null;
+    }
+
+    public boolean isFundingComplete() {
+        return funding != null;
+    }
 }
