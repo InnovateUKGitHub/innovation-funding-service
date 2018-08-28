@@ -695,7 +695,7 @@ Innovation leads can be added to a competition
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
-    When the user clicks the button/link      jQuery = .inline-nav a:contains("Find")
+    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Find")
     Then the user should see the element      jQuery = td:contains(${peter_freeman}) button:contains("Add")
 
 User deletes the competition
