@@ -204,7 +204,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
 
-# Please note that the below test cases refer to the new monitoring officer role functionality so the test cases above may become deprecated
+# Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
 
 Existing Monitoring Officer can sign in
