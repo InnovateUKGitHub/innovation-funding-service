@@ -10,6 +10,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
@@ -104,7 +106,11 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         ResearchCategory researchCategory = newResearchCategory().withId(researchCategoryId).build();
         ResearchCategory origResearchCategory = newResearchCategory().withId(origResearchCategoryId).build();
 
-        Competition competition = newCompetition().build();
+        CompetitionType competitionType = newCompetitionType()
+                .build();
+        Competition competition = newCompetition()
+                .withCompetitionType(competitionType)
+                .build();
         Question financeQuestion = newQuestion().build();
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
         Application application = newApplication()
@@ -118,7 +124,8 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(organisationService.findById(application.getLeadOrganisationId())).thenReturn(serviceSuccess(organisation));
-        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(anyLong())).thenReturn(serviceSuccess(asSet(researchCategory.getId())));
+        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType.getId())).thenReturn
+                (serviceSuccess(asSet(researchCategory.getId())));
         when(grantClaimMaximumService.getGrantClaimMaximumsForCompetition(competition.getId())).thenReturn(serviceSuccess(asSet(origResearchCategory.getId())));
 
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
