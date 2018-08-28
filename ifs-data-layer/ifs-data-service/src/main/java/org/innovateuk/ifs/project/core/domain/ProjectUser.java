@@ -47,14 +47,6 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         // no-arg constructor
     }
 
-    public ProjectUser(Long id, User user, Project project, ProjectParticipantRole role, Organisation organisation) {
-        this.id = id;
-        this.user = user;
-        this.project = project;
-        this.role = role;
-        this.organisation = organisation;
-    }
-
     public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         this.user = user;
         this.project = project;
