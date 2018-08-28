@@ -220,7 +220,7 @@ public class ApplicationQuestionController {
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty());
 
         if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
             model.addAttribute("applicationTeamModel",

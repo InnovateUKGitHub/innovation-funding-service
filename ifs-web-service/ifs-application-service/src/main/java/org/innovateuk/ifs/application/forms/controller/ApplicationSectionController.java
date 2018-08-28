@@ -22,6 +22,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +47,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.jsoup.helper.StringUtil.isBlank;
 
@@ -113,7 +116,7 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
+        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty());
         return APPLICATION_FORM;
     }
 
@@ -126,7 +129,11 @@ public class ApplicationSectionController {
                                                              @PathVariable(APPLICATION_ID) final Long applicationId,
                                                              @PathVariable("sectionId") final Long sectionId,
                                                              @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
-                                                             UserResource user) {
+                                                             UserResource user,
+                                                             @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                                             @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String queryParam = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         ApplicationResource application = applicationService.getById(applicationId);
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
@@ -138,7 +145,7 @@ public class ApplicationSectionController {
                 .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
+        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(queryParam));
         return APPLICATION_FORM;
     }
 
@@ -185,7 +192,7 @@ public class ApplicationSectionController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
+            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty());
             return APPLICATION_FORM;
         } else {
             return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
@@ -198,9 +205,10 @@ public class ApplicationSectionController {
                                  ApplicantSectionResource applicantSection,
                                  boolean readOnly,
                                  Optional<Long> applicantOrganisationId,
-                                 boolean readOnlyAllApplicantApplicationFinances) {
+                                 boolean readOnlyAllApplicantApplicationFinances,
+                                 Optional<String> queryParam) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, queryParam);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }

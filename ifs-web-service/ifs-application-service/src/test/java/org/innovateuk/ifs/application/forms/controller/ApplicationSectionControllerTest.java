@@ -185,7 +185,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -197,7 +197,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         mockMvc.perform(get("/application/1/form/section/" + currentSectionId).header("referer", "/application/1/summary"))
                 .andExpect(view().name("application-form"));
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -210,7 +210,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -292,7 +292,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -311,7 +311,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", "formInput[cost-otherPublicFunding]"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -329,7 +329,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", STATE_AID_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -357,7 +357,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -438,7 +438,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().hasErrors());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 
     @Test
@@ -551,6 +551,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class));
     }
 }
