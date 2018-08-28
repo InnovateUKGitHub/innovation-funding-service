@@ -2,7 +2,7 @@
 
 # Robot Framework and its library dependencies
 robotframework
-selenium
+selenium==3.3.1
 robotframework-databaselibrary
 robotframework-excellibrary
 robotframework-ftplibrary
@@ -11,13 +11,13 @@ robotframework-selenium2library
 robotframework-xvfb
 
 #In order to query the database
-PyMySQL
+PyMySQL==0.7.9
 
 #Python - Excel Library
-openpyxl
+openpyxl==2.4.0
 
 #and for PDF
-pdfminer
+pdfminer==20140328
 
 #SauceLabs dependencies
 requests
