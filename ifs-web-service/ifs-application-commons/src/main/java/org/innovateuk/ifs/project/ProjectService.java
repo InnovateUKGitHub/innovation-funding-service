@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,11 +22,7 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    ServiceResult<List<ProjectResource>> findByUser(Long userId);
-
     OrganisationResource getLeadOrganisation(Long projectId);
-
-    OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     boolean isUserLeadPartner(Long projectId, Long userId);
 
@@ -41,10 +35,6 @@ public interface ProjectService {
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 
     Boolean isProjectManager(Long userId, Long projectId);
-
-    PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
-
-    ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
 
     boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
 
