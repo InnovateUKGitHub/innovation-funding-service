@@ -182,7 +182,7 @@ the user edits the research category
     the user clicks the button/link  id=application-question-complete
     the user clicks the button/link  link=Your finances
 
-the user edits the organisation sizeetiti
+the user edits the organisation size
     [Arguments]  ${org_size}
     the user clicks the button/link     link=Your organisation
     the user clicks the button/link     jQuery=button:contains("Edit")

@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  1  AND  the user selects Research category  Industrial research
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${BUSINESS_TYPE_ID}  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
