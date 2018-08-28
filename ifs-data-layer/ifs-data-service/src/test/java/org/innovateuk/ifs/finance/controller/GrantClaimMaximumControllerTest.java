@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -76,6 +77,28 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
                 .andExpect(status().isNotFound());
 
         verify(grantClaimMaximumService, only()).getGrantClaimMaximumsForCompetitionType(1L);
+    }
+
+    @Test
+    public void getGrantClaimMaximumsForCompetition() throws Exception {
+        Long competitionId = 1L;
+        Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
+        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetition(competitionId)).thenReturn(serviceSuccess(expectedGcms));
+
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedGcms)));
+
+        verify(grantClaimMaximumService, only()).getGrantClaimMaximumsForCompetition(competitionId);
+    }
+
+    @Test
+    public void getGrantClaimMaximumsForCompetitionNotFound() throws Exception {
+        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetition(1L)).thenReturn(serviceFailure(notFoundError(CompetitionResource.class, 1L)));
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition/{competitionId}", 1L))
+                .andExpect(status().isNotFound());
+
+        verify(grantClaimMaximumService, only()).getGrantClaimMaximumsForCompetition(1L);
     }
 
     @Test

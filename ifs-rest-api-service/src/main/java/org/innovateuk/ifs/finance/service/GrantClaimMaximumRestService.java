@@ -12,4 +12,6 @@ public interface GrantClaimMaximumRestService {
     RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id);
 
     RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competititionTypeId);
+
+    RestResult<Set<Long>> getGrantClaimMaximumsForCompetition(long competititionId);
 }

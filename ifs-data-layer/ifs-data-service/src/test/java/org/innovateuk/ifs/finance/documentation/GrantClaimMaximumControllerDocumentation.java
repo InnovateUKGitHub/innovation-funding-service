@@ -54,21 +54,6 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
     }
 
     @Test
-    public void save() throws Exception {
-        GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().build();
-        when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcm));
-
-        mockMvc.perform(post("/grant-claim-maximum/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson((gcm))))
-                .andExpect(status().isCreated())
-                .andDo(document(
-                        "grant-claim-maximum/{method-name}",
-                        responseFields(grantClaimMaximumResourceFields)
-                ));
-    }
-
-    @Test
     public void getGrantClaimMaximumsForCompetitionType() throws Exception {
         Long competitionType = 1L;
         Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
@@ -83,6 +68,39 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("Set of Grant Claim Maximums for given CompetitionType"))
+                ));
+    }
+
+    @Test
+    public void getGrantClaimMaximumsForCompetition() throws Exception {
+        Long competitionId = 1L;
+        Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
+        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetition(competitionId)).thenReturn(serviceSuccess(expectedGcms));
+
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "grant-claim-maximum/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("id of the Competition to be retrieved")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("Set of Grant Claim Maximums for given Competition"))
+                ));
+    }
+
+    @Test
+    public void update() throws Exception {
+        GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().build();
+        when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcm));
+
+        mockMvc.perform(post("/grant-claim-maximum/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson((gcm))))
+                .andExpect(status().isCreated())
+                .andDo(document(
+                        "grant-claim-maximum/{method-name}",
+                        responseFields(grantClaimMaximumResourceFields)
                 ));
     }
 }

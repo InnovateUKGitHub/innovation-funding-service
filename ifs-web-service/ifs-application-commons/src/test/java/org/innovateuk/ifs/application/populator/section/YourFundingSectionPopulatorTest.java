@@ -98,5 +98,4 @@ public class YourFundingSectionPopulatorTest {
         assertThat(viewModel.getResearchCategoryQuestionId(), equalTo(researchQuestion.getId()));
         assertThat(viewModel.getYourOrganisationSectionId(), equalTo(yourOrganisationSection.getId()));
     }
-
 }

@@ -32,6 +32,11 @@ public class GrantClaimMaximumController {
         return grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionTypeId).toGetResponse();
     }
 
+    @GetMapping("/get-for-competition/{competitionId}")
+    public RestResult<Set<Long>> getGrantClaimMaximumsForCompetition(@PathVariable("competitionId") final long competitionId) {
+        return grantClaimMaximumService.getGrantClaimMaximumsForCompetition(competitionId).toGetResponse();
+    }
+
     @PostMapping("/")
     public RestResult<GrantClaimMaximumResource> update(@RequestBody final GrantClaimMaximumResource gcm) {
         return grantClaimMaximumService.save(gcm).toPostCreateResponse();
