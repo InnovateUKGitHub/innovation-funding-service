@@ -210,7 +210,6 @@ Links to other sections in Project setup dependent on project details (applicabl
 Existing Monitoring Officer can sign in
     [Documentation]    IFS-3977
     [Tags]    HappyPath
-    [Setup]    logout as user
     When log in as a different user    &{monitoring_officer_one_credentials}
     Then the user should see the text in the element    css=.govuk-heading-l       Dashboard
 
