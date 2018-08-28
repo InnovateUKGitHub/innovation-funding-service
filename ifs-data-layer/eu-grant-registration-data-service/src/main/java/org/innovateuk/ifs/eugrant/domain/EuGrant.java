@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 /**
- * EU Grant funding for a UK Organisation.
+ * Registers EU Grant funding for a UK Organisation.
  */
 @Entity
 public class EuGrant {
@@ -38,8 +38,11 @@ public class EuGrant {
         if (submitted) {
             throw new IllegalStateException("cannot resubmit an eugrant");
         }
+        if (!isOrganisationComplete() || !isContactComplete() || !isFundingComplete()) {
+            throw new IllegalStateException("cannot submit until organisation, contact and funding are complete");
+        }
         this.submitted = true;
-        // TODO generate short code
+        this.shortCode = UUID.randomUUID().toString().substring(1,8); // TODO IFS-4254 generate short code (or pass in as a parameter)
     }
 
     public UUID getId() {

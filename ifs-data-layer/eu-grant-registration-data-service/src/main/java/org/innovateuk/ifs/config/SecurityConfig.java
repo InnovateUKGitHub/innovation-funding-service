@@ -38,13 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .anonymous().and()
                 .authorizeRequests()
-                .antMatchers(monitoringEndpoint+"/**").permitAll()
+                .antMatchers(monitoringEndpoint + "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().and()
                 .addFilterBefore(webUserOnlyFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers()
-                .addHeaderWriter(new StaticHeadersWriter("server","server"))
+                .addHeaderWriter(new StaticHeadersWriter("server", "server"))
                 .cacheControl();
     }
 }

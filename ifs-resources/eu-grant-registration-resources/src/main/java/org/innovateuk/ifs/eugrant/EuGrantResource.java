@@ -3,6 +3,9 @@ package org.innovateuk.ifs.eugrant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Resource for an EU grant registration.
+ */
 public class EuGrantResource {
 
     private String id;

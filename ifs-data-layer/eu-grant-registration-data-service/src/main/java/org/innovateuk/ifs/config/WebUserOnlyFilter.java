@@ -19,6 +19,9 @@ import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Filter to only allow web system user.
+ */
 @Service
 @Configurable
 public class WebUserOnlyFilter extends OncePerRequestFilter {
