@@ -38,7 +38,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
 
     @Test
-    public void test_getApplicationById() {
+    public void getApplicationById() {
 
         String expectedUrl = applicationRestURL + "/" + 123;
         ApplicationResource response = new ApplicationResource();//newApplicationResource().build();
@@ -51,7 +51,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getApplicationsByCompetitionIdAndUserId() {
+    public void getApplicationsByCompetitionIdAndUserId() {
 
         String expectedUrl = applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/123/456/APPLICANT";
         List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());// newApplicationResource().build(3);
@@ -64,7 +64,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getApplicationsByUserId() {
+    public void getApplicationsByUserId() {
 
         String expectedUrl = applicationRestURL + "/findByUser/123";
         List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());//newApplicationResource().build(3);
@@ -78,7 +78,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_wildcardSearchById() {
+    public void wildcardSearchById() {
 
         String searchString = "12";
         int pageNumber = 0;
@@ -96,7 +96,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getCompleteQuestionsPercentage() throws Exception {
+    public void getCompleteQuestionsPercentage() throws Exception {
 
         Double returnedResponse = 60.5;
 
@@ -108,7 +108,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_saveApplication() {
+    public void saveApplication() {
 
         String expectedUrl = applicationRestURL + "/saveApplicationDetails/123";
         ApplicationResource applicationToUpdate = new ApplicationResource(); // newApplicationResource().withId(123L).build();
@@ -121,7 +121,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_updateApplicationStatus() {
+    public void updateApplicationStatus() {
 
         String expectedUrl = applicationRestURL + "/updateApplicationState?applicationId=123&state=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
@@ -130,7 +130,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_createApplication() {
+    public void createApplication() {
         String expectedUrl = applicationRestURL + "/createApplicationByName/123/456";
 
         ApplicationResource application = new ApplicationResource();
@@ -144,7 +144,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_findByProcessRoleId() {
+    public void findByProcessRoleId() {
         long processRoleId = 1L;
         String expectedUrl = processRoleRestURL + "/" + processRoleId + "/application";
         ApplicationResource application = newApplicationResource().build();
@@ -157,7 +157,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getAssignedQuestionsCount() {
+    public void getAssignedQuestionsCount() {
         long applicationId = 1L;
         long assigneeId = 1L;
         String expectedUrl = questionStatusRestURL + "/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId;
@@ -208,14 +208,14 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         String sortField = "id";
         String filter = "ALL";
 
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource();
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", UnsuccessfulApplicationPageResource.class, unsuccessfulApplicationPageResource);
 
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
+        UnsuccessfulApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
         assertNotNull(result);
-        Assert.assertEquals(applicationPage, result);
-        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", null, ApplicationPageResource.class);
+        Assert.assertEquals(unsuccessfulApplicationPageResource, result);
+        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", null, UnsuccessfulApplicationPageResource.class);
     }
 
     @Test
