@@ -27,3 +27,5 @@
 &{RTO_lead_applicant_credentials}                 email=dave.adams@gmail.com   password=Passw0rd
 &{Research_lead_applicant_credentials}            email=heather.ross@example.com   password=Passw0rd
 &{PublicSector_lead_applicant_credentials}        email=becky.mason@gmail.com   password=Passw0rd
+&{monitoring officer one credentials}             email=orville.gibbs@gmail.com    password=Passw0rd
+&{monitoring officer two credentials}             email=nilesh.patti@gmail.com    password=Passw0rd
