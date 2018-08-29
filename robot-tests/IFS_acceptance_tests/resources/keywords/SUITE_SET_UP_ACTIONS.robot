@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  1  AND  the user selects Research category  Industrial research
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${BUSINESS_TYPE_ID}  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -44,11 +44,12 @@ the user marks every section but one as complete
 the user selects Research category
     [Arguments]  ${res_category}
     the user clicks the button/link   link=Research category
-    # checking here applicant should see only one research category set while creating EOI compeition(IFS-2941)
+    # checking here applicant should see only one research category(checkbox) set while creating EOI compeition(IFS-2941 and IFS-4080)
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery=h1 span:contains("EOI Application")
     Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
     ...    AND             the user should not see the element   css = label[for="researchCategory3"]
-    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    ...    AND             the user selects the checkbox         researchCategory
+    Run Keyword If  '${status}' == 'FAIL'    the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
@@ -92,11 +93,11 @@ Create new application with the same user
     the user clicks the button/link            jQuery=summary:contains("Enter details manually")
     The user enters text to a text field       name=organisationName    org2
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            id=application-question-save
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="application.name"]  ${Application_title}
@@ -126,7 +127,7 @@ Invite and accept the invitation
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link                 css = .govuk-button[type="submit"]
     the research user finds org in company house
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address

@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourProjectLocationSectionViewModel;
@@ -35,8 +37,11 @@ public class YourProjectLocationSectionPopulator extends AbstractSectionPopulato
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
 
-        String projectLocation = applicationFinanceRestService.getApplicationFinance(viewModel.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId()).getSuccess().getWorkPostcode();
-        viewModel.setProjectLocationValue(projectLocation);
+        RestResult<ApplicationFinanceResource> applicationFinanceResourceRestResult = applicationFinanceRestService.getApplicationFinance(viewModel.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+
+        if (applicationFinanceResourceRestResult.isSuccess()) {
+            viewModel.setProjectLocationValue(applicationFinanceResourceRestResult.getSuccess().getWorkPostcode());
+        }
 
         viewModel.setReadonly(viewModel.isComplete() || !section.getCompetition().isOpen() || !section.getApplication().isOpen());
     }
@@ -51,5 +56,6 @@ public class YourProjectLocationSectionPopulator extends AbstractSectionPopulato
     public SectionType getSectionType() {
         return SectionType.PROJECT_LOCATION;
     }
+
 }
 

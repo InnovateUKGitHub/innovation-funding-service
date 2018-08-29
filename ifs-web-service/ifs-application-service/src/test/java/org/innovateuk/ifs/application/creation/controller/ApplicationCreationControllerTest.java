@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -42,7 +42,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     private CookieUtil cookieUtil;
 
     @Mock
-    private OrganisationService organisationService;
+    private CompanyHouseRestService companyHouseRestService;
 
     @Mock
     private PublicContentItemRestService publicContentItemRestService;
@@ -65,7 +65,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
-        when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
+        when(companyHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
     }
 
     @Test

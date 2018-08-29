@@ -12,6 +12,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
+...
+...            IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
@@ -79,7 +81,7 @@ Create new Application for this Competition
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 
 Applicant visits his Finances
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-3938
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
@@ -312,8 +314,8 @@ Invite Collaborator in Application with Growth table
     When log in as a different user                    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     When the user should see the element               jQuery=h2:contains("We have found an account with the invited email address")
-    Then the user clicks the button/link               link=Continue or sign in
-    And the user clicks the button/link                css=.button[type="submit"]
+    Then the user clicks the button/link               link=Continue
+    And the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
 
 Non-lead can mark Organisation as complete
     [Documentation]    INFUND-8518 INFUND-8561
@@ -356,7 +358,7 @@ the user should see the dates in full format
 
 the user should see that the funding depends on the research area
     the user clicks the button/link  link=Your funding
-    the user should see the element  jQuery=li:contains("you must select a") a:contains("research category")
+    the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link=Your finances
 
 
@@ -450,7 +452,7 @@ Newly invited collaborator can create account and sign in
     logout as user
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
-    the user should see the element               jquery=h1:contains("Choose your organisation type")
+    the user should see the element               jquery=h1:contains("Choose organisation type")
     the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
@@ -473,7 +475,7 @@ the user fills in the Open-All Initial details
 the logged in user should not be able to apply in a competition he has not right to
     [Arguments]  ${email}  ${competition}  ${applicationType}
     log in as a different user          ${email}  ${short_password}
-    the user clicks the button/link     id=proposition-name
+    the user clicks the button/link     link = Innovation Funding Service
     the user clicks the button/link in the paginated list  link=${competition}
     the user clicks the button/link     link=Start new application
     the user clicks the button/link     link=Apply with a different organisation.

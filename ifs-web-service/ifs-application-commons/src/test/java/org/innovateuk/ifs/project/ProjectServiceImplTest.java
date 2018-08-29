@@ -4,10 +4,7 @@ import junit.framework.TestCase;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -103,21 +100,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testFindByUser() {
-        List<ProjectResource> projects = newProjectResource().build(3);
-
-        when(projectRestService.findByUserId(1L)).thenReturn(restSuccess(projects));
-
-        ServiceResult<List<ProjectResource>> result = service.findByUser(1L);
-
-        assertTrue(result.isSuccess());
-
-        assertEquals(result.getSuccess(), projects);
-
-        verify(projectRestService).findByUserId(1L);
-    }
-
-    @Test
     public void testGetLeadOrganisation() {
 
         OrganisationResource organisationResource = newOrganisationResource().build();
@@ -193,27 +175,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
 
         assertFalse(service.isProjectManager(loggedInUserId, projectId));
-    }
-
-    @Test
-    public void testGetPartnerOrganisation() {
-        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
-        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
-        assertTrue(service.getPartnerOrganisation(123L, 234L).equals(partnerOrg));
-    }
-
-    @Test(expected = ObjectNotFoundException.class)
-    public void testGetPartnerOrganisationNotFound() {
-        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
-        service.getPartnerOrganisation(123L, 234L);
-    }
-
-    @Test
-    public void testCreateProjectFromApplication() {
-        Long applicationId = 2L;
-        ProjectResource projectResource = newProjectResource().build();
-        when(projectRestService.createProjectFromApplicationId(applicationId)).thenReturn(restSuccess(projectResource));
-        assertEquals(service.createProjectFromApplicationId(applicationId).getSuccess(), projectResource);
     }
 
     @Test

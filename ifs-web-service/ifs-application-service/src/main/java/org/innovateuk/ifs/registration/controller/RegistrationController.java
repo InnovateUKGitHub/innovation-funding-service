@@ -2,7 +2,6 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -18,6 +17,8 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,13 +60,16 @@ public class RegistrationController {
     private UserService userService;
 
     @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
     private RegistrationCookieService registrationCookieService;
 
     @Autowired
     private CookieUtil cookieUtil;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
     @Autowired
     private InviteRestService inviteRestService;
 
@@ -100,7 +104,7 @@ public class RegistrationController {
     @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response) {
-        userService.verifyEmail(hash);
+        userRestService.verifyEmail(hash);
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }
@@ -137,9 +141,9 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        OrganisationResource organisation = getOrganisation(request);
-        if (organisation != null) {
-            addOrganisationNameToModel(model, organisation);
+        RestResult<OrganisationResource> result = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
+        if (result.isSuccess()) {
+            addOrganisationNameToModel(model, result.getSuccess());
             return true;
         }
         return false;
@@ -169,10 +173,6 @@ public class RegistrationController {
             }
         }
         return false;
-    }
-
-    private OrganisationResource getOrganisation(HttpServletRequest request) {
-        return organisationService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
     }
 
     @PostMapping("/register")

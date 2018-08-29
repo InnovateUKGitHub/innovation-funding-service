@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private InviteRestService inviteRestService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private RegistrationService registrationService;
@@ -64,7 +64,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                                 return validateView;
                             }
                             // Success
-                            OrganisationResource organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
+                            OrganisationResource organisation = organisationRestService.getOrganisationById(inviteOrganisation.getOrganisation()).getSuccess();
                             model.addAttribute("model",
                                     new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation, getOrganisationAddress(organisation),
                                             "/accept-invite-authenticated/confirm-invited-organisation/confirm"));

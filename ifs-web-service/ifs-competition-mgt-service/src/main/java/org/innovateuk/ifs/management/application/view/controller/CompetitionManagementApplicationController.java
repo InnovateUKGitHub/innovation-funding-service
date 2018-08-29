@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.application.view.service.CompetitionManagem
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,8 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ProcessRoleService processRoleService;
     @Autowired
+    private UserRestService userRestService;
+    @Autowired
     private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -68,7 +71,6 @@ public class CompetitionManagementApplicationController {
     private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
     private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
-
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
@@ -165,7 +167,7 @@ public class CompetitionManagementApplicationController {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
-            processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         }
 
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();

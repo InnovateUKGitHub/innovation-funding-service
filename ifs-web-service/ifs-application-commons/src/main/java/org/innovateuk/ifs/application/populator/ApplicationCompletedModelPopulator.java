@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
@@ -13,8 +14,10 @@ import java.util.Optional;
 @Component
 public class ApplicationCompletedModelPopulator extends AbstractApplicationModelPopulator {
 
-    public ApplicationCompletedModelPopulator(SectionService sectionService, QuestionService questionService) {
-        super(sectionService, questionService);
+    public ApplicationCompletedModelPopulator(SectionService sectionService,
+                                              QuestionService questionService,
+                                              QuestionRestService questionRestService) {
+        super(sectionService, questionService, questionRestService);
     }
 
     public ApplicationCompletedViewModel populate(ApplicationResource application, Optional<OrganisationResource>

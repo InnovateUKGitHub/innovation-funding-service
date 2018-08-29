@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,7 +17,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
@@ -59,16 +60,19 @@ public class ApplicationModelPopulatorTest {
     protected QuestionService questionService;
 
     @Mock
-    protected ProcessRoleService processRoleService;
+    protected QuestionRestService questionRestService;
 
     @Mock
     protected SectionService sectionService;
 
     @Mock
-    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     protected OrganisationService organisationService;
+
+    @Mock
+    protected OrganisationRestService organisationRestService;
 
     @Mock
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -83,7 +87,7 @@ public class ApplicationModelPopulatorTest {
     public void testAddApplicationAndSections() {
         LocalDate startDate = LocalDate.now();
         ApplicationResource application = newApplicationResource()
-            .withStartDate(startDate).build();
+                .withStartDate(startDate).build();
         CompetitionResource competition = newCompetitionResource().build();
         Long userId = 1L;
         Long organisationId = 3L;
@@ -107,11 +111,11 @@ public class ApplicationModelPopulatorTest {
                 .withOrganisation(organisationId)
                 .build(2);
 
-	    Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
+        Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
 
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
-        when(userService.findById(leadApplicantId)).thenReturn(leadApplicant);
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
+        when(userRestService.retrieveUserById(leadApplicantId)).thenReturn(restSuccess(leadApplicant));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(userApplicationRoles));
 
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
 
@@ -175,13 +179,13 @@ public class ApplicationModelPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
-        when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
+        when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(organisationService.getPrimaryForUser(user.getId())).thenReturn(userOrganisation);
+        when(organisationRestService.getPrimaryForUser(user.getId())).thenReturn(restSuccess(userOrganisation));
         when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
-        ProcessRoleResource processRole  = newProcessRoleResource().withOrganisation().withUser(user).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form, organisationId);

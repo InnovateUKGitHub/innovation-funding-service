@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     private OrganisationService organisationService;
 
     @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private UserService userService;
 
     @Override
     public boolean isInviteForDifferentOrganisationThanUsersAndDifferentName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
-            OrganisationResource userOrganisation = organisationService.getPrimaryForUser(user.getId()); // Will exist as the user does
+            OrganisationResource userOrganisation = organisationRestService.getPrimaryForUser(user.getId()).getSuccess(); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
             if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && !userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
                 return true;
@@ -35,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public boolean isInviteForDifferentOrganisationThanUsersButSameName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
-            OrganisationResource userOrganisation = organisationService.getPrimaryForUser(user.getId()); // Will exist as the user does
+            OrganisationResource userOrganisation = organisationRestService.getPrimaryForUser(user.getId()).getSuccess(); // Will exist as the user does
             Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
             if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation()) && userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
                 return true;

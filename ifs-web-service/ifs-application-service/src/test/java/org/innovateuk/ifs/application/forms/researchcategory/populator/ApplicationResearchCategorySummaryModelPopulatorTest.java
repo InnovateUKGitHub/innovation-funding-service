@@ -14,6 +14,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
+import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
@@ -23,9 +25,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResearchCategoryLinkResourceBuilder.newCompetitionResearchCategoryLinkResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUnitTest {
 
@@ -37,6 +43,9 @@ public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUn
 
     @Mock
     private ApplicantRestService applicantRestService;
+
+    @Mock
+    private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
 
     @Test
     public void populateSummaryForLeadApplicant() {
@@ -53,8 +62,14 @@ public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUn
                 .withOrganisation(OrganisationResourceBuilder.newOrganisationResource().build()).build();
         boolean userIsLeadApplicant = true;
 
-        Mockito.when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, RESEARCH_CATEGORY)).thenReturn(restSuccess(question));
-            Mockito.when(applicantRestService.getQuestion(loggedInUser, application.getId(), question.getId()))
+        CompetitionResearchCategoryLinkResource competitionResearchCategoryLink = newCompetitionResearchCategoryLinkResource()
+                .withCompetition(newCompetitionResource()
+                        .withId(competitionId).build())
+                .withCategory(researchCategory).build();
+
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, RESEARCH_CATEGORY)).thenReturn(restSuccess(question));
+        when(competitionResearchCategoryRestService.findByCompetition(competitionId)).thenReturn(restSuccess(asList(competitionResearchCategoryLink)));
+        when(applicantRestService.getQuestion(loggedInUser, application.getId(), question.getId()))
                 .thenReturn(ApplicantQuestionResourceBuilder.newApplicantQuestionResource()
                         .withCurrentApplicant(applicant)
                         .withQuestion(question)
@@ -87,10 +102,17 @@ public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUn
         OrganisationResource organisation = OrganisationResourceBuilder.newOrganisationResource().build();
         ApplicantResource collaborator = ApplicantResourceBuilder.newApplicantResource()
                 .withOrganisation(organisation).build();
+
+        CompetitionResearchCategoryLinkResource competitionResearchCategoryLink = newCompetitionResearchCategoryLinkResource()
+                .withCompetition(newCompetitionResource()
+                        .withId(competitionId).build())
+                .withCategory(researchCategory).build();
+
         boolean userIsLeadApplicant = false;
 
-        Mockito.when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, RESEARCH_CATEGORY)).thenReturn(restSuccess(question));
-        Mockito.when(applicantRestService.getQuestion(loggedInUser, application.getId(), question.getId()))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, RESEARCH_CATEGORY)).thenReturn(restSuccess(question));
+        when(competitionResearchCategoryRestService.findByCompetition(competitionId)).thenReturn(restSuccess(asList(competitionResearchCategoryLink)));
+        when(applicantRestService.getQuestion(loggedInUser, application.getId(), question.getId()))
                 .thenReturn(ApplicantQuestionResourceBuilder.newApplicantQuestionResource()
                         .withCurrentApplicant(collaborator)
                         .withQuestion(question)

@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Service;
@@ -20,65 +18,17 @@ import java.util.stream.Collectors;
 public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
-    private CompanyHouseRestService companyHouseRestService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
-                                   CompanyHouseRestService companyHouseRestService,
-                                   ProcessRoleService processRoleService) {
+                                   UserRestService userRestService) {
         this.organisationRestService = organisationRestService;
-        this.companyHouseRestService = companyHouseRestService;
-        this.processRoleService = processRoleService;
-    }
-
-    @Override
-    public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource getOrganisationById(long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource getPrimaryForUser(long userId) {
-        return organisationRestService.getPrimaryForUser(userId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource getByUserAndApplicationId(long userId, long applicationId) {
-        return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource getByUserAndProjectId(long userId, long projectId) {
-        return organisationRestService.getByUserAndProjectId(userId, projectId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId) {
-        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource createOrMatch(OrganisationResource organisation) {
-        return organisationRestService.createOrMatch(organisation).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource updateNameAndRegistration(OrganisationResource organisation){
-        return organisationRestService.updateNameAndRegistration(organisation).getSuccess();
+        this.userRestService = userRestService;
     }
 
     @Override
     public Long getOrganisationType(long userId, long applicationId) {
-        final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
+        final ProcessRoleResource processRoleResource = userRestService.findProcessRole(userId, applicationId).getSuccess();
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
             return organisationResource.getOrganisationType();

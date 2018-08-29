@@ -50,7 +50,7 @@ IFS.core.repeatableFinanceRows = (function () {
         jQuery.ajaxProtected({
           url: url,
           beforeSend: function () {
-            addRowButton.before('<span class="form-hint">Adding a new row</span>')
+            addRowButton.before('<span class="govuk-hint">Adding a new row</span>')
           },
           cache: false
         }).done(function (data) {
@@ -58,7 +58,7 @@ IFS.core.repeatableFinanceRows = (function () {
           var buttonHtml = '<button type="submit" name="remove_cost" class="button-clear js-remove-row" value="">Remove</button>'
           // find the .buttonplaceholder span and add empty valued remove_cost as it hasn't been persisted yet but can be removed client side
           // (we don't do this on the server because of non-js situation)
-          addRowButton.prevAll('.form-hint').remove() // remove hint text
+          addRowButton.prevAll('.govuk-hint').remove() // remove hint text
           data = jQuery(data)
           data.find('.buttonplaceholder').replaceWith(buttonHtml)
           target.append(data)

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.populator.forminput;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
+import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,6 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
         viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
         viewModel.setApplication(resource.getApplication());
         viewModel.setCompetition(resource.getCompetition());
-        // TODO: IFS-2123 remove selectedResearchCategoryName when all competitions have the new Applicant menu
-        viewModel.setSelectedResearchCategoryName(resource.getApplication().getResearchCategory().getName());
         viewModel.setSelectedInnovationAreaName(resource.getApplication().getInnovationArea().getName());
         viewModel.setAssignButtonsViewModel(assignButtonsPopulator.populate(resource, viewModel.getApplicantQuestion(), viewModel.isComplete()));
     }

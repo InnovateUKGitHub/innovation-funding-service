@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -53,7 +54,7 @@ public class AssessmentOverviewModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private SectionRestService sectionRestService;
@@ -74,7 +75,7 @@ public class AssessmentOverviewModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
-        List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
+        List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = questions
                 .stream()
                 .collect(toList());

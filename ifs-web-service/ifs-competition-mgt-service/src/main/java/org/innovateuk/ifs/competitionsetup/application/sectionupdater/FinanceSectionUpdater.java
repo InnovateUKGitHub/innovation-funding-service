@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -37,7 +37,7 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
     private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Override
     public CompetitionSetupSection sectionToSave() {
@@ -70,17 +70,17 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
     }
 
     private void updateFundingRulesQuestion(String fundingRules, Long competitionId) {
-        Optional<QuestionResource> question = questionService.getQuestionsBySectionIdAndType(
+        Optional<QuestionResource> question = questionRestService.getQuestionsBySectionIdAndType(
                 getOverviewFinancesSectionId(competitionId),
                 QuestionType.GENERAL
-        )
+        ).getSuccess()
                 .stream()
                 .filter(questionResource -> questionResource.getName() == null)
                 .findFirst();
 
         question.ifPresent(questionResource -> {
             questionResource.setDescription(fundingRules);
-            questionService.save(questionResource);
+            questionRestService.save(questionResource);
         });
     }
 

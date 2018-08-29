@@ -11,7 +11,6 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -26,7 +25,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class ApplicationSectionController {
     private QuestionService questionService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -84,7 +84,7 @@ public class ApplicationSectionController {
     private ApplicationSectionSaver applicationSaver;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -129,8 +129,13 @@ public class ApplicationSectionController {
                                                              UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
-        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(), Role.COLLABORATOR.getName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+        ProcessRoleResource applicantUser = processRoles.stream()
+                .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(),
+                        Role.COLLABORATOR.getName()).contains(pr.getRoleName()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
@@ -243,7 +248,7 @@ public class ApplicationSectionController {
     }
 
     private boolean userIsResearch(long userId, long applicationId) {
-        return organisationService.getByUserAndApplicationId(userId, applicationId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+        return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
