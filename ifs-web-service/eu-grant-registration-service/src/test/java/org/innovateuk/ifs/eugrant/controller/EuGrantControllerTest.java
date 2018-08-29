@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eugrant.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.eugrant.controller.EUGrantController;
 import org.junit.Before;
 import org.junit.Test;
 

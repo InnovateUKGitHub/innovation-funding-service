@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eugrant.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,12 @@ public class EUGrantController {
     public String overview() {
 
         return "eugrant/overview";
+    }
+
+    @GetMapping("/contact-details")
+    public String contactDetails() {
+
+        return "eugrant/contact-details";
     }
 
 }
