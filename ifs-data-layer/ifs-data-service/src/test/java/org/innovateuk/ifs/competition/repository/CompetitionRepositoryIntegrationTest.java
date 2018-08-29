@@ -613,10 +613,10 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         long innovationLead1Id = 51L;
         long innovationLead2Id = 52L;
 
-        Long count = repository.countLiveForInnovationLead(innovationLead2Id);
+        Long count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead2Id);
         assertEquals(new Long(1L), count);
 
-        count = repository.countLiveForInnovationLead(innovationLead1Id);
+        count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead1Id);
         assertEquals(new Long(0L), count);
     }
 
