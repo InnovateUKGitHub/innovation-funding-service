@@ -3,18 +3,20 @@ package org.innovateuk.ifs.eugrant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.UUID;
+
 /**
  * Resource for an EU grant registration.
  */
 public class EuGrantResource {
 
-    private String id;
+    private UUID id;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

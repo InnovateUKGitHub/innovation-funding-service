@@ -54,6 +54,8 @@ prepareDockerBaseInput {
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
+    compile project(':ifs-resources:eu-grant-registration-resources')
+    compile project(':ifs-rest-api-service:eu-grant-registration-rest-api-service')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
