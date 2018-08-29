@@ -47,7 +47,7 @@ CREATE TABLE eu_funding (
   project_end_date DATE NOT NULL,
 
   grant_agreement_number VARCHAR(255) NOT NULL,
-  fundingContribution BIGINT(20) NOT NULL,
+  funding_contribution BIGINT(20) NOT NULL,
 
   project_coordinator BOOLEAN DEFAULT FALSE NOT NULL,
 
