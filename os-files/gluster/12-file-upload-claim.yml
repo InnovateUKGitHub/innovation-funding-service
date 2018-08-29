@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
   name: file-upload-claim
 spec:
   accessModes:
   - ReadWriteMany
   resources:
-     requests:
-       storage: 100M
+    requests:
+      storage: 100M
   selector:
     matchLabels:
-      dev: "dev"
-  storageClassName: glusterfs
+      dev: dev
