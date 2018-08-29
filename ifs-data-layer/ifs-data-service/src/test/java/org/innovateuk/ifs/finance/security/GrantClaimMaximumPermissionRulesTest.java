@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -32,7 +34,8 @@ public class GrantClaimMaximumPermissionRulesTest extends BasePermissionRulesTes
         when(usersRolesService.userHasApplicationForCompetition(user.getId(), competition.getId()))
                 .thenReturn(serviceSuccess(true));
 
-        assertTrue(rules.usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden(competition, user));
+        assertTrue(rules.internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+                (competition, user));
 
         verify(usersRolesService, only()).userHasApplicationForCompetition(user.getId(), competition.getId());
     }
@@ -45,8 +48,31 @@ public class GrantClaimMaximumPermissionRulesTest extends BasePermissionRulesTes
         when(usersRolesService.userHasApplicationForCompetition(user.getId(), competition.getId()))
                 .thenReturn(serviceSuccess(false));
 
-        assertFalse(rules.usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden(competition, user));
+        assertFalse(rules.internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+                (competition, user));
 
         verify(usersRolesService, only()).userHasApplicationForCompetition(user.getId(), competition.getId());
+    }
+
+    @Test
+    public void usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden_compAdminUser() {
+        CompetitionResource competition = newCompetitionResource().build();
+        UserResource user = newUserResource().withRoleGlobal(COMP_ADMIN).build();
+
+        assertTrue(rules.internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+                (competition, user));
+
+        verify(usersRolesService, never()).userHasApplicationForCompetition(isA(Long.class), isA(Long.class));
+    }
+
+    @Test
+    public void usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden_projectFinanceUser() {
+        CompetitionResource competition = newCompetitionResource().build();
+        UserResource user = newUserResource().withRoleGlobal(PROJECT_FINANCE).build();
+
+        assertTrue(rules.internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+                (competition, user));
+
+        verify(usersRolesService, never()).userHasApplicationForCompetition(isA(Long.class), isA(Long.class));
     }
 }

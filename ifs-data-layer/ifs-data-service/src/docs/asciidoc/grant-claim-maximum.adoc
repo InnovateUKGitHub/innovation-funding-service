@@ -40,7 +40,6 @@ include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/path
 
 ==== Response
 include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/http-response.adoc[]
-include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/curl-request.adoc[]

@@ -17,7 +17,7 @@ public interface GrantClaimMaximumService {
 
     @SecuredBySpring(value = "UPDATE", securedType = GrantClaimMaximumResource.class,
             description = "Only those with either comp admin or project finance roles can update a GrantClaimMaximum")
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource);
 
     @SecuredBySpring(value = "READ", securedType = GrantClaimMaximumResource.class,

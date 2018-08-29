@@ -55,7 +55,7 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(
                 () -> classUnderTest.isMaximumFundingLevelOverridden(competition.getId()),
                 () -> verify(grantClaimMaximumPermissionRules)
-                        .usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden(
+                        .internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden(
                                 isA(CompetitionResource.class), isA(UserResource.class))
         );
     }
