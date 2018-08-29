@@ -56,14 +56,14 @@ public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinan
 
     public BigDecimal getTotal() {
         return projectFinances.stream()
-                .map(of -> of.getTotal())
+                .map(ProjectFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalFundingSought() {
         BigDecimal totalFundingSought = projectFinances.stream()
                 .filter(of -> of != null && of.getGrantClaimPercentage() != null)
-                .map(of -> of.getTotalFundingSought())
+                .map(ProjectFinanceResource::getTotalFundingSought)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return totalFundingSought;
@@ -71,15 +71,15 @@ public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinan
 
     public BigDecimal getTotalContribution() {
         return projectFinances.stream()
-                .filter(of -> of != null)
-                .map(of -> of.getTotalContribution())
+                .filter(Objects::nonNull)
+                .map(ProjectFinanceResource::getTotalContribution)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalOtherFunding() {
         return projectFinances.stream()
-                .filter(of -> of != null)
-                .map(of -> of.getTotalOtherFunding())
+                .filter(Objects::nonNull)
+                .map(ProjectFinanceResource::getTotalOtherFunding)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
