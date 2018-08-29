@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -49,6 +50,7 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    @Transactional
     public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
         GrantClaimMaximum gcm = grantClaimMaximumRepository.save(grantClaimMaximumMapper.mapToDomain(grantClaimMaximumResource));
         return serviceSuccess(grantClaimMaximumMapper.mapToResource(gcm));
