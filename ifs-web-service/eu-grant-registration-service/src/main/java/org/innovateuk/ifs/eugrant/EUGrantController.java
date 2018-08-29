@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class EUGrantController {
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
+    @GetMapping("/overview")
+    public String overview() {
 
-        return "eugrant/dashboard";
+        return "eugrant/overview";
     }
 
 }
