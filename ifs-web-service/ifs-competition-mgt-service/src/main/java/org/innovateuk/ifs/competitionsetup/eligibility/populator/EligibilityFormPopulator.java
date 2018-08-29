@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * Form populator for the eligibility competition setup section.
  */
@@ -58,31 +60,31 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
         competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.getResubmission()));
 
-        boolean overrideFundingRuleSet = getOverrideFundingRulesSet(competitionResource, competitionSetupForm);
+        Boolean overrideFundingRuleSet = getOverrideFundingRulesSet(competitionResource, competitionSetupForm);
         competitionSetupForm.setOverrideFundingRules(overrideFundingRuleSet);
 
-        if (overrideFundingRuleSet) {
+        if (overrideFundingRuleSet != null && overrideFundingRuleSet) {
             competitionSetupForm.setFundingLevelPercentage(getFundingLevelPercentage(competitionResource));
         }
 
         return competitionSetupForm;
     }
 
-    private boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
+    private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
-        if (isFirstTimeInForm(eligibilityForm)) {
+        if (!isFirstTimeInForm(eligibilityForm)) {
             return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId()).getSuccess();
         }
 
-        return false;
+        return null;
     }
 
     private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
-        return (eligibilityForm.getMultipleStream() != null) &&
-                (!eligibilityForm.getResearchCategoryId().isEmpty() && eligibilityForm.getResearchCategoryId() != null) &&
-                (eligibilityForm.getSingleOrCollaborative() != null) &&
-                (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
-                (eligibilityForm.getResubmission() != null);
+        return  "no".equals(eligibilityForm.getMultipleStream())
+                && eligibilityForm.getResearchCategoryId().isEmpty()
+                && (eligibilityForm.getSingleOrCollaborative() == null)
+                && eligibilityForm.getLeadApplicantTypes().isEmpty()
+                && isBlank(eligibilityForm.getResubmission());
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {
