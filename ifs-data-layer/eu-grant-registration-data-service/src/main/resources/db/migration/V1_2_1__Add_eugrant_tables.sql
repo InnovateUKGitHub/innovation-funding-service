@@ -37,16 +37,15 @@ CREATE TABLE eu_action_type (
 CREATE TABLE eu_funding (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
 
-  eu_action_type_id BIGINT(20) NOT NULL,
-  call_name VARCHAR(255) NOT NULL,
-  call_id VARCHAR(255) NOT NULL,
-  topic_id VARCHAR(255) NOT NULL,
-  project_name VARCHAR(255) NOT NULL,
+  grant_agreement_number VARCHAR(255) NOT NULL,
+  participant_id VARCHAR(6) NOT NULL,
 
+  eu_action_type_id BIGINT(20) NOT NULL,
+
+  project_name VARCHAR(255) NOT NULL,
   project_start_date DATE NOT NULL,
   project_end_date DATE NOT NULL,
 
-  grant_agreement_number VARCHAR(255) NOT NULL,
   funding_contribution BIGINT(20) NOT NULL,
 
   project_coordinator BOOLEAN DEFAULT FALSE NOT NULL,

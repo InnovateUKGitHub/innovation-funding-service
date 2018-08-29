@@ -13,15 +13,13 @@ public class EuFunding {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String callName;
-    private String callId;
-    private String topicId;
-    private String projectName;
+    private String grantAgreementNumber;
+    private String particpantId; // 6 digit number
 
+    private String projectName;
     private LocalDate projectStartDate;
     private LocalDate projectEndDate;
 
-    private String grantAgreementNumber;
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
@@ -33,19 +31,15 @@ public class EuFunding {
     }
 
     public EuFunding(EuActionType actionType,
-                     String callName,
-                     String callId,
-                     String topicId,
+                     String grantAgreementNumber,
+                     String particpantId,
                      String projectName,
                      LocalDate projectStartDate,
                      LocalDate projectEndDate,
-                     String grantAgreementNumber,
                      BigDecimal fundingContribution,
                      boolean projectCoordinator) {
         this.actionType = actionType;
-        this.callName = callName;
-        this.callId = callId;
-        this.topicId = topicId;
+        this.particpantId = particpantId;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
         this.projectEndDate = projectEndDate;
@@ -58,28 +52,20 @@ public class EuFunding {
         return id;
     }
 
-    public String getCallName() {
-        return callName;
+    public String getGrantAgreementNumber() {
+        return grantAgreementNumber;
     }
 
-    public void setCallName(String callName) {
-        this.callName = callName;
+    public void setGrantAgreementNumber(String grantAgreementNumber) {
+        this.grantAgreementNumber = grantAgreementNumber;
     }
 
-    public String getCallId() {
-        return callId;
+    public String getParticpantId() {
+        return particpantId;
     }
 
-    public void setCallId(String callId) {
-        this.callId = callId;
-    }
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
+    public void setParticpantId(String particpantId) {
+        this.particpantId = particpantId;
     }
 
     public String getProjectName() {
@@ -106,13 +92,6 @@ public class EuFunding {
         this.projectEndDate = projectEndDate;
     }
 
-    public String getGrantAgreementNumber() {
-        return grantAgreementNumber;
-    }
-
-    public void setGrantAgreementNumber(String grantAgreementNumber) {
-        this.grantAgreementNumber = grantAgreementNumber;
-    }
 
     public BigDecimal getFundingContribution() {
         return fundingContribution;
