@@ -12,12 +12,12 @@ include::{snippets}/eu-grant/save/curl-request.adoc[]
 
 === Find By Id
 ==== Request
-include::{snippets}/eu-grant/findById/http-request.adoc[]
-include::{snippets}/eu-grant/findById/path-parameters.adoc[]
+include::{snippets}/eu-grant/find-by-id/http-request.adoc[]
+include::{snippets}/eu-grant/find-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/eu-grant/findById/http-response.adoc[]
-include::{snippets}/eu-grant/findById/response-fields.adoc[]
+include::{snippets}/eu-grant/find-by-id/http-response.adoc[]
+include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/eu-grant/findById/curl-request.adoc[]
+include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]
