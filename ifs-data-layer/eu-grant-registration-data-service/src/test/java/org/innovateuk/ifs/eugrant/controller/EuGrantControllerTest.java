@@ -32,7 +32,7 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
     public void save() throws Exception {
         EuGrantResource euGrantResource = newEuGrantResource().build();
 
-        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/eu-grant")

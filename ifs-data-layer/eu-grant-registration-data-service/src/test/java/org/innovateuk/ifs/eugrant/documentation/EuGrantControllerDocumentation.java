@@ -37,7 +37,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
         EuGrantResource euGrantResource = newEuGrantResource()
                 .build();
 
-        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/eu-grant")
