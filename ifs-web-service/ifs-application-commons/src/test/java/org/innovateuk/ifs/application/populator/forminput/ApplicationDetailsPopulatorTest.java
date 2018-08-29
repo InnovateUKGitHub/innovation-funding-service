@@ -4,11 +4,10 @@ import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.application.populator.forminput.ApplicationDetailsPopulator;
+import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -77,9 +76,7 @@ public class ApplicationDetailsPopulatorTest {
         assertThat(viewModel.getApplication(), equalTo(question.getApplication()));
         assertThat(viewModel.getApplicantSection(), equalTo(null));
         assertThat(viewModel.getInnovationAreaText(), equalTo("Change your innovation area"));
-//        assertThat(viewModel.getResearchCategoryText(), equalTo("Change your research category"));
         assertThat(viewModel.getSelectedInnovationAreaName(), equalTo(INNOVATION_AREA_NAME));
-//        assertThat(viewModel.getSelectedResearchCategoryName(), equalTo(RESEARCH_CATEGORY_NAME));
         assertThat(viewModel.getAssignButtonsViewModel(), equalTo(assignButtonsViewModel));
     }
 }

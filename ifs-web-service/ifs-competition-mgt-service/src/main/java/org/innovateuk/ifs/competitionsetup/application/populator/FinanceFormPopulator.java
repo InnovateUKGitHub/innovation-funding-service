@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,22 +27,22 @@ import java.util.Optional;
 @Service
 public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
-	@Autowired
-	private CompetitionSetupFinanceService competitionSetupFinanceService;
+    @Autowired
+    private CompetitionSetupFinanceService competitionSetupFinanceService;
 
     @Autowired
     private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
-	@Override
-	public CompetitionSetupSubsection sectionToFill() {
-		return CompetitionSetupSubsection.FINANCES;
-	}
+    @Override
+    public CompetitionSetupSubsection sectionToFill() {
+        return CompetitionSetupSubsection.FINANCES;
+    }
 
-	@Override
-	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
+    @Override
+    public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
         FinanceForm competitionSetupForm = new FinanceForm();
 
         if (competitionResource.isFinanceType()) {
@@ -53,20 +55,21 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
             competitionSetupForm.setApplicationFinanceType(ApplicationFinanceType.NONE);
         }
 
-		return competitionSetupForm;
-	}
+        return competitionSetupForm;
+    }
 
     private ApplicationFinanceType getFinanceType(boolean fullApplicationFinance) {
         return fullApplicationFinance ? ApplicationFinanceType.FULL : ApplicationFinanceType.LIGHT;
     }
 
     private String getFundingRulesWithoutHeading(Long competitionId) {
-        Optional<QuestionResource> question = questionService.getQuestionsBySectionIdAndType(getOverviewFinancesSectionId(competitionId), QuestionType.GENERAL).stream()
+        List<QuestionResource> questions = questionRestService.getQuestionsBySectionIdAndType(getOverviewFinancesSectionId(competitionId), QuestionType.GENERAL).getSuccess();
+        Optional<QuestionResource> question = questions.stream()
                 .filter(questionResource -> questionResource.getName() == null)
                 .findFirst();
 
-        if(question.isPresent()) {
-           return question.get().getDescription();
+        if (question.isPresent()) {
+            return question.get().getDescription();
         }
 
         return null;
@@ -74,7 +77,7 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
 
     private Long getOverviewFinancesSectionId(Long competitionId) {
         Optional<SectionResource> section = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES).stream().findFirst();
-        if(section.isPresent()) {
+        if (section.isPresent()) {
             return section.get().getId();
         }
 

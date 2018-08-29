@@ -18,6 +18,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class ApplicationTeamModelPopulator {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -171,7 +175,7 @@ public class ApplicationTeamModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {

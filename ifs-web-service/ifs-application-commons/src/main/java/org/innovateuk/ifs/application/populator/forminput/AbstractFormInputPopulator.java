@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator.forminput;
 
 import org.innovateuk.ifs.applicant.resource.*;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
+import org.innovateuk.ifs.form.ApplicationForm;
 
 /**
  * Abstract class for populating a form input view model.

@@ -64,8 +64,13 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     @Transactional
     public ServiceResult<ApplicationResource> setResearchCategory(Long applicationId, Long researchCategoryId) {
         return find(application(applicationId)).andOnSuccess(application ->
-                findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->
-                        saveApplicationWithResearchCategory(application, researchCategory))).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
+        {
+            if (researchCategoryId == null) {
+                return clearResearchCategory(application);
+            }
+            return findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->
+                    saveApplicationWithResearchCategory(application, researchCategory));
+        }).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
     }
 
     private ServiceResult<ResearchCategory> findResearchCategory(Long researchCategoryId) {
@@ -73,7 +78,6 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {
-
         Application origApplication = applicationRepository.findOne(application.getId());
 
         if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
@@ -85,6 +89,16 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
         application.setResearchCategory(researchCategory);
 
+        return serviceSuccess(applicationRepository.save(application));
+    }
+
+    private ServiceResult<Application> clearResearchCategory(Application application) {
+        boolean resetRequired = application.getResearchCategory() != null;
+        if (resetRequired) {
+            markAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
+            resetFundingLevels(application.getCompetition().getId(), application.getId());
+        }
+        application.setResearchCategory(null);
         return serviceSuccess(applicationRepository.save(application));
     }
 

@@ -50,7 +50,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
-        assertEquals(6, bindingResult.getErrorCount());
+        assertEquals(5, bindingResult.getErrorCount());
 
         application.setName(null);
         application.setStartDate(currentDate.minusDays(1));
@@ -65,7 +65,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         validator.validate(application, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        assertEquals(7, bindingResult.getErrorCount());
+        assertEquals(6, bindingResult.getErrorCount());
 
         application.setDurationInMonths(37L);
         application.setResubmission(false);
@@ -75,7 +75,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         validator.validate(application, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        assertEquals(5, bindingResult.getErrorCount());
+        assertEquals(4, bindingResult.getErrorCount());
     }
 
     @Test
