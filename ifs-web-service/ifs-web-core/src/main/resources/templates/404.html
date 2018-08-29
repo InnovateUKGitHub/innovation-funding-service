@@ -23,11 +23,11 @@
                 th:if="${error}" th:text="'('+${error}+')'">error ...</span>
         </p>
 
-        <div>
-            <span>
-                Please check the web address or search term you entered for any errors. You can return to <a th:href="${userDashboardLink}" class="govuk-link">your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
-            </span>
-        </div>
+        <p class="govuk-body">
+            Please check the web address or search term you entered for any errors. You can return to
+            <a class="govuk-link" th:href="${userDashboardLink}">your dashboard</a> or go back to the
+            <a class="govuk-link" href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+        </p>
 
         <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
             Error message will be displayed here for developers on dev/UAT environments.
