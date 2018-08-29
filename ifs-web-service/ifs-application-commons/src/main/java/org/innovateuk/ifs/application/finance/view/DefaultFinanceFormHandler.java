@@ -28,7 +28,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -171,10 +170,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                                               OrganisationSize newValue) {
         if (null != oldValue  && oldValue != newValue) {
             OrganisationResource organisation = organisationRestService.getOrganisationById(applicationFinance.getOrganisation()).getSuccess();
-            Set<Long> templateGcms = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(organisation.getOrganisationType()).getSuccess();
-            Set<Long> competitionGcms = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetition(competitionId).getSuccess();
+            boolean maximumFundingLevelOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
 
-            if (organisation.getOrganisationType().equals(BUSINESS.getId()) && templateGcms.equals(competitionGcms)) {
+            if (organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden) {
                 fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
             }
         }

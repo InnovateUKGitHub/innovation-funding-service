@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.eligibility.populator;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -70,7 +69,8 @@ public class EligibilityFormPopulatorTest {
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()))
+                .thenReturn(restSuccess(true));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));
@@ -110,7 +110,8 @@ public class EligibilityFormPopulatorTest {
                 .withLeadApplicantType(asList(2L))
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(restSuccess
+                (true));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));

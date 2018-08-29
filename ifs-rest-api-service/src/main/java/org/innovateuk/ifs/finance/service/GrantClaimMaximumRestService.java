@@ -13,5 +13,5 @@ public interface GrantClaimMaximumRestService {
 
     RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competititionTypeId);
 
-    RestResult<Set<Long>> getGrantClaimMaximumsForCompetition(long competititionId);
+    RestResult<Boolean> isMaximumFundingLevelOverridden(long competitionId);
 }

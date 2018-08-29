@@ -131,9 +131,10 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
     private boolean canResetFundingLevels(Application application) {
         OrganisationResource organisation = organisationService.findById(application.getLeadOrganisationId()).getSuccess();
-        Set<Long> templateGcms = grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(application.getCompetition().getCompetitionType().getId()).getSuccess();
-        Set<Long> competitionGcms = grantClaimMaximumService.getGrantClaimMaximumsForCompetition(application.getCompetition().getId()).getSuccess();
 
-        return organisation.getOrganisationType().equals(BUSINESS.getId()) && templateGcms.equals(competitionGcms);
+        boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
+                application.getCompetition().getId()).getSuccess();
+
+        return organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden;
     }
 }

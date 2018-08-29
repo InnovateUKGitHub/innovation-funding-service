@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -24,9 +25,7 @@ public interface GrantClaimMaximumService {
     @PreAuthorize("hasPermission(#competitionTypeId, 'org.innovateuk.ifs.competition.resource.CompetitionTypeResource', 'READ_GRANT_CLAIM_MAXIMUM')")
     ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(final Long competitionTypeId);
 
-    @SecuredBySpring(value = "READ_GRANT_CLAIM_MAXIMUM", description = "Competition administrators and members of " +
-            "the project team can read the grant claim maximums for a competition")
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ_GRANT_CLAIM_MAXIMUM')")
-    ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(final Long competitionId);
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Boolean> isMaximumFundingLevelOverridden(final long competitionId);
 
 }

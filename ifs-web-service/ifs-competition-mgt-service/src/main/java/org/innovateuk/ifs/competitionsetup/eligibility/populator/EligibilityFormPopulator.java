@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -59,23 +58,23 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
         competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.getResubmission()));
 
-        Boolean overrideFundingRuleSet = getOverrideFundingRulesSet(competitionResource, competitionSetupForm);
+        boolean overrideFundingRuleSet = getOverrideFundingRulesSet(competitionResource, competitionSetupForm);
         competitionSetupForm.setOverrideFundingRules(overrideFundingRuleSet);
 
-        if (overrideFundingRuleSet != null && overrideFundingRuleSet) {
+        if (overrideFundingRuleSet) {
             competitionSetupForm.setFundingLevelPercentage(getFundingLevelPercentage(competitionResource));
         }
 
         return competitionSetupForm;
     }
 
-    private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
+    private boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
         if (isFirstTimeInForm(eligibilityForm)) {
-            return fundingRulesAreOverriden(competitionResource);
+            return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId()).getSuccess();
         }
 
-        return null;
+        return false;
     }
 
     private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
@@ -84,14 +83,6 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
                 (eligibilityForm.getSingleOrCollaborative() != null) &&
                 (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
                 (eligibilityForm.getResubmission() != null);
-    }
-
-    private boolean fundingRulesAreOverriden(CompetitionResource competitionResource) {
-        Set<Long> templateGrantClaimMaximums = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
-                competitionResource.getCompetitionType()).getSuccess();
-
-        Set<Long> currentGrantClaimMaximums = competitionResource.getGrantClaimMaximums();
-        return !currentGrantClaimMaximums.equals(templateGrantClaimMaximums);
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {
