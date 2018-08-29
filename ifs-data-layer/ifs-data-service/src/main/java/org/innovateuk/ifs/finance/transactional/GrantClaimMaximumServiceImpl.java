@@ -58,8 +58,12 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
-        return getCompetition(competitionId).andOnSuccessReturn(competition -> !competition.getGrantClaimMaximums()
-                .equals(competition.getCompetitionType().getTemplate()
-                .getGrantClaimMaximums()));
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            Set<Long> competitionGrantClaimMaximumIds = competition.getGrantClaimMaximums().stream().map
+                    (GrantClaimMaximum::getId).collect(toSet());
+            Set<Long> templateGrantClaimMaximumIds = competition.getCompetitionType().getTemplate()
+                    .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
+            return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
+        });
     }
 }
