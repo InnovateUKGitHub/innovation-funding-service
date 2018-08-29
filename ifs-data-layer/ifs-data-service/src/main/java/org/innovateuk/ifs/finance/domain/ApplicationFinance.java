@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,6 +60,10 @@ public class ApplicationFinance extends Finance {
     }
 
     public Integer getMaximumFundingLevel() {
+        if (!isBusinessOrganisationType()) {
+            return 100;
+        }
+
         boolean researchCategoryRequired = isResearchCategoryRequired();
         return getApplication().getCompetition().getGrantClaimMaximums()
                 .stream()
@@ -69,13 +74,8 @@ public class ApplicationFinance extends Finance {
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum, boolean researchCategoryRequired) {
-        return isMatchingOrganisationType(grantClaimMaximum)
-                && isMatchingOrganisationSize(grantClaimMaximum)
+        return isMatchingOrganisationSize(grantClaimMaximum)
                 && (!researchCategoryRequired || isMatchingResearchCategory(grantClaimMaximum));
-    }
-
-    private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
-        return getOrganisation().getOrganisationType().getId().equals(grantClaimMaximum.getOrganisationType().getId());
     }
 
     private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
@@ -94,5 +94,9 @@ public class ApplicationFinance extends Finance {
     private boolean isResearchCategoryRequired() {
         return getApplication().getCompetition().getQuestions().stream()
                 .anyMatch(question -> RESEARCH_CATEGORY == question.getQuestionSetupType());
+    }
+
+    private boolean isBusinessOrganisationType() {
+        return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
     }
 }
