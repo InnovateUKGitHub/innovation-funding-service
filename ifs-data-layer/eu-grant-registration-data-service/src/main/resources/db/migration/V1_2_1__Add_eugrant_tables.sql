@@ -22,9 +22,10 @@ CREATE TABLE eu_organisation (
 
 CREATE TABLE eu_contact (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  telephone VARCHAR(255)
+  jobTitle VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  telephone VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE eu_action_type (

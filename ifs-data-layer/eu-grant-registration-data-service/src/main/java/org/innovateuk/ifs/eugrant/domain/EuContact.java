@@ -15,8 +15,8 @@ public class EuContact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String email;
     private String jobTitle;
+    private String email;
     private String telephone;
 
     EuContact() {
