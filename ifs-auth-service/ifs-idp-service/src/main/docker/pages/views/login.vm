@@ -41,7 +41,7 @@
         <link rel="apple-touch-icon" href="$resourcesDomain//images/govuk-apple-touch-icon.png">
 
         <!--[if !IE 8]><!-->
-        <link href="$resourcesDomain/css/screen.css" rel="stylesheet"  media="all" />
+        <link href="$resourcesDomain/css/screen.css?22082018" rel="stylesheet"  media="all" />
         <!--<![endif]-->
 
         <!--[if IE 8]>
