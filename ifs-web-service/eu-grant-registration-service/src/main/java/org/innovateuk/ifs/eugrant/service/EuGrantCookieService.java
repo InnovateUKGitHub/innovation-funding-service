@@ -42,7 +42,8 @@ public class EuGrantCookieService {
         } else {
             euGrant.setId(uuid.get());
         }
-        return euGrantRestService.update(euGrant).getSuccess();
+        euGrantRestService.update(euGrant).getSuccess();
+        return euGrant;
     }
 
     public void clear() {
