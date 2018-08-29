@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.annotations.Immutable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +11,7 @@ import javax.persistence.Id;
  * The type of EU grant.
  */
 @Entity
+@Immutable
 public class EuActionType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

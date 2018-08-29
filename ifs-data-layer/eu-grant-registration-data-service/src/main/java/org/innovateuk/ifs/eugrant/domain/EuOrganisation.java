@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -15,11 +17,17 @@ public class EuOrganisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private final String name;
-    @OneToOne
+
+    @OneToOne(optional = false)
     private final EuAddress address;
+
+    @NotNull
     @Enumerated(STRING)
     private final EuOrganisationType organisationType;
+
     private final String companiesHouseNumber;
 
     EuOrganisation() {

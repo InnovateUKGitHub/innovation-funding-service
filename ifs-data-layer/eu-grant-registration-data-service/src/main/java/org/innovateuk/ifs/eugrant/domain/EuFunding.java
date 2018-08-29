@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -13,13 +17,23 @@ public class EuFunding {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String grantAgreementNumber;
-    private String particpantId; // 6 digit number
 
+    @NotBlank
+    private String grantAgreementNumber;
+
+    @NotNull
+    @Pattern(regexp="[\\d]{6}")
+    private String particpantId;
+
+    @NotBlank
     private String projectName;
+
+    @NotNull
     private LocalDate projectStartDate;
+    @NotNull
     private LocalDate projectEndDate;
 
+    @NotBlank
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
