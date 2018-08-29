@@ -50,11 +50,9 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
     @Test
     public void getGrantClaimMaximumById() {
-        Integer expectedMaximum = 100;
-        Long expectedId = 1L;
-        GrantClaimMaximum gcm = newGrantClaimMaximum().withId(expectedId).withMaximum(expectedMaximum).build();
-        GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().withId(expectedId).withMaximum
-                (expectedMaximum).build();
+        GrantClaimMaximum gcm = newGrantClaimMaximum().build();
+        GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource()
+                .withMaximum(100).build();
 
         when(grantClaimMaximumRepository.findOne(gcm.getId())).thenReturn(gcm);
         when(grantClaimMaximumMapper.mapToResource(gcm)).thenReturn(gcmResource);
@@ -62,8 +60,8 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         ServiceResult<GrantClaimMaximumResource> result = service.getGrantClaimMaximumById(gcm.getId());
         assertTrue(result.isSuccess());
         assertEquals(gcmResource, result.getSuccess());
-        assertEquals(result.getSuccess().getMaximum(), expectedMaximum);
-        assertEquals(result.getSuccess().getId(), expectedId);
+        assertEquals(Integer.valueOf(100), result.getSuccess().getMaximum());
+        assertEquals(gcmResource.getId(), result.getSuccess().getId());
     }
 
     @Test
