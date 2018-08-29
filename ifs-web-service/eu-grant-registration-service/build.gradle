@@ -45,7 +45,7 @@ createContainer.containerName="eu-grant-registration-svc"
 createContainer.containerId="eu-grant-registration-svc"
 createContainer.portBindings = ['9008:8000']
 
-ext.serverContext = '/euGrantRegistration'
+ext.serverContext = '/eu-grant'
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
