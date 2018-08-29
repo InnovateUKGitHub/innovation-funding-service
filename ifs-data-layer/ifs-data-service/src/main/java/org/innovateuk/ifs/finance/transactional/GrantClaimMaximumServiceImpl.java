@@ -3,13 +3,14 @@ package org.innovateuk.ifs.finance.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -19,11 +20,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
+public class GrantClaimMaximumServiceImpl extends BaseTransactionalService implements GrantClaimMaximumService {
 
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
     private CompetitionTypeRepository competitionTypeRepository;
-    private CompetitionRepository competitionRepository;
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
 
     public GrantClaimMaximumServiceImpl(GrantClaimMaximumRepository grantClaimMaximumRepository,
@@ -37,28 +37,33 @@ public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
     }
 
     @Override
-    public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(Long id) {
+    public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
         return find(grantClaimMaximumRepository.findOne(id), notFoundError(GrantClaimMaximum.class, id)).andOnSuccess(
                 maximum -> serviceSuccess(grantClaimMaximumMapper.mapToResource(maximum)));
     }
 
     @Override
-    public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(Long competitionTypeId) {
+    public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competitionTypeId) {
         return find(competitionTypeRepository.findOne(competitionTypeId), notFoundError(CompetitionTypeResource.class, competitionTypeId))
                 .andOnSuccessReturn(competitionType -> competitionType.getTemplate().getGrantClaimMaximums().stream().map
                         (GrantClaimMaximum::getId).collect(toSet()));
     }
 
     @Override
-    public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetition(Long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(CompetitionResource.class, competitionId))
-                .andOnSuccessReturn(competition -> competition.getGrantClaimMaximums().stream().map
-                        (GrantClaimMaximum::getId).collect(toSet()));
-    }
-
-    @Override
+    @Transactional
     public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
         GrantClaimMaximum gcm = grantClaimMaximumRepository.save(grantClaimMaximumMapper.mapToDomain(grantClaimMaximumResource));
         return serviceSuccess(grantClaimMaximumMapper.mapToResource(gcm));
+    }
+
+    @Override
+    public ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            Set<Long> competitionGrantClaimMaximumIds = competition.getGrantClaimMaximums().stream().map
+                    (GrantClaimMaximum::getId).collect(toSet());
+            Set<Long> templateGrantClaimMaximumIds = competition.getCompetitionType().getTemplate()
+                    .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
+            return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
+        });
     }
 }

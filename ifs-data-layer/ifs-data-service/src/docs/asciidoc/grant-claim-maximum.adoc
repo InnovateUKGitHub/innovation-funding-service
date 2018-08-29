@@ -22,18 +22,6 @@ include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition
 ==== Curl Example
 include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition-type/curl-request.adoc[]
 
-=== Get Grant Claim Maximums For Competition
-==== Request
-include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition/http-request.adoc[]
-include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition/http-response.adoc[]
-include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/grant-claim-maximum/get-grant-claim-maximums-for-competition/curl-request.adoc[]
-
 === Update
 ==== Request
 include::{snippets}/grant-claim-maximum/update/http-request.adoc[]
@@ -44,3 +32,14 @@ include::{snippets}/grant-claim-maximum/update/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/grant-claim-maximum/update/curl-request.adoc[]
+
+=== Maximum Funding Level Overridden
+==== Request
+include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/http-request.adoc[]
+include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/grant-claim-maximum/is-maximum-funding-level-overridden/curl-request.adoc[]
