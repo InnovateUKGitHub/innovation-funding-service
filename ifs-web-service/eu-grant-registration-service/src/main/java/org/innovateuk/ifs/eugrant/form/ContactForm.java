@@ -8,7 +8,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class ContactForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.eugrant.notblank}")
-    private String fullName;
+    private String name;
 
     @NotBlank(message = "{validation.standard.eugrant.notblank}")
     private String jobTitle;
@@ -19,12 +19,12 @@ public class ContactForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.standard.eugrant.notblank}")
     private String telephone;
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getJobTitle() {
@@ -60,7 +60,7 @@ public class ContactForm extends BaseBindingResultTarget {
         ContactForm that = (ContactForm) o;
 
         return new EqualsBuilder()
-                .append(fullName, that.fullName)
+                .append(name, that.name)
                 .append(jobTitle, that.jobTitle)
                 .append(email, that.email)
                 .append(telephone, that.telephone)
@@ -70,7 +70,7 @@ public class ContactForm extends BaseBindingResultTarget {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(fullName)
+                .append(name)
                 .append(jobTitle)
                 .append(email)
                 .append(telephone)

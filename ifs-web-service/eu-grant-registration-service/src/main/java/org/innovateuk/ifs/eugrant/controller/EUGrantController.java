@@ -16,11 +16,4 @@ public class EUGrantController {
 
         return "eugrant/overview";
     }
-
-    @GetMapping("/contact-details")
-    public String contactDetails() {
-
-        return "eugrant/contact-details";
-    }
-
 }
