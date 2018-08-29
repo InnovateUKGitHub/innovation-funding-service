@@ -35,6 +35,7 @@ public class ApplicationDocs {
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable").optional(),
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible").optional(),
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation").optional(),
+            fieldWithPath("leadOrganisationName").type("string").description("the name of the lead organisation").optional(),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel").optional(),
             fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old menu view are complete").optional()
     };
