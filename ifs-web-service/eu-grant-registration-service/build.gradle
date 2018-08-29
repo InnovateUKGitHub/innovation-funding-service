@@ -27,7 +27,7 @@ version project.version
 
 apply plugin: 'idea'
 
-def enabled = project.hasProperty('ifs.eu-grant-registration-service.enabled') ? project.property('ifs.eu-grant-registration-service.enabled').toBoolean() : true
+def enabled = project.hasProperty('ifs.eu-grant-registration-service.enabled') ? project.property('ifs.eu-grant-registration-service.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }

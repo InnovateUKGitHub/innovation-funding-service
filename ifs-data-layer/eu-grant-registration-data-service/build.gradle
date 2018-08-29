@@ -22,7 +22,7 @@ osStageRemote.tag = euGrantRegistrationDataServiceVersion
 tagDockerLocal.tag = euGrantRegistrationDataServiceVersion
 osStageLocal.tag = euGrantRegistrationDataServiceVersion
 
-def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : true
+def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
