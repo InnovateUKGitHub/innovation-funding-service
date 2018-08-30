@@ -204,6 +204,26 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
 
+# Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
+# When adding new test cases here please make sure that anything unneccessary is removed from above.
+
+Existing Monitoring Officer can sign in
+    [Documentation]    IFS-3977
+    [Tags]    HappyPath
+    When log in as a different user    &{monitoring_officer_one_credentials}
+    Then the user should see the text in the element    css=.govuk-heading-l       Dashboard
+
+Monitoring Officer can see projects that they are assigned to
+    [Documentation]    IFS-3978
+    [Tags]    HappyPath
+    When the user should see the text in the element    css=.projects-in-setup    Magic material
+    And the user should see the element    link=Magic material
+
+Monitoring Officer cannot see projects if they are not assigned to them
+    [Documentation]    IFS-3978
+    [Tags]
+    When log in as a different user    &{monitoring_officer_two_credentials}
+    Then the user should not see the element    .projects-in-setup
 
 *** Keywords ***
 standard verification for email address follows

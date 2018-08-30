@@ -74,6 +74,9 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Before
     public void setup() {
+        loginCompAdmin();
+
+
         assessor = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
         otherAssessor = userRepository.findByEmail("felix.wilson@gmail.com")

@@ -9,10 +9,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
-    <th:block th:if="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
+    <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
