@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 @Component
 @PermissionRules
@@ -28,12 +28,7 @@ public class AssessorPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_PROFILE", description = "Comp admin can read any assessor profile")
     public boolean compAdminCanReadAssessorProfile(AssessorProfileResource assessorProfileResource, UserResource loggedInUser) {
-        return loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_MANAGER);
-    }
-
-    @PermissionRule(value = "READ_PROFILE", description = "IFS admin can read any assessor profile")
-    public boolean adminCanReadAssessorProfile(AssessorProfileResource assessorProfileResource, UserResource loggedInUser) {
-        return loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR);
+        return loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
     }
 
 }
