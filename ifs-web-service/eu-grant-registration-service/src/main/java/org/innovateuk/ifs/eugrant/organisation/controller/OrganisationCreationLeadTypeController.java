@@ -2,6 +2,7 @@ package org.innovateuk.ifs.eugrant.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
 import org.innovateuk.ifs.eugrant.organisation.populator.OrganisationCreationSelectTypePopulator;
@@ -12,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,18 +65,12 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                                 BindingResult bindingResult,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) {
-
-        Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if (!isValidLeadOrganisationType(organisationTypeId)) {
-            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
-        }
-
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
+            EuOrganisationType organisationType = organisationForm.getOrganisationType();
             OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
-            organisationTypeForm.setOrganisationType(organisationTypeId);
+            organisationTypeForm.setOrganisationType(organisationType);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
-
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
@@ -92,7 +86,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
     private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
         OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
-        newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
+        newOrganisationCreationForm.setOrganisationType(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
     }
 }

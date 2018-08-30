@@ -2,19 +2,20 @@ package org.innovateuk.ifs.eugrant.organisation.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
 import javax.validation.constraints.NotNull;
 
 public class OrganisationTypeForm {
     @NotNull(message="{validation.standard.organisationtype.required}")
-    private Long organisationType;
+    private EuOrganisationType organisationType;
     private boolean isLeadApplicant;
 
-    public Long getOrganisationType() {
+    public EuOrganisationType getOrganisationType() {
         return organisationType;
     }
 
-    public void setOrganisationType(Long organisationType) {
+    public void setOrganisationType(EuOrganisationType organisationType) {
         this.organisationType = organisationType;
     }
 

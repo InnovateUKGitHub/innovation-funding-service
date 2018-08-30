@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.eugrant.organisation.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,7 +20,7 @@ public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
 
     @NotNull(message = "{validation.standard.organisationtype.required}")
-    private Long organisationTypeId;
+    private EuOrganisationType organisationType;
 
     @NotBlank(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
@@ -51,22 +49,12 @@ public class OrganisationCreationForm implements Serializable {
         this.manualEntry = manualEntry;
     }
 
-    public Long getOrganisationTypeId() {
-        return organisationTypeId;
+    public EuOrganisationType getOrganisationType() {
+        return organisationType;
     }
 
-    public void setOrganisationTypeId(Long organisationTypeId) {
-        this.organisationTypeId = organisationTypeId;
-    }
-
-    @JsonIgnore
-    public boolean isResearch(){
-        if(organisationTypeId != null) {
-            return OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH);
-        }
-        else {
-            return false;
-        }
+    public void setOrganisationType(EuOrganisationType organisationType) {
+        this.organisationType = organisationType;
     }
 
     public String getOrganisationName() {
@@ -91,11 +79,6 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationSearching(boolean organisationSearching) {
         this.organisationSearching = organisationSearching;
-    }
-
-    @JsonIgnore
-    public List<OrganisationSearchResult> getOrganisationSearchResults() {
-        return organisationSearchResults;
     }
 
     public void setOrganisationSearchResults(List<OrganisationSearchResult> organisationSearchResults) {
@@ -134,46 +117,14 @@ public class OrganisationCreationForm implements Serializable {
         this.useSearchResultAddress = useSearchResultAddress;
     }
 
+    //Fields to be ignored in cookie.
     @JsonIgnore
-    public OrganisationTypeEnum getOrganisationTypeEnum() {
-        return OrganisationTypeEnum.getFromId(organisationTypeId);
+    public List<OrganisationSearchResult> getOrganisationSearchResults() {
+        return organisationSearchResults;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrganisationCreationForm that = (OrganisationCreationForm) o;
-
-        return new EqualsBuilder()
-                .append(triedToSave, that.triedToSave)
-                .append(organisationSearching, that.organisationSearching)
-                .append(manualEntry, that.manualEntry)
-                .append(useSearchResultAddress, that.useSearchResultAddress)
-                .append(addressForm, that.addressForm)
-                .append(organisationTypeId, that.organisationTypeId)
-                .append(organisationSearchName, that.organisationSearchName)
-                .append(searchOrganisationId, that.searchOrganisationId)
-                .append(organisationSearchResults, that.organisationSearchResults)
-                .append(organisationName, that.organisationName)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(addressForm)
-                .append(triedToSave)
-                .append(organisationTypeId)
-                .append(organisationSearchName)
-                .append(searchOrganisationId)
-                .append(organisationSearching)
-                .append(manualEntry)
-                .append(useSearchResultAddress)
-                .append(organisationSearchResults)
-                .append(organisationName)
-                .toHashCode();
+    @JsonIgnore
+    public boolean isResearch(){
+        return organisationType != null && organisationType == EuOrganisationType.RESEARCH;
     }
 }

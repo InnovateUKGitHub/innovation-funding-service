@@ -3,11 +3,13 @@ package org.innovateuk.ifs.eugrant.organisation.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.organisation.form.AddressForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
 import org.innovateuk.ifs.eugrant.organisation.service.OrganisationCookieService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -91,8 +93,8 @@ public abstract class AbstractOrganisationCreationController {
         addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
     }
 
-    protected void addOrganisationType(OrganisationCreationForm organisationForm, Optional<Long> organisationTypeId) {
-        organisationTypeId.ifPresent(organisationForm::setOrganisationTypeId);
+    protected void addOrganisationType(OrganisationCreationForm organisationForm, Optional<EuOrganisationType> organisationTypeId) {
+        organisationTypeId.ifPresent(organisationForm::setOrganisationType);
     }
 
     protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
@@ -106,7 +108,7 @@ public abstract class AbstractOrganisationCreationController {
         }
     }
 
-    protected Optional<Long> organisationTypeIdFromCookie(HttpServletRequest request) {
+    protected Optional<EuOrganisationType> organisationTypeIdFromCookie(HttpServletRequest request) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
 
         if (organisationTypeForm.isPresent()) {
@@ -128,7 +130,7 @@ public abstract class AbstractOrganisationCreationController {
             if (isNotBlank(organisationForm.getOrganisationSearchName())) {
                 String trimmedSearchString = StringUtils.normalizeSpace(organisationForm.getOrganisationSearchName());
                 List<OrganisationSearchResult> searchResults;
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationTypeId(), trimmedSearchString)
+                searchResults = organisationSearchRestService.searchOrganisation(getIdFromEu(organisationForm.getOrganisationType()), trimmedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -145,11 +147,16 @@ public abstract class AbstractOrganisationCreationController {
      */
     protected OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
-            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccess();
+            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(getIdFromEu(organisationForm.getOrganisationType()), organisationForm.getSearchOrganisationId()).getSuccess();
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;
         }
         return null;
+    }
+
+    //This is horrible
+    private Long getIdFromEu(EuOrganisationType type) {
+        return OrganisationTypeEnum.valueOf(type.name()).getId();
     }
 }

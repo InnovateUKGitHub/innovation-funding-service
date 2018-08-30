@@ -4,10 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.organisation.form.AddressForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
-import org.innovateuk.ifs.eugrant.organisation.viewmodel.OrganisationAddressViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -78,9 +77,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
-        model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
-        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationType(), "SearchLabel",  request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationType(), "SearchHint",  request.getLocale()));
+        model.addAttribute("organisationType", organisationForm.getOrganisationType());
 
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
@@ -132,10 +131,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
+        model.addAttribute("organisationType", organisationForm.getOrganisationType());
 
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
+        if (EuOrganisationType.RESEARCH == organisationForm.getOrganisationType()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -161,10 +159,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("organisationType", organisationForm.getOrganisationType());
 
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
+        if (EuOrganisationType.RESEARCH == organisationForm.getOrganisationType()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -188,11 +185,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("organisationType", organisationForm.getOrganisationType());
 
 
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
+        if (EuOrganisationType.RESEARCH == organisationForm.getOrganisationType()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -303,7 +299,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         }
     }
 
-    private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
+    private String getMessageByOrganisationType(EuOrganisationType orgTypeEnum, String textKey, Locale locale) {
         try {
             return messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         } catch (NoSuchMessageException e) {
