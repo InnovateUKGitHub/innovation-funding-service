@@ -289,7 +289,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Test
     public void findAssessorsByCompetition_nextPage() {
-        Competition competition = competitionRepository.findOne(1L);
+        Competition competition = competitionRepository.findById(1L).get();
 
         addTestAssessors();
 
@@ -312,7 +312,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Test
     public void findAssessorsByCompetition() {
-        Competition competition = competitionRepository.findOne(1L);
+        Competition competition = competitionRepository.findById(1L).get();
 
         addTestAssessors();
 

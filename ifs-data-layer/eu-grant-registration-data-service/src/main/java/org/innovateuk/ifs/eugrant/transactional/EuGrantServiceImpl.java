@@ -32,7 +32,7 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     @Override
     public ServiceResult<EuGrantResource> findById(UUID id) {
-        return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
+        return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
 }

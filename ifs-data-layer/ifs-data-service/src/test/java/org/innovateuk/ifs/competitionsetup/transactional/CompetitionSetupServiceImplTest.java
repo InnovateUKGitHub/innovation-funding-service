@@ -155,7 +155,7 @@ public class CompetitionSetupServiceImplTest {
                 .build();
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.existsInnovationLead(competitionId, innovationLead.getId())).thenReturn(false);
 
@@ -164,7 +164,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).existsInnovationLead(competitionId, innovationLead.getId());
         verify(competitionFunderService).reinsertFunders(competitionResource);
-        verify(competitionRepository).findOne(competition.getId());
+        verify(competitionRepository).findById(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -194,7 +194,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.findInnovationLead(competitionId, existingInnovationLeadId)).thenReturn(competitionParticipant);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(competitionRepository.save(competition)).thenReturn(competition);
 
         ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingInnovationLeadId);
@@ -203,7 +203,7 @@ public class CompetitionSetupServiceImplTest {
         // Verify that the correct CompetitionParticipant is deleted
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
-        verify(competitionRepository).findOne(competition.getId());
+        verify(competitionRepository).findById(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -231,7 +231,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.existsInnovationLead(competitionId, newInnovationLeadId)).thenReturn(true);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.findInnovationLead(competitionId, newInnovationLeadId))
                 .thenReturn(newLeadTechCompetitionParticipant);
@@ -241,7 +241,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
-        verify(competitionRepository).findOne(competition.getId());
+        verify(competitionRepository).findById(competition.getId());
         verify(competitionRepository).save(competition);
         verify(innovationLeadRepository).existsInnovationLead(competitionId, newInnovationLeadId);
         verify(innovationLeadRepository, never()).save(any(InnovationLead.class));
