@@ -209,7 +209,7 @@
             Before you can supply your funding details:
         </p>
         <ul class="govuk-list govuk-list--bullet">
-            <li th:if="${!model.researchCategoryComplete and model.leadApplicant}">
+            <li th:if="${model.researchCategoryRequired and model.leadApplicant}">
                 mark the
                 <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}"
                    class="govuk-link">
@@ -217,7 +217,7 @@
                 </a>
                 page as complete
             </li>
-            <li th:unless="${model.yourOrganisationComplete}">
+            <li th:if="${model.yourOrganisationRequired}">
                 <th:block th:unless="${model.leadApplicant}">you must </th:block>mark the
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}"
                    class="govuk-link">
@@ -225,7 +225,7 @@
                 </a>
                 page as complete
             </li>
-            <li th:if="${!model.researchCategoryComplete and !model.leadApplicant}">
+            <li th:if="${model.researchCategoryRequired and !model.leadApplicant}">
                 the lead applicant must mark the research category page as complete
             </li>
         </ul>
