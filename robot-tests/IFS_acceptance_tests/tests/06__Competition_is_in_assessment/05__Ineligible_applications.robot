@@ -20,6 +20,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-1491 Inform Applicant - Ineligible page - couple of issues
 ...
 ...               IFS-3132 Email content templates for notifications
+...
+...               IFS-2994 New Stakeholder role and permissions
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -32,6 +34,10 @@ ${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSME
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
 ${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
+${SUBMITTED_APPLICATION_1}            Living with Digital Rights Management
+${SUBMITTED_APPLICATION_1_NUMBER}     ${application_ids['${SUBMITTED_APPLICATION_1}']}
+${INELIGIBLE_APPLICATION_1}           Ineligible Vlogging
+${INELIGIBLE_APPLICATION_1_NUMBER}    ${application_ids['${INELIGIBLE_APPLICATION_1}']}
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -150,6 +156,19 @@ Reinstate an application
     And the reinstated application in no longer shown in the unsuccessful list
     And the applicant can see his application in the right section  Applications in progress
 
+
+Stakeholders cannot mark applications as ineligible
+    [Documentation]  IFS-2994
+    [Tags]
+    Given Log in as a different user            &{stakeholder_user}
+    When the user navigates to the page         ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${SUBMITTED_APPLICATION_1_NUMBER}?origin=SUBMITTED_APPLICATIONS
+    Then the user should not see the element    jQuery = button:contains("Mark application as ineligible")
+
+Stakeholders cannot reinstate an application
+    [Documentation]  IFS-2994
+    [Tags]
+    When the user navigates to the page         ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${INELIGIBLE_APPLICATION_1_NUMBER}?origin=INELIGIBLE_APPLICATIONS
+    Then the user should not see the element    css = a[data-js-modal = "modal-reinstate"]
 
 *** Keywords ***
 the applicant can see his application in the right section
