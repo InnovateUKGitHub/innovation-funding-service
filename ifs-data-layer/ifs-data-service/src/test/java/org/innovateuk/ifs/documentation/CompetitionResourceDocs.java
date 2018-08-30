@@ -70,7 +70,11 @@ public class CompetitionResourceDocs {
             fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old " +
                     "menu view are complete").optional(),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
-            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase").optional()
+            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase").optional(),
+            fieldWithPath("createdBy").description("user who created this competition").optional(),
+            fieldWithPath("createdOn").description("when the competition was created").optional(),
+            fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
+            fieldWithPath("modifiedOn").description("when the competition was modified").optional()
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

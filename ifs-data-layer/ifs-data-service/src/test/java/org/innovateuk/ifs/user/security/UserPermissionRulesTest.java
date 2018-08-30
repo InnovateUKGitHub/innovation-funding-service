@@ -555,7 +555,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesCanAccessProcessRolesWithinConsortium(){
+    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium(){
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -571,8 +571,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
                     ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
-                    assertTrue(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
-
+                    if (!roleType.isMonitoringOfficer()) {
+                        assertTrue(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
+                    } else {
+                        assertFalse(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
+                    }
                 });
     }
 

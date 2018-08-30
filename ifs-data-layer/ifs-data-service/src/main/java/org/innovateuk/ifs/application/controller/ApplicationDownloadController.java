@@ -50,7 +50,6 @@ public class ApplicationDownloadController {
     @Autowired
     private OrganisationRepository organisationRepository;
     private Integer cellCount = 0;
-    private Integer rowCount = 0;
     private Integer headerCount = 0;
 
     private static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
@@ -98,7 +97,7 @@ public class ApplicationDownloadController {
         font.setFontName(FONT_NAME);
         CellStyle style = sheet.getColumnStyle(0);
         style.setFont(font);
-        rowCount = 0;
+        Integer rowCount = 0;
         XSSFCellStyle headerStyle = wb.createCellStyle();
         headerStyle.cloneStyleFrom(style);
         XSSFFont headerFont = headerStyle.getFont();

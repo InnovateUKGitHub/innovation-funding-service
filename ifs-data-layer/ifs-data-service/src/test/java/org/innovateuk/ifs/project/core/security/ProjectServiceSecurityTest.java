@@ -123,6 +123,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> classUnderTest.getProjectUsers(123L), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

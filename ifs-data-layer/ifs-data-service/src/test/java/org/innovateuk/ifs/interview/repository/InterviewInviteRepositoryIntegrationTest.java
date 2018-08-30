@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +39,6 @@ public class InterviewInviteRepositoryIntegrationTest extends BaseRepositoryInte
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     @Override
     protected void setRepository(InterviewInviteRepository repository) {
         this.repository = repository;
@@ -50,7 +46,14 @@ public class InterviewInviteRepositoryIntegrationTest extends BaseRepositoryInte
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
+        loginCompAdmin();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        setLoggedInUser(null);
     }
 
     @Test

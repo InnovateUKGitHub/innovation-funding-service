@@ -60,6 +60,11 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return !partnerProjectUser.isEmpty();
     }
 
+    protected boolean isMonitoringOfficer(long projectId, long userId) {
+        List<ProjectUser> monitoringOfficerForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, MONITORING_OFFICER);
+        return !monitoringOfficerForProject.isEmpty();
+    }
+
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
         ProjectUser managerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_MANAGER);
