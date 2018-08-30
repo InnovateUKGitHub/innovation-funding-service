@@ -16,8 +16,7 @@
     "jquery-ui-dist": "^1.12.1",
     "js-cookie": "^2.2.0",
     "jshint-stylish": "^2.2.1",
-    "resolve": "^1.7.1",
-    "simplestatemanager": "^3.4.0"
+    "resolve": "^1.7.1"
   },
   "devDependencies": {
     "@frctl/fractal": "^1.1.7"
