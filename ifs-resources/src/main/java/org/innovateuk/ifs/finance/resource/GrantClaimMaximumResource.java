@@ -35,7 +35,7 @@ public class GrantClaimMaximumResource {
         this.researchCategory = researchCategory;
     }
 
-    @ZeroDowntime(reference = "IFS-4099", description = "Retaining this method to support old REST clients. Returning" +
+    @ZeroDowntime(reference = "IFS-4271", description = "Retaining this method to support old REST clients. Returning" +
             " the Business type here which represents all rows")
     public OrganisationTypeResource getOrganisationType() {
         OrganisationTypeResource organisationType = new OrganisationTypeResource();
@@ -70,7 +70,7 @@ public class GrantClaimMaximumResource {
         this.competitions = competitions;
     }
 
-    @ZeroDowntime(reference = "IFS-3954", description = "Retaining this method to support old REST clients. Returning" +
+    @ZeroDowntime(reference = "IFS-4160", description = "Retaining this method to support old REST clients. Returning" +
             " null here since the value is no longer used")
     public Long getCompetitionType() {
         return null;
