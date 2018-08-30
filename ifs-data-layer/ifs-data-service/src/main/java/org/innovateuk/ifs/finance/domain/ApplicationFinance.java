@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -11,7 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Set;
 
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
@@ -64,13 +67,22 @@ public class ApplicationFinance extends Finance {
             return 100;
         }
 
+        if (isMaximumFundingLevelOverridden()) {
+            // The same maximum funding level is set for all GrantClaimMaximums when overriding
+            return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();
+        }
+
         boolean researchCategoryRequired = isResearchCategoryRequired();
-        return getApplication().getCompetition().getGrantClaimMaximums()
+        return getCompetition().getGrantClaimMaximums()
                 .stream()
                 .filter(grantClaimMaximum -> isMatchingGrantClaimMaximum(grantClaimMaximum, researchCategoryRequired))
                 .findFirst()
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
+    }
+
+    private Competition getCompetition() {
+        return getApplication().getCompetition();
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum, boolean researchCategoryRequired) {
@@ -92,11 +104,19 @@ public class ApplicationFinance extends Finance {
     }
 
     private boolean isResearchCategoryRequired() {
-        return getApplication().getCompetition().getQuestions().stream()
+        return getCompetition().getQuestions().stream()
                 .anyMatch(question -> RESEARCH_CATEGORY == question.getQuestionSetupType());
     }
 
     private boolean isBusinessOrganisationType() {
         return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
+    }
+
+    private boolean isMaximumFundingLevelOverridden() {
+        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream().map
+                (GrantClaimMaximum::getId).collect(toSet());
+        Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
+                .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
+        return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
     }
 }
