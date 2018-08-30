@@ -15,7 +15,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle=${model.competitionName}, size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l lead-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}">1</span><br>
@@ -38,35 +38,40 @@
                     <dd th:text="${model.executiveName}">Materials and manufacturing</dd>
 
                 </dl>
-                <div class="govuk-!-margin-top-6">
-                    <ul class="govuk-list inline-nav cf">
-                        <li>
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}" class="govuk-link">Find</a>
+                <div class="govuk-tabs">
+                    <h2 class="govuk-tabs__title">
+                        Manage innovation leads
+                    </h2>
+                    <ul class="govuk-tabs__list">
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}"
+                               class="govuk-tabs__tab">Find</a>
                         </li>
-                        <li class="selected">
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}" class="govuk-link">Overview</a>
+                        <li class="govuk-tabs__list-item">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}"
+                               aria-selected="true"
+                               class="govuk-tabs__tab">Overview</a>
                         </li>
                     </ul>
-
-                    <!-- list -->
-                    <div class="govuk-grid-column-one-quarter sorting">
-                        <div class="govuk-grid-column-one-half">
-                            <p class="govuk-body">
-                                <span class="govuk-heading-xl total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
-                                <span class="govuk-heading-s">Innovation leads</span>
-                            </p>
+                    <section class="govuk-tabs__panel">
+                        <div class="govuk-grid-column-one-quarter sorting">
+                            <div class="govuk-grid-column-one-half">
+                                <p class="govuk-body">
+                                    <span class="govuk-heading-xl total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
+                                    <span class="govuk-heading-s">Innovation leads</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="table-overflow">
-                        <table class="govuk-table stakeholder-table">
-                            <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col">Innovation lead name</th>
-                                <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
-                            </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
+                        <div class="table-overflow">
+                            <table class="govuk-table stakeholder-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Innovation lead name</th>
+                                    <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row" th:each="innovationLeadUsers : ${model.innovationLeadsAssignedToCompetition}">
                                     <td class="govuk-table__cell" th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
                                     <td class="govuk-table__cell alignright">
@@ -78,9 +83,10 @@
                                 <tr class="govuk-table__row" th:if="${#lists.size(model.innovationLeadsAssignedToCompetition) == 0} ">
                                     <td class="govuk-table__cell" colspan="3">There are no innovation leads added to this competition.</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

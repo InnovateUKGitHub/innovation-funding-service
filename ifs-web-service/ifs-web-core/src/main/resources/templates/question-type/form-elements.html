@@ -270,7 +270,7 @@
 <!-- ========================= Current Assignee =========================== -->
 <th:block th:fragment="current-assignee(model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">
-        <div class="assignee" th:if="${model.assignedByCurrentUser}"
+        <div class="assignee govuk-body" th:if="${model.assignedByCurrentUser}"
              th:classappend="(${model.assignedToCurrentUser} ? 'assigned-to-me')"
              th:unless="${model.currentUserIsLead}">
           <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
@@ -278,7 +278,7 @@
           <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}" />
         </div>
 
-        <div class="assignee" th:unless="${model.assignedByCurrentUser}"
+        <div class="assignee govuk-body" th:unless="${model.assignedByCurrentUser}"
              th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
             <th:block th:if="${model.assignedByLead}">This question is assigned to
               <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}"/>
