@@ -7,11 +7,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.eugrant.organisation.form.AddressForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
 import org.innovateuk.ifs.eugrant.organisation.viewmodel.OrganisationAddressViewModel;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -28,7 +24,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
@@ -138,7 +133,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
 
         if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -166,7 +161,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
@@ -193,7 +188,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
 

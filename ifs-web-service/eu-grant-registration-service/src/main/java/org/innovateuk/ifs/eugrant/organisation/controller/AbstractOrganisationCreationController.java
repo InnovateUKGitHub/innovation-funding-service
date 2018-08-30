@@ -9,7 +9,6 @@ import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
 import org.innovateuk.ifs.eugrant.organisation.service.OrganisationCookieService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
@@ -40,15 +39,12 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String SELECTED_POSTCODE = "selectedPostcode";
     protected static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
 
-    protected static final String TEMPLATE_PATH = "registration/organisation";
+    protected static final String TEMPLATE_PATH = "organisation";
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
 
     @Autowired
     protected OrganisationCookieService registrationCookieService;
-
-    @Autowired
-    protected OrganisationTypeRestService organisationTypeRestService;
 
     @Autowired
     protected OrganisationSearchRestService organisationSearchRestService;

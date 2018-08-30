@@ -8,7 +8,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -98,17 +96,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
-        organisationResource = createOrRetrieveOrganisation(organisationResource, request);
-        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-        return "redirect:" + RegistrationController.BASE_URL;
+
+        return null; //TODO
+
+//        organisationResource = createOrRetrieveOrganisation(organisationResource, request);
+//        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
+//        return "redirect:" + RegistrationController.BASE_URL;
     }
 
-    private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
-        if(cookieHash.isPresent()) {
-            return organisationRestService.createAndLinkByInvite(organisationResource, cookieHash.get()).getSuccess();
-        }
-
-        return organisationRestService.createOrMatch(organisationResource).getSuccess();
-    }
 }

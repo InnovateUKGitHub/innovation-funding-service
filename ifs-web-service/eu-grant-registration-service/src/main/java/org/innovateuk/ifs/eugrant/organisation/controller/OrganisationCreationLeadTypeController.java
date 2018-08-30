@@ -4,12 +4,9 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
+import org.innovateuk.ifs.eugrant.organisation.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.eugrant.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -81,10 +77,6 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
-            if (!isAllowedToLeadApplication(organisationTypeId, request)) {
-                return redirectToNotEligibleUrl();
-            }
-
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
@@ -92,28 +84,6 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
-    }
-
-    private String redirectToNotEligibleUrl() {
-        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
-    }
-
-    @GetMapping(NOT_ELIGIBLE)
-    public String showNotEligible(Model model, HttpServletRequest request) {
-        return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
-    }
-
-    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
-        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-
-        if (competitionIdOpt.isPresent()) {
-            List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
-            return organisationTypesAllowed.stream()
-                    .map(organisationTypeResource -> organisationTypeResource.getId())
-                    .anyMatch(aLong -> aLong.equals(organisationTypeId));
-        }
-
-        return Boolean.FALSE;
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
