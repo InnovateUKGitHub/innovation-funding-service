@@ -46,7 +46,7 @@ public class QueryTest {
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() throws Exception {
+    public void itReturnsValuesAsTheyWereDefined() throws Exception {
         assertEquals(query.id(), id);
         assertEquals(query.contextClassPk(), classPk);
         assertEquals(query.contextClassName(), className);
@@ -57,12 +57,12 @@ public class QueryTest {
     }
 
     @Test
-    public void testItReturnsOptionalEmptyWhenNoPosts() {
+    public void itReturnsOptionalEmptyWhenNoPosts() {
         assertEquals(query.latestPost(), Optional.empty());
     }
 
     @Test
-    public void testItReturnsLatestAddedPostCorrectly() {
+    public void itReturnsLatestAddedPostCorrectly() {
         final Post p1 = new Post(33L, null, null, null, null);
         final Post p2 = new Post(44L, null, null, null, null);
         query.addPost(p1);
@@ -71,19 +71,19 @@ public class QueryTest {
     }
 
     @Test
-    public void testIsAwaitingResponsePositive() {
+    public void isAwaitingResponsePositive() {
         addPostWithUserHavingRole(PROJECT_FINANCE);
         assertTrue(query.isAwaitingResponse());
     }
 
     @Test
-    public void testIsAwaitingResponseNegative() {
+    public void isAwaitingResponseNegative() {
         addPostWithUserHavingRole(FINANCE_CONTACT);
         assertFalse(query.isAwaitingResponse());
     }
 
     @Test
-    public void testCloseThread() {
+    public void closeThread() {
 
         User closingUser = new User();
         query.closeThread(closingUser);

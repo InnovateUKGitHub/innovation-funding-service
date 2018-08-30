@@ -14,7 +14,8 @@ import static java.util.stream.Collectors.toMap;
 public enum ProjectParticipantRole implements ParticipantRole {
     PROJECT_PARTNER(10, "partner"),
     PROJECT_MANAGER(11, "project_manager"),
-    PROJECT_FINANCE_CONTACT(9, "finance_contact");
+    PROJECT_FINANCE_CONTACT(9, "finance_contact"),
+    MONITORING_OFFICER(19, "monitoring_officer");
 
     private final long id;
     private final String name;
@@ -45,6 +46,10 @@ public enum ProjectParticipantRole implements ParticipantRole {
 
     public boolean isFinanceContact() {
         return this == PROJECT_FINANCE_CONTACT;
+    }
+
+    public boolean isMonitoringOfficer() {
+        return this == MONITORING_OFFICER;
     }
 
     public static ProjectParticipantRole getById(Long id) {

@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationResearchCategoryControllerTest extends
@@ -53,10 +54,26 @@ public class ApplicationResearchCategoryControllerTest extends
                 .getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(applicationResource)));
 
         verify(applicationResearchCategoryServiceMock, only()).setResearchCategory(applicationResource.getId(),
                 researchCategoryId);
+    }
+
+    @Test
+    public void setResearchCategory_nullValue() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        when(applicationResearchCategoryServiceMock.setResearchCategory(applicationResource.getId(), null))
+                .thenReturn(serviceSuccess(applicationResource));
+
+        mockMvc.perform(post("/applicationResearchCategory/researchCategory/{applicationId}", applicationResource
+                .getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(applicationResource)));
+
+        verify(applicationResearchCategoryServiceMock, only()).setResearchCategory(applicationResource.getId(), null);
     }
 
     @Test
