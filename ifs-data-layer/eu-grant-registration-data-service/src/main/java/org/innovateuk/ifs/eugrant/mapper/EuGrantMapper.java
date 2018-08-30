@@ -11,13 +11,16 @@ import org.mapstruct.Mappings;
 import java.util.UUID;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        uses = {
+        EuContactMapper.class,
+}
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
             // TODO add to resource
-            @Mapping(target = "contact",  ignore = true),
+            @Mapping(source = "contact", target = "contact"),
             @Mapping(target = "organisation",  ignore = true),
             @Mapping(target = "funding", ignore = true)
     })

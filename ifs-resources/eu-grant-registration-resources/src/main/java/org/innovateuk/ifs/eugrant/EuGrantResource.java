@@ -12,12 +12,22 @@ public class EuGrantResource {
 
     private UUID id;
 
+    private EuContactResource contact;
+
     public UUID getId() {
         return id;
     }
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public EuContactResource getContact() {
+        return contact;
+    }
+
+    public void setContact(EuContactResource contact) {
+        this.contact = contact;
     }
 
     @Override

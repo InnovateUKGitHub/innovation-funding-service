@@ -18,8 +18,8 @@ public class EuContact {
     private String email;
     private String jobTitle;
     private String telephone;
-
-    EuContact() {
+    
+    public EuContact() {
     }
 
     public EuContact(String name, String email, String jobTitle, String telephone) {
