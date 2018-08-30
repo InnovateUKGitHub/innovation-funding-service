@@ -33,7 +33,7 @@
             </div>
         </th:block>
 
-        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+        <form th:action="@{/organisation/find}" th:object="${organisationForm}" method="POST">
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
                 <label class="govuk-label"
@@ -65,11 +65,12 @@
                 th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
                     <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                        <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
-                           title="View organisation"
-                           th:text="${organisation.name}"
-                           class="govuk-link">
-                        </a>
+                        <button title="View organisation"
+                                th:text="${organisation.name}"
+                                class="govuk-button button-clear govuk-!-margin-0"
+                                name="selected-organisation"
+                                th:value="${organisation.organisationSearchId}">
+                        </button>
                     </h3>
                     <th:block th:unless="${organisationForm.research}">
                         <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
@@ -108,6 +109,5 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

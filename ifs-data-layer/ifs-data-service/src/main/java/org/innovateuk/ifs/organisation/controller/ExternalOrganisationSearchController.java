@@ -34,8 +34,12 @@ public class ExternalOrganisationSearchController {
     @GetMapping("/searchOrganisations/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final long organisationTypeId,
                                                                           @RequestParam("organisationSearchText") final String organisationSearchText) {
-        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
+        return searchOrganisations(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchText);
+    }
 
+    @GetMapping("/searchOrganisations/{organisationType}")
+    public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final OrganisationTypeEnum organisationType,
+                                                                          @RequestParam("organisationSearchText") final String organisationSearchText) {
         switch (organisationType){
             case BUSINESS:
             case RTO:
@@ -52,7 +56,11 @@ public class ExternalOrganisationSearchController {
 
     @GetMapping("/getOrganisation/{organisationType}/{organisationSearchId}")
     public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final long organisationTypeId, @PathVariable("organisationSearchId") final String organisationSearchId) {
-        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
+        return searchOrganisation(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchId);
+    }
+
+    @GetMapping("/getOrganisation/{organisationType}/{organisationSearchId}")
+    public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final OrganisationTypeEnum organisationType, @PathVariable("organisationSearchId") final String organisationSearchId) {
         switch (organisationType){
             case BUSINESS:
             case RTO:

@@ -31,9 +31,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public abstract class AbstractOrganisationCreationController {
 
-    protected static final String BASE_URL = "/organisation/create";
-    protected static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
-    protected static final String FIND_ORGANISATION = "find-organisation";
+    protected static final String BASE_URL = "/organisation";
+    protected static final String ORGANISATION_TYPE = "type";
+    protected static final String FIND_ORGANISATION = "find";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
 
     protected static final String ORGANISATION_FORM = "organisationForm";

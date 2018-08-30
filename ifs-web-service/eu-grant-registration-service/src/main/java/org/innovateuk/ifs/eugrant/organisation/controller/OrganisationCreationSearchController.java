@@ -91,7 +91,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        return "redirect:/organisation/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
 
     }
 
@@ -103,7 +103,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         boolean currentManualEntryValue = organisationForm.isManualEntry();
         organisationForm.setManualEntry(!currentManualEntryValue);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        return "redirect:/organisation/create/" + FIND_ORGANISATION;
+        return "redirect:/organisation/" + FIND_ORGANISATION;
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS)
@@ -114,7 +114,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationFromCookie.getAddressForm().setManualAddress(true);
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationFromCookie, response);
-        return "redirect:/organisation/create/" + FIND_ORGANISATION;
+        return "redirect:/organisation/" + FIND_ORGANISATION;
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
@@ -301,7 +301,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     private String getMessageByOrganisationType(EuOrganisationType orgTypeEnum, String textKey, Locale locale) {
         try {
-            return messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
+            return messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.name(), textKey), null, locale);
         } catch (NoSuchMessageException e) {
             LOG.error("unable to get message", e);
             return messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);

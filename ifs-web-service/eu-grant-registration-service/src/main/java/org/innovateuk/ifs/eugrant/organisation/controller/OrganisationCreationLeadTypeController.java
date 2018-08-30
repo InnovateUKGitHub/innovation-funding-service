@@ -5,9 +5,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationCreationForm;
 import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
-import org.innovateuk.ifs.eugrant.organisation.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.eugrant.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,7 +25,7 @@ import java.util.Optional;
  */
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.ORGANISATION_TYPE)
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadTypeController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
@@ -38,16 +35,11 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     protected static final String NOT_ELIGIBLE = "not-eligible";
 
     @Autowired
-    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     @GetMapping
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
-        model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
-
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
@@ -56,7 +48,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
 
 
-        return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+        return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
     }
 
     @PostMapping
@@ -74,14 +66,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
-            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
-            model.addAttribute("model", selectOrgTypeViewModel);
-            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+            return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
         }
-    }
-
-    private boolean isValidLeadOrganisationType(Long organisationTypeId) {
-        return organisationTypeId != null && OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
     private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
