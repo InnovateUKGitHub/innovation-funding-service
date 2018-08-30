@@ -23,7 +23,7 @@ public class EuFunding {
 
     @NotNull
     @Pattern(regexp="[\\d]{6}")
-    private String particpantId;
+    private String participantId;
 
     @NotBlank
     private String projectName;
@@ -39,6 +39,7 @@ public class EuFunding {
     private boolean projectCoordinator;
 
     @ManyToOne
+    @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
 
     EuFunding() {
@@ -53,7 +54,7 @@ public class EuFunding {
                      BigDecimal fundingContribution,
                      boolean projectCoordinator) {
         this.actionType = actionType;
-        this.particpantId = particpantId;
+        this.participantId = particpantId;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
         this.projectEndDate = projectEndDate;
@@ -75,11 +76,11 @@ public class EuFunding {
     }
 
     public String getParticpantId() {
-        return particpantId;
+        return participantId;
     }
 
     public void setParticpantId(String particpantId) {
-        this.particpantId = particpantId;
+        this.participantId = particpantId;
     }
 
     public String getProjectName() {

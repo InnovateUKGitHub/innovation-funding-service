@@ -22,6 +22,7 @@ public class EuOrganisation {
     private final String name;
 
     @OneToOne(optional = false)
+    @JoinColumn(name = "eu_address_id")
     private final EuAddress address;
 
     @NotNull

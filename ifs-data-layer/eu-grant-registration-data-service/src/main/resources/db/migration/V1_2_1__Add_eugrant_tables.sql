@@ -13,7 +13,7 @@ CREATE TABLE eu_address (
 CREATE TABLE eu_organisation (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
-  company_house_number VARCHAR(255),
+  companies_house_number VARCHAR(255),
   organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL,
   eu_address_id BIGINT(20) NOT NULL,
 
@@ -22,7 +22,7 @@ CREATE TABLE eu_organisation (
 
 CREATE TABLE eu_contact (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  jobTitle VARCHAR(255) NOT NULL,
+  job_title VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   telephone VARCHAR(255) NOT NULL
