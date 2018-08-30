@@ -47,10 +47,6 @@ public class GrantClaimMaximumResourceBuilder extends BaseBuilder<GrantClaimMaxi
         return withArraySetFieldByReflection("maximum", maximums);
     }
 
-    public GrantClaimMaximumResourceBuilder withCompetitionType(Long... competitionTypes) {
-        return withArraySetFieldByReflection("competitionType", competitionTypes);
-    }
-
     @Override
     protected GrantClaimMaximumResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, GrantClaimMaximumResource>> actions) {
         return new GrantClaimMaximumResourceBuilder(actions);
