@@ -67,3 +67,7 @@ ALTER TABLE eu_grant ADD COLUMN submitted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE eu_grant ADD COLUMN short_code VARCHAR(12);
 ALTER TABLE eu_grant ADD UNIQUE KEY u_short_code (short_code);
+
+-- audit date columns
+ALTER TABLE eu_grant ADD COLUMN created_on datetime NOT NULL;
+ALTER TABLE eu_grant ADD COLUMN modified_on datetime NOT NULL;

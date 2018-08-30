@@ -31,6 +31,9 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
         repository.save(grant);
         flushAndClearSession();
 
-        assertNotNull(repository.findOne(grant.getId()));
+        EuGrant savedGrant = repository.findOne(grant.getId());
+        assertNotNull(savedGrant);
+        assertNotNull(savedGrant.getCreatedOn());
+        assertNotNull(savedGrant.getModifiedOn());
     }
 }
