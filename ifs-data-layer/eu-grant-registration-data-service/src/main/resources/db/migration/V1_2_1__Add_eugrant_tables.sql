@@ -1,23 +1,10 @@
 -- eu grant registration tables
 
-CREATE TABLE eu_address (
-  id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  address_line1 VARCHAR(255),
-  address_line2 VARCHAR(255),
-  address_line3 VARCHAR(255),
-  town VARCHAR(255),
-  postcode VARCHAR(255),
-  county VARCHAR(255)
-);
-
 CREATE TABLE eu_organisation (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   companies_house_number VARCHAR(255),
-  organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL,
-  eu_address_id BIGINT(20) NOT NULL,
-
-  CONSTRAINT fk_eu_address_id FOREIGN KEY (eu_address_id) REFERENCES eu_address(id)
+  organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL
 );
 
 CREATE TABLE eu_contact (
