@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
@@ -72,10 +71,9 @@ public class ApplicationFinance extends Finance {
             return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();
         }
 
-        boolean researchCategoryRequired = isResearchCategoryRequired();
         return getCompetition().getGrantClaimMaximums()
                 .stream()
-                .filter(grantClaimMaximum -> isMatchingGrantClaimMaximum(grantClaimMaximum, researchCategoryRequired))
+                .filter(this::isMatchingGrantClaimMaximum)
                 .findFirst()
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
@@ -85,9 +83,8 @@ public class ApplicationFinance extends Finance {
         return getApplication().getCompetition();
     }
 
-    private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum, boolean researchCategoryRequired) {
-        return isMatchingOrganisationSize(grantClaimMaximum)
-                && (!researchCategoryRequired || isMatchingResearchCategory(grantClaimMaximum));
+    private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
+        return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum);
     }
 
     private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
@@ -101,11 +98,6 @@ public class ApplicationFinance extends Finance {
     private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {
         return getApplication().getResearchCategory() != null &&
                 grantClaimMaximum.getResearchCategory().getId().equals(getApplication().getResearchCategory().getId());
-    }
-
-    private boolean isResearchCategoryRequired() {
-        return getCompetition().getQuestions().stream()
-                .anyMatch(question -> RESEARCH_CATEGORY == question.getQuestionSetupType());
     }
 
     private boolean isBusinessOrganisationType() {
