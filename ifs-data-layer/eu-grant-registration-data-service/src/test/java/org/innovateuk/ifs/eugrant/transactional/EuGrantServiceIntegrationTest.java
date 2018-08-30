@@ -31,10 +31,10 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void save() {
-        EuGrantResource surveyResource = newEuGrantResource()
+        EuGrantResource euGrantResource = newEuGrantResource()
                 .build();
 
-        ServiceResult<EuGrantResource> result = euGrantService.save(surveyResource);
+        ServiceResult<Void> result = euGrantService.save(euGrantResource);
 
         assertTrue(result.isSuccess());
 
@@ -44,7 +44,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         EuGrant grant = grants.get(0);
 
-        assertEquals(grant.getId().toString(), result.getSuccess().getId());
+        assertEquals(grant.getId().toString(), euGrantResource.getId().toString());
     }
 
     @Test
