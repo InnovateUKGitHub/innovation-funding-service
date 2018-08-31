@@ -34,7 +34,7 @@ public class PostTest {
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() {
+    public void itReturnsValuesAsTheyWereDefined() {
         assertEquals(post.id(), id);
         assertEquals(post.author(), author);
         assertEquals(post.body(), body);
@@ -43,7 +43,7 @@ public class PostTest {
     }
 
     @Test
-    public void testItReturnsAttachmentInSameOrderAsDefined() {
+    public void itReturnsAttachmentInSameOrderAsDefined() {
         attachments = nOf(3, new Attachment());
         Post currentPost = new Post(id, author, body, attachments, createdOn);
         assertEquals(currentPost.attachments(), attachments);

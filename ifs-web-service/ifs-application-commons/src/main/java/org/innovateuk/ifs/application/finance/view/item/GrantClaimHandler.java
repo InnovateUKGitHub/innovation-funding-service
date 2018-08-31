@@ -21,7 +21,7 @@ public class GrantClaimHandler extends FinanceRowHandler {
         Optional<FinanceFormField> grantClaimPercentageField = financeFormFields.stream().findFirst();
 
         Integer grantClaimPercentage = grantClaimPercentageField.
-                map(field -> convertFieldValueToInteger(field)).
+                map(this::convertFieldValueToInteger).
                 orElse(0);
 
         if (allNull(id, grantClaimPercentage)) {
