@@ -340,7 +340,7 @@ import org.apache.tools.ant.filters.*
 
 task osTestRemote(type: Exec, dependsOn: robotTestsFilter) {
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv]
+    args = [openshiftEnv, osTestArgs]
 }
 
 task osStopTests(type: Exec) {
