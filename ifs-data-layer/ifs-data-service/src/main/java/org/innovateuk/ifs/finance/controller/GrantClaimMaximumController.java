@@ -36,4 +36,9 @@ public class GrantClaimMaximumController {
     public RestResult<GrantClaimMaximumResource> update(@RequestBody final GrantClaimMaximumResource gcm) {
         return grantClaimMaximumService.save(gcm).toPostCreateResponse();
     }
+
+    @GetMapping("/maximum-funding-level-overridden/{competitionId}")
+    public RestResult<Boolean> isMaximumFundingLevelOverridden(@PathVariable("competitionId") final long competitionId) {
+        return grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).toGetResponse();
+    }
 }
