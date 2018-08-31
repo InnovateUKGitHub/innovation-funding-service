@@ -103,7 +103,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(role -> saveInvite(invitedUser, adminRoleType))
-                .andOnSuccess(this::inviteInternalUser);
+                .andOnSuccess(roleInvite -> inviteInternalUser(roleInvite));
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, Role adminRoleType) {
