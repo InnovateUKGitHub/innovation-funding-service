@@ -34,9 +34,9 @@ ${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSME
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
 ${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
-${submittedApplication}            Living with Digital Rights Management
+${submittedApplication}           Living with Digital Rights Management
 ${submittedApplicationNumber}     ${application_ids['${submittedApplication}']}
-${ineligibleApplication}           Ineligible Vlogging
+${ineligibleApplication}          Ineligible Vlogging
 ${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
 
 *** Test Cases ***
@@ -158,7 +158,7 @@ Reinstate an application
 
 Stakeholders cannot mark applications as ineligible
     [Documentation]  IFS-2994
-    [Tags]  FAHAD
+    [Tags]
     Given Log in as a different user            &{stakeholder_user}
     When the user navigates to the page         ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${submittedApplicationNumber}?origin=SUBMITTED_APPLICATIONS
     Then the user should see the element        jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
@@ -166,7 +166,7 @@ Stakeholders cannot mark applications as ineligible
 
 Stakeholders cannot reinstate an application
     [Documentation]  IFS-2994
-    [Tags]  FAHAD
+    [Tags]
     When the user navigates to the page        ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}?origin=INELIGIBLE_APPLICATIONS
     Then the user should see the element       jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should not see the element    css = a[data-js-modal = "modal-reinstate"]
