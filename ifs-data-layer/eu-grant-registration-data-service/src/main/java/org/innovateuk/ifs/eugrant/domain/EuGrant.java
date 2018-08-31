@@ -17,13 +17,16 @@ public class EuGrant {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "eu_organisation_id")
     private EuOrganisation organisation;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "eu_contact_id")
     private EuContact contact;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "eu_funding_id")
     private EuFunding funding;
 
     private boolean submitted;

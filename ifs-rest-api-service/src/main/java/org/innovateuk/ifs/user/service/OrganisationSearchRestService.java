@@ -9,4 +9,10 @@ public interface OrganisationSearchRestService {
     RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText);
 
     RestResult<OrganisationSearchResult> getOrganisation(Long organisationTypeId, String searchOrganisationId);
+
+    RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText);
+
+    RestResult<OrganisationSearchResult> getOrganisation(Enum<?> organisationType, String searchOrganisationId);
+
+
 }

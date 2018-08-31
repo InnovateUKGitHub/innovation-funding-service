@@ -37,7 +37,7 @@ public class ExternalOrganisationSearchController {
         return searchOrganisations(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchText);
     }
 
-    @GetMapping("/searchOrganisations/{organisationType}")
+    @GetMapping("/searchOrganisations/enum/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final OrganisationTypeEnum organisationType,
                                                                           @RequestParam("organisationSearchText") final String organisationSearchText) {
         switch (organisationType){
@@ -59,7 +59,7 @@ public class ExternalOrganisationSearchController {
         return searchOrganisation(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchId);
     }
 
-    @GetMapping("/getOrganisation/{organisationType}/{organisationSearchId}")
+    @GetMapping("/getOrganisation/enum/{organisationType}/{organisationSearchId}")
     public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final OrganisationTypeEnum organisationType, @PathVariable("organisationSearchId") final String organisationSearchId) {
         switch (organisationType){
             case BUSINESS:

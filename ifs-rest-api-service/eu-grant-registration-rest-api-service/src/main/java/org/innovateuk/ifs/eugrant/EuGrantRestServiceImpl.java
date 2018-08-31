@@ -25,11 +25,11 @@ public class EuGrantRestServiceImpl extends BaseRestService implements EuGrantRe
 
     @Override
     public RestResult<EuGrantResource> findById(UUID uuid) {
-        return getWithRestResult(baseURL + "/" + uuid.toString(), EuGrantResource.class);
+        return getWithRestResultAnonymous(baseURL + "/" + uuid.toString(), EuGrantResource.class);
     }
 
     @Override
     public RestResult<Void> update(EuGrantResource euGrantResource) {
-        return putWithRestResult(baseURL + "/" + euGrantResource.getId().toString(), euGrantResource, Void.class);
+        return putWithRestResultAnonymous(baseURL + "/" + euGrantResource.getId().toString(), euGrantResource, Void.class);
     }
 }

@@ -56,6 +56,7 @@ public class EuGrantCookieService {
 
     private Optional<UUID> getIdFromCookie() {
         return Optional.ofNullable(cookieUtil.getCookieValue(request(), EU_GRANT_ID))
+                .filter(cookie -> !cookie.isEmpty())
                 .map(UUID::fromString);
     }
 

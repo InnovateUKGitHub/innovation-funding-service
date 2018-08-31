@@ -1,34 +1,10 @@
-package org.innovateuk.ifs.eugrant.domain;
+package org.innovateuk.ifs.eugrant;
 
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
+public class EuOrganisationResource {
 
-import javax.persistence.*;
-
-import static javax.persistence.EnumType.STRING;
-
-/**
- * A UK Organisation that receives EU grant funding.
- */
-@Entity
-public class EuOrganisation {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String name;
-    @OneToOne
-    private EuAddress address;
-    @Enumerated(STRING)
     private EuOrganisationType organisationType;
     private String companiesHouseNumber;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -36,14 +12,6 @@ public class EuOrganisation {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public EuAddress getAddress() {
-        return address;
-    }
-
-    public void setAddress(EuAddress address) {
-        this.address = address;
     }
 
     public EuOrganisationType getOrganisationType() {
