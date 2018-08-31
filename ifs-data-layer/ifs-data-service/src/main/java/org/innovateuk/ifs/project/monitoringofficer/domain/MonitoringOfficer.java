@@ -28,8 +28,7 @@ public class MonitoringOfficer {
 
     public MonitoringOfficer() {}
 
-    public MonitoringOfficer(Long id, String firstName, String lastName, String email, String phoneNumber, Project project) {
-        this.id = id;
+    public MonitoringOfficer(String firstName, String lastName, String email, String phoneNumber, Project project) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
