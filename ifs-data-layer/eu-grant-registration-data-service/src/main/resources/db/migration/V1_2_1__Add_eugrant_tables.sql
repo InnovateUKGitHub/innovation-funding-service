@@ -1,30 +1,18 @@
 -- eu grant registration tables
 
-CREATE TABLE eu_address (
-  id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  address_line1 VARCHAR(255),
-  address_line2 VARCHAR(255),
-  address_line3 VARCHAR(255),
-  town VARCHAR(255),
-  postcode VARCHAR(255),
-  county VARCHAR(255)
-);
-
 CREATE TABLE eu_organisation (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
-  company_house_number VARCHAR(255),
-  organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL,
-  eu_address_id BIGINT(20) NOT NULL,
-
-  CONSTRAINT fk_eu_address_id FOREIGN KEY (eu_address_id) REFERENCES eu_address(id)
+  companies_house_number VARCHAR(255),
+  organisation_type ENUM('BUSINESS', 'RESEARCH', 'RTO', 'PUBLIC_SECTOR_OR_CHARITY') NOT NULL
 );
 
 CREATE TABLE eu_contact (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  telephone VARCHAR(255)
+  job_title VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  telephone VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE eu_action_type (
@@ -66,3 +54,7 @@ ALTER TABLE eu_grant ADD COLUMN submitted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE eu_grant ADD COLUMN short_code VARCHAR(12);
 ALTER TABLE eu_grant ADD UNIQUE KEY u_short_code (short_code);
+
+-- audit date columns
+ALTER TABLE eu_grant ADD COLUMN created_on datetime NOT NULL;
+ALTER TABLE eu_grant ADD COLUMN modified_on datetime NOT NULL;

@@ -17,7 +17,6 @@ public abstract class EuOrganisationMapper extends BaseMapper<EuOrganisation, Eu
 
     @Mappings({
             @Mapping(target = "id",  ignore = true),
-            @Mapping(target = "address", ignore = true)
     })
     @Override
     public abstract EuOrganisation mapToDomain(EuOrganisationResource resource);

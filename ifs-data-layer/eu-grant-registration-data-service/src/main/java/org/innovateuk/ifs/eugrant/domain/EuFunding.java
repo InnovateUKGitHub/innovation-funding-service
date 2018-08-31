@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -13,18 +17,29 @@ public class EuFunding {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String grantAgreementNumber;
-    private String particpantId; // 6 digit number
 
+    @NotBlank
+    private String grantAgreementNumber;
+
+    @NotNull
+    @Pattern(regexp="[\\d]{6}")
+    private String participantId;
+
+    @NotBlank
     private String projectName;
+
+    @NotNull
     private LocalDate projectStartDate;
+    @NotNull
     private LocalDate projectEndDate;
 
+    @NotBlank
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
 
     @ManyToOne
+    @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
 
     EuFunding() {
@@ -39,7 +54,7 @@ public class EuFunding {
                      BigDecimal fundingContribution,
                      boolean projectCoordinator) {
         this.actionType = actionType;
-        this.particpantId = particpantId;
+        this.participantId = particpantId;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
         this.projectEndDate = projectEndDate;
@@ -61,11 +76,11 @@ public class EuFunding {
     }
 
     public String getParticpantId() {
-        return particpantId;
+        return participantId;
     }
 
     public void setParticpantId(String particpantId) {
-        this.particpantId = particpantId;
+        this.participantId = particpantId;
     }
 
     public String getProjectName() {
