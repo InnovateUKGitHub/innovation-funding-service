@@ -10,21 +10,44 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to grant overview',linkUrl='/eu-grant/overview'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-xl'" />
 
-        <div class="message-alert">
-            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
-        </div>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-visually-hidden" th:text="${model.name} + ''">? Organisation</legend>
+            <div class="govuk-form-group">
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Confirm your organisation details are correct</h2>
-        <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
+                <h3 class="govuk-heading-s">Organisation type</h3>
+                <p class="govuk-body" th:text="${model.type.name}">Business</p>
 
-        <form method="post" th:action="@{/organisation/create/save-organisation}">
-            <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
-        </form>
+                <h3 class="govuk-heading-s">Registered name</h3>
+                <p class="govuk-body" th:text="${model.name}"></p>
+
+                <th:block th:if="${model.hasCompaniesHouseFields()}">
+                    <h3 class="govuk-heading-s">Registration number</h3>
+                    <p class="govuk-body" th:text="${model.registrationNumber}"></p>
+
+                    <div>
+                        <h3 class="govuk-heading-s">Registered Address</h3>
+                        <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine1}"></div>
+                        <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine2}"></div>
+                        <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine3}"></div>
+                        <div class="govuk-body govuk-!-margin-0" th:text="${model.town}"></div>
+                        <div class="govuk-body govuk-!-margin-0" th:text="${model.county}"></div>
+                        <div class="govuk-body" th:text="${model.postcode}"></div>
+                    </div>
+                </th:block>
+
+            </div>
+        </fieldset>
+
+        <p class="govuk-body govuk-!-margin-bottom-6">
+            <a class="govuk-link" href="/eu-grant/organisation/type">Edit your organisation details</a>
+        </p>
+
+        <a class="govuk-button" href="/eu-grant/overview">Save and return</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

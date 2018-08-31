@@ -37,7 +37,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  * Verifying or amending the address attached to the organisation.
  */
 @Controller
-@RequestMapping(AbstractOrganisationController.BASE_URL)
+@RequestMapping(AbstractOrganisationController.BASE_URL + "/" + AbstractOrganisationController.FIND_ORGANISATION)
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationFindController.class)
 @PreAuthorize("permitAll")
 public class OrganisationFindController extends AbstractOrganisationController {
@@ -53,7 +53,7 @@ public class OrganisationFindController extends AbstractOrganisationController {
     @Autowired
     private MessageSource messageSource;
 
-    @GetMapping(FIND_ORGANISATION)
+    @GetMapping
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request) {
@@ -63,7 +63,7 @@ public class OrganisationFindController extends AbstractOrganisationController {
         });
     }
 
-    @PostMapping(value = FIND_ORGANISATION, params = "organisationSearching")
+    @PostMapping(params = "organisationSearching")
     public String searchOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationForm organisationForm,
                                      BindingResult bindingResult,
                                      Model model,
@@ -75,7 +75,7 @@ public class OrganisationFindController extends AbstractOrganisationController {
         });
     }
 
-    @PostMapping(value = FIND_ORGANISATION)
+    @PostMapping
     public String saveOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationForm organisationForm,
                                    BindingResult bindingResult,
                                    Model model,

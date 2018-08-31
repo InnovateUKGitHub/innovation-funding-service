@@ -23,12 +23,4 @@ public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource,
     })
     @Override
     public abstract EuGrant mapToDomain(EuGrantResource resource);
-
-    public String map(UUID value) {
-        return value == null ? null : value.toString();
-    }
-
-    public UUID map(String value) {
-        return value == null ? null : UUID.fromString(value);
-    }
 }

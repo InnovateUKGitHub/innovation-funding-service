@@ -11,12 +11,11 @@ public abstract class AbstractOrganisationController {
     protected static final String BASE_URL = "/organisation";
     protected static final String ORGANISATION_TYPE = "type";
     protected static final String FIND_ORGANISATION = "find";
+    protected static final String VIEW_ORGANISATION = "view";
     protected static final String ORGANISATION_FORM = "organisationForm";
     protected static final String TEMPLATE_PATH = "organisation";
 
     @Autowired
     protected OrganisationCookieService organisationCookieService;
-
-
 
 }

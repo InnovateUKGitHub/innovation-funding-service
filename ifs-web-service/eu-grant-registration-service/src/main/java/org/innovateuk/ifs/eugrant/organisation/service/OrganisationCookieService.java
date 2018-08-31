@@ -30,6 +30,10 @@ public class OrganisationCookieService {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request(), ORGANISATION_TYPE), OrganisationTypeForm.class));
     }
 
+    public void clear() {
+        cookieUtil.removeCookie(response(), ORGANISATION_TYPE);
+    }
+
     private HttpServletRequest request() {
         return ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
