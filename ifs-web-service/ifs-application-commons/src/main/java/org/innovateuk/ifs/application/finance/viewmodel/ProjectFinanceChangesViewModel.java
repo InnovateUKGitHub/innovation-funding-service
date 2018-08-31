@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
@@ -24,7 +23,7 @@ public class ProjectFinanceChangesViewModel {
     private LabourCost applicationWorkingDaysPerYearCostItem;
     private LabourCost projectWorkingDaysPerYearCostItem;
     private Map<FinanceRowType, BigDecimal> sectionDifferences;
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes;
+    private Map<FinanceRowType, List<ChangedFinanceRowPair>> changes;
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
 
@@ -33,7 +32,7 @@ public class ProjectFinanceChangesViewModel {
                                           FinanceCheckEligibilityResource financeCheckEligibilityResource,
                                           LabourCost applicationWorkingDaysPerYearCostItem, LabourCost projectWorkingDaysPerYearCostItem,
                                           Map<FinanceRowType, BigDecimal> sectionDifferences,
-                                          Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes,
+                                          Map<FinanceRowType, List<ChangedFinanceRowPair>> changes,
                                           BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
         this.isInternal = isInternal;
         this.organisationName = organisationName;
@@ -58,11 +57,11 @@ public class ProjectFinanceChangesViewModel {
         this.sectionDifferences = sectionDifferences;
     }
 
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getChanges() {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getChanges() {
         return changes;
     }
 
-    public void setChanges(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes) {
+    public void setChanges(Map<FinanceRowType, List<ChangedFinanceRowPair>> changes) {
         this.changes = changes;
     }
 

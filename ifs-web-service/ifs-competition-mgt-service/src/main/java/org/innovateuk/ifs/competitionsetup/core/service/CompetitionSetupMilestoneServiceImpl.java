@@ -13,13 +13,11 @@ import org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;

@@ -119,10 +119,8 @@ public class TeamStatusController {
 
         ProjectPartnerStatusResource leadPartnerStatusResource = teamStatus.getLeadPartnerStatus();
 
-        if (partnerProjectLocationRequired) {
-            if (PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
-                leadPartnerStatusResource.setMonitoringOfficerStatus(NOT_STARTED);
-            }
+        if (partnerProjectLocationRequired && PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
+            leadPartnerStatusResource.setMonitoringOfficerStatus(NOT_STARTED);
         }
     }
 

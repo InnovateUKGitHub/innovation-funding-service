@@ -21,6 +21,7 @@ import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -147,8 +148,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccess();
             } else {
-                messages.getSuccess().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
+                messages.getSuccess().getErrors()
+                        .forEach(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccess();
             }
         }
@@ -260,19 +261,18 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
+        updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
 
-    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
-        switch (fieldNameReplaced) {
-            case "projectLocation":
-                applicationFinance.setWorkPostcode(value);
-                break;
-            default:
-                LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
+
+        if (fieldNameReplaced.equals("projectLocation")) {
+            applicationFinance.setWorkPostcode(value);
+        } else {
+            LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
     }
 

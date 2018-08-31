@@ -4,20 +4,20 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -25,7 +25,8 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -49,8 +50,10 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -101,13 +104,13 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private CookieUtil cookieUtil;
 
     @Mock
-    private UserService userService;
-
-    @Mock
-    private OrganisationService organisationService;
+    private UserRestService userRestService;
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Mock
     private ProjectFinanceService projectFinanceService;
@@ -115,27 +118,31 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
 
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
-        when(userService.findById(financeTeamUser.getId())).thenReturn(financeTeamUser);
-        when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
-        when(userService.findById(financeContactUser.getId())).thenReturn(financeContactUser);
-        when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
-        when(userService.findById(financeContact2User.getId())).thenReturn(financeContact2User);
-        when(organisationService.getOrganisationForUser(financeContact2User.getId())).thenReturn(leadOrganisationResource);
+        when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
+        when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
+        when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
+        when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
+        when(userRestService.retrieveUserById(financeContact2User.getId())).thenReturn(restSuccess(financeContact2User));
+        when(organisationRestService.getOrganisationByUserId(financeContact2User.getId())).thenReturn(restSuccess(leadOrganisationResource));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(financeContactProjectUser, financeContact2ProjectUser));
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(newPartnerOrganisationResource().build()));
 
         PostResource firstPost = new PostResource(null, financeTeamUser, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
         PostResource firstResponse = new PostResource(null, financeContactUser, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));

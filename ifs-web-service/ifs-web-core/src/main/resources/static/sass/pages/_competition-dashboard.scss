@@ -4,10 +4,12 @@
 
   input {
     &.search-query {
+      @include govuk-font(19);
       padding-right:35px;
       height: 35px;
       box-sizing: border-box;
       width: 100%;
+      font-weight: 200;
     }
 
     &[type='submit'] {
@@ -19,11 +21,11 @@
       width: 35px;
       height: 35px;
       border:none;
-      border-left: 1px solid $grey-2;
+      border-left: 1px solid govuk-colour("grey-2");
       overflow: hidden;
       text-indent: -5000px;
       color: #fff;
-      background: $govuk-blue url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png) no-repeat 0 50%;
+      background: govuk-colour("blue") url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png) no-repeat 0 50%;
       cursor: pointer;
     }
   }

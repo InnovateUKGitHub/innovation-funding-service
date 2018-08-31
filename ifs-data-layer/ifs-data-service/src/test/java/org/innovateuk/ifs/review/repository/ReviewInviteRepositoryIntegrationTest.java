@@ -50,7 +50,12 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
+        loginCompAdmin();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
     }
 
     @Test

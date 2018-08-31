@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator.forminput;
 
-import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
+import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.TextAreaInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;

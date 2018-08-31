@@ -8,18 +8,18 @@
    <div class="centralise">
 
         <div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-            <div class="marked-complete-alert extra-margin-bottom">
-                <p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
+            <div class="marked-complete-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
     have submitted their spend profiles submit them to Innovate UK</p>
             </div>
         </div>
 
         <div th:if="${param.spend != null and param.spend[0] == 'high'}" th:remove="tag">
 
-            <div class="warning-alert extra-margin-bottom">
-                <h2 class="heading-small">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
-                <p class="no-margin-bottom">Please review:</p>
-                <ul class="list list-bullet">
+            <div class="warning-alert govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+                <p class="govuk-body govuk-!-margin-bottom-0">Please review:</p>
+                <ul class="govuk-list govuk-list--bullet">
                     <li>Subcontracting costs</li>
                 </ul>
                 <!-- <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="button-secondary" th:unless="${param.status == null}">Save with overspend</a> -->
@@ -28,24 +28,24 @@
         </div>
 
         <div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
-            <div class="success-alert extra-margin-bottom">
-                <p><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body"><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
             </div>
         </div>
 
         <div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'Submitted'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-            <div class="success-alert extra-margin-bottom">
-                <p><strong>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.</strong></p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body"><strong>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.</strong></p>
             </div>
         </div>
 
         <div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'SubmittedByLead'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-            <div class="success-alert extra-margin-bottom">
-                <p><strong>Your spend profile has been submitted to Innovate UK by the lead partner.</strong></p>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body"><strong>Your spend profile has been submitted to Innovate UK by the lead partner.</strong></p>
             </div>
         </div>
 
-        <p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        <p class="govuk-body" th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
 
         <dl class="standard-definition-list">
             <dt>Project start date</dt>
@@ -67,44 +67,44 @@
         </dl>
 
         <!-- <div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-            <h2 class="heading-medium">Partner project costs</h2>
-            <p class="form-hint">These are the project costs for your partners on the project</p>
+            <h2 class="govuk-heading-m">Partner project costs</h2>
+            <p class="govuk-hint">These are the project costs for your partners on the project</p>
 
             <table id="partner-totals">
-                <thead>
-                    <tr>
-                        <th scope="col">Partner</th>
-                        <th scope="col">Project costs</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Partner</th>
+                        <th class="govuk-table__header" scope="col">Project costs</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Total</th>
-                        <td>&pound;525,000</td>
+                        <td class="govuk-table__cell">&pound;525,000</td>
                     </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <td>
-                            <p class="no-margin">Aptrans Ltd <br />Lead organisation</p>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-0">Aptrans Ltd <br />Lead organisation</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <p class="no-margin">Biotech Corp <br />Partner</p>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-0">Biotech Corp <br />Partner</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <p class="no-margin">University of Cardiff <br />Partner</p>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-0">University of Cardiff <br />Partner</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
@@ -113,22 +113,22 @@
         </div> -->
 
         <th:block th:if="${type == 'business'}">
-            <h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
+            <h2 class="govuk-heading-m" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
         </th:block>
 
         <th:block th:if="${type != 'business'}">
-            <h2 class="heading-medium">University of Cardiff</h2>
+            <h2 class="govuk-heading-m">University of Cardiff</h2>
         </th:block>
 
         <div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-            <h2 class="heading-medium">Project - Spend profile</h2>
+            <h2 class="govuk-heading-m">Project - Spend profile</h2>
         </div>
 
-        <p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
+        <p class="govuk-body" th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
             Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
         </p>
 
-        <p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed spend profile for your project.</p>
+        <p class="govuk-body" th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed spend profile for your project.</p>
 
         <div th:if="${param.status != null and param.status[0] == 'edit'}" th:unless="${type == 'academic'}" th:remove="tag">
 
@@ -154,8 +154,8 @@
             <div class="flex-left"></div>
             <div class="flex-middle">
                 <table id="table-forecast">
-                    <thead>
-                        <tr>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
                             <th class="alignleft fix-left" scope="row" id="month">Month</th>
                             <th scope="col" id="month1" aria-label="June 2016">Jun 2016</th>
                             <th scope="col" id="month2" aria-label="July 2016">Jul 2016</th>
@@ -204,52 +204,52 @@
                     <tfoot>
                         <tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
                             <th scope="row" id="total" class="fix-left" >Total</th>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
 
                             <td class="total fix-right2">936,000</td>
                             <td class="total eligible fix-right">936,000</td>
                         </tr>
                     </tfoot>
                     <th:block th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
-                        <tbody>
+                        <tbody class="govuk-table__body">
                             <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
                                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" />
                                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" />
@@ -273,7 +273,7 @@
                     </th:block>
 
                     <th:block th:if="${param.task != null and param.task[0] == 'reviewProject'}">
-                        <tbody>
+                        <tbody class="govuk-table__body">
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Aptrans Ltd'}, type=${'Lead Partner'}, value=${'12,500'}, total=${'450,000'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Biotech Corp'}, type=${'Partner'}, value=${'2,500'}, total=${'90,000'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'University of Cardiff'}, type=${'Partner'}, value=${'3,000'}, total=${'108,000'}" />
@@ -296,8 +296,8 @@
             <div class="flex-left"></div>
             <div class="flex-middle">
                 <table id="table-forecast">
-                    <thead>
-                        <tr>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
                             <th class="alignleft fix-left" scope="row" id="jes-cat" colspan="2">Je-S category</th>
                             <th scope="col" id="month1" aria-label="June 2016">Jun 2016</th>
                             <th scope="col" id="month2" aria-label="July 2016">Jul 2016</th>
@@ -346,51 +346,51 @@
                     <tfoot>
                         <tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
                             <th scope="row" id="total" class="fix-left" colspan="2">Total</th>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
 
                             <td class="total fix-right2">936,000</td>
                             <td class="total eligible fix-right">936,000</td>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody class="govuk-table__body">
                         <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" />
@@ -454,21 +454,21 @@
         <div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
             <!--<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">-->
-                <!--<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>-->
+                <!--<p class="govuk-body">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>-->
             <!--</div>-->
 
             <th:block th:unless="${type == 'academic'}">
                 <div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-                    <a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/3100-spend?status=edit'  )}" class="button button-secondary">Edit spend profile</a>
+                    <a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/3100-spend?status=edit'  )}" class="govuk-button button-secondary">Edit spend profile</a>
                 </div>
 
                  <div class="extra-margin" th:unless="${param.user == null}">
-                    <a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/3100-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
+                    <a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/3100-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/3100-spend?status=edit&#38;user=nonLead#table-forecast')}" class="govuk-button button-secondary">Edit spend profile</a>
                 </div>
             </th:block>
 
             <th:block th:if = "${type == 'academic'}">
-                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="button button-secondary">Edit spend profile</a>
+                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="govuk-button button-secondary">Edit spend profile</a>
             </th:block>
 
             <p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
@@ -479,28 +479,28 @@
             <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
                 <div class="extra-margin" th:unless="${param.spend != null and param.spend[0] == 'high'}">
-                    <a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Submit to lead partner</a>
+                    <a href="#" class="govuk-button button-large" data-js-modal="modal-send-to-lead">Submit to lead partner</a>
                 </div>
 
                 <div class="extra-margin" th:unless="${param.spend == null or param.spend[0] != 'high'}">
-                    <a href="#" class="button button-large" disabled="disabled">Send to lead partner</a>
+                    <a href="#" class="govuk-button button-large" disabled="disabled">Send to lead partner</a>
                 </div>
 
                 <div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
                     <button class="js-close close" aria-label="Close Popup">X</button>
                     <div>
 
-                        <h2 class="heading-medium no-margin">Send to lead partner</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-0">Send to lead partner</h2>
 
-                        <p>Are you sure you want to submit your spend profile to the lead partner?</p>
+                        <p class="govuk-body">Are you sure you want to submit your spend profile to the lead partner?</p>
 
-                        <hr />
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
                         <div class="alignright-button">
 
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                            <a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-                            <a th:href="@{?status=Submitted&#38;user=nonLead}" class="button">Send</a>
+                            <a th:href="@{?status=Submitted&#38;user=nonLead}" class="govuk-button">Send</a>
                         </div>
 
                     </div>
@@ -513,7 +513,7 @@
                 <input type="hidden" name="status" id="status" value="MarkedComplete" th:unless="${param.spend != null and param.spend[0] == 'high'}"/>
 
                 <div class="extra-margin">
-                    <button formaction="/prototypes/2472-spend-lead-overview?status=MarkedComplete" class="button button-large" th:disabled="${param.spend != null and param.spend[0] == 'high'}"> Mark as complete</button>
+                    <button formaction="/prototypes/2472-spend-lead-overview?status=MarkedComplete" class="govuk-button button-large" th:disabled="${param.spend != null and param.spend[0] == 'high'}"> Mark as complete</button>
                 </div>
 
             </div>
@@ -527,7 +527,7 @@
 
             <th:block th:unless="${type == 'academic'}">
 
-                <a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead':'/prototypes/3100-spend'}" class="button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
+                <a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead':'/prototypes/3100-spend'}" class="govuk-button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
 
                 <a href="#" class="button-secondary" data-js-modal="modal-save-error" th:unless="${param.spend == null or param.spend[0] != 'high'}">Save and return to spend profile overview</a>
 
@@ -535,19 +535,19 @@
                     <button class="js-close close" aria-label="Close Popup">X</button>
                     <div>
 
-                        <h2 class="heading-medium no-margin">Save</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-0">Save</h2>
 
-                        <p>Are you sure you wish to save your spend profile with higher costs than your eligible project costs?</p>
+                        <p class="govuk-body">Are you sure you wish to save your spend profile with higher costs than your eligible project costs?</p>
 
-                        <p>You will not be able to submit your spend profile until this is corrected.</p>
+                        <p class="govuk-body">You will not be able to submit your spend profile until this is corrected.</p>
 
-                        <hr />
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
                         <div class="alignright-button">
 
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                            <a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-                            <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="button">Save</a>
+                            <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="govuk-button">Save</a>
                         </div>
 
                     </div>
@@ -556,7 +556,7 @@
             </th:block>
 
             <th:block th:if="${type == 'academic'}">
-                <a th:href="@{'?user=nonLead'}" class="button button-secondary">Save and return to spend profile overview</a>
+                <a th:href="@{'?user=nonLead'}" class="govuk-button button-secondary">Save and return to spend profile overview</a>
             </th:block>
 
         </div>
@@ -567,29 +567,29 @@
 
         <div class="centralise">
 
-            <p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
+            <p class="govuk-body">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
 
             <div class="extra-margin">
-                <a href="#" class="button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
+                <a href="#" class="govuk-button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
             </div>
 
             <div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
                 <button class="js-close close" aria-label="Close Popup">X</button>
                 <div>
 
-                    <h2 class="heading-medium no-margin">Allow partner to edit</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Allow partner to edit</h2>
 
-                    <p><strong>Biotech Corp's</strong> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
+                    <p class="govuk-body"><strong>Biotech Corp's</strong> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
 
-                    <hr />
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
                     <div class="alignright-button">
-                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                        <a href="/prototypes/2472-spend-lead-overview" class="button">Allow partner to edit</a>
+                        <a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+                        <a href="/prototypes/2472-spend-lead-overview" class="govuk-button">Allow partner to edit</a>
                     </div>
 
                     <!--<div class="alignright-button">-->
-                        <!--<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>-->
+                        <!--<a href="/prototypes/2472-spend-lead-overview" class="govuk-button">OK</a>-->
                     <!--</div>-->
 
                 </div>
@@ -602,22 +602,22 @@
     <div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 
         <div class="extra-margin centralise" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
-            <a href="#" class="button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
+            <a href="#" class="govuk-button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
         </div>
 
         <div class="modal-submit-spend" role="dialog" aria-hidden="true" style="margin-top: -174px;">
             <button class="js-close close" aria-label="Close Popup">X</button>
             <div>
 
-                <h2 class="heading-medium no-margin">Submit project spend profile</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0">Submit project spend profile</h2>
 
-                <p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+                <p class="govuk-body">The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
                 <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                    <a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
+                    <a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+                    <a href="/prototypes/1588-project-status?stage=level4" class="govuk-button">Submit</a>
                 </div>
 
             </div>

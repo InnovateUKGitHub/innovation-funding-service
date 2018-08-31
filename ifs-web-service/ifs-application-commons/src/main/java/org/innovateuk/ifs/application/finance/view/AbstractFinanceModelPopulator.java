@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -22,14 +22,14 @@ public abstract class AbstractFinanceModelPopulator {
 
     private SectionService sectionService;
     private FormInputRestService formInputRestService;
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     public AbstractFinanceModelPopulator(SectionService sectionService,
                                          FormInputRestService formInputRestService,
-                                         QuestionService questionService) {
+                                         QuestionRestService questionRestService) {
         this.sectionService = sectionService;
         this.formInputRestService = formInputRestService;
-        this.questionService = questionService;
+        this.questionRestService = questionRestService;
     }
 
     protected List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
@@ -64,7 +64,7 @@ public abstract class AbstractFinanceModelPopulator {
 
     protected Map<Long, List<QuestionResource>> getFinanceSectionChildrenQuestionsMap(List<SectionResource> financeSubSectionChildren,
                                                                                       Long competitionId) {
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
+        List<QuestionResource> allQuestions = questionRestService.findByCompetition(competitionId).getSuccess();
         return financeSubSectionChildren.stream()
                 .collect(toMap(
                         SectionResource::getId,

@@ -1,69 +1,79 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management competition-setup">
+<body class="govuk-template__body competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
-        <!-- Link back -->
-        <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
-        <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem publishing the public content.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-        </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
+            <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
-        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='heading-xlarge'" />
-        </th:block>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem publishing the public content.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
 
-        <div class="message-alert" th:if="${model.hasBeenPublished()}">
-            <p th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
-            <p th:if="${model.inviteOnly}">Competition URL:
-                <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
-            </p>
-        </div>
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id}: $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='govuk-heading-xl'" />
+            </th:block>
 
-        <ul class="task-list extra-margin">
-            <li th:each="section : ${model.sections}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
-                    </h2>
-                </div>
-                <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>
+            <div class="message-alert" th:if="${model.hasBeenPublished()}">
+                <p class="govuk-body" th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
+                <p class="govuk-body" th:if="${model.inviteOnly}">Competition URL:
+                    <a th:href="${model.competitionURL}" th:text="${model.competitionURL}" class="govuk-link"></a>
+                </p>
+            </div>
+
+            <ul class="task-list govuk-!-margin-top-6">
+                <li th:each="section : ${model.sections}">
+                    <div class="task">
+                        <h2 class="govuk-heading-s">
+                            <a th:text="${section.type.text}"
+                               th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"
+                               class="govuk-link"></a>
+                        </h2>
+                    </div>
+                    <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>
+                </li>
+            </ul>
+            <p class="govuk-body" th:if="${model.hasBeenPublished()}"
+                th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
+                <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
+            <button th:unless="${model.hasBeenPublished()}" class="govuk-button" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
+        </form>
+
+        <ul class="pagination" th:unless="${model.competition.nonIfs}">
+            <li class="prev">
+                <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='assessors')}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Assessors</span>
+                </a>
+            </li>
+            <li class="next">
+                <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='project-document')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Documents</span>
+                </a>
             </li>
         </ul>
-        <p th:if="${model.hasBeenPublished()}"
-            th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
-                     publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
-            <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
-        <button th:unless="${model.hasBeenPublished()}" class="button" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
-    </form>
 
-    <ul class="pagination" th:unless="${model.competition.nonIfs}">
-        <li class="prev">
-            <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='assessors')}">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Assessors</span>
-            </a>
-        </li>
-    </ul>
+        <div class="govuk-!-margin-top-6">
+            <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to setup overview</a>
+            <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to non-IFS competition details</a>
+        </div>
 
-    <div class="extra-margin">
-        <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to setup overview</a>
-        <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to non-IFS competition details</a>
-    </div>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

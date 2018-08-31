@@ -161,7 +161,8 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(assessmentRestService.getByUserAndApplication(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(emptyList()));
-
+        when(applicationRestService.isApplicationReadyForSubmit(app.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(app.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, app.getId()   ))
                 .andExpect(status().isOk())
@@ -234,12 +235,14 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
                 .withValue(expectedQuestionScore, expectedQuestionFeedback)
                 .build(2);
 
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(processRoles);
-        when(organisationService.getOrganisationById(otherOrganisation.getId())).thenReturn(otherOrganisation);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(organisationRestService.getOrganisationById(otherOrganisation.getId())).thenReturn(restSuccess(otherOrganisation));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getApplicationId())).thenReturn(restSuccess(responses));
         when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(assessment));
         when(formInputRestService.getById(responses.get(0).getFormInput())).thenReturn(restSuccess(formInputs.get(0)));
         when(formInputRestService.getById(responses.get(1).getFormInput())).thenReturn(restSuccess(formInputs.get(1)));
+        when(applicationRestService.isApplicationReadyForSubmit(application.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(application.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, application.getId()   ))
                 .andExpect(status().isOk())

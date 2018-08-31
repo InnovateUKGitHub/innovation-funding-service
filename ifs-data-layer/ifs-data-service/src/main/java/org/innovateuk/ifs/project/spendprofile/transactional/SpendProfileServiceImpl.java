@@ -16,12 +16,11 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -37,7 +36,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
@@ -106,9 +104,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private OrganisationRepository organisationRepository;
+    private PartnerOrganisationService partnerOrganisationService;
     @Autowired
     private SpendProfileRepository spendProfileRepository;
     @Autowired
@@ -145,9 +141,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
         return getProject(projectId)
                 .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
-                        .andOnSuccess(() -> projectService.getProjectUsers(projectId)
-                                .andOnSuccess(projectUsers -> {
-                                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
+                        .andOnSuccess(() -> partnerOrganisationService.getProjectPartnerOrganisations(projectId)
+                                .andOnSuccess(partnerOrganisationResources -> {
+                                    List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))
                                 .andOnSuccess(() ->

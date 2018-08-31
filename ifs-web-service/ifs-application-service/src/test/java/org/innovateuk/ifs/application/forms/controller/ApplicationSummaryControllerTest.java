@@ -7,8 +7,8 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
@@ -49,18 +49,11 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationSummaryController> {
@@ -175,6 +168,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         when(researchCategorySummaryModelPopulator.populate(app, loggedInUser.getId(), true)).thenReturn
                 (researchCategorySummaryViewModel);
 
+        when(applicationRestService.isApplicationReadyForSubmit(app.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(app.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
+
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
 
@@ -222,6 +218,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         return new ResearchCategorySummaryViewModel(1L,
                 1L,
                 "Research category",
+                false,
                 false,
                 false,
                 false,

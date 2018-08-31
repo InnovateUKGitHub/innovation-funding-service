@@ -12,7 +12,7 @@ IFS.core.backLink = (function () {
       settings = this.settings
       var element = jQuery(settings.element)
       var linkTitle = element.data('javascript-back-link')
-      element.replaceWith('<button class="link-back" data-javascript-back-link>' + linkTitle + '</button>')
+      element.replaceWith('<a class="govuk-back-link" data-javascript-back-link>' + linkTitle + '</a>')
       // Handle click on back link
       jQuery('body').on('click', settings.element, function () {
         window.history.back()

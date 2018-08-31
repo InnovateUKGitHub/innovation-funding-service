@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public interface CompetitionSetupService {
 

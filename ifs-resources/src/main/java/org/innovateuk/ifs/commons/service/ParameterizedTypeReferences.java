@@ -277,6 +277,11 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 
+
+    public static ParameterizedTypeReference<List<ProjectDocumentResource>> projectDocumentResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectDocumentResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {
         return new ParameterizedTypeReference<List<SpendProfileStatusResource>>() {};
     }
@@ -311,5 +316,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
         return new ParameterizedTypeReference<Map<Long, Boolean>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>> competitionResearchCategoryLinkList() {
+        return new ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>>() {};
     }
 }

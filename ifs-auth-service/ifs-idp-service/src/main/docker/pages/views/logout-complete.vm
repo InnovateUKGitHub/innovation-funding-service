@@ -31,7 +31,7 @@
 
         <div class="content">
           <div class="column one">
-            <p>#springMessageText("idp.logout.local", "You elected not to log out of all the applications accessed during your session.")</p>
+            <p class="govuk-body">#springMessageText("idp.logout.local", "You elected not to log out of all the applications accessed during your session.")</p>
           </div>
           <div class="column two">
             <ul class="list list-help">

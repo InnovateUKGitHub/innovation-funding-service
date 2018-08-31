@@ -1,46 +1,49 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project team status'" />
 </head>
-<body>
+<body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team status',size='govuk-heading-xl'" />
+        <p class="govuk-body">Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team status',size='heading-xlarge'" />
-    <p>Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>
+        <div class="table-overflow">
 
-    <div class="table-overflow">
+            <table class="govuk-table" id="table-project-status">
+                <caption class="govuk-table__caption">Project setup stages</caption>
+                <thead class="govuk-table__head">
+                  <tr class="govuk-table__row">
+                      <th class="govuk-table__header" scope="col" rowspan="2">Partner</th>
+                      <th class="govuk-table__header status" scope="col">Project details</th>
+                      <th class="govuk-table__header status" scope="col">Monitoring Officer</th>
+                      <th class="govuk-table__header status" scope="col">Bank details</th>
+                      <th class="govuk-table__header status" scope="col">Finance checks</th>
+                      <th class="govuk-table__header status" scope="col">Spend profile</th>
+                      <th class="govuk-table__header status" scope="col">Other docs</th>
+                      <th class="govuk-table__header status" scope="col">Grant offer letter</th>
+                  </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                  <th:block th:each="partner : ${model.projectTeamStatusResource.partnerStatuses}">
+                      <tr class="govuk-table__row" th:insert="project/fragments :: consortium-partner-status-row(${partner}, ${model.projectTeamStatusResource.isLeadOrganisation(partner.organisationId)})"/>
+                  </th:block>
+                  </tbody>
+            </table>
+        </div>
 
-        <table id="table-project-status">
-            <caption>Project setup stages</caption>
-            <thead>
-              <tr>
-                  <th scope="col" rowspan="2">Partner</th>
-                  <th class="status" scope="col">Project details</th>
-                  <th class="status" scope="col">Monitoring Officer</th>
-                  <th class="status" scope="col">Bank details</th>
-                  <th class="status" scope="col">Finance checks</th>
-                  <th class="status" scope="col">Spend profile</th>
-                  <th class="status" scope="col">Other docs</th>
-                  <th class="status" scope="col">Grant offer letter</th>
-              </tr>
-            </thead>
-            <tbody>
-              <th:block th:each="partner : ${model.projectTeamStatusResource.partnerStatuses}">
-                  <tr th:insert="project/fragments :: consortium-partner-status-row(${partner}, ${model.projectTeamStatusResource.isLeadOrganisation(partner.organisationId)})"/>
-              </th:block>
-              </tbody>
-        </table>
-    </div>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

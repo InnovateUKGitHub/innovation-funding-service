@@ -30,15 +30,15 @@ Submit button should be disabled
     [Tags]
     When the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
     Then the user should see the text in the page    Registration is now closed, you are no longer able to submit your application.
-    And the user should not see the element    jQuery=.button:contains("Submit application")
-    And the user should not see the element    jQuery=.button:contains("Review and submit")
+    And the user should not see the element    jQuery=.govuk-button:contains("Submit application")
+    And the user should not see the element    jQuery=.govuk-button:contains("Review and submit")
 
 Applicant shouldn't see the Mark as complete-Edit-Save buttons
     [Documentation]    INFUND-3740
     [Tags]
     Given the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
     When The user clicks the button/link    jQuery=button:contains(Project summary)
-    Then The user should not see the element    jQuery=.button:contains(Mark as complete)
+    Then The user should not see the element    jQuery=.govuk-button:contains(Mark as complete)
     And the user should not see the element    jQuery=button:contains(Edit)
     And the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/form/question/44
     Then The user should not see the element    jQuery=button:contains("Save and return to application overview")

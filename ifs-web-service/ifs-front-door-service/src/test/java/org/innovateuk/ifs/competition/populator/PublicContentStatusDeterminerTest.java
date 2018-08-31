@@ -3,11 +3,8 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
 import org.innovateuk.ifs.competition.status.PublicContentStatusText;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;

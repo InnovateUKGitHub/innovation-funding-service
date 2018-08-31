@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -37,7 +37,7 @@ import java.util.Map;
 public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;
@@ -124,7 +124,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             model.addAttribute("costCategory", costCategory);
         }
         model.addAttribute("type", costType.getType());
-        model.addAttribute("question", questionService.getById(questionId));
+        model.addAttribute("question", questionRestService.findById(questionId).getSuccess());
         model.addAttribute("cost", costItem);
     }
 
@@ -141,9 +141,10 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     }
 
     private LabourCost getWorkingDaysPerYearCostItemFrom(Map<FinanceRowType, FinanceRowCostCategory> financeDetails) {
-        for (FinanceRowType rowType : financeDetails.keySet()) {
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : financeDetails.entrySet()) {
+            FinanceRowType rowType = entry.getKey();
             if (rowType.getType().equals(FinanceRowType.LABOUR.getType())) {
-                return ((LabourCostCategory) financeDetails.get(rowType)).getWorkingDaysPerYearCostItem();
+                return ((LabourCostCategory) entry.getValue()).getWorkingDaysPerYearCostItem();
             }
         }
         throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
@@ -153,8 +154,9 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
                                                                        Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances) {
         Map<FinanceRowType, BigDecimal> sectionDifferencesMap = new LinkedHashMap<>();
 
-        for (FinanceRowType rowType : organisationProjectFinances.keySet()) {
-            FinanceRowCostCategory financeRowProjectCostCategory = organisationProjectFinances.get(rowType);
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : organisationProjectFinances.entrySet()) {
+            FinanceRowType rowType = entry.getKey();
+            FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
             sectionDifferencesMap.put(rowType, financeRowProjectCostCategory.getTotal().subtract(financeRowAppCostCategory.getTotal()));
         }

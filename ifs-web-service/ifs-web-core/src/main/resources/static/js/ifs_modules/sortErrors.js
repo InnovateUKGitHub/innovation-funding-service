@@ -11,7 +11,7 @@ IFS.core.sortingErrors = (function () {
     },
 
     sortList: function () {
-      var errorContainer = jQuery('.error-summary-list')[0]
+      var errorContainer = jQuery('.govuk-error-summary__list')[0]
       if (!errorContainer) {
         // if theres no error summary return
         return

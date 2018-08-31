@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 
 /**
- * Interface for CRUD operations on {@link OrganisationSizeResource} related data.
+ * Interface for CRUD operations on {@link org.innovateuk.ifs.project.finance.resource.FinanceCheckResource} related data.
  */
 public interface OrganisationDetailsRestService {
 

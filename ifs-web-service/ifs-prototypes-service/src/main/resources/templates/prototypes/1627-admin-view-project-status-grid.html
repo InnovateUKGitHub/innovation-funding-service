@@ -49,11 +49,11 @@
 
 	<div class="constrain-width">
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<!-- <div class="info-area">
 			<section class="boxed">
-				<h3 class="heading-medium no-margin-top">Project setup stages</h3>
+				<h3 class="govuk-heading-m govuk-!-margin-top-0">Project setup stages</h3>
 				<ol class="list-number">
 					<li>Project Details</li>
 					<li>Monitoring Officer</li>
@@ -68,17 +68,17 @@
 		</div> -->
 
 
-			<h2 class="heading-large">Projects in setup</h2>
+			<h2 class="govuk-heading-l">Projects in setup</h2>
 
 			<div class="table-overflow">
 				<table id="table-project-status">
-					<thead>
-						<tr>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
 							<th scope="col" rowspan="2">Project no.</th>
 							<th scope="col" rowspan="2">Partner</th>
 							<th scope="col" colspan="8" class="aligncentre">Project setup stage</th>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th class="status" scope="col">Project details</th>
 							<th class="status" scope="col">MO</th>
 							<th class="status" scope="col">Bank details</th>
@@ -89,42 +89,42 @@
 							<th class="status" scope="col">Complete</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
 							<th rowspan="5" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></th>
-							<td><a href="#">Company A</a></td>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
+							<td class="govuk-table__cell"><a href="#">Company A</a></td>
+							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="govuk-visually-hidden">OK</span></a></td>
 
 							<div th:if="${param.stage == null or param.stage != null and param.stage[0]  &lt; '1'}" th:remove="tag">
-								<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="visuallyhidden">Action</span></a></td>
+								<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="govuk-visually-hidden">Action</span></a></td>
 							</div>
 
 							<div th:if="${param.stage != null and param.stage[0] >= '1'}" th:remove="tag">
-								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
+								<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="govuk-visually-hidden">OK</span></a></td>
 							</div>
 
 							<div th:if="${param.stage == null or param.stage[0] &lt; '2'}"  th:remove="tag">
-								<td class="status action"><a href="/prototypes/4547-review-all-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
+								<td class="status action"><a href="/prototypes/4547-review-all-bank-details" title="Review bank details"><span class="govuk-visually-hidden">Action</span></a></td>
 							</div>
 
 							<div th:if="${param.stage != null and param.stage[0] >= '2'}" th:remove="tag">
-								<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
+								<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="govuk-visually-hidden">OK</span></a></td>
 							</div>
 
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
+							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="govuk-visually-hidden">Action</span></a></td>
 
 							<td class="status with-partner">-</td>
 
 							<div th:if="${param.stage == null or param.stage[0] &lt; '5'}" th:remove="tag">
-								<td class="status action"><a href="/prototypes/2682-moderate-docs" title="View other documents"><span class="visuallyhidden">Action</span></a></td>
+								<td class="status action"><a href="/prototypes/2682-moderate-docs" title="View other documents"><span class="govuk-visually-hidden">Action</span></a></td>
 							</div>
 
 							<th:block th:if="${param.stage != null and param.stage[0] >= '5'}">
 
-								<td class="status ok" th:unless="${param.reject != null and param.reject[0] == 'docs'}"><a href="/prototypes/2682-moderate-docs?status=accepted" title="View other documents"><span class="visuallyhidden">OK</span></a></td>
+								<td class="status ok" th:unless="${param.reject != null and param.reject[0] == 'docs'}"><a href="/prototypes/2682-moderate-docs?status=accepted" title="View other documents"><span class="govuk-visually-hidden">OK</span></a></td>
 
 								<th:block th:if="${param.reject != null and param.reject[0] == 'docs'}">
-									<td class="status rejected"><a href="/prototypes/2682-moderate-docs?status=reject" title="View other documents"><span class="visuallyhidden">Rejected</span></a></td>
+									<td class="status rejected"><a href="/prototypes/2682-moderate-docs?status=reject" title="View other documents"><span class="govuk-visually-hidden">Rejected</span></a></td>
 								</th:block>
 
 							</th:block>
@@ -133,9 +133,9 @@
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company B</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company B</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
@@ -144,9 +144,9 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company C</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company C</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
@@ -155,45 +155,45 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company D</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company D</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
-							<td class="status action"><a href="#"><span class="visuallyhidden">Action</span></a></td>
+							<td class="status action"><a href="#"><span class="govuk-visually-hidden">Action</span></a></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
 						<tr class="project-divide">
-							<td><a href="#">Company E</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="govuk-table__cell"><a href="#">Company E</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
-							<td class="status action"><a href="#"><span class="visuallyhidden">Action</span></a></td>
+							<td class="status action"><a href="#"><span class="govuk-visually-hidden">Action</span></a></td>
 							<td class="status">-</td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th rowspan="2" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194732</a></th>
-							<td><a href="#">Company 1</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="govuk-table__cell"><a href="#">Company 1</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company 2</a></td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company 2</a></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
-							<td class="status ok"><span class="visuallyhidden">OK</span></td>
+							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status">-</td>
 							<td class="status">-</td>
 							<td class="status na">&nbsp;</td>

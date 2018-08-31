@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
  * Used for returning a pair of rows that can be used to display how application finances were changed by project finance updates.
  * INFUND-4837
  */
-public class ChangedFinanceRowPair<L extends FinanceRowItem, R extends FinanceRowItem> {
+public class ChangedFinanceRowPair {
 
     private TypeOfChange typeOfChange;
 
@@ -47,9 +47,9 @@ public class ChangedFinanceRowPair<L extends FinanceRowItem, R extends FinanceRo
         this.changed = changed;
     }
 
-    public static ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> of(TypeOfChange typeOfChange,
+    public static ChangedFinanceRowPair of(TypeOfChange typeOfChange,
                                                                            FinanceRowItem applicationFinanceRowItem,
                                                                            FinanceRowItem projectFinanceRowItem) {
-        return new ChangedFinanceRowPair<>(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);
+        return new ChangedFinanceRowPair(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);
     }
 }

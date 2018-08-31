@@ -22,10 +22,10 @@
 		<div id="sticky-zone">
 			<section class="info-area">
 				<div class="boxed">
-					<h2 class="heading-large no-margin" th:text="${(param.assessorName != null ? param.assessorName[0] : 'John Smith')}"></h2>
+					<h2 class="govuk-heading-l govuk-!-margin-0" th:text="${(param.assessorName != null ? param.assessorName[0] : 'John Smith')}"></h2>
 
-					<h2 class="heading-small">Contact details</h2>
-			        <p>
+					<h2 class="govuk-heading-s">Contact details</h2>
+			        <p class="govuk-body">
 			        	Nomensa <br />
 			        	King William House <br />
 			        	13 Queens Square <br />
@@ -33,19 +33,19 @@
 			        	BS3 1RF
 			        </p>
 
-					<div class="grid-row">
-						<div class="column-half">
-							<h2 class="heading-small">Assessor details</h2>
-							<ul class="list list-bullet">
+					<div class="govuk-grid-row">
+						<div class="govuk-grid-column-one-half">
+							<h2 class="govuk-heading-s">Assessor details</h2>
+							<ul class="govuk-list govuk-list--bullet">
 								<li>Male</li>
 								<li>CEO</li>
 								<li>ASDF Solutions</li>
 							</ul>
 
 						</div>
-						<div class="column-half">
-							 <ul class="list list-bullet">
-							 	<h2 class="heading-small">Innovation areas</h2>
+						<div class="govuk-grid-column-one-half">
+							 <ul class="govuk-list govuk-list--bullet">
+							 	<h2 class="govuk-heading-s">Innovation areas</h2>
 								<li>Advanced materials</li>
 								<li>Biosciences</li>
 								<li>Materials</li>
@@ -53,64 +53,64 @@
 					    </div>
 					</div>
 
-			        <h2 class="heading-small no-margin">Area</h2>
-			        <p>Industry</p>
+			        <h2 class="govuk-heading-s govuk-!-margin-0">Area</h2>
+			        <p class="govuk-body">Industry</p>
 
 
-			        <h2 class="heading-small no-margin">Skills</h2>
-			        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
+			        <h2 class="govuk-heading-s govuk-!-margin-0">Skills</h2>
+			        <p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
 				</div>
 			</section>
 
 		    <section class="data-area">
-		    	<h2 class="heading-large">Documents &#38; training</h2>
+		    	<h2 class="govuk-heading-l">Documents &#38; training</h2>
 
-		    	<div class="grid-row">
-		    		<div class="column-half">
-		    			<table>
-							<thead>
-								<tr>
-									<th scope="col">Document</th>
-									<th scope="col">Details</th>
+		    	<div class="govuk-grid-row">
+		    		<div class="govuk-grid-column-one-half">
+		    			<table class="govuk-table">
+							<thead class="govuk-table__head">
+								<tr class="govuk-table__row">
+									<th class="govuk-table__header" scope="col">Document</th>
+									<th class="govuk-table__header" scope="col">Details</th>
 									<th scope="col" class="alignright">Last updated</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>Contract</td>
-									<td><a href="#">View</a></td>
-									<td class="alignright">20/09/2016</td>
+							<tbody class="govuk-table__body">
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">Contract</td>
+									<td class="govuk-table__cell"><a href="#">View</a></td>
+									<td class="govuk-table__cell alignright">20/09/2016</td>
 								</tr>
-								<tr>
-									<td>Declaration</td>
-									<td><a href="/prototypes/1568-assessor-profile-doi">View</a></td>
-									<td class="alignright">20/09/2016</td>
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">Declaration</td>
+									<td class="govuk-table__cell"><a href="/prototypes/1568-assessor-profile-doi">View</a></td>
+									<td class="govuk-table__cell alignright">20/09/2016</td>
 								</tr>
-								<tr>
-									<td>C.V.</td>
-									<td><a href="#">View</a></td>
-									<td class="alignright">20/09/2016</td>
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">C.V.</td>
+									<td class="govuk-table__cell"><a href="#">View</a></td>
+									<td class="govuk-table__cell alignright">20/09/2016</td>
 								</tr>
 							</tbody>
 						</table>
 		    		</div>
 
-		    		<div class="column-half">
-		    			 <div class="form-group">
+		    		<div class="govuk-grid-column-one-half">
+		    			 <div class="govuk-form-group">
 						    <label class="form-label-bold" for="comments">Comments</label>
-						    <textarea class="form-control" id="comments" rows="6" style="width: 100%"></textarea>
+						    <textarea class="govuk-textarea" id="comments" rows="6" style="width: 100%"></textarea>
 						  </div>
 		    		</div>
 
 		    	</div>
 
-		    	<hr />
+		    	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 
-				<div class="grid-row">
-			    	<div class="column-half">
-			    		<h2 class="heading-large">Training <small><a href="#" id="update-details-button">Update training details</a></small></h2>
+				<div class="govuk-grid-row">
+			    	<div class="govuk-grid-column-one-half">
+			    		<h2 class="govuk-heading-l">Training <small><a href="#" id="update-details-button">Update training details</a></small></h2>
 						<dl class="standard-definition-list">
 				    		<dt>Panel approved</dt>
 				    		<dd>Yes</dd>
@@ -124,16 +124,16 @@
 			    	</div>
 
 
-			    	<div class="column-half">
+			    	<div class="govuk-grid-column-one-half">
 			    		<form id="update-details" style="display: none;">
-			    			<h2 class="heading-large">Update training details</h2>
-			    			<fieldset>
-			    				<legend class="visuallyhidden">Update training details</legend>
+			    			<h2 class="govuk-heading-l">Update training details</h2>
+			    			<fieldset class="govuk-fieldset">
+			    				<legend class="govuk-visually-hidden">Update training details</legend>
 
 								<fieldset class="inline">
-									<h3 class="heading-small">Is the assessor panel approved?</h3>
+									<h3 class="govuk-heading-s">Is the assessor panel approved?</h3>
 
-									<legend class="visuallyhidden">Is the assessor panel approved?</legend>
+									<legend class="govuk-visually-hidden">Is the assessor panel approved?</legend>
 									<label class="block-label selection-button-radio" for="approved-yes">
 										<input id="approved-yes" name="approved-group" value="Yes" type="radio" />
 										Yes
@@ -144,9 +144,9 @@
 									</label>
 								</fieldset>
 								<fieldset class="inline">
-									<h3 class="heading-small">Does the assessor require training?</h3>
+									<h3 class="govuk-heading-s">Does the assessor require training?</h3>
 
-									<legend class="visuallyhidden">Does the assessor require training?</legend>
+									<legend class="govuk-visually-hidden">Does the assessor require training?</legend>
 									<label class="block-label selection-button-radio" for="training-yes">
 										<input id="training-yes" name="training-group" value="Yes" type="radio" />
 										Yes
@@ -157,72 +157,72 @@
 									</label>
 								</fieldset>
 
-			    				<div class="form-group extra-margin">
+			    				<div class="govuk-form-group extra-margin">
 			    					<legend>
 			    						<span class="form-label-bold">Date of last workshop attended</span>
-			    						<span class="form-hint">For example: 31 12 2015</span>
+			    						<span class="govuk-hint">For example: 31 12 2015</span>
 			    					</legend>
 			    					<div class="date-group">
 			    						<div class="day">
 			    							<label class="form-label" for="workshop-day">
        											<div>Day</div>
    											</label>
-   											<input class="form-control width-extra-small" type="number" placeholder="DD" id="workshop-day" name="workshop-day" value="" />
+   											<input class="govuk-input width-extra-small" type="number" placeholder="DD" id="workshop-day" name="workshop-day" value="" />
 			    						</div>
 
 			    						<div class="month">
-			    							<label class="form-label" for="workshop-month">
+			    							<label class="govuk-label" for="workshop-month">
        											<div>Month</div>
    											</label>
-   											<input class="form-control width-extra-small" type="number" placeholder="MM" id="workshop-month" name="workshop-month" value="" />
+   											<input class="govuk-input width-extra-small" type="number" placeholder="MM" id="workshop-month" name="workshop-month" value="" />
 			    						</div>
 
 			    						<div class="year">
-			    							<label class="form-label" for="workshop-year">
+			    							<label class="govuk-label" for="workshop-year">
        											<div>Year</div>
    											</label>
-   											<input class="form-control width-extra-small" type="number" placeholder="YYYY" id="workshop-year" name="workshop-year" value="" />
+   											<input class="govuk-input width-extra-small" type="number" placeholder="YYYY" id="workshop-year" name="workshop-year" value="" />
 			    						</div>
 			    					</div>
 			    				</div>
 			    			</fieldset>
 			    			<div>
-			    				<button class="button">Update</button>
+			    				<button class="govuk-button">Update</button>
 			    				<a href="#" id="update-details-cancel" class="button-secondary">Cancel</a>
 			    			</div>
 						</form>
 			    	</div>
 			    </div>
 
-			    <h2 class="heading-large" id="current-assessors">Assessment history</h2>
+			    <h2 class="govuk-heading-l" id="current-assessors">Assessment history</h2>
 
-			    <table>
-					<thead>
-						<tr>
+			    <table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
 							<th scope="col" style="width: 30%">Competition title</th>
 							<th scope="col" style="width: 20%">No. assessed</th>
 							<th scope="col" style="width: 25%">Innovation areas</th>
 							<th scope="col" style="width: 25%">Assessment complete</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>Inspired technology</td>
-							<td>4</td>
-							<td>Digital services</td>
-							<td>23rd January 2016</td>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Inspired technology</td>
+							<td class="govuk-table__cell">4</td>
+							<td class="govuk-table__cell">Digital services</td>
+							<td class="govuk-table__cell">23rd January 2016</td>
 						</tr>
-						<tr>
-							<td>Future robotics</td>
-							<td>6</td>
-							<td>Digital services</td>
-							<td>3rd December 2015</td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Future robotics</td>
+							<td class="govuk-table__cell">6</td>
+							<td class="govuk-table__cell">Digital services</td>
+							<td class="govuk-table__cell">3rd December 2015</td>
 						</tr>
-						<tr>
-							<td>Digital services</td>
-							<td>10</td>
-							<td>Digital services</td>
-							<td>6th November 2014</td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Digital services</td>
+							<td class="govuk-table__cell">10</td>
+							<td class="govuk-table__cell">Digital services</td>
+							<td class="govuk-table__cell">6th November 2014</td>
 						</tr>
 					</tbody>
 				</table>

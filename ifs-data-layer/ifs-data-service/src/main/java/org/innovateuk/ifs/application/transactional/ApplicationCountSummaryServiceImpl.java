@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,13 +32,18 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
-    private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
-        put("id", new Sort(ASC, "id"));
-        put("appTitle", new Sort(ASC, "name", "id"));
-        put("leadOrg", new Sort(ASC, "leadOrganisation", "id"));
-        put("assignedApps", new Sort(ASC, "assessors", "id"));
-        put("completedApps", new Sort(ASC, "submitted", "id"));
-    }};
+    private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS;
+
+    static {
+        Map<String, Sort> sortFieldToDbSortFields = new HashMap<>();
+        sortFieldToDbSortFields.put("id", new Sort(ASC, "id"));
+        sortFieldToDbSortFields.put("appTitle", new Sort(ASC, "name", "id"));
+        sortFieldToDbSortFields.put("leadOrg", new Sort(ASC, "leadOrganisation", "id"));
+        sortFieldToDbSortFields.put("assignedApps", new Sort(ASC, "assessors", "id"));
+        sortFieldToDbSortFields.put("completedApps", new Sort(ASC, "submitted", "id"));
+
+        SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
+    }
 
     @Override
     public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,

@@ -34,6 +34,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
+    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -104,6 +105,10 @@ public class CompetitionResource {
     private boolean useNewApplicantMenu;
 
     private Set<Long> grantClaimMaximums;
+    private String createdBy;
+    private ZonedDateTime createdOn;
+    private String modifiedBy;
+    private ZonedDateTime modifiedOn;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -506,6 +511,14 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
+    public List<ProjectDocumentResource> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
+
     public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -652,9 +665,41 @@ public class CompetitionResource {
         this.grantClaimMaximums = grantClaimMaximums;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(final ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(final ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
 
@@ -672,6 +717,7 @@ public class CompetitionResource {
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
+                .append(projectDocuments, that.projectDocuments)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -720,6 +766,10 @@ public class CompetitionResource {
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
+                .append(createdBy, that.createdBy)
+                .append(createdOn, that.createdOn)
+                .append(modifiedBy, that.modifiedBy)
+                .append(modifiedOn, that.modifiedOn)
                 .isEquals();
     }
 
@@ -729,6 +779,7 @@ public class CompetitionResource {
                 .append(id)
                 .append(milestones)
                 .append(funders)
+                .append(projectDocuments)
                 .append(name)
                 .append(startDate)
                 .append(endDate)
@@ -781,6 +832,10 @@ public class CompetitionResource {
                 .append(stateAid)
                 .append(useNewApplicantMenu)
                 .append(grantClaimMaximums)
+                .append(createdBy)
+                .append(createdOn)
+                .append(modifiedBy)
+                .append(modifiedOn)
                 .toHashCode();
     }
 }

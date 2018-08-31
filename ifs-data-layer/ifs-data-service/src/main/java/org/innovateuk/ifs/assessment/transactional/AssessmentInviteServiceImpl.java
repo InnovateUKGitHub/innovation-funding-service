@@ -30,7 +30,6 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,9 +101,6 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -657,9 +653,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return
-                    applyInnovationAreaToUserProfile(participant, user)
-                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+            return applyInnovationAreaToUserProfile(participant, user)
+                    .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
         }
     }
 
@@ -717,9 +712,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private void updateParticipantStatus(AssessmentInvite invite){
+    private void updateParticipantStatus(AssessmentInvite invite) {
         AssessmentParticipant assessmentParticipant = assessmentParticipantRepository.getByInviteHash(invite.getHash());
-        if(assessmentParticipant.getStatus() != PENDING){
+        if (assessmentParticipant.getStatus() != PENDING) {
             assessmentParticipant.setStatus(PENDING);
             assessmentParticipantRepository.save(assessmentParticipant);
         }

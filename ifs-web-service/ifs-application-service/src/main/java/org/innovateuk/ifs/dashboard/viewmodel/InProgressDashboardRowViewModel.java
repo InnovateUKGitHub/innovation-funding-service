@@ -114,8 +114,15 @@ public class InProgressDashboardRowViewModel extends
 
     @Override
     public String getTitle() {
-        return !isNullOrEmpty(title) ? title :
-                (isSubmitted() ? "Untitled application" : "Untitled application (start here)");
+        if(!isNullOrEmpty(title)) {
+            return title;
+        }
+
+        if(isSubmitted()) {
+            return "Untitled application";
+        }
+
+        return "Untitled application (start here)";
     }
 
     @Override

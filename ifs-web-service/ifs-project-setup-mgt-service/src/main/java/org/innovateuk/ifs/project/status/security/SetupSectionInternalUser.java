@@ -26,7 +26,7 @@ public class SetupSectionInternalUser {
         this.projectSetupProgressChecker = new SetupProgressChecker(projectStatusResource);
     }
 
-    public SectionAccess canAccessCompaniesHouseSection(UserResource userResource) {
+    public SectionAccess canAccessCompaniesHouseSection() {
         return NOT_ACCESSIBLE;
     }
 

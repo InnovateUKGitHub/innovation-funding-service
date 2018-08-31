@@ -4,7 +4,7 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
-public enum InterviewState implements ProcessState, IdentifiableEnum<InterviewState> {
+public enum InterviewState implements ProcessState, IdentifiableEnum {
     ASSIGNED(50, State.ASSIGNED);
 
     private final long id;

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.finance.view;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -191,8 +191,8 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccess();
             } else {
-                messages.getSuccess().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
+                messages.getSuccess().getErrors()
+                        .forEach(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccess();
             }
         }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

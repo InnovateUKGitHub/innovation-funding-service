@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Viability process.
  */
-public enum ViabilityState implements ProcessState, IdentifiableEnum<ViabilityState> {
+public enum ViabilityState implements ProcessState, IdentifiableEnum {
 
     REVIEW(21, State.NOT_VERIFIED),
     NOT_APPLICABLE(22, State.NOT_APPLICABLE),

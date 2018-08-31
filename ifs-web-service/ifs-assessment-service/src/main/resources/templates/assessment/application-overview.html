@@ -1,123 +1,137 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor overview',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="assessment assessment-overview">
+    <body class="govuk-template__body assessment assessment-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='govuk-back-link',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment overview',subTitle=${applicationName},size='heading-xlarge'" />
-            </th:block>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <div class="grid-row extra-margin-bottom">
-                <div class="column-half">
-                    <dl class="font-xsmall">
-                        <dt>Application number:</dt>
-                        <dd th:text="${model.applicationId}"/>
-                        <dt>Competition:</dt>
-                        <dd th:text="${model.competitionName}"/>
-                    </dl>
+                <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment overview',subTitle=${applicationName},size='govuk-heading-xl'" />
+                </th:block>
+
+                <div class="govuk-grid-row govuk-!-margin-bottom-6">
+                    <div class="govuk-grid-column-one-half">
+                        <dl class="govuk-list govuk-!-font-size-16">
+                            <dt>Application number:</dt>
+                            <dd th:text="${model.applicationId}"/>
+                            <dt>Competition:</dt>
+                            <dd th:text="${model.competitionName}"/>
+                        </dl>
+                    </div>
                 </div>
-            </div>
 
-            <section th:each="section,iterStat : ${model.sections}">
-                <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
-                <p class="form-hint" th:text="${section.guidance}" />
-                <ul class="task-list">
-                    <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
-                        <div class="task">
-                            <h3 class="heading-small">
-                                <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
-                                   th:text="${questionNumber} + ${question.questionName}"
-                                   th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"/>
-                            </h3>
-                        </div>
-                        <span th:if="${question.scoreResponse}" class="notification" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></span>
-                        <span th:if="${question.scopeResponse}" class="notification">In scope</span>
-                        <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
-                        <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
-                    </li>
-                    <li class="read-only" th:if="${section.finance}">
-                        <div class="task">
-                            <h3 class="heading-small">
-                                <a th:href="@{/{id}/finances(id=${model.assessmentId})}">Finances overview</a>
-                            </h3>
-                        </div>
-                        <div class="task-status"><span>No score required</span></div>
-                    </li>
-                </ul>
-            </section>
-
-            <th:block th:unless="${#lists.isEmpty(model.appendices)}">
-                <h2 class="heading-medium">Appendices</h2>
-                <ul th:each="appendix : ${model.appendices}">
-                    <li class="form-group download">
-                        <div class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</div>
-                        <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
-                    </li>
-                </ul>
-            </th:block>
-
-            <div class="extra-margin">
-                <a class="button extra-margin" th:href="@{/{assessmentId}/summary(assessmentId=${model.assessmentId})}">Review and complete your assessment</a>
-            </div>
-
-            <div class="extra-margin">
-                <details th:attrappend="open=${#fields.hasErrors('${form.*}') ? 'open' : null}">
-                    <summary><span class="summary">Unable to assess this application?</span></summary>
-                    <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
-                    <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
-                            <label class="form-label" th:for="${#ids.next('rejectReason')}">
-                                Please select a reason for rejecting the competition
-                                <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
-                                </th:block>
-                            </label>
-                            <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
-                                <option value="">Select a reason</option>
-                                <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
-                                        th:value="${reason}"
-                                        th:text="${reason.displayLabel}"
-                                        value="1">Not available</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? 'form-group-error'">
-                            <label class="form-label" th:for="${#ids.next('rejectComment')}">
-                                Use this space to provide more information
-                                <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                                </th:block>
-                            </label>
-                            <textarea class="form-control width-full"
-                                      maxlength="5000"
-                                      data-max_words="100"
-                                      data-maxwordslength="100"
-                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                      th:errorclass="form-control-error"
-                                      rows="4"
-                                      th:field="*{rejectComment}"></textarea>
-                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                <section th:each="section,iterStat : ${model.sections}">
+                    <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
+                    <p class="govuk-hint" th:text="${section.guidance}" />
+                    <ul class="task-list">
+                        <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
+                                       th:text="${questionNumber} + ${question.questionName}"
+                                       th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
+                                       class="govuk-link" />
+                                </h3>
                             </div>
-                        </div>
-                        <div>
-                            <button class="button" name="submit-app-details">Reject</button>
-                        </div>
-                    </form>
-                </details>
-            </div>
+                            <span th:if="${question.scoreResponse}" class="notification" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></span>
+                            <span th:if="${question.scopeResponse}" class="notification">In scope</span>
+                            <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
+                            <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
+                        </li>
+                        <li class="read-only" th:if="${section.finance}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="@{/{id}/finances(id=${model.assessmentId})}" class="govuk-link">Finances overview</a>
+                                </h3>
+                            </div>
+                            <div class="task-status"><span>No score required</span></div>
+                        </li>
+                    </ul>
+                </section>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:unless="${#lists.isEmpty(model.appendices)}">
+                    <h2 class="govuk-heading-m">Appendices</h2>
+                    <ul th:each="appendix : ${model.appendices}" class="govuk-body govuk-list">
+                        <li class="govuk-form-group download">
+                            <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
+                            <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
+                        </li>
+                    </ul>
+                </th:block>
+
+                <div class="govuk-!-margin-top-6">
+                    <a class="govuk-button govuk-!-margin-top-6" th:href="@{/{assessmentId}/summary(assessmentId=${model.assessmentId})}">Review and complete your assessment</a>
+                </div>
+
+                <div class="govuk-!-margin-top-6">
+                    <details th:attrappend="open=${#fields.hasErrors('${form.*}') ? 'open' : null}"
+                             class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Unable to assess this application?</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+                            <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" th:for="${#ids.next('rejectReason')}">
+                                        Please select a reason for rejecting the competition
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                                    </th:block>
+                                    <select class="govuk-select"
+                                            th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
+                                            th:errorclass="govuk-select--error"
+                                            required="required"
+                                            th:field="*{rejectReason}">
+                                        <option value="">Select a reason</option>
+                                        <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                                                th:value="${reason}"
+                                                th:text="${reason.displayLabel}"
+                                                value="1">Not available</option>
+                                    </select>
+                                </div>
+
+                                <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? 'govuk-form-group--error'">
+                                    <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
+                                        Use this space to provide more information
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                    </th:block>
+                                    <textarea class="govuk-textarea"
+                                              maxlength="5000"
+                                              data-max_words="100"
+                                              data-maxwordslength="100"
+                                              data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                              th:errorclass="govuk-textarea--error"
+                                              rows="4"
+                                              th:field="*{rejectComment}"></textarea>
+                                    <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="govuk-button" name="submit-app-details">Reject</button>
+                                </div>
+                            </form>
+                        </div>
+                    </details>
+                </div>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

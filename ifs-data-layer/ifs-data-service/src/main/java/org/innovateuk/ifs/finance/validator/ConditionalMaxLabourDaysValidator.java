@@ -10,6 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class ConditionalMaxLabourDaysValidator  implements ConstraintValidator<ConditionalMaxLabourDays, LabourCost> {
     @Override
     public void initialize(final ConditionalMaxLabourDays annotation) {
+        // does nothing
     }
 
     @Override

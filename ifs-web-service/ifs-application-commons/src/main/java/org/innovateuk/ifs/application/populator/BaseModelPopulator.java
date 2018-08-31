@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.Optional;

@@ -46,12 +46,12 @@
 
 			<section class="boxed">
 
-				<div class="grid-row">
-					<div class="column-half">
-				 		<p><span class="heading-medium">12th April 2016</span> <br />Assessment deadline</p>
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+				 		<p class="govuk-body"><span class="govuk-heading-m">12th April 2016</span> <br />Assessment deadline</p>
 				 	</div>
-				 	<div class="column-half">
-					 	<p><span class="heading-medium">4</span> <br />Applications submitted</p>
+				 	<div class="govuk-grid-column-one-half">
+					 	<p class="govuk-body"><span class="govuk-heading-m">4</span> <br />Applications submitted</p>
 					</div>
 				</div>
 
@@ -59,26 +59,26 @@
 
 				<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
 
-					<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+					<a href="#" class="govuk-button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
 
 					<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 				        <button class="js-close close" aria-label="Close Popup">X</button>
 				        <div>
 
-							<h2 class="heading-medium no-margin">Notify applicants</h2>
+							<h2 class="govuk-heading-m govuk-!-margin-0">Notify applicants</h2>
 
-							<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+							<p class="govuk-body">Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
-							<p>This step cannot be undone.</p>
+							<p class="govuk-body">This step cannot be undone.</p>
 
-							<hr />
+							<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-				            <div class="grid-row extra-margin">
-				            	<div class="column-half">
+				            <div class="govuk-grid-row extra-margin">
+				            	<div class="govuk-grid-column-one-half">
 				            		<a href="#">Cancel</a>
 				            	</div>
-				            	<div class="column-half alignright-button">
-				            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="button">Notify applicants</a>
+				            	<div class="govuk-grid-column-one-half alignright-button">
+				            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="govuk-button">Notify applicants</a>
 				            	</div>
 				            </div>
 
@@ -94,23 +94,23 @@
 		</div>
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 		<div class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Applications submitted</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Applications submitted</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" />
 
 			<div class="table-overflow">
 				<table id="application-list">
-					<thead>
-						<tr>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-							<th scope="col">Area</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Application number</th>
+							<th class="govuk-table__header" scope="col">Project title</th>
+							<th class="govuk-table__header" scope="col">Lead</th>
+							<th class="govuk-table__header" scope="col">Area</th>
 							<th scope="col" class="alignright">No. of partners</th>
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
@@ -118,16 +118,16 @@
 							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" style="width: 120px">Fund project?</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">324,000</td>
-							<td class="alignright">12</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
+							<td class="govuk-table__cell">Machine learning in robots</td>
+							<td class="govuk-table__cell">PWC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">5</td>
+							<td class="govuk-table__cell alignright">203,000</td>
+							<td class="govuk-table__cell alignright">324,000</td>
+							<td class="govuk-table__cell alignright">12</td>
 							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
@@ -137,14 +137,14 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
-							<td>Robots that learn</td>
-							<td>Max Digital</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">300,000</td>
-							<td class="alignright">12</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
+							<td class="govuk-table__cell">Robots that learn</td>
+							<td class="govuk-table__cell">Max Digital</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">5</td>
+							<td class="govuk-table__cell alignright">203,000</td>
+							<td class="govuk-table__cell alignright">300,000</td>
+							<td class="govuk-table__cell alignright">12</td>
 							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
@@ -154,14 +154,14 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>HVM</td>
-							<td class="alignright">3</td>
-							<td class="alignright">67,000</td>
-							<td class="alignright">97,500</td>
-							<td class="alignright">13</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
+							<td class="govuk-table__cell">AI in learning</td>
+							<td class="govuk-table__cell">BBC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">3</td>
+							<td class="govuk-table__cell alignright">67,000</td>
+							<td class="govuk-table__cell alignright">97,500</td>
+							<td class="govuk-table__cell alignright">13</td>
 							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
@@ -171,14 +171,14 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
-							<td>Progressive machines</td>
-							<td>Kingfisher</td>
-							<td>HVM</td>
-							<td class="alignright">7</td>
-							<td class="alignright">100,000</td>
-							<td class="alignright">125,000</td>
-							<td class="alignright">14</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
+							<td class="govuk-table__cell">Progressive machines</td>
+							<td class="govuk-table__cell">Kingfisher</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">7</td>
+							<td class="govuk-table__cell alignright">100,000</td>
+							<td class="govuk-table__cell alignright">125,000</td>
+							<td class="govuk-table__cell alignright">14</td>
 							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>

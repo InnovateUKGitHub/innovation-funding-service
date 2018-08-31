@@ -15,7 +15,7 @@ The Comp admin closes the competition In Assessment
     ...
     ...    INFUND-6602
     When The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link   jQuery=.button:contains("Close assessment")
+    And The user clicks the button/link   jQuery=.govuk-button:contains("Close assessment")
     Then The user should see the element  jQuery=h1:contains("Panel")
     And The user clicks the button/link   link=All competitions
     And The user should see the element   jQuery=h2:contains("Panel") ~ ul a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")

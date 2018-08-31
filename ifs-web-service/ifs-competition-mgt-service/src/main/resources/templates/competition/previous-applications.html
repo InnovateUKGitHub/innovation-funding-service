@@ -1,89 +1,93 @@
  <!DOCTYPE html>
-<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+ <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Previous applications - ${model.competitionName}|" />
 </head>
 
-<body class="wide-page">
+<body class="govuk-template__body wide-page">
     <th:block th:insert="fragments/modals :: modal-overlay" />
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous competitions',linkUrl=@{/dashboard/previous}" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous competitions',linkClass='link-back',linkUrl=@{/dashboard/previous}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-    <form method="GET">
-        <div class="search-filters extra-margin">
-            <fieldset>
-                <legend class="heading-medium no-margin-top">Filter applications</legend>
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <label class="form-label" for="filter">Status</label>
-                        <select class="form-control" id="filter" name="filter">
-                            <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
-                            <option id="unsuccessful" th:href="@{/competition/{cid}/applications/previous?filter=}" value="REJECTED" th:selected="${(param.filter != null) and (param.filter[0] == 'REJECTED')}">Unsuccessful</option>
-                            <option id="withdrawn" th:href="@{/competition/{cid}/applications/previous?filter=}" value="WITHDRAWN" th:selected="${(param.filter != null) and (param.filter[0] == 'WITHDRAWN')}">Withdrawn</option>
-                            <option id="ineligable" th:href="@{/competition/{cid}/applications/previous?filter=}" value="INELIGIBLE" th:selected="${(param.filter != null) and (param.filter[0] == 'INELIGIBLE')}">Ineligible</option>
-                        </select>
-                    </div>
-                    <div class="column-third">
-                        <button class="button">Filter</button>
+            <form method="GET">
+                <div class="search-filters govuk-!-margin-top-6">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                            <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                        </legend>
+                        <div class="grid-row">
+                            <div class="govuk-grid-column-two-thirds">
+                                <label class="govuk-label" for="filter">Status</label>
+                                <select class="govuk-select" id="filter" name="filter">
+                                    <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
+                                    <option id="unsuccessful" th:href="@{/competition/{cid}/applications/previous?filter=}" value="REJECTED" th:selected="${(param.filter != null) and (param.filter[0] == 'REJECTED')}">Unsuccessful</option>
+                                    <option id="withdrawn" th:href="@{/competition/{cid}/applications/previous?filter=}" value="WITHDRAWN" th:selected="${(param.filter != null) and (param.filter[0] == 'WITHDRAWN')}">Withdrawn</option>
+                                    <option id="ineligable" th:href="@{/competition/{cid}/applications/previous?filter=}" value="INELIGIBLE" th:selected="${(param.filter != null) and (param.filter[0] == 'INELIGIBLE')}">Ineligible</option>
+                                </select>
+                            </div>
+                            <div class="govuk-grid-column-one-third">
+                                <button class="govuk-button">Filter</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="govuk-!-margin-top-6">
+                        <a href="?" class="govuk-body govuk-link">Clear all filters</a>
                     </div>
                 </div>
-            </fieldset>
-            <div class="extra-margin">
-                <a href="?">Clear all filters</a>
+            </form>
+
+            <div class="grid-row sorting">
+                <div class="govuk-grid-column-full">
+                    <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.unsuccessfulApplicationsSize}">6</span>
+                    <span class="govuk-heading-s">applications</span>
+                </div>
             </div>
-        </div>
-    </form>
+            <div class="table-overflow">
+                <table class="govuk-table" id="application-list">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header" scope="col" th:colspan="${model.ifsAdmin ? '2' : '1'}">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="row, iterStat : ${model.unsuccessfulApplications}">
+                        <td class="govuk-table__cell">
+                            <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
+                        <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>
+                        <td class="govuk-table__cell" th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}"
+                            th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
+                        <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
+                            <td class="govuk-table__cell alignright cta">
+                                <a
+                                    data-js-modal="mark-as-successful-modal"
+                                    th:attr="data-modal-form-action=@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
+                                    class="button-secondary"
+                                    th:href="@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"> Mark as successful
+                                </a>
+                            </td>
+                        </th:block>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
 
-    <div class="grid-row sorting">
-        <div class="column-full">
-            <span class="heading-xlarge no-margin" th:text="${model.unsuccessfulApplicationsSize}">6</span>
-            <span class="heading-small">applications</span>
-        </div>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.unsuccessfulApplicationsPagination})" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
     </div>
-    <div class="table-overflow">
-        <table id="application-list">
-            <thead>
-            <tr>
-                <th scope="col">Application number</th>
-                <th scope="col">Project title</th>
-                <th scope="col">Lead organisation</th>
-                <th scope="col" th:colspan="${model.ifsAdmin ? '2' : '1'}">Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="row, iterStat : ${model.unsuccessfulApplications}">
-                <td>
-                    <a th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
-                </td>
-                <td th:text="${row.name}">Automated Project Title generator</td>
-                <td th:text="${row.leadOrganisationName}">B.Systems</td>
-                <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}"
-                    th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
-                <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
-                    <td class="alignright cta">
-                        <a
-                            data-js-modal="mark-as-successful-modal"
-                            th:attr="data-modal-form-action=@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
-                            class="button button-secondary"
-                            th:href="@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"> Mark as successful
-                        </a>
-                    </td>
-                </th:block>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
-
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.unsuccessfulApplicationsPagination})" />
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

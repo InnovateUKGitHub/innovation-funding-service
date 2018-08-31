@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Become an assessor for Innovate UK'" />
     </head>
 
-    <body class="sign-in">
+    <body class="govuk-template__body sign-in">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Become an assessor for Innovate UK',size='heading-xlarge'" />
-            <p>Welcome to Innovate UK’s assessment service.</p>
-            <p>Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
 
-        	<a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Become an assessor for Innovate UK',size='govuk-heading-xl'" />
+                <p class="govuk-body">Welcome to Innovate UK’s assessment service.</p>
+                <p class="govuk-body">Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="govuk-button">Create account</a>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

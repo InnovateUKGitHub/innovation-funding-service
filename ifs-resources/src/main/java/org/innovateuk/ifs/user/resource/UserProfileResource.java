@@ -20,9 +20,6 @@ public class UserProfileResource extends UserProfileBaseResource {
 
     private ZonedDateTime modifiedOn;
 
-    public UserProfileResource() {
-    }
-
     public Long getUser() {
         return user;
     }

@@ -34,18 +34,18 @@ Resource          CompAdmin_Commons.robot
 Initial details: server-side validations
     [Documentation]  INFUND-2982 IFUND-3888
     [Tags]    HappyPath
-    Given the user navigates to the page   ${CA_UpcomingComp}
-    And the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link   jQuery=button:contains("Done")
-    Then the user should see an error    Please enter a title.
-    And the user should see an error    Please select a competition type.
-    And the user should see an error    Please select an innovation sector.
-    And the user should see an error    Please select an innovation area.
-    And the user should see an error    Please enter a valid date.
-    And the user should see an error    Please select an Innovation Lead.
-    And the user should see an error    Please select a Portfolio Manager.
-    And the user should see an error    Please select a state aid option.
+    Given the user navigates to the page    ${CA_UpcomingComp}
+    And the user clicks the button/link     jQuery = .govuk-button:contains("Create competition")
+    And The user clicks the button/link     link = Initial details
+    When the user clicks the button/link    jQuery = button:contains("Done")
+    Then the user should see an error       Please enter a title.
+    And the user should see an error        Please select a competition type.
+    And the user should see an error        Please select an innovation sector.
+    And the user should see an error        Please select an innovation area.
+    And the user should see an error        Please enter a valid date.
+    And the user should see an error        Please select an Innovation Lead.
+    And the user should see an error        Please select a Portfolio Manager.
+    And the user should see an error        Please select a state aid option.
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888
@@ -86,7 +86,7 @@ Initial details: should not allow dates in the past
     And the user enters text to a text field    id=openingDateYear    2015
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then The user should not see the element    jQuery=.button:contains("Edit")
+    Then The user should not see the element    jQuery=.govuk-button:contains("Edit")
     [Teardown]    #the user enters text to a text field    id=openingDateYear    2017
 
 Initial details: mark as done
@@ -95,7 +95,7 @@ Initial details: mark as done
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the element    jQuery=.button:contains("Edit")
+    Then the user should see the element    jQuery=.govuk-button:contains("Edit")
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
@@ -111,7 +111,7 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Generate code")
+    When the user clicks the button/link    id=generate-code
     Then the user should not see the error any more    Please generate a competition code.
     When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
@@ -245,6 +245,28 @@ Assessor: Client-side validation
     When The user enters text to a text field  id=assessorPay  120
     And the user selects the radio button      assessorCount   5
     Then The user should not see the text in the page  This field can only accept whole numbers
+    And the user clicks the button/link        link = Competition setup
+
+Documents in project setup: The competition admin is required to enter a title and guidance message
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       link = Documents in project setup
+    And the user clicks the button/link         link = Add document type
+    When the user clicks the button/link        css = button[type = "submit"]
+    Then the user should see the group of errors
+
+Documents in project setup: The competition admin addresses the errors
+    [Documentation]
+    [Tags]
+    Given the user enters text to a text field    id = title    Test document type
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter a title.")
+    When the user clicks the button/link          jQuery = span:contains("PDF")
+    #And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
+    When the user enters text to a text field     css = .editor    Guidance test.
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
 Custom suite setup
@@ -274,8 +296,8 @@ the user fills the empty question fields
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    jQuery=.button[value="Save and close"]
-    Wait Until Element Is Not Visible Without Screenshots    css=error-message
+    focus    jQuery=.govuk-button[value="Save and close"]
+    Wait Until Element Is Not Visible Without Screenshots    css=.govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user fills the milestones with invalid data
@@ -457,4 +479,8 @@ the user should not see the error any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Done")
     Wait for autosave
-    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}
+
+the user should see the group of errors
+    the user should see a summary error    Please enter guidance for the applicant.
+    the user should see a summary error    Please enter a title.

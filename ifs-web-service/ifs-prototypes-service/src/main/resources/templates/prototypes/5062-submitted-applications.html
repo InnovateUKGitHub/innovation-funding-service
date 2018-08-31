@@ -27,52 +27,52 @@
 
   <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.comp != null and param.comp[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Funding decision'}, ${null})" />
 
-      <h2 class="heading-medium">Key statistics</h2>
+      <h2 class="govuk-heading-m">Key statistics</h2>
 
-			<div class="grid-row" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
+			<div class="govuk-grid-row" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
 				<div class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-medium">17 November 2016</span><br />
+            <span class="govuk-heading-m">17 November 2016</span><br />
             <small>assessment deadline</small>
           </div>
 			 	</div>
 			 	<div class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-medium">4</span><br />
+            <span class="govuk-heading-m">4</span><br />
             <small>applications submitted</small>
           </div>
 				</div>
         <!-- <div class="column-quarter">
-          <a href="/prototypes/1969-export-example" class="button">Export application data (.csv)</a>
+          <a href="/prototypes/1969-export-example" class="govuk-button">Export application data (.csv)</a>
 				</div> -->
 			</div>
 
       <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
-        <div class="grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">287</span><br />
+              <span class="govuk-heading-l">287</span><br />
               <small>applications</small>
             </div>
   				</div>
 
   				<div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">2</span><br />
+              <span class="govuk-heading-l">2</span><br />
               <small>applications being funded</small>
             </div>
   				</div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">281</span><br />
+              <span class="govuk-heading-l">281</span><br />
               <small>applications not being funded</small>
             </div>
           </div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">3</span><br />
+              <span class="govuk-heading-l">3</span><br />
               <small>applications on hold</small>
             </div>
           </div>
@@ -82,26 +82,26 @@
 
 			<div th:if="${param.comp != null} and ${param.comp[0] == 'panel'}" th:remove="tag">
 
-				<!-- <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a> -->
+				<!-- <a href="#" class="govuk-button" data-js-modal="modal-publish-funding-decision">Notify applicants</a> -->
 
 				<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Notify applicants</h2>
+						<h2 class="govuk-heading-m govuk-!-margin-0">Notify applicants</h2>
 
-						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+						<p class="govuk-body">Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
-						<p>This step cannot be undone.</p>
+						<p class="govuk-body">This step cannot be undone.</p>
 
-						<hr />
+						<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-			            <div class="grid-row extra-margin">
-			            	<div class="column-half">
+			            <div class="govuk-grid-row extra-margin">
+			            	<div class="govuk-grid-column-one-half">
 			            		<a href="#">Cancel</a>
 			            	</div>
-			            	<div class="column-half alignright-button">
-			            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="button">Notify applicants</a>
+			            	<div class="govuk-grid-column-one-half alignright-button">
+			            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="govuk-button">Notify applicants</a>
 			            	</div>
 			            </div>
 
@@ -111,7 +111,7 @@
 			</div>
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 		<th:block th:if="${param.status != null and param.status[0] == 'decision'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='fundingDecision'" />
@@ -120,33 +120,33 @@
 
       <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
 
-      <div class="grid-row sorting">
+      <div class="govuk-grid-row sorting">
         <div class="column-one">
-          <h2><span class="heading-xlarge no-margin" id="applications-selected">287</span> applications</h2>
+          <h2><span class="govuk-heading-xl govuk-!-margin-0" id="applications-selected">287</span> applications</h2>
         </div>
       </div>
 
-        <div class="grid-row sorting sorting-controls">
-          <div class="column-half">
-            <div class="form-group no-margin">
+        <div class="govuk-grid-row sorting sorting-controls">
+          <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group govuk-!-margin-0">
               <fieldset class="alignleft select-all-applications">
-                <legend class="visuallyhidden">Select applications</legend>
+                <legend class="govuk-visually-hidden">Select applications</legend>
                 <label class="block-label selection-button-checkbox" for="select-all-1">
                   <input class="select-all" id="select-all-1" value="select-all" type="checkbox" />
                   Select all applications
                 </label>
               </fieldset>
-              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+              <span class="govuk-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
             </div>
           </div>
 
-          <div class="column-half">
+          <div class="govuk-grid-column-one-half">
             <fieldset class="mark-applications alignright">
-              <legend class="visuallyhidden">Mark selected applications</legend>
+              <legend class="govuk-visually-hidden">Mark selected applications</legend>
               <h3>Mark application as:</h3>
-              <button class="button button-secondary select-app" disabled="disabled">Successful</button>
-              <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
-              <button class="button button-secondary select-app" disabled="disabled">On hold</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">Successful</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">On hold</button>
             </fieldset>
           </div>
         </div>
@@ -154,20 +154,20 @@
       </th:block>
 
 			<div class="table-overflow">
-        <fieldset>
-          <legend class="visuallyhidden">Applications</legend>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-visually-hidden">Applications</legend>
   				<table id="application-list">
-  					<thead>
-  						<tr>
+  					<thead class="govuk-table__head">
+  						<tr class="govuk-table__row">
 
                 <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
                   <th scope="col" id="select-applications-label">Select applications</th>
                 </th:block>
 
-                <th scope="col">Application number</th>
-  							<th scope="col">Project title</th>
-  							<th scope="col">Lead</th>
-  							<th scope="col">Area</th>
+                <th class="govuk-table__header" scope="col">Application number</th>
+  							<th class="govuk-table__header" scope="col">Project title</th>
+  							<th class="govuk-table__header" scope="col">Lead</th>
+  							<th class="govuk-table__header" scope="col">Area</th>
   							<th scope="col" class="alignright">Number of partners</th>
   							<th scope="col" class="alignright">Grant requested (&#163;)</th>
   							<th scope="col" class="alignright">Total project cost (&#163;)</th>
@@ -180,7 +180,7 @@
 
   						</tr>
   					</thead>
-  					<tbody>
+  					<tbody class="govuk-table__body">
   						<tr class="filtered-result">
                 <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
                   <td class="form-group-cell">
@@ -192,14 +192,14 @@
 
                   </td>
                 </th:block>
-                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-  							<td>HVM</td>
-  							<td class="alignright">5</td>
-  							<td class="alignright">203,000</td>
-  							<td class="alignright">324,000</td>
-  							<td class="alignright">12</td>
+                <td class="govuk-table__cell"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+  							<td class="govuk-table__cell">HVM</td>
+  							<td class="govuk-table__cell alignright">5</td>
+  							<td class="govuk-table__cell alignright">203,000</td>
+  							<td class="govuk-table__cell alignright">324,000</td>
+  							<td class="govuk-table__cell alignright">12</td>
   							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
   								-
   							</td>
@@ -218,14 +218,14 @@
 
                   </td>
                 </th:block>
-                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-  							<td>HVM</td>
-  							<td class="alignright">5</td>
-  							<td class="alignright">203,000</td>
-  							<td class="alignright">300,000</td>
-  							<td class="alignright">12</td>
+                <td class="govuk-table__cell"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+  							<td class="govuk-table__cell">HVM</td>
+  							<td class="govuk-table__cell alignright">5</td>
+  							<td class="govuk-table__cell alignright">203,000</td>
+  							<td class="govuk-table__cell alignright">300,000</td>
+  							<td class="govuk-table__cell alignright">12</td>
   							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
   								Oh hold
   							</td>
@@ -244,14 +244,14 @@
 
                   </td>
                 </th:block>
-                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-  							<td>HVM</td>
-  							<td class="alignright">3</td>
-  							<td class="alignright">67,000</td>
-  							<td class="alignright">97,500</td>
-  							<td class="alignright">13</td>
+                <td class="govuk-table__cell"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+  							<td class="govuk-table__cell">HVM</td>
+  							<td class="govuk-table__cell alignright">3</td>
+  							<td class="govuk-table__cell alignright">67,000</td>
+  							<td class="govuk-table__cell alignright">97,500</td>
+  							<td class="govuk-table__cell alignright">13</td>
   							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
   								Successful
   							</td>
@@ -270,14 +270,14 @@
 
                   </td>
                 </th:block>
-                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-  							<td>HVM</td>
-  							<td class="alignright">7</td>
-  							<td class="alignright">100,000</td>
-  							<td class="alignright">125,000</td>
-  							<td class="alignright">14</td>
+                <td class="govuk-table__cell"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+  							<td class="govuk-table__cell">HVM</td>
+  							<td class="govuk-table__cell alignright">7</td>
+  							<td class="govuk-table__cell alignright">100,000</td>
+  							<td class="govuk-table__cell alignright">125,000</td>
+  							<td class="govuk-table__cell alignright">14</td>
   							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
   								On hold
   							</td>
@@ -294,27 +294,27 @@
 
       <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
 
-        <div class="grid-row sorting sorting-controls extra-margin-top">
-          <div class="column-half">
-            <div class="form-group no-margin">
+        <div class="govuk-grid-row sorting sorting-controls extra-margin-top">
+          <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group govuk-!-margin-0">
               <fieldset class="alignleft select-all-applications">
-                <legend class="visuallyhidden">Select applications</legend>
+                <legend class="govuk-visually-hidden">Select applications</legend>
                 <label class="block-label selection-button-checkbox" for="select-all-2">
                   <input class="select-all" id="select-all-2" value="select-all" type="checkbox" />
                   Select all applications
                 </label>
               </fieldset>
-              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+              <span class="govuk-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
             </div>
           </div>
 
-          <div class="column-half">
+          <div class="govuk-grid-column-one-half">
             <fieldset class="mark-applications alignright">
-              <legend class="visuallyhidden">Mark selected applications</legend>
+              <legend class="govuk-visually-hidden">Mark selected applications</legend>
               <h3>Mark application as:</h3>
-              <button class="button button-secondary select-app" disabled="disabled">Successful</button>
-              <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
-              <button class="button button-secondary select-app" disabled="disabled">On hold</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">Successful</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+              <button class="govuk-button button-secondary select-app" disabled="disabled">On hold</button>
             </fieldset>
           </div>
         </div>

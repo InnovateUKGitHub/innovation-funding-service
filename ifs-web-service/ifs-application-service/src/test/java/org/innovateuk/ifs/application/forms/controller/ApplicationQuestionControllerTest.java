@@ -4,20 +4,16 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
-import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -25,10 +21,10 @@ import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewM
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -163,7 +159,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         // save actions should always succeed.
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
 

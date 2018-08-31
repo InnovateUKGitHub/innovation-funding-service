@@ -29,7 +29,7 @@
 %icon-incomplete {
   background-image: url('../images/ifs-images/icons/icon-alert.png');
   background-repeat: no-repeat;
-  color: $red;
+  color: $govuk-error-colour;
 }
 
 .collapsible,
@@ -48,8 +48,8 @@
 
   div {
     &.section-status {
+      @include govuk-font(16);
       float: right;
-      font-size: 16px;
       padding: 3px 5px 0 20px;
       text-align: left;
       font-weight: bold;
@@ -66,16 +66,16 @@
 
   .section-complete {
     @extend %icon-tick;
-    color: $button-colour;
+    color: $govuk-button-colour;
   }
 
   .section-incomplete {
     @extend %icon-incomplete;
-    color: $red;
+    color: $govuk-error-colour;
   }
 
   .section-awaiting {
-    color: $grey-1;
+    color: $govuk-secondary-text-colour;
   }
 
   @include media-down(mobile) {
@@ -111,8 +111,8 @@
 
   %marked-as-complete {
     border-width: 2px;
-    border-color: $panel-colour;
-    background-color: $grey-4;
+    border-color: govuk-colour("grey-3");
+    background-color: govuk-colour("grey-4");
   }
 
   &.marked-as-complete {
@@ -131,7 +131,7 @@
   &.assigned-to-me {
     textarea,
     .textarea-header {
-      border: 2px solid $text-colour;
+      border: 2px solid $govuk-text-colour;
     }
 
     .textarea-header {
@@ -156,12 +156,12 @@ th,
 span {
   &.status {
     &.na {
-      background: $grey-3;
+      background: govuk-colour("grey-3");
     }
 
     &.ok {
       @extend %icon-tick;
-      color: $button-colour;
+      color: $govuk-button-colour;
       padding-left: 25px;
     }
 
@@ -170,7 +170,7 @@ span {
     }
 
     &.waiting {
-      color: $secondary-text-colour;
+      color: $govuk-secondary-text-colour;
     }
 
     a {
@@ -191,7 +191,7 @@ span {
 
         a {
           &:link {
-            color: $button-colour;
+            color: $govuk-button-colour;
           }
         }
       }
@@ -199,7 +199,7 @@ span {
       &.rejected {
         a {
           &:link {
-            color: $red;
+            color: $govuk-error-colour;
           }
         }
       }
@@ -215,7 +215,7 @@ span {
         background-size: 33px 30px;
 
         a {
-          color: $secondary-text-colour;
+          color: $govuk-secondary-text-colour;
         }
       }
     }
@@ -266,7 +266,7 @@ ul {
       }
 
       &[data-valid="true"]{
-        color: $button-colour;
+        color: $govuk-button-colour;
 
         &:before{
           @extend %icon-tick;
@@ -274,7 +274,7 @@ ul {
       }
 
       &[data-valid="false"]{
-        color: $error-colour;
+        color: $govuk-error-colour;
 
         &:before{
           @extend %icon-cross;

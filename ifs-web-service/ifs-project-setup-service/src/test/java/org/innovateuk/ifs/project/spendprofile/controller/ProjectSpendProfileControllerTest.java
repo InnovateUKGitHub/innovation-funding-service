@@ -28,7 +28,7 @@ import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -82,7 +82,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     private StatusService statusService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
@@ -223,7 +223,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -251,7 +251,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         verify(projectService).getById(projectId);
         verify(spendProfileService, times(2)).getSpendProfileTable(projectId, organisationId);
-        verify(organisationService).getOrganisationById(organisationId);
+        verify(organisationRestService).getOrganisationById(organisationId);
         verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
     }
 
@@ -443,7 +443,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
 
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
@@ -496,7 +496,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -524,7 +524,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         verify(projectService).getById(projectId);
         verify(spendProfileService).getSpendProfileTable(projectId, organisationId);
-        verify(organisationService).getOrganisationById(organisationId);
+        verify(organisationRestService).getOrganisationById(organisationId);
         verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
 
     }
@@ -690,7 +690,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .withRole(PARTNER)
                 .build(1);
 
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();

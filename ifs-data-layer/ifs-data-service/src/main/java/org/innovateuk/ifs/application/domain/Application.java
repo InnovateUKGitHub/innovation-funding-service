@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Application defines database relations and a model to use client side and server side.
  */
@@ -217,11 +215,11 @@ public class Application implements ProcessActivity {
     }
 
     public User getLeadApplicant() {
-        return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getUser).orElse(null);
     }
 
     public Long getLeadOrganisationId() {
-        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     public List<ApplicationInvite> getInvites() {

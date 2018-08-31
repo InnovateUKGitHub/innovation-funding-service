@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ProjectDetailsState implements ProcessState, IdentifiableEnum<ProjectDetailsState> {
+public enum ProjectDetailsState implements ProcessState, IdentifiableEnum {
 
     PENDING(6, State.PENDING),
     DECIDE_IF_READY_TO_SUBMIT(-1, State.PENDING), // pseudo state

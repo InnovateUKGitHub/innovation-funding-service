@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -14,12 +16,11 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -38,7 +39,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private ApplicationService applicationService;
     private SectionService sectionService;
     private UserService userService;
-    private OrganisationService organisationService;
     private InviteService inviteService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
@@ -47,12 +47,11 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          CompetitionRestService competitionRestService,
                                                          ApplicationService applicationService,
                                                          SectionService sectionService,
-                                                         QuestionService questionService,
+                                                         QuestionRestService questionRestService,
                                                          FormInputRestService formInputRestService,
                                                          UserService userService,
-                                                         OrganisationService organisationService,
                                                          InviteService inviteService) {
-        super(sectionService, formInputRestService, questionService);
+        super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
@@ -60,7 +59,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.userService = userService;
-        this.organisationService = organisationService;
         this.inviteService = inviteService;
     }
 
@@ -70,7 +68,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,

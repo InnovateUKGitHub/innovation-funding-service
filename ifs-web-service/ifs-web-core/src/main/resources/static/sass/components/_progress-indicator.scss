@@ -29,13 +29,13 @@
   display: inline-block;
   position: relative;
   width:100%;
-  background: $grey-2;
+  background: govuk-colour("grey-2");
   height:30px;
 
   .progress-totals {
+    @include govuk-font(14);
     position: absolute;
-    color:$grey-1;
-    font-size:15px;
+    color:$govuk-secondary-text-colour;
     display:block; // overwriting the aria-hidden="true" as we do want this for non-assisted technlogy users but not for screen readers
     bottom:-40px;
   }
@@ -51,7 +51,7 @@
 
 .progress {
   @include border-radius(15px 0 0 15px);
-  background-color: $turquoise;
+  background-color: govuk-colour("turquoise");
   height: 100%;
   position: absolute;
   left:0;
@@ -76,6 +76,7 @@
 
 .progress {
   div {
+    @include govuk-font(19);
     position: absolute;
     right:-37px;
     width:70px;
@@ -85,26 +86,25 @@
     background:#000;
     text-indent: 0;
     top:47px;
-    color:#fff;
-    font-size:18px;
+    color:govuk-colour("white");
     z-index:1;
 
     &:before {
       @include rotate(45deg);
+      @include govuk-font(36);
       position: absolute;
       display: block;
       width:100%;
       text-align: center;
-      top:-28px;
+      top:-10px;
       color:#000;
-      font-size: 40px;
       content: "\25A0";
       z-index: -1;
     }
   }
 }
 
-@include ie-lte(8) {
+@include is-ie8() {
   .progress {
     div {
       &:before {

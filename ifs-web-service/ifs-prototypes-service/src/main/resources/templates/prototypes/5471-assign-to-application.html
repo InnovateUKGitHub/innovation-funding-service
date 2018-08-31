@@ -19,11 +19,11 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Application progress'}, ${null})" />
 
-	<h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+	<h2 class="govuk-heading-m">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
-	<div class="grid-row extra-margin">
+	<div class="govuk-grid-row extra-margin">
 		<div class="column-quarter">
-			<h3 class="heading-small">Partners</h3>
+			<h3 class="govuk-heading-s">Partners</h3>
 			<ul>
 				<li>Aptrans Ltd (Lead)</li>
 				<li>Biotech Corp</li>
@@ -31,15 +31,15 @@
 			</ul>
 		</div>
 		<div class="column-quarter">
-			<h3 class="heading-small">Innovation area</h3>
-			<p>Advanced materials</p>
+			<h3 class="govuk-heading-s">Innovation area</h3>
+			<p class="govuk-body">Advanced materials</p>
 		</div>
 	</div>
 	<div class="extra-margin">
 		<a href="#">Review application</a>
 	</div>
 
-	<h2 class="heading-medium">Assigned (4)</h2>
+	<h2 class="govuk-heading-m">Assigned (4)</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-assessors-list3-table" />
 
@@ -47,32 +47,32 @@
 		<button class="js-close close" aria-label="Close Popup">X</button>
 		<div>
 
-			<h2 class="heading-medium no-margin">Are you sure you want to remove this assessor from the application?</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to remove this assessor from the application?</h2>
 
-			<p>If you remove this application from the assessor then any work they may have started will be permanently deleted. This action cannot be undone.</p>
+			<p class="govuk-body">If you remove this application from the assessor then any work they may have started will be permanently deleted. This action cannot be undone.</p>
 
-			<hr />
+			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 			<div class="alignright-button">
 
-				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+				<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-				<a class="button js-close" href="#" id="prototype-remove-started">Remove assessor</a>
+				<a class="govuk-button js-close" href="#" id="prototype-remove-started">Remove assessor</a>
 
 			</div>
 
 		</div>
 	</div>
 
-	<h2 class="heading-medium">Rejected (1)</h2>
+	<h2 class="govuk-heading-m">Rejected (1)</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-assessors-list4-table" />
 
-	<h2 class="heading-medium">Previously assigned (0)</h2>
+	<h2 class="govuk-heading-m">Previously assigned (0)</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-assessors-list7-table" />
 
-	<h2 class="heading-medium">Available assessors</h2>
+	<h2 class="govuk-heading-m">Available assessors</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=4" />
 

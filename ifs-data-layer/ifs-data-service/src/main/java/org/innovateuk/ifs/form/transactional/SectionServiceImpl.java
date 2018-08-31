@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
-import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -27,9 +26,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class SectionServiceImpl extends BaseTransactionalService implements SectionService {
-
-    @Autowired
-    private SectionRepository sectionRepository;
 
     @Autowired
     private SectionMapper sectionMapper;

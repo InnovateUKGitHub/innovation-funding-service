@@ -5,15 +5,15 @@
 <!-- ======== Assessment - pagination ======= -->
 <div th:fragment="assessment-pagination">
     <nav class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
-        <ul>
+        <ul class="govuk-list govuk-!-padding-1">
             <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
-                <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
+                <a th:href="@{${navigation.previousUrl}}" class="govuk-link" rel="prev" title="Navigate to previous part">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title" th:text="${navigation.previousText}" />
                 </a>
             </li>
             <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
-                <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
+                <a th:href="@{${navigation.nextUrl}}" class="govuk-link" rel="next" title="Navigate to next part">
                     <span class="pagination-label">Next</span>
                     <span class="pagination-part-title" th:text="${navigation.nextText}" />
                 </a>
@@ -24,19 +24,19 @@
 
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
-<div th:fragment="assessment-header-sub (linkTitle, linkUrl, linkClass)">
-    <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
-    </div>
+<div th:fragment="assessment-header-sub (linkTitle, linkUrl)">
+    <a th:if="${linkTitle != null and linkUrl != null}"
+       class="govuk-back-link"
+       th:href="${linkUrl}"
+       th:text="${linkTitle}" />
 </div>
 
-<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, linkClass, daysPercentage, daysLeft)">
+<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, daysPercentage, daysLeft)">
     <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
+        <a th:if="${linkTitle != null and linkUrl != null}"
+           class="govuk-back-link"
+           th:href="${linkUrl}"
+           th:text="${linkTitle}" />
         <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}"><th:block th:text="${daysLeft}" /> days left to submit</div>
     </div>
 </div>
@@ -44,14 +44,14 @@
 
 <!-- =================== Application details ============================== -->
 <th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
-    <div class="grid-row">
-        <div class="column-half">
-            <h3 class="heading-small">Project title</h3>
-            <p th:text="${applicationName}" />
-            <h3 class="heading-small">Lead organisation</h3>
-            <p th:text="${leadOrganisation.name}" />
-            <h3 class="heading-small">Partners</h3>
-            <ul class="list list-bullet">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h3 class="govuk-heading-s">Project title</h3>
+            <p class="govuk-body" th:text="${applicationName}" />
+            <h3 class="govuk-heading-s">Lead organisation</h3>
+            <p class="govuk-body" th:text="${leadOrganisation.name}" />
+            <h3 class="govuk-heading-s">Partners</h3>
+            <ul class="govuk-list govuk-list--bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
                 </li>
@@ -61,12 +61,12 @@
                 </li>
             </ul>
         </div>
-        <div class="column-half">
-            <h3 class="heading-small">Project timescales</h3>
-            <p>Project start date:<br/>
+        <div class="govuk-grid-column-one-half">
+            <h3 class="govuk-heading-s">Project timescales</h3>
+            <p class="govuk-body">Project start date:<br/>
             <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
             </p>
-            <p>Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
+            <p class="govuk-body">Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>
 </th:block>
@@ -86,10 +86,10 @@
         </div>
     </h2>
     <div class="question">
-        <div class="form-group">
-            <p data-md-to-html="" class="wysiwyg-styles" th:text="${question.feedback}" />
-            <p><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
-            <p th:unless="${question.applicationInScope == null}" class="assessor-score alignright">
+        <div class="govuk-form-group">
+            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${question.feedback}" />
+            <p class="govuk-body"><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" class="govuk-link">Return to this question in the application</a></p>
+            <p th:unless="${question.applicationInScope == null}" class="govuk-body assessor-score alignright">
               <span class="score">In scope: <strong th:text="${question.applicationInScope} ? 'Yes' : 'No'" /></span>
             </p>
         </div>
@@ -99,11 +99,11 @@
 
 <!-- ======== Assessment - assessor summary total score ======= -->
 <div th:fragment="assessment-summary-total-score(totalGiven, totalPossible, totalPercentage)">
-    <div class="extra-margin alignright">
-        <p class="no-margin">
+    <div class="govuk-!-margin-top-6 alignright">
+        <p class="govuk-body govuk-!-margin-0">
             <strong>Total: <th:block th:text="${totalGiven}">0</th:block>/<th:block th:text="${totalPossible}">100</th:block></strong>
         </p>
-        <p>
+        <p class="govuk-body">
             <strong th:text="${totalPercentage}+'%'">0%</strong>
         </p>
     </div>
@@ -123,24 +123,24 @@
 <!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
-        <h2 class="heading-medium no-margin">Reject assessment</h2>
-        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-            <h2 class="heading-medium error-summary-heading">We were unable to reject the assessment.</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Reject assessment</h2>
+        <div aria-labelledby="error-summary-title" th:if="${#fields.hasErrors('global')}">
+            <h2 class="govuk-heading-m error-summary-heading">We were unable to reject the assessment.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
             </ul>
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
-            <label class="form-label" th:for="rejectReason">
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
+            <label class="govuk-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
-                <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
-                </th:block>
             </label>
-            <select class="form-control"
+            <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
+            </th:block>
+            <select class="govuk-select"
                     th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
-                    th:errorclass="form-control-error"
+                    th:errorclass="govuk-select--error"
                     required="required"
                     th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
@@ -149,31 +149,31 @@
                         th:text="${reason.displayLabel}">Conflict of interest</option>
             </select>
         </div>
-        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
-            <label class="form-label" th:for="rejectComment">
+        <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
+            <label class="govuk-label" th:for="rejectComment">
                 Use this space to provide more information
-                <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
-                </th:block>
             </label>
+            <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
+            </th:block>
             <textarea
-                class="form-control width-full"
+                class="govuk-textarea"
                 maxlength="5000"
                 data-max_words="100"
                 data-maxwordslength="100"
                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                 th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                th:errorclass="form-control-error"
+                th:errorclass="govuk-textarea--error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
             <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="button" name="submit-app-details">Reject</button>
-            <button class="js-close buttonlink" type="button">Cancel</button>
+            <button class="govuk-button" name="submit-app-details">Reject</button>
+            <button class="js-close button-clear" type="button">Cancel</button>
         </div>
     </form>
 </div>
@@ -184,12 +184,12 @@
     <div class="modal-submit-assessments" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
 
-        <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
-        <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
-        <hr />
+        <h2 class="govuk-heading-m govuk-!-margin-0">You are about to submit your assessments.</h2>
+        <p class="govuk-body">You will not be able to edit after you submit. Are you sure you want to continue?</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="button" type="submit">Yes I want to submit the assessments</button>
-            <button class="js-close buttonlink" type="button">Cancel</button>
+            <button class="govuk-button" type="submit">Yes I want to submit the assessments</button>
+            <button class="js-close button-clear" type="button">Cancel</button>
         </div>
     </div>
 </div>

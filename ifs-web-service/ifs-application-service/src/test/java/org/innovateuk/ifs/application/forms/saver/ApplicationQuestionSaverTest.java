@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +27,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_INCOMPLETE;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -43,7 +45,7 @@ public class ApplicationQuestionSaverTest {
     private ApplicationQuestionSaver questionSaver;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -53,6 +55,9 @@ public class ApplicationQuestionSaverTest {
 
     @Mock
     private QuestionService questionService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -81,9 +86,9 @@ public class ApplicationQuestionSaverTest {
         application.setResubmission(false);
         form.setApplication(application);
 
-        when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(newProcessRoleResource().withId(processRoleId).build());
+        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(newProcessRoleResource().withId(processRoleId).build()));
         when(applicationService.getById(applicationId)).thenReturn(application);
-        when(questionService.getById(questionId)).thenReturn(newQuestionResource().withId(questionId).build());
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().withId(questionId).build()));
         when(userService.isLeadApplicant(userId, application)).thenReturn(Boolean.FALSE);
     }
 
@@ -103,6 +108,7 @@ public class ApplicationQuestionSaverTest {
     @Test
     public void saveApplicationForm_MarkQuestionAsCompleteAndErrors() {
         when(request.getParameterMap()).thenReturn(asMap(MARK_AS_COMPLETE, new String[]{}));
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(newQuestionResource().build()));
 
         ValidationMessages messages = new ValidationMessages();
         messages.addError(new Error("Random One", HttpStatus.BAD_REQUEST));
@@ -121,6 +127,7 @@ public class ApplicationQuestionSaverTest {
     @Test
     public void saveApplicationForm_MarkQuestionAsCompleteWithOverridingAndErrors() {
         when(request.getParameterMap()).thenReturn(asMap());
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(newQuestionResource().build()));
 
         ValidationMessages messages = new ValidationMessages();
         messages.addError(new Error("Random One", HttpStatus.BAD_REQUEST));

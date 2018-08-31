@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.exception;
 
-public class BigDecimalNumberFormatException extends NumberFormatException {
-    public BigDecimalNumberFormatException() {
-    }
+public class BigDecimalNumberFormatException extends IllegalArgumentException {
 
     @Override
     public String getMessage() {
