@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -58,4 +59,13 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         assertEquals(result.getSuccess().getId(), grant.getId().toString());
     }
 
+    @Test
+    public void create() throws Exception {
+        ServiceResult<EuGrantResource> result = euGrantService.create();
+
+        List<EuGrant> grants = newArrayList(euGrantRepository.findAll());
+
+        assertTrue(result.isSuccess());
+        assertFalse(grants.isEmpty());
+    }
 }

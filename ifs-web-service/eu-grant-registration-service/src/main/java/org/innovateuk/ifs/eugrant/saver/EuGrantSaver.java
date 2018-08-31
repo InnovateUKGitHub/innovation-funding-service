@@ -11,15 +11,11 @@ import org.springframework.stereotype.Component;
 public class EuGrantSaver {
 
     @Autowired
-    private EuGrantRestService euGrantRestService;
-
-    @Autowired
     private EuGrantCookieService euGrantCookieService;
 
     public RestResult<Void> save(EuGrantResource euGrantResource) {
 
         euGrantCookieService.save(euGrantResource);
-//        return euGrantRestService.update(euGrantResource);
         return RestResult.restSuccess();
     }
 }

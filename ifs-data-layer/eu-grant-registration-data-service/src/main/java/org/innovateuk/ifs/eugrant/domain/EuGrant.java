@@ -39,6 +39,7 @@ public class EuGrant {
     private String shortCode;
 
     @CreatedDate
+    @Column(updatable = false)
     private ZonedDateTime createdOn;
 
     @LastModifiedDate
@@ -61,6 +62,10 @@ public class EuGrant {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setContact(EuContact contact) {
@@ -110,4 +115,5 @@ public class EuGrant {
     public ZonedDateTime getModifiedOn() {
         return modifiedOn;
     }
+
 }
