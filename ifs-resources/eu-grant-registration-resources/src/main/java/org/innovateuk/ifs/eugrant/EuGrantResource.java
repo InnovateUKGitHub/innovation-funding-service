@@ -40,6 +40,7 @@ public class EuGrantResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(contact, that.contact)
                 .isEquals();
     }
 
@@ -47,6 +48,7 @@ public class EuGrantResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(contact)
                 .toHashCode();
     }
 }
