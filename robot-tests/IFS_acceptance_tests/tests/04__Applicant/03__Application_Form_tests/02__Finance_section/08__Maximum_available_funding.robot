@@ -74,6 +74,15 @@ Maximum funding level available for RTO lead
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                            link=Application overview
 
+Editing research category does not reset your funding
+    [Documentation]  IFS-4127
+    [Tags]
+    Given the user edits the research category   Feasibility studies
+    And the user edits the organisation size     ${SMALL_ORGANISATION_SIZE}
+    And The user clicks the button/link          link = Your finances
+    Then the user should see the element         jQuery = li:contains("Your funding") .task-status-complete
+    [Teardown]  the user clicks the button/link  link=Application overview
+
 Lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]

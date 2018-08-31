@@ -43,7 +43,7 @@
             <tr class="govuk-table__row" th:each="invite : ${invites}">
                 <td class="govuk-table__cell"><th:block th:text="${invite.name}"/></td>
                 <td class="govuk-table__cell" th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
-                <td class="govuk-table__cell"><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}" class="govuk-link">steve.smith@empire.com</a></td>
                 <td class="govuk-table__cell">
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
@@ -71,9 +71,9 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="user : ${users}">
-                <td class="govuk-table__cell"><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                <td class="govuk-table__cell"><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}" class="govuk-link">Steve Smith</a></td>
                 <td class="govuk-table__cell" th:text="${user.getRolesString()}">IFS Admin</td>
-                <td class="govuk-table__cell"><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + user.email}" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></td>
                 <td class="govuk-table__cell"><span class="govuk-hint"></span></td>
             </tr>
             </tbody>
