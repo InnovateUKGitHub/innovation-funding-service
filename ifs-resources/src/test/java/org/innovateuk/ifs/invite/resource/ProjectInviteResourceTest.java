@@ -7,10 +7,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class InviteProjectResourceTest {
+public class ProjectInviteResourceTest {
 
-    InviteProjectResource setInviteResource;
-    InviteProjectResource constructedInviteResource;
+    ProjectInviteResource setInviteResource;
+    ProjectInviteResource constructedInviteResource;
 
     Long inviteId;
     Long userId;
@@ -40,7 +40,7 @@ public class InviteProjectResourceTest {
         leadApplicant = "leadApplicant";
         competitionName = "competitionName";
 
-        setInviteResource = new InviteProjectResource();
+        setInviteResource = new ProjectInviteResource();
         setInviteResource.setId(inviteId);
         setInviteResource.setName(name);
         setInviteResource.setNameConfirmed(nameConfirmed);
@@ -52,7 +52,7 @@ public class InviteProjectResourceTest {
         setInviteResource.setCompetitionName(competitionName);
         setInviteResource.setLeadApplicant(leadApplicant);
 
-        constructedInviteResource = new InviteProjectResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
+        constructedInviteResource = new ProjectInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
 
     }
 

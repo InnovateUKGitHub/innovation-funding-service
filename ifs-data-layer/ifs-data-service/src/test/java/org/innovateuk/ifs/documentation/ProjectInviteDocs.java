@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder;
+import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.UUID;
 
 import static org.innovateuk.ifs.documentation.RestDocsUtil.createTopLevelArrayOfDocumentation;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class InviteProjectDocs {
+public class ProjectInviteDocs {
 
-    public static final FieldDescriptor[] inviteProjectFields = {
-            fieldWithPath("id").description("Id of the InviteProject"),
-            fieldWithPath("status").description("The current InviteStatus of the InviteProject (e.g. CREATED)"),
+    public static final FieldDescriptor[] projectInviteFields = {
+            fieldWithPath("id").description("Id of the ProjectInvite"),
+            fieldWithPath("status").description("The current InviteStatus of the ProjectInvite (e.g. CREATED)"),
             fieldWithPath("user").description("Id of the User for which the Invite is intended (if they exist in the system)"),
             fieldWithPath("project").description("Id of the Project for which the Invite is intended"),
             fieldWithPath("projectName").description("Name of the Project for which the Invite is intended"),
@@ -31,9 +31,9 @@ public class InviteProjectDocs {
             fieldWithPath("organisationName").description("Name of the Organisation that the Invite recipient is being invited into")
     };
 
-    public static final FieldDescriptor[] inviteProjectFieldsList = createTopLevelArrayOfDocumentation(inviteProjectFields);
+    public static final FieldDescriptor[] projectInviteFieldsList = createTopLevelArrayOfDocumentation(projectInviteFields);
 
-    public static final InviteProjectResourceBuilder inviteProjectResourceBuilder = newInviteProjectResource().
+    public static final ProjectInviteResourceBuilder projectInviteResourceBuilder = newProjectInviteResource().
             withStatus(InviteStatus.CREATED).
             withUser(654L).
             withProject(123L).
