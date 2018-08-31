@@ -14,7 +14,6 @@ public class GrantClaimMaximumDocs {
             fieldWithPath("researchCategory").description("The research category the Grant Claim belongs to"),
             fieldWithPath("organisationType").description("The organisation type the Grant Claim belongs to"),
             fieldWithPath("organisationSize").description("The organisation size for this Grant Claim Maximum"),
-            fieldWithPath("competitionType").description("The competition type for this Grant Claim Maximum"),
             fieldWithPath("maximum").description("The maximum for this Grant Claim")
     };
 }
