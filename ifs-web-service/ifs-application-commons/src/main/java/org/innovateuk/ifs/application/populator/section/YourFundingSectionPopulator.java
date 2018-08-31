@@ -96,13 +96,14 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     }
 
     private long getYourOrganisationSectionId(ApplicantSectionResource section) {
-        SectionResource yourOrganisationSection = sectionService.getOrganisationFinanceSection(section.getCompetition
-                ().getId());
+        SectionResource yourOrganisationSection = sectionService.getOrganisationFinanceSection(
+                section.getCompetition().getId());
         return yourOrganisationSection.getId();
     }
 
-    private boolean isFundingSectionLocked(ApplicantSectionResource section, boolean researchCategoryRequired, boolean
-            yourOrganisationRequired) {
+    private boolean isFundingSectionLocked(ApplicantSectionResource section,
+                                           boolean researchCategoryRequired,
+                                           boolean yourOrganisationRequired) {
         boolean fieldsRequired = researchCategoryRequired || yourOrganisationRequired;
         return fieldsRequired && isCompetitionOpen(section) && isOrganisationTypeBusiness(section) &&
                 !isMaximumFundingLevelOverridden(section);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -63,7 +64,7 @@ public class ApplicationFinance extends Finance {
 
     public Integer getMaximumFundingLevel() {
         if (!isBusinessOrganisationType()) {
-            return 100;
+            return FundingLevel.HUNDRED.getPercentage();
         }
 
         if (isMaximumFundingLevelOverridden()) {
@@ -105,8 +106,9 @@ public class ApplicationFinance extends Finance {
     }
 
     private boolean isMaximumFundingLevelOverridden() {
-        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream().map
-                (GrantClaimMaximum::getId).collect(toSet());
+        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream()
+                .map(GrantClaimMaximum::getId)
+                .collect(toSet());
         Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
                 .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
         return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
