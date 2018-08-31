@@ -182,7 +182,7 @@
 
                 <div th:unless="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                         <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
-                        <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
+                        <span class="govuk-body" th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
                 </div>
             </div>
 

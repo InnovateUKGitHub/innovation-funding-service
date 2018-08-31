@@ -86,7 +86,7 @@ the support user should be able to see him as
     logging in and error checking    &{support_user_credentials}
     the user navigates to the page   ${manageExternalUsers}
     the user is searching for external users  ${invitedCollaborator}  Email
-    the user clicks the button/link  jQuery=.button-clear:contains("${tab}")
+    the user clicks the button/link  jQuery=button:contains("${tab}")
     #The tab appears after enabling the search functionality
     the user should see the element  jQuery=td:contains("${invitedCollaborator}") ~ td:contains("${status}")
     the user logs out if they are logged in

@@ -46,8 +46,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
 
-
-
     @Before
     public void setupMockMvc() {
         mockMvc = new MockMvcConfigurer()

@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -122,7 +123,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void multipleFundedAndInformed() {
-
+        loginCompAdmin();
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
@@ -167,7 +168,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void fundedAndNotInformed() {
-        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+        loginCompAdmin();
+
+        Competition compFundedAndInformed = newCompetition()
+                .with(id(null))
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
@@ -181,7 +189,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void notFundedAndInformed() {
-        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+        loginCompAdmin();
+
+        Competition compFundedAndInformed = newCompetition()
+                .with(id(null))
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
@@ -622,7 +637,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationsId() {
-        Competition competition = repository.save(newCompetition().withId(7L).build());
+        loginCompAdmin();
+
+        Competition competition = repository.save(newCompetition()
+                .with(id(null))
+                .build());
+
         Application application = applicationRepository.save(newApplication().withId(11L).withCompetition
                 (competition).build());
 
