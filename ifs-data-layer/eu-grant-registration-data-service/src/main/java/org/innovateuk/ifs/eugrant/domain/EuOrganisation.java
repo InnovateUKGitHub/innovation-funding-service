@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -15,22 +17,24 @@ public class EuOrganisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private final String name;
-    @OneToOne
-    private final EuAddress address;
+
+    @NotNull
     @Enumerated(STRING)
     private final EuOrganisationType organisationType;
+
     private final String companiesHouseNumber;
 
     EuOrganisation() {
         name = null;
-        address = null;
         organisationType = null;
         companiesHouseNumber = null;
     }
 
     public EuOrganisation(final String name, final EuOrganisationType organisationType,
-                          final String companiesHouseNumber, final EuAddress address) {
+                          final String companiesHouseNumber) {
         if (name == null) {
             throw new NullPointerException("name connect be null");
         }
@@ -46,13 +50,9 @@ public class EuOrganisation {
         if (companiesHouseNumber.isEmpty()) {
             throw new IllegalArgumentException("companiesHouseNumber cannot be empty");
         }
-        if (address == null) {
-            throw new NullPointerException("address cannot be null");
-        }
         this.companiesHouseNumber = companiesHouseNumber;
         this.name = name;
         this.organisationType = organisationType;
-        this.address = address;
     }
 
     public Long getId() {
@@ -61,10 +61,6 @@ public class EuOrganisation {
 
     public String getName() {
         return name;
-    }
-
-    public EuAddress getAddress() {
-        return address;
     }
 
     public EuOrganisationType getOrganisationType() {
