@@ -8,11 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class EuGrantControllerTest extends BaseControllerMockMVCTest<EUGrantController> {
+public class EuGrantControllerTest extends BaseControllerMockMVCTest<EuGrantController> {
 
     @Override
-    protected EUGrantController supplyControllerUnderTest() {
-        return new EUGrantController();
+    protected EuGrantController supplyControllerUnderTest() {
+        return new EuGrantController();
     }
 
     @Before

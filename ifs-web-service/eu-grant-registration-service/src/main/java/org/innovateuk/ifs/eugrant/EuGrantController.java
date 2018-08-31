@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/")
-public class EUGrantController {
+public class EuGrantController {
 
     @GetMapping("/overview")
     public String overview() {
-
         return "eugrant/overview";
     }
 
