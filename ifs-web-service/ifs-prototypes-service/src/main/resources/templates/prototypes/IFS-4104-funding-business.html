@@ -2,7 +2,7 @@
 <html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Business'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -15,9 +15,10 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-4104-funding-org?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
 
@@ -112,7 +113,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
