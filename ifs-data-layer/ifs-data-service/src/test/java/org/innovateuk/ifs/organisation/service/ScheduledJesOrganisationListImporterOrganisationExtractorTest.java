@@ -11,9 +11,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * TODO DW - document this class
- */
 public class ScheduledJesOrganisationListImporterOrganisationExtractorTest {
 
     @Test
