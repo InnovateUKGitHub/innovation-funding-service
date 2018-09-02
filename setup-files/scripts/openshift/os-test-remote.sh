@@ -43,7 +43,7 @@ function buildAndPushTestImages() {
 
 function deployTests() {
     oc create -f $(getBuildLocation)/robot-tests/7-chrome.yml
-    sleep 5
+    sleep 30 # TODO should wait till chrome is running
     oc create -f $(getBuildLocation)/robot-tests/8-robot.yml
     sleep 2
 }
