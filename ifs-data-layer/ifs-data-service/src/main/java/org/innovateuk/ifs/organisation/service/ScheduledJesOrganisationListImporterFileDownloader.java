@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.organisation.service.ScheduledJesOrganisationLi
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
- * TODO DW - document this class
+ * Component used to deal with the handling of the file download and cleanup exercises of refreshing the Je-S list of organisations
  */
 @Component
 class ScheduledJesOrganisationListImporterFileDownloader {
