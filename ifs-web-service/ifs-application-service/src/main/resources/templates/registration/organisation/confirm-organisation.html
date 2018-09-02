@@ -15,11 +15,11 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='govuk-heading-xl'" />
 
-        <div class="message-alert">
+        <div class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Confirm your organisation details are correct</h2>
+        <h2 class="govuk-heading-m">Confirm your organisation details are correct</h2>
         <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
         <form method="post" th:action="@{/organisation/create/save-organisation}">

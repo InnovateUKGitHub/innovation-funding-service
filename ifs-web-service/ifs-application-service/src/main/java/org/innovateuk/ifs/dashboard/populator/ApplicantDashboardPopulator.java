@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,7 @@ public class ApplicantDashboardPopulator {
 
     public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
         List<ProjectResource> allProjects = projectRestService.findByUserId(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(userId);
@@ -97,7 +99,7 @@ public class ApplicantDashboardPopulator {
                         .sorted()
                         .collect(toList());
 
-        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews, originQuery);
+        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews, originQuery, user.hasRole(MONITORING_OFFICER));
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -21,16 +22,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -139,15 +139,13 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id,
-                       List<Question> questions,
+    public Competition(List<Question> questions,
                        List<Section> sections,
                        String name,
                        ZonedDateTime startDate,
                        ZonedDateTime endDate,
                        ZonedDateTime registrationDate,
                        GrantTermsAndConditions termsAndConditions) {
-        this.id = id;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -158,8 +156,7 @@ public class Competition implements ProcessActivity {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
+    public Competition(String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
@@ -750,8 +747,7 @@ public class Competition implements ProcessActivity {
 
     public boolean getUseNewApplicantMenu() {
         return questions.stream().anyMatch(
-                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
-        );
+                question -> APPLICATION_TEAM == question.getQuestionSetupType());
     }
 }
 

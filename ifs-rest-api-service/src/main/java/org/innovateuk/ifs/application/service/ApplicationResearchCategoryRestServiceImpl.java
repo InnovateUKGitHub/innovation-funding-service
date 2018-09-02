@@ -18,7 +18,7 @@ public class ApplicationResearchCategoryRestServiceImpl extends BaseRestService 
 
     @Override
     public RestResult<ApplicationResource> setResearchCategory(long applicationId,
-                                                               long researchCategoryId) {
+                                                               Long researchCategoryId) {
         return postWithRestResult(format("%s/researchCategory/%s", applicationResearchCategoryRestURL, applicationId),
                 researchCategoryId, ApplicationResource.class);
     }

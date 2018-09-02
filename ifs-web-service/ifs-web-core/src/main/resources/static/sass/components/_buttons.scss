@@ -153,3 +153,13 @@ table {
     }
   }
 }
+
+button {
+  &.govuk-tabs__tab {
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

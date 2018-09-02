@@ -230,6 +230,10 @@ include::formInput.adoc[]
 == FormInputResponse
 include::formInputResponse.adoc[]
 
+[[grantClaimMaximum]]
+== Grant Claim Maximum
+include::grant-claim-maximum.adoc[]
+
 [[project]]
 == Project
 include::project.adoc[]

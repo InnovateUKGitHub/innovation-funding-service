@@ -22,7 +22,6 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -199,6 +198,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
 
         return sectionQuestions.values().stream()
                 .flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+                .collect(Collectors.toMap(QuestionResource::getId, k -> findFormInputByQuestion(k.getId(), formInputResources)));
     }
 }
