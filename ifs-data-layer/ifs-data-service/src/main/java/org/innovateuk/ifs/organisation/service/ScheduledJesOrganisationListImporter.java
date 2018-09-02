@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.repository.AcademicRepository;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -38,31 +39,37 @@ public class ScheduledJesOrganisationListImporter {
 
     private static final Log LOG = LogFactory.getLog(ScheduledJesOrganisationListImporter.class);
 
-    private boolean importEnabled;
-    private String jesFileDownloadUrl;
-    private int connectionTimeoutMillis = 10000;
-    private int readTimeoutMillis = 10000;
-
     private AcademicRepository academicRepository;
     private ScheduledJesOrganisationListImporterFileDownloader fileDownloader;
     private ScheduledJesOrganisationListImporterOrganisationExtractor organisationExtractor;
+    private TransactionalHelper transactionalHelper;
+
+    private boolean importEnabled;
+    private String jesSourceFileUrl;
+    private int connectionTimeoutMillis = 10000;
+    private int readTimeoutMillis = 10000;
+    private boolean deleteJesSourceFile;
 
     @Autowired
     ScheduledJesOrganisationListImporter(@Autowired AcademicRepository academicRepository,
                                          @Autowired ScheduledJesOrganisationListImporterFileDownloader fileDownloader,
                                          @Autowired ScheduledJesOrganisationListImporterOrganisationExtractor organisationExtractor,
+                                         @Autowired TransactionalHelper transactionalHelper,
                                          @Value("${ifs.data.service.jes.organisation.importer.connection.timeout.millis}") int connectionTimeoutMillis,
                                          @Value("${ifs.data.service.jes.organisation.importer.read.timeout.millis}") int readTimeoutMillis,
                                          @Value("${ifs.data.service.jes.organisation.importer.enabled}") boolean importEnabled,
-                                         @Value("${ifs.data.service.jes.organisation.importer.download.url}") String jesFileDownloadUrl) {
+                                         @Value("${ifs.data.service.jes.organisation.importer.download.url}") String jesSourceFileUrl,
+                                         @Value("${ifs.data.service.jes.organisation.importer.delete.source.file}") boolean deleteJesSourceFile) {
 
         this.academicRepository = academicRepository;
         this.organisationExtractor = organisationExtractor;
-        this.jesFileDownloadUrl = jesFileDownloadUrl;
+        this.transactionalHelper = transactionalHelper;
+        this.jesSourceFileUrl = jesSourceFileUrl;
         this.connectionTimeoutMillis = connectionTimeoutMillis;
         this.readTimeoutMillis = readTimeoutMillis;
         this.importEnabled = importEnabled;
         this.fileDownloader = fileDownloader;
+        this.deleteJesSourceFile = deleteJesSourceFile;
     }
 
     @Transactional
@@ -70,26 +77,49 @@ public class ScheduledJesOrganisationListImporter {
     public ServiceResult<List<String>> importJesList() {
 
         if (!importEnabled) {
-            LOG.trace("Je-S organisation list import currently disabled");
+            LOG.debug("Je-S organisation list import currently disabled");
+            return serviceSuccess(emptyList());
+        }
+
+        ServiceResult<URL> jesSourceFileUrlResult = getJesSourceFileUrl();
+
+        if (jesSourceFileUrlResult.isFailure()) {
+            LOG.warn("Could not determine Je-S organisation list file URI.  Got " + jesSourceFileUrlResult.getFailure());
+            return serviceFailure(jesSourceFileUrlResult.getFailure());
+        }
+
+        URL jesFileToDownload = jesSourceFileUrlResult.getSuccess();
+
+        if (!fileDownloader.jesSourceFileExists(jesFileToDownload)) {
+            LOG.debug("No Je-S organisation list file to import");
             return serviceSuccess(emptyList());
         }
 
         LOG.info("Importing Je-S organisation list...");
 
-        ServiceResult<List<String>> downloadResult = getJesFileDownloadUrl().
-                andOnSuccess(jesFileToDownload -> downloadFile(jesFileToDownload).
-                andOnSuccess(downloadedFile -> readDownloadedFile(downloadedFile).
+        ServiceResult<List<String>> downloadResult = downloadFile(jesFileToDownload).
+                andOnSuccess(downloadedFile -> deleteJesSourceFileIfNecessary(jesFileToDownload).
+                andOnSuccess(() -> readDownloadedFile(downloadedFile)).
                 andOnSuccessDo(organisationNames -> logDownloadedOrganisations(organisationNames)).
                 andOnSuccessDo(organisationNames -> deleteExistingAcademicEntries()).
-                andOnSuccessDo(organisationNames -> importNewAcademicEntries(organisationNames))));
+                andOnSuccessDo(organisationNames -> importNewAcademicEntries(organisationNames)));
 
         return downloadResult.handleSuccessOrFailureNoReturn(
                 this::logFailure,
                 this::logSuccess);
     }
 
+    private ServiceResult<Void> deleteJesSourceFileIfNecessary(URL jesSourceFile) {
+
+        if (!deleteJesSourceFile) {
+            return serviceSuccess();
+        }
+
+        return fileDownloader.deleteSourceFile(jesSourceFile);
+    }
+
     private void logDownloadedOrganisations(List<String> organisationNames) {
-        organisationNames.forEach(name -> LOG.debug("Found organisation " + name));
+        organisationNames.forEach(name -> LOG.debug("Found Je-S organisation " + name + " to import..."));
     }
 
     private void importNewAcademicEntries(List<String> organisationNames) {
@@ -99,6 +129,7 @@ public class ScheduledJesOrganisationListImporter {
 
     private void deleteExistingAcademicEntries() {
         academicRepository.deleteAll();
+        transactionalHelper.flushWithNoCommit();
     }
 
     private void logSuccess(List<String> success) {
@@ -114,12 +145,12 @@ public class ScheduledJesOrganisationListImporter {
     }
 
     private ServiceResult<File> downloadFile(URL jesFileToDownload) {
-        return fileDownloader.downloadFile(jesFileToDownload, connectionTimeoutMillis, readTimeoutMillis);
+        return fileDownloader.copyJesSourceFile(jesFileToDownload, connectionTimeoutMillis, readTimeoutMillis);
     }
 
-    private ServiceResult<URL> getJesFileDownloadUrl() {
+    private ServiceResult<URL> getJesSourceFileUrl() {
         try {
-            return serviceSuccess(new URL(jesFileDownloadUrl));
+            return serviceSuccess(new URL(jesSourceFileUrl));
         } catch (MalformedURLException e) {
             return serviceFailure(new Error(e.getMessage(), INTERNAL_SERVER_ERROR));
         }

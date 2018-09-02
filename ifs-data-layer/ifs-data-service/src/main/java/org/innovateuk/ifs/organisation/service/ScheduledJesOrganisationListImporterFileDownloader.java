@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -20,17 +21,37 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Component
 class ScheduledJesOrganisationListImporterFileDownloader {
 
-    ServiceResult<File> downloadFile(URL jesFileToDownload, int connectionTimeoutMillis, int readTimeoutMillis) {
+    boolean jesSourceFileExists(URL jesSourceFile) {
+        try {
+            return new File(jesSourceFile.toURI()).exists();
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
+    ServiceResult<File> copyJesSourceFile(URL jesSourceFile, int connectionTimeoutMillis, int readTimeoutMillis) {
 
         return createTemporaryDownloadFile().andOnSuccess(temporaryDownloadFile -> {
 
             try {
-                FileUtils.copyURLToFile(jesFileToDownload, temporaryDownloadFile, connectionTimeoutMillis, readTimeoutMillis);
+                FileUtils.copyURLToFile(jesSourceFile, temporaryDownloadFile, connectionTimeoutMillis, readTimeoutMillis);
                 return serviceSuccess(temporaryDownloadFile);
             } catch (IOException e) {
                 return createServiceFailureFromIoException(e);
             }
         });
+    }
+
+    ServiceResult<Void> deleteSourceFile(URL jesSourceFile) {
+        try {
+            if (new File(jesSourceFile.toURI()).delete()) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(new Error("jes.file.unable.to.delete", INTERNAL_SERVER_ERROR));
+            }
+        } catch (URISyntaxException e) {
+            return serviceFailure(new Error("jes.file.unable.to.delete", INTERNAL_SERVER_ERROR));
+        }
     }
 
     private ServiceResult<File> createTemporaryDownloadFile() {

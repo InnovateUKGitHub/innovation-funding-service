@@ -23,7 +23,7 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
 
         ScheduledJesOrganisationListImporterFileDownloader fileDownloader = new ScheduledJesOrganisationListImporterFileDownloader();
         URL dummyFileUrl = currentThread().getContextClassLoader().getResource("test-jes-download.csv");
-        ServiceResult<File> fileDownloadResult = fileDownloader.downloadFile(dummyFileUrl, 5000, 500);
+        ServiceResult<File> fileDownloadResult = fileDownloader.copyJesSourceFile(dummyFileUrl, 5000, 500);
 
         assertThat(fileDownloadResult.isSuccess()).isTrue();
 
@@ -46,7 +46,7 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
         String nonExistentFileUrl = File.createTempFile("jestest", "jestest").getAbsolutePath() + "does-not-exist";
         URL dummyFileUrl = new File(nonExistentFileUrl).toURI().toURL();
 
-        ServiceResult<File> fileDownloadResult = fileDownloader.downloadFile(dummyFileUrl, 5000, 500);
+        ServiceResult<File> fileDownloadResult = fileDownloader.copyJesSourceFile(dummyFileUrl, 5000, 500);
 
         assertThat(fileDownloadResult.isFailure()).isTrue();
 
