@@ -53,41 +53,57 @@
                     <div id="editDetails" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/details/edit}">Edit</a></div>
                 </div>
 
-                <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-                    <li class="selected">
-                        <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/skills}">Skills</a>
-                        <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">Skills</a>
-                    </li>
-                    <li class="not-selected">
-                        <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/declaration}">DOI</a>
-                        <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">DOI</a>
-                    </li>
-                </ul>
+                <div class="govuk-tabs govuk-!-margin-top-6">
+                    <h2 class="govuk-tabs__title">
+                        Profile
+                    </h2>
+                    <ul class="govuk-tabs__list">
+                        <li class="govuk-tabs__list-item">
+                            <a th:if="${!model.compAdminUser}"
+                               th:href="@{/profile/details/skills}"
+                               class="govuk-tabs__tab"
+                               aria-selected="true">Skills</a>
+                            <a th:unless="${!model.compAdminUser}"
+                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                               class="govuk-tabs__tab"
+                               aria-selected="true">Skills</a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a th:if="${!model.compAdminUser}"
+                               th:href="@{/profile/details/declaration}"
+                               class="govuk-tabs__tab">DOI</a>
+                            <a th:unless="${!model.compAdminUser}"
+                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                               class="govuk-tabs__tab">DOI</a>
+                        </li>
+                    </ul>
+                    <section class="govuk-tabs__panel">
+                        <h3 class="govuk-heading-m">Innovation areas</h3>
 
-                <h3 class="govuk-heading-m">Innovation areas</h3>
+                        <table class="govuk-table" th:each="innovationSector : ${model.innovationAreas}">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__head">
+                            <tr class="govuk-table__row" th:each="innovationArea : ${innovationSector.value}">
+                                <td class="govuk-table__cell" th:text="${innovationArea}">digital sciences</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-                <table class="govuk-table" th:each="innovationSector : ${model.innovationAreas}">
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__head">
-                        <tr class="govuk-table__row" th:each="innovationArea : ${innovationSector.value}">
-                            <td class="govuk-table__cell" th:text="${innovationArea}">digital sciences</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <h3 class="govuk-heading-m">Skill areas</h3>
+                        <p class="govuk-body" th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
 
-                <h3 class="govuk-heading-m">Skill areas</h3>
-                <p class="govuk-body" th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
+                        <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
+                            <div id="editSkills" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/skills/edit}">Edit</a></div>
+                        </div>
 
-                <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
-                    <div id="editSkills" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/skills/edit}">Edit</a></div>
-                </div>
-
-                <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
-                    <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                        <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
+                            <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                        </div>
+                    </section>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
