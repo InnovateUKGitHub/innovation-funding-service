@@ -27,7 +27,7 @@ function tailorToAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/os_run_tests.sh
     echo "ROBOT COMMAND: $ROBOT_COMMAND"
-    sed -i.bak "s#\[\"./os_run_tests.sh\", \"-q\"\]#[\"./os_run_tests.sh\", \"-q\", \"$ROBOT_COMMAND\"]#g" robot-tests-tmp/Dockerfile
+    sed -i.bak "s#\[\"./os_run_tests.sh\", \"-q\"\]#[\"./os_run_tests.sh\", \"-q\", $ROBOT_COMMAND]#g" robot-tests-tmp/Dockerfile
 }
 
 function cleanUp() {
