@@ -83,6 +83,7 @@ function upgradeServices {
     fi
 
     watchStatus
+
 }
 
 function forceReload {
@@ -100,11 +101,10 @@ function forceReload {
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
 
-    rolloutStatus competition-mgt-svc
-    rolloutStatus project-setup-mgt-svc
-
     rolloutStatus application-svc
     rolloutStatus survey-svc
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
 
     oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
@@ -120,7 +120,6 @@ function forceReload {
 
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
-
 
     rolloutStatus idp
     rolloutStatus shib
