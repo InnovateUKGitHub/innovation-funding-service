@@ -2,10 +2,8 @@ package org.innovateuk.ifs.organisation.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class OrganisationType {
@@ -20,9 +18,6 @@ public class OrganisationType {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType parentOrganisationType;
-
-    @OneToMany(mappedBy="organisationType")
-    private List<GrantClaimMaximum> grantClaimMaximums;
 
     private boolean visibleInSetup;
 
@@ -55,11 +50,6 @@ public class OrganisationType {
         return parentOrganisationType;
     }
 
-
-    public List<GrantClaimMaximum> getGrantClaimMaximums() {
-        return grantClaimMaximums;
-    }
-
     public boolean getVisibleInSetup() {
         return visibleInSetup;
     }
@@ -77,7 +67,6 @@ public class OrganisationType {
                 .append(name, that.name)
                 .append(description, that.description)
                 .append(parentOrganisationType, that.parentOrganisationType)
-                .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(visibleInSetup, that.visibleInSetup)
                 .isEquals();
     }
@@ -89,7 +78,6 @@ public class OrganisationType {
                 .append(name)
                 .append(description)
                 .append(parentOrganisationType)
-                .append(grantClaimMaximums)
                 .append(visibleInSetup)
                 .toHashCode();
     }

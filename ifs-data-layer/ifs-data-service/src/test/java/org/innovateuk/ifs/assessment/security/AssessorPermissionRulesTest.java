@@ -18,7 +18,7 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
     private long assessorId;
     private UserResource assessorUser;
     private UserResource otherUser;
-    private UserResource adminUser;
+    private UserResource compAdmin;
     private AssessorProfileResource assessorProfileResource;
 
     @Override
@@ -33,7 +33,7 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
                 .withId(assessorId)
                 .build();
         otherUser = newUserResource().build();
-        adminUser = newUserResource()
+        compAdmin = newUserResource()
                 .withRoleGlobal(Role.COMP_ADMIN)
                 .build();
 
@@ -57,8 +57,8 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
 
     @Test
     public void compAdminUsersCanReadAllProfiles() {
-        assertTrue(rules.compAdminCanReadAssessorProfile(assessorProfileResource, adminUser));
-        assertFalse(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, adminUser));
+        assertTrue(rules.compAdminCanReadAssessorProfile(assessorProfileResource, compAdmin));
+        assertFalse(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, compAdmin));
     }
 
 }
