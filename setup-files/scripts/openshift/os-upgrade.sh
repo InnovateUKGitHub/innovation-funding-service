@@ -35,6 +35,11 @@ function upgradeServices {
     # services
     oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
 
     rolloutStatus application-svc
     rolloutStatus survey-svc
@@ -47,11 +52,7 @@ function upgradeServices {
     rolloutStatus front-door-svc
     rolloutStatus assessment-svc
 
-    oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
-    rolloutStatus competition-mgt-svc
-    rolloutStatus project-setup-mgt-svc
 
     oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
@@ -61,7 +62,7 @@ function upgradeServices {
 
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
-    
+
     rolloutStatus idp
     rolloutStatus shib
 
