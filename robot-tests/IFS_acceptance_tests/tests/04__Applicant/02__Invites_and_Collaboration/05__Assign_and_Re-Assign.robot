@@ -162,7 +162,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link   jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page  Upload
 
-RTO Collaborator is not guided that the research area is not select
+RTO Collaborator is not guided that the research area is not selected
     [Documentation]  IFS-4099
     [Tags]
     Given the user navigates to Your-finances page  Assign test
