@@ -23,11 +23,11 @@ public class EuGrant {
     private UUID id;
 
     @JoinColumn(name = "eu_organisation_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private EuOrganisation organisation;
 
     @JoinColumn(name = "eu_contact_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private EuContact contact;
 
     @JoinColumn(name = "eu_funding_id")
@@ -39,7 +39,7 @@ public class EuGrant {
     private String shortCode;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
     @LastModifiedDate

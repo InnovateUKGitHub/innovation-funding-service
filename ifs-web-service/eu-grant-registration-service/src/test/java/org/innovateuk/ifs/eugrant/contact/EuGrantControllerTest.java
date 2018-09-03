@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.eugrant.controller;
+package org.innovateuk.ifs.eugrant.contact;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eugrant.controller.EUGrantController;
+import org.innovateuk.ifs.eugrant.overview.controller.EuGrantController;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class EuGrantControllerTest extends BaseControllerMockMVCTest<EUGrantController> {
+public class EuGrantControllerTest extends BaseControllerMockMVCTest<EuGrantController> {
 
     @Override
-    protected EUGrantController supplyControllerUnderTest() {
-        return new EUGrantController();
+    protected EuGrantController supplyControllerUnderTest() {
+        return new EuGrantController();
     }
 
     @Before

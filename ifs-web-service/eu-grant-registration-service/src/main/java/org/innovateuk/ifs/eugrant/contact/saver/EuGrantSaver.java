@@ -1,9 +1,8 @@
-package org.innovateuk.ifs.eugrant.saver;
+package org.innovateuk.ifs.eugrant.contact.saver;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuGrantRestService;
-import org.innovateuk.ifs.eugrant.service.EuGrantCookieService;
+import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ public class EuGrantSaver {
     private EuGrantCookieService euGrantCookieService;
 
     public RestResult<Void> save(EuGrantResource euGrantResource) {
-
         euGrantCookieService.save(euGrantResource);
         return RestResult.restSuccess();
     }

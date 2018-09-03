@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.controller;
+package org.innovateuk.ifs.eugrant.contact;
 
 import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.eugrant.EuGrantResource;

@@ -1,36 +1,10 @@
-package org.innovateuk.ifs.eugrant.domain;
+package org.innovateuk.ifs.eugrant;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
+public class EuOrganisationResource {
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import static javax.persistence.EnumType.STRING;
-
-/**
- * A UK Organisation that receives EU grant funding.
- */
-@Entity
-public class EuOrganisation {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @NotBlank
     private String name;
-    @NotNull
-    @Enumerated(STRING)
     private EuOrganisationType organisationType;
     private String companiesHouseNumber;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.eugrant;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.UUID;
 
 /**
@@ -12,7 +9,16 @@ public class EuGrantResource {
 
     private UUID id;
 
+    private EuOrganisationResource organisation;
+
     private EuContactResource contact;
+
+    private boolean organisationComplete;
+
+    private boolean contactComplete;
+
+    private boolean fundingComplete;
+
 
     public UUID getId() {
         return id;
@@ -20,6 +26,14 @@ public class EuGrantResource {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public EuOrganisationResource getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(EuOrganisationResource organisation) {
+        this.organisation = organisation;
     }
 
     public EuContactResource getContact() {
@@ -30,25 +44,27 @@ public class EuGrantResource {
         this.contact = contact;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EuGrantResource that = (EuGrantResource) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(contact, that.contact)
-                .isEquals();
+    public boolean isOrganisationComplete() {
+        return organisationComplete;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(contact)
-                .toHashCode();
+    public void setOrganisationComplete(boolean organisationComplete) {
+        this.organisationComplete = organisationComplete;
+    }
+
+    public boolean isContactComplete() {
+        return contactComplete;
+    }
+
+    public void setContactComplete(boolean contactComplete) {
+        this.contactComplete = contactComplete;
+    }
+
+    public boolean isFundingComplete() {
+        return fundingComplete;
+    }
+
+    public void setFundingComplete(boolean fundingComplete) {
+        this.fundingComplete = fundingComplete;
     }
 }

@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.eugrant.service;
+package org.innovateuk.ifs.eugrant.overview.service;
 
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuGrantRestService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -33,7 +34,7 @@ public class EuGrantCookieService {
         }
     }
 
-    public EuGrantResource save(EuGrantResource euGrant) {
+    public ServiceResult<EuGrantResource> save(EuGrantResource euGrant) {
         Optional<UUID> uuid = getIdFromCookie();
         if (!uuid.isPresent()) {
             UUID id = euGrantRestService.create().getSuccess().getId();
@@ -42,8 +43,9 @@ public class EuGrantCookieService {
         } else {
             euGrant.setId(uuid.get());
         }
-        euGrantRestService.update(euGrant).getSuccess();
-        return euGrant;
+        return euGrantRestService.update(euGrant)
+                .toServiceResult()
+                .andOnSuccessReturn(() -> euGrant);
     }
 
     public void clear() {
@@ -55,9 +57,13 @@ public class EuGrantCookieService {
     }
 
     private Optional<UUID> getIdFromCookie() {
-        return Optional.ofNullable(cookieUtil.getCookieValue(request(), EU_GRANT_ID))
-                .filter(cookie -> !cookie.isEmpty())
-                .map(UUID::fromString);
+        String cookie = cookieUtil.getCookieValue(request(), EU_GRANT_ID);
+
+        if (!cookie.isEmpty()) {
+            return Optional.of(UUID.fromString(cookie));
+        }
+
+        return Optional.empty();
     }
 
     private HttpServletRequest request() {

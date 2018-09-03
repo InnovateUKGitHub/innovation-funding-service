@@ -13,25 +13,18 @@ import java.util.UUID;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-        EuContactMapper.class,
-}
+                EuOrganisationMapper.class,
+                EuContactMapper.class,
+        }
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
             // TODO add to resource
             @Mapping(source = "contact", target = "contact"),
-            @Mapping(target = "organisation",  ignore = true),
+            @Mapping(target = "organisation", ignore = true),
             @Mapping(target = "funding", ignore = true)
     })
     @Override
     public abstract EuGrant mapToDomain(EuGrantResource resource);
-
-    public String map(UUID value) {
-        return value == null ? null : value.toString();
-    }
-
-    public UUID map(String value) {
-        return value == null ? null : UUID.fromString(value);
-    }
 }

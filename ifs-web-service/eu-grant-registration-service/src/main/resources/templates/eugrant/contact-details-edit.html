@@ -39,28 +39,28 @@
                         <label class="govuk-label" for="name">
                             Full name
                         </label>
-                        <input class="govuk-input" id="name" name="name" type="text" value="" required="">
+                        <input class="govuk-input" id="name" name="name" type="text" th:value="${model.name}" required="">
                     </div>
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="jobTitle">
                             Job title
                         </label>
-                        <input class="govuk-input" id="jobTitle" name="jobTitle" type="text" value="" required="">
+                        <input class="govuk-input" id="jobTitle" name="jobTitle" type="text" th:value="${model.jobTitle}" required="">
                     </div>
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="email">
                             Email
                         </label>
-                        <input class="govuk-input" id="email" name="email" type="email" value="" required="">
+                        <input class="govuk-input" id="email" name="email" type="email" th:value="${model.email}" required="">
                     </div>
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="telephone">
                             Telephone
                         </label>
-                        <input class="govuk-input" id="telephone" name="telephone" type="text" value="" required="">
+                        <input class="govuk-input" id="telephone" name="telephone" type="text" th:value="${model.telephone}" required="">
                     </div>
 
                     <button class="govuk-button" type="submit">Continue</button>

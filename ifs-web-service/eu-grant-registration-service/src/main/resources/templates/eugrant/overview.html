@@ -47,18 +47,24 @@
         <ul class="govuk-body task-list">
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" disabled="disabled">Your organisation</a>
+                    <a class="govuk-heading-s" th:href="${model.organisationComplete ? '/eu-grant/organisation/view' : '/eu-grant/organisation/type'}">Your organisation</a>
                 </div>
-                <div class="task-status-incomplete">
+                <div th:unless="${model.organisationComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
+                </div>
+                <div th:if="${model.organisationComplete}" class="task-status-complete">
+                    <span>Complete</span>
                 </div>
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="@{/contact-details/edit}">Contact details</a>
+                    <a class="govuk-heading-s" th:href="${model.contactComplete ? '/eu-grant/contact-details' : '/eu-grant/contact-details/edit'}">Contact details</a>
                 </div>
-                <div class="task-status-incomplete">
+                <div th:unless="${model.contactComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
+                </div>
+                <div th:if="${model.contactComplete}" class="task-status-complete">
+                    <span>Complete</span>
                 </div>
             </li>
             <li class="govuk-!-padding-left-0">

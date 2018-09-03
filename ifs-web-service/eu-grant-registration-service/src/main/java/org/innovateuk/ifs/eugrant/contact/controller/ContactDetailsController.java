@@ -1,14 +1,14 @@
-package org.innovateuk.ifs.eugrant.controller;
+package org.innovateuk.ifs.eugrant.contact.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuGrantRestService;
-import org.innovateuk.ifs.eugrant.form.ContactForm;
-import org.innovateuk.ifs.eugrant.populator.ContactFormPopulator;
-import org.innovateuk.ifs.eugrant.saver.EuGrantSaver;
-import org.innovateuk.ifs.eugrant.service.EuGrantCookieService;
+import org.innovateuk.ifs.eugrant.contact.form.ContactForm;
+import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
+import org.innovateuk.ifs.eugrant.contact.populator.ContactFormPopulator;
+import org.innovateuk.ifs.eugrant.contact.saver.EuGrantSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,22 +38,15 @@ public class ContactDetailsController {
     private EuGrantSaver euGrantSaver;
 
     @GetMapping("/contact-details")
-    public String contactDetails(@ModelAttribute("form") ContactForm contactForm,
-                                 BindingResult bindingResult,
-                                 Model model) {
+    public String contactDetails(Model model) {
 
-        EuGrantResource euGrantResource = euGrantCookieService.get();
+        EuContactResource contact = euGrantCookieService.get().getContact();
 
-        if (euGrantResource.getId() != null) {
-            contactForm = contactFormPopulator.populate(euGrantResource.getContact());
-            model.addAttribute("readOnly", true);
-            model.addAttribute("email", contactForm.getEmail());
-            model.addAttribute("name", contactForm.getName());
-            model.addAttribute("phonenumber", contactForm.getTelephone());
-            model.addAttribute("jobTitle", contactForm.getJobTitle());
-        } else {
-            model.addAttribute("readOnly", false);
+        if (contact == null) {
+            return "redirect:/contact-details/edit";
         }
+
+        model.addAttribute("model", contactFormPopulator.populate(contact));
 
         return "eugrant/contact-details";
     }
@@ -63,18 +56,10 @@ public class ContactDetailsController {
                                      BindingResult bindingResult,
                                      Model model) {
 
-        EuGrantResource euGrantResource = euGrantCookieService.get();
+        EuContactResource contact = euGrantCookieService.get().getContact();
 
-        if (euGrantResource.getId() != null) {
-            contactForm = contactFormPopulator.populate(euGrantResource.getContact());
-            model.addAttribute("readOnly", true);
-            model.addAttribute("email", contactForm.getEmail());
-            model.addAttribute("name", contactForm.getName());
-            model.addAttribute("phonenumber", contactForm.getTelephone());
-            model.addAttribute("jobTitle", contactForm.getJobTitle());
-        } else {
-            model.addAttribute("readOnly", false);
-        }
+        EuGrantResource euGrantResource = euGrantCookieService.get();
+        model.addAttribute("model", contactFormPopulator.populate(contact));
 
         return "eugrant/contact-details-edit";
     }
@@ -85,8 +70,12 @@ public class ContactDetailsController {
                                        ValidationHandler validationHandler,
                                        Model model) {
 
-        Supplier<String> failureView = () -> contactDetails(contactForm, bindingResult, model);
-        Supplier<String> successView = () -> "redirect:/eu-grant/contact-details";
+        Supplier<String> failureView = () -> contactDetailsEdit(contactForm, bindingResult, model);
+        Supplier<String> successView = () -> "redirect:/contact-details";
+
+        if (bindingResult.hasErrors()) {
+            return failureView.get();
+        }
 
         EuContactResource euContactResource = getEuContactResource(contactForm);
 

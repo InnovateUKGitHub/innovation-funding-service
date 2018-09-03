@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.form;
+package org.innovateuk.ifs.eugrant.contact.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
