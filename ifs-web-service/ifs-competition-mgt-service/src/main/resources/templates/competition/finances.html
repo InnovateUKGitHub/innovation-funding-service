@@ -46,8 +46,7 @@
                                    th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
                                    th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-full"
-                                   th:text="Full application finances"
-                                   class="govuk-label govuk-radios__label"/>
+                                   class="govuk-label govuk-radios__label">Full application finances</label>
                         </div>
                         <div class="govuk-radios__item">
                             <input id="application-finance-none"
@@ -56,8 +55,7 @@
                                    th:disabled="${!model.subsection.noneFinanceCompetition}"
                                    type="radio" th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-none"
-                                   th:text="No finances"
-                                   class="govuk-label govuk-radios__label"/>
+                                   class="govuk-label govuk-radios__label">No finances</label>
                         </div>
                     </div>
                 </fieldset>
