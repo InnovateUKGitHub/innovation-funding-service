@@ -97,8 +97,6 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setOverrideFundingRules(true);
         competitionSetupForm.setFundingLevelPercentage(50);
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                        .withId(BUSINESS.getId()).build())
-                        .build())
                 .build(2);
 
         CompetitionResource competition = newCompetitionResource()
