@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -49,30 +50,20 @@ public class EuGrantCookieService {
     }
 
     public void clear() {
-        cookieUtil.removeCookie(response(), EU_GRANT_ID);
+        cookieUtil.removeCookie(EuGrantHttpServlet.response(), EU_GRANT_ID);
     }
 
     private void saveToEuGrantCookie(UUID uuid) {
-        cookieUtil.saveToCookie(response(), EU_GRANT_ID, uuid.toString());
+        cookieUtil.saveToCookie(EuGrantHttpServlet.response(), EU_GRANT_ID, uuid.toString());
     }
 
     private Optional<UUID> getIdFromCookie() {
-        String cookie = cookieUtil.getCookieValue(request(), EU_GRANT_ID);
+        String cookie = cookieUtil.getCookieValue(EuGrantHttpServlet.request(), EU_GRANT_ID);
 
         if (!cookie.isEmpty()) {
             return Optional.of(UUID.fromString(cookie));
         }
 
         return Optional.empty();
-    }
-
-    private HttpServletRequest request() {
-        return ((ServletRequestAttributes) RequestContextHolder
-                .getRequestAttributes()).getRequest();
-    }
-
-    private HttpServletResponse response() {
-        return ((ServletRequestAttributes) RequestContextHolder
-                .getRequestAttributes()).getResponse();
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.MockMvcTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.mockito.Mockito.verify;
@@ -28,10 +30,10 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
     }
 
     @Test
-    public void save() throws Exception {
+    public void create() throws Exception {
         EuGrantResource euGrantResource = newEuGrantResource().build();
 
-        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess());
+        when(euGrantService.create()).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
                 post("/eu-grant")
@@ -39,7 +41,7 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(euGrantService).save(euGrantResource);
+        verify(euGrantService).create();
     }
 
     @Test

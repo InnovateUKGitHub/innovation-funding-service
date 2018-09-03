@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.contact;
+package org.innovateuk.ifs.eugrant.contact.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
