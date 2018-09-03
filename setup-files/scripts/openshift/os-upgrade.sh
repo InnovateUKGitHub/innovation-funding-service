@@ -97,14 +97,33 @@ function forceReload {
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
+
+    rolloutStatus application-svc
+    rolloutStatus survey-svc
+
+    oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus front-door-svc
+    rolloutStatus assessment-svc
+
     oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/registration-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus project-setup-svc
+    rolloutStatus registration-svc
+
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
+
+
+    rolloutStatus idp
+    rolloutStatus shib
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
