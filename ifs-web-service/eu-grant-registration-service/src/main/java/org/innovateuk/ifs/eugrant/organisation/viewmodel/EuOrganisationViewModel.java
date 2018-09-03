@@ -3,7 +3,7 @@ package org.innovateuk.ifs.eugrant.organisation.viewmodel;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
-public class OrganisationViewModel {
+public class EuOrganisationViewModel {
 
     private final EuOrganisationType type;
     private final String name;
@@ -15,11 +15,11 @@ public class OrganisationViewModel {
     private final String county;
     private final String postcode;
 
-    public OrganisationViewModel(EuOrganisationType type, String name) {
+    public EuOrganisationViewModel(EuOrganisationType type, String name) {
         this(type, name, null, new AddressResource());
     }
 
-    public OrganisationViewModel(EuOrganisationType type, String name, String registrationNumber,  AddressResource organisationAddress) {
+    public EuOrganisationViewModel(EuOrganisationType type, String name, String registrationNumber, AddressResource organisationAddress) {
         this.type = type;
         this.name = name;
         this.registrationNumber = registrationNumber;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.eugrant.EuOrganisationType;
 
 import javax.validation.constraints.NotNull;
 
-public class OrganisationTypeForm {
+public class EuOrganisationTypeForm {
     @NotNull(message="{validation.standard.organisationtype.required}")
     private EuOrganisationType organisationType;
 

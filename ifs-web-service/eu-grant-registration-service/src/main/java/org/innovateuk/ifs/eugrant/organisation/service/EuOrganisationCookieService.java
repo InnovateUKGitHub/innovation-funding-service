@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.eugrant.organisation.service;
 
-import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
+import org.innovateuk.ifs.eugrant.organisation.form.EuOrganisationTypeForm;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +15,19 @@ import java.util.Optional;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 
 @Service
-public class OrganisationCookieService {
+public class EuOrganisationCookieService {
 
-    private static final String ORGANISATION_TYPE = "organisationType";
+    private static final String ORGANISATION_TYPE = "euOrganisationType";
 
     @Autowired
     private CookieUtil cookieUtil;
 
-    public void saveToOrganisationTypeCookie(OrganisationTypeForm organisationTypeForm) {
+    public void saveToOrganisationTypeCookie(EuOrganisationTypeForm organisationTypeForm) {
         cookieUtil.saveToCookie(response(), ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
     }
 
-    public Optional<OrganisationTypeForm> getOrganisationTypeCookieValue() {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request(), ORGANISATION_TYPE), OrganisationTypeForm.class));
+    public Optional<EuOrganisationTypeForm> getOrganisationTypeCookieValue() {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request(), ORGANISATION_TYPE), EuOrganisationTypeForm.class));
     }
 
     public void clear() {
