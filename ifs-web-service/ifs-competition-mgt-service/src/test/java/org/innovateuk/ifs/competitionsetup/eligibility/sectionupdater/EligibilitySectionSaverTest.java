@@ -3,8 +3,10 @@ package org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
-import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -12,7 +14,6 @@ import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,8 +32,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -53,9 +54,6 @@ public class EligibilitySectionSaverTest {
     @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    @Mock
-    private CompetitionRestService competitionRestService;
-
     @Test
     public void saveSection() {
         EligibilityForm competitionSetupForm = new EligibilityForm();
@@ -63,20 +61,16 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setMultipleStream("yes");
         competitionSetupForm.setStreamName("streamname");
         competitionSetupForm.setResubmission("yes");
-        competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
+        competitionSetupForm.setResearchCategoryId(asLinkedSet(1L, 2L, 3L));
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.THIRTY.getId());
         competitionSetupForm.setSingleOrCollaborative("collaborative");
         competitionSetupForm.setOverrideFundingRules(true);
         competitionSetupForm.setFundingLevelPercentage(10);
 
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(BUSINESS.getId())
-                        .build())
-                .build(2);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
@@ -90,7 +84,7 @@ public class EligibilitySectionSaverTest {
         assertEquals(asList(BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
         assertTrue(competition.isMultiStream());
         assertEquals("streamname", competition.getStreamName());
-        assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
+        assertEquals(asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
         assertEquals(ResearchParticipationAmount.THIRTY.getAmount(), competition.getMaxResearchRatio());
         assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());
 
@@ -103,14 +97,13 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setOverrideFundingRules(true);
         competitionSetupForm.setFundingLevelPercentage(50);
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(BUSINESS.getId())
+                        .withId(BUSINESS.getId()).build())
                         .build())
                 .build(2);
 
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(STANDARD)
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
@@ -132,15 +125,11 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setOverrideFundingRules(true);
         competitionSetupForm.setFundingLevelPercentage(50);
 
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(BUSINESS.getId())
-                        .build())
-                .build(2);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(null)
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
@@ -161,20 +150,16 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(false);
 
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(BUSINESS.getId())
-                        .build())
-                .build(4);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(4);
 
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionType(BUSINESS.getId())
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
         CompetitionResource template = newCompetitionResource()
                 .withCompetitionType(BUSINESS.getId())
-                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
                 .build();
 
         when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
@@ -186,12 +171,12 @@ public class EligibilitySectionSaverTest {
 
         service.saveSection(competition, competitionSetupForm);
 
+        verify(grantClaimMaximumRestService).getGrantClaimMaximumById(gcms.get(0).getId());
+        verify(grantClaimMaximumRestService).getGrantClaimMaximumById(gcms.get(1).getId());
         verify(grantClaimMaximumRestService).getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType());
-        verify(grantClaimMaximumRestService).getGrantClaimMaximumById(gcms.get(2).getId());
-        verify(grantClaimMaximumRestService).getGrantClaimMaximumById(gcms.get(3).getId());
         verify(competitionSetupRestService).update(competition);
 
-        assertEquals(competition.getGrantClaimMaximums(), CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()));
+        assertEquals(asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()), competition.getGrantClaimMaximums());
     }
 
     @Test
