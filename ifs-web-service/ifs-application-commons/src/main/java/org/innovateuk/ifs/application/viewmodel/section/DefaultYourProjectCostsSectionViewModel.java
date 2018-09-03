@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
+
 /**
  * Default your project costs view model.
  */
@@ -43,6 +45,10 @@ public class DefaultYourProjectCostsSectionViewModel extends AbstractYourProject
 
     public void setDefaultProjectCostSections(List<DefaultProjectCostSection> defaultProjectCostSections) {
         this.defaultProjectCostSections = defaultProjectCostSections;
+    }
+
+    public boolean isIncludeVat() {
+        return STANDARD_WITH_VAT.equals(this.getCompetition().getApplicationFinanceType());
     }
 }
 
