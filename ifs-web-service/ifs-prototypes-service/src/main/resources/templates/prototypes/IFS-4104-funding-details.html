@@ -61,7 +61,9 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        aria-describedby="grant-agreement-number-hint"
                                        type="text"
                                        th:value="${edit ? '123456' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a grant agreement number"
+                                >
                             </div>
 
                             <div class="govuk-form-group">
@@ -80,7 +82,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        aria-describedby="pic-number-hint"
                                        type="text"
                                        th:value="${edit ? '12345689' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a Participant Identification Code (PIC)">
                             </div>
 
                             <div class="govuk-form-group">
@@ -90,9 +93,14 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <span id="type-of-action-hint" class="govuk-hint">
                                     Funding scheme
                                 </span>
-                                <select class="govuk-select govuk-!-width-three-quarters" name="type-of-action" id="type-of-action" aria-describedby="type-of-action-hint">
-                                    <option selected="" th:value="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : 'Select...'}"
-                                            th:text="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : 'Select...'}">Select...</option>
+                                <select class="govuk-select govuk-!-width-three-quarters"
+                                        name="type-of-action"
+                                        id="type-of-action"
+                                        aria-describedby="type-of-action-hint"
+                                        required="required"
+                                        data-required-errormessage="Select a type of action">
+                                    <option selected="" th:value="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : NULL }"
+                                            th:text="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : NULL}">Select...</option>
                                     <option value="(COFUND-EJP) COFUND (European Joint Programme)">(COFUND-EJP) COFUND (European Joint Programme)</option>
                                     <option value="(CSA) Coordination and support action">(CSA) Coordination and support action</option>
                                     <option value="(ERA-NET-Cofund) ERA-NET Cofund">(ERA-NET-Cofund) ERA-NET Cofund</option>
@@ -115,7 +123,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <option value="(PPI) Public Procurement of Innovative solutions">(PPI) Public Procurement of Innovative solutions</option>
                                     <option value="(RIA) Research and Innovation action">(RIA) Research and Innovation action</option>
                                     <option value="(RPr) Recognition Prize">(RPr) Recognition Prize</option>
-                                    <option value="(SME-1) SME Instrument phase 1  ">(SME-1) SME Instrument phase 1&nbsp; </option>
+                                    <option value="(SME-1) SME Instrument phase 1  ">(SME-1) SME Instrument phase 1 </option>
                                     <option value="(SME-2) SME Instrument phase 2 ">(SME-2) SME Instrument phase 2 </option>
                                 </select>
                             </div>
@@ -132,7 +140,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        type="text"
                                        aria-describedby="project-name-hint"
                                        th:value="${edit ? 'My EU project name' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a project name">
                             </div>
 
                             <div class="govuk-form-group">
@@ -141,7 +150,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                         Project start date
                                     </legend>
                                     <div class="date-group" data-past-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly}, dateType='data-past-date')" />
+                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly}, data-required-errormessage='ENTER A DATE', dateType='data-past-date')" />
                                     </div>
                                 </fieldset>
                             </div>
@@ -171,7 +180,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        type="text"
                                        aria-describedby="funding-committed-hint"
                                        th:value="${edit ? '100,000' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter the EU funding contribution for above project (EUR)">
                             </div>
 
                             <div class="govuk-form-group">
@@ -183,7 +193,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        name="grant-agreement-number"
                                        type="text"
                                        th:value="${edit ? '123456' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a grant agreement number">
                             </div>
 
                             <div class="govuk-form-group">
@@ -198,7 +209,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                                    name="consortium-lead"
                                                    type="radio"
                                                    value="yes"
-                                                   required="required">
+                                                   required="required"
+                                                   data-required-errormessage="Select an option">
                                             <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
                                                 Yes
                                             </label>
@@ -210,7 +222,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                                    type="radio"
                                                    value="no"
                                                    th:checked="${edit}"
-                                                   required="required">
+                                                   required="required"
+                                                   data-required-errormessage="Select an option">
                                             <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
                                                 No
                                             </label>
