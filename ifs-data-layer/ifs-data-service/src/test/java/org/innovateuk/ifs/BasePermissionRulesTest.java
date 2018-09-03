@@ -21,6 +21,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.MONITORING_OFFICER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -80,6 +81,14 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         setupPartnerExpectations(project, user, organisation, false);
     }
 
+    protected void setupUserAsMonitoringOfficer(ProjectResource project, UserResource user) {
+        setupMonitoringOfficerExpectations(project, user, true);
+    }
+
+    protected void setupUserNotAsMonitoringOfficer(ProjectResource project, UserResource user) {
+        setupMonitoringOfficerExpectations(project, user, false);
+    }
+
     protected void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
         List<Role> compAdminRoleResource = singletonList(COMP_ADMIN);
         user.setRoles(compAdminRoleResource);
@@ -110,6 +119,13 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         ProjectUser partnerProjectUser = newProjectUser().build();
 
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
+    }
+
+    private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
+        List<ProjectUser> monitoringOfficerForProject = newProjectUser().build(1);
+
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), MONITORING_OFFICER))
+                .thenReturn(userIsMonitoringOfficer ? monitoringOfficerForProject : emptyList());
     }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
