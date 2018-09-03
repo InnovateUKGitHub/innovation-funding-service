@@ -161,7 +161,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         rtoOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology " +
                 "organisations (RTOs)")).build();
 
-        // TODO DW - INFUND-1604 - remove when process roles are converted to DTOs
         businessOrganisationType = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationType = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
         academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology " +
