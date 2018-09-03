@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.eugrant.organisation.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 
-public class OrganisationForm {
-    @NotBlank(message = "{validation.standard.organisationsearchname.required}")
-    // on empty value don't check pattern since then there already is a validation message.
+@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
+public class EuOrganisationForm {
+
     private String organisationSearchName;
-
-    @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
-
     private String selectedOrganisationId;
     private boolean manualEntry = false;
     private boolean organisationSearching = false;

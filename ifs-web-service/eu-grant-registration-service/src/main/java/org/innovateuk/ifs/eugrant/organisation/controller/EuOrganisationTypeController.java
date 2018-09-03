@@ -3,7 +3,7 @@ package org.innovateuk.ifs.eugrant.organisation.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
-import org.innovateuk.ifs.eugrant.organisation.form.OrganisationTypeForm;
+import org.innovateuk.ifs.eugrant.organisation.form.EuOrganisationTypeForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,10 +23,10 @@ import java.util.Optional;
  */
 
 @Controller
-@RequestMapping(AbstractOrganisationController.BASE_URL + "/" + AbstractOrganisationController.ORGANISATION_TYPE)
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationTypeController.class)
+@RequestMapping(AbstractEuOrganisationController.BASE_URL + "/" + AbstractEuOrganisationController.ORGANISATION_TYPE)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = EuOrganisationTypeController.class)
 @PreAuthorize("permitAll")
-public class OrganisationTypeController extends AbstractOrganisationController {
+public class EuOrganisationTypeController extends AbstractEuOrganisationController {
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -34,21 +34,21 @@ public class OrganisationTypeController extends AbstractOrganisationController {
     @GetMapping
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
-        Optional<OrganisationTypeForm> organisationTypeCookieValue = organisationCookieService.getOrganisationTypeCookieValue();
+        Optional<EuOrganisationTypeForm> organisationTypeCookieValue = organisationCookieService.getOrganisationTypeCookieValue();
         if (organisationTypeCookieValue.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationTypeCookieValue.get());
         } else {
-            model.addAttribute(ORGANISATION_FORM, new OrganisationTypeForm());
+            model.addAttribute(ORGANISATION_FORM, new EuOrganisationTypeForm());
         }
         return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
     }
 
     @PostMapping
-    public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationTypeForm typeForm,
+    public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) EuOrganisationTypeForm typeForm,
                                                 BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             EuOrganisationType organisationType = typeForm.getOrganisationType();
-            OrganisationTypeForm organisationTypeForm = organisationCookieService.getOrganisationTypeCookieValue().orElse(new OrganisationTypeForm());
+            EuOrganisationTypeForm organisationTypeForm = organisationCookieService.getOrganisationTypeCookieValue().orElse(new EuOrganisationTypeForm());
             organisationTypeForm.setOrganisationType(organisationType);
             organisationCookieService.saveToOrganisationTypeCookie(organisationTypeForm);
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.eugrant.EuOrganisationResource;
-import org.innovateuk.ifs.eugrant.organisation.populator.OrganisationViewModelPopulator;
+import org.innovateuk.ifs.eugrant.organisation.populator.EuOrganisationViewModelPopulator;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Verifying or amending the address attached to the organisation.
  */
 @Controller
-@RequestMapping(AbstractOrganisationController.BASE_URL + "/" + AbstractOrganisationController.VIEW_ORGANISATION)
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationViewController.class)
+@RequestMapping(AbstractEuOrganisationController.BASE_URL + "/" + AbstractEuOrganisationController.VIEW_ORGANISATION)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = EuOrganisationViewController.class)
 @PreAuthorize("permitAll")
-public class OrganisationViewController extends AbstractOrganisationController {
+public class EuOrganisationViewController extends AbstractEuOrganisationController {
 
-    private static final Log LOG = LogFactory.getLog(OrganisationViewController.class);
+    private static final Log LOG = LogFactory.getLog(EuOrganisationViewController.class);
 
     @Autowired
-    private OrganisationViewModelPopulator organisationViewModelPopulator;
+    private EuOrganisationViewModelPopulator organisationViewModelPopulator;
 
     @Autowired
     private EuGrantCookieService euGrantCookieService;
