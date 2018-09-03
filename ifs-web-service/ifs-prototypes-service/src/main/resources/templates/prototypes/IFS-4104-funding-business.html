@@ -18,7 +18,6 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-4104-funding-org?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})" />
 
@@ -39,7 +38,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                     You can identify your organisation through Companies House or enter your details manually
                 </p>
 
-                <form th:action="${#httpServletRequest.requestURI}">
+                <form action="/prototypes/IFS-4104-funding-org-selected">
 
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -97,6 +96,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <input type="hidden" id="section2" name="section2" th:value="${section2}">
                                 <input type="hidden" id="section3" name="section3" th:value="${section3}">
                                 <input type="hidden" id="status" name="status" th:value="${status}">
+                                <input type="hidden" id="entry" name="entry" value="manual">
 
                                 <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
                             </div>

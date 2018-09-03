@@ -18,7 +18,6 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
 
