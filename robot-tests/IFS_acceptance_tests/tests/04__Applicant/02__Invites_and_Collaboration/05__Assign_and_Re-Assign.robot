@@ -16,6 +16,8 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Set predefined date variables
 Suite Teardown    The user closes the browser
 Test Teardown
@@ -59,10 +61,10 @@ The question is enabled for the assignee
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
-    When the user clicks the button/link  jQuery=.button:contains("Review")
+    When the user clicks the button/link  jQuery=.govuk-button:contains("Review")
     And the user expands the section      Public description
     Then the user should see the element  jQuery=button:contains("Assign to lead for review")
-    And the user clicks the button/link   jQuery=.form-group button:contains("Return and edit")
+    And the user clicks the button/link   jQuery=.govuk-form-group button:contains("Return and edit")
     And the user should see the element   css=.textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page
@@ -80,10 +82,10 @@ Collaborator should see the review button instead of the review and submit
     [Tags]  Email  HappyPath
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Assign test
-    Then the user should not see the element      jQuery=.button:contains("Review and submit")
-    And the user clicks the button/link           jQuery=.button:contains("Review")
+    Then the user should not see the element      jQuery=.govuk-button:contains("Review and submit")
+    And the user clicks the button/link           jQuery=.govuk-button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
-    And the user should not see the element       jQuery=.button:contains("Submit application")
+    And the user should not see the element       jQuery=.govuk-button:contains("Submit application")
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
@@ -165,16 +167,16 @@ Collaborator can see that Research area is not selected
     [Tags]
     Given the user navigates to Your-finances page  Assign test
     When the user clicks the button/link  link=Your funding
-    Then The user should see the element  jQuery=.list li:contains("the lead applicant must select a research category")
+    Then The user should see the element  jQuery=.govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Lead selects Research category
-    [Documentation]  INFUND-6823
+    [Documentation]  INFUND-6823  IFS-3938
     [Tags]  Email
     [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
     And the user clicks the button/link   link=Your funding
-    Then the user should see the element  jQuery=li:contains("you must select a"):contains("research category")
+    Then the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user clicks the button/link  link=Assign test
     When the user selects Research category  Feasibility studies

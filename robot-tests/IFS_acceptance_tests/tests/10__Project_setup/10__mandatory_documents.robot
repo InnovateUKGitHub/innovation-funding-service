@@ -70,7 +70,7 @@ PM cannot submit when both documents are not uploaded
     #Then the user should see the 2 Upload buttons
     And the user should see the element    css=label[for="collaborationAgreement"]
     And the user should see the element    css=label[for="exploitationPlan"]
-    Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    Then the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
@@ -125,7 +125,7 @@ Lead partner does not have the option to submit the mandatory documents
     [Tags]
     [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should not see an error in the page
-    And the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 Lead partner cannot remove either document
     [Documentation]    INFUND-3011
@@ -139,7 +139,7 @@ Non-lead partner can view both documents
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
@@ -157,7 +157,7 @@ Non-lead partner cannot remove or submit right
     When the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
@@ -223,11 +223,11 @@ Mandatory document submission
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     And the user reloads the page
-    When the user clicks the button/link    jQuery=.button:contains("Submit documents")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
     And the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
-    When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Submit")
     When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     When the user navigates to the page    ${project_in_setup_page}
@@ -317,7 +317,7 @@ CompAdmin rejects other documents
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject documents")
+    And the user clicks the button/link    jQuery=.modal-reject-docs .govuk-button:contains("Reject documents")
     Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the Project Manager.
 
 
@@ -327,11 +327,11 @@ Partners can see the documents rejected
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    And the user should see the element  jQuery=.button:contains("Submit documents")
+    And the user should see the element  jQuery=.govuk-button:contains("Submit documents")
     Given log in as a different user    &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    And the user should not see the element  jQuery=.button:contains("Submit documents")
+    And the user should not see the element  jQuery=.govuk-button:contains("Submit documents")
     Given log in as a different user   &{collaborator2_credentials}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
@@ -380,7 +380,7 @@ After rejection, lead partner does not have the option to submit the mandatory d
     [Tags]
     [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should not see an error in the page
-    And the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 After rejection, non-lead partner cannot view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428, INFUND-7342
@@ -388,7 +388,7 @@ After rejection, non-lead partner cannot view both documents
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
@@ -417,7 +417,7 @@ Project Manager can remove the offending documents
     When the user clicks the button/link    name=removeCollaborationAgreementClicked
     And the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see the text in the page    ${valid_pdf}
-    And the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 After rejection, non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
@@ -462,7 +462,7 @@ After rejection, PM cannot submit when both documents are removed
     #Then the user should see the 2 Upload buttons
     And the user should see the element    css=label[for="collaborationAgreement"]
     And the user should see the element    css=label[for="exploitationPlan"]
-    Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    Then the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
 
 
 After rejection PM can upload both documents when both documents are removed
@@ -484,11 +484,11 @@ After rejection, mandatory document submission
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
-    When the user clicks the button/link    jQuery=.button:contains("Submit documents")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
     And the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
-    When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Submit")
     When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     When the user navigates to the page    ${project_in_setup_page}
@@ -550,7 +550,7 @@ CompAdmin approves other documents
     And the user clicks the button/link    jQuery=.modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept documents")
+    And the user clicks the button/link    jQuery=.modal-accept-docs .govuk-button:contains("Accept documents")
     Then the user should see the text in the page    The documents provided have been approved.
 
 Partners can see the documents approved
@@ -599,10 +599,10 @@ Sole applicant uploads only exploitation plan and submits
     And the user clicks the button/link  link=Other documents
     Then the user should not see the text in the page  Collaboration
     And the user should see the element  jQuery=h2:contains("Exploitation plan")
-    And the user should not see the element  jQuery=.button.enabled:contains("Submit document")
+    And the user should not see the element  jQuery=.govuk-button.enabled:contains("Submit document")
     When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
-    And the user clicks the button/link  jQuery=.button:contains("Submit document")
-    And the user clicks the button/link  jQuery=.button:contains("Submit")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Submit document")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Submit")
     And the user clicks the button/link  link=Set up your project
     Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
 
@@ -616,7 +616,7 @@ CompAdmin sees uploaded file and approves it
     When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
     When the user clicks the button/link  jQuery=button:contains("Accept document")
-    And the user clicks the button/link  jQuery=.modal-accept-doc .button:contains("Accept document")
+    And the user clicks the button/link  jQuery=.modal-accept-doc .govuk-button:contains("Accept document")
     Then the user should see the element  jQuery=p:contains("The document provided has been approved.")
 
 Sole applicant can see documents approval

@@ -17,6 +17,7 @@ import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.assessor.populator.*;
 import org.innovateuk.ifs.management.assessor.viewmodel.*;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -103,7 +104,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
 
     @Spy
     @InjectMocks
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Mock
     private CookieUtil cookieUtil;

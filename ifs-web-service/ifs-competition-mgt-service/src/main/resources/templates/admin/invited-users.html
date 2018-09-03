@@ -1,30 +1,43 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage users'" />
 </head>
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External user list',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <ul class="inline-nav cf">
-        <li>
-            <a th:href="@{/admin/users/created}">Users with account</a>
-        </li>
-        <li th:classappend="selected">
-            <a th:href="@{/admin/invites}">Invited users</a>
-        </li>
-    </ul>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External user list',size='govuk-heading-l'" />
 
-    <th:block th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                External users
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" th:href="@{/admin/users/created}">
+                        Users with account
+                    </a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" th:href="@{/admin/invites}" aria-selected="true">
+                        Invited users
+                    </a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <th:block th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
+            </section>
+        </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

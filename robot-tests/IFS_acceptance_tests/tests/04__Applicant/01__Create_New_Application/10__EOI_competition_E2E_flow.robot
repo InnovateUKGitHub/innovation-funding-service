@@ -4,6 +4,10 @@ Documentation   Suite description
 ...             IFS-2192 As a Portfolio manager I am able to create an EOI competition
 ...
 ...             IFS-2196 As an applicant I am able to apply for an EOI competition
+...
+...             IFS-2941 As an applicant I am only offered the Research category eligible for the competition
+...
+...             IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Force Tags      compAdmin  Applicant  Assessor
@@ -25,13 +29,13 @@ Comp Admin Creates EOI type competition
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196
+    [Documentation]  IFS-2192  IFS-2196  IFS-4080
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${comp_name}
     Then Lead Applicant applies to the new created competition   ${comp_name}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2196
+    [Documentation]  IFS-2196  IFS-2941
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
@@ -46,13 +50,13 @@ Invite a registered assessor
     When the user clicks the button/link                      link=${comp_name}
     And the user clicks the button/link                       link=Invite assessors to assess the competition
     And the user selects the option from the drop-down menu   Smart infrastructure  id=filterInnovationArea
-    And the user clicks the button/link                       jQuery=.button:contains("Filter")
+    And the user clicks the button/link                       jQuery=.govuk-button:contains("Filter")
     Then the user clicks the button/link                      jQuery=tr:contains("Paul Plum") label[for^="assessor-row"]
-    And the user clicks the button/link                       jQuery=.button:contains("Add selected to invite list")
+    And the user clicks the button/link                       jQuery=.govuk-button:contains("Add selected to invite list")
     And the user clicks the button/link                       link=Invite
     And the user clicks the button/link                       link=Review and send invites  # a:contains("Review and send invites")
     And the user enters text to a text field                  id=message    This is custom text
-    And the user clicks the button/link                       jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                       jQuery=.govuk-button:contains("Send invite")
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
@@ -84,7 +88,7 @@ Allocated assessor assess the application
     When The user clicks the button/link                   link=EOI comp
     And the user clicks the button/link                    jQuery=li:contains("${EOI_application}") a:contains("Accept or reject")
     And the user selects the radio button                  assessmentAccept  true
-    Then the user clicks the button/link                   jQuery=.button:contains("Confirm")
+    Then the user clicks the button/link                   jQuery=.govuk-button:contains("Confirm")
     And the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${competitionId}
     And the user clicks the button/link                    link=EOI Application
     And the assessor submits the assessment
@@ -113,22 +117,23 @@ Custom Suite Setup
 
 The competition admin creates a EOI Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user clicks the button/link  jQuery=.button:contains("Create competition")
-    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_EOI}
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_EOI}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
-    the user fills in the CS Milestones   ${month}  ${nextyear}
-    the user marks the Application as done  no  ${compType_EOI}
+    the user fills in the CS Eligibility                    ${orgType}  1  # 1 means 30%
+    the user fills in the CS Milestones                     ${month}  ${nextyear}
+    the user marks the Application as done  no              ${compType_EOI}
     the user fills in the CS Assessors
-    the user clicks the button/link  link=Public content
-    the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link   link=Return to setup overview
-    the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  css=button[type="submit"]
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user fills in the CS Documents in other projects
+    the user clicks the button/link                         link = Public content
+    the user fills in the Public content and publishes      ${extraKeyword}
+    the user clicks the button/link                         link = Return to setup overview
+    the user clicks the button/link                         jQuery = a:contains("Complete")
+    the user clicks the button/link                         css = button[type = "submit"]
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
@@ -148,9 +153,9 @@ the assessor submits the assessment
     the user clicks the button/link               link=Review and complete your assessment
     the user selects the radio button             fundingConfirmation  true
     the user enters text to a text field          id=feedback    EOI application assessed
-    the user clicks the button/link               jQuery=.button:contains("Save assessment")
+    the user clicks the button/link               jQuery=.govuk-button:contains("Save assessment")
     the user clicks the button/link               jQuery=li:contains("${EOI_application}") label[for^="assessmentIds"]
-    the user clicks the button/link               jQuery=.button:contains("Submit assessments")
+    the user clicks the button/link               jQuery=.govuk-button:contains("Submit assessments")
     the user clicks the button/link               jQuery=button:contains("Yes I want to submit the assessments")
     the user should see the element               jQuery=li:contains("EOI Application") strong:contains("Recommended")   #
 

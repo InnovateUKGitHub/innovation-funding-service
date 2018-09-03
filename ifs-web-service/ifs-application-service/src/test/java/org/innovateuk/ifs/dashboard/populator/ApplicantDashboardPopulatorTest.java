@@ -4,17 +4,17 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,13 +71,13 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private ProjectService projectService;
+    private ProjectRestService projectRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -109,7 +109,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(allApplications));
 
-        when(projectService.findByUser(loggedInUser.getId())).thenReturn(ServiceResult.serviceSuccess(newProjectResource()
+        when(projectRestService.findByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProjectResource()
                 .withId(PROJECT_ID_IN_PROJECT, PROJECT_ID_IN_PROJECT_WITHDRAWN)
                 .withApplication(APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN)
                 .withProjectState(ProjectState.SETUP, ProjectState.WITHDRAWN)
@@ -130,11 +130,13 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
 
-        when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
+        when(userRestService.findProcessRoleByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
                 .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT)
-                .build(4));
+                .build(4)));
 
+        UserResource user = UserResourceBuilder.newUserResource().withId(loggedInUser.getId()).withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(user));
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_SUBMITTED)).thenReturn(restSuccess(true));
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_IN_PROGRESS)).thenReturn(restSuccess(true));
     }
@@ -151,5 +153,6 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Application in progress", viewModel.getApplicationInProgressText());
+        assertEquals("Set up your project", viewModel.getProjectSetupContainerText());
     }
 }

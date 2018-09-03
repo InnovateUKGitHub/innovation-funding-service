@@ -9,6 +9,7 @@ import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,17 +22,17 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUM
 @Component
 public class AssessmentReviewModelPopulator {
 
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private FormInputResponseRestService formInputResponseRestService;
     private ReviewRestService reviewRestService;
     private OrganisationService organisationService;
 
-    public AssessmentReviewModelPopulator(ProcessRoleService processRoleService,
+    public AssessmentReviewModelPopulator(UserRestService userRestService,
                                           FormInputResponseRestService formInputResponseRestService,
                                           ReviewRestService reviewRestService,
                                           OrganisationService organisationService) {
         this.organisationService = organisationService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.reviewRestService = reviewRestService;
     }
@@ -41,7 +42,7 @@ public class AssessmentReviewModelPopulator {
                 reviewRestService.getAssessmentReview(reviewId).getSuccess();
 
         String projectSummary = getProjectSummary(reviewResource);
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(reviewResource.getApplication());
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(reviewResource.getApplication()).getSuccess();
         SortedSet<OrganisationResource> collaborators = organisationService.getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = organisationService.getApplicationLeadOrganisation(processRoles).orElse(null);
 

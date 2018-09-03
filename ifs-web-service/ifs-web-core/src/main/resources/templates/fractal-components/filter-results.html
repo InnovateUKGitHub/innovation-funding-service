@@ -1,18 +1,24 @@
-<h1 class="heading-xlarge">Filter results</h1>
+<h1 class="govuk-heading-xl">Filter results</h1>
 
 <form method="GET">
-  <div class="search-filters extra-margin">
+  <div class="search-filters govuk-!-margin-top-6">
 
-    <fieldset>
-      <legend class="heading-medium">Filter applications</legend>
-      <div class="grid-row">
-        <div class="column-two-thirds">
-          <label class="form-label" for="filterSearch">Search by application number.</label>
-          <input class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" value="" type="text">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        <h2 class="govuk-fieldset__heading">Filter applications</h2>
+      </legend>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <label class="govuk-label" for="filterSearch">Search by application number.</label>
+          <input class="govuk-input govuk-!-margin-bottom-6"
+                 id="filterSearch"
+                 name="filterSearch"
+                 value=""
+                 type="text">
           <a href="?sort=">Clear all filters</a>
         </div>
-        <div class="column-third">
-          <button class="button">Filter</button>
+        <div class="govuk-grid-column-one-third">
+          <button class="govuk-button">Filter</button>
         </div>
       </div>
     </fieldset>

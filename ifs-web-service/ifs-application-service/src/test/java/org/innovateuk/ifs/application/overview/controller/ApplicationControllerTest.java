@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewView
 import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -22,10 +23,10 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
@@ -109,6 +110,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @InjectMocks
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -132,7 +137,8 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController();
+        return new ApplicationController(applicationOverviewModelPopulator,
+                questionService, userRestService, applicationRestService, cookieFlashMessageFilter);
     }
 
     @Before
@@ -227,7 +233,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(LEADAPPLICANT).build();
 
-        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
 
         mockMvc.perform(get("/application/" + app.getId()))
@@ -246,7 +252,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(COLLABORATOR).build();
 
-        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
 
         mockMvc.perform(get("/application/" + app.getId()))

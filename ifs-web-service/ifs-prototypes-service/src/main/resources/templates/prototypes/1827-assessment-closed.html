@@ -43,35 +43,35 @@
 
 			<div class="boxed">
 
-				<div class="grid-row">
-					<div class="column-half">
-						<p>Total funding available <br /><span class="heading-medium">£250000</span></p>
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+						<p class="govuk-body">Total funding available <br /><span class="govuk-heading-m">£250000</span></p>
 					</div>
-					<div class="column-half">
-						<p>Funding remaining <br /><span class="heading-medium">£<span id="funding-remaining">250000</span></span></p>
+					<div class="govuk-grid-column-one-half">
+						<p class="govuk-body">Funding remaining <br /><span class="govuk-heading-m">£<span id="funding-remaining">250000</span></span></p>
 					</div>
 				</div>
-				<div class="grid-row">
-					<div class="column-half">
-						<p>Applications <br /><span class="heading-medium">45</span></p>
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+						<p class="govuk-body">Applications <br /><span class="govuk-heading-m">45</span></p>
 					</div>
 
-					<div class="column-half">
-						<p>Applications over 70% <br /><span class="heading-medium">6</span></p>
+					<div class="govuk-grid-column-one-half">
+						<p class="govuk-body">Applications over 70% <br /><span class="govuk-heading-m">6</span></p>
 					</div>
 				</div>
 
 			</div>
 
-			<div class="grid-row extra-margin">
-				<div class="column-third">
-					<p>Modal score <br /><span class="heading-medium">50%</span></p>
+			<div class="govuk-grid-row extra-margin">
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-body">Modal score <br /><span class="govuk-heading-m">50%</span></p>
 				</div>
-				<div class="column-third">
-					<p>Highest score <br /><span class="heading-medium">90%</span></p>
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-body">Highest score <br /><span class="govuk-heading-m">90%</span></p>
 				</div>
-				<div class="column-third">
-					<p>Lowest score <br /><span class="heading-medium">34%</span></p>
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-body">Lowest score <br /><span class="govuk-heading-m">34%</span></p>
 				</div>
 			</div>
 
@@ -81,32 +81,32 @@
 		    <div th:if="${param.sendAssignments != null}" th:remove="tag">
 		    	<div class="highlight-panel extra-margin">
 			        <div class="alignright-button" id="added-assessors">
-						<a href="/prototypes/1385-application-allocation-confirm" class="button">Send updates to assessors</a>
+						<a href="/prototypes/1385-application-allocation-confirm" class="govuk-button">Send updates to assessors</a>
 					</div>
 				</div>
 			</div>
 
 		</section>
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<section class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Application list</h2>
 
 			<div class="alignright-button highlight-panel">
-				<a href="#" class="button button-secondary">Export assessors panel sheet</a>
-				<a href="#" id="confirm-selections" class="button">Confirm selections</a>
+				<a href="#" class="govuk-button button-secondary">Export assessors panel sheet</a>
+				<a href="#" id="confirm-selections" class="govuk-button">Confirm selections</a>
 			</div>
 
 		    <div class="table-overflow extra-margin">
 		        <table id="application-list">
-		            <thead>
-		                <tr>
-		                    <th scope="col">Application number</th>
-		                    <th scope="col">Project title</th>
-		                    <th scope="col">Lead</th>
-		                    <th scope="col">Assessment category (innovation area)</th>
+		            <thead class="govuk-table__head">
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col">Application number</th>
+		                    <th class="govuk-table__header" scope="col">Project title</th>
+		                    <th class="govuk-table__header" scope="col">Lead</th>
+		                    <th class="govuk-table__header" scope="col">Assessment category (innovation area)</th>
 		                    <th scope="col" class="alignright">Grant request (&#163;)</th>
 		                    <th scope="col" class="alignright">Score as percentage</th>
 		                    <th scope="col" class="alignright">Percentage spread</th>
@@ -118,164 +118,164 @@
 		                    <th scope="col" class="alignright">Funding remaining</th>
 		                </tr>
 		            </thead>
-		            <tbody>
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5431</a></th>
-		                    <td>Machine learning in robots</td>
-		                    <td>PWC</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">50000</td>
-		                    <td class="alignright">90</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		            <tbody class="govuk-table__body">
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5431</a></th>
+		                    <td class="govuk-table__cell">Machine learning in robots</td>
+		                    <td class="govuk-table__cell">PWC</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">50000</td>
+		                    <td class="govuk-table__cell alignright">90</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5432</a></th>
-		                    <td>Robots that learn</td>
-		                    <td>MaxDigital</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">88</td>
-		                    <td class="alignright">2</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5432</a></th>
+		                    <td class="govuk-table__cell">Robots that learn</td>
+		                    <td class="govuk-table__cell">MaxDigital</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">88</td>
+		                    <td class="govuk-table__cell alignright">2</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
-		                    <td>AI in learning</td>
-		                    <td>BBC</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">25000</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
+		                    <td class="govuk-table__cell">AI in learning</td>
+		                    <td class="govuk-table__cell">BBC</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">25000</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
-		                    <td>Intelligent machine</td>
-		                    <td>BBC</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">50000</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
+		                    <td class="govuk-table__cell">Intelligent machine</td>
+		                    <td class="govuk-table__cell">BBC</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">50000</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-		                    <td>Progressive machines</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">65000</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+		                    <td class="govuk-table__cell">Progressive machines</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">65000</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright">-</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5436</a></th>
-		                    <td>Example application 6</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5436</a></th>
+		                    <td class="govuk-table__cell">Example application 6</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">69</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5437</a></th>
-		                    <td>Example application 7</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5437</a></th>
+		                    <td class="govuk-table__cell">Example application 7</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">69</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5438</a></th>
-		                    <td>Example application 8</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5438</a></th>
+		                    <td class="govuk-table__cell">Example application 8</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">69</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5439</a></th>
-		                    <td>Example application 9</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5439</a></th>
+		                    <td class="govuk-table__cell">Example application 9</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">69</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-54310</a></th>
-		                    <td>Example application 10</td>
-		                    <td>Kingfisher</td>
-		                    <td>Digital services</td>
-		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-54310</a></th>
+		                    <td class="govuk-table__cell">Example application 10</td>
+		                    <td class="govuk-table__cell">Kingfisher</td>
+		                    <td class="govuk-table__cell">Digital services</td>
+		                    <td class="govuk-table__cell alignright">35000</td>
+		                    <td class="govuk-table__cell alignright">69</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">5</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright">4</td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="govuk-table__cell alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 		            </tbody>

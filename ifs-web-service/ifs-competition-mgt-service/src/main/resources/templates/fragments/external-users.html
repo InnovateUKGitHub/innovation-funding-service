@@ -1,33 +1,33 @@
 <th:block th:fragment="user-list(users)">
-    <p>
-        <span class="heading-xlarge no-margin" th:text="${users.size()}">38</span>
-        <span class="heading-small">users</span>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${users.size()}">38</span>
+        <span class="govuk-heading-s">users</span>
     </p>
     <th:block th:insert="fragments/external-users :: users-table(users=${users})" />
 </th:block>
 
 <th:block th:fragment="users-table(users)">
-    <p th:if="${#lists.isEmpty(users)}">There are no results for this search.</p>
+    <p class="govuk-body" th:if="${#lists.isEmpty(users)}">There are no results for this search.</p>
     <div class="table-overflow" th:unless="${#lists.isEmpty(users)}">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Organisation name</th>
-                <th scope="col">Organisation type</th>
-                <th scope="col">Organisation ID</th>
-                <th scope="col">Email</th>
-                <th scope="col">Status</th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Organisation name</th>
+                <th class="govuk-table__header" scope="col">Organisation type</th>
+                <th class="govuk-table__header" scope="col">Organisation ID</th>
+                <th class="govuk-table__header" scope="col">Email</th>
+                <th class="govuk-table__header" scope="col">Status</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.name}">Steve Smith</td>
-                <td th:text="${user.organisationName}">Empire Limited</td>
-                <td th:text="${user.organisationType}">Research</td>
-                <td th:text="${user.organisationId}">10</td>
-                <td th:text="${user.email}">steve.smith@empire.com</td>
-                <td th:text="${user.status.displayName}">Verified</td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="user : ${users}">
+                <td class="govuk-table__cell" th:text="${user.name}">Steve Smith</td>
+                <td class="govuk-table__cell" th:text="${user.organisationName}">Empire Limited</td>
+                <td class="govuk-table__cell" th:text="${user.organisationType}">Research</td>
+                <td class="govuk-table__cell" th:text="${user.organisationId}">10</td>
+                <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
+                <td class="govuk-table__cell" th:text="${user.status.displayName}">Verified</td>
             </tr>
             </tbody>
         </table>

@@ -21,43 +21,43 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Project details'}, ${'project setup'})" />
 
-  <h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+  <h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
 		<div class="success-alert" th:unless="${param.status != null and param.status[0] == 'incomplete'}">
-			<h2 class="heading-small no-margin-top">The project details have been submitted to Innovate UK.</h2>
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The project details have been submitted to Innovate UK.</h2>
 		</div>
 
-		<h2 class="heading-medium">Project details</h2>
+		<h2 class="govuk-heading-m">Project details</h2>
 
-		<p>These project details were supplied by the lead partner on behalf of the project.</p>
+		<p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
 
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Question</th>
 					<th scope="col" style="width: 50%">Answer</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Target start date
 					</td>
 					<td id="start-date" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '01/06/2016'}">
 						START DATE
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Project address
 					</td>
 					<td id="project-address" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '13 Queens Square, Bristol, BS3 1RF'}">
 						ADDRESS
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Project manager
 					</td>
 					<td id="project-manager" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'Steve Dafit'}">
@@ -68,58 +68,58 @@
 			</tbody>
 		</table>
 
-		<h2 class="heading-medium">Partner finance contacts</h2>
-		<p>Each of the partners is responsible for submitting their own finance contact.</p>
+		<h2 class="govuk-heading-m">Partner finance contacts</h2>
+		<p class="govuk-body">Each of the partners is responsible for submitting their own finance contact.</p>
 
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Partner</th>
 					<th scope="col" style="width: 50%">Finance contact</th>
 					<!-- <th scope="col" style="width: 20%">Turnover</th>
 					<th scope="col" style="width: 20%">Staff headcount</th> -->
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Aptrans Ltd (Lead)
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span id="finance-contact" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'John Smith'}">NAME</span>
 					</td>
-					<!-- <td>
+					<!-- <td class="govuk-table__cell">
 						<span id="finance-turnover">&pound;1,023,092</span>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span id="finance-headcount">84</span>
 					</td>-->
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Biotech Corp
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span id="finance-partner-contact">Ann Jones</span>
 					</td>
-					<!-- <td>
+					<!-- <td class="govuk-table__cell">
 						<span id="finance-partner-turnover">&pound;756,137</span>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span id="finance-partner-headcount">29</span>
 					</td> -->
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						University of Cardiff
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						Paula Moore
 					</td>
-					<!-- <td>
+					<!-- <td class="govuk-table__cell">
 						<span id="finance-partner2-turnover">&pound;2,023,092</span>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span id="finance-partner2-headcount">76</span>
 					</td> -->
 				</tr>

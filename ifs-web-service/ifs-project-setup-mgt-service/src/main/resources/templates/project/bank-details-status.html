@@ -1,46 +1,50 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details Partner progress'" />
 </head>
-<body class="competition-management project-management application-overview">
+<body class="govuk-template__body competition-management project-management application-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-	<th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
-  <div class="grid-row">
-    <div class="column-two-thirds">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
-    </div>
-    <div class="column-third alignright extra-margin">
-      <h2 class="bold-small blue-block">Bank details</h2>
-    </div>
-  </div>
-  <hr/>
-  <p>This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
-  <h2 class="heading-medium">Partner progress</h2>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
 
-  <ul class="task-list">
-    <li th:each="partner : ${model.bankDetailsStatusResources}" th:class="${partner.bankDetailsStatus.name() == 'NOT_REQUIRED' ? 'read-only' : ''}">
-      <div class="task">
-        <h3 class="heading-small">
-          <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-            <span th:text="${partner.organisationName}"/>
-          </th:block>
-          <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
-          </th:block>
-          <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
-        </h3>
-      </div>
-      <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
-    </li>
-  </ul>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
+          </div>
+          <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
+              <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank details</h2>
+          </div>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <p class="govuk-body">This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
+        <h2 class="govuk-heading-m">Partner progress</h2>
 
-	<th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <ul class="task-list">
+            <li th:each="partner : ${model.bankDetailsStatusResources}" th:class="${partner.bankDetailsStatus.name() == 'NOT_REQUIRED' ? 'read-only' : ''}">
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+                            <span th:text="${partner.organisationName}"/>
+                        </th:block>
+                        <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+                            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" class="govuk-link" />
+                        </th:block>
+                        <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
+                    </h3>
+                </div>
+                <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+            </li>
+        </ul>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>

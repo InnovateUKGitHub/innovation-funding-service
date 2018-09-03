@@ -17,6 +17,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -29,18 +32,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.util.ReflectionUtils.*;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -73,6 +76,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
+    @Autowired
+    private FileTypeRepository fileTypeRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -107,7 +112,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
+
+        Competition existingCompetition = competitionRepository.findOne(competitionResource.getId());
+
         Competition competition = competitionMapper.mapToDomain(competitionResource);
+        competition = setCompetitionAuditableFields(competition, existingCompetition);
 
         saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
@@ -346,9 +355,42 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
+        competition.setProjectDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
+    }
+
+    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
+
+        FileType pdfFileType = fileTypeRepository.findByName("PDF");
+
+        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
+        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+
+        return defaultProjectDocuments;
+    }
+
+    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
+                false, true, fileTypes);
+    }
+
+    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
+                false, true, fileTypes);
+    }
+
+    private Competition setCompetitionAuditableFields(Competition competition, Competition existingCompetition) {
+        Field createdBy = findField(Competition.class, "createdBy");
+        Field createdOn = findField(Competition.class, "createdOn");
+        makeAccessible(createdBy);
+        makeAccessible(createdOn);
+        setField(createdBy, competition, existingCompetition.getCreatedBy());
+        setField(createdOn, competition, existingCompetition.getCreatedOn());
+
+        return competition;
     }
 }

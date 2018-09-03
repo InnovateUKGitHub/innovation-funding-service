@@ -1,38 +1,49 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" />
     </head>
 
-    <body class="competition-management competition-overview">
+    <body class="govuk-template__body competition-management competition-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessors',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='heading-xlarge'" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessors',linkUrl=@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" />
 
-            <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
-            <form th:action="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-                <div class="form-group">
-                    <label class="form-label-bold" for="subject">Subject</label>
-                    <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
-                </div>
+                <p class="govuk-heading-m" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
 
-                <div class="form-group">
-                    <label class="form-label-bold" for="message">Message</label>
-                    <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
-                </div>
+                <form th:action="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="subject">Subject</label>
+                        <input class="govuk-input"
+                               id="subject"
+                               type="text"
+                               th:field="*{subject}" />
+                    </div>
 
-                <div class="alignright">
-                    <button type="submit" class="button button-large">Send invite</button>
-                </div>
-            </form>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="message">Message</label>
+                        <textarea id="message"
+                                  rows="16"
+                                  class="govuk-textarea"
+                                  th:field="*{content}">
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                        </textarea>
+                    </div>
 
+                    <div class="alignright">
+                        <button type="submit" class="govuk-button">Send invite</button>
+                    </div>
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />

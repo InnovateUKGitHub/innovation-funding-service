@@ -30,28 +30,28 @@
 
     <!-- ===========================Form: capital usage =========================== -->
     <th:block th:fragment="capital_usage(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: travel cost =========================== -->
     <th:block th:fragment="travel (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.description}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.description}" />
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}"  th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
@@ -59,60 +59,64 @@
     <!-- ===========================Form: Other funding=========================== -->
     <th:block th:fragment="other_funding" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
 
-        <div class="form-group"
-             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'form-group-error'">
+        <div class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading" th:text="${question.getName()}"></h2>
+                </legend>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
+                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item" data-target="other-funding-table">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               value="Yes"
+                               required="required"
+                               th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                        />
+                        <label th:class="${(costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               class="govuk-label govuk-radios__label">
+                            Yes
+                        </label>
+                    </div>
 
+                    <div class="govuk-radios__item">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                               th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               value="No"
+                               required="required"
+                               th:checked="${costCategory.otherPublicFunding?.equals('No')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+                        <label th:class="${(costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                               class="govuk-label govuk-radios__label">
+                            No
+                        </label>
+                    </div>
 
-            <h2 th:text="${question.getName()}" class="heading-medium" />
-            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
-            <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-
-            <fieldset class="inline" id="otherFundingShowHideToggle">
-                <legend class="visuallyhidden" th:text="${question.getName()}" />
-
-                <div class="multiple-choice" data-target="other-funding-table">
-                    <input type="radio"
-                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                           th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                           value="Yes"
-                           required="required"
-                           th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
-                           th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                            />
-                    <label th:class="${(costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}">
-                        Yes
-                    </label>
-                </div>
-
-                <div class="multiple-choice">
-                    <input type="radio"
-                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
-                           th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                           value="No"
-                           required="required"
-                           th:checked="${costCategory.otherPublicFunding?.equals('No')}"
-                           th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
-                    <label th:class="${(costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
-                        No
-                    </label>
                 </div>
 
                 <div id="other-funding-table">
-                    <div class="form-group" th:attr="data-repeatable-container=${question.id}">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th id="other-funding-source">Source of funding</th>
-                                <th id="other-funding-date" class="width-medium">Date secured</th>
-                                <th id="other-funding-amount" class="width-medium">Funding amount (£)</th>
-                                <th th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"><span class="visuallyhidden">Actions</span></th>
+                    <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                                <th id="other-funding-date" class="govuk-table__header width-150" scope="col">Date secured</th>
+                                <th id="other-funding-amount" class="govuk-table__header width-150" scope="col">Funding amount (£)</th>
+                                <th th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="govuk-table__body">
                             <th:block th:each="cost : ${costCategory.costs}">
                                 <th:block th:insert="project/financecheck/fragments/finance :: other_funding_row" />
                             </th:block>
@@ -122,9 +126,10 @@
                             <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
                         </p>
                     </div>
-                    <div class="form-group alignright inline">
-                        <label for="other-funding-total">Total other funding</label>
-                        <input class="form-control form-control-1-4 alignright"
+                    <div class="govuk-form-group alignright inline">
+                        <label for="other-funding-total"
+                               class="govuk-label">Total other funding</label>
+                        <input class="govuk-input govuk-input--width-10 alignright"
                                data-calculation-fields="[id*=fundingAmount]"
                                data-calculation-operations="+"
                                id="other-funding-total"
@@ -142,54 +147,54 @@
 
     <th:block th:fragment="other_funding_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
+            <tr class="govuk-table__row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-source'}">
-                        <span class="visuallyhidden">Source of funding</span>
+                        <span class="govuk-visually-hidden">Source of funding</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
-                           class="form-control width-full"
+                           class="govuk-input"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${rejectedValue != null ? rejectedValue : cost.fundingSource}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
                            required="required"
                            maxlength="255"
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
                 </td>
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
+                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-date'}">
-                        <span class="visuallyhidden">Date secured</span>
+                        <span class="govuk-visually-hidden">Date secured</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
-                           class="form-control width-medium"
+                           class="govuk-input govuk-input--width-10"
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
                            th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
                            maxlength="7"
                            th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-input--error'"
                            required="required" />
                 </td>
 
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
+                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
                   <label th:for="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}">
-                    <span class="visuallyhidden">Funding amount (&pound;)</span>
+                    <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                   </label>
-                    <input class="form-control width-medium"
+                    <input class="govuk-input govuk-input--width-10"
                            type="number"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0')}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-input--error'"
                            required="required"
                            placeholder="0"
                            min="1"
@@ -197,11 +202,11 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                            />
                 </td>
-                <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+                <td class="govuk-table__cell" th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
-                            class="buttonlink js-remove-row"
+                            class="button-clear js-remove-row"
                             th:value="${cost.id}"
                             th:attrappend="formaction='&#35;question-'+${question.id}">Remove
                     </button>
@@ -213,7 +218,7 @@
 
     <!-- ===========================Research Participation =========================== -->
     <th:block th:fragment="research_participation(researchParticipationPercentage,maxResearchPercentage)">
-        <div class="extra-margin-top extra-margin-bottom" th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
+        <div class="eligibility govuk-!-margin-bottom-9" th:classappend="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'warning' : ''" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${maxResearchPercentage}+' %'"></dd>
@@ -231,37 +236,37 @@
     <!-- ===========================Research Participation alert messages =========================== -->
     <th:block th:fragment="research_participation_alert">
         <div th:unless="${researchParticipationPercentage &gt; maxResearchPercentage}" class="success-alert">
-            <h2 class="heading-small no-margin">The research participation levels of this project are within the required range.</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">The research participation levels of this project are within the required range.</h2>
         </div>
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
-            <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
-            <p>Please seek confirmation that the project is still eligible for funding.</p>
+            <h2 class="govuk-heading-s govuk-!-margin-0">Maximum research participation exceeded</h2>
+            <p class="govuk-body">Please seek confirmation that the project is still eligible for funding.</p>
         </div>
     </th:block>
 
     <!-- ===========================Finances Overview =========================== -->
     <th:block th:fragment="project-finance-overview(overview)">
-        <h3 class="heading-medium">Overview</h3>
-        <div class="table-overflow extra-margin-bottom">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Start date</th>
-                        <th scope="col">Duration</th>
-                        <th scope="col" class="numeric">Total project cost</th>
-                        <th scope="col" class="numeric">Grant applied for (&pound;)</th>
-                        <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="numeric">Total % grant</th>
+        <h3 class="govuk-heading-m">Overview</h3>
+        <div class="table-overflow govuk-!-margin-bottom-6">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Start date</th>
+                        <th class="govuk-table__header" scope="col">Duration</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total % grant</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
-                        <td th:text="${overview.durationInMonths+' months'}" />
-                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
-                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
-                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                        <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
+                        <td class="govuk-table__cell" th:text="${overview.durationInMonths+' months'}" />
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+                        <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="govuk-table__cell govuk-table__cell--numeric" />
                     </tr>
                 </tbody>
             </table>
@@ -270,48 +275,48 @@
 
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
-        <div class="table-overflow extra-margin-bottom">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Partner</th>
-                        <th scope="col" class="numeric width-small">Total costs</th>
-                        <th scope="col" class="numeric width-small">
+        <div class="table-overflow govuk-!-margin-bottom-6">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Partner</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total costs</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">
                             % Grant
                         </th>
-                        <th scope="col" class="numeric width-small-medium">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                             Funding sought (&pound;)
                         </th>
-                        <th scope="col" class="numeric width-medium">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
                             Other public sector funding (&pound;)
                         </th>
-                        <th scope="col" class="numeric width-small-medium">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                             Contribution to project (&pound;)
                         </th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'DEFAULT')}" /></strong></td>
-                        <td class="numeric"></td>
-                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
-                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
-                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
+                <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'DEFAULT')}" /></strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
                     </tr>
                 </tfoot>
-                <tbody>
+                <tbody class="govuk-table__body">
                     <th:block th:each="summary : ${summaries.financeCheckSummariesResources}" th:with="partner=${summaries.getPartnerFromSummary(summary.organisationId)}">
-                        <tr>
-                            <th scope="col">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
                                 <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
-                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'DEFAULT')}" /></strong></td>
-                            <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric"></td>
-                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'DEFAULT')}" /></td>
-                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'DEFAULT')}" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'DEFAULT')}" /></strong></td>
+                            <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'DEFAULT')}" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'DEFAULT')}" /></td>
                         </tr>
                     </th:block>
                 </tbody>
@@ -321,44 +326,44 @@
 
     <!-- ===========================Project Finance Cost Breakdown =========================== -->
     <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="table-overflow extra-margin-bottom">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Partner</th>
-                        <th scope="col" class="numeric width-small">Total</th>
-                        <th scope="col" class="numeric width-small">Labour (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Overheads (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Materials (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Capital usage (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Subcontract cost (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Travel and subs (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Other costs (&pound;)</th>
+        <div class="table-overflow govuk-!-margin-bottom-6">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Partner</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Labour (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Overheads (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Materials (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Capital usage (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Subcontract cost (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Travel and subs (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
+                <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
                     </tr>
                 </tfoot>
-                <tbody>
+                <tbody class="govuk-table__body">
                 <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
-                    <tr>
-                        <th scope="col">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">
                             <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
                             <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                         </th>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
                         <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
-                            <td th:if="${rowType.isIncludedInSpendProfile()}" class="numeric">
+                            <td th:if="${rowType.isIncludedInSpendProfile()}" class="govuk-table__cell govuk-table__cell--numeric">
                                 <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
                             </td>
                         </th:block>

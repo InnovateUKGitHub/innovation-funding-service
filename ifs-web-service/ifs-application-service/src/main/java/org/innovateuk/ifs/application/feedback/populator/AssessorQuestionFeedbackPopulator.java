@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.feedback.populator;
 import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AssessorQuestionFeedbackPopulator {
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -34,7 +34,7 @@ public class AssessorQuestionFeedbackPopulator {
 
     public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId, String originQuery ) {
 
-        QuestionResource questionResource = questionService.getById(questionId);
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         long applicationId = applicationResource.getId();
 
         List<FormInputResponseResource> responseResource = formInputResponseRestService.getByApplicationIdAndQuestionId(

@@ -1,25 +1,26 @@
 package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +61,13 @@ public class FinanceChecksNotesAddNoteController {
     private static final String ORIGIN_GET_COOKIE = "finance_checks_notes_new_note_origin";
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectRestService projectRestService;
 
     @Autowired
     private CookieUtil cookieUtil;
@@ -84,7 +88,7 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
@@ -188,7 +192,7 @@ public class FinanceChecksNotesAddNoteController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
             ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
@@ -233,7 +237,7 @@ public class FinanceChecksNotesAddNoteController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         attachments.forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
@@ -244,7 +248,7 @@ public class FinanceChecksNotesAddNoteController {
 
         ProjectResource project = projectService.getById(projectId);
 
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 

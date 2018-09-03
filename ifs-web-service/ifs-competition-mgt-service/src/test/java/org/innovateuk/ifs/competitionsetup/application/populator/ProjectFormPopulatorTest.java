@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -16,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.junit.Assert.assertEquals;
@@ -26,13 +28,13 @@ import static org.mockito.Mockito.when;
 public class ProjectFormPopulatorTest {
 
     @InjectMocks
-	private ProjectFormPopulator populator;
+    private ProjectFormPopulator populator;
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Mock
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     private Long questionId = 7890L;
     private Long questionNotFoundId = 12904L;
@@ -40,10 +42,10 @@ public class ProjectFormPopulatorTest {
     private CompetitionResource competitionResource;
 
 
-	@Test
+    @Test
     public void testPopulateFormWithoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
-        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
 
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionId));

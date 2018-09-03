@@ -19,56 +19,56 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">
+    <h1 class="govuk-heading-xl">
         <span class="heading-secondary">Technology inspired</span>
         Interviews you have agreed to attend
     </h1>
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl class="font-xsmall">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <dl class="govuk-list govuk-!-font-size-16">
                 <dt>Competition:</dt>
                 <dd>Technology inspired</dd>
                 <dt>Innovation Lead:</dt>
                 <dd>Peter Freeman</dd>
             </dl>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a href="#">View competition brief (opens in a new window)</a>
         </div>
     </div>
 
-    <p class="extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
+    <p class="govuk-body extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
 
     <div class="my-applications">
 
         <div class="progress-list">
-            <h2 class="heading-medium no-margin-top" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for interview panel (0)' : 'Applications for interview panel (3)'}">Applications for interview panel (3)</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-0" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for interview panel (0)' : 'Applications for interview panel (3)'}">Applications for interview panel (3)</h2>
             <ul>
                 <th:block th:unless="${param.status != null and param.status[0] == 'noApplications'}">
                     <li>
                         <div class="task">
-                            <h3 class="heading-small"><a href="/prototypes/IFS-2254-feedback-overview">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3>
-                            <p>Wessex University</p>
+                            <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2254-feedback-overview">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3>
+                            <p class="govuk-body">Wessex University</p>
                         </div>
                     </li>
                     <li>
                         <div class="task">
-                            <h3 class="heading-small"><a href="/prototypes/IFS-2254-feedback-overview">Mobility problems and the potential for internet enabled zimmer frame</a></h3>
-                            <p>Plymouth University</p>
+                            <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2254-feedback-overview">Mobility problems and the potential for internet enabled zimmer frame</a></h3>
+                            <p class="govuk-body">Plymouth University</p>
                         </div>
                     </li>
                     <li>
                         <div class="task">
-                            <h3 class="heading-small"><a href="/prototypes/IFS-2254-feedback-overview">Modifying internal domestic plumbing systems to enhance fire prevention in the home</a></h3>
-                            <p>Horizon Ltd</p>
+                            <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2254-feedback-overview">Modifying internal domestic plumbing systems to enhance fire prevention in the home</a></h3>
+                            <p class="govuk-body">Horizon Ltd</p>
                         </div>
                     </li>
                 </th:block>
                 <th:block th:if="${param.status != null and param.status[0] == 'noApplications'}">
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small">No applications have been assigned to this panel.</h3>
+                            <h3 class="govuk-heading-s">No applications have been assigned to this panel.</h3>
                         </div>
                     </li>
                 </th:block>

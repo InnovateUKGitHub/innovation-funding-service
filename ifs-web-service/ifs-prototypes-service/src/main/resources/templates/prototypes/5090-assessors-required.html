@@ -22,11 +22,11 @@
 
     <th:block th:if="${param.status != null and param.status[0] == 'edit'}">
 		<form>
-			<fieldset>
-				<legend class="visuallyhidden">Assessors</legend>
-				<div class="form-group">
+			<fieldset class="govuk-fieldset">
+				<legend class="govuk-visually-hidden">Assessors</legend>
+				<div class="govuk-form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Assessors required per application</h3>
+						<h3 class="govuk-heading-s">Assessors required per application</h3>
 						<label class="block-label selection-button-radio" for="assessors-one">
 							<input id="assessors-one" name="assessors-required" value="1" type="radio" />
 							1
@@ -41,12 +41,12 @@
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="remittance">
 						<span class="form-label-bold">Assessor payment per application</span>
-						<span class="form-hint">This information will be distributed in the assessor invites.</span>
+						<span class="govuk-hint">This information will be distributed in the assessor invites.</span>
 					</label>
-					<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input width-medium" id="remittance" name="remittance" value="£100" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 
 
@@ -54,18 +54,18 @@
 		</form>
 	</th:block>
 	<th:block th:unless="${param.status != null and param.status[0] == 'edit'}">
-		<dl class="application-question-list grid-row">
-			<dt class="column-third">Assessors required per application</dt>
+		<dl class="application-question-list govuk-grid-row">
+			<dt class="govuk-grid-column-one-third">Assessors required per application</dt>
 			<dd class="column-two-thirds">5</dd>
-			<dt class="column-third">Assessor payment per application</dt>
+			<dt class="govuk-grid-column-one-third">Assessor payment per application</dt>
 			<dd class="column-two-thirds">£100</dd>
 		</dl>
 	</th:block>
 
 
 	<div class="extra-margin">
-		<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required?compStatus=ready&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
-		<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required?compStatus=ready&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
 	</div>
 
 	<ul class="pagination">

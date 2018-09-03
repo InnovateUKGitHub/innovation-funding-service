@@ -1,77 +1,3 @@
-.column-three-quarters{
-  @include grid-column( 9/12 );
-}
-
-.column-one-quarter{
-  @include grid-column( 3/12 );
-}
-
-.column-one{
-  @include grid-column( 12/12 );
-}
-
-.no-pad{
-  padding: 0;
-
-  .heading-large,
-  .heading-xlarge{
-    margin-bottom: 10px;
-  }
-
-  .subtitle{
-    margin: 20px 0 30px 0;
-  }
-}
-
-.no-margin{
-  margin: 0;
-}
-
-.no-margin-left{
-  margin-left: 0;
-}
-
-.no-margin-right{
-  margin-right: 0;
-}
-
-.no-margin-top{
-  margin-top: 0;
-}
-
-.no-margin-bottom{
-  margin-bottom: 0;
-}
-
-.margin-top{
-  margin-top: 15px;
-}
-
-.extra-margin{
-  margin-top: 30px;
-}
-
-.extra-large-margin{
-  margin-top: 90px;
-}
-
-.extra-margin-bottom{
-  margin-bottom: 30px;
-}
-
-.no-padding-left{
-  padding-left:0;
-}
-
-.width-150{
-  width: 150px;
-}
-
-.dl-pad{
-  dd{
-    padding-bottom: 20px;
-  }
-}
 
 table {
 
@@ -93,10 +19,6 @@ table {
     box-sizing: border-box;
     padding-right: 1em;
     width: 40%;
-
-    .width-full {
-      width: 100%;
-    }
   }
 
   .width-50-percent {
@@ -105,12 +27,33 @@ table {
     width: 50%;
   }
 
+  .width-65 {
+    width: 65px;
+  }
+
+  .width-80 {
+    width: 80px;
+  }
+
+  .width-100 {
+    width: 100px;
+  }
+
+  .width-150 {
+    width: 150px;
+  }
+
+  .width-200 {
+    width: 200px;
+  }
+
   .selection-button-checkbox {
     margin-left: 5px;
     width: 20px;
   }
 
-  .multiple-choice{
+  .govuk-radios__item,
+  .govuk-checkboxes__item{
     margin-left: 3px;
 
     // The invisible label causes alignment issues with checkboxes within tables, restricting width and height cures this issue
@@ -162,7 +105,7 @@ table {
 .table-stacked-mobile {
 
   td{
-    .form-label {
+    .govuk-label {
       display: none;
     }
   }
@@ -179,21 +122,21 @@ table {
 
     tr{
       &.form-group-row-validated{
-        border-top: 1px solid #bfc1c3;
+        border-top: 1px solid $govuk-border-colour;
 
         &:first-child{
           border:none;
         }
       }
 
-      &.form-group-error {
+      &.govuk-form-group--error {
         margin-right: 0px;
         border-left: none;
         padding-left: 0px;
 
         td{
           &.form-group-error {
-            border-left: 4px solid #b10e1e;
+            border-left: 4px solid $govuk-error-colour;
             margin-right: 15px;
             padding-left: 10px;
           }
@@ -201,34 +144,25 @@ table {
       }
     }
 
-    td,
-    td.form-group{
+    td {
+      &.form-group {
         width: 100%;
         float: left;
-        border:none;
+        border: none;
 
-        label{
-          .form-label {
+        label {
+          .govuk-label {
             display: block;
             font-weight: 800;
           }
         }
       }
+    }
   }
 }
 
 .hint {
-  color: $grey-1;
-}
-
-.button-warning{
-  @include button(#c00000);
-}
-
-.button-block{
-  display: block;
-  text-align: center;
-  width: 100%;
+  color: $govuk-secondary-text-colour;
 }
 
 hr,
@@ -236,13 +170,28 @@ hr,
   clear: both;
 }
 
-button {
-  &.link-back {
-    background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    padding-right: 0;
-    cursor: pointer;
+.govuk-panel--confirmation {
+  .govuk-link {
+    color: govuk-colour("white");
+
   }
+}
+
+.govuk-body {
+  a {
+    color: $govuk-link-colour;
+
+    &:active,
+    &:hover {
+      color: $govuk-link-hover-colour;
+    }
+
+    &:visited {
+      color: $govuk-link-visited-colour;
+    }
+  }
+}
+
+.govuk-back-link {
+  cursor: pointer;
 }

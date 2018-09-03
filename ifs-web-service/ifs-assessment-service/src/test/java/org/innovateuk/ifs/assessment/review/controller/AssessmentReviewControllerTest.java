@@ -11,6 +11,7 @@ import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -64,6 +65,9 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
     private ProcessRoleService processRoleService;
 
     @Mock
+    private UserRestService userRestService;
+
+    @Mock
     private OrganisationService organisationService;
 
     @Mock
@@ -106,7 +110,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
         partners.add(leadOrganisation);
         partners.add(collaboratorOrganisation2);
 
-        when(processRoleService.findProcessRolesByApplicationId(APPLICATION_ID)).thenReturn(processRoleResources);
+        when(userRestService.findProcessRole(APPLICATION_ID)).thenReturn(restSuccess(processRoleResources));
         when(organisationService.getApplicationOrganisations(processRoleResources)).thenReturn(partners);
         when(organisationService.getApplicationLeadOrganisation(processRoleResources)).thenReturn(Optional.ofNullable(leadOrganisation));
     }
@@ -137,10 +141,10 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .andExpect(model().attribute("model", expectedReviewViewModel))
                 .andExpect(view().name("assessment/review-invitation")).andReturn();
 
-        InOrder inOrder = inOrder(reviewRestService, formInputResponseRestService, processRoleService, organisationService);
+        InOrder inOrder = inOrder(reviewRestService, formInputResponseRestService, userRestService, organisationService);
         inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(anyList());
         inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
         inOrder.verifyNoMoreInteractions();

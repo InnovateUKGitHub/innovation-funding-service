@@ -9,8 +9,6 @@ import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -22,12 +20,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,9 +113,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
-    @Mock
-    private UserRestService userRestServiceMock;
-
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -147,7 +143,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         // save actions should always succeed.
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(overheadFileSaver.isOverheadFileRequest(any(HttpServletRequest.class))).thenCallRealMethod();
         when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
@@ -286,7 +282,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
         when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
@@ -305,7 +301,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
         when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
@@ -323,9 +319,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
+        when(organisationRestService.getOrganisationByUserId(anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -340,9 +336,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidButWithTermsForAcademic() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build());
+        when(organisationRestService.getOrganisationByUserId(anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -354,7 +350,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Test
     public void testApplicationYourOrganisationMarkAsCompleteFailWithoutOrganisationSize() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
+        when(organisationRestService.getOrganisationByUserId(anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -543,7 +539,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
 
         when(applicationService.getById(1L)).thenReturn(application);
-        when(processRoleService.getByApplicationId(application.getId())).thenReturn(asList(processRole));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(processRole)));
         when(applicantRestService.getSection(processRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
 
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));

@@ -34,7 +34,7 @@
 
         <div class="content">
           <div class="column one">
-              <p>#springMessageText("idp.logout.attempt", "Attempting to log out of the following services:")</p>
+              <p class="govuk-body">#springMessageText("idp.logout.attempt", "Attempting to log out of the following services:")</p>
               #parse("logout/propagate.vm")
           </div>
           <div class="column two">

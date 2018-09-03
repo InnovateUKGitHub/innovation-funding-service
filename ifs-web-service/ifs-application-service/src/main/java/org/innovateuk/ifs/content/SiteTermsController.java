@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.content;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +43,7 @@ public class SiteTermsController {
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private CookieUtil cookieUtil;
@@ -71,8 +71,7 @@ public class SiteTermsController {
         Supplier<String> failureView = () -> newTermsAndConditions(form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> updateResult = userService.agreeNewTermsAndConditions(loggedInUser.getId());
+            RestResult<Void> updateResult = userRestService.agreeNewSiteTermsAndConditions(loggedInUser.getId());
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, redirectHandler(request, response));

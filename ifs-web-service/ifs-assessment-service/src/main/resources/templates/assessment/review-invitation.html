@@ -1,102 +1,121 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-
-<body>
+<body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to the panel applications page',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${model.competitionId})})" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to the panel applications page',linkUrl=@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${model.competitionId})})" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
-
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept or reject application',size='heading-xlarge'" />
-
-    <section class="boxed">
-        <div class="grid-row">
-            <div class="column-half">
-                <h2 class="heading-small no-margin">Title:</h2>
-                <p th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
-
-                <th:block th:if="${model.projectSummary}">
-                    <h2 class="heading-small">Project summary:</h2>
-                    <p th:text="${model.projectSummary}">This is the applicant response for project summary</p>
-                </th:block>
-            </div>
-            <div class="column-half">
-                <h2 class="heading-small no-margin">Partners:</h2>
-                <span th:each="partner : ${model.partners}">
-                        <th:block th:text="${partner.name}">Wessex University</th:block>
-                        <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
-                        <br>
-                </span>
-            </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-    </section>
 
-    <p class="extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept or reject application',size='govuk-heading-xl'" />
 
-    <form th:action="@{/review/{reviewId}/respond(reviewId=${model.reviewId})}" method="post" novalidate="novalidate" th:object="${form}">
-        <div class="form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'form-group-error'">
-            <fieldset>
-                <legend id="reviewAccept">
-                    <h2 class="heading-medium">Choose your option</h2>
-                    <th:block th:if="${#fields.hasErrors('reviewAccept')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
+        <section class="boxed">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Title:</h2>
+                    <p class="govuk-body" th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
+
+                    <th:block th:if="${model.projectSummary}">
+                        <h2 class="govuk-heading-s">Project summary:</h2>
+                        <p class="govuk-body" th:text="${model.projectSummary}">This is the applicant response for project summary</p>
                     </th:block>
-                </legend>
-
-                <div class="multiple-choice" data-target="accept-application">
-                    <input id="acceptReview" value="true" th:field="*{reviewAccept}" type="radio" required="required">
-                    <label for="acceptReview">Yes, I am able to review this application.</label>
                 </div>
-
-                <div class="panel js-hidden" id="accept-application">
-                    <p>You will still have the option to reject after accepting and viewing the full application.</p>
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Partners:</h2>
+                    <span th:each="partner : ${model.partners}">
+                            <th:block th:text="${partner.name}">Wessex University</th:block>
+                            <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
+                            <br>
+                    </span>
                 </div>
+            </div>
+        </section>
 
-                <label class="multiple-choice" data-target="reject-application">
-                    <input id="rejectReview" value="false" th:field="*{reviewAccept}" type="radio" required="required">
-                    <label for="rejectReview">No, I am not able to review this application.</label>
-                </label>
+        <p class="govuk-body govuk-!-margin-top-6">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 
-                <div class="panel js-hidden" id="reject-application">
-                    <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
-                        <label class="form-label" th:for="${#ids.next('rejectComment')}">
-                            Use this space to tell us why.
-                            <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                            </th:block>
+        <form th:action="@{/review/{reviewId}/respond(reviewId=${model.reviewId})}" method="post" novalidate="novalidate" th:object="${form}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="reviewAccept">
+                        <h2 class="govuk-fieldset__heading">Choose your option</h2>
+                    </legend>
+                    <th:block th:if="${#fields.hasErrors('reviewAccept')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="accept-application">
+                            <input id="acceptReview"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   th:field="*{reviewAccept}"
+                                   type="radio"
+                                   required="required">
+                            <label for="acceptReview"
+                                   class="govuk-label govuk-radios__label">Yes, I am able to review this application.</label>
+                        </div>
+
+                        <div class="panel js-hidden" id="accept-application">
+                            <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application.</p>
+                        </div>
+
+                        <label class="govuk-radios__item" data-target="reject-application">
+                            <input id="rejectReview"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   th:field="*{reviewAccept}"
+                                   type="radio"
+                                   required="required">
+                            <label for="rejectReview"
+                                   class="govuk-label govuk-radios__label">No, I am not able to review this application.</label>
                         </label>
-                        <textarea class="form-control width-full"
-                                  maxlength="5000"
-                                  data-max_words="100"
-                                  data-maxwordslength="100"
-                                  data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                  th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                  th:errorclass="form-control-error"
-                                  rows="4"
-                                  th:field="*{rejectComment}"></textarea>
-                        <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
-                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                    </div>
+                    <div class="panel js-hidden" id="reject-application">
+                        <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
+                                Use this space to tell us why.
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                            </th:block>
+                            <textarea class="govuk-textarea"
+                                      maxlength="5000"
+                                      data-max_words="100"
+                                      data-maxwordslength="100"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                      th:errorclass="govuk-textarea--error"
+                                      rows="4"
+                                      th:field="*{rejectComment}"></textarea>
+                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </fieldset>
-        </div>
+                </fieldset>
+            </div>
 
-        <button class="button" type="submit">Confirm</button>
-    </form>
+            <button class="govuk-button" type="submit">Confirm</button>
+        </form>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

@@ -153,11 +153,11 @@ Scope: Guidance
     ...    INFUND-6281
     [Tags]    HappyPath
     When the user clicks the button/link          css=details summary
-    Then the user should see the element          css=#details-content-0
+    Then the user should see the element          css=div[id^="details-content-"]
     And The user should see the text in the page  One or more of the above requirements have not been satisfied.
     And The user should see the text in the page  Does it meet the scope of the competition as defined in the competition brief?
     And the user clicks the button/link           css=details summary
-    And The user should not see the element       css=#details-content-0
+    And The user should not see the element       css=div[id^="details-content-"]
 
 Economic Benefit: validations
     [Documentation]  IFS-508
@@ -192,7 +192,7 @@ Economic Benefit: Autosave
 
 Economic Benefit: Guidance
     [Documentation]    INFUND-6281
-    When The user clicks the button/link           css=.summary
+    When The user clicks the button/link           css=.govuk-details__summary-text
     Then the user should see the text in the page  The project is damaging to other stakeholders with no realistic mitigation or balance described.
     And The user should see the text in the page   The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
     And The user should see the text in the page   Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
@@ -255,15 +255,15 @@ the user clicks previous and goes to the page
     the user should see the text in the page  ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903

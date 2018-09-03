@@ -1,16 +1,18 @@
 
 <!-- =================Section: Terms and Conditions (3) =========================== -->
 <th:block th:fragment="section-content">
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
 
-    <p>These are the terms and conditions applicants must accept for this competition.</p>
+    <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
-    <p><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
+    <p class="govuk-body"><a th:text="${model.currentTermsAndConditions.name}"
+                             th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}"
+                             class="govuk-link">
         Terms and conditions</a>
     </p>
 
@@ -21,11 +23,11 @@
           method="post" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-3-edit">
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <select
                     th:field="*{termsAndConditionsId}"
                     required="required"
-                    class="form-control width-x-large"
+                    class="govuk-select govuk-!-width-one-third"
                     th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
                     data-autosave-disabled="">
                     <option value="" disabled="disabled">Please select &hellip;</option>
@@ -37,16 +39,16 @@
                 </select>
             </div>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </div>
 
         <th:block th:unless="${model.general.editable}">
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
 
     </form>
 
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">

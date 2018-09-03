@@ -4,6 +4,8 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6394: As an Applicant I will be invited to input my Organisation size within a new ‘Your organisation’ page navigated to from ‘Your finances’
 ...
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Custom Suite Setup
 Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant
@@ -15,11 +17,11 @@ Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Before org size is selected, your funding link is not available
-    [Documentation]    INFUND-6394
+    [Documentation]    INFUND-6394  IFS-3938
     [Tags]
     Given applicant navigates to the finances of the robot application
     When the user clicks the button/link        link=Your funding
-    Then the user should see the element        jQuery=li:contains("you must state"):contains("your organisation size")
+    Then the user should see the element        jQuery=li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
@@ -46,7 +48,7 @@ Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    45
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    jQuery=.govuk-error-message
 
 User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
@@ -82,7 +84,7 @@ Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    35
-    Then the user should not see the element    css=.error-message
+    Then the user should not see the element    css=.govuk-error-message
 
 
 User still sees warning that the funding section will be reset
@@ -121,7 +123,7 @@ Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    25
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    jQuery=.govuk-error-message
     And the user marks the 'your funding' section as incomplete again
 
 *** Keywords ***
@@ -132,10 +134,10 @@ Custom Suite Setup
 The user marks their organisation as
     [Arguments]    ${org_size}
     the user selects the radio button    financePosition-organisationSize  ${org_size}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element  css=.error-message
+    the user should not see the element  css=.govuk-error-message
     the user should see the text in the page    Please complete your project finances.
 
 the user completes the funding section with funding level

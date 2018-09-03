@@ -1,14 +1,14 @@
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-content">
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='govuk-heading-xl'" />
 
-    <div class="panel">
+    <div class="govuk-body panel">
         Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     </div>
 
@@ -18,29 +18,28 @@
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-4-edit">
 
-            <table class="milestones-table">
-                <thead>
-                <tr>
-                    <th scope="col" id="milestone">Milestone</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Weekday</th>
-                    <th scope="col">Day</th>
-                    <th scope="col">Month</th>
-                    <th scope="col">Year</th>
+            <table class="govuk-table milestones-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                    <th class="govuk-table__header" scope="col">Time</th>
+                    <th class="govuk-table__header" scope="col">Weekday</th>
+                    <th class="govuk-table__header" scope="col">Day</th>
+                    <th class="govuk-table__header" scope="col">Month</th>
+                    <th class="govuk-table__header" scope="col">Year</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
-                      class="date-group form-group-row"
+                      class="govuk-table__row date-group form-group-row"
                       data-future-date=""
                       th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
                                data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
-
-                      <th scope="row">
-                        <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
+                      <th class="govuk-table__header" scope="row">
+                          <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
                       </th>
-                      <td class="time">
+                      <td class="govuk-table__cell time">
                         <input type="hidden"
                                required="required"
                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
@@ -51,7 +50,7 @@
 
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  class="form-control width-large"
+                                  class="govuk-select"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
@@ -67,8 +66,8 @@
                                 th:value="${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).TWELVE_PM}">
                           </th:block>
                       </td>
-                      <td class="js-addWeekDay" th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}" th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                      <td class="day">
+                      <td class="govuk-table__cell js-addWeekDay" th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}" th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                      <td class="govuk-table__cell day">
                           <input type="text"
                                  placeholder="DD"
                                  min="1"
@@ -79,14 +78,14 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
                                  minlength="1"
-                                 class="form-control width-small"
+                                 class="govuk-input govuk-input--width-4"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
                                  th:readonly="${milestoneEntry.value.readonly}" />
                       </td>
-                      <td class="month">
+                      <td class="govuk-table__cell month">
                           <input type="text"
                                 placeholder="MM"
                                 min="1"
@@ -96,14 +95,14 @@
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
                                 minlength="1"
-                                class="form-control width-small"
+                                class="govuk-input govuk-input--width-4"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
                                 th:readonly="${milestoneEntry.value.readonly}"/>
                       </td>
-                      <td class="year" >
-                          <input type="test"
+                      <td class="govuk-table__cell year">
+                          <input type="text"
                                  placeholder="YYYY"
                                  pattern="[0-9]{4,}"
                                  data-prevent-input-regex="[^0-9]"
@@ -113,7 +112,7 @@
                                  data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
                                  required="required"
-                                 class="form-control width-small"
+                                 class="govuk-input govuk-input--width-4"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
                                  th:readonly="${milestoneEntry.value.readonly}" />
@@ -121,38 +120,38 @@
                     </tr>
                 </tbody>
             </table>
-            <button class="button extra-margin">Done</button>
+            <button class="govuk-button govuk-!-margin-top-6">Done</button>
 
         </div>
 
         <th:block th:unless="${model.general.editable}">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col" id="milestone">Milestone</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Weekday</th>
-                        <th scope="col">Date</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                        <th class="govuk-table__header" scope="col">Time</th>
+                        <th class="govuk-table__header" scope="col">Weekday</th>
+                        <th class="govuk-table__header" scope="col">Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
-                        <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
-                        <td>
+                        <td class="govuk-table__cell" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        <td class="govuk-table__cell">
                             <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
                             <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
                         </td>
-                        <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                        <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
+                        <td class="govuk-table__cell" th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                        <td class="govuk-table__cell" th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>
                 </tbody>
             </table>
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button extra-margin">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
         </th:block>
     </form>
 
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">

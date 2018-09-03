@@ -4,20 +4,16 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
-import static org.innovateuk.ifs.commons.error.CommonErrors.*;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -77,21 +73,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findUserByType() throws Exception {
-        UserResource userOne = new UserResource();
-        userOne.setId(1L);
-
-        UserResource userTwo = new UserResource();
-        userTwo.setId(2L);
-
-        List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
-        when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(expected));
-
-        List<UserResource> found = service.findUserByType(COMP_ADMIN);
-        assertTrue(found.size() > 0);
-    }
-
-    @Test
     public void userHasApplicationForCompetition() throws Exception {
         Long userId = 1L;
         Long competitionId = 2L;
@@ -141,30 +122,5 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
 
         assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
-    }
-
-    @Test
-    public void agreeNewTermsAndConditions() {
-        long userId = 1L;
-
-        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
-
-        assertTrue(service.agreeNewTermsAndConditions(userId).isSuccess());
-
-        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
-    }
-
-    @Test
-    public void agreeNewTermsAndConditions_userNotFound() {
-        long userId = 1L;
-
-        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restFailure(forbiddenError()));
-
-        ServiceResult<Void> serviceResult = service.agreeNewTermsAndConditions(userId);
-
-        assertFalse(serviceResult.isSuccess());
-        assertTrue(serviceResult.getFailure().is(forbiddenError()));
-
-        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
     }
 }

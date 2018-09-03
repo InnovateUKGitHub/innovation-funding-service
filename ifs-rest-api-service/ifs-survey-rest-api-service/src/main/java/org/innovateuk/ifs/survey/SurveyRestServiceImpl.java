@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.survey;
 
+import com.netflix.hystrix.exception.HystrixTimeoutException;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import org.innovateuk.ifs.commons.exception.ServiceUnavailableException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -24,6 +25,17 @@ public class SurveyRestServiceImpl extends BaseRestService implements SurveyRest
     }
 
     public RestResult<Void> saveFallback(SurveyResource surveyResource, Throwable e) {
-        throw new ServiceUnavailableException();
+
+        /*
+         * Hystrix command will time out on first request due to the time it
+         * takes to initialise.
+         *
+         * A solution to this will be covered under IFS-4163
+         */
+       if(e.getClass().equals(HystrixTimeoutException.class)) {
+            return RestResult.restSuccess();
+        }
+
+        return RestResult.restFailure(HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

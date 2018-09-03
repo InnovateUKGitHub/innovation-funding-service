@@ -20,34 +20,34 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" /> -->
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
     <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
     Application overview
   </h1>
 
 	<div>
 
-		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-top-0">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
 
 
-			<h3 class="heading-small">
+			<h3 class="govuk-heading-s">
 				Removed by
 			</h3>
-			<p>Peter Kault, 20 December 2016</p>
+			<p class="govuk-body">Peter Kault, 20 December 2016</p>
 
 
-			<h3 class="heading-small">
+			<h3 class="govuk-heading-s">
 				Reason for removal
 			</h3>
-			<p>
+			<p class="govuk-body">
 				Lorem ipsum dolor sit amet, consectetur adipisicing elit. In vel officia quibusdam quod repudiandae odit quia pariatur quasi obcaecati, dolorum sunt iusto libero, dignissimos nemo architecto blanditiis deserunt autem odio!
 			</p>
 
 			<div class="extra-margin">
 
-				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
+				<a href="/prototypes/5698-removed-applications" class="govuk-button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
 
 			</div>
 
@@ -56,19 +56,19 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Reinstate application</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Reinstate application</h2>
 
-					<p>Are you sure that you wish to reinstate this application?</p>
+					<p class="govuk-body">Are you sure that you wish to reinstate this application?</p>
 
-					<p>It will be added to applications requiring asessment, and will require assessors to be assigned to it.</p>
+					<p class="govuk-body">It will be added to applications requiring asessment, and will require assessors to be assigned to it.</p>
 
-					<hr />
+					<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	            	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
+	            		<a href="/prototypes/5698-removed-applications" class="govuk-button">Reinstate application</a>
 	            	</div>
 
 		        </div>
@@ -79,39 +79,39 @@
 
 		<th:block th:insert="prototypes/fragments/applicant-view :: prototype-readonly-application" th:with="user=admin" />
 
-		<hr />
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 		<div class="extra-margin">
 			<a href="/prototypes/634-print-application.html" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
 		</div>
 
-		<h2 class="heading-medium">Appendices</h2>
+		<h2 class="govuk-heading-m">Appendices</h2>
 
-			<div class="form-group download">
-		        <h3 class="heading-small no-margin">View project management appendix:</h3>
+			<div class="govuk-form-group download">
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View project management appendix:</h3>
 		        <a href="#">Project-plan.pdf (161.96 KB)</a>
 		    </div>
 
-		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View innovation appendix:</h3>
+		    <div class="govuk-form-group download">
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View innovation appendix:</h3>
 		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
 		    </div>
 
-		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View project team appendix:</h3>
+		    <div class="govuk-form-group download">
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View project team appendix:</h3>
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
 
 		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
-		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
+		    	<a th:href="@{'?status=removeApp#removeApp'}" class="govuk-button button-secondary">Remove application from assessment</a>
 		    </div>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="govuk-!-margin-bottom-6">
 				<form action="/prototypes/5698-draft-email" id="removeApp">
-					<fieldset>
-						<legend class="heading-medium">Remove application from assessment</legend>
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-heading-m">Remove application from assessment</legend>
 					</fieldset>
-					<div class="form-group no-margin-bottom">
+					<div class="govuk-form-group govuk-!-margin-bottom-0">
 						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
 						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
 						<div class="textarea-footer">
@@ -121,12 +121,12 @@
 						</div>
 					</div>
 
-					<div class="grid-row">
-						<div class="column-half">
+					<div class="govuk-grid-row">
+						<div class="govuk-grid-column-one-half">
 							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
 						</div>
-						<div class="column-half alignright">
-							<button class="button no-margin-right">Continue and draft email</button>
+						<div class="govuk-grid-column-one-half alignright">
+							<button class="govuk-button govuk-!-margin-right-0">Continue and draft email</button>
 						</div>
 					</div>
 				</form>

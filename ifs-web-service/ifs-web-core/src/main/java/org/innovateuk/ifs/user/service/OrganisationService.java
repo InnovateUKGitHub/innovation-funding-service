@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.service;
 
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;
@@ -13,20 +12,6 @@ import java.util.SortedSet;
  * Interface for CRUD operations on {@link OrganisationResource} related data.
  */
 public interface OrganisationService {
-
-    OrganisationResource getOrganisationById(long organisationId);
-
-    OrganisationResource getOrganisationForUser(long userId);
-
-    OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId);
-
-    OrganisationResource createOrMatch(OrganisationResource organisation);
-
-    OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
-
-    OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
-
-    OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
     Long getOrganisationType(long userId, long applicationId);
 
