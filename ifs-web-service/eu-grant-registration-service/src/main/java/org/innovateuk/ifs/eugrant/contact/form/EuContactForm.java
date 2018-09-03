@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-public class ContactForm extends BaseBindingResultTarget {
+public class EuContactForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.eugrant.notblank}")
     private String name;
@@ -57,7 +57,7 @@ public class ContactForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ContactForm that = (ContactForm) o;
+        EuContactForm that = (EuContactForm) o;
 
         return new EqualsBuilder()
                 .append(name, that.name)

@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.eugrant.contact;
+package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.MockMvcTest;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.eugrant.contact.viewmodel;
 
-public class ContactFormViewModel {
+public class EuContactFormViewModel {
 
     private String name;
     private String jobTitle;
     private String email;
     private String telephone;
 
-    public ContactFormViewModel(String name, String jobTitle, String email, String telephone) {
+    public EuContactFormViewModel(String name, String jobTitle, String email, String telephone) {
         this.name = name;
         this.jobTitle = jobTitle;
         this.email = email;

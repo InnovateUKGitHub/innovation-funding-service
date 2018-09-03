@@ -5,10 +5,10 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuGrantRestService;
-import org.innovateuk.ifs.eugrant.contact.form.ContactForm;
+import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
-import org.innovateuk.ifs.eugrant.contact.populator.ContactFormPopulator;
-import org.innovateuk.ifs.eugrant.contact.saver.EuGrantSaver;
+import org.innovateuk.ifs.eugrant.contact.populator.EuContactFormPopulator;
+import org.innovateuk.ifs.eugrant.contact.saver.EuContactSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,19 +23,19 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 @Controller
 @RequestMapping("/")
-public class ContactDetailsController {
+public class EuContactDetailsController {
 
     @Autowired
     private EuGrantCookieService euGrantCookieService;
 
     @Autowired
-    private ContactFormPopulator contactFormPopulator;
+    private EuContactFormPopulator euContactFormPopulator;
 
     @Autowired
     private EuGrantRestService euGrantRestService;
 
     @Autowired
-    private EuGrantSaver euGrantSaver;
+    private EuContactSaver euContactSaver;
 
     @GetMapping("/contact-details")
     public String contactDetails(Model model) {
@@ -46,26 +46,26 @@ public class ContactDetailsController {
             return "redirect:/contact-details/edit";
         }
 
-        model.addAttribute("model", contactFormPopulator.populate(contact));
+        model.addAttribute("model", euContactFormPopulator.populate(contact));
 
         return "eugrant/contact-details";
     }
 
     @GetMapping("/contact-details/edit")
-    public String contactDetailsEdit(@ModelAttribute("form") ContactForm contactForm,
+    public String contactDetailsEdit(@ModelAttribute("form") EuContactForm contactForm,
                                      BindingResult bindingResult,
                                      Model model) {
 
         EuContactResource contact = euGrantCookieService.get().getContact();
 
         EuGrantResource euGrantResource = euGrantCookieService.get();
-        model.addAttribute("model", contactFormPopulator.populate(contact));
+        model.addAttribute("model", euContactFormPopulator.populate(contact));
 
         return "eugrant/contact-details-edit";
     }
 
     @PostMapping("/contact-details")
-    public String submitContactDetails(@ModelAttribute("form") @Valid ContactForm contactForm,
+    public String submitContactDetails(@ModelAttribute("form") @Valid EuContactForm contactForm,
                                        BindingResult bindingResult,
                                        ValidationHandler validationHandler,
                                        Model model) {
@@ -84,7 +84,7 @@ public class ContactDetailsController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            RestResult<Void> sendResult = euGrantSaver.save(euGrantResource);
+            RestResult<Void> sendResult = euContactSaver.save(euGrantResource);
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors()))).
                     failNowOrSucceedWith(failureView, successView);
@@ -92,7 +92,7 @@ public class ContactDetailsController {
 
     }
 
-    private EuContactResource getEuContactResource(ContactForm contactForm) {
+    private EuContactResource getEuContactResource(EuContactForm contactForm) {
         return new EuContactResource(
                 contactForm.getName(),
                 contactForm.getJobTitle(),
