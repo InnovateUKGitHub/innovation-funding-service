@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -71,27 +72,19 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
-        if (isFirstTimeInForm(eligibilityForm)) {
-            return fundingRulesAreOverriden(competitionResource);
+        if (!isFirstTimeInForm(eligibilityForm)) {
+            return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId()).getSuccess();
         }
 
         return null;
     }
 
     private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
-        return (eligibilityForm.getMultipleStream() != null) &&
-                (!eligibilityForm.getResearchCategoryId().isEmpty() && eligibilityForm.getResearchCategoryId() != null) &&
-                (eligibilityForm.getSingleOrCollaborative() != null) &&
-                (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
-                (eligibilityForm.getResubmission() != null);
-    }
-
-    private boolean fundingRulesAreOverriden(CompetitionResource competitionResource) {
-        Set<Long> templateGrantClaimMaximums = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
-                competitionResource.getCompetitionType()).getSuccess();
-
-        Set<Long> currentGrantClaimMaximums = competitionResource.getGrantClaimMaximums();
-        return !currentGrantClaimMaximums.equals(templateGrantClaimMaximums);
+        return  "no".equals(eligibilityForm.getMultipleStream())
+                && eligibilityForm.getResearchCategoryId().isEmpty()
+                && (eligibilityForm.getSingleOrCollaborative() == null)
+                && eligibilityForm.getLeadApplicantTypes().isEmpty()
+                && isBlank(eligibilityForm.getResubmission());
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {
