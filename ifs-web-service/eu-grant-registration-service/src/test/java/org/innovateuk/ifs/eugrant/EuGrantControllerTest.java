@@ -2,7 +2,6 @@ package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.eugrant.overview.controller.EUGrantController;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,11 +13,6 @@ public class EuGrantControllerTest extends BaseControllerMockMVCTest<EUGrantCont
     @Override
     protected EUGrantController supplyControllerUnderTest() {
         return new EUGrantController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test

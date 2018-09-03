@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.eugrant;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.UUID;
 
 /**
@@ -55,5 +58,33 @@ public class EuGrantResource {
 
     public void setFundingComplete(boolean fundingComplete) {
         this.fundingComplete = fundingComplete;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EuGrantResource that = (EuGrantResource) o;
+
+        return new EqualsBuilder()
+                .append(organisationComplete, that.organisationComplete)
+                .append(contactComplete, that.contactComplete)
+                .append(fundingComplete, that.fundingComplete)
+                .append(id, that.id)
+                .append(organisation, that.organisation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisation)
+                .append(organisationComplete)
+                .append(contactComplete)
+                .append(fundingComplete)
+                .toHashCode();
     }
 }
