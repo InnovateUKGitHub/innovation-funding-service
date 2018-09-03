@@ -12,26 +12,22 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.function.Function;
-
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,16 +46,13 @@ public class ApplicationFinanceSectionSaverTest {
     private QuestionRestService questionRestService;
 
     @Test
-    public void testSectionToSave() {
+    public void subsectionToSave() {
         assertEquals(CompetitionSetupSubsection.FINANCES, service.subsectionToSave());
     }
 
     @Test
-    public void testSaveCompetitionSetupSection() {
-        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.FULL;
+    public void saveCompetitionSetupSection() {
         final boolean isIncludeGrowthTable = true;
-        final boolean isFullApplicationFinance = true;
-        final Long competitionId = 1L;
         final Long sectionId = 234L;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
@@ -68,11 +61,11 @@ public class ApplicationFinanceSectionSaverTest {
                 .withType(SectionType.OVERVIEW_FINANCES)
                 .build();
 
-        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
+        CompetitionResource competition = newCompetitionResource().build();
 
         assertTrue(competition.isFinanceType());
 
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
+        when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.OVERVIEW_FINANCES))
                 .thenReturn(asList(overviewFinanceSection));
         when(questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
                 .thenReturn(
@@ -84,12 +77,12 @@ public class ApplicationFinanceSectionSaverTest {
 
         FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
-        competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
+        competitionSetupForm.setApplicationFinanceType(STANDARD);
 
-        CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
-                withCompetitionId(competitionId).
-                withFullApplicationFinance(isFullApplicationFinance).
-                withIncludeGrowthTable(isIncludeGrowthTable).build();
+        CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource()
+                .withCompetitionId(competition.getId())
+                .withApplicationFinanceType(STANDARD)
+                .withIncludeGrowthTable(isIncludeGrowthTable).build();
         // Call the service under test
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
@@ -99,7 +92,6 @@ public class ApplicationFinanceSectionSaverTest {
 
     @Test
     public void testSaveCompetitionSetupSectionNoneFinance() {
-        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
         final Long competitionId = 1L;
 
         CompetitionResource competition = newCompetitionResource()
@@ -110,7 +102,7 @@ public class ApplicationFinanceSectionSaverTest {
         assertTrue(competition.isNonFinanceType());
 
         FinanceForm competitionSetupForm = new FinanceForm();
-        competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
+        competitionSetupForm.setApplicationFinanceType(NO_FINANCES);
 
         // Call the service under test
         service.saveSection(competition, competitionSetupForm);
@@ -123,14 +115,5 @@ public class ApplicationFinanceSectionSaverTest {
     public void testsSupportsForm() {
         assertTrue(service.supportsForm(FinanceForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
-    }
-
-    private <T> T match(Function<T, Boolean> function) {
-        return argThat(new ArgumentMatcher<T>() {
-            @Override
-            public boolean matches(Object argument) {
-                return function.apply((T) argument);
-            }
-        });
     }
 }

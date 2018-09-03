@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -32,6 +29,7 @@ import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
@@ -79,7 +77,7 @@ public class EligibilitySectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource()
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
-                .withFullApplicationFinance(true)
+                .withApplicationFinanceType(STANDARD)
                 .build();
 
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
@@ -111,7 +109,7 @@ public class EligibilitySectionSaverTest {
                 .build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withFullApplicationFinance(true)
+                .withApplicationFinanceType(STANDARD)
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
@@ -141,7 +139,7 @@ public class EligibilitySectionSaverTest {
                 .build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withFullApplicationFinance(null)
+                .withApplicationFinanceType(null)
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 

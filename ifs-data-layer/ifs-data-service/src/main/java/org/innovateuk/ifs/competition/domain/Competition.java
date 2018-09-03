@@ -111,7 +111,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
     private Boolean useResubmissionQuestion = true;
@@ -134,6 +133,9 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     private boolean locationPerPartner = true;
 
     private Boolean stateAid;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationFinanceType applicationFinanceType;
 
     public Competition() {
         setupComplete = false;
@@ -596,14 +598,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return "";
     }
 
-    public Boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
-    }
-
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -743,6 +737,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
+    }
+
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
+    }
+
+    public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
     }
 
     public boolean getUseNewApplicantMenu() {

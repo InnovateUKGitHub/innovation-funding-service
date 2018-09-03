@@ -42,31 +42,21 @@
                         <div class="govuk-radios__item">
                             <input id="application-finance-full"
                                    class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL}"
+                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD}"
                                    th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
                                    th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-full"
-                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL.name}"
-                                   class="govuk-label govuk-radios__label"/>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="application-finance-light"
-                                   class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT}"
-                                   disabled="disabled" type="radio"
-                                   th:field="*{applicationFinanceType}" required="required" />
-                            <label for="application-finance-light"
-                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT.name}"
+                                   th:text="Full application finances"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
                         <div class="govuk-radios__item">
                             <input id="application-finance-none"
                                    class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE}"
+                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES}"
                                    th:disabled="${!model.subsection.noneFinanceCompetition}"
                                    type="radio" th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-none"
-                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE.name}"
+                                   th:text="No finances"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
                     </div>

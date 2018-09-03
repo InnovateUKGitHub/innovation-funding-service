@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 
@@ -59,8 +60,7 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
         } else {
             FinanceForm form = (FinanceForm) competitionSetupForm;
             CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
-            // INFUND-6773 - Not allowed to at this moment
-            compSetupFinanceRes.setFullApplicationFinance(true);
+            compSetupFinanceRes.setApplicationFinanceType(STANDARD);
             compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
             compSetupFinanceRes.setCompetitionId(competition.getId());
 
@@ -92,17 +92,11 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
                 .stream()
                 .findFirst();
 
-        if (section.isPresent()) {
-            return section.get().getId();
-        }
-
-        return null;
+        return section.map(SectionResource::getId).orElse(null);
     }
-
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
         return FinanceForm.class.equals(clazz);
     }
-
 }

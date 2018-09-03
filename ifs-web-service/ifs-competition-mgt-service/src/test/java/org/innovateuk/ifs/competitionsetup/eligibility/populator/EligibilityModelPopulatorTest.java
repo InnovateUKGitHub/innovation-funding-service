@@ -86,14 +86,14 @@ public class EligibilityModelPopulatorTest {
     }
 
     @Test
-    public void populateModelWithNoResearchParticipationAmounts() throws Exception {
+    public void populateModelWithNoResearchParticipationAmounts() {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withName("name")
                 .withId(8L)
                 .withLeadApplicantType(asList(1L, 2L))
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-                .withFullApplicationFinance(null)
+                .withApplicationFinanceType(null)
                 .build();
 
         List<ResearchCategoryResource> researchCategories = emptyList();
