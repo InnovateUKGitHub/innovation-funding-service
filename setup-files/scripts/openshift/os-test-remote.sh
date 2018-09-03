@@ -4,7 +4,7 @@ set -e
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 
-PROJECT=$(tom )
+PROJECT=$(oc project -q)
 shift 1
 ROBOT_COMMAND=$@
 HOST=$(getClusterAddress)
