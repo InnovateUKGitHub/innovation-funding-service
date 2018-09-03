@@ -54,7 +54,7 @@ public class OverheadFileController {
     @GetMapping("/overheadCalculationDocument")
     public @ResponseBody
     ResponseEntity<Object> getFileContents(
-            @RequestParam("overheadId") long overheadId) throws IOException {
+            @RequestParam("overheadId") long overheadId) {
 
         return fileControllerUtils.handleFileDownload(() -> overheadFileService.getFileEntryContents(overheadId));
     }
@@ -62,7 +62,7 @@ public class OverheadFileController {
     @GetMapping("/projectOverheadCalculationDocument")
     public @ResponseBody
     ResponseEntity<Object> getProjectFileContents(
-            @RequestParam("overheadId") long overheadId) throws IOException {
+            @RequestParam("overheadId") long overheadId) {
         return fileControllerUtils.handleFileDownload(() -> overheadFileService.getProjectFileEntryContents(overheadId));
     }
 
@@ -92,7 +92,7 @@ public class OverheadFileController {
 
     @DeleteMapping(value = "/overheadCalculationDocument", produces = "application/json")
     public RestResult<Void> deleteCalculationFile(
-            @RequestParam(value = "overheadId") long overheadId) throws IOException {
+            @RequestParam(value = "overheadId") long overheadId) {
 
         return overheadFileService.deleteFileEntry(overheadId).toGetResponse();
     }

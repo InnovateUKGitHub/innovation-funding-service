@@ -173,7 +173,7 @@
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
+                <div class="govuk-body" th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
             </div>
 
             <div th:if="${confirmDetails == true
