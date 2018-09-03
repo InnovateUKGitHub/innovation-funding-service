@@ -35,14 +35,35 @@ function upgradeServices {
     # services
     oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus application-svc
+    rolloutStatus survey-svc
+
+
+
     oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus front-door-svc
+    rolloutStatus assessment-svc
+
     oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
+
     oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus project-setup-svc
+    rolloutStatus registration-svc
+
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
+    
+    rolloutStatus idp
+    rolloutStatus shib
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
