@@ -61,6 +61,13 @@ function upgradeServices {
     fi
 
     watchStatus
+
+    # EU Grant Registration Service
+    oc apply -f $(getBuildLocation)/eu-grant-registration-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-data-service"
+    oc apply -f $(getBuildLocation)/eu-grant-registration-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-service"
+
 }
 
 function forceReload {
