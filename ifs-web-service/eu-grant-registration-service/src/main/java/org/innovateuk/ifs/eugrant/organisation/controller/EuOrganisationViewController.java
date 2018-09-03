@@ -33,7 +33,7 @@ public class EuOrganisationViewController extends AbstractEuOrganisationControll
     private EuGrantCookieService euGrantCookieService;
 
     @GetMapping
-    public String view(Model model) {
+    public String viewOrganisation(Model model) {
         EuOrganisationResource organisation = euGrantCookieService.get().getOrganisation();
         if (organisation == null) {
             return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE;
