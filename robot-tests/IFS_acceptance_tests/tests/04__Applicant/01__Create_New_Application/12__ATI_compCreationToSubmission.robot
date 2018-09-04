@@ -55,6 +55,7 @@ Applicant submits his application
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     And the user checks the override value is applied
+    And the user selects research category              Feasibility studies
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
