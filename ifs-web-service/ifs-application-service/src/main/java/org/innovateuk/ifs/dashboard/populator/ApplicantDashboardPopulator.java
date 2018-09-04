@@ -76,8 +76,7 @@ public class ApplicantDashboardPopulator {
                 .filter(this::applicationInProgress)
                 .map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
-            Long applicationTeamQuestionId = competition.getUseNewApplicantMenu() ? getApplicationTeamQuestion
-                            (competition.getId()) : null;
+            long applicationTeamQuestionId = getApplicationTeamQuestion(competition.getId());
             Optional<ProcessRoleResource> role = usersProcessRoles.stream()
                     .filter(processRoleResource -> processRoleResource.getApplicationId().equals(application.getId()))
                     .findFirst();

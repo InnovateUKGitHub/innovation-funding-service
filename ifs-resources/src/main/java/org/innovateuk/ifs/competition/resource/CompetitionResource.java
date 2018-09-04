@@ -101,9 +101,6 @@ public class CompetitionResource {
     private boolean locationPerPartner = true;
     private Boolean stateAid;
 
-    // IFS-3088 & IFS-2123 & IFS-3753: This is temporary until all competitions with the old menu view are complete
-    private boolean useNewApplicantMenu;
-
     private Set<Long> grantClaimMaximums;
 
     private ApplicationFinanceType applicationFinanceType;
@@ -650,14 +647,6 @@ public class CompetitionResource {
         this.stateAid = stateAid;
     }
 
-    public boolean getUseNewApplicantMenu() {
-        return useNewApplicantMenu;
-    }
-
-    public void setUseNewApplicantMenu(boolean useNewApplicantMenu) {
-        this.useNewApplicantMenu = useNewApplicantMenu;
-    }
-
     public Set<Long> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
@@ -722,7 +711,6 @@ public class CompetitionResource {
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
                 .append(locationPerPartner, that.locationPerPartner)
-                .append(useNewApplicantMenu, that.useNewApplicantMenu)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -838,7 +826,6 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
-                .append(useNewApplicantMenu)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(createdBy)
