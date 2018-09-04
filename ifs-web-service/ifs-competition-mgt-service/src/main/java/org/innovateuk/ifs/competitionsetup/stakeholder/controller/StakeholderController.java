@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
+import org.innovateuk.ifs.competitionsetup.stakeholder.form.InviteStakeholderForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -59,11 +60,11 @@ public class StakeholderController {
     @GetMapping("/{competitionId}/manage-stakeholders")
     public String manageStakeholders(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model) {
 
-        InviteUserForm form = new InviteUserForm();
+        InviteStakeholderForm form = new InviteStakeholderForm();
         return doViewManageStakeholders(competitionId, model, form);
     }
 
-    private String doViewManageStakeholders(long competitionId, Model model, InviteUserForm form) {
+    private String doViewManageStakeholders(long competitionId, Model model, InviteStakeholderForm form) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -79,10 +80,12 @@ public class StakeholderController {
 
     @PostMapping("/{competitionId}/invite-stakeholder")
     public String saveStakeholderInvite(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model,
-                                        @Valid @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
+                                        @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form);
+
+        form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -100,7 +103,7 @@ public class StakeholderController {
         return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(STAKEHOLDER_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 
-    private InviteUserResource constructInviteUserResource(InviteUserForm form) {
+    private InviteUserResource constructInviteUserResource(InviteStakeholderForm form) {
 
         UserResource invitedUser = new UserResource();
         invitedUser.setFirstName(form.getFirstName());
