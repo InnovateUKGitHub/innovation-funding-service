@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.builder.UnsuccessfulApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.management.application.list.controller.CompetitionMana
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.list.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -564,7 +562,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         String filter = "ALL";
 
         String competitionName = "Competition One";
-        List<UnsuccessfulApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        List<PreviousApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         PreviousApplicationsViewModel viewModel = new PreviousApplicationsViewModel(competitionId,
                 competitionName, true, previousApplications, previousApplications.size(), new Pagination(applicationPageResource, ""));

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.documentation;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.builder.UnsuccessfulApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
@@ -317,14 +317,14 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         String sortField = "id";
         String filter = "ALL";
 
-        List<UnsuccessfulApplicationResource> applicationResources = UnsuccessfulApplicationResourceBuilder.newUnsuccessfulApplicationResource().build(4);
-        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
+        List<PreviousApplicationResource> applicationResources = PreviousApplicationResourceBuilder.newPreviousApplicationResource().build(4);
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
 
-        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(unsuccessfulApplicationPageResource));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
         mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(JsonMappingUtil.toJson(unsuccessfulApplicationPageResource)))
+                .andExpect(content().json(JsonMappingUtil.toJson(previousApplicationPageResource)))
                 .andDo(document(
                         "application/{method-name}",
                         pathParameters(

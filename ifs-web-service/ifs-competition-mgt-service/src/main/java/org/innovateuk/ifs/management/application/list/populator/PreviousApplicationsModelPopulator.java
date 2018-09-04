@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.application.list.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.UnsuccessfulApplicationPageResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -33,7 +32,7 @@ public class PreviousApplicationsModelPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        UnsuccessfulApplicationPageResource previousApplicationsPagedResult = applicationRestService
+        PreviousApplicationPageResource previousApplicationsPagedResult = applicationRestService
                 .findPreviousApplications(competitionId, pageNumber, pageSize, sortField, filter)
                 .getSuccess();
 

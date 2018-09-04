@@ -228,13 +228,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         String sortField = "id";
         String filter = "ALL";
 
-        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource();
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
 
-        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(unsuccessfulApplicationPageResource));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(unsuccessfulApplicationPageResource)));
+                .andExpect(content().json(toJson(previousApplicationPageResource)));
 
         verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }

@@ -208,13 +208,13 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         String sortField = "id";
         String filter = "ALL";
 
-        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource();
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", UnsuccessfulApplicationPageResource.class, unsuccessfulApplicationPageResource);
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", PreviousApplicationPageResource.class, previousApplicationPageResource);
 
-        UnsuccessfulApplicationPageResource result = service.findPreviousApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
+        PreviousApplicationPageResource result = service.findPreviousApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
         assertNotNull(result);
-        Assert.assertEquals(unsuccessfulApplicationPageResource, result);
+        Assert.assertEquals(previousApplicationPageResource, result);
         setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", null, ApplicationPageResource.class);
     }
 

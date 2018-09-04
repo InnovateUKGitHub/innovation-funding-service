@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.application.list.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
@@ -14,13 +14,13 @@ public class PreviousApplicationsViewModel {
 
     private Long competitionId;
     private String competitionName;
-    private List<ApplicationResource> previousApplications;
+    private List<PreviousApplicationResource> previousApplications;
     private long previousApplicationsSize;
     private Pagination previousApplicationsPagination;
     private boolean isIfsAdmin;
 
     public PreviousApplicationsViewModel(Long competitionId, String competitionName, boolean isIfsAdmin,
-                                         List<ApplicationResource> previousApplications,
+                                         List<PreviousApplicationResource> previousApplications,
                                          long previousApplicationsSize,
                                          Pagination previousApplicationsPagination) {
         this.competitionId = competitionId;
@@ -41,7 +41,7 @@ public class PreviousApplicationsViewModel {
 
     public boolean isIfsAdmin() { return isIfsAdmin; }
 
-    public List<ApplicationResource> getPreviousApplications() {
+    public List<PreviousApplicationResource> getPreviousApplications() {
         return previousApplications;
     }
 

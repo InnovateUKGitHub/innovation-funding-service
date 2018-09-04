@@ -145,20 +145,20 @@ public class ApplicationController {
 
     @ZeroDowntime(description = "delete this controller", reference = "IFS-2471")
     @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                        @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                        @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+    public RestResult<PreviousApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                    @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                                    @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
         return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/{competitionId}/previous-applications")
-    public RestResult<UnsuccessfulApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                        @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                        @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+    public RestResult<PreviousApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                                @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
         return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 

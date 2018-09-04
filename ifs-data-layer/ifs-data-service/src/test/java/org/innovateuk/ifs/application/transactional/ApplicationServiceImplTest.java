@@ -566,10 +566,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getSize()).thenReturn(0);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        UnsuccessfulApplicationPageResource previousApplicationsPage = result.getSuccess();
+        PreviousApplicationPageResource previousApplicationsPage = result.getSuccess();
         assertTrue(previousApplicationsPage.getContent().isEmpty());
 
     }
@@ -626,10 +626,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        UnsuccessfulApplicationPageResource previousApplicationsPage = result.getSuccess();
+        PreviousApplicationPageResource previousApplicationsPage = result.getSuccess();
         assertTrue(previousApplicationsPage.getSize() == 2);
         assertEquals(applicationResource1, previousApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, previousApplicationsPage.getContent().get(1));
@@ -644,7 +644,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "INELIGIBLE");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "INELIGIBLE");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any());
@@ -659,7 +659,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "REJECTED");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "REJECTED");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any());
@@ -674,7 +674,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
@@ -689,7 +689,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());
@@ -704,7 +704,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "wrongFilter");
+        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "wrongFilter");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());

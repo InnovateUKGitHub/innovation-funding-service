@@ -278,20 +278,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<UnsuccessfulApplicationPageResource> findPreviousApplications(Long competitionId,
-                                                                           int pageIndex,
-                                                                           int pageSize,
-                                                                           String sortField,
-                                                                           String filter) {
+    public ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId,
+                                                                                   int pageIndex,
+                                                                                   int pageSize,
+                                                                                   String sortField,
+                                                                                   String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
-        List<UnsuccessfulApplicationPageResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
+        List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
 
-        return serviceSuccess(new UnsuccessfulApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
@@ -330,12 +330,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
     }
 
-    private UnsuccessfulApplicationResource convertToUnsuccessfulApplicationResource(Application application) {
+    private PreviousApplicationResource convertToPreviousApplicationResource(Application application) {
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
 
-        return new UnsuccessfulApplicationResource(
+        return new PreviousApplicationResource(
                 applicationResource.getId(),
                 applicationResource.getName(),
                 leadOrganisation.getName(),

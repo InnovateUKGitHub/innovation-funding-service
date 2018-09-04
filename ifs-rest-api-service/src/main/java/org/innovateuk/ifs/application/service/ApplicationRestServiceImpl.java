@@ -124,7 +124,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<UnsuccessfulApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
+    public RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         if (filter != null) {
@@ -132,6 +132,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         }
 
         String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, UnsuccessfulApplicationPageResource.class);
+        return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
     }
 }
