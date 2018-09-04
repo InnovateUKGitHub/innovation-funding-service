@@ -20,7 +20,7 @@ import java.util.List;
 public interface InviteUserService {
 
     @PreAuthorize("hasPermission(#invitedUser, 'SAVE_USER_INVITE')")
-    ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType);
+    ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_EXISTING_INVITE_FOR_HASH", description = "The System Registration user can get invite using hash to process registration")
