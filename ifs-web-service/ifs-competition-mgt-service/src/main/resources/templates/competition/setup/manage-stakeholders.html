@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite a new stakeholder',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage Users',linkUrl=@{/admin/users/active}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to invite this user.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new stakeholder XX22',size='govuk-heading-l'" />
+
+        <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{/competition/setup/{competitionId}/invite-stakeholder(competitionId=${model.competitionId})}">
+        <!--<form th:action="@{/invite/competition/{inviteHash}/decision(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">-->
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="${#ids.next('firstName')}">
+                    First name
+                </label>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{firstName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                data-pattern-errormessage=#{validation.standard.firstname.invalid},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.standard.firstname.required}" />
+            </div>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="${#ids.next('lastName')}">
+                    Last name
+                </label>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{lastName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-pattern-errormessage=#{validation.standard.lastname.invalid},
+                                data-required-errormessage=#{validation.standard.lastname.required}" />
+            </div>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="${#ids.next('emailAddress')}">
+                    Email address
+                </label>
+                <th:block th:if="${#fields.hasErrors('emailAddress')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input"
+                       type="email"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{emailAddress}"
+                       maxlength="256"
+                       required="required"
+                       th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                        data-required-errormessage=#{validation.invite.email.required}" />
+            </div>
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <button class="govuk-button">Invite stakeholder</button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
