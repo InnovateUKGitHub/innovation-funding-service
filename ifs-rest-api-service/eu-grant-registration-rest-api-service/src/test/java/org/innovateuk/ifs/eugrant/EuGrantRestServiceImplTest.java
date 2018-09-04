@@ -2,6 +2,7 @@ package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,11 +26,16 @@ public class EuGrantRestServiceImplTest {
     @Mock
     private RootAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
 
+    private String baseUrl;
+
+    @Before
+    public void setUp() throws Exception {
+        baseUrl = "base";
+        euGrantRestService.setServiceUrl(baseUrl);
+    }
+
     @Test
     public void create() throws Exception {
-        String baseUrl = "base";
-        euGrantRestService.setServiceUrl(baseUrl);
-
         EuGrantResource euGrantResource = newEuGrantResource().build();
         RestResult<EuGrantResource> expected = mock(RestResult.class);
 
@@ -44,9 +50,6 @@ public class EuGrantRestServiceImplTest {
     public void save() throws Exception {
 
         final UUID uuid = randomUUID();
-
-        String baseUrl = "base";
-        euGrantRestService.setServiceUrl(baseUrl);
 
         EuGrantResource euGrantResource = newEuGrantResource().build();
         euGrantResource.setId(uuid);
@@ -64,9 +67,6 @@ public class EuGrantRestServiceImplTest {
     public void findById() throws Exception {
 
         final UUID uuid = randomUUID();
-
-        String baseUrl = "base";
-        euGrantRestService.setServiceUrl(baseUrl);
 
         EuGrantResource euGrantResource = newEuGrantResource().build();
         euGrantResource.setId(uuid);

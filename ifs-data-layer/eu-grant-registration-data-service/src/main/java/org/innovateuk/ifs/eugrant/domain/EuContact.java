@@ -34,13 +34,6 @@ public class EuContact {
     public EuContact() {
     }
 
-    public EuContact(String name, String email, String jobTitle, String telephone) {
-        this.name = name;
-        this.email = email;
-        this.jobTitle = jobTitle;
-        this.telephone = telephone;
-    }
-
     public Long getId() {
         return id;
     }

@@ -52,53 +52,34 @@ public class EuContactDetailsController {
     }
 
     @GetMapping("/contact-details/edit")
-    public String contactDetailsEdit(@ModelAttribute("form") EuContactForm contactForm,
-                                     BindingResult bindingResult,
-                                     Model model) {
+    public String contactDetailsEdit(@ModelAttribute(value = "form", binding = false) EuContactForm form,
+                                     BindingResult bindingResult) {
 
-        EuContactResource contact = euGrantCookieService.get().getContact();
-
-        EuGrantResource euGrantResource = euGrantCookieService.get();
-        model.addAttribute("model", euContactFormPopulator.populate(contact));
+        form = euContactSaver.getEuContactForm(form);
 
         return "eugrant/contact-details-edit";
     }
 
-    @PostMapping("/contact-details")
+    @PostMapping("/contact-details/edit")
     public String submitContactDetails(@ModelAttribute("form") @Valid EuContactForm contactForm,
                                        BindingResult bindingResult,
-                                       ValidationHandler validationHandler,
-                                       Model model) {
+                                       ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> contactDetailsEdit(contactForm, bindingResult, model);
+        Supplier<String> failureView = () -> contactDetailsEdit(contactForm, bindingResult);
         Supplier<String> successView = () -> "redirect:/contact-details";
 
         if (bindingResult.hasErrors()) {
             return failureView.get();
         }
 
-        EuContactResource euContactResource = getEuContactResource(contactForm);
-
-        EuGrantResource euGrantResource = euGrantCookieService.get();
-        euGrantResource.setContact(euContactResource);
-
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            RestResult<Void> sendResult = euContactSaver.save(euGrantResource);
+            RestResult<Void> sendResult = euContactSaver.save(contactForm);
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors()))).
                     failNowOrSucceedWith(failureView, successView);
         });
 
-    }
-
-    private EuContactResource getEuContactResource(EuContactForm contactForm) {
-        return new EuContactResource(
-                contactForm.getName(),
-                contactForm.getJobTitle(),
-                contactForm.getEmail(),
-                contactForm.getTelephone()
-                );
     }
 
 }
