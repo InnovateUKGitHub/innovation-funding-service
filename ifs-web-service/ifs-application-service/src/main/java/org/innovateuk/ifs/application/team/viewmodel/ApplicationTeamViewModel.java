@@ -18,7 +18,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
     private boolean summary;
 
     public ApplicationTeamViewModel(Long applicationId,
-                                    Long questionId,
+                                    long questionId,
                                     String applicationName,
                                     List<ApplicationTeamOrganisationRowViewModel> organisations,
                                     boolean userLeadApplicant,
