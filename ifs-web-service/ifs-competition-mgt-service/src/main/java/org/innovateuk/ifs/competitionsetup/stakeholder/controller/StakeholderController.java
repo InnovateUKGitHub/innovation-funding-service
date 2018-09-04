@@ -78,7 +78,7 @@ public class StakeholderController {
         return "competition/setup/manage-stakeholders";
     }
 
-    @PostMapping("/{competitionId}/invite-stakeholder")
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"addNewUser"})
     public String saveStakeholderInvite(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
