@@ -141,10 +141,10 @@ Non-lead partner can view both documents
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page     ${project_in_setup_page}/team-status
@@ -164,8 +164,8 @@ PM can view both documents
     [Tags]
     Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user should see the element  link=${valid_pdf} (opens in a new window)
-    Then the user should see the element  link=${valid_pdf} (opens in a new window)
+    When the user should see the element  link=${valid_pdf}
+    Then the user should see the element  link=${valid_pdf}
     When the user navigates to the page   ${project_in_setup_page}/team-status
     Then the user should see the element  css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
@@ -240,10 +240,10 @@ PM can still view both documents after submitting
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
 
@@ -265,10 +265,10 @@ Lead partner cannot remove the documents after submission by PM
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    Then the user clicks the button/link    link=${valid_pdf}
     When the user should not see an error in the page
     Then the user closes the last opened tab
 
@@ -283,10 +283,10 @@ Non-lead partner cannot remove the documents after submission by PM
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    Then the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page    ${project_in_setup_page}
@@ -363,10 +363,10 @@ After rejection, lead partner can view both documents
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}
@@ -390,10 +390,10 @@ After rejection, non-lead partner cannot view both documents
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}

@@ -80,9 +80,10 @@
                     <a target="_blank"
                        class="govuk-link"
                        th:href="${appendix.getDownloadURL()}"
-                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
+                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize()}">
                         Project-plan.pdf (161.96 KB)
                     </a>
+                    (opens in a new window)
                 </div>
             </th:block>
         </th:block>

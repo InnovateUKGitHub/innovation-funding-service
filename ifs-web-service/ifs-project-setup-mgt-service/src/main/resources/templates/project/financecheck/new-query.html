@@ -113,9 +113,10 @@
                 <div class="upload-section govuk-!-width-one-half">
                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                         <h3 class="govuk-heading-s">Supporting documentation</h3>
-                        <ul>
+                        <ul class="govuk-list">
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
+                                <span class="govuk-body"> (opens in a new window)</span>
                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                             </li>
                         </ul>
