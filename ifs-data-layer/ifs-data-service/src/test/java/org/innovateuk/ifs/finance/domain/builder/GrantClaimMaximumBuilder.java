@@ -5,7 +5,6 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -25,7 +24,7 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
 
     @Override
     protected GrantClaimMaximumBuilder createNewBuilderWithActions(List<BiConsumer<Integer, GrantClaimMaximum>>
-                                                                               actions) {
+                                                                           actions) {
         return new GrantClaimMaximumBuilder(actions);
     }
 
@@ -44,10 +43,6 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
 
     public GrantClaimMaximumBuilder withResearchCategory(ResearchCategory... researchCategory) {
         return withArraySetFieldByReflection("researchCategory", researchCategory);
-    }
-
-    public GrantClaimMaximumBuilder withOrganisationType(OrganisationType... organisationType) {
-        return withArraySetFieldByReflection("organisationType", organisationType);
     }
 
     public GrantClaimMaximumBuilder withSize(OrganisationSize... size) {

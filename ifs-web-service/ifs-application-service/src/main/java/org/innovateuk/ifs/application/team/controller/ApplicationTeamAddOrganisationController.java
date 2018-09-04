@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamAddOrganisat
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -138,13 +139,10 @@ public class ApplicationTeamAddOrganisationController {
         });
     }
 
-    protected String redirectToApplicationTeamPage(long applicationId) {
+    private String redirectToApplicationTeamPage(long applicationId) {
         long competitionId = applicationService.getById(applicationId).getCompetition();
-        return questionRestService
-                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
-                .handleSuccessOrFailure(
-                        failure -> format("redirect:/application/%s/team", applicationId),
-                        question -> format("redirect:/application/%s/form/question/%s", applicationId, question.getId())
-                );
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess();
+        return format("redirect:/application/%s/form/question/%s", applicationId, question.getId());
     }
 }

@@ -53,8 +53,6 @@ public class ApplicationResource {
 
     private boolean isInAssessmentReviewPanel;
 
-    private boolean useNewApplicantMenu;
-
     public Long getId() {
         return id;
     }
@@ -249,14 +247,6 @@ public class ApplicationResource {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.isInAssessmentReviewPanel = inAssessmentReviewPanel;
-    }
-
-    public boolean isUseNewApplicantMenu() {
-        return useNewApplicantMenu;
-    }
-
-    public void setUseNewApplicantMenu(final boolean useNewApplicantMenu) {
-        this.useNewApplicantMenu = useNewApplicantMenu;
     }
 
     @Override
