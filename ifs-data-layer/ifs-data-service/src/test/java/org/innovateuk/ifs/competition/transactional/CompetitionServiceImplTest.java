@@ -472,7 +472,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
     }
 
-    private void searchCompetitionsAssertions(long totalElements, int totalPages, int page, int size, String competitionType, Competition competition, CompetitionSearchResult response) {
+    private void searchCompetitionsAssertions(long totalElements, int totalPages, int page, int size,
+                                              String competitionType, Competition competition, CompetitionSearchResult response) {
 
         assertEquals(totalElements, response.getTotalElements());
         assertEquals(totalPages, response.getTotalPages());

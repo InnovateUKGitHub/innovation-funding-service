@@ -43,7 +43,6 @@ public class ManageApplicationModelPopulator {
                                                ApplicationForm form) {
 
         boolean readOnly = user.hasRole(SUPPORT);
-        //TODO - XXX - Do not give permission to Stakeholder to reinstate. Comment will be deleted on review.
         boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER));
 
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);

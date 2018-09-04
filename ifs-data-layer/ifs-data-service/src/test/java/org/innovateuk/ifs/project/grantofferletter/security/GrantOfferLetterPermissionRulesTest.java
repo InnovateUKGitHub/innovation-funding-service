@@ -64,7 +64,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
-        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();

@@ -204,11 +204,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                     "competition.setup.invalid.comp.exec"));
         }
 
-        //TODO - XXX - Skip this for stakeholder. This comment will be deleted after review.
-        // That is, the lead technologist should still be an innovation lead. He cannot be a Stakeholder.
-        if (userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), INNOVATION_LEAD)
-                //|| userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), STAKEHOLDER)
-                ) {
+        if (userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), INNOVATION_LEAD)) {
             competition.setLeadTechnologist(initialDetailsForm.getInnovationLeadUserId());
         } else if (initialDetailsForm.getInnovationLeadUserId() != null) {
             return asList(fieldError("innovationLeadUserId",

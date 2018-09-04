@@ -92,7 +92,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
 
         User stakeholderUserOnCompetition = newUser().build();
-        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(Role.STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(Role.STAKEHOLDER).build();
         Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
         leadOnApplication1 = newUserResource().build();

@@ -91,7 +91,6 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    //TODO - XXX - Do not allow the Stakeholder to do this. Comment will be deleted after review.
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
