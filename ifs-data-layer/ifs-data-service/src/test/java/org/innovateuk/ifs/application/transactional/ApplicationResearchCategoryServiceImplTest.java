@@ -11,19 +11,26 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
-
+import static java.util.Collections.EMPTY_LIST;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -51,6 +58,12 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private ApplicationMapper applicationMapperMock;
+
+    @Mock
+    private GrantClaimMaximumService grantClaimMaximumService;
+
+    @Mock
+    private OrganisationService organisationService;
 
     @Override
     protected ApplicationResearchCategoryService supplyServiceUnderTest() {
@@ -82,7 +95,6 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
     @Test
     public void setApplicationResearchCategoryWithResearchCategoryChange() throws Exception {
 
-        Long applicationId = 1L;
         Long researchCategoryId = 1L;
         Long origResearchCategoryId = 2L;
 
@@ -91,21 +103,29 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
         Competition competition = newCompetition().build();
         Question financeQuestion = newQuestion().build();
-        Application application = newApplication().withId(applicationId).withCompetition(competition).withResearchCategory(origResearchCategory).build();
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withResearchCategory(origResearchCategory)
+                .withProcessRoles(newProcessRole().withOrganisationId(organisation.getId()).withRole(LEADAPPLICANT).build())
+                .build();
 
-        Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+
+        Application expectedApplication = newApplication().withId(application.getId()).withResearchCategory
+                (researchCategory).build();
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(organisationService.findById(application.getLeadOrganisationId())).thenReturn(serviceSuccess(organisation));
+        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(serviceSuccess(true));
+
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
         when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
-        when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
-        when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
-        when(financeServiceMock.financeDetails(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
+        when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(serviceSuccess(financeQuestion));
+        when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(application.getId())).thenReturn(serviceSuccess(EMPTY_LIST));
 
-        ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
+        ServiceResult<ApplicationResource> result = service.setResearchCategory(application.getId(), researchCategoryId);
 
         assertTrue(result.isSuccess());
 
-        verify(financeServiceMock, times(1)).financeDetails(applicationId);
         verify(applicationRepositoryMock, times(1)).save(any(Application.class));
     }
 
