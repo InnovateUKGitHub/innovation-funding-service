@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.UnsuccessfulApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.UnsuccessfulApplicationPageResource;
+import org.innovateuk.ifs.application.resource.UnsuccessfulApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -64,8 +67,8 @@ public class PreviousApplicationsModelPopulatorTest {
                 .withId(5L)
                 .build();
 
-        List<ApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
-        ApplicationPageResource previousApplicationsPagedResult = Mockito.mock(ApplicationPageResource.class);
+        List<UnsuccessfulApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        UnsuccessfulApplicationPageResource previousApplicationsPagedResult = Mockito.mock(ApplicationPageResource.class);
         when(previousApplicationsPagedResult.getContent()).thenReturn(previousApplications);
         when(previousApplicationsPagedResult.getTotalElements()).thenReturn((long) previousApplications.size());
 

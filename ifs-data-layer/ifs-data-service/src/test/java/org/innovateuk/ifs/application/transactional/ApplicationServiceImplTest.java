@@ -9,10 +9,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -45,6 +42,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -247,8 +245,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
         ApplicationResource testApplication3Resource = newApplicationResource().with(id(3L)).withName("testApplication3Name").build();
 
-        Organisation organisation1 = new Organisation(1L, "test organisation 1");
-        Organisation organisation2 = new Organisation(2L, "test organisation 2");
+        Organisation organisation1 = new Organisation("test organisation 1");
+        Organisation organisation2 = new Organisation("test organisation 2");
 
         ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
         ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
@@ -568,10 +566,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getSize()).thenReturn(0);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        ApplicationPageResource previousApplicationsPage = result.getSuccess();
+        UnsuccessfulApplicationPageResource previousApplicationsPage = result.getSuccess();
         assertTrue(previousApplicationsPage.getContent().isEmpty());
 
     }
@@ -606,8 +604,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         previousApplications.add(application1);
         previousApplications.add(application2);
 
-        ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
-        ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource applicationResource1 = newApplicationResource()
+                .withId(1L)
+                .withCompetition(1L)
+                .build();
+
+        ApplicationResource applicationResource2 = newApplicationResource()
+                .withId(2L)
+                .withCompetition(2L)
+                .build();
 
         Page<Application> pagedResult = mock(Page.class);
         when(pagedResult.getContent()).thenReturn(previousApplications);
@@ -621,10 +626,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        ApplicationPageResource previousApplicationsPage = result.getSuccess();
+        UnsuccessfulApplicationPageResource previousApplicationsPage = result.getSuccess();
         assertTrue(previousApplicationsPage.getSize() == 2);
         assertEquals(applicationResource1, previousApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, previousApplicationsPage.getContent().get(1));
@@ -639,7 +644,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "INELIGIBLE");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "INELIGIBLE");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any());
@@ -654,7 +659,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "REJECTED");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "REJECTED");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any());
@@ -669,7 +674,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
@@ -684,7 +689,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());
@@ -699,10 +704,30 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = mock(Page.class);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "wrongFilter");
+        ServiceResult<UnsuccessfulApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "wrongFilter");
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.previousStates), any());
 
+    }
+
+    @Test
+    public void findLatestEmailFundingDateByCompetitionId() {
+        long competitionId = 1L;
+
+        ZonedDateTime expectedDateTime = ZonedDateTime.of(2018, 8, 1, 1, 0, 0, 0, ZoneId.systemDefault());
+
+        Application application = newApplication()
+                .withManageFundingEmailDate(expectedDateTime)
+                .build();
+
+        when(applicationRepositoryMock.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
+                .thenReturn(application);
+
+        ServiceResult<ZonedDateTime> result = service
+                .findLatestEmailFundingDateByCompetitionId(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expectedDateTime, result.getSuccess());
     }
 }

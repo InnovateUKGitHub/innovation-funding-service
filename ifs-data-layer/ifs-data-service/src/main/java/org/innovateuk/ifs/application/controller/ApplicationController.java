@@ -145,7 +145,7 @@ public class ApplicationController {
 
     @ZeroDowntime(description = "delete this controller", reference = "IFS-2471")
     @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+    public RestResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                         @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
@@ -154,7 +154,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/{competitionId}/previous-applications")
-    public RestResult<ApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
+    public RestResult<UnsuccessfulApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
                                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                         @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,

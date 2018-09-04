@@ -53,7 +53,8 @@
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">
                                 <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
-                                   th:text="${model.applicationId}">114
+                                   th:text="${model.applicationId}"
+                                   class="govuk-link">114
                                 </a>
                             </td>
                             <td class="govuk-table__cell" th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
@@ -71,7 +72,7 @@
 
                                     <div class="upload-section file-toggle" th:style="${model.hasAttachment()} ? 'display:none' : 'display:block'" >
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">+ Upload</label>
                                         <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
                                     </div>
                                     <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >

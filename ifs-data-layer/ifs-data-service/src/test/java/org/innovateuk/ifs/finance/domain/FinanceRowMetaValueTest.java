@@ -44,7 +44,7 @@ public class FinanceRowMetaValueTest {
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
         FinanceRow newCost = new ApplicationFinanceRow(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
-        FinanceRowMetaField newFinanceRowMetaField = new FinanceRowMetaField(2L,"title","type");
+        FinanceRowMetaField newFinanceRowMetaField = new FinanceRowMetaField(2L, "title","type");
 
         costValue.setFinanceRowId(newCost.getId());
         costValue.setFinanceRowMetaField(newFinanceRowMetaField);

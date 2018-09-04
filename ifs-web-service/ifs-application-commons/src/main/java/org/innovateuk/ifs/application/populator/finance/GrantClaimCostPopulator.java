@@ -26,8 +26,10 @@ public class GrantClaimCostPopulator extends AbstractCostPopulator<GrantClaimCos
 
     @Override
     protected void populateCost(AbstractApplicantResource resource, GrantClaimCostViewModel viewModel, ApplicationFinanceResource organisationFinances) {
-        viewModel.setMaximumGrantClaimPercentage(organisationFinances.getMaximumFundingLevel());
-        viewModel.setOrganisationGrantClaimPercentage(ofNullable(organisationFinances.getGrantClaim().getGrantClaimPercentage()).orElse(0));
-        viewModel.setOrganisationGrantClaimPercentageId(organisationFinances.getGrantClaim().getId());
+        if (organisationFinances != null) {
+            viewModel.setMaximumGrantClaimPercentage(organisationFinances.getMaximumFundingLevel());
+            viewModel.setOrganisationGrantClaimPercentage(ofNullable(organisationFinances.getGrantClaim().getGrantClaimPercentage()).orElse(0));
+            viewModel.setOrganisationGrantClaimPercentageId(organisationFinances.getGrantClaim().getId());
+        }
     }
 }
