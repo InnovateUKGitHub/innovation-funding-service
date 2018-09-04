@@ -13,7 +13,7 @@ import static java.lang.String.format;
 public class ApplicationTeamManagementViewModel {
 
     private long applicationId;
-    private Long questionId;
+    private long questionId;
     private String applicationName;
     private Long organisationId;
     private Long inviteOrganisationId;
@@ -24,7 +24,7 @@ public class ApplicationTeamManagementViewModel {
     private boolean organisationExists;
 
     public ApplicationTeamManagementViewModel(long applicationId,
-                                              Long questionId,
+                                              long questionId,
                                               String applicationName,
                                               Long organisationId,
                                               Long inviteOrganisationId,
@@ -86,12 +86,7 @@ public class ApplicationTeamManagementViewModel {
     }
 
     public String getBackUrl() {
-        boolean useNewApplicantMenu = questionId != null;
-        if (useNewApplicantMenu) {
-            return format("/application/%s/form/question/%s", applicationId, questionId);
-        } else {
-            return format("/application/%s/team", applicationId);
-        }
+        return format("/application/%s/form/question/%s", applicationId, questionId);
     }
 
     @Override
