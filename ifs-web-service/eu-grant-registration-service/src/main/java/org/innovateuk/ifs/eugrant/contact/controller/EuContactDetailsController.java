@@ -38,15 +38,15 @@ public class EuContactDetailsController {
     private EuContactSaver euContactSaver;
 
     @GetMapping("/contact-details")
-    public String contactDetails(Model model) {
+    public String contactDetails(@ModelAttribute(value = "form", binding = false) EuContactForm form) {
 
-        EuContactResource contact = euGrantCookieService.get().getContact();
+        EuGrantResource grantResource = euGrantCookieService.get();
 
-        if (contact == null) {
+        if (grantResource.getContact() == null) {
             return "redirect:/contact-details/edit";
         }
 
-        model.addAttribute("model", euContactFormPopulator.populate(contact));
+        form = euContactFormPopulator.populate(form);
 
         return "eugrant/contact-details";
     }
@@ -55,7 +55,7 @@ public class EuContactDetailsController {
     public String contactDetailsEdit(@ModelAttribute(value = "form", binding = false) EuContactForm form,
                                      BindingResult bindingResult) {
 
-        form = euContactSaver.getEuContactForm(form);
+        form = euContactFormPopulator.populate(form);
 
         return "eugrant/contact-details-edit";
     }

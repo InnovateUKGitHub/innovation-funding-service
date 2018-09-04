@@ -25,19 +25,6 @@ public class EuContactSaver {
         return RestResult.restSuccess();
     }
 
-    public EuContactForm getEuContactForm(EuContactForm contactForm) {
-
-        EuGrantResource euGrantResource = euGrantCookieService.get();
-        EuContactResource euContactResource = euGrantResource.getContact();
-
-        contactForm.setName(euContactResource.getName());
-        contactForm.setEmail(euContactResource.getEmail());
-        contactForm.setJobTitle(euContactResource.getJobTitle());
-        contactForm.setTelephone(euContactResource.getTelephone());
-
-        return contactForm;
-    }
-
     private EuContactResource getEuContactResource(EuContactForm contactForm) {
         return new EuContactResource(
                 contactForm.getName(),

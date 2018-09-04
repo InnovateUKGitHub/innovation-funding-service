@@ -7,11 +7,11 @@ import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-
-import java.util.UUID;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class EuContactMapper extends BaseMapper<EuContact, EuContactResource, Long> {
 
