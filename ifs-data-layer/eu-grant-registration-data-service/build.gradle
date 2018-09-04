@@ -112,5 +112,3 @@ test {
 
 
 flywayMigrate.dependsOn processResources
-
-ext.serverPort=8080
