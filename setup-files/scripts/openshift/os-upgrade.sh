@@ -21,26 +21,22 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 function upgradeServices {
     # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
-    oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "finance-data-service"
 
     # data-service
-    oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    # survey-data-service
-    oc apply -f $(getBuildLocation)/survey-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-
+    oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "data-service"
-    rolloutStatus "survey-data-service"
 
     # services
-    oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
@@ -62,12 +58,38 @@ function upgradeServices {
 
     watchStatus
 
-    # EU Grant Registration Service
-    oc apply -f $(getBuildLocation)/eu-grant-registration-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-data-service"
-    oc apply -f $(getBuildLocation)/eu-grant-registration-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-service"
+    upgradeSurvey
+    upgradeEuGrantRegistration
 
+}
+
+function upgradeSurvey {
+    # Survey service
+    oc apply -f $(getBuildLocation)/survey/survey-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-data-service"
+    oc apply -f $(getBuildLocation)/survey/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-svc"
+}
+
+function upgradeEuGrantRegistration {
+    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-data-service"
+    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-service"
+}
+
+function forceReloadSurvey {
+    oc rollout latest dc/survey-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-data-service"
+    oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-svc"
+}
+
+function forceReloadEuGrantRegistration {
+    oc rollout latest dc/eu-grant-registration-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-data-service"
+    oc rollout latest dc/eu-grant-registration-svc ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-svc"
 }
 
 function forceReload {
@@ -77,11 +99,7 @@ function forceReload {
     oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus data-service
 
-    oc rollout latest dc/survey-data-service ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus survey-data-service
-
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
@@ -102,11 +120,13 @@ function forceReload {
     fi
 
     watchStatus
+
+    forceReloadSurvey
+    forceReloadEuGrantRegistration
 }
 
 function watchStatus {
     rolloutStatus application-svc
-    rolloutStatus survey-svc
     rolloutStatus front-door-svc
     rolloutStatus assessment-svc
     rolloutStatus competition-mgt-svc

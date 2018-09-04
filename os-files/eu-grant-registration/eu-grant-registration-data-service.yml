@@ -9,7 +9,7 @@ items:
   spec:
     replicas: 1
     selector:
-      deploymentconfig: eu-grant-registration
+      deploymentconfig: eu-grant-registration-data-service
     strategy:
       type: Rolling
       rollingParams:
@@ -20,7 +20,7 @@ items:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: eu-grant-registration
+          deploymentconfig: eu-grant-registration-data-service
       spec:
         containers:
         - image: innovateuk/eu-grant-registration-data-service:${euGrantRegistrationDataServiceVersion}
