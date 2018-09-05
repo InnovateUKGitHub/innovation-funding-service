@@ -21,7 +21,7 @@ public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource,
 
     @Mappings({
             // TODO add to resource
-            @Mapping(source = "contact", target = "contact"),
+            @Mapping(source = "contact", target = "contact", defaultValue = "null"),
             @Mapping(target = "funding", ignore = true)
     })
     @Override

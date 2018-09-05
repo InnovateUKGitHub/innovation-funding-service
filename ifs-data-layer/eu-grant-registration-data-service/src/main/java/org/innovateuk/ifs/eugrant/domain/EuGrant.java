@@ -49,7 +49,7 @@ public class EuGrant {
         this.submitted = false;
     }
 
-    public void submit() {
+    public EuGrant submit() {
         if (submitted) {
             throw new IllegalStateException("cannot resubmit an eugrant");
         }
@@ -58,6 +58,7 @@ public class EuGrant {
         }
         this.submitted = true;
         this.shortCode = UUID.randomUUID().toString().substring(1,8); // TODO IFS-4254 generate short code (or pass in as a parameter)
+        return this;
     }
 
     public UUID getId() {
@@ -116,4 +117,7 @@ public class EuGrant {
         return modifiedOn;
     }
 
+    public boolean isSubmitted() {
+        return submitted;
+    }
 }

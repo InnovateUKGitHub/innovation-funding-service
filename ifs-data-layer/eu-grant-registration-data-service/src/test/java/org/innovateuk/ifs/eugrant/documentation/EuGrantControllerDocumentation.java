@@ -2,6 +2,7 @@ package org.innovateuk.ifs.eugrant.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.eugrant.*;
+import org.innovateuk.ifs.eugrant.controller.EuGrantController;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
 import org.mockito.Mock;

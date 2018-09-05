@@ -110,7 +110,7 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
 
     @ResponseStatus(value= HttpStatus.PAYLOAD_TOO_LARGE)  // 413
     @ExceptionHandler(value = {MaxUploadSizeExceededException.class, MultipartException.class, PayloadTooLargeException.class})
-    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, MultipartException e){
+    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, Exception e){
         LOG.debug("ErrorController payloadTooLarge", e );
         return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.PAYLOAD_TOO_LARGE, "413");
     }

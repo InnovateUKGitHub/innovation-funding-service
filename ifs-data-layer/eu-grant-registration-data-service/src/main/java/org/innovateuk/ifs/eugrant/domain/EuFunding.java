@@ -75,12 +75,12 @@ public class EuFunding {
         this.grantAgreementNumber = grantAgreementNumber;
     }
 
-    public String getParticpantId() {
+    public String getParticipantId() {
         return participantId;
     }
 
-    public void setParticpantId(String particpantId) {
-        this.participantId = particpantId;
+    public void setParticipantId(String participantId) {
+        this.participantId = participantId;
     }
 
     public String getProjectName() {

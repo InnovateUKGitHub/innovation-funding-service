@@ -32,4 +32,9 @@ public class EuGrantRestServiceImpl extends BaseRestService implements EuGrantRe
     public RestResult<Void> update(EuGrantResource euGrantResource) {
         return putWithRestResultAnonymous(baseURL + "/" + euGrantResource.getId().toString(), euGrantResource, Void.class);
     }
+
+    @Override
+    public RestResult<Void> submit(UUID uuid) {
+        return postWithRestResultAnonymous(baseURL + "/" + uuid.toString() + "/submit", Void.class);
+    }
 }

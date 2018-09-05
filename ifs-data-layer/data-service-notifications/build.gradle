@@ -1,0 +1,22 @@
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
+bootRepackage {
+    enabled = false
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-freemarker"
+
+    compile project(":ifs-data-layer:data-service-commons")
+    compile project(":ifs-sil-resources")
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
+}

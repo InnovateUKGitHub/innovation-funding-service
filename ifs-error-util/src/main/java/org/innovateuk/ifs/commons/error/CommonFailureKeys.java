@@ -298,7 +298,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * External user search
      */
-    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST);
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST),
+
+    /**
+     * EU Grant Errors
+     */
+    EU_GRANT_NOT_READY_TO_SUBMIT(BAD_REQUEST);
+
 
     private ErrorTemplate errorTemplate;
 

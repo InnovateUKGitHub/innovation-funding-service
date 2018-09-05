@@ -1,0 +1,43 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${euGrant.contact.name},
+Thank you for registering your Horizon 2020 funding details. This is the first step to transitioning your funding during the Brexit process. You will receive further instruction from us to complete the process over the coming months.
+Reference number
+${euGrant.shortCode}
+Grant agreement number
+${euGrant.funding.grantAgreementNumber}
+Organisation type
+${euGrant.organisation.organisationType}
+Registered name
+${euGrant.organisation.name}
+<#if euGrant.organisation.companiesHouseNumber??>
+Registration number
+${euGrant.organisation.companiesHouseNumber}
+</#if>
+Full name
+${euGrant.contact.name}
+Job title
+${euGrant.contact.jobTitle}
+Email
+${euGrant.contact.email}
+Telephone
+${euGrant.contact.telephone}
+Type of action
+${euGrant.funding.actionType.name}
+Participant ID
+${euGrant.funding.participantId}
+Project name
+${euGrant.funding.projectName}
+Project start date
+${projectStartDate}
+Project end date
+${projectEndDate}
+EU funding contribution for above project
+€${euGrant.funding.fundingContribution}
+Is your consortium the lead on this project?
+${euGrant.funding.projectCoordinator?string('yes', 'no')}
+
+If you spot any errors in the information above, please ring 000 000 0000 or email UKRIpublichelpdesk@ukri.org
+Yours sincerely,
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

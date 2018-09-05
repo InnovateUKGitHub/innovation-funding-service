@@ -9,5 +9,6 @@ public interface EuGrantRestService {
     RestResult<EuGrantResource> create();
     RestResult<EuGrantResource> findById(UUID uuid);
     RestResult<Void> update(EuGrantResource euGrantResource);
+    RestResult<Void> submit(UUID uuid);
 
 }
