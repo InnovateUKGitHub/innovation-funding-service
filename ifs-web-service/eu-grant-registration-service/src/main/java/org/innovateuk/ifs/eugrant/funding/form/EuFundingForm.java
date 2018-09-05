@@ -1,22 +1,16 @@
-package org.innovateuk.ifs.eugrant.domain;
+package org.innovateuk.ifs.eugrant.funding.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * The funding details for an {@link EuOrganisation} benefiting from an {@link EuGrant}.
- */
-@Entity
-public class EuFunding {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class EuFundingForm {
 
     @NotBlank
     private String grantAgreementNumber;
@@ -30,7 +24,6 @@ public class EuFunding {
 
     @NotNull
     private LocalDate projectStartDate;
-
     @NotNull
     private LocalDate projectEndDate;
 
@@ -39,34 +32,8 @@ public class EuFunding {
 
     private boolean projectCoordinator;
 
-    @ManyToOne
-    @JoinColumn(name = "eu_action_type_id")
-    private EuActionType actionType;
+//    private EuActionType actionType;
 
-    public EuFunding() {
-    }
-
-//    public EuFunding(EuActionType actionType,
-//                     String grantAgreementNumber,
-//                     String participantId,
-//                     String projectName,
-//                     LocalDate projectStartDate,
-//                     LocalDate projectEndDate,
-//                     BigDecimal fundingContribution,
-//                     boolean projectCoordinator) {
-//        this.actionType = actionType;
-//        this.participantId = participantId;
-//        this.projectName = projectName;
-//        this.projectStartDate = projectStartDate;
-//        this.projectEndDate = projectEndDate;
-//        this.grantAgreementNumber = grantAgreementNumber;
-//        this.fundingContribution = fundingContribution;
-//        this.projectCoordinator = projectCoordinator;
-//    }
-
-    public Long getId() {
-        return id;
-    }
 
     public String getGrantAgreementNumber() {
         return grantAgreementNumber;
@@ -76,12 +43,12 @@ public class EuFunding {
         this.grantAgreementNumber = grantAgreementNumber;
     }
 
-    public String getParticpantId() {
+    public String getParticipantId() {
         return participantId;
     }
 
-    public void setParticpantId(String particpantId) {
-        this.participantId = particpantId;
+    public void setParticipantId(String participantId) {
+        this.participantId = participantId;
     }
 
     public String getProjectName() {
@@ -108,7 +75,6 @@ public class EuFunding {
         this.projectEndDate = projectEndDate;
     }
 
-
     public BigDecimal getFundingContribution() {
         return fundingContribution;
     }
@@ -125,11 +91,35 @@ public class EuFunding {
         this.projectCoordinator = projectCoordinator;
     }
 
-    public EuActionType getActionType() {
-        return actionType;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EuFundingForm that = (EuFundingForm) o;
+
+        return new EqualsBuilder()
+                .append(grantAgreementNumber, that.grantAgreementNumber)
+                .append(participantId, that.participantId)
+                .append(projectName, that.projectName)
+                .append(projectStartDate, that.projectStartDate)
+                .append(projectEndDate, that.projectEndDate)
+                .append(fundingContribution, that.fundingContribution)
+                .append(projectCoordinator, that.projectCoordinator)
+                .isEquals();
     }
 
-    public void setActionType(EuActionType actionType) {
-        this.actionType = actionType;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(grantAgreementNumber)
+                .append(participantId)
+                .append(projectName)
+                .append(projectStartDate)
+                .append(projectEndDate)
+                .append(fundingContribution)
+                .append(projectCoordinator)
+                .toHashCode();
     }
 }
