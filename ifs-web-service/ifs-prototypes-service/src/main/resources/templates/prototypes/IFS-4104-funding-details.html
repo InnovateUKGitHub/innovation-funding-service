@@ -68,10 +68,10 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label govuk-label--s" for="pic-number">
-                                    Participant Identification Code (PIC)
+                                    Participant identification code (PIC)
                                 </label>
                                 <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
-                                    This is a 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
+                                    The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
                                     href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
                                     target="_blank"
                                     class="govuk-link">participant portal</a> (opens in a new window).
@@ -83,7 +83,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        type="text"
                                        th:value="${edit ? '12345689' : ''}"
                                        required="required"
-                                       data-required-errormessage="Enter a Participant Identification Code (PIC)">
+                                       data-required-errormessage="Enter a participant identification code (PIC)">
                             </div>
 
                             <div class="govuk-form-group">
@@ -91,7 +91,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     Type of action
                                 </label>
                                 <span id="type-of-action-hint" class="govuk-hint">
-                                    Funding scheme
+                                    The funding scheme you applied for.
                                 </span>
                                 <select class="govuk-select govuk-!-width-three-quarters"
                                         name="type-of-action"
@@ -133,7 +133,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     Project name
                                 </label>
                                 <span id="project-name-hint" class="govuk-hint">
-                                    The call that your original proposal was in response to.
+                                    The name of your project as used in your proposal.
                                 </span>
                                 <input class="govuk-input govuk-!-width-three-quarters"
                                        id="project-name" name="project-name"
@@ -150,7 +150,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                         Project start date
                                     </legend>
                                     <div class="date-group" data-past-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly}, data-required-errormessage='ENTER A DATE', dateType='data-past-date')" />
+                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly},  dayReadonly=true, dateType='data-past-date')" />
                                     </div>
                                 </fieldset>
                             </div>
@@ -171,7 +171,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     EU funding contribution for above project (EUR)
                                 </label>
                                 <span id="funding-committed-hint" class="govuk-hint">
-                                    This is the total amount in euros granted to your organisation at the point of the award for your project.
+                                    The total amount in euros granted to your organisation at the point of the award for your project.
                                 </span>
                                 <span class="govuk-body govuk-!-padding-right-1">&euro;</span>
                                 <input class="govuk-input govuk-input--width-10"
@@ -181,20 +181,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        aria-describedby="funding-committed-hint"
                                        th:value="${edit ? '100,000' : ''}"
                                        required="required"
-                                       data-required-errormessage="Enter the EU funding contribution for above project (EUR)">
-                            </div>
-
-                            <div class="govuk-form-group">
-                                <label class="govuk-label govuk-label--s" for="grant-agreement-number">
-                                    Grant agreement number
-                                </label>
-                                <input class="govuk-input govuk-input--width-10"
-                                       id="grant-agreement-number"
-                                       name="grant-agreement-number"
-                                       type="text"
-                                       th:value="${edit ? '123456' : ''}"
-                                       required="required"
-                                       data-required-errormessage="Enter a grant agreement number">
+                                       data-required-errormessage="Enter the EU funding contribution">
                             </div>
 
                             <div class="govuk-form-group">
@@ -252,7 +239,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                     <dl class="govuk-list">
                         <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
                         <dd>123456</dd>
-                        <dt class="govuk-!-margin-top-6">Participant Identification Code (PIC)</dt>
+                        <dt class="govuk-!-margin-top-6">Participant identification code (PIC)</dt>
                         <dd>12345689</dd>
                         <dt class="govuk-!-margin-top-6">Type of action</dt>
                         <dd>(COFUND-EJP) COFUND (European Joint Programme)</dd>
