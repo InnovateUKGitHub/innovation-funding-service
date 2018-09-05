@@ -15,6 +15,7 @@ import java.util.UUID;
         uses = {
                 EuOrganisationMapper.class,
                 EuContactMapper.class,
+                EuFundingMapper.class
         }
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {

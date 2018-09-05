@@ -3,6 +3,7 @@ package org.innovateuk.ifs.eugrant.funding.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.eugrant.EuActionTypeResource;
 import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 
 import javax.validation.constraints.NotNull;
@@ -32,7 +33,7 @@ public class EuFundingForm {
 
     private boolean projectCoordinator;
 
-//    private EuActionType actionType;
+    private EuActionTypeResource actionType;
 
 
     public String getGrantAgreementNumber() {
@@ -91,6 +92,14 @@ public class EuFundingForm {
         this.projectCoordinator = projectCoordinator;
     }
 
+    public EuActionTypeResource getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(EuActionTypeResource actionType) {
+        this.actionType = actionType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +116,7 @@ public class EuFundingForm {
                 .append(projectEndDate, that.projectEndDate)
                 .append(fundingContribution, that.fundingContribution)
                 .append(projectCoordinator, that.projectCoordinator)
+                .append(actionType, that.actionType)
                 .isEquals();
     }
 
@@ -120,6 +130,7 @@ public class EuFundingForm {
                 .append(projectEndDate)
                 .append(fundingContribution)
                 .append(projectCoordinator)
+                .append(actionType)
                 .toHashCode();
     }
 }

@@ -16,4 +16,5 @@ project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
-project.ext['flyway.locations']=flywayPatchesPath + "/migration"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration," + flywayPatchesPath + "/reference"
+//project.ext['flyway.locations']=flywayPatchesPath + "/migration"

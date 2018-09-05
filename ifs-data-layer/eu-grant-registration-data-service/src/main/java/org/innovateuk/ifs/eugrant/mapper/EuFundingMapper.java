@@ -11,7 +11,10 @@ import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
         config = GlobalMapperConfig.class,
-        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL,
+        uses = {
+            EuActionTypeMapper.class,
+}
 )
 public abstract class EuFundingMapper extends BaseMapper<EuFunding, EuFundingResource, Long> {
 

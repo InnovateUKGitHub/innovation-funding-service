@@ -49,12 +49,12 @@ public class EuFundingController {
     }
 
     @GetMapping("/funding-details/edit")
-    public String contactDetailsEdit(@ModelAttribute(value = "form", binding = false) EuFundingForm form,
+    public String fundingDetailsEdit(@ModelAttribute(value = "form", binding = false) EuFundingForm form,
                                      BindingResult bindingResult) {
 
         form = euFundingFormPopulator.populate(form);
 
-        return "eugrant/funding-details-edit";
+        return "funding/funding-details-edit";
     }
 
 //    @PostMapping("/contact-details/edit")

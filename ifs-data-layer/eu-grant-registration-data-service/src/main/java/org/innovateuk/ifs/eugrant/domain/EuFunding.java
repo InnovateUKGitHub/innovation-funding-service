@@ -76,11 +76,11 @@ public class EuFunding {
         this.grantAgreementNumber = grantAgreementNumber;
     }
 
-    public String getParticpantId() {
+    public String getParticipantId() {
         return participantId;
     }
 
-    public void setParticpantId(String particpantId) {
+    public void setParticipantId(String particpantId) {
         this.participantId = particpantId;
     }
 

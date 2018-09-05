@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.eugrant;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -18,6 +21,8 @@ public class EuFundingResource {
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
+
+    private EuActionTypeResource actionType;
 
     public String getGrantAgreementNumber() {
         return grantAgreementNumber;
@@ -73,5 +78,47 @@ public class EuFundingResource {
 
     public void setProjectCoordinator(boolean projectCoordinator) {
         this.projectCoordinator = projectCoordinator;
+    }
+
+    public EuActionTypeResource getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(EuActionTypeResource actionType) {
+        this.actionType = actionType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EuFundingResource that = (EuFundingResource) o;
+
+        return new EqualsBuilder()
+                .append(grantAgreementNumber, that.grantAgreementNumber)
+                .append(participantId, that.participantId)
+                .append(projectName, that.projectName)
+                .append(projectStartDate, that.projectStartDate)
+                .append(projectEndDate, that.projectEndDate)
+                .append(fundingContribution, that.fundingContribution)
+                .append(projectCoordinator, that.projectCoordinator)
+                .append(actionType, that.actionType)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(grantAgreementNumber)
+                .append(participantId)
+                .append(projectName)
+                .append(projectStartDate)
+                .append(projectEndDate)
+                .append(fundingContribution)
+                .append(projectCoordinator)
+                .append(actionType)
+                .toHashCode();
     }
 }
