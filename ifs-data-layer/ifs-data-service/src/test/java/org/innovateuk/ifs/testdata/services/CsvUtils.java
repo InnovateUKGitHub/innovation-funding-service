@@ -448,7 +448,6 @@ public class CsvUtils {
         public boolean inviteOnly;
         public boolean nonIfs;
         public String nonIfsUrl;
-        public String includeApplicationTeamQuestion;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -488,7 +487,6 @@ public class CsvUtils {
             inviteOnly = nullableBoolean(line.get(i++));
             nonIfs = nullableBoolean(line.get(i++));
             nonIfsUrl = nullable(line.get(i++));
-            includeApplicationTeamQuestion = nullable(line.get(i++));
         }
     }
 
