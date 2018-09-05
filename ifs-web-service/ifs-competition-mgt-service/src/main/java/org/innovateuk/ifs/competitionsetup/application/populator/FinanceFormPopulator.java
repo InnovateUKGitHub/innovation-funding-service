@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -50,8 +49,6 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
             competitionSetupForm.setApplicationFinanceType(competitionSetupFinanceResource.getApplicationFinanceType());
             competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.isIncludeGrowthTable());
             competitionSetupForm.setFundingRules(getFundingRulesWithoutHeading(competitionResource.getId()));
-        } else {
-            competitionSetupForm.setApplicationFinanceType(ApplicationFinanceType.NO_FINANCES);
         }
 
         return competitionSetupForm;

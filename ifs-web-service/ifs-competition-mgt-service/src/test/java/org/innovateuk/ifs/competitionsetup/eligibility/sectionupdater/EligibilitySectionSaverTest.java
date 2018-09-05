@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -117,7 +114,9 @@ public class EligibilitySectionSaverTest {
     }
 
     @Test
-    public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNullFullApplicationFinance() {
+    public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNullApplicationFinanceType() {
+        ApplicationFinanceType applicationFinanceType = null;
+
         EligibilityForm competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(true);
@@ -126,7 +125,7 @@ public class EligibilitySectionSaverTest {
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withApplicationFinanceType(null)
+                .withApplicationFinanceType(applicationFinanceType)
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 

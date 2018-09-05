@@ -49,6 +49,17 @@
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
+                        <!-- TODO IFS-4143 Enable the Standard with VAT option -->
+                        <!--<div class="govuk-radios__item">
+                            <input id="application-finance-standard-with-vat"
+                                   class="govuk-radios__input"
+                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT}"
+                                   type="radio" th:field="*{applicationFinanceType}" required="required"/>
+                            <label for="application-finance-standard-with-vat"
+                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
+                                   class="govuk-label govuk-radios__label"/>
+                        </div>
+                        -->
                         <div class="govuk-radios__item">
                             <input id="application-finance-no-finances"
                                    class="govuk-radios__input"

@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -103,6 +104,6 @@ public class FinanceFormPopulatorTest {
 
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
-        assertEquals(NO_FINANCES, form.getApplicationFinanceType());
+        assertNull(form.getApplicationFinanceType());
     }
 }
