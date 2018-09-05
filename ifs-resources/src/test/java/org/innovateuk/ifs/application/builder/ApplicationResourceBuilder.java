@@ -93,9 +93,4 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((noInnovationAreaApplicable, application) ->
                 setField("noInnovationAreaApplicable", noInnovationAreaApplicable, application), noInnovationAreaApplicableArray);
     }
-
-    public ApplicationResourceBuilder withUseNewApplicantMenu(Boolean... useNewApplicantMenuArray) {
-        return withArray((useNewApplicantMenu, application) ->
-                setField("useNewApplicantMenu", useNewApplicantMenu, application), useNewApplicantMenuArray);
-    }
 }

@@ -23,7 +23,7 @@ public class InProgressDashboardRowViewModel extends
     private final long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
-    private final Long applicationTeamQuestionId;
+    private final long applicationTeamQuestionId;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -106,7 +106,7 @@ public class InProgressDashboardRowViewModel extends
                 return format("/application/%s/track", getApplicationNumber());
             }
         } else if (isCreated() && leadApplicant) {
-            return getApplicationTeamLinkUrl();
+            return format("/application/%s/form/question/%s", getApplicationNumber(), applicationTeamQuestionId);
         } else {
             return format("/application/%s", getApplicationNumber());
         }
@@ -131,14 +131,5 @@ public class InProgressDashboardRowViewModel extends
             return assignedToInterview ? -1 : 1;
         }
         return Long.compare(getApplicationNumber(), o.getApplicationNumber());
-    }
-
-    private String getApplicationTeamLinkUrl() {
-        boolean useNewApplicantMenu = applicationTeamQuestionId != null;
-        if (useNewApplicantMenu) {
-            return format("/application/%s/form/question/%s", getApplicationNumber(), applicationTeamQuestionId);
-        } else {
-            return format("/application/%s/team", getApplicationNumber());
-        }
     }
 }
