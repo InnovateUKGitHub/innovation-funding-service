@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div>
+            <a th:href="@{/overview}" class="govuk-back-link">Back</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact details',size='govuk-heading-xl'" />
+
+        <th:block>
+
+            <form th:action="@{/contact-details/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+
+                <fieldset class="govuk-fieldset">
+
+                    <legend class="govuk-fieldset__legend">
+                        <p>Who is the most appropriate person for us to contact about your Horizon 2020 project?</p>
+                        <p>We recommend your Legal Entity Appointed Representative (LEAR).</p>
+                    </legend>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" th:for="name">
+                            Full name
+                        </label>
+                        <input class="govuk-input" type="text" th:field="*{name}" required="">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" th:for="jobTitle">
+                            Job title
+                        </label>
+                        <input class="govuk-input" type="text" th:field="*{jobTitle}" required="">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" th:for="email">
+                            Email
+                        </label>
+                        <input class="govuk-input" type="email" th:field="*{email}" required="">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" th:for="telephone">
+                            Telephone
+                        </label>
+                        <input class="govuk-input" type="text" th:field="*{telephone}" required="">
+                    </div>
+
+                    <button class="govuk-button" type="submit">Continue</button>
+
+                </fieldset>
+
+            </form>
+
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

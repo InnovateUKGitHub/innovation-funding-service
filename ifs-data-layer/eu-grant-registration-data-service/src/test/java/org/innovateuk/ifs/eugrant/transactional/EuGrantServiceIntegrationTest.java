@@ -2,7 +2,10 @@ package org.innovateuk.ifs.eugrant.transactional;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.junit.Before;
@@ -12,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuContactResource;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
+import static org.innovateuk.ifs.eugrant.builder.EuOrganisationResourceBuilder.newEuOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,10 +37,26 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void save() {
-        EuGrantResource surveyResource = newEuGrantResource()
+
+        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
+                .withName("worth")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .withCompaniesHouseNumber("1234")
                 .build();
 
-        ServiceResult<EuGrantResource> result = euGrantService.save(surveyResource);
+        EuContactResource euContactResource = newEuContactResource()
+                .withName("Worth")
+                .withEmail("Worth@gmail.com")
+                .withJobTitle("worth employee")
+                .withTelephone("0123456789")
+                .build();
+
+        EuGrantResource euGrantResource = newEuGrantResource()
+                .withOrganisation(euOrganisationResource)
+                .withContact(euContactResource)
+                .build();
+
+        ServiceResult<Void> result = euGrantService.save(euGrantResource);
 
         assertTrue(result.isSuccess());
 
@@ -44,7 +66,14 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         EuGrant grant = grants.get(0);
 
-        assertEquals(grant.getId().toString(), result.getSuccess().getId());
+        assertEquals(grant.getContact().getName(), euGrantResource.getContact().getName());
+        assertEquals(grant.getContact().getJobTitle(), euGrantResource.getContact().getJobTitle());
+        assertEquals(grant.getContact().getEmail(), euGrantResource.getContact().getEmail());
+        assertEquals(grant.getContact().getTelephone(), euGrantResource.getContact().getTelephone());
+
+        assertEquals(grant.getOrganisation().getName(), euGrantResource.getOrganisation().getName());
+        assertEquals(grant.getOrganisation().getOrganisationType(), euGrantResource.getOrganisation().getOrganisationType());
+        assertEquals(grant.getOrganisation().getCompaniesHouseNumber(), euGrantResource.getOrganisation().getCompaniesHouseNumber());
     }
 
     @Test
@@ -55,7 +84,16 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         ServiceResult<EuGrantResource> result = euGrantService.findById(grant.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess().getId(), grant.getId().toString());
+        assertEquals(result.getSuccess().getId().toString(), grant.getId().toString());
     }
 
+    @Test
+    public void create() throws Exception {
+        ServiceResult<EuGrantResource> result = euGrantService.create();
+
+        List<EuGrant> grants = newArrayList(euGrantRepository.findAll());
+
+        assertTrue(result.isSuccess());
+        assertFalse(grants.isEmpty());
+    }
 }

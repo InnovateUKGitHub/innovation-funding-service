@@ -24,15 +24,20 @@ public class EuGrantServiceImpl implements EuGrantService {
     private EuGrantRepository euGrantRepository;
 
     @Override
-    public ServiceResult<EuGrantResource> save(EuGrantResource euGrant) {
-        return serviceSuccess(euGrantMapper.mapToResource(
-                euGrantRepository.save(
-                        euGrantMapper.mapToDomain(euGrant))));
+    public ServiceResult<Void> save(EuGrantResource euGrant) {
+        euGrantRepository.save(
+                euGrantMapper.mapToDomain(euGrant));
+        return serviceSuccess();
     }
 
     @Override
     public ServiceResult<EuGrantResource> findById(UUID id) {
         return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<EuGrantResource> create() {
+        return serviceSuccess(euGrantMapper.mapToResource(euGrantRepository.save(new EuGrant())));
     }
 }

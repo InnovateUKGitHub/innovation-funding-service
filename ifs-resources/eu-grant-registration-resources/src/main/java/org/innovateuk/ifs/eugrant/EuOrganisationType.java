@@ -29,4 +29,8 @@ public enum EuOrganisationType {
     public String getDescription() {
         return description;
     }
+
+    public boolean isResearch() {
+        return this == RESEARCH;
+    }
 }

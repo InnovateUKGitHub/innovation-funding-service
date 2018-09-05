@@ -1,11 +1,11 @@
-=== Save
+=== Create
 ==== Request
-include::{snippets}/eu-grant/save/http-request.adoc[]
-include::{snippets}/eu-grant/save/request-fields.adoc[]
+include::{snippets}/eu-grant/create/http-request.adoc[]
+include::{snippets}/eu-grant/create/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/eu-grant/save/http-response.adoc[]
-include::{snippets}/eu-grant/save/response-fields.adoc[]
+include::{snippets}/eu-grant/create/http-response.adoc[]
+include::{snippets}/eu-grant/create/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/eu-grant/save/curl-request.adoc[]

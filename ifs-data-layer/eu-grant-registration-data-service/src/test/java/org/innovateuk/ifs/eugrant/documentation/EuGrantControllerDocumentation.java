@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.eugrant.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.controller.EuGrantController;
+import org.innovateuk.ifs.eugrant.*;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,7 +10,9 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.util.UUID;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuContactResource;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
+import static org.innovateuk.ifs.eugrant.builder.EuOrganisationResourceBuilder.newEuOrganisationResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -33,11 +34,27 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
     }
 
     @Test
-    public void save() throws Exception {
-        EuGrantResource euGrantResource = newEuGrantResource()
+    public void create() throws Exception {
+
+        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
+                .withName("worth")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .withCompaniesHouseNumber("1234")
                 .build();
 
-        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess(euGrantResource));
+        EuContactResource euContactResource = newEuContactResource()
+                .withName("Worth")
+                .withEmail("Worth@gmail.com")
+                .withJobTitle("worth employee")
+                .withTelephone("0123456789")
+                .build();
+
+        EuGrantResource euGrantResource = newEuGrantResource()
+                .withContact(euContactResource)
+                .withOrganisation(euOrganisationResource)
+                .build();
+
+        when(euGrantService.create()).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
                 post("/eu-grant")
@@ -55,8 +72,24 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void findById() throws Exception {
-        EuGrantResource euGrantResource = newEuGrantResource()
+        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
+                .withName("worth")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .withCompaniesHouseNumber("1234")
                 .build();
+
+        EuContactResource euContactResource = newEuContactResource()
+                .withName("Worth")
+                .withEmail("Worth@gmail.com")
+                .withJobTitle("worth employee")
+                .withTelephone("0123456789")
+                .build();
+
+        EuGrantResource euGrantResource = newEuGrantResource()
+                .withContact(euContactResource)
+                .withOrganisation(euOrganisationResource)
+                .build();
+
         UUID uuid = UUID.randomUUID();
 
         when(euGrantService.findById(uuid)).thenReturn(serviceSuccess(euGrantResource));
@@ -74,10 +107,21 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 );
     }
 
-
     private FieldDescriptor[] fields() {
         return new FieldDescriptor[] {
-                fieldWithPath("id").description("Unique id for the eu grant.")
+                fieldWithPath("id").description("Unique id for the eu grant."),
+                fieldWithPath("organisation").description("Organisation details for the eu grant."),
+                fieldWithPath("organisation.name").description("Name of the organisation"),
+                fieldWithPath("organisation.organisationType").description("The type of the the organisation e.g. BUSINESS"),
+                fieldWithPath("organisation.companiesHouseNumber").description("Companies House number"),
+                fieldWithPath("contact").description("Contact details for the eu grant."),
+                fieldWithPath("contact.name").description("Full name of the contact"),
+                fieldWithPath("contact.jobTitle").description("Job title of the contact"),
+                fieldWithPath("contact.email").description("Email address of the contact"),
+                fieldWithPath("contact.telephone").description("Telephone number of the contact"),
+                fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
+                fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
+                fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding.")
         };
     }
 }
