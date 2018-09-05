@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -82,7 +81,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
     }
 
     private ResearchParticipationAmount[] getResearchParticipationAmounts(CompetitionResource competitionResource) {
-        if (NO_FINANCES.equals(competitionResource.getApplicationFinanceType())) {
+        if (competitionResource.isNonFinanceType()) {
             return new ResearchParticipationAmount[]{};
         }
 
