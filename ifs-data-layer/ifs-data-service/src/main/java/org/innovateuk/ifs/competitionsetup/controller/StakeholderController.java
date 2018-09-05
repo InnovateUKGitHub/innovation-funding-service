@@ -20,10 +20,10 @@ public class StakeholderController {
     @Autowired
     private StakeholderService stakeholderService;
 
-    @PostMapping("/save-invite")
-    public RestResult<Void> saveStakeholderInvite(@RequestBody InviteUserResource inviteUserResource) {
+    @PostMapping("/invite")
+    public RestResult<Void> inviteStakeholder(@RequestBody InviteUserResource inviteUserResource) {
 
-        return stakeholderService.saveStakeholderInvite(inviteUserResource.getInvitedUser()).toPostResponse();
+        return stakeholderService.inviteStakeholder(inviteUserResource.getInvitedUser()).toPostResponse();
     }
 }
 

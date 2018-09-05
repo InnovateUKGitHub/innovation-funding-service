@@ -14,8 +14,8 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
     private String competitionSetupStakeholderRestURL = "/competition/setup/stakeholder";
 
     @Override
-    public RestResult<Void> saveStakeholderInvite(InviteUserResource inviteUserResource) {
-        return postWithRestResult(competitionSetupStakeholderRestURL + "/save-invite", inviteUserResource, Void.class);
+    public RestResult<Void> inviteStakeholder(InviteUserResource inviteUserResource) {
+        return postWithRestResult(competitionSetupStakeholderRestURL + "/invite", inviteUserResource, Void.class);
     }
 }
 

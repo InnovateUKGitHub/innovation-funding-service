@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.stakeholder.controller;
 
-import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
 import org.innovateuk.ifs.competitionsetup.stakeholder.form.InviteStakeholderForm;
+import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -78,8 +77,8 @@ public class StakeholderController {
         return "competition/setup/manage-stakeholders";
     }
 
-    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"addNewUser"})
-    public String saveStakeholderInvite(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model,
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"inviteStakeholder"})
+    public String inviteStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
@@ -91,15 +90,15 @@ public class StakeholderController {
 
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
 
-            RestResult<Void> saveResult = competitionSetupStakeholderRestService.saveStakeholderInvite(inviteUserResource);
+            RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource);
 
-            return handleSaveStakeholderInviteErrors(saveResult, validationHandler).
+            return handleInviteStakeholderErrors(saveResult, validationHandler).
                     failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders");
 
         });
     }
 
-    private ValidationHandler handleSaveStakeholderInviteErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
+    private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
         return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(STAKEHOLDER_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 

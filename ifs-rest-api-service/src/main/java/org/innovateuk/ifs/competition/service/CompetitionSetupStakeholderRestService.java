@@ -8,6 +8,6 @@ import org.innovateuk.ifs.invite.resource.InviteUserResource;
  */
 public interface CompetitionSetupStakeholderRestService {
 
-    RestResult<Void> saveStakeholderInvite(InviteUserResource inviteUserResource);
+    RestResult<Void> inviteStakeholder(InviteUserResource inviteUserResource);
 }
 
