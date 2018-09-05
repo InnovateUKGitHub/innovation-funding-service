@@ -116,7 +116,7 @@
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
                            th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a>
-                        (opens in a new window)
+                        (opens in a new window).
                     </p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">

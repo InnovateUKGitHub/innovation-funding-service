@@ -123,7 +123,7 @@
                 <a class="govuk-link"
                    th:href="${downloadUrl}"
                    th:text="${filename}" target="_blank">The-uploaded-file-example.pdf</a>
-                (opens in a new window)
+                (opens in a new window).
             </p>
         </th:block>
         <!--/* file upload can still be changed */-->
@@ -142,7 +142,7 @@
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
+                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
                     <th:block th:if="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
                     </th:block>
@@ -158,7 +158,7 @@
                            th:href="${downloadUrl}"
                            th:text="${filename}"
                            target="_blank">The-uploaded-file-example.pdf</a>
-                        (opens in a new window)
+                        (opens in a new window).
                     </p>
                     <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
                 </th:block>
