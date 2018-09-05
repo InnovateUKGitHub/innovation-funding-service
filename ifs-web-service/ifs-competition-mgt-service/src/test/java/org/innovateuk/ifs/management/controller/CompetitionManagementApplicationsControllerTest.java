@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -562,7 +563,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         String filter = "ALL";
 
         String competitionName = "Competition One";
-        List<PreviousApplicationResource> previousApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        List<PreviousApplicationResource> previousApplications = PreviousApplicationResourceBuilder.newPreviousApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         PreviousApplicationsViewModel viewModel = new PreviousApplicationsViewModel(competitionId,
                 competitionName, true, previousApplications, previousApplications.size(), new Pagination(applicationPageResource, ""));
