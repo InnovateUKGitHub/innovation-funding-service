@@ -11,11 +11,11 @@ import static java.lang.String.format;
 public class ApplicationTeamAddOrganisationViewModel {
 
     private long applicationId;
-    private Long questionId;
+    private long questionId;
     private String applicationName;
 
     public ApplicationTeamAddOrganisationViewModel(long applicationId,
-                                                   Long questionId,
+                                                   long questionId,
                                                    String applicationName) {
         this.applicationId = applicationId;
         this.questionId = questionId;
@@ -31,12 +31,7 @@ public class ApplicationTeamAddOrganisationViewModel {
     }
 
     public String getBackUrl() {
-        boolean useNewApplicantMenu = questionId != null;
-        if (useNewApplicantMenu) {
-            return format("/application/%s/form/question/%s", applicationId, questionId);
-        } else {
-            return format("/application/%s/team", applicationId);
-        }
+        return format("/application/%s/form/question/%s", applicationId, questionId);
     }
 
     @Override

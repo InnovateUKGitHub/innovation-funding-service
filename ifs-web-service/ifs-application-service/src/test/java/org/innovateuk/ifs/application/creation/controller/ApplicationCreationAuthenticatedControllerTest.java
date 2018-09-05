@@ -23,8 +23,6 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -122,26 +120,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testGetRequestWithoutExistingApplicationAndWithOldApplicantMenu() throws Exception {
-        long competitionId = 1L;
-        ApplicationResource application = newApplicationResource().build();
-
-        when(applicationRestService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(restSuccess(application));
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
-                APPLICATION_TEAM))
-                .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
-        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
-
-        mockMvc.perform(get("/application/create-authenticated/{competitionId}", competitionId))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
-
-        verify(applicationRestService, only()).createApplication(competitionId, loggedInUser.getId(), "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
-        verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), competitionId);
-    }
-
-    @Test
     public void testPostEmptyFormShouldThrowError() throws Exception {
         mockMvc.perform(post("/application/create-authenticated/1"))
                 .andExpect(status().isOk())
@@ -165,25 +143,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/form/question/%s", application.getId(),
                         applicationTeamQuestion.getId())));
-
-        verify(applicationRestService, only()).createApplication(competitionId, loggedInUser.getId(), "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
-    }
-
-    @Test
-    public void testPostCreateNewApplicationAndWithOldApplicantMenu() throws Exception {
-        long competitionId = 1L;
-        ApplicationResource application = newApplicationResource().build();
-
-        when(applicationRestService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(restSuccess(application));
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
-                APPLICATION_TEAM))
-                .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
-
-        mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
-                .param("createNewApplication", "1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
 
         verify(applicationRestService, only()).createApplication(competitionId, loggedInUser.getId(), "");
         verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);

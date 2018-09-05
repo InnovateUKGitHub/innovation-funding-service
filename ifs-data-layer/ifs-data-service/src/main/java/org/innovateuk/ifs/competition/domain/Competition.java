@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -743,11 +742,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
-    }
-
-    public boolean getUseNewApplicantMenu() {
-        return questions.stream().anyMatch(
-                question -> APPLICATION_TEAM == question.getQuestionSetupType());
     }
 }
 
