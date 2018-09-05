@@ -104,7 +104,7 @@ public class RegistrationController {
     @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response) {
-        userRestService.verifyEmail(hash);
+        userRestService.verifyEmail(hash).getSuccess();
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }
