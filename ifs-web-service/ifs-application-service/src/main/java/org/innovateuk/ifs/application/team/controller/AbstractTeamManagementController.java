@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -159,14 +160,11 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    protected String redirectToApplicationTeamPage(long applicationId) {
+    private String redirectToApplicationTeamPage(long applicationId) {
         long competitionId = applicationService.getById(applicationId).getCompetition();
-        return questionRestService
-                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
-                .handleSuccessOrFailure(
-                        failure -> format("redirect:/application/%s/team", applicationId),
-                        question -> format("redirect:/application/%s/form/question/%s", applicationId, question.getId())
-                );
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess();
+        return format("redirect:/application/%s/form/question/%s", applicationId, question.getId());
     }
 
     protected String redirectToOrganisationTeamPage(long applicationId, long organisationId) {

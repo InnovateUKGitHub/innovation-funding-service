@@ -59,8 +59,8 @@ public class ApplicationFeedbackController {
         this.competitionRestService = competitionRestService;
     }
 
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view the application summary page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/feedback")
     public String feedback(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                            BindingResult bindingResult,
@@ -123,8 +123,8 @@ public class ApplicationFeedbackController {
     }
 
     @GetMapping("/{applicationId}/feedback/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -133,8 +133,8 @@ public class ApplicationFeedbackController {
     }
 
     @GetMapping("/{applicationId}/feedback/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {

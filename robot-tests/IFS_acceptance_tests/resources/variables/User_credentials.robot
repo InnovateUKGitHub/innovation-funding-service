@@ -16,6 +16,7 @@
 &{internal_finance_credentials}           email=lee.bowman@innovateuk.test    password=Passw0rd
 &{innovation_lead_one}                    email=ian.cooper@innovateuk.test    password=Passw0rd
 &{innovation_lead_two}                    email=peter.freeman@innovateuk.test    password=Passw0rd
+&{stakeholder_user}                       email=Rayon.Kevin@gmail.com    password=Passw0rd
 &{Multiple_user_credentials}              email=jo.peters@ntag.example.com    password=Passw0rd
 &{Ineligible_user}                        email=nancy.peterson@gmail.com    password=Passw0rd
 &{support_user_credentials}               email=support@innovateuk.test    password=Passw0rd
