@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -116,13 +117,9 @@ public class ApplicationCreationAuthenticatedController {
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
         ApplicationResource application = applicationRestService.createApplication(competitionId, user.getId(), "").getSuccess();
         if (application != null) {
-            return questionRestService
-                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
-                    .handleSuccessOrFailure(
-                            failure -> format("redirect:/application/%s/team", application.getId()),
-                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
-                                    question.getId())
-                    );
+            QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType
+                    (competitionId, APPLICATION_TEAM).getSuccess();
+            return format("redirect:/application/%s/form/question/%s", application.getId(), question.getId());
         } else {
             // Application not created, throw exception
             List<Object> args = new ArrayList<>();
