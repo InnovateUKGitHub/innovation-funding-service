@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Spend Profile process.
  */
-public enum SpendProfileState implements ProcessState, IdentifiableEnum<SpendProfileState> {
+public enum SpendProfileState implements ProcessState, IdentifiableEnum {
     PENDING(39, State.PENDING),
     CREATED(40, State.CREATED),
     SUBMITTED(41, State.SUBMITTED),

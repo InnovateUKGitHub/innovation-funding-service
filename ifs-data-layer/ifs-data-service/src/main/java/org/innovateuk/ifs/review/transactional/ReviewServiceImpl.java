@@ -5,11 +5,8 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
@@ -32,11 +29,14 @@ import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_ACCEPT_FAILED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_REJECT_FAILED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -51,6 +51,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
 
+    private final String REVIEW_APPLICATIONS_EMAIL_SUBJECT = "Applications ready for review";
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -64,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -113,7 +115,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .forEach(assessor -> getAllApplicationsOnPanel(competitionId)
                         .forEach(application -> createAssessmentReview(assessor, application)));
 
-        // deliberately keeping this separate from creation in anticipation of splitting out notification
         return notifyAllCreated(competitionId);
     }
 
@@ -187,20 +188,23 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
-        reviewRepository
-                .findByTargetCompetitionIdAndActivityState(competitionId, CREATED)
-                .forEach(this::notifyInvitation);
 
-        return serviceSuccess();
+        List<Review> reviews = reviewRepository.findByTargetCompetitionIdAndActivityState(competitionId, CREATED);
+        List<ServiceResult<Void>> notificationResults = simpleMap(reviews, this::notifyInvitation);
+
+        return aggregate(notificationResults).andOnSuccessReturnVoid();
     }
 
-    private void notifyInvitation(Review review) {
-        workflowHandler.notifyInvitation(review);
-        sendInviteNotification("Applications ready for review", review, Notifications.INVITE_ASSESSMENT_REVIEW);
+    private ServiceResult<Void> notifyInvitation(Review review) {
+
+        if (!workflowHandler.notifyInvitation(review)) {
+            return serviceFailure(internalServerErrorError());
+        }
+
+        return sendInviteNotification(review, Notifications.INVITE_ASSESSMENT_REVIEW);
     }
 
-    private ServiceResult<Void> sendInviteNotification(String subject,
-                                                       Review review,
+    private ServiceResult<Void> sendInviteNotification(Review review,
                                                        Notifications notificationType) {
         User target  = review.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(target.getName(), target.getEmail());
@@ -209,13 +213,13 @@ public class ReviewServiceImpl implements ReviewService {
                 recipient,
                 notificationType,
                 asMap(
-                        "subject", subject,
+                        "subject", REVIEW_APPLICATIONS_EMAIL_SUBJECT,
                         "name", review.getParticipant().getUser().getName(),
                         "competitionName", review.getTarget().getCompetition().getName(),
                         "panelDate", review.getTarget().getCompetition().getAssessmentPanelDate().format(INVITE_DATE_FORMAT),
                         "ifsUrl", webBaseUrl
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

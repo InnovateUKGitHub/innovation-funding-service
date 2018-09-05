@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.nonifs.saver;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -53,9 +52,6 @@ public class NonIfsDetailsFormSaverTest {
 
     @InjectMocks
     private NonIfsDetailsFormSaver target;
-
-    @Mock
-    private CompetitionService competitionService;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;

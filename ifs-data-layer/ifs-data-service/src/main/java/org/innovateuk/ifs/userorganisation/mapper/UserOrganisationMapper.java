@@ -24,6 +24,7 @@ public abstract class UserOrganisationMapper extends BaseMapper<UserOrganisation
     @Mappings({
             @Mapping(source = "user.name", target = "name"),
             @Mapping(source = "organisation.name.", target = "organisationName"),
+            @Mapping(source = "organisation.organisationType.name", target = "organisationType"),
             @Mapping(source = "organisation.id", target = "organisationId"),
             @Mapping(source = "user.email", target = "email"),
             @Mapping(source = "user.status", target = "status")

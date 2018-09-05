@@ -66,9 +66,6 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
-    @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
-
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
         return find(financeRowMetaFieldRepository.findOne(id), notFoundError(FinanceRowMetaField.class, id));
@@ -219,7 +216,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
-                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                        dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
                     }
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());

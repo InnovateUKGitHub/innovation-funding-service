@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.CompetitionServiceImpl;
 import org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
@@ -27,6 +26,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchServiceImpl.COMPETITION_PAGE_SIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -130,7 +130,7 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
         results.setContent(new ArrayList<>());
         String searchQuery = "SearchQuery";
         int page = 1;
-        when(competitionRestService.searchCompetitions(searchQuery, page, CompetitionServiceImpl.COMPETITION_PAGE_SIZE)).thenReturn(restSuccess(results));
+        when(competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE)).thenReturn(restSuccess(results));
 
         CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page);
 

@@ -75,17 +75,23 @@ Lead organisation server-side validations
     When The user clicks the button/link      jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
-    And browser validations have been disabled
     And the user clicks the button/link       css=[id^="invite-collaborator"]
-    Then the user should see an error         Please enter a valid email address.
-    And the user should see an error          Please enter a name.
+    Then The user should see a field and summary error  Please enter a valid email address.
+    And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
     When The user enters text to a text field      css=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field       css=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
+    And the user moves focus to the element        css=button[name="executeStagedInvite"]
     Then the user cannot see a validation error in the page
+
+Lead organisation already used email
+    [Documentation]  IFS-3361
+    Given the user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
+    And the user clicks the button/link         css = button[name="executeStagedInvite"]
+    Then The user should see a field and summary error  This email is already in use.
     [Teardown]    The user clicks the button/link  link=Application team
 
 Lead Adds/Removes partner organisation
@@ -118,7 +124,7 @@ Partner organisation Server-side validations
     And The user enters text to a text field   name=applicants[0].name    ${EMPTY}
     And The user enters text to a text field   name=applicants[0].email    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        jQuery=.button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link        jQuery=.govuk-button:contains("Add organisation and invite applicants")
     Then the user should see an error          An organisation name is required.
     And the user should see an error           Please enter a name.
     And the user should see an error           Please enter an email address.
@@ -162,9 +168,9 @@ Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button               organisationType    1
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
     And the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
@@ -175,7 +181,7 @@ Partner requests new verification email via password reset
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field       id=email    ${invite_email}
-    And the user clicks the button/link            css=button
+    And the user clicks the button/link            jQuery=#forgotten-password-cta
     Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
 
 Complete account verification
@@ -189,7 +195,7 @@ Partner should be able to log-in and see the new company name
     ...
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link                   jQuery=.button:contains("Sign in")
+    Given the user clicks the button/link                   jQuery=.govuk-button:contains("Sign in")
     When the user logs-in in new browser                    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page  ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
@@ -246,10 +252,10 @@ Registered partner should not create new org but should follow the create accoun
     [Tags]    Email
     When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
-    And the user clicks the button/link                    jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation
     And the user should see the element                    link=email the lead applicant
-    And the user clicks the button/link                    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Confirm and continue")
     And the invited user fills the create account form     Roger  Axe
     And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
@@ -329,7 +335,7 @@ the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}

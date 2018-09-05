@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -8,6 +7,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CompetitionManagementCompetitionController {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private AssessorRestService assessorRestService;
@@ -42,7 +42,7 @@ public class CompetitionManagementCompetitionController {
 
     @GetMapping("/{competitionId}")
     public String competition(Model model, @PathVariable("competitionId") Long competitionId, UserResource user) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competition.getCompetitionStatus().isInFlight()) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition, user));
             return "competition/competition-in-flight";
@@ -77,6 +77,7 @@ public class CompetitionManagementCompetitionController {
     }
 
     private boolean isCompetitionTypeEOI(Long competitionId) {
-            return "Expression of interest".equals(competitionService.getById(competitionId).getCompetitionTypeName());
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return "Expression of interest".equals(competition.getCompetitionTypeName());
     }
 }

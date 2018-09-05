@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.profile.form;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -37,15 +35,6 @@ public class UserDetailsForm {
         @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
-
-    @NotBlank(message = "{validation.standard.gender.selectionrequired}")
-    private String gender = Gender.NOT_STATED.name();
-
-    @NotBlank(message = "{validation.standard.ethnicity.selectionrequired}")
-    private String ethnicity = "7";
-
-    @NotBlank(message = "{validation.standard.disability.selectionrequired}")
-    private String disability = Disability.NOT_STATED.name();
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
     @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
@@ -96,18 +85,6 @@ public class UserDetailsForm {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getEthnicity() {
-        return ethnicity;
-    }
-
-    public String getDisability() {
-        return disability;
     }
 
     public String getPhoneNumber() {

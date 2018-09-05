@@ -26,7 +26,6 @@ ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 ext.ifsFlywayLocations="db/migration,db/reference,db/setup,db/webtest"
 
 ext.silRestBaseURL="http://sil-stub:8080/silstub"
-ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL="http://registration-svc:8080"
 

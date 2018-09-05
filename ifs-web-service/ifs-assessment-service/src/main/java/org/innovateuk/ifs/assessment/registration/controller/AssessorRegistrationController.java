@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,6 +87,7 @@ public class AssessorRegistrationController {
 
         addAddressOptions(registrationForm);
         validateAddressForm(registrationForm, bindingResult);
+        registrationForm.getAddressForm().setTriedToSave(true);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
@@ -167,21 +167,6 @@ public class AssessorRegistrationController {
         return doViewYourDetails(model, inviteHash);
     }
 
-    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
-        if (postcodeIsSelected(assessorRegistrationForm)) {
-            ValidationUtils.invokeValidator(validator, assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
-        } else {
-            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
-                bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
-                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
-            } else {
-                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
-                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
-                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
-            }
-        }
-    }
-
     private boolean postcodeIndexIsSubmitted(AssessorRegistrationForm assessorRegistrationForm) {
         return StringUtils.hasText(assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex());
     }
@@ -228,5 +213,18 @@ public class AssessorRegistrationController {
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
         return "registration/register";
+    }
+
+    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
+        if (!postcodeIsSelected(assessorRegistrationForm)) {
+            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
+                bindingResult.rejectValue("addressForm.selectedPostcodeIndex", "validation.standard.postcodeoptions.required");
+                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
+            } else {
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
+                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+            }
+        }
     }
 }

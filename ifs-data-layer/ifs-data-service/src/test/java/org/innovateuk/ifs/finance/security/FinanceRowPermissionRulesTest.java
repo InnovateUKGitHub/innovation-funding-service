@@ -43,7 +43,6 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     private UserResource collaborator;
     private UserResource compAdmin;
     private UserResource projectFinance;
-    private UserResource assessor;
     private UserResource otherLeadApplicant;
 
     private UserResource projectUserResource;
@@ -70,7 +69,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
+            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
             costItem = new AcademicCost(cost.getId(), "", ZERO, "");
 
@@ -87,7 +86,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final long otherOrganisationId = 4l;
             final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
             final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
-            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisationSize(otherOrganisation).withApplication(otherApplication).build();
+            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
             otherCost = newApplicationFinanceRow().withOwningFinance(otherApplicationFinance).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),  Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());

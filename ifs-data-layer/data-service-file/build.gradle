@@ -1,5 +1,10 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 bootRepackage {
     enabled = false

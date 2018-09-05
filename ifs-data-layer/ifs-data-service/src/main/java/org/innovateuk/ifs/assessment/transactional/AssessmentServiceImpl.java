@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
-import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -51,7 +50,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             ApplicationState.SUBMITTED);
 
     private AssessmentRepository assessmentRepository;
-    private AssessmentInviteRepository assessmentInviteRepository;
     private AssessmentMapper assessmentMapper;
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
@@ -63,14 +61,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     public AssessmentServiceImpl(AssessmentRepository assessmentRepository,
-                                 AssessmentInviteRepository assessmentInviteRepository,
                                  AssessmentMapper assessmentMapper,
                                  AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
                                  AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
                                  AssessmentWorkflowHandler assessmentWorkflowHandler,
                                  CompetitionParticipantService competitionParticipantService) {
         this.assessmentRepository = assessmentRepository;
-        this.assessmentInviteRepository = assessmentInviteRepository;
         this.assessmentMapper = assessmentMapper;
         this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
         this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;

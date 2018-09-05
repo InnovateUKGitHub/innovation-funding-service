@@ -23,32 +23,32 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
   <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Finances'})" />
 
-  <h2 class="heading-medium no-margin-bottom">Finances</h2>
-  <p>Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section</p>
-  <ul class="list-overview">
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
+  <p class="govuk-body">Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section</p>
+  <ul class="govuk-list list-overview">
     <li class="section-status assigned-to-me">
-      <div class="grid-row">
+      <div class="govuk-grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/4600-your-finances">Your project costs</a></h3>
+          <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-finances">Your project costs</a></h3>
         </div>
 
       </div>
     </li>
     <li class="assigned-to-me">
-      <div class="grid-row">
+      <div class="govuk-grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/4600-your-org">Your organisation</a></h3>
+          <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-org">Your organisation</a></h3>
         </div>
       </div>
     </li>
   </ul>
 
-  <h2 class="heading-medium">Finance summary</h2>
+  <h2 class="govuk-heading-m">Finance summary</h2>
 
   <div class="table-overflow">
-    <table>
-      <thead>
-          <tr>
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
               <th scope="col" class="numeric width-small">Total</th>
               <th scope="col" class="numeric width-small">Labour</th>
               <th scope="col" class="numeric width-small">Overheads</th>
@@ -59,25 +59,25 @@
               <th scope="col" class="numeric width-small">Other costs</th>
           </tr>
       </thead>
-      <tbody>
-          <tr>
-            <td class="numeric"><strong>&pound;257,033</strong></td>
-            <td class="numeric">&pound;126,207</td>
-            <td class="numeric">&pound;86,167</td>
-            <td class="numeric">&pound;44,659</td>
-            <td class="numeric">&pound;257,033</td>
-            <td class="numeric">&pound;126,207</td>
-            <td class="numeric">&pound;86,167</td>
-            <td class="numeric">&pound;44,659</td>
+      <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;257,033</strong></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;126,207</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;86,167</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;44,659</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;257,033</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;126,207</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;86,167</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;44,659</td>
           </tr>
       </tbody>
     </table>
   </div>
 
-  <h2 class="heading-medium no-margin-bottom">Organisation size</h2>
-  <p>Medium (Claim up to 60%)</p>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Organisation size</h2>
+  <p class="govuk-body">Medium (Claim up to 60%)</p>
 
-	<!-- <p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+	<!-- <p class="govuk-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
 	<div class="form-block">
 		<label class="block-label" for="radio-1">
 			<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
@@ -93,15 +93,15 @@
 		</label>
 	</div> -->
 
-<fieldset>
-	<div class="form-group extra-margin">
-		<label class="form-label" for="other-funding">
-			<span class="heading-medium">Funding level</span>
-			<span class="form-hint">Please enter the funding level that you would like to apply for in this application. This is based on the size of your organisation.</span>
+<fieldset class="govuk-fieldset">
+	<div class="govuk-form-group extra-margin">
+		<label class="govuk-label" for="other-funding">
+			<span class="govuk-heading-m">Funding level</span>
+			<span class="govuk-hint">Please enter the funding level that you would like to apply for in this application. This is based on the size of your organisation.</span>
 		</label>
 		<details>
 		    <summary><span class="summary">What funding level should I enter?</span></summary>
-		    <div class="panel">
+		    <div class="govuk-body panel">
 		    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
 		    </div>
 		</details>
@@ -110,8 +110,8 @@
 </fieldset>
 
 
-<div class="form-group">
-  <fieldset>
+<div class="govuk-form-group">
+  <fieldset class="govuk-fieldset">
     <label for="agree-terms" class="block-label">
       <input id="agree-terms" value="agree-terms" type="checkbox" />
       As a member of this project I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.
@@ -128,7 +128,7 @@
 	<!-- <th:block th:insert="prototypes/fragments/finance-questions :: finance-other-funding" /> -->
 
 	<div class="alignright-button extra-margin">
-		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
+		<button type="submit" name="mark_as_complete" class="govuk-button" formaction="#" value="1">Mark as complete
 		</button>
 	</div>
 

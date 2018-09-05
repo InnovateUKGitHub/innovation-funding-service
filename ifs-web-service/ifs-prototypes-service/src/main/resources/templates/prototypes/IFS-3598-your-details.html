@@ -18,78 +18,78 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">
+    <h1 class="govuk-heading-xl">
         <span class="heading-secondary">Create your account</span>
         Your details
     </h1>
 
-    <p>To continue with your application, you need to create an account with the Innovation Funding Service.</p>
+    <p class="govuk-body">To continue with your application, you need to create an account with the Innovation Funding Service.</p>
 
     <form action="/prototypes/IFS-3598-verify-email" method="get" novalidate="novalidate"><input type="hidden" name="_csrf" value="ad363c141cd038af53ffc48c1c0ff32cba8f80a69b4dd90c9cf7a4a13a93ccf16b009d1e567a63535ae751b51980f9e157ebd471f414f6616fc186b674c726fad1482c3a6a29ddbf221c23f33d992e0ef8b4000ab8c7677769b48b2549913200">
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="firstName">
                 <span class="form-label-bold">First name</span>
             </label>
             <input class="form-control" id="firstName" type="text" required="required" minlength="2" maxlength="70" pattern="\D{2,}" data-minlength-errormessage="Your first name should have at least 2 characters." data-maxlength-errormessage="Your first name cannot have more than 70 characters." data-required-errormessage="Please enter a first name." data-pattern-errormessage="Invalid first name." name="firstName" value="">
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="lastName">
                 <span class="form-label-bold">Last name</span>
             </label>
             <input class="form-control" id="lastName" type="text" required="required" minlength="2" maxlength="70" pattern="\D{2,}" data-minlength-errormessage="Your last name should have at least 2 characters." data-maxlength-errormessage="Your last name cannot have more than 70 characters." data-required-errormessage="Please enter a last name." data-pattern-errormessage="Invalid last name." name="lastName" value="">
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="phoneNumber">
                 <span class="form-label-bold">Phone number</span>
-                <span class="form-hint">We may use this to contact you about the application.</span>
+                <span class="govuk-hint">We may use this to contact you about the application.</span>
             </label>
             <input class="form-control" id="phoneNumber" type="tel" minlength="8" maxlength="20" required="required" data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters." data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters." data-required-errormessage="Please enter a phone number." name="phoneNumber" value="">
         </div>
 
         <th:block th:if="${type == 'lead'}">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="email">
                     <span class="form-label-bold">Email</span>
-                    <span class="form-hint">You will need this to sign in to your account.</span>
+                    <span class="govuk-hint">You will need this to sign in to your account.</span>
                 </label>
                 <input class="form-control" id="email" type="email" maxlength="256" required="required" data-maxlength-errormessage="Your email address has a maximum length of {2} characters." data-required-errormessage="Please enter your email address." name="email" value="">
             </div>
         </th:block>
 
         <th:block th:unless="${type == 'lead'}">
-            <div class="extra-margin-bottom">
-                <h2 class="heading-small">Email</h2>
-                <p class="form-hint">You will need this to sign in to your account, the provided email is:<br />
+            <div class="govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s">Email</h2>
+                <p class="govuk-hint">You will need this to sign in to your account, the provided email is:<br />
                     <strong>srankin.nomensa@gmail.com</strong>
                 </p>
             </div>
         </th:block>
 
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="password">
                 <span class="form-label-bold">Create password</span>
             </label>
-            <div class="form-hint" id="password-hint">
-                <p>Your password is case-sensitive and needs to:</p>
-                <ul class="list list-bullet status">
+            <div class="govuk-hint" id="password-hint">
+                <p class="govuk-body">Your password is case-sensitive and needs to:</p>
+                <ul class="govuk-list govuk-list--bullet status">
                     <li data-minlength-validationstatus="">be at least 8 characters long</li>
                     <li data-containsuppercase-validationstatus="">contain at least 1 capital letter</li>
                     <li data-containsnumber-validationstatus="">contain at least 1 number</li>
                 </ul>
-                <p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+                <p class="govuk-body govuk-!-margin-bottom-0">Your password can include spaces to make a phrase.</p>
             </div>
             <div class="password-toggle">
-                <input data-containsnumber-showmessage="visuallyhidden" data-containsuppercase-showmessage="visuallyhidden" data-minlength-showmessage="visuallyhidden" data-required-showmessage="visuallyhidden" data-duplicate-required-minlength="true" aria-describedby="password-hint" class="form-control" type="password" required="required" minlength="8" data-required-errormessage="Please enter your password." data-minlength-errormessage="Password must be at least 8 characters." id="password" name="password" value="">
+                <input data-containsnumber-showmessage="govuk-visually-hidden" data-containsuppercase-showmessage="govuk-visually-hidden" data-minlength-showmessage="govuk-visually-hidden" data-required-showmessage="govuk-visually-hidden" data-duplicate-required-minlength="true" aria-describedby="password-hint" class="form-control" type="password" required="required" minlength="8" data-required-errormessage="Please enter your password." data-minlength-errormessage="Password must be at least 8 characters." id="password" name="password" value="">
                 <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
             </div>
         </div>
 
-        <div class="form-group">
-            <fieldset>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
                 <legend>
-                    <span class="visuallyhidden">Terms and conditions</span>
+                    <span class="govuk-visually-hidden">Terms and conditions</span>
                 </legend>
                 <div class="multiple-choice">
                     <input id="termsAndConditions" value="1" type="checkbox" required="required" data-required-errormessage="To create a new account you must agree to the website terms and conditions." name="termsAndConditions"><input type="hidden" name="_termsAndConditions" value="on">
@@ -98,7 +98,7 @@
             </fieldset>
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <div class="multiple-choice">
                 <input id="allowMarketing" type="checkbox" name="allowMarketingEmails" value="true"><input type="hidden" name="_allowMarketingEmails" value="on">
                 <label for="allowMarketing">Email me competition updates, events, deadlines and announcements.</label>
@@ -110,7 +110,7 @@
             <input type="hidden" name="type" th:value="${type}" />
         </th:block>
 
-        <button class="button button-large" name="create-account" type="submit">Create account</button>
+        <button class="govuk-button button-large" name="create-account" type="submit">Create account</button>
     </form>
 
 	<!-- END OF HARDCODED PROTOTYPE HTML -->

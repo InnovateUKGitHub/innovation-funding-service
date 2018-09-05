@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Application defines database relations and a model to use client side and server side.
  */
@@ -90,12 +88,11 @@ public class Application implements ProcessActivity {
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationState activityState) {
-        requireNonNull(activityState, "activityState cannot be null " + activityState);
+    public Application(Competition competition, String name, List<ProcessRole> processRoles) {
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
-        this.applicationProcess = new ApplicationProcess(this, null, activityState);
+        this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
     protected boolean canEqual(Object other) {
@@ -218,11 +215,11 @@ public class Application implements ProcessActivity {
     }
 
     public User getLeadApplicant() {
-        return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getUser).orElse(null);
     }
 
     public Long getLeadOrganisationId() {
-        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     public List<ApplicationInvite> getInvites() {
@@ -364,6 +361,4 @@ public class Application implements ProcessActivity {
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
     }
-
-
 }

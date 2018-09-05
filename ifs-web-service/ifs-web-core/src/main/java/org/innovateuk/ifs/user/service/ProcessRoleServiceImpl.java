@@ -22,16 +22,6 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     private UserRestService userRestService;
 
     @Override
-    public ProcessRoleResource findProcessRole(Long userId, Long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess();
-    }
-
-    @Override
-    public List<ProcessRoleResource> findProcessRolesByApplicationId(Long applicationId) {
-        return userRestService.findProcessRole(applicationId).getSuccess();
-    }
-
-    @Override
     public Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId) {
         return adapt(userRestService.findAssignableProcessRoles(applicationId), re -> asList(re.getSuccess()));
     }
@@ -39,15 +29,5 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     @Override
     public Future<ProcessRoleResource> getById(Long id) {
         return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccess);
-    }
-
-    @Override
-    public List<ProcessRoleResource> getByApplicationId(Long applicationId) {
-        return userRestService.findProcessRole(applicationId).getSuccess();
-    }
-
-    @Override
-    public List<ProcessRoleResource> getByUserId(Long userId) {
-        return userRestService.findProcessRoleByUserId(userId).getSuccess();
     }
 }

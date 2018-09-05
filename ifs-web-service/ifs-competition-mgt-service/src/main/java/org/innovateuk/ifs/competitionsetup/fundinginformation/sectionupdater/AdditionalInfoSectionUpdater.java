@@ -124,7 +124,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 	}
 
 	private Integer getFunderIndex(String fieldName) {
-		return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
+		return Integer.parseInt(fieldName.substring(fieldName.indexOf('[') + 1, fieldName.indexOf(']')));
 	}
 
 	private void addNotSavedFunders(CompetitionResource competitionResource, Integer index) {

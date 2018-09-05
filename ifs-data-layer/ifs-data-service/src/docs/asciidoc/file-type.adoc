@@ -1,0 +1,23 @@
+=== Find file type by id
+==== Request
+include::{snippets}/file/file-type/find-one/http-request.adoc[]
+include::{snippets}/file/file-type/find-one/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/file/file-type/find-one/http-response.adoc[]
+include::{snippets}/file/file-type/find-one/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/file/file-type/find-one/curl-request.adoc[]
+
+=== Find file type by name
+==== Request
+include::{snippets}/file/file-type/find-by-name/http-request.adoc[]
+include::{snippets}/file/file-type/find-by-name/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/file/file-type/find-by-name/http-response.adoc[]
+include::{snippets}/file/file-type/find-by-name/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/file/file-type/find-by-name/curl-request.adoc[]

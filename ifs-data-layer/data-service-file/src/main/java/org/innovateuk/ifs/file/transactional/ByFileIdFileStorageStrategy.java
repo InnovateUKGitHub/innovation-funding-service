@@ -45,7 +45,7 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
             long startForThisPartition = (id / maxFilesAtThisLevel) * maxFilesAtThisLevel;
             long endForThisPartition = startForThisPartition + maxFilesAtThisLevel - 1;
 
-            String startOfPartitionPadded = leftPad(startForThisPartition + "", (endForThisPartition + "").length(), '0');
+            String startOfPartitionPadded = leftPad(Long.toString(startForThisPartition), (Long.toString(endForThisPartition)).length(), '0');
 
             return startOfPartitionPadded + "_" + endForThisPartition;
         };

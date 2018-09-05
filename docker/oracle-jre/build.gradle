@@ -3,4 +3,6 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
     task.enabled = false
 }
 
-
+buildscript {
+    repositories { jcenter() }
+}

@@ -1,0 +1,59 @@
+- name: upgrade python
+  shell: pip install --upgrade setuptools --user python
+
+- name: create .ssh folder for devops ssl key
+  file: path=/home/devops/.ssh state=directory
+
+- name: upload private key for cloning
+  copy: src=files/devops dest=/home/devops/.ssh/id_rsa
+
+- name: correcy ssh deploy key permissions
+  file: dest=/home/devops/.ssh/id_rsa owner=devops group=devops mode=0600
+
+- name: setup host file
+  copy: src=files/hosts dest=/etc/hosts
+
+- name: clone the code repository
+  become: true
+  become_user: devops
+  git:
+    repo: ssh://git@git.devops.innovateuk.org/ifs/innovation-funding-service.git
+    dest: /home/devops/innovation-funding-service
+    accept_hostkey: yes
+    clone: yes
+    key_file: /home/devops/.ssh/id_rsa
+
+- name: set up roboframework
+  shell: export LC_ALL="en_US.UTF-8" && pip install robotframework && pip install --upgrade setuptools --user python && cd /home/devops/innovation-funding-service/robot-tests && pip install --user -r robotPythonLibs-requirements.txt
+
+- name: setup gradle
+  become: true
+  become_user: devops
+  command: /home/devops/innovation-funding-service/gradlew wrapper --configure-on-demand
+
+- name: copy gradle config
+  become: true
+  become_user: devops
+  copy: src=files/gradle.properties dest=/home/devops/.gradle/gradle.properties
+
+- name: install docker ansible support
+  shell: pip install docker-py
+  register: task_result
+
+- name: Reboot server.
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+  when: task_result is changed
+
+- name: Wait for the reboot to complete if there was a change.
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  when: task_result is changed
+
+- name: create docker network
+  docker_network:
+    name: ifs

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -82,8 +81,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
-        InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess(inviteResultsResource));
+        when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
                 .contentType(APPLICATION_JSON)

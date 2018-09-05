@@ -31,6 +31,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/mail/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
 
@@ -88,5 +89,6 @@ then
     # We only scale up data-services once started up and performed the Flyway migrations on one thread
     scaleDataService
     scaleFinanceDataService
+    scaleSurveyDataService
 fi
 

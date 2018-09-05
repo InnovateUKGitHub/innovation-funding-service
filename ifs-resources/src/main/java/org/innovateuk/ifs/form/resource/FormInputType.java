@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  * This is also used to choose a template in the web-service. Depending on the FormInputType we
  * can also implement extra behaviour like form / input validation.
  */
-public enum FormInputType implements IdentifiableEnum<FormInputType> {
+public enum FormInputType implements IdentifiableEnum {
 
     TEXTINPUT(1),
     TEXTAREA(2),

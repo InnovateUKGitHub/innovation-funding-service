@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -19,16 +22,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -86,6 +88,9 @@ public class Competition implements ProcessActivity {
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
 
+    @OneToMany(mappedBy = "competition", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<ProjectDocument> projectDocuments = new ArrayList<>();
+
     private String activityCode;
 
     private boolean multiStream;
@@ -120,6 +125,12 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "grant_claim_maximum_competition",
+            joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
+            inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
+    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+
     private boolean locationPerPartner = true;
 
     private Boolean stateAid;
@@ -128,15 +139,13 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id,
-                       List<Question> questions,
+    public Competition(List<Question> questions,
                        List<Section> sections,
                        String name,
                        ZonedDateTime startDate,
                        ZonedDateTime endDate,
                        ZonedDateTime registrationDate,
                        GrantTermsAndConditions termsAndConditions) {
-        this.id = id;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -147,8 +156,7 @@ public class Competition implements ProcessActivity {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
+    public Competition(String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
@@ -226,7 +234,9 @@ public class Competition implements ProcessActivity {
     }
 
     @JsonIgnore
-    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+    public boolean inProjectSetup() {
+        return PROJECT_SETUP.equals(getCompetitionStatus());
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -338,7 +348,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone(milestoneType,this);
+            Milestone m = new Milestone(milestoneType, this);
             milestones.add(m);
             return m;
         });
@@ -353,10 +363,6 @@ public class Competition implements ProcessActivity {
     private boolean isMilestoneReached(MilestoneType milestoneType) {
         ZonedDateTime today = ZonedDateTime.now();
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
-    }
-
-    private boolean isMilestoneSet(MilestoneType milestoneType) {
-        return getMilestone(milestoneType).isPresent();
     }
 
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
@@ -505,7 +511,15 @@ public class Competition implements ProcessActivity {
         }
 
         researchCategories.forEach(this::addResearchCategory);
-	}
+    }
+
+    public List<ProjectDocument> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
 
     public List<Milestone> getMilestones() {
         return milestones;
@@ -667,7 +681,7 @@ public class Competition implements ProcessActivity {
         this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isHasInterviewStage(){
+    public Boolean isHasInterviewStage() {
         return hasInterviewStage;
     }
 
@@ -681,6 +695,14 @@ public class Competition implements ProcessActivity {
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
         this.assessorFinanceView = assessorFinanceView;
+    }
+
+    public List<GrantClaimMaximum> getGrantClaimMaximums() {
+        return grantClaimMaximums;
+    }
+
+    public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
+        this.grantClaimMaximums = grantClaimMaximums;
     }
 
     public GrantTermsAndConditions getTermsAndConditions() {
@@ -719,15 +741,13 @@ public class Competition implements ProcessActivity {
         return stateAid;
     }
 
-    public void setStateAid(final Boolean stateAid) {
+    public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
     }
 
     public boolean getUseNewApplicantMenu() {
         return questions.stream().anyMatch(
-                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
-        );
+                question -> APPLICATION_TEAM == question.getQuestionSetupType());
     }
-
 }
 

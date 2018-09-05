@@ -25,9 +25,9 @@ Innovation Lead should see Submitted and Ineligible Applications
     When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
     Then the user should see the element      css=#application-list
     When the user clicks the button/link       jQuery=a:contains(${application_ids["Ineligible Virtualisation"]})
-    Then the user should not see the element   jQuery=.button:contains("Reinstate application")
+    Then the user should not see the element   jQuery=.govuk-button:contains("Reinstate application")
     When the user clicks the button/link      jQuery=a:contains("Back")
-    Then the user should not see the element  jQuery=.button:contains("Inform applicant")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Inform applicant")
 
 Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
     [Documentation]  IFS-984, IFS-1414

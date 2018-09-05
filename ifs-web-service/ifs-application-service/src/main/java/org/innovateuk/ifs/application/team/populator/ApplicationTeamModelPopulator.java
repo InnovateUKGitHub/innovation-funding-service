@@ -18,6 +18,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class ApplicationTeamModelPopulator {
     private UserService userService;
 
     @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
     private ApplicantRestService applicantRestService;
 
     @Autowired
@@ -64,10 +68,17 @@ public class ApplicationTeamModelPopulator {
         boolean isComplete = isComplete(applicationId, loggedInUserId, questionId);
         boolean allReadonly = isComplete;
 
-        return new ApplicationTeamViewModel(applicationResource.getId(), questionId, applicationResource.getName(),
+        return new ApplicationTeamViewModel(
+                applicationResource.getId(),
+                questionId,
+                applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin, !isCompetitionOpen(applicationResource),
-                isComplete, userIsLeadApplicant, allReadonly);
+                userIsLeadApplicant,
+                applicationCanBegin,
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
+                isComplete,
+                userIsLeadApplicant,
+                allReadonly);
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
@@ -164,11 +175,15 @@ public class ApplicationTeamModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {
         return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
+    }
+
+    private boolean isApplicationSubmitted(ApplicationResource applicationResource) {
+        return applicationResource.isSubmitted();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {

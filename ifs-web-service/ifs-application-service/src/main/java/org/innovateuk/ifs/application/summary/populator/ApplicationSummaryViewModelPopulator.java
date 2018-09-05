@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
-import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,23 +22,25 @@ import org.springframework.stereotype.Component;
 public class ApplicationSummaryViewModelPopulator {
 
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private ApplicationRestService applicationRestService;
+    private CompetitionRestService competitionRestService;
     private UserService userService;
-    private SummaryViewModelPopulator summaryViewModelPopulator;
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
     private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
     private ProjectService projectService;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
-                                                CompetitionService competitionService,
+                                                ApplicationRestService applicationRestService,
+                                                CompetitionRestService competitionRestService,
                                                 UserService userService,
-                                                SummaryViewModelPopulator summaryViewModelPopulator,
+                                                SummaryViewModelFragmentPopulator summaryViewModelPopulator,
                                                 ApplicationTeamModelPopulator applicationTeamModelPopulator,
-                                                ApplicationResearchCategorySummaryModelPopulator
-                                                        researchCategorySummaryModelPopulator,
+                                                ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator,
                                                 ProjectService projectService) {
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.applicationRestService = applicationRestService;
+        this.competitionRestService = competitionRestService;
         this.userService = userService;
         this.summaryViewModelPopulator = summaryViewModelPopulator;
         this.applicationTeamModelPopulator = applicationTeamModelPopulator;
@@ -45,28 +48,29 @@ public class ApplicationSummaryViewModelPopulator {
         this.projectService = projectService;
     }
 
-    public ApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form) {
+    public ApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form, boolean isSupport) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
 
         ApplicationTeamViewModel applicationTeamViewModel = competition.getUseNewApplicantMenu() ?
                 applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), application.getCompetition()) : null;
 
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = competition.getUseNewApplicantMenu() ?
-                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant) : null;
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel =
+                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant);
 
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
-                applicationService.isApplicationReadyForSubmit(application.getId()),
+                applicationRestService.isApplicationReadyForSubmit(application.getId()).getSuccess(),
                 summaryViewModelPopulator.populate(applicationId, user, form),
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,
                 userService.isLeadApplicant(user.getId(), application),
-                isProjectWithdrawn(applicationId));
+                isProjectWithdrawn(applicationId),
+                isSupport);
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

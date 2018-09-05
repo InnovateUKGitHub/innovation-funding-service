@@ -2,8 +2,7 @@ package org.innovateuk.ifs.assessment.summary.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -14,6 +13,7 @@ import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPop
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -75,10 +75,10 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     private FormInputRestService formInputRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     private List<FormInputResource> formInputsForQuestion4;
     private List<FormInputResource> formInputsForQuestion3;
@@ -423,7 +423,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorDeadlineDate(now.plusDays(4))
                 .build();
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         return competitionResource;
     }
@@ -461,7 +461,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         List<QuestionResource> questionResources = asList(question1, question2, question3, question4);
-        when(questionService.getQuestionsByAssessment(assessmentId)).thenReturn(questionResources);
+        when(questionRestService.getQuestionsByAssessment(assessmentId)).thenReturn(restSuccess(questionResources));
 
         FormInputType anotherTypeOfFormInput = ASSESSOR_RESEARCH_CATEGORY;
 

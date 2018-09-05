@@ -123,12 +123,12 @@ invite a new academic
     the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Application team
-    the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Invite new contributors")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=.button:contains("Save changes")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Save changes")
 
 the user should see that the element is disabled
     [Arguments]    ${element}
@@ -180,10 +180,6 @@ The user opens the link in new window
     [Arguments]   ${link_text}
     the user clicks the button/link   link=${link_text} (opens in a new window)
 
-The user goes back to the previous tab
-    the user should not see an error in the page
-    Select Window    #this goes back to the initial tab
-
 the user expands the section
     [Arguments]  ${section}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
@@ -197,5 +193,5 @@ the user collapses the section
 the internal sends the descision notification email to all applicants
     [Arguments]  ${email}
     the user enters text to a text field  css=.editor  ${email}
-    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=.govuk-button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css=button[name="send-emails"]

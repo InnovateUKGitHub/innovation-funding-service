@@ -9,7 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class ApplicationDownloadController {
     private FinanceService financeService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -52,7 +52,7 @@ public class ApplicationDownloadController {
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) {
-        ProcessRoleResource processRole = processRoleService.findProcessRolesByApplicationId(applicationId).stream()
+        ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);

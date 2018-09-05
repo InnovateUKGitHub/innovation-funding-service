@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ApplicationState implements ProcessState, IdentifiableEnum<ApplicationState> {
+public enum ApplicationState implements ProcessState, IdentifiableEnum {
 
     CREATED(27, State.CREATED, "Started"), // initial state
     SUBMITTED(29,State.SUBMITTED, "Submitted"),

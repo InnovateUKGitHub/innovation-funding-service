@@ -5,22 +5,22 @@ var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 
 // build all js
-gulp.task('js', function () {
+gulp.task('assessment:js', function () {
   return gulp.src([
-    'js/ifsAssessmentLoader.js',
-    'js/ifs_modules/*.js',
-    'js/ifs_pages/*.js'
+    __dirname + '/js/ifsAssessmentLoader.js',
+    __dirname + '/js/ifs_modules/*.js',
+    __dirname + '/js/ifs_pages/*.js'
   ])
   .pipe(standard())
   .pipe(concat('assessment.min.js'))
   .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
+  .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
 })
-gulp.task('css', function (done) { done() })
-gulp.task('css:watch', function () {})
-gulp.task('default', gulp.parallel('js', 'css'))
+gulp.task('assessment:css', function (done) { done() })
+gulp.task('assessment:css:watch', function () {})
+gulp.task('default', gulp.parallel('assessment:js', 'assessment:css'))

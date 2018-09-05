@@ -18,7 +18,7 @@ public class CompetitionResearchCategoryLink extends CategoryLink<Competition, R
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Competition competition;
 
-    protected CompetitionResearchCategoryLink() {
+    public CompetitionResearchCategoryLink() {
 
     }
 
@@ -30,6 +30,10 @@ public class CompetitionResearchCategoryLink extends CategoryLink<Competition, R
         }
 
         this.competition = competition;
+    }
+
+    public Competition getCompetition() {
+        return competition;
     }
 
     @Override

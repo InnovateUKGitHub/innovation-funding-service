@@ -1,125 +1,150 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="reject-invitation-confirm">
+    <body class="govuk-template__body reject-invitation-confirm">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
-
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='heading-xlarge'" />
-
-            <h2 class="visually-hidden">Application details</h2>
-            <div class="boxed">
-                <div class="grid-row">
-                    <div class="column-half">
-                        <p class="heading-small no-margin">Title:</p>
-                        <p th:text="${model.applicationName}"></p>
-                    </div>
-                    <div class="column-half">
-                        <p class="heading-small no-margin">Partners:</p>
-                        <ul class="list list-bullet">
-                            <li th:each="partner : ${model.partners}">
-                                <th:block th:text="${partner.name}"></th:block>
-                                <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
-                            </li>
-                        </ul>
-                    </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}"
+                     class="govuk-error-summary"
+                     role="alert"
+                     aria-labelledby="error-summary-title"
+                     tabindex="-1"
+                     data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='govuk-heading-xl'" />
 
-                <th:block th:if="${model.projectSummary}">
-                    <h3 class="heading-small no-margin">Project summary:</h3>
-                    <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
-                </th:block>
-            </div>
+                <h2 class="govuk-visually-hidden">Application details</h2>
+                <div class="boxed govuk-!-margin-bottom-6">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
+                            <p class="govuk-heading-s govuk-!-margin-0">Title:</p>
+                            <p class="govuk-body" th:text="${model.applicationName}"></p>
+                        </div>
+                        <div class="govuk-grid-column-one-half">
+                            <p class="govuk-heading-s govuk-!-margin-0">Partners:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li th:each="partner : ${model.partners}">
+                                    <th:block th:text="${partner.name}"></th:block>
+                                    <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-            <h2 class="heading-medium">Review the project summary above to make sure:</h2>
-            <ul class="list list-bullet">
-                <li>you do not have a conflict of interest with this application</li>
-                <li>the application fits within your area of expertise</li>
-                <li>you have time to assess this application</li>
-            </ul>
 
-            <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'form-group-error'">
-                    <fieldset>
-                        <legend id="assessmentAccept">
-                            <h2 class="heading-medium">Select your ability to assess this application</h2>
+                    <th:block th:if="${model.projectSummary}">
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Project summary:</h3>
+                        <p th:text="${model.projectSummary}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response for project summary.</p>
+                    </th:block>
+                </div>
+
+                <h2 class="govuk-heading-m">Review the project summary above to make sure:</h2>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>you do not have a conflict of interest with this application</li>
+                    <li>the application fits within your area of expertise</li>
+                    <li>you have time to assess this application</li>
+                </ul>
+
+                <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="assessmentAccept">
+                                <h2 class="govuk-fieldset__heading">Select your ability to assess this application</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
                             </th:block>
-                        </legend>
-
-                        <div class="multiple-choice" data-target="accept-application">
-                            <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
-                            <label for="acceptAssessment">Accept, I am able to assess this application</label>
-                        </div>
-
-                        <div class="panel js-hidden" id="accept-application">
-                            <p>You will still have the option to reject after accepting and viewing the full application</p>
-                        </div>
-
-                        <label class="multiple-choice" data-target="reject-application">
-                            <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
-                            <label for="rejectAssessment">Reject, I am not able to assess this application</label>
-                        </label>
-
-                        <div class="panel js-hidden" id="reject-application">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
-                                <label class="form-label" for="rejectReasonValid">
-                                    Please select a reason for rejecting the competition
-                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
-                                    </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="accept-application">
+                                    <input id="acceptAssessment"
+                                           class="govuk-radios__input"
+                                           value="true"
+                                           th:field="*{assessmentAccept}"
+                                           type="radio"
+                                           required="required">
+                                    <label for="acceptAssessment"
+                                           class="govuk-label govuk-radios__label">Accept, I am able to assess this application</label>
+                                </div>
+                                <div class="panel js-hidden" id="accept-application">
+                                    <p class="govuk-body govuk-!-margin-0">You will still have the option to reject after accepting and viewing the full application</p>
+                                </div>
+                                <label class="govuk-radios__item" data-target="reject-application">
+                                    <input id="rejectAssessment"
+                                           class="govuk-radios__input"
+                                           value="false"
+                                           th:field="*{assessmentAccept}"
+                                           type="radio"
+                                           required="required">
+                                    <label for="rejectAssessment"
+                                           class="govuk-label govuk-radios__label">Reject, I am not able to assess this application</label>
                                 </label>
-                                <select class="form-control"  id="rejectReasonValid" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
-                                    <option value="">Select a reason</option>
-                                    <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
-                                            th:value="${reason}"
-                                            th:text="${reason.displayLabel}"
-                                            value="1">Not available</option>
-                                </select>
                             </div>
 
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
-                                <label class="form-label" th:for="${#ids.next('rejectComment')}">
-                                    Use this space to provide more information
-                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+
+                            <div class="panel js-hidden" id="reject-application">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" for="rejectReasonValid">
+                                        Please select a reason for rejecting the competition
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
-                                </label>
-                                <textarea class="form-control width-full"
-                                          maxlength="5000"
-                                          data-max_words="100"
-                                          data-maxwordslength="100"
-                                          data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                          th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                          th:errorclass="form-control-error"
-                                          rows="4"
-                                          th:field="*{rejectComment}"></textarea>
-                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
-                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                    <select class="govuk-select"
+                                            id="rejectReasonValid"
+                                            th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
+                                            th:errorclass="govuk-select--error"
+                                            required="required"
+                                            th:field="*{rejectReason}">
+                                        <option value="">Select a reason</option>
+                                        <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                                                th:value="${reason}"
+                                                th:text="${reason.displayLabel}"
+                                                value="1">Not available</option>
+                                    </select>
+                                </div>
+
+                                <div class="govuk-form-group textarea-wrapped word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
+                                        Use this space to provide more information
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                    </th:block>
+                                    <textarea class="govuk-textarea"
+                                              maxlength="5000"
+                                              data-max_words="100"
+                                              data-maxwordslength="100"
+                                              data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                              th:errorclass="govuk-textarea--error"
+                                              rows="4"
+                                              th:field="*{rejectComment}"></textarea>
+                                    <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </fieldset>
-                </div>
+                        </fieldset>
+                    </div>
 
-                <button class="button" type="submit">Confirm</button>
-            </form>
+                    <button class="govuk-button" type="submit">Confirm</button>
+                </form>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

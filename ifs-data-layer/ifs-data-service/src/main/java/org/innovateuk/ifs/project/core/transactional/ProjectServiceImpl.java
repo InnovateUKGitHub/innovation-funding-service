@@ -9,15 +9,10 @@ import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
@@ -53,21 +48,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ProjectUserMapper projectUserMapper;
-
-    @Autowired
-    private ProjectMapper projectMapper;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
 
     @Autowired
     private OrganisationMapper organisationMapper;
@@ -248,7 +228,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
                 List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId())));
+                                createPartnerOrganisation(application, project, org, leadApplicantRole));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
@@ -260,6 +240,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private PartnerOrganisation createPartnerOrganisation(Application application, Project project, Organisation org, ProcessRole leadApplicantRole) {
+        PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId()));
+
+        simpleFindFirst(application.getApplicationFinances(), applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
+                .ifPresent(applicationFinance -> partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode()));
+
+        return partnerOrganisation;
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {

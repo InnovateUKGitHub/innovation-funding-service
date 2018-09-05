@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
@@ -9,12 +8,17 @@ import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
@@ -39,9 +43,8 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
 
     private OrganisationRestService organisationRestService;
-    private OrganisationService organisationService;
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private UserService userService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
@@ -56,25 +59,24 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
     public ApplicationFeedbackViewModelPopulator(OrganisationRestService organisationRestService,
                                                  ApplicationService applicationService,
-                                                 CompetitionService competitionService,
-                                                 OrganisationService organisationService,
+                                                 CompetitionRestService competitionRestService,
                                                  UserService userService,
                                                  FileEntryRestService fileEntryRestService,
                                                  FinanceService financeService,
                                                  AssessmentRestService assessmentRestService,
                                                  SectionService sectionService,
                                                  QuestionService questionService,
+                                                 QuestionRestService questionRestService,
                                                  AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                                  ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                                  ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
                                                  InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                  InterviewAssignmentRestService interviewAssignmentRestService,
                                                  ProjectService projectService) {
-        super(sectionService, questionService);
+        super(sectionService, questionService, questionRestService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
-        this.organisationService = organisationService;
+        this.competitionRestService = competitionRestService;
         this.userService = userService;
         this.fileEntryRestService = fileEntryRestService;
         this.financeService = financeService;
@@ -91,10 +93,10 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     public ApplicationFeedbackViewModel populate(long applicationId, UserResource user, MultiValueMap<String, String> queryParams, String origin) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
         List<OrganisationResource> partners = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
 
 

@@ -10,7 +10,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -24,13 +26,17 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -38,7 +44,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.EmailService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,14 +59,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -86,6 +87,13 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESE
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
+import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterAcademicFinanceTableBuilder.newGrantOfferLetterAcademicFinanceTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterFinanceTotalsTableBuilder.newGrantOfferLetterFinanceTotalsTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterIndustrialFinanceTableBuilder.newGrantOfferLetterIndustrialFinanceTable;
+import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -110,9 +118,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private ProjectUser leadPartnerProjectUser;
     private Project project;
     private List<OrganisationResource> organisationResources;
-
-    @Mock
-    private EmailService projectEmailService;
+    private GrantOfferLetterIndustrialFinanceTable industrialFinanceTable;
+    private GrantOfferLetterAcademicFinanceTable academicFinanceTable;
+    private GrantOfferLetterFinanceTotalsTable totalsTable;
 
     private Address address;
 
@@ -159,6 +167,24 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private NotificationService notificationServiceMock;
+    
+    @Mock
+    private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private SpendProfileRepository spendProfileRepositoryMock;
+
+    @Mock
+    private CostRepository costRepositoryMock;
+
+    @Mock
+    private GrantOfferLetterIndustrialFinanceTablePopulator industrialFinanceTablePopulatorMock;
+
+    @Mock
+    private GrantOfferLetterAcademicFinanceTablePopulator academicFinanceTablePopulatorMock;
+
+    @Mock
+    private GrantOfferLetterFinanceTotalsTablePopulator financeTotalsTablePopulatorMock;
 
     @Before
     public void setUp() {
@@ -215,6 +241,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
 
+        SpendProfile orgSpendProfile = newSpendProfile()
+                .withSpendProfileFigures(singletonList(newCost().build()))
+                .build();
+
+        industrialFinanceTable = newGrantOfferLetterIndustrialFinanceTable().build();
+        academicFinanceTable = newGrantOfferLetterAcademicFinanceTable().build();
+        totalsTable = newGrantOfferLetterFinanceTotalsTable().build();
+
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
         when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
@@ -222,6 +256,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(Optional.of(orgSpendProfile));
+        when(costRepositoryMock.findByCostGroupId(anyLong())).thenReturn(singletonList(newCost().build()));
+        when(industrialFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(industrialFinanceTable);
+        when(academicFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(academicFinanceTable);
+        when(financeTotalsTablePopulatorMock.createTable(anyMap(), anyLong())).thenReturn(totalsTable);
     }
 
     @Test
@@ -292,7 +331,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Test
     public void testUpdateSignedGrantOfferLetterFileEntry() {
-        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         assertUpdateFile(
                 project::getSignedGrantOfferLetter,
@@ -307,7 +346,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(projectWorkflowHandlerMock.getState(any())).thenReturn(ProjectState.LIVE);
-        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(false);
 
         ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
         assertTrue(result.isFailure());
@@ -321,7 +360,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(projectWorkflowHandlerMock.getState(any())).thenReturn(ProjectState.SETUP);
-        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(false);
 
         ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
         assertTrue(result.isFailure());
@@ -341,7 +380,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     public void testSubmitGrantOfferLetterFailureCannotReachSignedState() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
 
-        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(false);
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
@@ -353,7 +392,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     public void testSubmitGrantOfferLetterSuccess() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
 
-        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(true);
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
@@ -366,6 +405,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertGenerateFile(
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
     }
 
     @Test
@@ -511,6 +556,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
 
         assertTrue(checkGolTemplate());
         assertTrue(result.isSuccess());
@@ -715,7 +766,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -757,19 +808,29 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
+        User projectManagerUser = pu.get(0).getUser();
+
+        NotificationTarget to = new UserNotificationTarget(projectManagerUser.getName(), projectManagerUser.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
-                "applicationId", projectId,
+                "applicationId", application.getId(),
                 "competitionName", "Competition 1"
         );
 
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        Notification notification = new Notification(systemNotificationSource, to, GRANT_OFFER_LETTER_PROJECT_MANAGER, expectedNotificationArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+
+        User user = newUser().build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        when(golWorkflowHandlerMock.grantOfferLetterSent(project, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
         assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
 
     @Test
@@ -808,25 +869,31 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
+        User projectManagerUser = pu.get(0).getUser();
+
+        NotificationTarget to = new UserNotificationTarget(projectManagerUser.getName(), projectManagerUser.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
-                "applicationId", projectId,
+                "applicationId", application.getId(),
                 "competitionName", "Competition 1"
         );
 
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+        Notification notification = new Notification(systemNotificationSource, to, GRANT_OFFER_LETTER_PROJECT_MANAGER, expectedNotificationArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
+
+        verify(golWorkflowHandlerMock).grantOfferLetterSent(p, user);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
@@ -854,25 +921,17 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-
-        Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard",
-                "competitionName", "Competition 1",
-                "applicationId", projectId
-        );
-
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
-
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        when(golWorkflowHandlerMock.grantOfferLetterSent(project, user)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterSent(project, user)).thenReturn(false);
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
         assertTrue(result.isFailure());
+        verify(golWorkflowHandlerMock).grantOfferLetterSent(project, user);
+        verify(notificationServiceMock, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
     }
 
     @Test
@@ -880,28 +939,21 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(true);
 
         String rejectionReason = "No signature";
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, rejectionReason);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
-
-        Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", project.getApplication().getCompetition().getName(),
-                "applicationId", project.getApplication().getId()
-        );
 
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterRejected(project, u);
         verify(golWorkflowHandlerMock, never()).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
-        verify(projectEmailService, never()).sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
         assertNull(project.getOfferSubmittedDate());
         assertEquals(project.getGrantOfferLetterRejectionReason(), rejectionReason);
 
@@ -916,9 +968,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(false);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, "No signature");
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -928,7 +980,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).grantOfferLetterRejected(project, u);
         verify(golWorkflowHandlerMock, never()).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
-        verify(projectEmailService, never()).sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
@@ -980,11 +1032,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         );
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(Boolean.TRUE);
-        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(true);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(true);
+
+        Notification notification = new Notification(systemNotificationSource, to, PROJECT_LIVE, expectedNotificationArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -993,7 +1047,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(projectEmailService).sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
 
         assertTrue(result.isSuccess());
     }
@@ -1054,11 +1108,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         );
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(Boolean.TRUE);
-        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(true);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(true);
+
+        Notification notification = new Notification(systemNotificationSource, to, PROJECT_LIVE, expectedNotificationArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1067,7 +1123,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(projectEmailService).sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
 
         assertTrue(result.isSuccess());
     }
@@ -1079,16 +1135,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newProjectInvite().build()).build(1);
         Project project = newProject().withId(projectId).withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).build();
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(Boolean.TRUE);
-        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(true);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(false);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1097,7 +1151,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(projectEmailService, never()).sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
@@ -1108,15 +1162,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(false);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1125,7 +1177,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
-        verify(projectEmailService, never()).sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(notificationServiceMock, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
@@ -1138,7 +1190,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         project.setGrantOfferLetter(golFile);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(false);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
@@ -90,20 +89,6 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
             verify(rules).ifsAdminCanDeactivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
-    }
-
-
-    @Test
-    public void testSendUserVerificationEmail() throws Exception {
-        final UserResource userToSendVerificationEmail = newUserResource().build();
-
-        assertAccessDenied(
-                () -> classUnderTest.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
-                () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
-                            getLoggedInUser());
-                    verifyNoMoreInteractions(rules);
-                });
     }
 
     @Test

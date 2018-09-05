@@ -17,10 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -111,17 +109,5 @@ public class FileControllerUtils {
             }
         };
     }
-
-    private static Supplier<OutputStream> outputStreamSupplier(HttpServletResponse response) {
-        return () -> {
-            try {
-                return response.getOutputStream();
-            } catch (IOException e) {
-                LOG.error("Unable to open an output stream from response", e);
-                throw new RuntimeException("Unable to open an output stream from response", e);
-            }
-        };
-    }
-
 
 }

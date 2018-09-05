@@ -2,18 +2,21 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.UnsuccessfulApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationsController;
-import org.innovateuk.ifs.management.application.populator.*;
-import org.innovateuk.ifs.management.application.viewmodel.*;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
+import org.innovateuk.ifs.management.application.list.populator.*;
+import org.innovateuk.ifs.management.application.list.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -75,10 +78,10 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Mock
-    private ProjectService projectService;
+    private ProjectRestService projectRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @InjectMocks
     @Spy
@@ -100,7 +103,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withAssesorsInvited(30)
                 .build();
 
-        when(competitionService.getById(any())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
+        CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
     }
 
     @Test
@@ -213,6 +217,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/" + COMPETITION_ID + "/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
+        assertEquals(false, model.isSupport());
     }
 
     @Test
@@ -559,7 +564,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         String filter = "ALL";
 
         String competitionName = "Competition One";
-        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        List<UnsuccessfulApplicationResource> unsuccessfulApplications = UnsuccessfulApplicationResourceBuilder.newUnsuccessfulApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
                 competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new Pagination(applicationPageResource, ""));
@@ -589,8 +594,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
                 .thenReturn(ServiceResult.serviceSuccess());
-        when(projectService.createProjectFromApplicationId(anyLong()))
-                .thenReturn(ServiceResult.serviceSuccess(projectResource));
+        when(projectRestService.createProjectFromApplicationId(anyLong()))
+                .thenReturn(restSuccess(projectResource));
 
         mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
                 .andExpect(status().is3xxRedirection())
@@ -599,8 +604,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
         verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
-        verify(projectService).createProjectFromApplicationId(anyLong());
-        verifyNoMoreInteractions(applicationFundingDecisionService, projectService);
+        verify(projectRestService).createProjectFromApplicationId(anyLong());
+        verifyNoMoreInteractions(applicationFundingDecisionService, projectRestService);
 
     }
 

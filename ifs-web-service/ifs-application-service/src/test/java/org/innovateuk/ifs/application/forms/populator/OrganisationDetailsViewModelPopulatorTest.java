@@ -7,6 +7,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -15,7 +16,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -52,7 +54,10 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     private InviteRestService inviteRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private InviteService inviteService;
+
+    @Mock
+    private UserRestService userRestService;
 
     private Long applicationId;
 
@@ -71,7 +76,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelWithValidObjects() throws Exception {
+    public void populateModelWithValidObjects() throws Exception {
         setupSuccess();
         List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
         ApplicantQuestionResource question = newApplicantQuestionResource().withApplication(newApplicationResource().build()).withApplicants(applicantResources).build();
@@ -88,7 +93,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testPopulateModelWithInvalidObjects() throws Exception {
+    public void populateModelWithInvalidObjects() throws Exception {
         userApplicationRoles.forEach(
                 processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisationId()));
 
@@ -99,9 +104,9 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelOnlyLong() throws Exception {
+    public void populateModelOnlyLong() throws Exception {
         setupSuccess();
-        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(userApplicationRoles);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(userApplicationRoles));
         List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
         ApplicantQuestionResource question = newApplicantQuestionResource().withApplication(newApplicationResource().build()).withApplicants(applicantResources).build();
         question.getApplication().setId(applicationId);
@@ -131,15 +136,11 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
                             applicationInviteResource.setInviteOrganisationNameConfirmed("OrgNameConfirmed");
                         }).build(1))
                 .build(1);
-        setupInviteServicesSuccess(applicationId, pendingInvites);
+        setupInviteServiceSuccess(applicationId, pendingInvites);
     }
 
     private void setupOrganisationServicesSuccess(Long organisationId, OrganisationResource organisation) {
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(RestResult.restSuccess(organisation));
-    }
-
-    private void setupInviteServicesSuccess(Long applicationId, List<InviteOrganisationResource> pendingInvites) {
-        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(RestResult.restSuccess(pendingInvites));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
     }
 
     private void setupOrganisationServicesFailure(Long organisationId) {
@@ -148,6 +149,10 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
 
     private void setupInviteServicesFailure(Long applicationId) {
         when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(RestResult.restFailure(new Error("", HttpStatus.NOT_FOUND)));
+    }
+
+    private void setupInviteServiceSuccess(long applicationId, List<InviteOrganisationResource> pendingInvites) {
+        when(inviteService.getPendingInvitationsByApplicationId(applicationId)).thenReturn(pendingInvites.get(0).getInviteResources());
     }
 
 }

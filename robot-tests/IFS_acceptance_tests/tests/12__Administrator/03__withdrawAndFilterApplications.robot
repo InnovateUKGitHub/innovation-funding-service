@@ -28,7 +28,7 @@ The IFS Admin searches for a project
 The IFS Admin clears all filters after searching for a project
     [Documentation]  IFS-3565
     [Tags]
-    When the user clicks the button/link    css = button[class="button"]  #Filter
+    When the user clicks the button/link    css = button[class="govuk-button"]  #Filter
 
 The IFS Admin withdraws a project from Project Setup
     [Documentation]  IFS-2945
@@ -75,7 +75,7 @@ The user can see the previous application
 The user selects a filter for the applications
     [Arguments]  ${applicationStatusInDropDown}  ${filterID}
     Given the user selects the option from the drop-down menu    ${applicationStatusInDropDown}  id=${filterID}
-    When the user clicks the button/link                         css = button[class = "button"]  #Filter
+    When the user clicks the button/link                         css = button[class = "govuk-button"]  #Filter
 
 The user can see all of the previous applications when the All filter is applied
     the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
@@ -85,7 +85,7 @@ The user can see all of the previous applications when the All filter is applied
 The user enters a project to search for and clicks the Filter button
     [Arguments]  ${projectID}
     the user enters text to a text field    id = applicationSearchString  ${projectID}
-    the user clicks the button/link         css = button[class="button"]  #Filter
+    the user clicks the button/link         css = button[class="govuk-button"]  #Filter
 
 the user should see the Low-friction wheel coatings project
     the user should see the element        jQuery = th:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}")

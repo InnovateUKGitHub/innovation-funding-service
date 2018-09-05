@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     private String inviteRestUrl = "/invite";
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByInviteOrganisation(String organisationName, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByInviteOrganisation(String organisationName, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisationName(organisationName);
@@ -31,11 +30,11 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisation(organisationId);
@@ -43,11 +42,11 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisation(organisationId);
@@ -56,13 +55,13 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + String.format("/createApplicationInvites/%s", applicationId);
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
+    public RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         String url = inviteRestUrl + "/saveInvites";
-        return postWithRestResult(url, inviteResources, InviteResultsResource.class);
+        return postWithRestResult(url, inviteResources, Void.class);
     }
 
     @Override

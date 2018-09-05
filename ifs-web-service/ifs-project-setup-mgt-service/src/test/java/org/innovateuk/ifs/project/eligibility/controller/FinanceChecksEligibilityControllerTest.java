@@ -7,29 +7,30 @@ import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelMan
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
-import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
@@ -41,6 +42,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -112,6 +114,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
     private ProjectFinanceService projectFinanceService;
 
     @Mock
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Mock
     private ProjectFinanceRowRestService projectFinanceRowRestService;
 
     private OrganisationResource industrialOrganisation;
@@ -167,12 +172,12 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
                         .withApplicants(asList(applicant))
                         .withSection(newSectionResource().withType(SectionType.FINANCE).build())
                         .withCurrentUser(loggedInUser).build());
-        when(userService.retrieveUserById(loggedInUser.getId())).thenReturn(loggedInUser);
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
-        when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
-        when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
+        when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
+        when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
@@ -191,6 +196,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         financeViewModel.setOrganisationGrantClaimPercentage(74);
 
         when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+        when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
     }
 
     @Test

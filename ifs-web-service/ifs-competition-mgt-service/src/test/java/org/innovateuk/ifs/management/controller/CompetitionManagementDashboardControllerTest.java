@@ -340,6 +340,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(5, model.getApplicationPagination().getTotalPages());
         assertEquals(0, model.getApplicationPagination().getCurrentPage());
         assertEquals(40, model.getApplicationPagination().getPageSize());
+        assertEquals(false, model.isSupport());
 
         verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchString, pageNumber, pageSize);
 

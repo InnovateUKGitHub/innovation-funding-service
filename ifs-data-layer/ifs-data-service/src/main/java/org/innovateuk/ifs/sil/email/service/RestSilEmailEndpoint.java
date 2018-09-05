@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 
 /**
- * A simple logging implementation of the SIL email endpoint as opposed to a REST-based endpoint
+ * A REST-based implementation of the SIL email endpoint
  */
 @Component
 public class RestSilEmailEndpoint implements SilEmailEndpoint {
@@ -33,11 +33,15 @@ public class RestSilEmailEndpoint implements SilEmailEndpoint {
 
     @Override
     public ServiceResult<SilEmailMessage> sendEmail(SilEmailMessage message) {
+
         return handlingErrors(() -> {
-                    final Either<ResponseEntity<Void>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silSendmailPath, message, Void.class, Void.class, HttpStatus.ACCEPTED);
-                    return response.mapLeftOrRight(failure -> serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)),
-                            success -> serviceSuccess(message));
-                }
-        );
+
+            final Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
+                    adaptor.restPostWithEntity(silRestServiceUrl + silSendmailPath, message, Void.class, Void.class, HttpStatus.ACCEPTED);
+
+            return response.mapLeftOrRight(
+                    failure -> serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, failure.getStatusCode())),
+                    success -> serviceSuccess(message));
+        });
     }
 }

@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.exception;
 
 
-public class IntegerNumberFormatException extends NumberFormatException {
-    public IntegerNumberFormatException() {
-    }
+public class IntegerNumberFormatException extends IllegalArgumentException {
 
     @Override
     public String getMessage() {

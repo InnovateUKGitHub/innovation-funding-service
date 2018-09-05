@@ -29,6 +29,7 @@ public class OverheadFileSaver {
     public static final String OVERHEAD_FILE_SUBMIT = "overheadfilesubmit";
     public static final String OVERHEAD_FILE_DELETE = "overheadfiledelete";
     public static final String OVERHEAD_FILE_ID = "fileoverheadid";
+    public static final String OVERHEAD_FILE = "overheadfile";
 
     @Autowired
     private OverheadFileRestService overheadFileRestService;
@@ -39,7 +40,7 @@ public class OverheadFileSaver {
         ValidationMessages messages = new ValidationMessages();
 
         final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-        final MultipartFile file = fileMap.get("overheadfile");
+        final MultipartFile file = fileMap.get(OVERHEAD_FILE);
         try {
             Long overheadId = Long.valueOf(request.getParameter("fileoverheadid"));
             RestResult<FileEntryResource> fileEntryResult = overheadFileRestService.updateOverheadCalculationFile(overheadId, file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
@@ -56,9 +57,9 @@ public class OverheadFileSaver {
         if(fileEntryResult.isFailure()) {
             fileEntryResult.getErrors().forEach(error -> {
                 if(UNSUPPORTED_MEDIA_TYPE.name().equals(error.getErrorKey())) {
-                    messages.addError(fieldError("overheadfile", new Error("validation.finance.overhead.file.type", UNSUPPORTED_MEDIA_TYPE)));
+                    messages.addError(fieldError(OVERHEAD_FILE, new Error("validation.finance.overhead.file.type", UNSUPPORTED_MEDIA_TYPE)));
                 } else {
-                    messages.addError(fieldError("overheadfile", error));
+                    messages.addError(fieldError(OVERHEAD_FILE, error));
                 }
             });
         }

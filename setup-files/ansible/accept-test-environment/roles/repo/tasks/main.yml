@@ -1,0 +1,16 @@
+- name: create .ssh folder for devops
+  file: path=/home/devops/.ssh state=directory
+
+- name: upload private key for cloning
+  copy: src=files/devops dest=/home/devops/.ssh/devops
+
+- name: correcy ssh deploy key permissions
+  file: dest=/home/devops/.ssh/devops mode=0600
+
+- name: clone the code repository
+  git:
+    repo: ssh://git@git.devops.innovateuk.org/ifs/innovation-funding-service.git
+    dest: /home/devops/innovation-funding-service
+    accept_hostkey: yes
+    clone: yes
+    key_file: /home/devops/.ssh/devops

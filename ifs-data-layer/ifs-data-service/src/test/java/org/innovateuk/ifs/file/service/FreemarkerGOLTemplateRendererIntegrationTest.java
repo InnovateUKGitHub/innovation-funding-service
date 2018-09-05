@@ -16,16 +16,20 @@ import java.util.List;
 import java.util.Map;
 
 import static java.io.File.separator;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterAcademicFinanceTableBuilder.newGrantOfferLetterAcademicFinanceTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterFinanceTotalsTableBuilder.newGrantOfferLetterFinanceTotalsTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterIndustrialFinanceTableBuilder.newGrantOfferLetterIndustrialFinanceTable;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
+ * In place to test the {@link FreemarkerGOLTemplateRenderer}
  **/
+
 public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegrationTest {
 
-    private static final String DATE_PREFIX = "Date: ";
+    private static final String DATE_PREFIX = "Date:</span> ";
     private static final String DATE_TODAY = DATE_PREFIX +  DateFormatUtils.format(new Date(), "d MMMM yyyy");
     private static final String DUMMY_PROJECT_START_DATE = "26 December 2016";
     private static final String GOL_HTML_TEMPLATE_NAME = "grant_offer_letter.html";
@@ -38,6 +42,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
 
     @Test
     public void testGenerateGrantOfferLetterHtmlFile() throws URISyntaxException, IOException {
+
         Map<String, Object> templateArguments = asMap(
                 "LeadContact", "Steve Smith",
                 "LeadOrgName", "test2",
@@ -50,7 +55,10 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
                 "ProjectTitle", "<Time Machine> & \"Teleportation\"", // test escape html
                 "ProjectStartDate", DUMMY_PROJECT_START_DATE,
                 "ProjectLength", "3",
-                "ApplicationNumber", "12334"
+                "ApplicationNumber", "12334",
+                "industrialFinanceTable", newGrantOfferLetterIndustrialFinanceTable().build(),
+                "academicFinanceTable", newGrantOfferLetterAcademicFinanceTable().build(),
+                "financeTotalsTable", newGrantOfferLetterFinanceTotalsTable().build()
         );
         assertRenderedGOLFileExpectedLines(GOL_HTML_TEMPLATE_NAME, templateArguments);
     }

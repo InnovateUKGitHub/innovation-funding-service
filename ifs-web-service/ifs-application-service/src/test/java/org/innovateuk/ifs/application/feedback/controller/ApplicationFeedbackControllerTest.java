@@ -17,10 +17,11 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -42,13 +43,14 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.Mockito.verify;
 
 public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMVCTest<ApplicationFeedbackController> {
 
@@ -78,9 +80,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     private CategoryRestService categoryRestServiceMock;
 
     @Mock
-    private UserRestService userRestServiceMock;
-
-    @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Mock
@@ -94,6 +93,9 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Before
     public void setUp() {
@@ -129,7 +131,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
         MockMultipartFile file = new MockMultipartFile("response", "testFile.pdf", "application/pdf", "My content!".getBytes());
 
-
         mockMvc.perform(
                 fileUpload("/application/" + app.getId() + "/feedback")
                         .file(file)
@@ -153,6 +154,14 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         app.setCompetition(competition.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
+        UserResource userResource = newUserResource().build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withOrganisation(organisations.get(0).getId()).build();
+
+
+        when(userRestService.findProcessRole(userResource.getId(), app.getId())).thenReturn(restSuccess(processRole));
+        when(organisationRestService.getOrganisationById(processRole.getOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
+
         when(interviewResponseRestService.deleteResponse(app.getId()))
                 .thenReturn(restSuccess());
 
@@ -172,7 +181,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).withRole(Role.LEADAPPLICANT).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(aggregateResource));

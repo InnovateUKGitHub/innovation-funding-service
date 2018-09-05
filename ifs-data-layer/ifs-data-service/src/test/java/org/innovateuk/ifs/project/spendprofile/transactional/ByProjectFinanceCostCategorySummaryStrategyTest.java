@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
@@ -65,7 +66,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 withDuration(10L).
                 build();
 
-        OrganisationResource organisation = newOrganisationResource().build();
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
         Map<FinanceRowType, FinanceRowCostCategory> finances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().
@@ -135,7 +136,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 withDuration(10L).
                 build();
 
-        OrganisationResource organisation = newOrganisationResource().build();
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
 
         Map<FinanceRowType, FinanceRowCostCategory> finances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(

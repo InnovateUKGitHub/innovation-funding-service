@@ -1,71 +1,84 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="app-dashboard">
+    <body class="govuk-template__body app-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='heading-xlarge'" />
-            <p>You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
-
-            <section class="boxed">
-                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
-                    21 March 2017: assessment panel
-                </h2>
-                <p>Are you available to take part in this assessment panel? <br>
-                    If you respond ‘Yes’ below, you will be required to attend the panel on this date.</p>
-            </section>
-
-            <section>
-                <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
-
-                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
-                <br>
-            </section>
-
-            <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
-                    <fieldset>
-                        <legend id="acceptInvitation">
-                            <span class="heading-medium">Are you able to attend the assessment panel?</span>
-                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
-                            </th:block>
-                            <p>You should reject this invitation if you are unavailable for the assessment panel date.</p>
-                        </legend>
-
-                        <div class="multiple-choice">
-                            <input id="acceptPanel" value="true" type="radio" required="required"
-                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
-                            <label for="acceptPanel">
-                                Yes, I am able to attend the assessment panel.
-                            </label>
-                        </div>
-
-                        <div class="multiple-choice" data-target="reject-panel">
-                            <input id="rejectPanel" value="false" type="radio" required="required"
-                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
-                            <label for="rejectPanel">
-                                No, I am not able to attend the assessment panel.
-                            </label>
-                        </div>
-                    </fieldset>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}"
+                     class="govuk-error-summary"
+                     role="alert"
+                     aria-labelledby="error-summary-title"
+                     tabindex="-1"
+                     data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <button class="button" type="submit">Confirm</button>
-            </form>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='govuk-heading-xl'" />
+                <p class="govuk-body">You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <section class="boxed govuk-!-margin-bottom-6">
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
+                        21 March 2017: assessment panel
+                    </h2>
+                    <p class="govuk-body">Are you available to take part in this assessment panel? <br>
+                        If you respond ‘Yes’ below, you will be required to attend the panel on this date.</p>
+                </section>
+
+                <section>
+                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+
+                    <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" class="govuk-link" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
+                    <br>
+                </section>
+
+                <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="acceptInvitation">
+                                <h2 class="govuk-fieldset__heading">Are you able to attend the assessment panel?</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                            <p class="govuk-body">You should reject this invitation if you are unavailable for the assessment panel date.</p>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="acceptPanel" value="true" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
+                                    <label for="acceptPanel"
+                                           class="govuk-label govuk-radios__label">
+                                        Yes, I am able to attend the assessment panel.
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="reject-panel">
+                                    <input id="rejectPanel" value="false" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
+                                    <label for="rejectPanel"
+                                           class="govuk-label govuk-radios__label">
+                                        No, I am not able to attend the assessment panel.
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" type="submit">Confirm</button>
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

@@ -12,12 +12,12 @@ import java.util.List;
 @Service
 public class CompetitionParticipantRestServiceImpl extends BaseRestService implements CompetitionParticipantRestService {
 
-    private static final String competitionParticipantRestUrl = "/competitionparticipant";
+    private static final String COMPETITION_PARTICIPANT_REST_URL = "/competitionparticipant";
 
     @Override
     public RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role) {
         return getWithRestResult(
-                String.format("%s/user/%s/role/%s", competitionParticipantRestUrl, userId, role),
+                String.format("%s/user/%s/role/%s", COMPETITION_PARTICIPANT_REST_URL, userId, role),
                 ParameterizedTypeReferences.competitionParticipantResourceListType()
         );
     }

@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
@@ -72,7 +72,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     private InterviewInviteRestService interviewInviteRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {
@@ -153,7 +153,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -581,7 +581,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())

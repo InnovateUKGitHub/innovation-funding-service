@@ -25,55 +25,55 @@
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
-		<div class="success-alert extra-margin-bottom">
-			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The grant offer letter has been received and accepted</h2>
 		</div>
 
-		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
+		<p class="govuk-body">The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
-		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small">REJECT TEXT REQUIRED</h3>
-			<ul class="list list-bullet">
+		<div class="warning-alert govuk-!-margin-bottom-6">
+			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
+			<ul class="govuk-list govuk-list--bullet">
 				<li>TEXT REQUIRED</li>
 			</ul>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status == null}">
-		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+		<p class="govuk-body">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-        <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">Upload signed grant offer letter</h2>
         The Project Manager is required to provide a signed copy of the grant offer letter.
         <details>
             <summary><span class="summary">What are the requirements for upload?</span></summary>
-            <div class="panel">
-                <p>The uploaded signed grant offer letter agreement must:</p>
-                <ul class="list list-bullet">
+            <div class="govuk-body panel">
+                <p class="govuk-body">The uploaded signed grant offer letter agreement must:</p>
+                <ul class="govuk-list govuk-list--bullet">
                     <li>contain signed pages</li>
                     <li>be in a portable document format (.pdf)</li>
                     <li>be legible at 100% magnification</li>
                     <li>be less than 1mb in file size</li>
                 </ul>
-                <p>Unable to upload? Contact Customer Support on 0300 321 4357.</p>
+                <p class="govuk-body">Unable to upload? Contact Customer Support on 0300 321 4357.</p>
             </div>
         </details>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLDecision'}">
-		<p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
+		<p class="govuk-body">Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
 	</th:block>
 
 
 	<div class="extra-margin-top">
-		<h2 class="heading-medium no-margin">Grant offer letter</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-0">Grant offer letter</h2>
 
 		<th:block th:if="${param.status == null}">
 
-			<!--<p>The grant offer letter has been created from the information supplied by the applicants.</p>-->
+			<!--<p class="govuk-body">The grant offer letter has been created from the information supplied by the applicants.</p>-->
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
 				<a href="#">Grant offer letter 2016-04-28a.PDF (opens in a new window)</a>
@@ -84,51 +84,51 @@
 				<div id="upload-gol">
 			        <input type="file" name="file-gol" id="file-gol" class="inputfile" />
 			        <label for="file-gol" class="button-secondary extra-margin">+ Upload</label>
-			        <a th:href="${#httpServletRequest.requestURI}" class="button button-secondary extra-margin-top">Generate GOL</a>
+			        <a th:href="${#httpServletRequest.requestURI}" class="govuk-button button-secondary extra-margin-top">Generate GOL</a>
 				</div>
 			</th:block>
 
 		</th:block>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
-			<p><a href="#">Grant offer letter 2016-04-28a.PDF (opens in a new window)</a> </p>
+			<p class="govuk-body"><a href="#">Grant offer letter 2016-04-28a.PDF (opens in a new window)</a> </p>
 		</th:block>
 
     </div>
 
-    <h2 class="heading-medium">Annex</h2>
-    <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-    <p>Any additional supporting materials should be uploaded to the Annex.</p>
+    <h2 class="govuk-heading-m">Annex</h2>
+    <p class="govuk-body">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+    <p class="govuk-body">Any additional supporting materials should be uploaded to the Annex.</p>
     <p class="uploaded-file">No file currently uploaded</p>
 
 
 	 <th:block th:if="${param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
 		<div class="extra-margin-top">
-			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
-			<p><a href="#">signed-offer-letter.PDF</a></p>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Signed grant offer letter</h2>
+			<p class="govuk-body"><a href="#">signed-offer-letter.PDF</a></p>
 		</div>
 	</th:block>
 
 
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<a href="#" data-js-modal="modal-send" class="button">Send to project team</a>
+		<a href="#" data-js-modal="modal-send" class="govuk-button">Send to project team</a>
 
 		<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="heading-medium no-margin">Send grant offer letter</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Send grant offer letter</h2>
 
-				<p>The grant offer letter will now be sent to the applicants. The Project Manager will be informed of the availablity of the GOL by email.</p>
+				<p class="govuk-body">The grant offer letter will now be sent to the applicants. The Project Manager will be informed of the availablity of the GOL by email.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLSent'}" class="button">Send to project team</a>
+	        		<a th:href="@{'?status=GOLSent'}" class="govuk-button">Send to project team</a>
 	        	</div>
 
 	        </div>
@@ -139,33 +139,33 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
 
-		<h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
-		<p>If the grant offer letter has been received by post, please tick the box below.</p>
+		<h2 class="govuk-heading-m govuk-!-margin-bottom-0">Received GOL by post?</h2>
+		<p class="govuk-body">If the grant offer letter has been received by post, please tick the box below.</p>
 
-		<div class="form-group">
+		<div class="govuk-form-group">
 	    	<label class="block-label selection-button-checkbox" for="gol-by-post">
 		      <input id="gol-by-post" value="gol-by-post" type="checkbox" />
 		     	The grant offer letter has been received by post
 		    </label>
 	    </div>
 
-	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="govuk-button" type="submit" disabled="disabled">Confirm GOL received by post</button>
 
 	    <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Confirm receipt of posted grant offer letter</h2>
 
-				<p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
+				<p class="govuk-body">The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLDecision'}" class="button">Confirm</a>
+	        		<a th:href="@{'?status=GOLDecision'}" class="govuk-button">Confirm</a>
 	        	</div>
 
 	        </div>
@@ -175,13 +175,13 @@
 
 	<div th:if="${param.status != null and param.status[0] == 'GOLDecision'}" th:remove="tag">
 
-		<h2 class="heading-medium">Confirm receipt ofgrant offer letter</h2>
-		<p>Please review that these documents meet the requirements for the grant offer letter </p>
+		<h2 class="govuk-heading-m">Confirm receipt ofgrant offer letter</h2>
+		<p class="govuk-body">Please review that these documents meet the requirements for the grant offer letter </p>
 
         <form action="/prototypes/IFS-807-app-readonly">
-            <div class="form-group">
-                <fieldset>
-                    <legend class="visuallyhidden">Select your ability to assess this application</legend>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select your ability to assess this application</legend>
                     <div class="multiple-choice">
                         <input id="acceptGOL" value="true" type="radio" required="required" name="acceptGOL">
                         <label for="acceptGOL">
@@ -214,8 +214,8 @@
 
                 </fieldset>
             </div>
-            <button class="button" type="submit">Submit</button>
-            <a href="#" class="button button-clear">Cancel</a>
+            <button class="govuk-button" type="submit">Submit</button>
+            <a href="#" class="govuk-button button-clear">Cancel</a>
         </form>
 
 

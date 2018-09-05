@@ -1,0 +1,62 @@
+
+<!-- =================Section:Project Documents (10) =========================== -->
+<th:block th:fragment="section-content">
+
+    <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',subTitle=${competitionTitle},size='govuk-heading-xl'" />
+    </th:block>
+
+    <h2 class="govuk-heading-s">Required documents</h2>
+    <p class="govuk-hint">The project manager will have to upload these in project setup.</p>
+
+    <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
+          th:object="${landingPageForm}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          data-section="project-document"
+          method="post" novalidate="novalidate">
+
+        <div th:if="${model.general.editable}">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.projectDocuments}" >
+                            <input th:value="${document.id}"
+                                    type="checkbox"
+                                    name="enabledIds"
+                                    class="govuk-checkboxes__input"
+                                    th:id="${'projectdocument-enabled-' + document.id}"
+                                    th:checked="${document.enabled}" />
+                            <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
+                                <span th:text=${document.title}>document_title</span>
+                                <span class="end-label-link">
+                                    <th>
+                                         <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
+                                    </th>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <th:form th:unless="${model.general.state.preventEdit}">
+                <p class="govuk-body">
+                    <a th:href="@{/competition/setup/{competitionId}/section/project-document/add(competitionId=${model.general.competition.id})}">Add document type</a>
+                </p>
+            </th:form>
+
+            <button class="govuk-button" id="doneButton">Done</button>
+        </div>
+
+    </form>
+
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part"
+               th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Public content</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

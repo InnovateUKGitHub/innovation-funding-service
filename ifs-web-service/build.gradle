@@ -3,6 +3,11 @@ apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
 apply from: "front-end.gradle"
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 buildscript {
 
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
@@ -13,36 +18,13 @@ buildscript {
 
     repositories {
         jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
     }
 }
 
-subprojects {
-    apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
-    // ifs-web-core is not a docker project.
-    if (it.name != 'ifs-web-core') {
-
-        apply from: rootProject.file("gradle-support/openshift-build.gradle")
-        apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-        ext.dockerDir = "$project.parent.projectDir/docker/"
-
-        buildDocker.dependsOn ":docker:app-base-image:buildDocker"
-        buildDocker.dependsOn prepareDockerInput
-        buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-        buildDocker.inputDir = project.file("$project.buildDir/docker")
-        tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-    }
-}
 apply from: "documentation.gradle"
 
 endpointDocumentation.dependsOn "ifs-application-service:test"
+endpointDocumentation.dependsOn "ifs-survey-service:test"
 endpointDocumentation.dependsOn "ifs-assessment-service:test"
 endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"

@@ -34,10 +34,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -121,7 +120,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .build(2);
 
         when(inviteRestService.createInvitesByInviteOrganisation("Ludlow", expectedInvites))
-                .thenReturn(restSuccess(newInviteResultResource().build()));
+                .thenReturn(restSuccess());
 
         QuestionResource applicationTeamQuestion = new QuestionResource();
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
@@ -159,7 +158,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .build(2);
 
         when(inviteRestService.createInvitesByInviteOrganisation("Ludlow", expectedInvites))
-                .thenReturn(restSuccess(newInviteResultResource().build()));
+                .thenReturn(restSuccess());
 
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
                 APPLICATION_TEAM)).thenReturn(restFailure(notFoundError(QuestionResource.class,

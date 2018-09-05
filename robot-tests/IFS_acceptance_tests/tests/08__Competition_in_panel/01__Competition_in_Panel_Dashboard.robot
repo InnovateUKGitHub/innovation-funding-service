@@ -21,7 +21,7 @@ In Panel Dashboard
     And the user should see the element       jQuery=a:contains("Manage assessments")
 
 Milestones for In Panel Competitions
-    Then the user should see the element  jQuery=.disabled[aria-disabled="true"]:contains("Manage funding notifications")
+    Then the user should see the element  jQuery=.govuk-button--disabled[aria-disabled="true"]:contains("Manage funding notifications")
     And the user should see the element   css=li:nth-child(8).done    #Verify that 8. Line draw is done
     And the user should see the element   css=li:nth-child(9).not-done    #Verify that 9. Assessment panel is not done
 

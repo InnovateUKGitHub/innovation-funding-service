@@ -23,16 +23,16 @@ textarea {
     top: 0;
     width: 35px;
     height: 35px;
-    border: 1px solid $link-colour;
+    border: 1px solid $govuk-link-colour;
     border-width: 0 0 0 1px;
-    border-left-color: $border-colour;
+    border-left-color: $govuk-border-colour;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
     overflow: hidden;
     text-indent: -5000px;
     color: #fff;
-    background-color: $link-colour;
+    background-color: $govuk-link-colour;
     background-image: url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png);
     background-repeat: no-repeat;
     background-position: 0 50%;
@@ -49,7 +49,7 @@ textarea {
   }
 
   &.assigned-to-me{
-    border: 2px solid $link-colour;
+    border: 2px solid $govuk-link-colour;
     .textarea-header {
       padding-left: 60px;
     }
@@ -80,7 +80,7 @@ textarea {
     padding-top: 6px;
   }
 
-  //border-bottom: 1px solid $border-colour;
+  //border-bottom: 1px solid $govuk-border-colour;
   padding-bottom: 3em;
   margin-bottom: 1.2em;
 }
@@ -100,13 +100,13 @@ input{
   }
 }
 
-select.form-control{
+select.govuk-select{
   &.width-x-large{
     width: 60%;
   }
 }
 
-select.form-control{
+select.govuk-select{
   &.width-full{
     width: 100%;
   }
@@ -119,24 +119,20 @@ select.form-control{
   .form-group{
     margin-bottom: 20px;
 
-    &.underline{
-      border-bottom: 1px solid $black;
-      margin-top: 10px
-   	}
-
     &.border-top{
-      border-top: 1px solid $black;
+      border-top: 1px solid govuk-colour("black");
       margin-top: 10px;
       margin-bottom: 20px;
       padding: 20px 0;
     }
 
     &.totals{
-      border: 1px solid $border-colour;
-      background: $panel-colour;
+      border: 1px solid $govuk-border-colour;
+      background: govuk-colour("grey-3");
       padding: 10px 5px;
 
-      .form-control{
+      .govuk-input,
+      .govuk-textarea{
         border: none;
         background: none;
         font-weight: bold;
@@ -144,14 +140,15 @@ select.form-control{
     }
 	}
 
-  .form-label{
+  .govuk-label{
     float: left;
     width: 30%;
     margin-right: 20px;
     padding-top: 5px;
   }
 
-  .form-control{
+  .govuk-input,
+  .govuk-textarea{
     float: left;
   }
 }
@@ -159,8 +156,8 @@ select.form-control{
 /*----- File upload / download styling ----*/
 
 /*.upload-section{
-  border: 1px solid $border-colour;
-  background: $grey-4;
+  border: 1px solid $govuk-border-colour;
+  background: govuk-colour("grey-4");
   padding: 16px 16px 8px 16px;
   margin-top: 16px;
   overflow: auto;
@@ -190,7 +187,7 @@ select.form-control{
 
   .uploaded-file{
     display: block;
-    background: $panel-colour;
+    background: govuk-colour("grey-3");
     padding: 20px;
     font-weight: bold;
     margin: 10px 0;
@@ -243,10 +240,11 @@ select.form-control{
 
 .search-filters{
   padding: 20px;
-  background: $panel-colour;
+  background: govuk-colour("grey-3");
   margin-bottom: 40px;
 
-  .form-control{
+  .govuk-input,
+  .govuk-select{
     background: #fff;
     width: 100%;
   }

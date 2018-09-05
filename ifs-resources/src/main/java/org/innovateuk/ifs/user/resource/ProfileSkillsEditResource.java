@@ -5,7 +5,4 @@ package org.innovateuk.ifs.user.resource;
  */
 public class ProfileSkillsEditResource extends ProfileSkillsBaseResource {
 
-    public ProfileSkillsEditResource() {
-    }
-    
 }

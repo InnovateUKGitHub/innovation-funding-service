@@ -2,9 +2,10 @@ package org.innovateuk.ifs.application.forms.validator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.util.List;
 
@@ -14,11 +15,14 @@ import java.util.List;
 public abstract class QuestionEditableValidator {
 
     private QuestionService questionService;
+    private QuestionRestService questionRestService;
     private QuestionSetupType questionType;
 
     protected QuestionEditableValidator(QuestionService questionService,
+                                        QuestionRestService questionRestService,
                                         QuestionSetupType questionType) {
         this.questionService = questionService;
+        this.questionRestService = questionRestService;
         this.questionType = questionType;
     }
 
@@ -30,7 +34,7 @@ public abstract class QuestionEditableValidator {
     }
 
     protected boolean questionIsAllowedType(long questionId) {
-        QuestionResource questionResource = questionService.getById(questionId);
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         return questionResource.getQuestionSetupType().equals(questionType);
     }
 

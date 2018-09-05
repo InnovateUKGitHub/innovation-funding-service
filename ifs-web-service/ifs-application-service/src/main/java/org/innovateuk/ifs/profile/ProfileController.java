@@ -3,18 +3,16 @@ package org.innovateuk.ifs.profile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,19 +38,16 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 
 @Controller
 @RequestMapping("/profile")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ProfileController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
     @Autowired
     private UserService userService;
-    
-    @Autowired
-    private OrganisationService organisationService;
 
     @Autowired
-    private EthnicityRestService ethnicityRestService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -60,20 +55,20 @@ public class ProfileController {
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationByUserId(userResource.getId()).getSuccess();
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
+        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource));
         return "profile/user-profile";
     }
 
-    private void populateUserDetailsForm(Model model, UserResource userResource){
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+    private void populateUserDetailsForm(Model model, UserResource userResource) {
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationByUserId(userResource.getId()).getSuccess();
         UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
-    
-	private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation){
+
+    private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation) {
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
@@ -81,26 +76,26 @@ public class ProfileController {
         form.setPhoneNumber(user.getPhoneNumber());
         form.setAllowMarketingEmails(user.getAllowMarketingEmails());
 
-        if(organisation == null) {
-        	LOG.warn("No organisation retrieved for user" + user.getId());
-			return form;
-		}
-		form.setOrganisationName(organisation.getName());
-		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
-		
-		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
-		
-		if(organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
-			AddressResource address = organisationAddress.get().getAddress();
-			
-			form.setAddressLine1(address.getAddressLine1());
-			form.setAddressLine2(address.getAddressLine2());
-			form.setAddressLine3(address.getAddressLine3());
-			form.setCounty(address.getCounty());
-			form.setPostcode(address.getPostcode());
-			form.setTown(address.getTown());
-		}
-		return form;
+        if (organisation == null) {
+            LOG.warn("No organisation retrieved for user" + user.getId());
+            return form;
+        }
+        form.setOrganisationName(organisation.getName());
+        form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
+
+        Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
+
+        if (organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
+            AddressResource address = organisationAddress.get().getAddress();
+
+            form.setAddressLine1(address.getAddressLine1());
+            form.setAddressLine2(address.getAddressLine2());
+            form.setAddressLine3(address.getAddressLine3());
+            form.setCounty(address.getCounty());
+            form.setPostcode(address.getPostcode());
+            form.setTown(address.getTown());
+        }
+        return form;
     }
 
     @PostMapping("/edit")
@@ -110,7 +105,7 @@ public class ProfileController {
                                     HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
 
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
@@ -128,12 +123,7 @@ public class ProfileController {
     public String editUserProfile(UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private void setFormActionURL(UserDetailsForm userDetailsForm) {
@@ -148,15 +138,12 @@ public class ProfileController {
                 userDetailsForm.getLastName(),
                 userDetailsForm.getTitle(),
                 userDetailsForm.getPhoneNumber(),
-                userDetailsForm.getGender(),
-                Long.parseLong(userDetailsForm.getEthnicity()),
-                userDetailsForm.getDisability(),
                 userDetailsForm.getAllowMarketingEmails());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-            error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[] {error.getErrorKey()}, null, null))
+                error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[]{error.getErrorKey()}, null, null))
         );
     }
 }

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,9 +23,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @Component
 @PermissionRules
 public class ApplicationFinancePermissionRules extends BasePermissionRules {
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;

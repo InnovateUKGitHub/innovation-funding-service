@@ -13,7 +13,7 @@ Administrator is able to mark as successful an unsuccessful application
     Given the user navigates to the page  ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/applications/previous
     Then the user should be allowed to only reinstate Unsuccessful applications
     When the user clicks the button/link  jQuery=td:contains("Cleaning Product packaging") ~ td a:contains("Mark as successful")
-    And the user clicks the button/link   css=.button[name="mark-as-successful"]  # I'm sure button
+    And the user clicks the button/link   css=.govuk-button[name="mark-as-successful"]  # I'm sure button
     Then the user should no longer see the application in the unsuccessful list but in Project Setup
 
 *** Keywords ***

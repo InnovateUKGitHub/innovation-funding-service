@@ -57,7 +57,7 @@ Competition Dashboard
 Milestones for the In inform competition
     [Documentation]    INFUND-7561 INFUND-7950
     [Tags]
-    Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
+    Then the user should see the element    jQuery=.govuk-button:contains("Manage funding notifications")
     And the user should see the element     jQuery=button:contains("Release feedback")
     And the user should see the element     css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element     css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
@@ -65,7 +65,7 @@ Milestones for the In inform competition
 Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
-    Given The user clicks the button/link                      jQuery=.button:contains("Manage funding notifications")
+    Given The user clicks the button/link                      jQuery=.govuk-button:contains("Manage funding notifications")
     And the user enters text to a text field                   id=stringFilter    ${application_ids['Climate control solution']}
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter
@@ -82,7 +82,7 @@ Checking release feedback button state is correct
     Given the user clicks the button/link                                   link=Input and review funding decision
     And the user selects the checkbox                                       app-row-3
     And the user clicks the button/link                                     jQuery=button:contains("On hold")
-    When the user clicks the button/link                                    jQuery=.link-back:contains("Competition")
+    When the user clicks the button/link                                    jQuery=.govuk-back-link:contains("Competition")
     Then the user should see that the element is disabled                   jQuery=button:contains("Release feedback")
     [Teardown]    User sends the notification to enable release feedback
 
@@ -147,7 +147,7 @@ User can see feedback to individual questions
     Given the user clicks the button/link            jQuery=a:contains("6. Innovation")
     Then the user should see the element             jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
     And the user should see the element              jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
-    [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
+    [Teardown]    the user clicks the button/link    jQuery=.govuk-back-link:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -159,21 +159,21 @@ The finance details are shown
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
+    Given the user clicks the button/link    jQuery=.govuk-back-link:contains("Dashboard")
     Then the user should see the element     jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the application question scores are correct
-    the user should see the element    jQuery=.column-two-thirds:contains("Business opportunity") ~ div div:contains("Average score 6 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Potential market") ~ div div:contains("Average score 5 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Project exploitation") ~ div div:contains("Average score 6 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Economic benefit") ~ div div:contains("Average score 4 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Technical approach") ~ div div:contains("Average score 4 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Innovation") ~ div div:contains("Average score 5 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Risks") ~ div div:contains("Average score 7 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Project team") ~ div div:contains("Average score 7 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Funding") ~ div div:contains("Average score 3 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Adding value") ~ div div:contains("Average score 7 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Project exploitation") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Economic benefit") + div .govuk-grid-column-one-third:contains("Average score 4 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Technical approach") + div .govuk-grid-column-one-third:contains("Average score 4 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Innovation") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Risks") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3 / 10")
+    the user should see the element    jQuery=.govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
     the user should see the element    jQuery=p:contains("Average overall: 53%")
 
 the application details are correct
@@ -187,12 +187,12 @@ User sends the notification to enable release feedback
     the user clicks the button/link                                          link=Input and review funding decision
     the user selects the checkbox                                            app-row-3
     the user clicks the button/link                                          jQuery=button:contains("Unsuccessful")
-    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          jQuery=.govuk-back-link:contains("Competition")
     the user clicks the button/link                                          jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox                                            app-row-${application_ids['Electric Drive']}
     the user clicks the button/link                                          jQuery=button:contains("Write and send email")
     the internal sends the descision notification email to all applicants    EmailTextBody
-    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          jQuery=.govuk-back-link:contains("Competition")
 
 The user checks the Project summary functionality
     the user clicks the button/link    jQuery=a:contains("Project summary")

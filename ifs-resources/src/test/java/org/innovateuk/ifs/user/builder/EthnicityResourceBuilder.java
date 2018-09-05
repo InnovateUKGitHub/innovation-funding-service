@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 /**
  * Builder for {@link org.innovateuk.ifs.user.resource.EthnicityResource}.
  */
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityResourceBuilder extends BaseBuilder<EthnicityResource, EthnicityResourceBuilder> {
 
     private EthnicityResourceBuilder(List<BiConsumer<Integer, EthnicityResource>> newActions) {

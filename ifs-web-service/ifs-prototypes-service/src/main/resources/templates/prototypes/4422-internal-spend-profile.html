@@ -25,53 +25,53 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
-		<div class="success-alert extra-margin-bottom">
-			<h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile has been approved.</h2>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'reject'}">
-		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small">REJECT TEXT REQUIRED</h3>
-			<ul class="list list-bullet">
+		<div class="warning-alert govuk-!-margin-bottom-6">
+			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
+			<ul class="govuk-list govuk-list--bullet">
 				<li>TEXT REQUIRED</li>
 			</ul>
 		</div>
 	</th:block>
 
 
-	<p>This overview details the spend profile for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+	<p class="govuk-body">This overview details the spend profile for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
 
-	<p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
+	<p class="govuk-body">You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
 
-	<h2 class="heading-medium">Innovation Lead</h2>
+	<h2 class="govuk-heading-m">Innovation Lead</h2>
 
-	<p>
+	<p class="govuk-body">
 		Paul Davidson
 	</p>
 
-	<h2 class="heading-medium">Project spend profile</h2>
+	<h2 class="govuk-heading-m">Project spend profile</h2>
 	<a href="#">Competition-soend-profile.csv</a>
 
 
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<h2 class="heading-medium">Approved by Innovation Lead</h2>
-		<p>The spend profile must be sent to the Innovation Lead for their review and approval.</p>
+		<h2 class="govuk-heading-m">Approved by Innovation Lead</h2>
+		<p class="govuk-body">The spend profile must be sent to the Innovation Lead for their review and approval.</p>
 
-		<div class="form-group">
+		<div class="govuk-form-group">
 	    	<label class="block-label selection-button-checkbox" for="profile-reviewed">
 		      <input id="profile-reviewed" value="profile-reviewed" type="checkbox" />
 		     	The spend profile has been approved by the Innovation Lead
 		    </label>
 	    </div>
 
-		<button data-js-modal="modal-accept-profile" id="accept-profile" class="button" disabled="disabled">Approve</button>
+		<button data-js-modal="modal-accept-profile" id="accept-profile" class="govuk-button" disabled="disabled">Approve</button>
 
-		<button data-js-modal="modal-reject-profile" id="reject-profile" class="button button-warning large">Reject</button>
+		<button data-js-modal="modal-reject-profile" id="reject-profile" class="govuk-button button-warning large">Reject</button>
 
 	</div>
 
@@ -80,17 +80,17 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="heading-medium no-margin">Approved by Innovation Lead</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Approved by Innovation Lead</h2>
 
-			<p>The project spend profile has been appoved and accepted by the Innovation Lead, by confirming the Project Manager will be notified of this decision via email.</p>
+			<p class="govuk-body">The project spend profile has been appoved and accepted by the Innovation Lead, by confirming the Project Manager will be notified of this decision via email.</p>
 
-			<hr />
+			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         	<div class="alignright-button">
 
-				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+				<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-        		<a th:href="@{'?status=accepted'}" class="button">Accept documents</a>
+        		<a th:href="@{'?status=accepted'}" class="govuk-button">Accept documents</a>
         	</div>
 
         </div>
@@ -101,21 +101,21 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="heading-medium no-margin">Reject spend profile</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Reject spend profile</h2>
 
-			<p>Rejecting will return access to this section to all project partners.</p>
+			<p class="govuk-body">Rejecting will return access to this section to all project partners.</p>
 
-			<p>Before taking this action please contact the Project Manager to explain why the the Spend Profile is being returned to them.</p>
+			<p class="govuk-body">Before taking this action please contact the Project Manager to explain why the the Spend Profile is being returned to them.</p>
 
 			<form >
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=reject'}" class="button button-warning">Reject spend profile</a>
+	        		<a th:href="@{'?status=reject'}" class="govuk-button button-warning">Reject spend profile</a>
 	        	</div>
 
 	        </form>

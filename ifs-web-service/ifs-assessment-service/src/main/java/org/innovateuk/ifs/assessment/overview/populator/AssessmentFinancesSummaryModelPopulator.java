@@ -3,15 +3,15 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -22,7 +22,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -33,31 +33,31 @@ import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAIL
 @Component
 public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private OrganisationService organisationService;
     private FinanceService financeService;
 
-    public AssessmentFinancesSummaryModelPopulator(CompetitionService competitionService,
+    public AssessmentFinancesSummaryModelPopulator(CompetitionRestService competitionRestService,
                                                    AssessmentService assessmentService,
-                                                   ProcessRoleService processRoleService,
+                                                   UserRestService userRestService,
                                                    FileEntryRestService fileEntryRestService,
                                                    ApplicationFinanceRestService applicationFinanceRestService,
                                                    FinanceService financeService,
                                                    SectionService sectionService,
                                                    OrganisationService organisationService,
                                                    FormInputRestService formInputRestService,
-                                                   QuestionService questionService) {
-        super(sectionService, formInputRestService, questionService);
+                                                   QuestionRestService questionRestService) {
+        super(sectionService, formInputRestService, questionRestService);
         this.organisationService = organisationService;
         this.sectionService = sectionService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.fileEntryRestService = fileEntryRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.financeService = financeService;
@@ -65,7 +65,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
         addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
@@ -75,7 +75,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
         addOrganisationDetails(model, userApplicationRoles, financeVew);
     }
 

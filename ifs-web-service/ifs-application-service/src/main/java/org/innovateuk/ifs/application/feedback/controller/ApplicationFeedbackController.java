@@ -4,10 +4,10 @@ import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackView
 import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
@@ -41,17 +41,22 @@ public class ApplicationFeedbackController {
     private InterviewResponseRestService interviewResponseRestService;
     private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
-    public ApplicationFeedbackController() {}
+    public ApplicationFeedbackController() {
+    }
 
     @Autowired
-    public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService, InterviewResponseRestService interviewResponseRestService, ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator, ApplicationService applicationService, CompetitionService competitionService) {
+    public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService,
+                                         InterviewResponseRestService interviewResponseRestService,
+                                         ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator,
+                                         ApplicationService applicationService,
+                                         CompetitionRestService competitionRestService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewResponseRestService = interviewResponseRestService;
         this.applicationFeedbackViewModelPopulator = applicationFeedbackViewModelPopulator;
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view the application summary page")
@@ -67,7 +72,7 @@ public class ApplicationFeedbackController {
                            @RequestParam MultiValueMap<String, String> queryParams) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         if (!competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return redirectToSummary(applicationId, queryParams);

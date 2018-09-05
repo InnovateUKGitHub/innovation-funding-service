@@ -8,8 +8,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
@@ -142,9 +140,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected OrganisationRepository organisationRepository;
 
     @Autowired
-    private NotificationSender emailNotificationSender;
-
-    @Autowired
     private BankDetailsService bankDetailsService;
 
     @Autowired
@@ -239,9 +234,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
-
-        EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
-        ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
 
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);

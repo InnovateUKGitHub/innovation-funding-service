@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.model.InterviewModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.viewmodel.InterviewViewModel;
@@ -38,7 +38,7 @@ public class InterviewControllerTest extends BaseControllerMockMVCTest<Interview
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected InterviewController supplyControllerUnderTest() {
@@ -59,7 +59,7 @@ public class InterviewControllerTest extends BaseControllerMockMVCTest<Interview
 
         InterviewStatisticsResource keyStats = newInterviewStatisticsResource().build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionKeyApplicationStatisticsRestService.getInterviewStatisticsByCompetition(competitionId))
                 .thenReturn(restSuccess(keyStats));
 
@@ -70,7 +70,7 @@ public class InterviewControllerTest extends BaseControllerMockMVCTest<Interview
 
         InterviewViewModel model = (InterviewViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(competitionService, only()).getById(competitionId);
+        verify(competitionRestService, only()).getCompetitionById(competitionId);
 
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());

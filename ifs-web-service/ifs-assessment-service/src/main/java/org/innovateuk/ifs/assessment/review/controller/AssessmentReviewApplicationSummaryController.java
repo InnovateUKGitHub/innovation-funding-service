@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -31,7 +31,7 @@ public class AssessmentReviewApplicationSummaryController {
                                   Model model,
                                   UserResource user) {
 
-        assessmentReviewApplicationSummaryModelPopulator.populateModel(model, form, user, applicationId);
+        model.addAttribute("model", assessmentReviewApplicationSummaryModelPopulator.populateModel(form, user, applicationId));
 
         return "assessor-panel-application-overview";
     }

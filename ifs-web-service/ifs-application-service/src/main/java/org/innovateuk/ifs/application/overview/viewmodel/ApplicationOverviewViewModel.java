@@ -1,36 +1,42 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 
 
 /**
  * View model for the application overview
  */
 public class ApplicationOverviewViewModel {
-    private ApplicationResource currentApplication;
-    private ProjectResource currentProject;
+
+    private Long applicationId;
+    private String applicationName;
+    private ApplicationState applicationState;
+    private boolean applicationSubmitted;
     private boolean projectWithdrawn;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
-
     private Integer completedQuestionsPercentage;
     private Long financeSectionId;
-
     private ApplicationOverviewUserViewModel user;
     private ApplicationOverviewAssignableViewModel assignable;
-    private ApplicationOverviewCompletedViewModel completed;
+    private ApplicationCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
 
-    public ApplicationOverviewViewModel(ApplicationResource currentApplication, ProjectResource currentProject, boolean projectWithdrawn, CompetitionResource currentCompetition,
+    public ApplicationOverviewViewModel(Long applicationId,
+                                        String applicationName,
+                                        ApplicationState applicationState,
+                                        boolean applicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
                                         OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
-                                        ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
-        this.currentApplication = currentApplication;
-        this.currentProject = currentProject;
+                                        ApplicationCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
+        this.applicationState = applicationState;
+        this.applicationSubmitted = applicationSubmitted;
         this.projectWithdrawn = projectWithdrawn;
         this.currentCompetition = currentCompetition;
         this.userOrganisation = userOrganisation;
@@ -42,12 +48,20 @@ public class ApplicationOverviewViewModel {
         this.section = section;
     }
 
-    public ApplicationResource getCurrentApplication() {
-        return currentApplication;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public ProjectResource getCurrentProject() {
-        return currentProject;
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public ApplicationState getApplicationState() {
+        return applicationState;
+    }
+
+    public boolean isApplicationSubmitted() {
+        return applicationSubmitted;
     }
 
     public boolean isProjectWithdrawn() {
@@ -78,7 +92,7 @@ public class ApplicationOverviewViewModel {
         return assignable;
     }
 
-    public ApplicationOverviewCompletedViewModel getCompleted() {
+    public ApplicationCompletedViewModel getCompleted() {
         return completed;
     }
 

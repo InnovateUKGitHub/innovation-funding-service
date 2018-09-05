@@ -4,21 +4,21 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class MonitoringOfficerController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -163,7 +163,7 @@ public class MonitoringOfficerController {
     private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId, boolean editMode, boolean existingMonitoringOfficer, boolean editable) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         String projectManagerName = getProjectManagerName(projectResource);
 

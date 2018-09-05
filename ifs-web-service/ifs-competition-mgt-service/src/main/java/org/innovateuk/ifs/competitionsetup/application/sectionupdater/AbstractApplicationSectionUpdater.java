@@ -32,21 +32,21 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
     }
 
 
-	@Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    @Override
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
         mapGuidanceRows(form);
         return competitionSetupQuestionService.updateQuestion(form.getQuestion());
-	}
+    }
 
-	protected abstract void mapGuidanceRows(AbstractQuestionForm form);
+    protected abstract void mapGuidanceRows(AbstractQuestionForm form);
 
     @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
                                                               String fieldName,
                                                               String value,
                                                               Optional<Long> questionId) {
-        if("removeGuidanceRow".equals(fieldName)) {
+        if ("removeGuidanceRow".equals(fieldName)) {
             return removeGuidanceRow(questionId, value);
         } else if (fieldName.contains("guidanceRow")) {
             return tryUpdateGuidanceRow(questionId, fieldName, value);
@@ -105,13 +105,13 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
     protected abstract ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value);
 
     private Integer getGuidanceRowsIndex(String fieldName) throws ParseException {
-        return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
+        return Integer.parseInt(fieldName.substring(fieldName.indexOf('[') + 1, fieldName.indexOf(']')));
     }
 
     private void addNotSavedGuidanceRows(CompetitionSetupQuestionResource question, Integer index) {
         Integer currentIndexNotUsed = question.getGuidanceRows().size();
 
-        for(Integer i = currentIndexNotUsed; i <= index; i++) {
+        for (Integer i = currentIndexNotUsed; i <= index; i++) {
             GuidanceRowResource guidanceRowResource = new GuidanceRowResource();
             question.getGuidanceRows().add(i, guidanceRowResource);
         }

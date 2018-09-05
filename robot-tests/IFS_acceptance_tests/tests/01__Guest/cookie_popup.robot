@@ -13,7 +13,7 @@ The cookie warning appears for a new user
     Then the user should see the element    id=global-cookie-message
     And the user should see the text in the page    GOV.UK uses cookies to make the site simpler
     And the user should see the element    link=Find out more about cookies
-    And the user should see the element    css=a[href*='https://www.gov.uk/help/cookies']
+    And the user should see the element    css=a[href*='info/cookies']
 
 The warning disappears on refresh
     [Documentation]    INFUND-1943 INFUND-6260

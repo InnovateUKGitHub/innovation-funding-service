@@ -148,7 +148,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
 
     private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
+        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
     }
 
     private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource, Competition competition) {

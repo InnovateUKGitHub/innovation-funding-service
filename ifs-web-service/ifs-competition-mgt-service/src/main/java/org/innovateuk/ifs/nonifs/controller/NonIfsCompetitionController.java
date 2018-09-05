@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.nonifs.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -40,7 +40,7 @@ public class NonIfsCompetitionController {
     private NonIfsDetailsViewModelPopulator nonIfsDetailsViewModelPopulator;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -54,7 +54,7 @@ public class NonIfsCompetitionController {
 
     @GetMapping("/non-ifs-competition/setup/{competitionId}")
     public String details(Model model, @PathVariable("competitionId") Long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (!competition.isNonIfs()) {
             return "redirect:/competition/setup/" + competitionId;
         }
@@ -66,7 +66,7 @@ public class NonIfsCompetitionController {
     public String save(Model model,@Valid @ModelAttribute(FORM_ATTR) NonIfsDetailsForm form,
                        BindingResult bindingResult, ValidationHandler validationHandler,
                        @PathVariable("competitionId") Long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Supplier<String> failureView = () -> getDetailsPage(model, competition, Optional.of(form));
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;

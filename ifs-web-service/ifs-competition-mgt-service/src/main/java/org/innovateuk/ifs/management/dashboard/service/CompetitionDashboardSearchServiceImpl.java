@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.service.CompetitionServiceImpl.COMPETITION_PAGE_SIZE;
-
 /**
  * Implementation of the competition dashboard searches.
  */
 @Service
 public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboardSearchService {
+
+    public static final int COMPETITION_PAGE_SIZE = 20;
 
     @Autowired
     private CompetitionRestService competitionRestService;

@@ -56,9 +56,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     private Long sectionIdYourProjectCostsFinances;
     private Long fundingSection;
 
-
-
-
     @Before
     public void setUp() throws Exception {
         sectionId = 1L;

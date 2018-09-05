@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityBuilder extends BaseBuilder<Ethnicity, EthnicityBuilder> {
 
     private EthnicityBuilder(List<BiConsumer<Integer, Ethnicity>> multiActions) {

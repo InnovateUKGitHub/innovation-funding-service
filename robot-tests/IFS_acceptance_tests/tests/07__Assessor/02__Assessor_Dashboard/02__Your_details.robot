@@ -42,7 +42,7 @@ Validations for invalid inputs
     Then the user should see an error            Invalid first name.
     And the user should see an error             Invalid last name.
     And the user should see an error             Please enter a valid phone number between 8 and 20 digits.
-    And the user should see an error             The address cannot be blank.
+    And the user should see an error             The first line of the address cannot be blank.
     And the user should see an error             The postcode cannot be blank.
     And the user should see an error             The town cannot be blank.
 

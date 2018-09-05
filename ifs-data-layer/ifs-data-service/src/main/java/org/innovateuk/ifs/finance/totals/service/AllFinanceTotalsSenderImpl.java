@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.submittedStates;
+import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 
 /**
  * Service sends cost totals for all submitted {@link Application}s.
@@ -41,6 +41,6 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender {
     }
 
     private Stream<Application> submittedApplicationsStream() {
-        return applicationRepository.findByApplicationProcessActivityStateIn(submittedStates);
+        return applicationRepository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
     }
 }

@@ -18,6 +18,7 @@ import java.util.List;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 /**
@@ -70,6 +71,11 @@ public class InviteOrganisationPermissionRules {
         return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
     }
 
+    @PermissionRule(value = "READ", description = "a support user can view the invites of all organisations")
+    public boolean supportCanViewAnyInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        return user.hasRole(SUPPORT);
+    }
+
     @PermissionRule(value = "READ_FOR_UPDATE", description = "a consortium member can view the invites of their own organisation or if lead applicant")
     public boolean consortiumCanViewAnInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
         if (inviteOrganisation.getOrganisation() == null) {
@@ -92,7 +98,7 @@ public class InviteOrganisationPermissionRules {
     private boolean isLeadApplicantForAllApplications(InviteOrganisationResource inviteOrganisation, UserResource user) {
         List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
         if (invites == null || invites.isEmpty()) {
-            return false; // Unable to check the application so default to false;
+            return false; // Unable to check the application so default to false
         }
         return invites.stream().allMatch(applicationInviteResource -> isLeadApplicant(applicationInviteResource, user));
     }
@@ -100,7 +106,7 @@ public class InviteOrganisationPermissionRules {
     private boolean isApplicationCollaboratorOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, UserResource userResource) {
         List<ApplicationInviteResource> invites = inviteOrganisationResource.getInviteResources();
         if (invites == null || invites.isEmpty()) {
-            return false; // Unable to check the application so default to false;
+            return false; // Unable to check the application so default to false
         }
         return invites.stream().allMatch(applicationInviteResource ->
                 isLeadApplicant(applicationInviteResource, userResource) ||
@@ -111,7 +117,7 @@ public class InviteOrganisationPermissionRules {
     private boolean isApplicationCollaboratorForOrganisationOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, UserResource userResource) {
         List<ApplicationInviteResource> invites = inviteOrganisationResource.getInviteResources();
         if (invites == null || invites.isEmpty()) {
-            return false; // Unable to check the application so default to false;
+            return false; // Unable to check the application so default to false
         }
         return invites.stream().allMatch(applicationInviteResource ->
                 isLeadApplicant(applicationInviteResource, userResource) ||
