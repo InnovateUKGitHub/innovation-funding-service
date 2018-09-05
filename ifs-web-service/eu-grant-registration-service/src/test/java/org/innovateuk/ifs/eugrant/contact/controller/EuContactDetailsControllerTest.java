@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.contact.controller.EuContactDetailsController;
 import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 import org.innovateuk.ifs.eugrant.contact.populator.EuContactFormPopulator;
 import org.innovateuk.ifs.eugrant.contact.saver.EuContactSaver;
@@ -89,9 +88,9 @@ public class EuContactDetailsControllerTest extends BaseControllerMockMVCTest<Eu
         contactForm.setTelephone("0123456789");
 
         when(euGrantCookieService.get()).thenReturn(euGrantResource);
-        when(euContactSaver.save(euGrantResource)).thenReturn(RestResult.restSuccess());
+        when(euContactSaver.save(contactForm)).thenReturn(RestResult.restSuccess());
 
-        mockMvc.perform(post("/contact-details")
+        mockMvc.perform(post("/contact-details/edit")
                 .param("name", contactForm.getName())
                 .param("email", contactForm.getEmail())
                 .param("jobTitle", contactForm.getJobTitle())

@@ -2,16 +2,13 @@ package org.innovateuk.ifs.eugrant.contact.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuGrantRestService;
 import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
 import org.innovateuk.ifs.eugrant.contact.populator.EuContactFormPopulator;
 import org.innovateuk.ifs.eugrant.contact.saver.EuContactSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +18,9 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
+/**
+ * This Controller handles the contact details activity
+ */
 @Controller
 @RequestMapping("/")
 public class EuContactDetailsController {
@@ -30,9 +30,6 @@ public class EuContactDetailsController {
 
     @Autowired
     private EuContactFormPopulator euContactFormPopulator;
-
-    @Autowired
-    private EuGrantRestService euGrantRestService;
 
     @Autowired
     private EuContactSaver euContactSaver;
