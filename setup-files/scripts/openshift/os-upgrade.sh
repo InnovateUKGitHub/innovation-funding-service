@@ -59,7 +59,11 @@ function upgradeServices {
     watchStatus
 
     upgradeSurvey
-    upgradeEuGrantRegistration
+
+    # EU Grant Registration is not ready for production release yet.
+    if ! $(isProductionEnvironment ${TARGET}); then
+        upgradeEuGrantRegistration
+    fi
 
 }
 
@@ -122,7 +126,11 @@ function forceReload {
     watchStatus
 
     forceReloadSurvey
-    forceReloadEuGrantRegistration
+
+    # EU Grant Registration is not ready for production release yet.
+    if ! $(isProductionEnvironment ${TARGET}); then
+        forceReloadEuGrantRegistration
+    fi
 }
 
 function watchStatus {
