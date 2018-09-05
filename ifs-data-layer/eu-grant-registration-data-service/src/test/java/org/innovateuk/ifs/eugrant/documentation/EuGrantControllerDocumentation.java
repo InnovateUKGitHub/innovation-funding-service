@@ -72,8 +72,24 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void findById() throws Exception {
-        EuGrantResource euGrantResource = newEuGrantResource()
+        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
+                .withName("worth")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .withCompaniesHouseNumber("1234")
                 .build();
+
+        EuContactResource euContactResource = newEuContactResource()
+                .withName("Worth")
+                .withEmail("Worth@gmail.com")
+                .withJobTitle("worth employee")
+                .withTelephone("0123456789")
+                .build();
+
+        EuGrantResource euGrantResource = newEuGrantResource()
+                .withContact(euContactResource)
+                .withOrganisation(euOrganisationResource)
+                .build();
+
         UUID uuid = UUID.randomUUID();
 
         when(euGrantService.findById(uuid)).thenReturn(serviceSuccess(euGrantResource));
@@ -91,12 +107,18 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 );
     }
 
-
     private FieldDescriptor[] fields() {
         return new FieldDescriptor[] {
                 fieldWithPath("id").description("Unique id for the eu grant."),
                 fieldWithPath("organisation").description("Organisation details for the eu grant."),
+                fieldWithPath("organisation.name").description("Name of the organisation"),
+                fieldWithPath("organisation.organisationType").description("The type of the the organisation e.g. BUSINESS"),
+                fieldWithPath("organisation.companiesHouseNumber").description("Companies House number"),
                 fieldWithPath("contact").description("Contact details for the eu grant."),
+                fieldWithPath("contact.name").description("Full name of the contact"),
+                fieldWithPath("contact.jobTitle").description("Job title of the contact"),
+                fieldWithPath("contact.email").description("Email address of the contact"),
+                fieldWithPath("contact.telephone").description("Telephone number of the contact"),
                 fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
                 fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
                 fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding.")
