@@ -7,11 +7,9 @@
 <body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div>
@@ -48,7 +46,7 @@
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
