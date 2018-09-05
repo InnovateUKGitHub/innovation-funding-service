@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  */
 @Controller
 @RequestMapping("/")
-public class EuContactDetailsController {
+public class EuContactController {
 
     @Autowired
     private EuGrantCookieService euGrantCookieService;
