@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${orgType} AND  the user selects Research category  Industrial research
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${BUSINESS_TYPE_ID}  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -87,15 +87,17 @@ Create new application with the same user
     the user navigates to the page             ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
+    the user clicks the button/link            link=Apply with a different organisation.
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user clicks the Not on company house link
+    the user clicks the button/link            jQuery=summary:contains("Enter details manually")
+    The user enters text to a text field       name=organisationName    org2
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            id=application-question-save
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="application.name"]  ${Application_title}
@@ -125,7 +127,7 @@ Invite and accept the invitation
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Continue")
+    And the user clicks the button/link                 css = .govuk-button[type="submit"]
     the research user finds org in company house
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
@@ -214,7 +216,7 @@ the user verifies email
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
-    the user clicks the button/link         link=Continue without an account
+    the user clicks the button/link         link = Continue and create an account
     the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
@@ -222,7 +224,7 @@ the user follows the flow to register their organisation
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
     the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
 
 the user enters the details and clicks the create account
