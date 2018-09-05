@@ -629,11 +629,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
-        PreviousApplicationPageResource previousApplicationsPage = result.getSuccess();
-        assertTrue(previousApplicationsPage.getSize() == 2);
-        assertEquals(applicationResource1, previousApplicationsPage.getContent().get(0));
-        assertEquals(applicationResource2, previousApplicationsPage.getContent().get(1));
-        assertEquals(leadOrganisationName, previousApplicationsPage.getContent().get(0).getLeadOrganisationName());
+        PreviousApplicationPageResource previousApplicationPageResource = result.getSuccess();
+        assertTrue(previousApplicationPageResource.getSize() == 2);
+        assertEquals(applicationResource1.getId().longValue(), previousApplicationPageResource.getContent().get(0).getId());
+        assertEquals(applicationResource2.getId().longValue(), previousApplicationPageResource.getContent().get(1).getId());
+        assertEquals(leadOrganisationName, previousApplicationPageResource.getContent().get(0).getLeadOrganisationName());
     }
 
     @Test
