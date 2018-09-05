@@ -40,22 +40,24 @@
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input id="application-finance-full"
+                            <input id="application-finance-standard"
                                    class="govuk-radios__input"
                                    th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD}"
                                    th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
                                    th:field="*{applicationFinanceType}" required="required"/>
-                            <label for="application-finance-full"
-                                   class="govuk-label govuk-radios__label">Full application finances</label>
+                            <label for="application-finance-standard"
+                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
+                                   class="govuk-label govuk-radios__label"/>
                         </div>
                         <div class="govuk-radios__item">
-                            <input id="application-finance-none"
+                            <input id="application-finance-no-finances"
                                    class="govuk-radios__input"
                                    th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES}"
                                    th:disabled="${!model.subsection.noneFinanceCompetition}"
                                    type="radio" th:field="*{applicationFinanceType}" required="required"/>
-                            <label for="application-finance-none"
-                                   class="govuk-label govuk-radios__label">No finances</label>
+                            <label for="application-finance-no-finances"
+                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES.displayLabel}"
+                                   class="govuk-label govuk-radios__label"/>
                         </div>
                     </div>
                 </fieldset>
@@ -123,7 +125,8 @@
         <th:block th:unless="${model.editable}">
             <dl class="govuk-list application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third">Finances form</dt>
-                <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
+                <dd class="govuk-grid-column-two-thirds"
+                    th:text="${competitionSetupForm.applicationFinanceType.displayLabel}" />
                 <th:block th:unless="${model.subsection.noneFinanceCompetition}">
                     <dt class="govuk-grid-column-one-third">Include project growth table</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />

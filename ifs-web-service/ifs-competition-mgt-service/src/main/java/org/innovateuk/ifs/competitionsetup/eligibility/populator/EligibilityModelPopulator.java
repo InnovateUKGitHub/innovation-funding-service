@@ -82,7 +82,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
     }
 
     private ResearchParticipationAmount[] getResearchParticipationAmounts(CompetitionResource competitionResource) {
-        if (NO_FINANCES.equals(competitionResource.isFullApplicationFinance())) {
+        if (NO_FINANCES.equals(competitionResource.getApplicationFinanceType())) {
             return new ResearchParticipationAmount[]{};
         }
 
