@@ -26,6 +26,9 @@ var sassFiles = [
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
+  nodeModulesPath + 'jquery-ui/ui/version.js',
+  nodeModulesPath + 'jquery-ui/ui/focusable.js',
+  nodeModulesPath + 'jquery-ui/ui/tabbable.js',
   nodeModulesPath + 'jquery-ui/ui/widget.js',
 	govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
