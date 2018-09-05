@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
-
 /**
  * Competition setup section saver for the eligibility section.
  */
@@ -54,8 +52,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
         competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
 
-        if (competition.getApplicationFinanceType() == null ||
-                NO_FINANCES.equals(competition.getApplicationFinanceType())) {
+        if (competition.isNonFinanceType()) {
             competition.setMaxResearchRatio(ResearchParticipationAmount.NONE.getAmount());
         } else {
             ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());

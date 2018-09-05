@@ -28,6 +28,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.NON_FINANCE_TYPES;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -114,34 +115,6 @@ public class EligibilitySectionSaverTest {
     }
 
     @Test
-    public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNullApplicationFinanceType() {
-        ApplicationFinanceType applicationFinanceType = null;
-
-        EligibilityForm competitionSetupForm = new EligibilityForm();
-        competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
-        competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(50);
-
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
-
-        CompetitionResource competition = newCompetitionResource()
-                .withApplicationFinanceType(applicationFinanceType)
-                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
-                .build();
-
-        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
-        when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
-        when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
-        when(grantClaimMaximumRestService.save(any())).thenReturn(restSuccess(gcms.get(0)));
-
-        service.saveSection(competition, competitionSetupForm).getSuccess();
-
-        assertEquals(0, competition.getMaxResearchRatio().intValue());
-
-        verify(competitionSetupRestService).update(competition);
-    }
-
-    @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         EligibilityForm competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
@@ -151,7 +124,7 @@ public class EligibilitySectionSaverTest {
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withApplicationFinanceType(ApplicationFinanceType.NO_FINANCES)
+                .withCompetitionTypeName(NON_FINANCE_TYPES.iterator().next())
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
