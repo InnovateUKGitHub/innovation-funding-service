@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.eligibility.populator;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -22,7 +21,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,11 +46,7 @@ public class EligibilityFormPopulatorTest {
 
     @Test
     public void testGetSectionFormDataInitialDetails() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
-                .build(4);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(4);
 
         CompetitionResource competition = newCompetitionResource()
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
@@ -70,7 +64,8 @@ public class EligibilityFormPopulatorTest {
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()))
+                .thenReturn(restSuccess(true));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));
@@ -90,11 +85,7 @@ public class EligibilityFormPopulatorTest {
 
     @Test
     public void testGetDefaultResearchParticipationAmountId() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
-                .build(4);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(4);
         CompetitionResource template = newCompetitionResource()
                 .withCompetitionType(OrganisationTypeEnum.BUSINESS.getId())
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
@@ -110,7 +101,8 @@ public class EligibilityFormPopulatorTest {
                 .withLeadApplicantType(asList(2L))
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(restSuccess
+                (true));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));

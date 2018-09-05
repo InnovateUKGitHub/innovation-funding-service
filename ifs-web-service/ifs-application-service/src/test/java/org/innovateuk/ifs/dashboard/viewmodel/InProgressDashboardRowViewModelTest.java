@@ -43,16 +43,6 @@ public class InProgressDashboardRowViewModelTest {
     }
 
     @Test
-    public void testConstructCreatedWithOldApplicantMenu() {
-        InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
-                "Competition", true, ApplicationState.CREATED, true,
-                ZonedDateTime.now().plusDays(12), 12, 0 , false, null);
-
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/team"));
-        assertThat(viewModel.getTitle(), equalTo( "Untitled application (start here)"));
-    }
-
-    @Test
     public void testConstructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, ApplicationState.SUBMITTED, true,

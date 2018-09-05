@@ -78,7 +78,7 @@ public class YourFinancesSectionPopulatorTest {
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().withUseNewApplicantMenu(true).build())
+                .withCompetition(newCompetitionResource().build())
                 .withApplication(newApplicationResource().build())
                 .withApplicantChildrenSections(asList(yourProjectCosts, yourOrganisation, yourFunding))
                 .build();

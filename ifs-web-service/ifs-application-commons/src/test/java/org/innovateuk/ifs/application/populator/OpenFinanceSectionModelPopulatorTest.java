@@ -151,8 +151,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(competitionId)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(competitionId).withUseNewApplicantMenu(true).build();
-        List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
@@ -196,7 +195,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(231L)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(321L).withUseNewApplicantMenu(true).build();
+        CompetitionResource competition = newCompetitionResource().withId(321L).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(132L).build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);

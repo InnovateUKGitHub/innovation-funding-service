@@ -25,8 +25,6 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
@@ -241,22 +239,6 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void removeApplicant_shouldReturnRedirectWithOldApplicantMenuWhenOrganisationIsInvalidAfterRemoval() throws Exception {
-        when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true, false);
-        when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.removeInvite(3L)).thenReturn(serviceSuccess());
-
-        setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
-                .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
-
-        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
-                .param("removeInvite", "3"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/application/%s/team", testApplicationId)));
-    }
-
-    @Test
     public void confirmDeleteInviteOrganisation_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
@@ -286,23 +268,6 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(format("redirect:/application/%s/form/question/%s", testApplicationId,
                         applicationTeamQuestion.getId())));
-    }
-
-    @Test
-    public void deleteOrganisation_shouldReturnSuccessViewWithOldApplicantMenuWhenOrganisationIsValid() throws Exception {
-        when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
-        when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.getInviteIds(same(testApplicationId), same(testOrganisationId))).thenReturn(Arrays.asList(1L, 2L, 3L));
-        when(testTeamManagementService.removeInvite(anyLong())).thenReturn(serviceSuccess());
-
-        setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
-                .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
-
-        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
-                .param("deleteOrganisation", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/application/%s/team", testApplicationId)));
     }
 
     @Test
