@@ -34,7 +34,7 @@ Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
     [Tags]  HappyPath  MySQL
     When the competition is open                 ${comp_name}
-    And Log in as a different user               bob.malone@gmail.com  ${short_password}
+    And Log in as a different user               &{assessor_bob_credentials}
     Then logged in user applies to competition   ${comp_name}  1
 
 Applicant submits his application

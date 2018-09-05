@@ -5,9 +5,6 @@ Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
-*** Variables ***
-${assessor_bob_email}    bob.malone@gmail.com
-
 *** Test Cases ***
 
 Cancel button returns to read only view
@@ -34,7 +31,7 @@ Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]
     Given the user should see the element        jQuery=h1:contains("Edit your details")
-    And the user should see the element          jQuery=h3:contains("Email") ~ p:contains("${assessor_bob_email}")
+    And the user should see the element          jQuery=h3:contains("Email") ~ p:contains("bob.malone@gmail.com")
     When The user enters text to a text field    id=firstName    Joy12
     And The user enters text to a text field     id=lastName    Archer12
     And the user enters text to a text field     id=phoneNumber    18549731414test
@@ -85,5 +82,5 @@ User opens the edit details form
 
 the assessor logs-in
    The guest user opens the browser
-   The guest user inserts user email and password   ${assessor_bob_email}  ${short_password}
+   The guest user inserts user email and password   &{assessor_bob_credentials}
    The guest user clicks the log-in button
