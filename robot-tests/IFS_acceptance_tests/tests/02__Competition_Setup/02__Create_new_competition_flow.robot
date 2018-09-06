@@ -555,7 +555,7 @@ Documents in project setup: The competition admin adds document requirements
 Documents in project setup: The competition admin removes a document
     [Documentation]    IFS-3916
     [Tags]
-    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ span:contains("Edit")
+    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ a:contains("Edit")
     When the user clicks the button/link        css = button[name = "removeDocument"]
     And the user clicks the button/link         jQuery = button:contains("Confirm")
     Then the user should not see the element    jQuery = span:contains("Test document type")
