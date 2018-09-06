@@ -67,7 +67,7 @@
 
                             <th:block>
                                 <div class="task">
-                                    <a th:if="${app.accepted}" class="govuk-heading-s govuk-link" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
+                                    <a th:if="${app.accepted}" class="govuk-heading-s govuk-link govuk-!-display-inline" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
                                     <h3 th:unless="${app.accepted}" class="govuk-heading-s" th:text="${app.displayLabel}">Application name</h3>
                                     <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
                                 </div>
