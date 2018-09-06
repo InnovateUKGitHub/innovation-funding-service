@@ -149,8 +149,48 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                         Project start date
                                     </legend>
-                                    <div class="date-group" data-past-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly},  dayReadonly=true, dateType='data-past-date')" />
+                                    <div class="date-group" data-past-date="">
+                                        <div class="day govuk-visually-hidden">
+                                            <label class="govuk-label" for="projectStartDate_day">
+                                                <span>Day</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_day"
+                                                   readonly="readonly"
+                                                   name="projectStartDate.dayOfMonth"
+                                                   value="1"
+                                                   data-date="">
+                                        </div>
+                                        <div class="month">
+                                            <label class="govuk-label" for="projectStartDate_month">
+                                                <span>Month</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_month"
+                                                   min="1"
+                                                   max="12"
+                                                   placeholder="MM"
+                                                   required="required"
+                                                   name="projectStartDate.monthValue"
+                                                   th:value="${edit ? '12' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <div class="year">
+                                            <label class="govuk-label" for="projectStartDate_year">
+                                                <span>Year</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_year"
+                                                   placeholder="YYYY"
+                                                   required="required"
+                                                   name="projectStartDate.year"
+                                                   th:value="${edit ? '2017' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <input type="hidden" name="projectStartDate" id="projectStartDate" value="projectStartDate" data-date="">
                                     </div>
                                 </fieldset>
                             </div>
@@ -160,8 +200,48 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                         Project end date
                                     </legend>
-                                    <div class="date-group" data-future-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-enddate', field='application.endDate',readonly=${readonly}, dateType='data-future-date')" />
+                                    <div class="date-group" data-future-date="">
+                                        <div class="day govuk-visually-hidden">
+                                            <label class="govuk-label" for="projectEndDate_day">
+                                                <span>Day</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_day"
+                                                   readonly="readonly"
+                                                   name="projectEndDate.dayOfMonth"
+                                                   value="1"
+                                                   data-date="">
+                                        </div>
+                                        <div class="month">
+                                            <label class="govuk-label" for="projectEndDate_month">
+                                                <span>Month</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_month"
+                                                   min="1"
+                                                   max="12"
+                                                   placeholder="MM"
+                                                   required="required"
+                                                   name="projectEndDate.monthValue"
+                                                   th:value="${edit ? '03' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <div class="year">
+                                            <label class="govuk-label" for="projectEndDate_year">
+                                                <span>Year</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_year"
+                                                   placeholder="YYYY"
+                                                   required="required"
+                                                   name="projectEndDate.year"
+                                                   th:value="${edit ? '2020' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <input type="hidden" name="projectEndDate" id="projectEndDate" value="projectStartDate" data-date="">
                                     </div>
                                 </fieldset>
                             </div>
