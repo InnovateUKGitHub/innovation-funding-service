@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.model;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.registration.populator.InviteAndUserOrganisationDifferentModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.InviteAndUserOrganisationDifferentViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -50,7 +51,7 @@ public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUn
                 build();
         UserResource user = newUserResource().withEmail(inviteEmail).build();
         when(userService.findUserByEmail(inviteEmail)).thenReturn(of(user));
-        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(inviteesExistingOrganisation));
+        when(organisationRestService.getPrimaryForUser(user.getId())).thenReturn(restSuccess(inviteesExistingOrganisation));
 
         // Method under test
         InviteAndUserOrganisationDifferentViewModel model = populator.populateModel(invite);
