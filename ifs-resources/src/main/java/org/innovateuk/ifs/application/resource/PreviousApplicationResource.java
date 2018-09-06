@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class UnsuccessfulApplicationResource {
+public class PreviousApplicationResource {
 
     private long id;
     private String name;
@@ -10,10 +10,10 @@ public class UnsuccessfulApplicationResource {
     private ApplicationState applicationState;
     private long competition;
 
-    public UnsuccessfulApplicationResource() {
+    public PreviousApplicationResource() {
     }
 
-    public UnsuccessfulApplicationResource(long id, String name, String leadOrganisationName, ApplicationState applicationState, long competition) {
+    public PreviousApplicationResource(long id, String name, String leadOrganisationName, ApplicationState applicationState, long competition) {
         this.id = id;
         this.name = name;
         this.leadOrganisationName = leadOrganisationName;
