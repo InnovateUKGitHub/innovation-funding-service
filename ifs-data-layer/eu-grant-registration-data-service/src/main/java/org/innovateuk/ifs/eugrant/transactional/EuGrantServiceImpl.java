@@ -67,7 +67,7 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> submit(UUID id) {
+    public ServiceResult<EuGrantResource> submit(UUID id) {
         return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
                 .andOnSuccess(this::submit);
@@ -81,10 +81,11 @@ public class EuGrantServiceImpl implements EuGrantService {
         }
     }
 
-    private ServiceResult<Void> submit(EuGrant euGrant) {
+    private ServiceResult<EuGrantResource> submit(EuGrant euGrant) {
         return isReadyToSubmit(euGrant)
                 .andOnSuccessReturn(EuGrant::submit)
-                .andOnSuccessReturnVoid(this::sendEmail);
+                .andOnSuccess(this::sendEmail)
+                .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
 
     private ServiceResult<EuGrant> sendEmail(EuGrant euGrant) {

@@ -26,5 +26,5 @@ public interface EuGrantService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "Anonymous users can submit grant registration")
-    ServiceResult<Void> submit(UUID uuid);
+    ServiceResult<EuGrantResource> submit(UUID uuid);
 }

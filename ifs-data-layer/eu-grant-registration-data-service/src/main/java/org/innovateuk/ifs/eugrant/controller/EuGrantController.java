@@ -34,7 +34,7 @@ public class EuGrantController {
     }
 
     @PostMapping("/eu-grant/{uuid}/submit")
-    public RestResult<Void> submit(@PathVariable("uuid") UUID uuid) {
-        return euGrantService.submit(uuid).toPostResponse();
+    public RestResult<EuGrantResource> submit(@PathVariable("uuid") UUID uuid) {
+        return euGrantService.submit(uuid).toPostWithBodyResponse();
     }
 }

@@ -34,7 +34,7 @@ public class EuGrantRestServiceImpl extends BaseRestService implements EuGrantRe
     }
 
     @Override
-    public RestResult<Void> submit(UUID uuid) {
-        return postWithRestResultAnonymous(baseURL + "/" + uuid.toString() + "/submit", Void.class);
+    public RestResult<EuGrantResource> submit(UUID uuid) {
+        return postWithRestResultAnonymous(baseURL + "/" + uuid.toString() + "/submit", Void.class, EuGrantResource.class);
     }
 }

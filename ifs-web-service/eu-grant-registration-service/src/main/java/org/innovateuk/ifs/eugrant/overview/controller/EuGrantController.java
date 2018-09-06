@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.overview.controller;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuGrantRestService;
@@ -45,21 +46,21 @@ public class EuGrantController {
 
     @PostMapping("/overview")
     public String submit(@Valid @ModelAttribute("form") EuGrantSubmitForm form,
-                         BindingResult result,
+                         BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model) {
-        Supplier<String> failureView = () -> overview(form, result, validationHandler, model);
+        Supplier<String> failureView = () -> overview(form, bindingResult, validationHandler, model);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             EuGrantResource euGrantResource = euGrantCookieService.get();
             if (euGrantResource.getId() == null) {
                 return failureView.get();
             }
-            return validationHandler.addAnyErrors(
-                    euGrantRestService.submit(euGrantResource.getId()))
+            RestResult<EuGrantResource> result = euGrantRestService.submit(euGrantResource.getId());
+            return validationHandler.addAnyErrors(result)
                     .failNowOrSucceedWith(failureView,
                             () -> {
                                 euGrantCookieService.clear();
-                                euGrantCookieService.setPreviouslySubmitted(euGrantResource);
+                                euGrantCookieService.setPreviouslySubmitted(result.getSuccess());
                                 return "redirect:/submitted";
                             });
         });
