@@ -14,111 +14,66 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Horizon 2020: UK government underwrite guarantee',size='govuk-heading-xl'" />
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
 
-        <p class="govuk-body">The
-            <a class="govuk-link" href="https://www.gov.uk/government/publications/uk-participation-in-horizon-2020-uk-government-overview" target="_blank">UK government has underwritten the funding</a>
-            (opens in a new window) of Horizon 2020 projects if the UK exits the EU under certain circumstances.
-        </p>
-
-        <p class="govuk-body">This website is for UK participants who are in receipt of Horizon 2020 funding.
-            It is also for UK participants in a Euratom Research and Training project or an ongoing Framework
-            Programme 7 project.
-        </p>
-
-        <p class="govuk-body">Please enter your details to ensure that UK Research and Innovation:</p>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>has initial information about you and your project to underwrite guarantee payments if
-                required
-            </li>
-            <li>can keep you updated about what you need to do next</li>
-        </ul>
-
-        <p class="govuk-body">Please have your grant agreement to hand before you start. If you do not have a
-            signed grant agreement yet, please return to this page when you have one.
-        </p>
-
-        <p class="govuk-body">It takes approximately 10 minutes to register one project. We are unable to save
-            your progress so you must submit or you will need to start again. Check your details very carefully
-            before you submit as you will not be able to make changes later.
-        </p>
-
-        <ul class="govuk-body task-list">
-            <li class="govuk-!-padding-left-0">
-                <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.organisationComplete ? '/eu-grant/organisation/view' : '/eu-grant/organisation/type'}">Your organisation</a>
-                </div>
-                <div th:unless="${model.organisationComplete}" class="task-status-incomplete">
-                    <span>Incomplete</span>
-                </div>
-                <div th:if="${model.organisationComplete}" class="task-status-complete">
-                    <span>Complete</span>
-                </div>
-            </li>
-            <li class="govuk-!-padding-left-0">
-                <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.contactComplete ? '/eu-grant/contact-details' : '/eu-grant/contact-details/edit'}">Contact details</a>
-                </div>
-                <div th:unless="${model.contactComplete}" class="task-status-incomplete">
-                    <span>Incomplete</span>
-                </div>
-                <div th:if="${model.contactComplete}" class="task-status-complete">
-                    <span>Complete</span>
-                </div>
-            </li>
-            <li class="govuk-!-padding-left-0">
-                <div class="task">
-                    <a class="govuk-heading-s" disabled="disabled">Funding details</a>
-                </div>
-                <div class="task-status-incomplete">
-                    <span>Incomplete</span>
-                </div>
-            </li>
-        </ul>
-
-        <div class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">You can only register one project at a time. If you or your organisation is
-                participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
-                on 000 000 0000 or email
-                <a href="mailto:xxx@xxx" class="govuk-link">xxx@xxx</a>.</p>
-        </div>
-
-        <form th:action="@{/overview}" th:object="${form}" method="POST" novalidate="novalidate"
-              enctype="multipart/form-data">
-
-            <div th:if="${model.allComplete()}" class="govuk-form-group">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
-                    <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
-                </legend>
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" />
-                        <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a>.</label>
+                <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
+                    <h1 class="govuk-panel__title">
+                        Registration complete
+                    </h1>
+                    <div class="govuk-panel__body">
+                        Your reference number
+                        <br><strong th:text="${model.shortCode}">123456</strong>
                     </div>
                 </div>
+
+                <p class="govuk-body">Thank you for registering your project details.</p>
+                <p class="govuk-body">You will receive an email confirming your registration.</p>
+                <p class="govuk-body">If your details are correct UK Research and Innovation will be able to provide funding for
+                    participation in EU Framework Programmes. We will keep you informed of next steps in due course.</p>
+
+                <dl class="govuk-list">
+                    <dt class="govuk-!-margin-top-6">Reference number</dt>
+                    <dd th:text="${model.shortCode}">1234567</dd>
+                    <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
+                    <dd th:text="${model.funding.grantAgreementNumber}">123456</dd>
+                    <dt class="govuk-!-margin-top-6">Organisation type</dt>
+                    <dd th:text="${model.organisation.organisationType.name}">Business</dd>
+                    <dt class="govuk-!-margin-top-6">Registered name</dt>
+                    <dd th:text="${model.organisation.name}">Nomensa Ltd</dd>
+                    <th:block th:if="${model.organisation.companiesHouseNumber != null}">
+                        <dt class="govuk-!-margin-top-6">Registration number</dt>
+                        <dd th:text="${model.organisation.companiesHouseNumber}">04214477</dd>
+                    </th:block>
+                    <dt class="govuk-!-margin-top-6">Full name</dt>
+                    <dd th:text="${model.contact.name}">Joe Bloggs</dd>
+                    <dt class="govuk-!-margin-top-6">Job title</dt>
+                    <dd th:text="${model.contact.jobTitle}">Executive</dd>
+                    <dt class="govuk-!-margin-top-6">Email</dt>
+                    <dd th:text="${model.contact.email}">joebloggs@gmail.com</dd>
+                    <dt class="govuk-!-margin-top-6">Telephone</dt>
+                    <dd th:text="${model.contact.telephone}">07986543211</dd>
+                    <dt class="govuk-!-margin-top-6">Type of action</dt>
+                    <dd th:text="${model.funding.actionType.name}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
+                    <dt class="govuk-!-margin-top-6">Participant ID</dt>
+                    <dd th:text="${model.funding.participantId}">Industrialisation of artificial intelligence</dd>
+                    <dt class="govuk-!-margin-top-6">Project name</dt>
+                    <dd th:text="${model.funding.projectName}">My EU project name</dd>
+                    <dt class="govuk-!-margin-top-6">Project start date</dt>
+                    <dd th:text="${#temporals.format(model.funding.projectStartDate, 'MMMM yyyy')}">August 2017</dd>
+                    <dt class="govuk-!-margin-top-6">Project end date</dt>
+                    <dd th:text="${#temporals.format(model.funding.projectEndDate, 'MMMM yyyy')}">March 2019</dd>
+                    <dt class="govuk-!-margin-top-6">EU funding contribution for above project (EUR)</dt>
+                    <dd th:text="${'&euro;' + model.funding.fundingContribution}">100,000</dd>
+                    <dt class="govuk-!-margin-top-6">Is your organisation the project co-ordinator on this project?</dt>
+                    <dd th:text="${model.funding.projectCoordinator ? 'Yes' : 'No'}">Yes</dd>
+                </dl>
+
+                <p class="govuk-body govuk-!-margin-top-6">
+                    <a class="govuk-link" th:href="@{/overview}">Register another project</a>
+                </p>
             </div>
-
-            <button type="button" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
-                Submit
-            </button>
-
-            <div class="registration-modal" role="dialog" aria-hidden="true">
-                <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
-                <h2 class="govuk-heading-m">Submit registration</h2>
-                <p class="govuk-body">Your details will be checked and verified in due course. UK Research and
-                    Innovation may contact you for more information. You will receive an email confirmation of
-                    your registration.</p>
-                <hr>
-                <div>
-                    <button type="submit" class="govuk-button govuk-!-margin-bottom-0">Submit</button>
-                    <button class="js-close button-clear" type="button">Cancel</button>
-                </div>
-            </div>
-
-            <div class="modal-overlay" aria-hidden="true"></div>
-
-        </form>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

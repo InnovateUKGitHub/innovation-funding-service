@@ -21,8 +21,6 @@ import java.util.UUID;
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
-            @Mapping(source = "organisation", target = "organisation", defaultValue = "null"),
-            @Mapping(source = "contact", target = "contact", defaultValue = "null"),
             @Mapping(target = "funding", ignore = true)
     })
     @Override
