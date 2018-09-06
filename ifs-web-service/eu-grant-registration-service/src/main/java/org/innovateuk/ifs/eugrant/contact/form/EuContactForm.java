@@ -5,18 +5,29 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+
 public class EuContactForm extends BaseBindingResultTarget {
 
-    @NotBlank(message = "{validation.standard.eugrant.notblank}")
+    @NotBlank(message = "{validation.eugrant.fullname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.eugrant.fullname.invalid}")
+    @Size.List ({
+            @Size(min=2, message="{validation.eugrant.fullname.length.min}"),
+            @Size(max=70, message="{validation.eugrant.fullname.length.max}"),
+    })
     private String name;
 
-    @NotBlank(message = "{validation.standard.eugrant.notblank}")
+    @NotBlank(message = "{validation.eugrant.jobtitle.required}")
     private String jobTitle;
 
-    @NotBlank(message = "{validation.standard.eugrant.notblank}")
+    @NotBlank(message = "{validation.eugrant.email.required}")
     private String email;
 
-    @NotBlank(message = "{validation.standard.eugrant.notblank}")
+    @NotBlank(message = "{validation.eugrant.telephone.required}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.eugrant.telephone.format}")
     private String telephone;
 
     public String getName() {
