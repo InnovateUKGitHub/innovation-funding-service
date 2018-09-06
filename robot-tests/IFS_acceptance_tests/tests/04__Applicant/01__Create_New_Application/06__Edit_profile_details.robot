@@ -50,7 +50,9 @@ Verify that the applicant's name has been changed on other parts of the site
     And the user clicks the button/link            link=Profile
     And the user clicks the button/link            link=Edit your details
     When the user enters profile details
-    And the user navigates to the page             ${APPLICATION_TEAM_URL}
+    And The user clicks the button/link            link = Dashboard
+    And The user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_NAME}
+    And The user clicks the button/link            link = Application team
     Then the user should see the text in the page  Chris Brown
     And other contributors should see the applicant's updated name for the assignation options
     And the user navigates to the page             ${EDIT_PROFILE_URL}

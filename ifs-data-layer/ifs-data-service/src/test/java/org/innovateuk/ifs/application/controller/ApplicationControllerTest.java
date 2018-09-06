@@ -227,21 +227,21 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
+    public void findPreviousApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
         String filter = "ALL";
 
-        UnsuccessfulApplicationPageResource unsuccessfulApplicationPageResource = new UnsuccessfulApplicationPageResource();
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(unsuccessfulApplicationPageResource));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
+        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(unsuccessfulApplicationPageResource)));
+                .andExpect(content().json(toJson(previousApplicationPageResource)));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
+        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }
 }
