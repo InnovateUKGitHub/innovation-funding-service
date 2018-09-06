@@ -231,12 +231,24 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
-    public CompetitionResourceBuilder withUseNewApplicantMenu(Boolean... useNewApplicantMenu) {
-        return withArraySetFieldByReflection("useNewApplicantMenu", useNewApplicantMenu);
-    }
-
     public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
+    }
+
+    public CompetitionResourceBuilder withCreatedBy(String... users) {
+        return withArraySetFieldByReflection("createdBy", users);
+    }
+
+    public CompetitionResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArraySetFieldByReflection("createdOn", createdOns);
+    }
+
+    public CompetitionResourceBuilder withModifiedBy(String... users) {
+        return withArraySetFieldByReflection("modifiedBy", users);
+    }
+
+    public CompetitionResourceBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
 
     @Override

@@ -2,7 +2,7 @@
 <html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Choose your organisation type'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -15,7 +15,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
 
@@ -35,7 +35,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                     <p class="govuk-body">Your organisation must be identified as a UK partner in the grant agreement to receive funding.</p>
                 </div>
 
-                <form id="lead-organisation-type-form" action="/prototypes/IFS-4104-funding-business" method="GET" novalidate="novalidate">
+                <form id="lead-organisation-type-form" action="/prototypes/IFS-4104-funding-business" method="GET">
 
                     <input type="hidden" id="section1" name="section1" th:value="${section1}">
                     <input type="hidden" id="section2" name="section2" th:value="${section2}">
@@ -82,7 +82,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     </label>
                                 </div>
 
-                                <div id="rto-guidance" class="govuk-body panel" aria-hidden="true">
+                                <!-- <div id="rto-guidance" class="govuk-body panel" aria-hidden="true">
                                     <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the
                                         following rules are met:</h2>
                                     <ul class="list-bullet">
@@ -93,7 +93,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                             stage industry
                                         </li>
                                     </ul>
-                                </div>
+                                </div> -->
 
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input"
@@ -129,7 +129,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>

@@ -83,19 +83,19 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void internalUsersBarringInnovationLeadAndIFSAdminCanViewUnsuccessfulApplications() {
+    public void internalUsersBarringInnovationLeadAndIFSAdminCanViewPreviousApplications() {
         allGlobalRoleUsers.forEach(user -> {
             if ((allInternalUsers.contains(user) && !user.hasRoles(INNOVATION_LEAD))
                     || getUserWithRole(IFS_ADMINISTRATOR).equals(user)) {
-                assertTrue(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+                assertTrue(rules.internalUsersAndIFSAdminCanViewPreviousApplications(newCompetitionResource().build(), user));
             } else {
-                assertFalse(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+                assertFalse(rules.internalUsersAndIFSAdminCanViewPreviousApplications(newCompetitionResource().build(), user));
             }
         });
     }
 
     @Test
-    public void onlyInnovationLeadUsersAssignedToCompCanViewUnsuccessfulApplications() {
+    public void onlyInnovationLeadUsersAssignedToCompCanViewPreviousApplications() {
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
@@ -104,8 +104,8 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         when(innovationLeadRepository.findInnovationsLeads(1L)).thenReturn(innovationLeads);
 
-        assertTrue(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadAssignedToCompetition));
-        assertFalse(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadNotAssignedToCompetition));
+        assertTrue(rules.innovationLeadForCompetitionCanViewPreviousApplications(competition, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadForCompetitionCanViewPreviousApplications(competition, innovationLeadNotAssignedToCompetition));
     }
 
     @Test

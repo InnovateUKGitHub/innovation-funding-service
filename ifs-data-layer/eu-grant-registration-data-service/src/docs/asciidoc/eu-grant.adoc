@@ -1,0 +1,23 @@
+=== Save
+==== Request
+include::{snippets}/eu-grant/save/http-request.adoc[]
+include::{snippets}/eu-grant/save/request-fields.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/save/http-response.adoc[]
+include::{snippets}/eu-grant/save/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/save/curl-request.adoc[]
+
+=== Find By Id
+==== Request
+include::{snippets}/eu-grant/find-by-id/http-request.adoc[]
+include::{snippets}/eu-grant/find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/find-by-id/http-response.adoc[]
+include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]

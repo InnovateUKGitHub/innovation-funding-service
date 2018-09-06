@@ -4,13 +4,16 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -30,7 +33,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
@@ -74,6 +79,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Mock
     private UserRestService userRestService;
@@ -134,8 +142,14 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT)
                 .build(4)));
 
+        UserResource user = UserResourceBuilder.newUserResource().withId(loggedInUser.getId()).withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(user));
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_SUBMITTED)).thenReturn(restSuccess(true));
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_IN_PROGRESS)).thenReturn(restSuccess(true));
+
+        QuestionResource applicationTeamQuestion = newQuestionResource().build();
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionResource.getId(),
+                APPLICATION_TEAM)).thenReturn(restSuccess(applicationTeamQuestion));
     }
 
     @Test
@@ -150,5 +164,6 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Application in progress", viewModel.getApplicationInProgressText());
+        assertEquals("Set up your project", viewModel.getProjectSetupContainerText());
     }
 }

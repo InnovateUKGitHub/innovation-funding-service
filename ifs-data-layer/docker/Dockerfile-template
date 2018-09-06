@@ -10,13 +10,9 @@ ENV USER_PASSWORD PcdO6g4gV662A
 
 VOLUME /tmp
 
-RUN mkdir -p /mnt/ifs_storage
 
 RUN groupadd -ms /bin/bash -g 994 gluster
 RUN useradd -ms /bin/bash -p $USER_PASSWORD -u 997 -g 994 gluster
-
-RUN chown -R gluster:gluster /mnt/ifs_storage && chmod -R g=u /mnt/ifs_storage
-
 
 ADD newrelic.jar /
 ADD newrelic.yml /
