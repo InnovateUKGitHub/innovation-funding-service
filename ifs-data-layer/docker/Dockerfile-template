@@ -10,9 +10,8 @@ ENV USER_PASSWORD PcdO6g4gV662A
 
 VOLUME /tmp
 
-
-RUN groupadd -ms /bin/bash -g 994 gluster
-RUN useradd -ms /bin/bash -p $USER_PASSWORD -u 997 -g 994 gluster
+RUN groupadd -g 994 gluster
+RUN useradd -p $USER_PASSWORD -u 997 -g 994 gluster
 
 ADD newrelic.jar /
 ADD newrelic.yml /
