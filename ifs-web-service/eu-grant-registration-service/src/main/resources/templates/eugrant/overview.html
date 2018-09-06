@@ -7,11 +7,9 @@
 <body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Horizon 2020: UK government underwrite guarantee',size='govuk-heading-xl'" />
@@ -69,10 +67,13 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" disabled="disabled">Funding details</a>
+                    <a class="govuk-heading-s" th:href="${model.fundingComplete ? '/eu-grant/funding-details' : '/eu-grant/funding-details/edit'}">Funding details</a>
                 </div>
-                <div class="task-status-incomplete">
+                <div th:unless="${model.fundingComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
+                </div>
+                <div th:if="${model.fundingComplete}" class="task-status-complete">
+                    <span>Complete</span>
                 </div>
             </li>
         </ul>
@@ -123,7 +124,7 @@
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

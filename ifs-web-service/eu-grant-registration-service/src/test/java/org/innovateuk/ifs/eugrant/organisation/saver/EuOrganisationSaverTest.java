@@ -37,7 +37,7 @@ public class EuOrganisationSaverTest extends BaseServiceUnitTest<EuOrganisationS
     }
 
     @Test
-    public void testSave() {
+    public void save() {
         EuGrantResource euGrantResource = newEuGrantResource().build();
         when(euGrantCookieService.get()).thenReturn(euGrantResource);
 
@@ -62,7 +62,7 @@ public class EuOrganisationSaverTest extends BaseServiceUnitTest<EuOrganisationS
     }
 
     @Test
-    public void testSave_manualEntry() {
+    public void save_manualEntry() {
         EuGrantResource euGrantResource = newEuGrantResource().build();
         when(euGrantCookieService.get()).thenReturn(euGrantResource);
 

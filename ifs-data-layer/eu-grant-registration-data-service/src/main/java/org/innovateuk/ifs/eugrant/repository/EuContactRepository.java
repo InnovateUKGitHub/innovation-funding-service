@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;
 
-public interface EuContactRepository extends CrudRepository<EuContact, UUID> {
+public interface EuContactRepository extends CrudRepository<EuContact, Long> {
 }

@@ -15,12 +15,13 @@ import java.util.UUID;
         uses = {
                 EuOrganisationMapper.class,
                 EuContactMapper.class,
+                EuFundingMapper.class
         }
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
-            // TODO add to resource
+            @Mapping(source = "organisation", target = "organisation", defaultValue = "null"),
             @Mapping(source = "contact", target = "contact", defaultValue = "null"),
             @Mapping(target = "funding", ignore = true)
     })

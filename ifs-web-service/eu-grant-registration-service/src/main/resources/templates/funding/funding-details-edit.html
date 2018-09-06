@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div>
+            <a th:href="@{/overview}" class="govuk-back-link">Back</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding details',size='govuk-heading-xl'" />
+
+        <th:block>
+
+            <form th:action="@{/Funding-details/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+
+                <fieldset class="govuk-fieldset">
+
+                    <p class="govuk-body govuk-!-margin-bottom-6">Make sure you have your grant agreement to hand before you start.</p>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label--s" for="grant-agreement-number">
+                            Grant agreement number
+                        </label>
+                        <span id="grant-agreement-number-hint" class="govuk-hint">
+                                    This might also be referred to as your project ID, agreement number or proposal ID.
+                                </span>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="grant-agreement-number"
+                               name="grant-agreement-number"
+                               type="text"
+                               required="required">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label--s" for="pic-number">
+                            Participant identification code (PIC)
+                        </label>
+                        <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
+                                    The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html" target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
+                                </span>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="pic-number"
+                               name="pic-number"
+                               type="text"
+                               required="required">
+                    </div>
+
+                    <!--<div class="govuk-form-group govuk-form-group&#45;&#45;error">-->
+                        <!--<label class="govuk-label govuk-label&#45;&#45;s">-->
+                            <!--Type of action-->
+                        <!--</label><span class="govuk-error-message">Select a type of action</span>-->
+                        <!--<span id="type-of-action-hint" class="govuk-hint">-->
+                                    <!--The funding scheme you applied for.-->
+                                <!--</span>-->
+                    <!--</div>-->
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label--s" for="project-name">
+                            Project name
+                        </label>
+                        <span id="project-name-hint" class="govuk-hint">
+                                    The name of your project as used in your proposal.
+                                </span>
+                        <input class="govuk-input govuk-!-width-three-quarters"
+                               id="project-name"
+                               name="project-name"
+                               type="text"
+                               required="required">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Project start date
+                            </legend>
+                            <div class="date-group" data-past-date="">
+                                <div class="day">
+                                    <input type="hidden"
+                                           name="day"
+                                           id="application_details-startdate_day"
+                                           value="01"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                                <div class="month">
+                                    <label class="govuk-label" for="application_details-startdate_month">
+                                        <span>Month</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="application_details-startdate_month"
+                                           name="application.startDate.monthValue"
+                                           min="1"
+                                           max="12"
+                                           placeholder="MM"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                                <div class="year">
+                                    <label class="govuk-label" for="application_details-startdate_year">
+                                        <span>Year</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="application_details-startdate_year"
+                                           name="application.startDate.year"
+                                           placeholder="YYYY"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Project end date
+                            </legend>
+                            <div class="date-group" data-future-date="">
+                                <div class="day">
+                                    <input type="hidden"
+                                           name="day"
+                                           id="application_details-enddate_day"
+                                           value="01"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                                <div class="month">
+                                    <label class="govuk-label" for="application_details-enddate_month">
+                                        <span>Month</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="application_details-enddate_month"
+                                           name="application.endDate.monthValue"
+                                           min="1"
+                                           max="12"
+                                           placeholder="MM"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                                <div class="year">
+                                    <label class="govuk-label" for="application_details-enddate_year">
+                                        <span>Year</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="application_details-enddate_year"
+                                           name="application.endDate.year"
+                                           placeholder="YYYY"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled="">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label--s" for="funding-committed">
+                            EU funding contribution for above project (EUR)
+                        </label>
+                        <span id="funding-committed-hint" class="govuk-hint">
+                                    The total amount in euros granted to your organisation at the point of the award for your project.
+                                </span>
+                        <span class="govuk-body govuk-!-padding-right-1">€</span>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="funding-committed"
+                               name="funding-committed"
+                               type="text"
+                               aria-describedby="funding-committed-hint"
+                               value=""
+                               required="required"
+                               data-required-errormessage="Enter the EU funding contribution for above project (EUR)">
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Is your organisation the consortium lead on this project?
+                            </legend>
+                            <div class="govuk-radios" data-module="radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="consortium-lead-yes"
+                                           name="consortium-lead"
+                                           type="radio"
+                                           value="yes"
+                                           required="required"
+                                           data-required-errormessage="Select an option">
+                                    <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="consortium-lead-no"
+                                           name="consortium-lead"
+                                           type="radio"
+                                           value="no"
+                                           required="required"
+                                           data-required-errormessage="Select an option">
+                                    <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit">Continue</button>
+
+                </fieldset>
+
+            </form>
+
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

@@ -7,26 +7,18 @@ import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-
-import java.util.UUID;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
-public abstract class EuContactMapper extends BaseMapper<EuContact, EuContactResource, UUID> {
+public abstract class EuContactMapper extends BaseMapper<EuContact, EuContactResource, Long> {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
     })
     @Override
     public abstract EuContact mapToDomain(EuContactResource resource);
-
-    public String map(UUID value) {
-        return value == null ? null : value.toString();
-    }
-
-    public UUID map(String value) {
-        return value == null ? null : UUID.fromString(value);
-    }
 
 }

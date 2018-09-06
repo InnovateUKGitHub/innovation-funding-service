@@ -10,12 +10,12 @@ import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -71,37 +71,30 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
-        if (isFirstTimeInForm(eligibilityForm)) {
-            return fundingRulesAreOverriden(competitionResource);
+        if (!isFirstTimeInForm(eligibilityForm)) {
+            return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId()).getSuccess();
         }
 
         return null;
     }
 
     private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
-        return (eligibilityForm.getMultipleStream() != null) &&
-                (!eligibilityForm.getResearchCategoryId().isEmpty() && eligibilityForm.getResearchCategoryId() != null) &&
-                (eligibilityForm.getSingleOrCollaborative() != null) &&
-                (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
-                (eligibilityForm.getResubmission() != null);
-    }
-
-    private boolean fundingRulesAreOverriden(CompetitionResource competitionResource) {
-        Set<Long> templateGrantClaimMaximums = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
-                competitionResource.getCompetitionType()).getSuccess();
-
-        Set<Long> currentGrantClaimMaximums = competitionResource.getGrantClaimMaximums();
-        return !currentGrantClaimMaximums.equals(templateGrantClaimMaximums);
+        return  "no".equals(eligibilityForm.getMultipleStream())
+                && eligibilityForm.getResearchCategoryId().isEmpty()
+                && (eligibilityForm.getSingleOrCollaborative() == null)
+                && eligibilityForm.getLeadApplicantTypes().isEmpty()
+                && isBlank(eligibilityForm.getResubmission());
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {
-        Optional<GrantClaimMaximumResource> overriddenGcm = competition.getGrantClaimMaximums()
-                .stream()
-                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
-                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
-                .findFirst();
+        // The same maximum funding level is set for all GrantClaimMaximums when overriding
+        Optional<GrantClaimMaximumResource> grantClaimMaximumResource = competition.getGrantClaimMaximums().stream()
+                .findAny().map(this::getGrantClaimMaximumById);
+        return grantClaimMaximumResource.get().getMaximum();
+    }
 
-        return overriddenGcm.get().getMaximum();
+    private GrantClaimMaximumResource getGrantClaimMaximumById(long id) {
+        return grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess();
     }
 
 }

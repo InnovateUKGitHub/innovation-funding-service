@@ -7,11 +7,9 @@
 <body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div>
@@ -26,13 +24,13 @@
 
                     <dl class="govuk-list">
                         <dt>Full name</dt>
-                        <dd th:text="${model.name}">Felix Wilson</dd>
+                        <dd th:text="${form.name}">Felix Wilson</dd>
                         <dt>Job title</dt>
-                        <dd th:text="${model.jobTitle}">Scrum master</dd>
+                        <dd th:text="${form.jobTitle}">Scrum master</dd>
                         <dt>Email</dt>
-                        <dd th:text="${model.email}">Felix.Wilson@gmail.com</dd>
+                        <dd th:text="${form.email}">Felix.Wilson@gmail.com</dd>
                         <dt>Telephone</dt>
-                        <dd th:text="${model.telephone}">01234 567891</dd>
+                        <dd th:text="${form.telephone}">01234 567891</dd>
                     </dl>
 
                     <p class="govuk-body govuk-!-margin-bottom-6">
@@ -48,7 +46,7 @@
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
