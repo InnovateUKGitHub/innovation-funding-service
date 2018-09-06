@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_EMAIL_TAKEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
  * Transactional and secured service implementation providing operations around stakeholders.
  */
 @Service
-public class StakeholderServiceImpl extends BaseTransactionalService implements StakeholderService {
+public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalService implements CompetitionSetupStakeholderService {
 
     @Autowired
     private RoleInviteRepository roleInviteRepository;
@@ -60,7 +60,7 @@ public class StakeholderServiceImpl extends BaseTransactionalService implements 
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName())){
-            return serviceFailure(USER_ROLE_INVITE_INVALID);
+            return serviceFailure(STAKEHOLDER_INVITE_INVALID);
         }
         return serviceSuccess();
     }
@@ -79,32 +79,14 @@ public class StakeholderServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> validateUserEmailAvailable(UserResource invitedUser) {
-        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
+        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(STAKEHOLDER_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
     }
-
-/*    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
-
-        List<RoleInvite> existingInvites = roleInviteRepository.findByEmail(invitedUser.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
-    }*/
 
     private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
 
         List<StakeholderInvite> existingInvites = stakeholderInviteRepository.findByEmail(invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED);
     }
-
-/*    private ServiceResult<Void> saveInviteOLD(UserResource invitedUser) {
-        RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
-                invitedUser.getEmail(),
-                generateInviteHash(),
-                Role.MONITORING_OFFICER, // TODO - XXX - Change this to STAKEHOLDER once 2994 is merged
-                CREATED);
-
-        roleInviteRepository.save(roleInvite);
-
-        return serviceSuccess();
-    }*/
 
     private ServiceResult<Void> saveInvite(UserResource invitedUser, long competitionId) {
 

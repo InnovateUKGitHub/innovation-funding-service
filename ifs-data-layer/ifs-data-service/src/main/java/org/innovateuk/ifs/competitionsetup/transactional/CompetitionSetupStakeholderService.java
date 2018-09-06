@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * Transactional and secured service providing operations around stakeholders.
  */
-public interface StakeholderService {
+public interface CompetitionSetupStakeholderService {
 
     //@PreAuthorize("hasPermission(#invitedUser, 'SAVE_STAKEHOLDER_INVITE')")
     @SecuredBySpring(value = "SAVE_STAKEHOLDER_INVITE", description = "Only comp admin, project finance or IFS admin can save a stakeholder invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
-    ServiceResult<Void> inviteStakeholder(UserResource invitedUser);
+    ServiceResult<Void> inviteStakeholder(UserResource invitedUser, long competitionId);
 }
 
