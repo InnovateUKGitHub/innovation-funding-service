@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService implements CompetitionSetupStakeholderRestService {
 
-    private String competitionSetupStakeholderRestURL = "/competition/setup/stakeholder";
+    private String competitionSetupStakeholderRestURL = "/competition/setup/";
 
     @Override
-    public RestResult<Void> inviteStakeholder(InviteUserResource inviteUserResource) {
-        return postWithRestResult(competitionSetupStakeholderRestURL + "/invite", inviteUserResource, Void.class);
+    public RestResult<Void> inviteStakeholder(InviteUserResource inviteUserResource, long competitionId) {
+        return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/invite", inviteUserResource, Void.class);
     }
 }
 
