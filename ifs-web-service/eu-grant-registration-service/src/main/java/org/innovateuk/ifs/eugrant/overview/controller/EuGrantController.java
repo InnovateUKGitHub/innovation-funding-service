@@ -44,6 +44,16 @@ public class EuGrantController {
         return "eugrant/overview";
     }
 
+    @PostMapping(value = "/overview", params = "without-dialog")
+    public String noJsDialogView(@Valid @ModelAttribute("form") EuGrantSubmitForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model) {
+
+        Supplier<String> failureView = () -> overview(form, bindingResult, validationHandler, model);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> "eugrant/confirm-submit");
+    }
+
     @PostMapping("/overview")
     public String submit(@Valid @ModelAttribute("form") EuGrantSubmitForm form,
                          BindingResult bindingResult,
