@@ -14,7 +14,7 @@ public enum NavigationOrigin implements BackLinkOrigin {
     MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
     ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
     PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
-    UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/previous"),
+    PREVIOUS_APPLICATIONS("/competition/{competitionId}/applications/previous"),
     MANAGE_APPLICATIONS_PANEL("/assessment/panel/competition/{competitionId}/manage-applications"),
     INTERVIEW_PANEL_FIND("/assessment/interview/competition/{competitionId}/applications/find"),
     INTERVIEW_PANEL_INVITE("/assessment/interview/competition/{competitionId}/applications/invite"),

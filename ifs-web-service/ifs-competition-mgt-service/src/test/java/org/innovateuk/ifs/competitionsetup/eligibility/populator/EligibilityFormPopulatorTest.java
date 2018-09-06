@@ -21,7 +21,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -47,11 +46,7 @@ public class EligibilityFormPopulatorTest {
 
     @Test
     public void testGetSectionFormDataInitialDetails() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
-                .build(4);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(4);
 
         CompetitionResource competition = newCompetitionResource()
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
@@ -90,11 +85,7 @@ public class EligibilityFormPopulatorTest {
 
     @Test
     public void testGetDefaultResearchParticipationAmountId() {
-        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
-                .withOrganisationType(newOrganisationTypeResource()
-                        .withId(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
-                .build(4);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(4);
         CompetitionResource template = newCompetitionResource()
                 .withCompetitionType(OrganisationTypeEnum.BUSINESS.getId())
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))

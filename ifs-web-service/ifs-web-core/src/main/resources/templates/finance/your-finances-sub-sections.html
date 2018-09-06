@@ -238,7 +238,7 @@
             </div>
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
-             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.applicationIsReadOnly}"></div>
+             th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
     </th:block>
 </th:block>

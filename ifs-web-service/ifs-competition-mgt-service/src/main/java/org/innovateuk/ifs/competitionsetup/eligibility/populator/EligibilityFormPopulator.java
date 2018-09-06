@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -88,13 +87,14 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {
-        Optional<GrantClaimMaximumResource> overriddenGcm = competition.getGrantClaimMaximums()
-                .stream()
-                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
-                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
-                .findFirst();
+        // The same maximum funding level is set for all GrantClaimMaximums when overriding
+        Optional<GrantClaimMaximumResource> grantClaimMaximumResource = competition.getGrantClaimMaximums().stream()
+                .findAny().map(this::getGrantClaimMaximumById);
+        return grantClaimMaximumResource.get().getMaximum();
+    }
 
-        return overriddenGcm.get().getMaximum();
+    private GrantClaimMaximumResource getGrantClaimMaximumById(long id) {
+        return grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess();
     }
 
 }

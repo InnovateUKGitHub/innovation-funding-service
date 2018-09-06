@@ -18,7 +18,6 @@ readonly=${param.status != null and param.status[0] == 'readonly' ? TRUE : FALSE
 <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:unless="${readonly}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-business?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
     <th:block th:if="${readonly}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
