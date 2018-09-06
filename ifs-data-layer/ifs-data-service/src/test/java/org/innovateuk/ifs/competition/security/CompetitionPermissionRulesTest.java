@@ -115,7 +115,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void onlyStakeholdersAssignedToCompCanViewUnsuccessfulApplications() {
+    public void onlyStakeholdersAssignedToCompCanViewPreviousApplications() {
         List<Role> stakeholderRoles = singletonList(STAKEHOLDER);
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
         UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
@@ -124,8 +124,8 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         when(stakeholderRepository.findStakeholders(1L)).thenReturn(stakeholders);
 
-        assertTrue(rules.stakeholderForCompetitionCanViewUnsuccessfulApplications(competition, stakeholderAssignedToCompetition));
-        assertFalse(rules.stakeholderForCompetitionCanViewUnsuccessfulApplications(competition, stakeholderNotAssignedToCompetition));
+        assertTrue(rules.stakeholderForCompetitionCanViewPreviousApplications(competition, stakeholderAssignedToCompetition));
+        assertFalse(rules.stakeholderForCompetitionCanViewPreviousApplications(competition, stakeholderNotAssignedToCompetition));
     }
 
     @Test
