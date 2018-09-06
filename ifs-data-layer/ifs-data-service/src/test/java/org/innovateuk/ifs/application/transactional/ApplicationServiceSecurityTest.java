@@ -167,6 +167,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         assertAccessDenied(() -> classUnderTest.findPreviousApplications(competitionId, 0, 0, "", "ALL"), () -> {
             verify(competitionRules).internalUsersAndIFSAdminCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
             verify(competitionRules).innovationLeadForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(competitionRules).stakeholderForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
     }

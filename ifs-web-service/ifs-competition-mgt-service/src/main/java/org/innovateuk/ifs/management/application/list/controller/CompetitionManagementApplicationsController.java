@@ -132,8 +132,9 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of previous applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users," +
+            "Innovation leads, Stakeholders and IFS Admins can view the list of previous applications to a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead', 'stakeholder')")
     @GetMapping("/previous")
     public String previousApplications(Model model,
                                        @PathVariable("competitionId") long competitionId,
