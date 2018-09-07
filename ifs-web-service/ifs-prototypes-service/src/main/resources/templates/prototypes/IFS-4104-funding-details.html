@@ -18,7 +18,6 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4104-funding-dashboard?section1='} + ${section1} + '&#38;section2=' + ${section2} + '&#38;section3=' + ${section3})"/>
 
@@ -62,15 +61,17 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        aria-describedby="grant-agreement-number-hint"
                                        type="text"
                                        th:value="${edit ? '123456' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a grant agreement number"
+                                >
                             </div>
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label govuk-label--s" for="pic-number">
-                                    Participant Identification Code (PIC)
+                                    Participant identification code (PIC)
                                 </label>
                                 <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
-                                    This is a 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
+                                    The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
                                     href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
                                     target="_blank"
                                     class="govuk-link">participant portal</a> (opens in a new window).
@@ -81,7 +82,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        aria-describedby="pic-number-hint"
                                        type="text"
                                        th:value="${edit ? '12345689' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a participant identification code (PIC)">
                             </div>
 
                             <div class="govuk-form-group">
@@ -89,11 +91,16 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     Type of action
                                 </label>
                                 <span id="type-of-action-hint" class="govuk-hint">
-                                    Funding scheme
+                                    The funding scheme you applied for.
                                 </span>
-                                <select class="govuk-select govuk-!-width-three-quarters" name="type-of-action" id="type-of-action" aria-describedby="type-of-action-hint">
-                                    <option selected="" th:value="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : 'Select...'}"
-                                            th:text="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : 'Select...'}">Select...</option>
+                                <select class="govuk-select govuk-!-width-three-quarters"
+                                        name="type-of-action"
+                                        id="type-of-action"
+                                        aria-describedby="type-of-action-hint"
+                                        required="required"
+                                        data-required-errormessage="Select a type of action">
+                                    <option selected="" th:value="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : NULL }"
+                                            th:text="${edit ? '(COFUND-EJP) COFUND (European Joint Programme)' : NULL}">Select...</option>
                                     <option value="(COFUND-EJP) COFUND (European Joint Programme)">(COFUND-EJP) COFUND (European Joint Programme)</option>
                                     <option value="(CSA) Coordination and support action">(CSA) Coordination and support action</option>
                                     <option value="(ERA-NET-Cofund) ERA-NET Cofund">(ERA-NET-Cofund) ERA-NET Cofund</option>
@@ -116,7 +123,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <option value="(PPI) Public Procurement of Innovative solutions">(PPI) Public Procurement of Innovative solutions</option>
                                     <option value="(RIA) Research and Innovation action">(RIA) Research and Innovation action</option>
                                     <option value="(RPr) Recognition Prize">(RPr) Recognition Prize</option>
-                                    <option value="(SME-1) SME Instrument phase 1  ">(SME-1) SME Instrument phase 1&nbsp; </option>
+                                    <option value="(SME-1) SME Instrument phase 1  ">(SME-1) SME Instrument phase 1 </option>
                                     <option value="(SME-2) SME Instrument phase 2 ">(SME-2) SME Instrument phase 2 </option>
                                 </select>
                             </div>
@@ -126,14 +133,15 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     Project name
                                 </label>
                                 <span id="project-name-hint" class="govuk-hint">
-                                    The call that your original proposal was in response to.
+                                    The name of your project as used in your proposal.
                                 </span>
                                 <input class="govuk-input govuk-!-width-three-quarters"
                                        id="project-name" name="project-name"
                                        type="text"
                                        aria-describedby="project-name-hint"
                                        th:value="${edit ? 'My EU project name' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter a project name">
                             </div>
 
                             <div class="govuk-form-group">
@@ -141,8 +149,48 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                         Project start date
                                     </legend>
-                                    <div class="date-group" data-past-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly}, dateType='data-past-date')" />
+                                    <div class="date-group" data-past-date="">
+                                        <div class="day govuk-visually-hidden">
+                                            <label class="govuk-label" for="projectStartDate_day">
+                                                <span>Day</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_day"
+                                                   readonly="readonly"
+                                                   name="projectStartDate.dayOfMonth"
+                                                   value="1"
+                                                   data-date="">
+                                        </div>
+                                        <div class="month">
+                                            <label class="govuk-label" for="projectStartDate_month">
+                                                <span>Month</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_month"
+                                                   min="1"
+                                                   max="12"
+                                                   placeholder="MM"
+                                                   required="required"
+                                                   name="projectStartDate.monthValue"
+                                                   th:value="${edit ? '12' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <div class="year">
+                                            <label class="govuk-label" for="projectStartDate_year">
+                                                <span>Year</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectStartDate_year"
+                                                   placeholder="YYYY"
+                                                   required="required"
+                                                   name="projectStartDate.year"
+                                                   th:value="${edit ? '2017' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <input type="hidden" name="projectStartDate" id="projectStartDate" value="projectStartDate" data-date="">
                                     </div>
                                 </fieldset>
                             </div>
@@ -152,8 +200,48 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                         Project end date
                                     </legend>
-                                    <div class="date-group" data-future-date>
-                                        <th:block th:insert="prototypes/fragments/date-elements :: form-dateinput (id='application_details-enddate', field='application.endDate',readonly=${readonly}, dateType='data-future-date')" />
+                                    <div class="date-group" data-future-date="">
+                                        <div class="day govuk-visually-hidden">
+                                            <label class="govuk-label" for="projectEndDate_day">
+                                                <span>Day</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_day"
+                                                   readonly="readonly"
+                                                   name="projectEndDate.dayOfMonth"
+                                                   value="1"
+                                                   data-date="">
+                                        </div>
+                                        <div class="month">
+                                            <label class="govuk-label" for="projectEndDate_month">
+                                                <span>Month</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_month"
+                                                   min="1"
+                                                   max="12"
+                                                   placeholder="MM"
+                                                   required="required"
+                                                   name="projectEndDate.monthValue"
+                                                   th:value="${edit ? '03' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <div class="year">
+                                            <label class="govuk-label" for="projectEndDate_year">
+                                                <span>Year</span>
+                                            </label>
+                                            <input class="govuk-input govuk-input--width-3"
+                                                   type="number"
+                                                   id="projectEndDate_year"
+                                                   placeholder="YYYY"
+                                                   required="required"
+                                                   name="projectEndDate.year"
+                                                   th:value="${edit ? '2020' : null}"
+                                                   data-date="">
+                                        </div>
+                                        <input type="hidden" name="projectEndDate" id="projectEndDate" value="projectStartDate" data-date="">
                                     </div>
                                 </fieldset>
                             </div>
@@ -163,7 +251,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                     EU funding contribution for above project (EUR)
                                 </label>
                                 <span id="funding-committed-hint" class="govuk-hint">
-                                    This is the total amount in euros granted to your organisation at the point of the award for your project.
+                                    The total amount in euros granted to your organisation at the point of the award for your project.
                                 </span>
                                 <span class="govuk-body govuk-!-padding-right-1">&euro;</span>
                                 <input class="govuk-input govuk-input--width-10"
@@ -172,19 +260,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                        type="text"
                                        aria-describedby="funding-committed-hint"
                                        th:value="${edit ? '100,000' : ''}"
-                                       required="required">
-                            </div>
-
-                            <div class="govuk-form-group">
-                                <label class="govuk-label govuk-label--s" for="grant-agreement-number">
-                                    Grant agreement number
-                                </label>
-                                <input class="govuk-input govuk-input--width-10"
-                                       id="grant-agreement-number"
-                                       name="grant-agreement-number"
-                                       type="text"
-                                       th:value="${edit ? '123456' : ''}"
-                                       required="required">
+                                       required="required"
+                                       data-required-errormessage="Enter the EU funding contribution">
                             </div>
 
                             <div class="govuk-form-group">
@@ -199,7 +276,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                                    name="consortium-lead"
                                                    type="radio"
                                                    value="yes"
-                                                   required="required">
+                                                   required="required"
+                                                   data-required-errormessage="Select an option">
                                             <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
                                                 Yes
                                             </label>
@@ -211,7 +289,8 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                                    type="radio"
                                                    value="no"
                                                    th:checked="${edit}"
-                                                   required="required">
+                                                   required="required"
+                                                   data-required-errormessage="Select an option">
                                             <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
                                                 No
                                             </label>
@@ -240,7 +319,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                     <dl class="govuk-list">
                         <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
                         <dd>123456</dd>
-                        <dt class="govuk-!-margin-top-6">Participant Identification Code (PIC)</dt>
+                        <dt class="govuk-!-margin-top-6">Participant identification code (PIC)</dt>
                         <dd>12345689</dd>
                         <dt class="govuk-!-margin-top-6">Type of action</dt>
                         <dd>(COFUND-EJP) COFUND (European Joint Programme)</dd>

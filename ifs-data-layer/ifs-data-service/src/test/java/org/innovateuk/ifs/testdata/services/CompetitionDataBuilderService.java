@@ -105,10 +105,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }
 
-    public void removeApplicationTeamForCompetition(CompetitionData data){
-        competitionDataBuilder.removeApplicationTeamFromCompetition(data.getCompetition().getId());
-    }
-
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {
         if (line.nonIfs) {
             return nonIfsCompetitionDataBuilder(line);
@@ -124,7 +120,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null, null,
                         null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
-                        null, emptyList(), null, null, line.nonIfsUrl, line.includeApplicationTeamQuestion);
+                        null, emptyList(), null, null, line.nonIfsUrl);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
 
@@ -141,7 +137,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withBasicData(line.name, line.type, line.innovationAreas,
                     line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
                     line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
-                    line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.includeApplicationTeamQuestion).
+                    line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones();
 
