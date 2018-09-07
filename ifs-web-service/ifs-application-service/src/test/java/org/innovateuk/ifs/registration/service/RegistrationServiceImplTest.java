@@ -1,11 +1,9 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.service.RegistrationService;
-import org.innovateuk.ifs.registration.service.RegistrationServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -55,7 +53,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationRestService.getOrganisationByUserId(userOne.getId())).thenReturn(restSuccess(expected));
+        when(organisationRestService.getPrimaryForUser(userOne.getId())).thenReturn(restSuccess(expected));
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersAndDifferentName(inviteResource, inviteOrganisationResource));
@@ -71,7 +69,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationRestService.getOrganisationByUserId(userOne.getId())).thenReturn(restSuccess(expected));
+        when(organisationRestService.getPrimaryForUser(userOne.getId())).thenReturn(restSuccess(expected));
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));
@@ -86,7 +84,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
-        when(organisationRestService.getOrganisationByUserId(userOne.getId())).thenReturn(restSuccess(expected));
+        when(organisationRestService.getPrimaryForUser(userOne.getId())).thenReturn(restSuccess(expected));
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertFalse(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));

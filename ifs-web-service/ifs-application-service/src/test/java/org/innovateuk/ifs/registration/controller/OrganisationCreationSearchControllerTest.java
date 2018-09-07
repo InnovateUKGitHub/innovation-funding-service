@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -10,7 +10,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
-import org.innovateuk.ifs.registration.controller.OrganisationCreationSearchController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -105,7 +104,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(companyHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
-        when(applicationRestService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
+        when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
@@ -128,7 +127,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationForm.setSearchOrganisationId(COMPANY_ID);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(false);
-        organisationForm.setUseSearchResultAddress(false);
         organisationForm.setOrganisationSearchResults(Collections.emptyList());
         organisationForm.setOrganisationName("NOMENSA LTD");
 
@@ -136,7 +134,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationFormUseSearchResult = new OrganisationCreationForm();
         organisationFormUseSearchResult.setOrganisationSearchName("searchname");
         organisationFormUseSearchResult.setOrganisationName("actualname");
-        organisationFormUseSearchResult.setUseSearchResultAddress(true);
 
         competitionId = 2L;
 
@@ -231,21 +228,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(view().name("registration/organisation/find-organisation"))
                 .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))))
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "addressForm.selectedPostcode.addressLine1"));
-    }
-
-    @Test
-    public void testCreateOrganisation_noAddressAndNoUseSearchResultAddressShouldResultInError() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setTriedToSave(true);
-
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
-
-        mockMvc.perform(get("/organisation/create/find-organisation"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))))
-                .andExpect(model().attributeHasFieldErrors("organisationForm", "useSearchResultAddress"));
     }
 
     @Test
@@ -439,7 +421,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     @Test
     public void testManualAddress_selectedBusinessManualAddress() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setUseSearchResultAddress(true);
+//        organisationFormCookieValue.setUseSearchResultAddress(true);
 
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
