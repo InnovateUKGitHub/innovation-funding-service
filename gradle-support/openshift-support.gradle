@@ -270,8 +270,8 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 
 task deleteProject(type: Exec) {
     doFirst {
-        executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        executable = 'setup-files/scripts/openshift/os-delete-project.sh'
+        args = [openshiftEnv, "remote", project.version]
     }
 
     ignoreExitValue true
@@ -283,8 +283,8 @@ task deleteProject(type: Exec) {
 
 task createProject(type: Exec, dependsOn: deleteProject) {
     doFirst {
-        executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        executable = 'setup-files/scripts/openshift/os-create-project.sh'
+        args = [openshiftEnv, "remote", project.version]
     }
 }
 
