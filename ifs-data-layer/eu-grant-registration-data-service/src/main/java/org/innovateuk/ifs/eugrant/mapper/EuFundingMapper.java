@@ -19,7 +19,7 @@ import org.mapstruct.NullValueMappingStrategy;
 public abstract class EuFundingMapper extends BaseMapper<EuFunding, EuFundingResource, Long> {
 
     @Mappings({
-            @Mapping(target = "id",  ignore = true),
+            @Mapping(target = "id",  ignore = true)
     })
     @Override
     public abstract EuFunding mapToDomain(EuFundingResource resource);

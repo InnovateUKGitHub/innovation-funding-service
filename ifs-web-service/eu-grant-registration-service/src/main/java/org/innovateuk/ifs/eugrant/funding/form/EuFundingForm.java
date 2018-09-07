@@ -3,13 +3,11 @@ package org.innovateuk.ifs.eugrant.funding.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.eugrant.EuActionTypeResource;
-import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class EuFundingForm {
 
@@ -23,18 +21,24 @@ public class EuFundingForm {
     @NotBlank
     private String projectName;
 
-    @NotNull
-    private LocalDate projectStartDate;
-    @NotNull
-    private LocalDate projectEndDate;
+    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
+    private int startDateMonth;
 
-    @NotBlank
+    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
+    private int startDateYear;
+
+    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
+    private int endDateMonth;
+
+    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
+    private int endDateYear;
+
+    @NotNull
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
 
-    private EuActionTypeResource actionType;
-
+    private Long actionType;
 
     public String getGrantAgreementNumber() {
         return grantAgreementNumber;
@@ -60,20 +64,36 @@ public class EuFundingForm {
         this.projectName = projectName;
     }
 
-    public LocalDate getProjectStartDate() {
-        return projectStartDate;
+    public int getStartDateMonth() {
+        return startDateMonth;
     }
 
-    public void setProjectStartDate(LocalDate projectStartDate) {
-        this.projectStartDate = projectStartDate;
+    public void setStartDateMonth(int startDateMonth) {
+        this.startDateMonth = startDateMonth;
     }
 
-    public LocalDate getProjectEndDate() {
-        return projectEndDate;
+    public int getStartDateYear() {
+        return startDateYear;
     }
 
-    public void setProjectEndDate(LocalDate projectEndDate) {
-        this.projectEndDate = projectEndDate;
+    public void setStartDateYear(int startDateYear) {
+        this.startDateYear = startDateYear;
+    }
+
+    public int getEndDateMonth() {
+        return endDateMonth;
+    }
+
+    public void setEndDateMonth(int endDateMonth) {
+        this.endDateMonth = endDateMonth;
+    }
+
+    public int getEndDateYear() {
+        return endDateYear;
+    }
+
+    public void setEndDateYear(int endDateYear) {
+        this.endDateYear = endDateYear;
     }
 
     public BigDecimal getFundingContribution() {
@@ -92,11 +112,11 @@ public class EuFundingForm {
         this.projectCoordinator = projectCoordinator;
     }
 
-    public EuActionTypeResource getActionType() {
+    public Long getActionType() {
         return actionType;
     }
 
-    public void setActionType(EuActionTypeResource actionType) {
+    public void setActionType(Long actionType) {
         this.actionType = actionType;
     }
 
@@ -112,8 +132,10 @@ public class EuFundingForm {
                 .append(grantAgreementNumber, that.grantAgreementNumber)
                 .append(participantId, that.participantId)
                 .append(projectName, that.projectName)
-                .append(projectStartDate, that.projectStartDate)
-                .append(projectEndDate, that.projectEndDate)
+                .append(startDateMonth, that.startDateMonth)
+                .append(startDateYear, that.startDateYear)
+                .append(endDateMonth, that.endDateMonth)
+                .append(endDateYear, that.endDateYear)
                 .append(fundingContribution, that.fundingContribution)
                 .append(projectCoordinator, that.projectCoordinator)
                 .append(actionType, that.actionType)
@@ -126,8 +148,11 @@ public class EuFundingForm {
                 .append(grantAgreementNumber)
                 .append(participantId)
                 .append(projectName)
-                .append(projectStartDate)
-                .append(projectEndDate)
+                .append(startDateMonth)
+                .append(startDateYear)
+                .append(startDateMonth)
+                .append(endDateMonth)
+                .append(endDateYear)
                 .append(fundingContribution)
                 .append(projectCoordinator)
                 .append(actionType)
