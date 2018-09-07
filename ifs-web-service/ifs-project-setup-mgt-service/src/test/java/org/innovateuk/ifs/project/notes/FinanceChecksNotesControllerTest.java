@@ -125,8 +125,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
-        when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
-        when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
+        when(organisationRestService.getPrimaryForUser(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
+        when(organisationRestService.getPrimaryForUser(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
         // populate viewmodel
