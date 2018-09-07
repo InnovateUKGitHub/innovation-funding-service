@@ -14,6 +14,6 @@ HOST=$(getHost $TARGET)
 ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 
-echo "Deleting $PROJECT Openshift project"
+echo "Creating $PROJECT Openshift project"
 
-oc delete ${PROJECT} ${SVC_ACCOUNT_CLAUSE}
+oc new-project ${PROJECT} ${SVC_ACCOUNT_CLAUSE}

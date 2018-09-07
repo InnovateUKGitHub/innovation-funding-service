@@ -16,4 +16,4 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 
 echo "Deleting $PROJECT Openshift project"
 
-oc delete ${PROJECT} ${SVC_ACCOUNT_CLAUSE}
+oc delete project ${PROJECT} ${SVC_ACCOUNT_CLAUSE}
