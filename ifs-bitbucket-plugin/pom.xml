@@ -4,10 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.innovateuk.ifs.bitbucket.plugin</groupId>
     <artifactId>ifs-bitbucket-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <organization>
-        <name>Example Company</name>
-        <url>http://www.example.com/</url>
+        <name>Innovate UK</name>
     </organization>
     <name>ifs-bitbucket-plugin</name>
     <description>This is the org.innovateuk.ifs.bitbucket.plugin:ifs-bitbucket-plugin plugin for Atlassian Bitbucket Server.</description>
@@ -53,13 +52,18 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>${junit.libversion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+            <!--
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
+            -->
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -77,7 +81,7 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <version>${javax.inject.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
@@ -90,13 +94,13 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
+            <version>${jsr311.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -135,7 +139,7 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>1.2.6</version>
+                <version>${atlassian.spring.scanner.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -157,13 +161,20 @@
         </plugins>
     </build>
     <properties>
-        <bitbucket.version>5.8.0</bitbucket.version>
-        <bitbucket.data.version>5.8.0</bitbucket.data.version>
-        <amps.version>6.3.15</amps.version>
-        <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
-        <atlassian.spring.scanner.version>1.2.6</atlassian.spring.scanner.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
         <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdkLevel>1.8</jdkLevel>
+
+        <amps.version>6.3.15</amps.version>
+        <atlassian.spring.scanner.version>1.2.6</atlassian.spring.scanner.version>
+        <bitbucket.version>5.8.0</bitbucket.version>
+        <bitbucket.data.version>5.8.0</bitbucket.data.version>
+        <commons.lang3.version>3.5</commons.lang3.version>
+        <gson.version>2.2.2-atlassian-1</gson.version>
+        <javax.inject.version>1</javax.inject.version>
+        <jsr311.version>1.1.1</jsr311.version>
+        <junit.libversion>4.10</junit.libversion>
+        <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
     </properties>
 </project>
