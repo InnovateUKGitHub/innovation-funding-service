@@ -60,7 +60,7 @@ public class EuContactControllerTest extends BaseControllerMockMVCTest<EuContact
 
         mockMvc.perform(get("/contact-details"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("eugrant/contact-details"));
+                .andExpect(view().name("contact/contact-details"));
     }
 
     @Test
