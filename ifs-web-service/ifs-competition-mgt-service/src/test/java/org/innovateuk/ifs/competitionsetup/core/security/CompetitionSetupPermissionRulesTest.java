@@ -36,6 +36,16 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
         assertTrue(rules.manageInnovationLead(competitionId, loggedInUser));
     }
 
+    @Test
+    public void manageStakeholders() {
+
+        CompetitionCompositeId competitionId = CompetitionCompositeId.id(14L);
+        UserResource loggedInUser = new UserResource();
+
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId.id())).thenReturn(Boolean.TRUE);
+        assertTrue(rules.manageStakeholders(competitionId, loggedInUser));
+    }
+
     @Override
     protected CompetitionSetupPermissionRules supplyPermissionRulesUnderTest() {
         return new CompetitionSetupPermissionRules();
