@@ -61,17 +61,17 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user);
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders) and IFS Admin can view unsuccessful applications")
-    public boolean internalUsersAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders), and IFS Admin can view previous applications")
+    public boolean internalUsersAndIFSAdminCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || isIFSAdmin(user);
     }
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competition can view unsuccessful applications")
-    public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Innovation leads for the competition can view previous applications")
+    public boolean innovationLeadForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Stakeholders for the competition can view unsuccessful applications")
-    public boolean stakeholderForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Stakeholders for the competition can view previous applications")
+    public boolean stakeholderForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
