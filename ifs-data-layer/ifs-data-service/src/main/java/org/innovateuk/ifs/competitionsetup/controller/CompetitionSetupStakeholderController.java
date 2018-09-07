@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Stakeholder controller to handle RESTful services related to stakeholders
  */
-
 @RestController
 @RequestMapping("/competition/setup/{competitionId}/stakeholder")
 public class CompetitionSetupStakeholderController {
