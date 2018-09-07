@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.registration.controller.OrganisationCreationContributorTypeController;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -66,11 +65,11 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void testChooseOrganisationType() throws Exception {
         mockMvc.perform(
-                get("/organisation/create/new-account-organisation-type")
+                get("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/organisation-type"))
+                .andExpect(view().name("registration/organisation/contributor-organisation-type"))
                 .andExpect(model().attributeExists("form", "model"));
     }
 
@@ -80,7 +79,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void chooseOrganisationTypePostBusiness() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/new-account-organisation-type")
+                post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "1")
 
@@ -99,7 +98,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void chooseOrganisationTypePostResearch() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/new-account-organisation-type")
+                post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "2")
 
