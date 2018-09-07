@@ -36,7 +36,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void save() {
+    public void update() {
 
         EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
                 .withName("worth")
