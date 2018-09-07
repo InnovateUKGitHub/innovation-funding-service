@@ -54,7 +54,7 @@
                                     data-pattern-errormessage=#{validation.eugrant.fullname.invalid}" />
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('jobTitle')} ? 'govuk-form-group--error'">
                     <label class="govuk-label" for="jobTitle">Job title</label>
                     <th:block th:if="${#fields.hasErrors('jobTitle')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('jobTitle')}" th:text="${err}"></span>
@@ -67,7 +67,7 @@
                            th:attr="data-required-errormessage=#{validation.eugrant.jobtitle.required}">
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                     <label class="govuk-label" for="email">Email</label>
                     <th:block th:if="${#fields.hasErrors('email')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
@@ -80,7 +80,7 @@
                            th:attr="data-required-errormessage=#{validation.eugrant.email.required}">
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('telephone')} ? 'govuk-form-group--error'">
                     <label class="govuk-label" for="telephone">Telephone</label>
                     <th:block th:if="${#fields.hasErrors('telephone')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('telephone')}" th:text="${err}"></span>
