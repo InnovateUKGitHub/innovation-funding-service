@@ -14,8 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class EuGrantController {
 
-    @Autowired
     private EuGrantOverviewViewModelPopulator euGrantOverviewViewModelPopulator;
+
+    public EuGrantController() {
+    }
+
+    @Autowired
+    public EuGrantController(EuGrantOverviewViewModelPopulator euGrantOverviewViewModelPopulator) {
+        this.euGrantOverviewViewModelPopulator = euGrantOverviewViewModelPopulator;
+    }
 
     @GetMapping("/overview")
     public String overview(Model model) {
