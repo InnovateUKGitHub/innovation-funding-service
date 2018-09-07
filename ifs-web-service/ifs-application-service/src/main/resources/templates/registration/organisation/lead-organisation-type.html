@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to application start',linkClass='link-back',linkUrl=${competitionId != null ? '/application/create/start-application/'+competitionId : '/competition/search'},currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back', linkUrl=${competitionId != null ? '/application/create/start-application/'+competitionId : '/competition/search'},currentApplication=${currentApplication}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}"
