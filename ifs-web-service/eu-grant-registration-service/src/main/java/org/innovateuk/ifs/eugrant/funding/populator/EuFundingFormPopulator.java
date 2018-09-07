@@ -30,6 +30,7 @@ public class EuFundingFormPopulator {
             fundingForm.setStartDateYear(euFundingResource.getProjectStartDate().getYear());
             fundingForm.setEndDateMonth(euFundingResource.getProjectEndDate().getMonthValue());
             fundingForm.setEndDateYear(euFundingResource.getProjectEndDate().getYear());
+            fundingForm.setActionType(euFundingResource.getActionType().getId());
         }
 
         return fundingForm;

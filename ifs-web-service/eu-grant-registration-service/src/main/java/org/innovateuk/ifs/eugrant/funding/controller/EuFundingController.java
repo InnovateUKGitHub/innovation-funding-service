@@ -48,7 +48,8 @@ public class EuFundingController {
     }
 
     @GetMapping("/funding-details")
-    public String fundingDetails(@ModelAttribute(value = "form", binding = false) EuFundingForm form) {
+    public String fundingDetails(@ModelAttribute(value = "form", binding = false) EuFundingForm form,
+                                 Model model) {
 
         EuGrantResource grantResource = euGrantCookieService.get();
 
@@ -57,6 +58,7 @@ public class EuFundingController {
         }
 
         form = euFundingFormPopulator.populate(form);
+        model.addAttribute("actionType", euActionTypeRestService.getById(form.getActionType()).getSuccess());
 
         return "funding/funding-details";
     }

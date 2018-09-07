@@ -10,15 +10,21 @@
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
 
 <div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/overview}" />
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div>
-            <a th:href="@{/overview}" class="govuk-back-link">Back</a>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding details',size='govuk-heading-xl'" />
-
-        <th:block>
 
             <form th:action="@{/funding-details/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
 
@@ -95,24 +101,12 @@
                                th:attr="data-required-errormessage=#{validation.standard.eugrant.notblank}">
                     </div>
 
-                    <!--<div class="govuk-form-group">-->
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDateMonth')} or ${#fields.hasErrors('startDateYear')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Project start date
                             </legend>
-                            <!--<th:block th:if="${#fields.hasErrors('projectStartDate')}">-->
-                                <!--<span class="govuk-error-message"  th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}"></span>-->
-                            <!--</th:block>-->
                             <div class="date-group" data-past-date="">
-                                <div class="day">
-                                    <input type="hidden"
-                                           name="day"
-                                           id="application_details-startdate_day"
-                                           value="01"
-                                           data-date=""
-                                           data-autosave-disabled="">
-                                </div>
                                 <div class="month">
                                     <label class="govuk-label" for="application_details-startdate_month">
                                         <span>Month</span>
@@ -127,8 +121,10 @@
                                            required="required"
                                            data-date=""
                                            data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
                                            th:field="*{startDateMonth}">
                                 </div>
+
                                 <div class="year">
                                     <label class="govuk-label" for="application_details-startdate_year">
                                         <span>Year</span>
@@ -141,30 +137,20 @@
                                            required="required"
                                            data-date=""
                                            data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
                                            th:field="*{startDateYear}">
                                 </div>
                             </div>
                         </fieldset>
                     </div>
 
-                    <!--<div class="govuk-form-group">-->
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('endDateMonth')} or ${#fields.hasErrors('endDateYear')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Project end date
                             </legend>
-                            <!--<th:block th:if="${#fields.hasErrors('projectEndDate')}">-->
-                                <!--<span class="govuk-error-message"  th:each="err : ${#fields.errors('projectEndDate')}" th:text="${err}"></span>-->
-                            <!--</th:block>-->
                             <div class="date-group" data-future-date="">
-                                <div class="day">
-                                    <input type="hidden"
-                                           name="day"
-                                           id="application_details-enddate_day"
-                                           value="01"
-                                           data-date=""
-                                           data-autosave-disabled="">
-                                </div>
+
                                 <div class="month">
                                     <label class="govuk-label" for="application_details-enddate_month">
                                         <span>Month</span>
@@ -179,8 +165,10 @@
                                            required="required"
                                            data-date=""
                                            data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('endDateMonth')} ? 'govuk-input--error'"
                                            th:field="*{endDateMonth}">
                                 </div>
+
                                 <div class="year">
                                     <label class="govuk-label" for="application_details-enddate_year">
                                         <span>Year</span>
@@ -193,6 +181,7 @@
                                            required="required"
                                            data-date=""
                                            data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('endDateYear')} ? 'govuk-input--error'"
                                            th:field="*{endDateYear}">
                                 </div>
                             </div>
@@ -259,8 +248,6 @@
                 </fieldset>
 
             </form>
-
-        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

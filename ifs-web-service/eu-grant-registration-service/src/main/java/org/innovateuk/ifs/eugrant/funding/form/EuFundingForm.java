@@ -15,21 +15,25 @@ public class EuFundingForm {
     private String grantAgreementNumber;
 
     @NotNull
-    @Pattern(regexp="[\\d]{6}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.participantIdentificationCode}")
     private String participantId;
 
     @NotBlank
     private String projectName;
 
+    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
     private int startDateMonth;
 
+    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
     private int startDateYear;
 
+    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
     private int endDateMonth;
 
+    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
     private int endDateYear;
 
