@@ -43,7 +43,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> classUnderTest.createOrganisationUser(123L, userToCreate), () -> {
+        assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -92,7 +92,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testResendUserVerificationEmail() throws Exception {
+    public void testResendUserVerificationEmail() {
         final UserResource userToSendVerificationEmail = newUserResource().build();
 
         assertAccessDenied(
@@ -105,7 +105,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testEditInternalUser() throws Exception {
+    public void testEditInternalUser() {
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
