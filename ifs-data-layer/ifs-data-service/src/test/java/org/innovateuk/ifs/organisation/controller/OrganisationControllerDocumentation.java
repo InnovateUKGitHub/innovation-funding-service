@@ -112,6 +112,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("applicationId").description("Identifier of the application to find the application organisation for")
                         ),
                         responseFields(organisationResourceFields)
+                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -131,6 +134,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("projectId").description("Identifier of the project to find the project organisation for")
                         ),
                         responseFields(organisationResourceFields)
+                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
