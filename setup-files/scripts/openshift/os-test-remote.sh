@@ -69,7 +69,7 @@ function navigateToRoot(){
 navigateToRoot
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
-fileFixtures
+fileFixtures "${SVC_ACCOUNT_CLAUSE}"
 tailorToAppInstance
 copyNecessaryFiles
 buildAndPushTestImages

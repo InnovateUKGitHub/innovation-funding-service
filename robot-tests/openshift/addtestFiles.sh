@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SVC_ACCOUNT_CLAUSE=$1
+echo "Using svc account caluse: " + ${SVC_ACCOUNT_CLAUSE}
+
 # Define some functions for later use
 
 function coloredEcho() {
@@ -32,45 +35,45 @@ function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
 
-    DATA_SERVICE_POD=$(oc get pods | grep ^data-service | awk '{ print $1 }')
+    DATA_SERVICE_POD=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^data-service | awk '{ print $1 }')
 
-    oc rsh ${DATA_SERVICE_POD} rm -rf ${storedFileFolder}
+    oc  ${SVC_ACCOUNT_CLAUSE} sh ${DATA_SERVICE_POD} rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    oc rsh ${DATA_SERVICE_POD} rm -rf ${virusScanHoldingFolder}
+    oc  ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} rm -rf ${virusScanHoldingFolder}
 
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    oc rsh ${DATA_SERVICE_POD} rm -rf ${virusScanQuarantinedFolder}
+    oc  ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} rm -rf ${virusScanQuarantinedFolder}
 
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    oc rsh ${DATA_SERVICE_POD} rm -rf ${virusScanScannedFolder}
+    oc  ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles() {
     section "=> RESETTING FILE STORAGE STATE"
 
-    DATA_SERVICE_POD=$(oc get pods | grep ^data-service | awk '{ print $1 }')
+    DATA_SERVICE_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep ^data-service | awk '{ print $1 }')
 
-    oc rsh ${DATA_SERVICE_POD} apt-get update
-    oc rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get update 
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    oc rsync --include=testing.pdf ${uploadFileDir}/ ${DATA_SERVICE_POD}:/tmp/
+    oc ${SVC_ACCOUNT_CLAUSE} rsync --include=testing.pdf ${uploadFileDir}/ ${DATA_SERVICE_POD}:/tmp/
 
     echo "***********Making the quarantined directory ***************"
-    oc rsh ${DATA_SERVICE_POD} mkdir -p ${virusScanQuarantinedFolder}
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    oc rsh ${DATA_SERVICE_POD} cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    oc rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}000000000_999999999/000000_999999/000_999
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}000000000_999999999/000000_999999/000_999
 
-    oc rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
-    oc rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}
+    oc ${SVC_ACCOUNT_CLAUSE} rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}
 }
 
 # ====================================
