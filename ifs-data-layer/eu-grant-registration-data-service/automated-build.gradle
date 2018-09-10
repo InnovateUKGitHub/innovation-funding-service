@@ -14,4 +14,7 @@ project.ext['flyway.schemas']='eu_grant_registration,eu_grant_registration_test'
 project.ext['flyway.user']="ifs"
 project.ext['flyway.password']="ifs"
 
+def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration," + flywayPatchesPath + "/reference"
+
 ext.silRestBaseURL="http://sil-stub:8080/silstub"

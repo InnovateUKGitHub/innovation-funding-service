@@ -15,9 +15,9 @@ import org.mapstruct.NullValueMappingStrategy;
 )
 public abstract class EuActionTypeMapper extends BaseMapper<EuActionType, EuActionTypeResource, Long> {
 
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-    })
+//    @Mappings({
+//            @Mapping(target = "id", ignore = true)
+//    })
     @Override
     public abstract EuActionType mapToDomain(EuActionTypeResource resource);
 

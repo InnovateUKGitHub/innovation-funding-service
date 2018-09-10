@@ -8,7 +8,7 @@ include::{snippets}/eu-grant/create/http-response.adoc[]
 include::{snippets}/eu-grant/create/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/eu-grant/save/curl-request.adoc[]
+include::{snippets}/eu-grant/create/curl-request.adoc[]
 
 === Find By Id
 ==== Request
@@ -22,7 +22,6 @@ include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]
 
-
 === Save
 ==== Request
 include::{snippets}/eu-grant/save/http-request.adoc[]
@@ -35,8 +34,7 @@ include::{snippets}/eu-grant/save/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/eu-grant/save/curl-request.adoc[]
 
-
-=== Find By Id
+=== Submit
 ==== Request
 include::{snippets}/eu-grant/submit/http-request.adoc[]
 include::{snippets}/eu-grant/submit/path-parameters.adoc[]

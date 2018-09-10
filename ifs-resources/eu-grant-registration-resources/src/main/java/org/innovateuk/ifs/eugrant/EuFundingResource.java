@@ -24,6 +24,27 @@ public class EuFundingResource {
 
     private EuActionTypeResource actionType;
 
+    public EuFundingResource() {
+    }
+
+    public EuFundingResource(String grantAgreementNumber,
+                             String participantId,
+                             String projectName,
+                             LocalDate projectStartDate,
+                             LocalDate projectEndDate,
+                             BigDecimal fundingContribution,
+                             boolean projectCoordinator,
+                             EuActionTypeResource actionType) {
+        this.grantAgreementNumber = grantAgreementNumber;
+        this.participantId = participantId;
+        this.projectName = projectName;
+        this.projectStartDate = projectStartDate;
+        this.projectEndDate = projectEndDate;
+        this.fundingContribution = fundingContribution;
+        this.projectCoordinator = projectCoordinator;
+        this.actionType = actionType;
+    }
+
     public String getGrantAgreementNumber() {
         return grantAgreementNumber;
     }

@@ -23,16 +23,25 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  */
 @Controller
 @RequestMapping("/")
-public class EuContactDetailsController {
+public class EuContactController {
 
-    @Autowired
     private EuGrantCookieService euGrantCookieService;
 
-    @Autowired
     private EuContactFormPopulator euContactFormPopulator;
 
-    @Autowired
     private EuContactSaver euContactSaver;
+
+    public EuContactController() {
+    }
+
+    @Autowired
+    public EuContactController(EuGrantCookieService euGrantCookieService,
+                               EuContactFormPopulator euContactFormPopulator,
+                               EuContactSaver euContactSaver) {
+        this.euGrantCookieService = euGrantCookieService;
+        this.euContactFormPopulator = euContactFormPopulator;
+        this.euContactSaver = euContactSaver;
+    }
 
     @GetMapping("/contact-details")
     public String contactDetails(@ModelAttribute(value = "form", binding = false) EuContactForm form) {
@@ -45,7 +54,7 @@ public class EuContactDetailsController {
 
         form = euContactFormPopulator.populate(form);
 
-        return "eugrant/contact-details";
+        return "contact/contact-details";
     }
 
     @GetMapping("/contact-details/edit")
@@ -54,7 +63,7 @@ public class EuContactDetailsController {
 
         form = euContactFormPopulator.populate(form);
 
-        return "eugrant/contact-details-edit";
+        return "contact/contact-details-edit";
     }
 
     @PostMapping("/contact-details/edit")

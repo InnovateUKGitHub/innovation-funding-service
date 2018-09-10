@@ -2,6 +2,7 @@ package org.innovateuk.ifs.eugrant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.eugrant.EuContactResource;
+import org.innovateuk.ifs.eugrant.EuFundingResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 
@@ -43,8 +44,11 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
         return withArray((contact, grant) -> grant.setContact(contact), contacts);
     }
 
+    public EuGrantResourceBuilder withFunding(EuFundingResource... fundings) {
+        return withArray((funding, grant) -> grant.setFunding(funding), fundings);
+    }
+
     public EuGrantResourceBuilder withShortCode(String... shortCodes) {
         return withArray((shortCode, grant) -> grant.setShortCode(shortCode), shortCodes);
     }
-
 }

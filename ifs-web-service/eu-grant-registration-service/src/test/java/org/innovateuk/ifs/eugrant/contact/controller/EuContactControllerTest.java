@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class EuContactDetailsControllerTest extends BaseControllerMockMVCTest<EuContactDetailsController> {
+public class EuContactControllerTest extends BaseControllerMockMVCTest<EuContactController> {
 
     @Spy
     @InjectMocks
@@ -34,8 +34,8 @@ public class EuContactDetailsControllerTest extends BaseControllerMockMVCTest<Eu
     private EuContactSaver euContactSaver;
 
     @Override
-    protected EuContactDetailsController supplyControllerUnderTest() {
-        return new EuContactDetailsController();
+    protected EuContactController supplyControllerUnderTest() {
+        return new EuContactController();
     }
 
     @Before
@@ -60,7 +60,7 @@ public class EuContactDetailsControllerTest extends BaseControllerMockMVCTest<Eu
 
         mockMvc.perform(get("/contact-details"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("eugrant/contact-details"));
+                .andExpect(view().name("contact/contact-details"));
     }
 
     @Test

@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eugrant.controller;
 
 import org.innovateuk.ifs.MockMvcTest;
-import org.innovateuk.ifs.eugrant.controller.EuGrantController;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.mockito.Mockito.verify;
