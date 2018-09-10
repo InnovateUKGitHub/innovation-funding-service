@@ -32,6 +32,6 @@ public class OrganisationAddressViewModel {
     }
 
     public boolean isShowOrgType() {
-        return !isLeadApplicant;
+        return true;
     }
 }

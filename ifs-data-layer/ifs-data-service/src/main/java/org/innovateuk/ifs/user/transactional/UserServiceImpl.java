@@ -14,6 +14,7 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -236,19 +237,19 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
-            List<UserOrganisation> userOrganisations;
+            Set<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
@@ -263,6 +264,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                     userRepository.save(user);
                     return serviceSuccess();
                 }));
+    }
+
+    @Override
+    public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
+        return getUser(grantRoleCommand.getUserId())
+                .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {
