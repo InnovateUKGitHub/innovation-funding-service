@@ -18,7 +18,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -126,6 +126,12 @@ Comp admin can see the application is rejected on manage assessment page
     And the user should see the element      jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
+Custom Suite Setup
+   The user logs-in in new browser  &{assessor2_credentials}
+   ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Sign in successful")
+   Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
+   ...                              AND    the user clicks the button/link   css=.button[type="submit"]   #Continue
+
 the assessor fills all fields with valid inputs
     Select From List By Index                             id=rejectReasonValid    2
     The user should not see the text in the page          Please enter a reason

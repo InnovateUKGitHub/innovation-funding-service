@@ -102,14 +102,14 @@ public class ThreadViewModelPopulator {
      * A strategy for naming authors of posts by either explicitly identifying them as named Project Finance members or
      * otherwise simply as named external users
      */
-    public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser() {
+    public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser(long projectId) {
 
         return user -> {
 
             if (user.isInternalUser()) {
                 return user.getName() + " - Innovate UK (Finance team)";
             } else {
-                return user.getName() + " - " + organisationRestService.getOrganisationByUserId(user.getId()).getSuccess().getName();
+                return user.getName() + " - " + organisationRestService.getByUserAndProjectId(user.getId(), projectId).getSuccess().getName();
             }
         };
     }
@@ -118,12 +118,12 @@ public class ThreadViewModelPopulator {
      * A strategy for naming authors of posts by either explicitly identifying them as anonymous Project Finance members or
      * otherwise simply as named external users
      */
-    public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser() {
+    public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser(long projectId) {
         return user -> {
             if (user.isInternalUser()) {
                 return "Innovate UK - Finance team";
             } else {
-                return user.getName() + " - " + organisationRestService.getOrganisationByUserId(user.getId()).getSuccess().getName();
+                return user.getName() + " - " + organisationRestService.getByUserAndProjectId(user.getId(), projectId).getSuccess().getName();
             }
         };
     }

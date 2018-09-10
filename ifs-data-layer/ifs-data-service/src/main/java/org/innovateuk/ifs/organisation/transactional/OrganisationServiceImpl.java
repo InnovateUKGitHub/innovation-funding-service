@@ -86,11 +86,33 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> getPrimaryForUser(final long userId) {
-        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
         return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
+        Organisation org = organisationRepository.findByProcessRolesUserIdAndProcessRolesApplicationId(userId, applicationId);
+        return find(org, notFoundError(Organisation.class, userId, applicationId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId) {
+        Organisation org = organisationRepository.findByUserAndProjectId(userId, projectId);
+        return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
+    }
+
+    @Override
+    public ServiceResult<List<OrganisationResource>> getAllByUserId(long userId) {
+        return serviceSuccess(simpleMap(organisationRepository.findDistinctByUsersId(userId),
+                organisationMapper::mapToResource));
     }
 
     @Override
@@ -177,5 +199,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             organisationNameDecoded = encodedName;
         }
         return organisationNameDecoded;
+    }
+
+    private List<OrganisationResource> organisationsToResources(List<Organisation> organisations) {
+        return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
     }
 }

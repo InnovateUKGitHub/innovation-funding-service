@@ -197,7 +197,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
     private ServiceResult<Void> validateUserIsInSameOrganisation(InviteProjectResource invite, User user) {
 
-        List<Long> usersOrganisations = simpleMap(organisationRepository.findByUsers(user), Organisation::getId);
+        List<Long> usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(user), Organisation::getId);
 
         if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);

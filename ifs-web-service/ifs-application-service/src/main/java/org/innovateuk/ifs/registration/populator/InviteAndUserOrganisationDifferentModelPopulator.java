@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.model;
+package org.innovateuk.ifs.registration.populator;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,7 +22,7 @@ public class InviteAndUserOrganisationDifferentModelPopulator {
     public InviteAndUserOrganisationDifferentViewModel populateModel(ApplicationInviteResource invite) {
         String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
         UserResource user = userService.findUserByEmail(invite.getEmail()).get();
-        OrganisationResource userOrganisation = organisationRestService.getOrganisationByUserId(user.getId()).getSuccess();
+        OrganisationResource userOrganisation = organisationRestService.getPrimaryForUser(user.getId()).getSuccess();
         String leadApplicantName = invite.getLeadApplicant();
         String leadApplicantEmail = invite.getLeadApplicantEmail();
         return new InviteAndUserOrganisationDifferentViewModel(inviteOrganisationName, userOrganisation.getName(), leadApplicantName, leadApplicantEmail);

@@ -134,11 +134,11 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
-        when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
+        when(organisationRestService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
-        when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
+        when(organisationRestService.getByUserAndProjectId(financeContactUser.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
         when(userRestService.retrieveUserById(financeContact2User.getId())).thenReturn(restSuccess(financeContact2User));
-        when(organisationRestService.getOrganisationByUserId(financeContact2User.getId())).thenReturn(restSuccess(leadOrganisationResource));
+        when(organisationRestService.getByUserAndProjectId(financeContact2User.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);

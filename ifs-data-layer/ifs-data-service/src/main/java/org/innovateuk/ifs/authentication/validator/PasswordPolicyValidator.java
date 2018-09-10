@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.stream.Collectors.summingInt;
@@ -156,14 +157,19 @@ public class PasswordPolicyValidator {
     }
 
     private List<String> getOrganisationNamesForUser(UserResource user, Long organisationId) {
-        if (user.getId() == null && organisationId != null) {
-            Optional<Organisation> organisation = organisationRepository.findById(organisationId);
-            if(organisation.isPresent()) {
-                return asList(organisation.get().getName());
+        if (user.getId() == null) {
+            if (organisationId != null) {
+                Optional<Organisation> organisation = organisationRepository.findById(organisationId);
+                if (organisation.isPresent()) {
+                    return asList(organisation.get().getName());
+                } else {
+                    return emptyList();
+                }
+            } else  {
+                return emptyList();
             }
-            return asList();
         }
-        return organisationRepository.findByUsersId(user.getId()).stream()
+        return organisationRepository.findDistinctByUsersId(user.getId()).stream()
                 .filter(organisation -> organisation.getName() != null)
                 .map(Organisation::getName)
                 .collect(Collectors.toList());

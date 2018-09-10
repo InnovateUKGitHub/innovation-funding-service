@@ -44,27 +44,24 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> data.setCompetition(competition));
     }
 
-    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission) {
+    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId) {
 
-        return with(data -> {
+        return with(data -> doAs(leadApplicant, () -> {
 
-            doAs(leadApplicant, () -> {
+            ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
+                    applicationName, data.getCompetition().getId(), leadApplicant.getId(), organisationId).
+                    getSuccess();
 
-                ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
-                        applicationName, data.getCompetition().getId(), leadApplicant.getId()).
-                        getSuccess();
+            created.setResubmission(resubmission);
+            created = applicationService.saveApplicationDetails(created.getId(), created)
+                    .getSuccess();
 
-                created.setResubmission(resubmission);
-                created = applicationService.saveApplicationDetails(created.getId(), created)
-                        .getSuccess();
+            ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
+            applicationResearchCategoryService.setResearchCategory(created.getId(), category.getId());
 
-                ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
-                applicationResearchCategoryService.setResearchCategory(created.getId(), category.getId());
-
-                data.setLeadApplicant(leadApplicant);
-                data.setApplication(created);
-            });
-        });
+            data.setLeadApplicant(leadApplicant);
+            data.setApplication(created);
+        }));
     }
 
     public ApplicationDataBuilder withInnovationArea(String innovationAreaName) {
@@ -126,13 +123,13 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return asLeadApplicant(data -> {
 
-            List<Organisation> organisations = organisationRepository.findByUsersId(collaborator.getId());
+            List<Organisation> organisations = organisationRepository.findDistinctByUsersId(collaborator.getId());
             Organisation organisation = organisations.get(0);
 
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
-            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
+            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.empty()));
         });
     }
 
@@ -194,7 +191,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
 
-        List<Organisation> organisations = organisationRepository.findByUsersId(data.getLeadApplicant().getId());
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(data.getLeadApplicant().getId());
         Organisation leadOrganisation = organisations.get(0);
 
         List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.
