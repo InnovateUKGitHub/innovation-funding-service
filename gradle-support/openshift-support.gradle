@@ -350,7 +350,7 @@ task osBlockTilTestsRunning(type: Exec) {
 
 task osStopTests(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = []
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osTestResults(type: Exec) {
