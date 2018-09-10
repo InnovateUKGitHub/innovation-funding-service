@@ -1,19 +1,21 @@
 #!/bin/bash
+
 set -e
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 
-PROJECT=$(oc project -q)
+PROJECT=$1
 shift 1
 ROBOT_COMMAND=$@
 HOST=$(getClusterAddress)
 ROUTE_DOMAIN=apps.${HOST}
-REGISTRY=docker-registry-default.apps.$(getClusterAddress)
-INTERNAL_REGISTRY=172.30.80.28:5000
+REGISTRY=$(getRegistry)
+INTERNAL_REGISTRY=$(getInternalRegistry)
+SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 
-
-echo "Deploying tests to the current oc project ($PROJECT)"
+echo "Deploying tests to ($PROJECT)"
 
 function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
@@ -37,14 +39,14 @@ function cleanUp() {
 
 function buildAndPushTestImages() {
     docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
-    docker login -p $(oc whoami -t) -u unused ${REGISTRY}
+    docker login -p ${SVC_ACCOUNT_TOKEN} -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
 
 function deployTests() {
-    oc create -f $(getBuildLocation)/robot-tests/7-chrome.yml
+    oc create -f $(getBuildLocation)/robot-tests/7-chrome.yml ${SVC_ACCOUNT_CLAUSE}
     sleep 30 # TODO should wait till chrome is running
-    oc create -f $(getBuildLocation)/robot-tests/8-robot.yml
+    oc create -f $(getBuildLocation)/robot-tests/8-robot.yml ${SVC_ACCOUNT_CLAUSE}
     sleep 2
 }
 
@@ -78,4 +80,4 @@ sleep 5
 
 echo ""
 echo "Tests are running now. You can follow the progress with the following command:"
-echo "oc logs -f $(oc get pods | grep robot-framework-1- | grep -v deploy | awk '{ print $1 }')"
+echo "oc logs -f $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep robot-framework-1- | grep -v deploy | awk '{ print $1 }')"
