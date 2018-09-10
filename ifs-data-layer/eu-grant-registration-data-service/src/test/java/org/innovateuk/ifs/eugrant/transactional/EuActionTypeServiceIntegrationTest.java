@@ -35,6 +35,8 @@ public class EuActionTypeServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getById() {
         EuActionType actionType = new EuActionType();
+        actionType.setId(1L);
+
         ServiceResult<EuActionTypeResource> result = euActionTypeService.getById(actionType.getId());
 
         assertTrue(result.isSuccess());
