@@ -16,7 +16,6 @@ SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause "remote" $PROJECT $SVC_ACCOUNT_TOKEN)
 
 echo "Deploying tests to ($PROJECT)"
-echo ${SVC_ACCOUNT_CLAUSE}
 
 function tailorToAppInstance() {
     rm -rf $(getBuildLocation)

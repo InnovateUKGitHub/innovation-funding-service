@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SVC_ACCOUNT_CLAUSE=$1
-echo "Using svc account caluse: " ${SVC_ACCOUNT_CLAUSE}
 
 # Define some functions for later use
 
@@ -37,7 +36,7 @@ function clearDownFileRepository() {
 
     DATA_SERVICE_POD=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^data-service | awk '{ print $1 }')
 
-    oc  ${SVC_ACCOUNT_CLAUSE} sh ${DATA_SERVICE_POD} rm -rf ${storedFileFolder}
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
