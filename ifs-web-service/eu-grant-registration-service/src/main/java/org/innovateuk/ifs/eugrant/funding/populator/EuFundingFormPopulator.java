@@ -4,6 +4,7 @@ import org.innovateuk.ifs.eugrant.EuFundingResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,6 +12,10 @@ public class EuFundingFormPopulator {
 
     private EuGrantCookieService euGrantCookieService;
 
+    public EuFundingFormPopulator() {
+    }
+
+    @Autowired
     public EuFundingFormPopulator(EuGrantCookieService euGrantCookieService) {
         this.euGrantCookieService = euGrantCookieService;
     }

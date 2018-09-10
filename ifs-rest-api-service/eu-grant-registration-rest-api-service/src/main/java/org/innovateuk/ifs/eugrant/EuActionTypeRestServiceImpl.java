@@ -20,12 +20,12 @@ public class EuActionTypeRestServiceImpl extends BaseRestService implements EuAc
 
     @Override
     public RestResult<List<EuActionTypeResource>> findAll() {
-        return getWithRestResultAnonymous(baseURL + "/findAll", euActionTypeResourceListType());
+        return getWithRestResultAnonymous(baseURL + "/find-all", euActionTypeResourceListType());
     }
 
     @Override
     public RestResult<EuActionTypeResource> getById(long id) {
-        return getWithRestResultAnonymous(baseURL + "/getById/" + id, EuActionTypeResource.class);
+        return getWithRestResultAnonymous(baseURL + "/get-by-id/" + id, EuActionTypeResource.class);
     }
 
     public static ParameterizedTypeReference<List<EuActionTypeResource>> euActionTypeResourceListType() {

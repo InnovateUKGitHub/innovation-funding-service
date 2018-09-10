@@ -8,6 +8,7 @@ import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;
 import org.innovateuk.ifs.eugrant.funding.populator.EuFundingFormPopulator;
 import org.innovateuk.ifs.eugrant.funding.saver.EuFundingSaver;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,10 @@ public class EuFundingController {
 
     private EuActionTypeRestService euActionTypeRestService;
 
+    public EuFundingController() {
+    }
+
+    @Autowired
     public EuFundingController(EuGrantCookieService euGrantCookieService,
                                EuFundingFormPopulator euFundingFormPopulator,
                                EuFundingSaver euFundingSaver,

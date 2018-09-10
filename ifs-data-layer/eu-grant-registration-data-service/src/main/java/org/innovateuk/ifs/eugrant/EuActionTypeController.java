@@ -21,12 +21,12 @@ public class EuActionTypeController {
     @Autowired
     private EuActionTypeService euActionTypeService;
 
-    @GetMapping(baseURL + "/findAll")
+    @GetMapping(baseURL + "/find-all")
     public RestResult<List<EuActionTypeResource>> findAll() {
         return euActionTypeService.findAll().toGetResponse();
     }
 
-    @GetMapping(baseURL + "/getById/{id}")
+    @GetMapping(baseURL + "/get-by-id/{id}")
     public RestResult<EuActionTypeResource> getById(@PathVariable("id") long id) {
         return euActionTypeService.getById(id).toGetResponse();
     }
