@@ -52,7 +52,7 @@ function deployTests() {
 
 function fileFixtures() {
     chmod +x robot-tests/openshift/addtestFiles.sh
-    ./robot-tests/openshift/addtestFiles.sh
+    ./robot-tests/openshift/addtestFiles.sh "${SVC_ACCOUNT_CLAUSE}"
 }
 
 function copyNecessaryFiles() {
@@ -69,7 +69,7 @@ function navigateToRoot(){
 navigateToRoot
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
-fileFixtures "${SVC_ACCOUNT_CLAUSE}"
+fileFixtures
 tailorToAppInstance
 copyNecessaryFiles
 buildAndPushTestImages
