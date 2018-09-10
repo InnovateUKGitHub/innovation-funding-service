@@ -343,6 +343,11 @@ task osTestRemote(type: Exec, dependsOn: robotTestsFilter) {
     args = [openshiftEnv, osTestArgs]
 }
 
+task osBlockTilTestsRunning(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-block-til-tests-running.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
 task osStopTests(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
     args = []
