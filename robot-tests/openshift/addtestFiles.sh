@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SVC_ACCOUNT_CLAUSE=$1
-echo "Using svc account caluse: " + ${SVC_ACCOUNT_CLAUSE}
+echo "Using svc account caluse: " ${SVC_ACCOUNT_CLAUSE}
 
 # Define some functions for later use
 

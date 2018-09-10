@@ -13,9 +13,10 @@ ROUTE_DOMAIN=apps.${HOST}
 REGISTRY=$(getRegistry)
 INTERNAL_REGISTRY=$(getInternalRegistry)
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
-SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause "remote" $PROJECT $SVC_ACCOUNT_TOKEN)
 
 echo "Deploying tests to ($PROJECT)"
+echo ${SVC_ACCOUNT_CLAUSE}
 
 function tailorToAppInstance() {
     rm -rf $(getBuildLocation)
