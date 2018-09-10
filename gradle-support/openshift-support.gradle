@@ -355,5 +355,5 @@ task osStopTests(type: Exec) {
 
 task osTestResults(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = []
+    args = [openshiftEnv, "remote", project.version]
 }
