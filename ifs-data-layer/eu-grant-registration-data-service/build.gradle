@@ -96,6 +96,7 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
 
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }

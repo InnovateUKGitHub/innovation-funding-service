@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.email.service;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
@@ -8,6 +8,7 @@ import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.innovateuk.ifs.sil.email.service.SilEmailEndpoint;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
@@ -27,15 +28,13 @@ import static org.mockito.Mockito.when;
 /**
  * Testing the SilEmailService's interaction with the SIL email endpoint
  */
-public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
+public class SilEmailServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private SilEmailEndpoint endpointMock;
 
-    @Override
-    protected SilEmailService supplyServiceUnderTest() {
-        return new SilEmailService();
-    }
+    @InjectMocks
+    private SilEmailService service;
 
     @Test
     public void testSendEmail() {

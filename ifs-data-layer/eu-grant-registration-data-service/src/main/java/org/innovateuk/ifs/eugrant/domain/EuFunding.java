@@ -34,7 +34,7 @@ public class EuFunding {
     @NotNull
     private LocalDate projectEndDate;
 
-    @NotBlank
+    @NotNull
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
@@ -42,27 +42,6 @@ public class EuFunding {
     @ManyToOne
     @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
-
-    public EuFunding() {
-    }
-
-//    public EuFunding(EuActionType actionType,
-//                     String grantAgreementNumber,
-//                     String participantId,
-//                     String projectName,
-//                     LocalDate projectStartDate,
-//                     LocalDate projectEndDate,
-//                     BigDecimal fundingContribution,
-//                     boolean projectCoordinator) {
-//        this.actionType = actionType;
-//        this.participantId = participantId;
-//        this.projectName = projectName;
-//        this.projectStartDate = projectStartDate;
-//        this.projectEndDate = projectEndDate;
-//        this.grantAgreementNumber = grantAgreementNumber;
-//        this.fundingContribution = fundingContribution;
-//        this.projectCoordinator = projectCoordinator;
-//    }
 
     public Long getId() {
         return id;

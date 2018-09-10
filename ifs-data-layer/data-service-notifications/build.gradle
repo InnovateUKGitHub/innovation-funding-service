@@ -9,6 +9,17 @@ bootRepackage {
     enabled = false
 }
 
+configurations {
+    testArtifacts
+}
+task testJar(type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-freemarker"
 
@@ -16,6 +27,7 @@ dependencies {
     compile project(":ifs-sil-resources")
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 

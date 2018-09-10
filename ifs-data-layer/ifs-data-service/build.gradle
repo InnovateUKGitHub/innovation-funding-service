@@ -120,6 +120,7 @@ dependencies {
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"

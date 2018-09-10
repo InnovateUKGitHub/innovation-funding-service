@@ -6,6 +6,7 @@ import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -30,6 +31,10 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
         return new EuGrantResource();
     }
 
+    public EuGrantResourceBuilder withId(UUID... ids) {
+        return withArray((id, grant) -> grant.setId(id), ids);
+    }
+
     public EuGrantResourceBuilder withOrganisation(EuOrganisationResource... organisations) {
         return withArray((organisation, grant) -> grant.setOrganisation(organisation), organisations);
     }
@@ -37,4 +42,9 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
     public EuGrantResourceBuilder withContact(EuContactResource... contacts) {
         return withArray((contact, grant) -> grant.setContact(contact), contacts);
     }
+
+    public EuGrantResourceBuilder withShortCode(String... shortCodes) {
+        return withArray((shortCode, grant) -> grant.setShortCode(shortCode), shortCodes);
+    }
+
 }

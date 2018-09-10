@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.eugrant.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eugrant.*;
+import org.innovateuk.ifs.eugrant.EuContactResource;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.controller.EuGrantController;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Test;
@@ -17,8 +20,7 @@ import static org.innovateuk.ifs.eugrant.builder.EuOrganisationResourceBuilder.n
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -36,24 +38,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void create() throws Exception {
-
-        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
-                .withName("worth")
-                .withOrganisationType(EuOrganisationType.BUSINESS)
-                .withCompaniesHouseNumber("1234")
-                .build();
-
-        EuContactResource euContactResource = newEuContactResource()
-                .withName("Worth")
-                .withEmail("Worth@gmail.com")
-                .withJobTitle("worth employee")
-                .withTelephone("0123456789")
-                .build();
-
-        EuGrantResource euGrantResource = newEuGrantResource()
-                .withContact(euContactResource)
-                .withOrganisation(euOrganisationResource)
-                .build();
+        EuGrantResource euGrantResource = euGrantResource();
 
         when(euGrantService.create()).thenReturn(serviceSuccess(euGrantResource));
 
@@ -73,27 +58,9 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void findById() throws Exception {
-        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
-                .withName("worth")
-                .withOrganisationType(EuOrganisationType.BUSINESS)
-                .withCompaniesHouseNumber("1234")
-                .build();
-
-        EuContactResource euContactResource = newEuContactResource()
-                .withName("Worth")
-                .withEmail("Worth@gmail.com")
-                .withJobTitle("worth employee")
-                .withTelephone("0123456789")
-                .build();
-
-        EuGrantResource euGrantResource = newEuGrantResource()
-                .withContact(euContactResource)
-                .withOrganisation(euOrganisationResource)
-                .build();
-
         UUID uuid = UUID.randomUUID();
 
-        when(euGrantService.findById(uuid)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.findById(uuid)).thenReturn(serviceSuccess(euGrantResource()));
 
         mockMvc.perform(
                 get("/eu-grant/{uuid}", uuid.toString()))
@@ -108,6 +75,67 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 );
     }
 
+    @Test
+    public void save() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        EuGrantResource euGrantResource = euGrantResource();
+
+        when(euGrantService.save(uuid, euGrantResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                put("/eu-grant/{uuid}", uuid.toString())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(euGrantResource)))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "eu-grant/{method-name}",
+                        requestFields(fields()),
+                        pathParameters(
+                                parameterWithName("uuid").description("Id the grant registration to save")
+                        ))
+                );
+    }
+
+    @Test
+    public void submit() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        EuGrantResource euGrantResource = euGrantResource();
+
+        when(euGrantService.submit(uuid)).thenReturn(serviceSuccess(euGrantResource));
+
+        mockMvc.perform(
+                post("/eu-grant/{uuid}/submit", uuid.toString()))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "eu-grant/{method-name}",
+                        pathParameters(
+                                parameterWithName("uuid").description("Id the grant registration to save")
+                        ),
+                        responseFields(fields())
+                ));
+    }
+
+    private EuGrantResource euGrantResource() {
+        EuOrganisationResource euOrganisationResource = newEuOrganisationResource()
+                .withName("worth")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .withCompaniesHouseNumber("1234")
+                .build();
+
+        EuContactResource euContactResource = newEuContactResource()
+                .withName("Worth")
+                .withEmail("Worth@gmail.com")
+                .withJobTitle("worth employee")
+                .withTelephone("0123456789")
+                .build();
+
+        return newEuGrantResource()
+                .withContact(euContactResource)
+                .withOrganisation(euOrganisationResource)
+                .withShortCode("12345")
+                .build();
+    }
+
     private FieldDescriptor[] fields() {
         return new FieldDescriptor[] {
                 fieldWithPath("id").description("Unique id for the eu grant."),
@@ -120,9 +148,13 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("contact.jobTitle").description("Job title of the contact"),
                 fieldWithPath("contact.email").description("Email address of the contact"),
                 fieldWithPath("contact.telephone").description("Telephone number of the contact"),
+                fieldWithPath("funding").description("The funding details for the eu grant."),
                 fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
                 fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
-                fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding.")
+                fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding."),
+                fieldWithPath("shortCode").description("Short reference number for the grant registration.")
+
+
         };
     }
 }

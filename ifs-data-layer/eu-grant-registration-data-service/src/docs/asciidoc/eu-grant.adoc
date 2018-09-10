@@ -21,3 +21,29 @@ include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]
+
+
+=== Save
+==== Request
+include::{snippets}/eu-grant/save/http-request.adoc[]
+include::{snippets}/eu-grant/save/path-parameters.adoc[]
+include::{snippets}/eu-grant/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/save/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/save/curl-request.adoc[]
+
+
+=== Find By Id
+==== Request
+include::{snippets}/eu-grant/submit/http-request.adoc[]
+include::{snippets}/eu-grant/submit/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/submit/http-response.adoc[]
+include::{snippets}/eu-grant/submit/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/submit/curl-request.adoc[]

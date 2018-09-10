@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EU_GRANT_NOT_READY_TO_SUBMIT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -82,9 +81,8 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     private ServiceResult<EuGrantResource> submit(EuGrant euGrant) {
-        return isReadyToSubmit(euGrant)
-                .andOnSuccessReturn(EuGrant::submit)
-                .andOnSuccess(this::sendEmail)
+        euGrant.submit();
+        return sendEmail(euGrant)
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
 
@@ -108,14 +106,6 @@ public class EuGrantServiceImpl implements EuGrantService {
         );
         return notificationService.sendNotificationWithFlush(notification, EMAIL)
                 .andOnSuccessReturn(() -> euGrant);
-    }
-
-    private ServiceResult<EuGrant> isReadyToSubmit(EuGrant euGrant) {
-        if (euGrant.isOrganisationComplete() && euGrant.isContactComplete() && euGrant.isFundingComplete()) {
-            return serviceSuccess(euGrant);
-        } else {
-            return serviceFailure(EU_GRANT_NOT_READY_TO_SUBMIT);
-        }
     }
 
     enum Notifications {

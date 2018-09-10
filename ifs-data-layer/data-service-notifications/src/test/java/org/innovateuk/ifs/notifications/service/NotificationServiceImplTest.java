@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.notifications.service;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static java.util.Arrays.asList;
@@ -24,13 +27,16 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * Tests for NotificationServiceImpl
  */
-public class NotificationServiceImplTest extends BaseServiceUnitTest<NotificationServiceImpl> {
+@RunWith(MockitoJUnitRunner.class)
+public class NotificationServiceImplTest extends BaseUnitTestMocksTest {
 
     private NotificationSender mockLoggingNotificationSender;
     private NotificationSender mockEmailNotificationSender;
+    private NotificationServiceImpl service;
 
-    @Override
-    protected NotificationServiceImpl supplyServiceUnderTest() {
+    @Before
+    public void setUp() {
+        super.setupMockInjection();
 
         mockLoggingNotificationSender = Mockito.mock(NotificationSender.class);
         mockEmailNotificationSender = Mockito.mock(NotificationSender.class);
@@ -38,14 +44,12 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockLoggingNotificationSender.getNotificationMedium()).thenReturn(LOGGING);
         when(mockEmailNotificationSender.getNotificationMedium()).thenReturn(EMAIL);
 
-        NotificationServiceImpl notificationService = new NotificationServiceImpl();
+        service = new NotificationServiceImpl();
 
-        ReflectionTestUtils.setField(notificationService, "notificationSendingServices",
+        ReflectionTestUtils.setField(service, "notificationSendingServices",
                 asList(mockLoggingNotificationSender, mockEmailNotificationSender));
 
-        notificationService.constructServicesByMediaMap();
-
-        return notificationService;
+        service.constructServicesByMediaMap();
     }
 
     @Test
