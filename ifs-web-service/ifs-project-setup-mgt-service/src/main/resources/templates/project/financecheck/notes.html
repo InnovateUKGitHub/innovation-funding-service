@@ -96,7 +96,7 @@
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link">filename</a>
                                                 (opens in a new window)
-                                                <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button><br />
+                                                <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button><br />
                                             </li>
                                         </ul>
                                     </th:block>
