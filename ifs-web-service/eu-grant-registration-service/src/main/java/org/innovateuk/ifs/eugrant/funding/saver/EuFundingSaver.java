@@ -45,7 +45,7 @@ public class EuFundingSaver {
                 getLocalDate(fundingForm.getStartDateMonth(), fundingForm.getStartDateYear()),
                 getLocalDate(fundingForm.getEndDateMonth(), fundingForm.getEndDateYear()),
                 fundingForm.getFundingContribution(),
-                fundingForm.isProjectCoordinator(),
+                fundingForm.getProjectCoordinator(),
                 euActionTypeResource
         );
     }

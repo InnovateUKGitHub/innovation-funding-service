@@ -145,7 +145,7 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
                 .param("endDateMonth", String.valueOf(fundingForm.getEndDateMonth()))
                 .param("endDateYear", String.valueOf(fundingForm.getEndDateYear()))
                 .param("fundingContribution", String.valueOf(fundingForm.getFundingContribution()))
-                .param("projectCoordinator", String.valueOf(fundingForm.isProjectCoordinator()))
+                .param("projectCoordinator", String.valueOf(fundingForm.getProjectCoordinator()))
                 .param("actionType", String.valueOf(fundingForm.getActionType())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/funding-details"));
