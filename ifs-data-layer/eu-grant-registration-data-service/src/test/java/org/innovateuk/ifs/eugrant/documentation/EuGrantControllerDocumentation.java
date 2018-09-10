@@ -82,6 +82,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withContact(euContactResource)
                 .withOrganisation(euOrganisationResource)
                 .withFunding(euFundingResource)
+                .withShortCode("1234")
                 .build();
 
         uuid = UUID.randomUUID();
