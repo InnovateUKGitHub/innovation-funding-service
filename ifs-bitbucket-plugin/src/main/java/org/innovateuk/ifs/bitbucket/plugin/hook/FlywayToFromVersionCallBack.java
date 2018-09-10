@@ -48,7 +48,9 @@ public class FlywayToFromVersionCallBack {
                 final Pair<String, List<Integer>> newFromMin = newFromVersions.get(0);
                 if (FLYWAY_VERSION_COMPARATOR.compare(toMaxVersion.getValue(), newFromMin.getValue()) >= 0) {
                     setErrors("Flyway patching number error, please up the patching level. Max current version: " +
-                            toMaxVersion.getKey() + " is greater that new min version " + newFromMin.getKey());
+                            toMaxVersion.getKey() + "(" + toMaxVersion.getValue() +
+                            ") is greater that new min version " + newFromMin.getKey() +
+                            "(" + newFromMin.getValue() + ")");
                 }
             }
         }

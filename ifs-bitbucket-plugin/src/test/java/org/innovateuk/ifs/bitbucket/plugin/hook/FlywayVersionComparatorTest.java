@@ -21,5 +21,7 @@ public class FlywayVersionComparatorTest
         assertEquals(1, comparator.compare(asList(1, 2), asList(1, 1)));
         assertEquals(0, comparator.compare(asList(1, 2), asList(1, 2)));
         assertEquals(1, comparator.compare(asList(1, 2, 3, 4, 6), asList(1, 2, 3, 4, 5)));
+        assertEquals(1, comparator.compare(asList(127, 2), asList(127, 1)));
+        assertEquals(1, comparator.compare(asList(128, 2), asList(128, 1)));
     }
 }
