@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -97,7 +98,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -105,17 +106,17 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
+        verify(registrationServiceMock, times(1)).createUser(userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
     @Test
     public void createUserWithCompetitionId() throws Exception {
-        final Long organisationId = 9999L;
-        final Long competitionId = 8888L;
+        final long organisationId = 9999L;
+        final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -123,7 +124,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource);
+        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, organisationId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
@@ -371,5 +372,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
+    }
+
+    @Test
+    public void grantRole() throws Exception {
+        long userId = 1L;
+        Role grantRole = Role.APPLICANT;
+
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 }
