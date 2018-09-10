@@ -279,8 +279,8 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         List<InterviewParticipant> interviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
 
-        InterviewParticipants.get(0).getInvite().open();
-        InterviewParticipants.get(0).acceptAndAssignUser(user);
+        interviewParticipants.get(0).getInvite().open();
+        interviewParticipants.get(0).acceptAndAssignUser(user);
 
         repository.saveAll(interviewParticipants);
         flushAndClearSession();
