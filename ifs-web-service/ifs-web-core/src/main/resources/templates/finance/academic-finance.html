@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="your_finance (model, internalView)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
+    <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
+        <p class="govuk-body">You must include VAT in figures where appropriate.</p>
+    </div>
+
     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p class="govuk-body" ifs:utext="${question.description}"/>
     <fieldset class="govuk-fieldset">
