@@ -43,7 +43,8 @@ Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${ATIcompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
+    And Log in as a different user            &{lead_applicant_credentials}
+    Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-2332  IFS-1497
@@ -55,6 +56,7 @@ Applicant submits his application
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     And the user checks the override value is applied
+    And the user selects research category              Feasibility studies
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
@@ -78,7 +80,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]
     Given Log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery=tr:contains("org2") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Then the user should see the element   jQuery=a:contains("${excel_file}")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22
