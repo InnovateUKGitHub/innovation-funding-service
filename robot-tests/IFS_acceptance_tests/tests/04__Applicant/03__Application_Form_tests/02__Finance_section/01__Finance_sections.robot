@@ -120,7 +120,7 @@ Academic partner can upload file for field J-es PDF
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your project costs
     # Note the Jes form is already uploaded
-    Then the user should see the element     css=a.uploaded-file
+    Then the user should see the element     css=p.uploaded-file a
     When The user clicks the button/link       jQuery=button:contains("Remove")
     then the user should see the element       jQuery=label.button-secondary
     and the user uploads the file  css=.upload-section input  ${valid_pdf}

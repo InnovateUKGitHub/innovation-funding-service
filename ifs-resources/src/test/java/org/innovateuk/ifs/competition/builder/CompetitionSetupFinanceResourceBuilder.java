@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
         return withArray((competitionId, competitionSetupFinance) -> setField("competitionId", competitionId, competitionSetupFinance), competitionIds);
     }
 
-    public CompetitionSetupFinanceResourceBuilder withFullApplicationFinance(Boolean... fullApplicationFinances) {
-        return withArray((fullApplicationFinance, competitionSetupFinance) -> setField("fullApplicationFinance", fullApplicationFinance, competitionSetupFinance), fullApplicationFinances);
+    public CompetitionSetupFinanceResourceBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceTypes) {
+        return withArray((applicationFinanceType, competitionSetupFinance) -> setField("applicationFinanceType", applicationFinanceType, competitionSetupFinance), applicationFinanceTypes);
     }
 
     public CompetitionSetupFinanceResourceBuilder withIncludeGrowthTable(Boolean... includeGrowthTables) {

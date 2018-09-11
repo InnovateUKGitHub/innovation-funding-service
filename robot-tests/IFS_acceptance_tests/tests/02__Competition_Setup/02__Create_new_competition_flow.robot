@@ -518,10 +518,7 @@ Application: Finances
     Given the user clicks the button/link    link=Finances
     When the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    Then the user should see the element     css=input:checked ~ label[for="application-finance-full"]
-    And the user should see the element      css=label[for="application-finance-light"]
-#   Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
-    And the user should see the element      css=label[for="application-finance-none"]
+    And the user selects the radio button    applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element  css=input[id="include-growth-table-no"]
     When the user selects the radio button    includeGrowthTable  true
