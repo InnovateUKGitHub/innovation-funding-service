@@ -115,7 +115,6 @@ def getLocalOCCredentials() {
 }
 
 def getRemoteOCCredentials() {
-    println("Docker creds")
     def dockerRegistryCredentials = new DockerRegistryCredentials()
     try {
         // Get the docker repository for the remote OS cluster
@@ -123,7 +122,6 @@ def getRemoteOCCredentials() {
         dockerRegistryCredentials.username = "unused"
         dockerRegistryCredentials.password = openshiftToken
         dockerRegistryCredentials.email = "unused"
-        println(dockerRegistryCredentials.password)
     }
     catch (ignored) {
         println("Exception thrown creating the OpenShift docker registry credentials. " +
