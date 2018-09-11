@@ -11,37 +11,32 @@
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">
-
-        <div>
-            <a th:href="@{/overview}" class="govuk-back-link">Back</a>
-        </div>
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/overview}" />
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact details',size='govuk-heading-xl'" />
 
-        <th:block>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
 
-                    <dl class="govuk-list">
-                        <dt>Full name</dt>
-                        <dd th:text="${form.name}">Felix Wilson</dd>
-                        <dt>Job title</dt>
-                        <dd th:text="${form.jobTitle}">Scrum master</dd>
-                        <dt>Email</dt>
-                        <dd th:text="${form.email}">Felix.Wilson@gmail.com</dd>
-                        <dt>Telephone</dt>
-                        <dd th:text="${form.telephone}">01234 567891</dd>
-                    </dl>
+                <dl class="govuk-list">
+                    <dt>Full name</dt>
+                    <dd th:text="${form.name}">Felix Wilson</dd>
+                    <dt>Job title</dt>
+                    <dd th:text="${form.jobTitle}">Scrum master</dd>
+                    <dt>Email</dt>
+                    <dd th:text="${form.email}">Felix.Wilson@gmail.com</dd>
+                    <dt>Telephone</dt>
+                    <dd th:text="${form.telephone}">01234 567891</dd>
+                </dl>
 
-                    <p class="govuk-body govuk-!-margin-bottom-6">
-                        <a class="govuk-link" th:href="@{/contact-details/edit}">Edit your contact details</a>
-                    </p>
+                <p class="govuk-body govuk-!-margin-bottom-6">
+                    <a class="govuk-link" th:href="@{/contact-details/edit}">Edit your contact details</a>
+                </p>
 
-                    <a class="govuk-button" th:href="@{/overview}">Save and return</a>
+                <a class="govuk-button" th:href="@{/overview}">Save and return</a>
 
-                </div>
             </div>
-        </th:block>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
