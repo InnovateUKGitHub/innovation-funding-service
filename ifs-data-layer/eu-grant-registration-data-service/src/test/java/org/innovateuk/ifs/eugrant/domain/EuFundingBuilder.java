@@ -32,9 +32,11 @@ public class EuFundingBuilder extends BaseBuilder<EuFunding, EuFundingBuilder> {
     public EuFundingBuilder withGrantAgreementNumber(String... grantAgreementNumbers) {
         return withArray((grantAgreementNumber, funding) -> funding.setGrantAgreementNumber(grantAgreementNumber), grantAgreementNumbers);
     }
+
     public EuFundingBuilder withParticipantId(String... participantIds) {
         return withArray((participantId, funding) -> funding.setParticipantId(participantId), participantIds);
     }
+
     public EuFundingBuilder withProjectName(String... projectNames) {
         return withArray((projectName, funding) -> funding.setProjectName(projectName), projectNames);
     }
@@ -42,15 +44,19 @@ public class EuFundingBuilder extends BaseBuilder<EuFunding, EuFundingBuilder> {
     public EuFundingBuilder withProjectStartDate(LocalDate... projectStartDates) {
         return withArray((projectStartDate, funding) -> funding.setProjectStartDate(projectStartDate), projectStartDates);
     }
+
     public EuFundingBuilder withProjectEndDate(LocalDate... projectEndDates) {
         return withArray((projectEndDate, funding) -> funding.setProjectEndDate(projectEndDate), projectEndDates);
     }
+
     public EuFundingBuilder withFundingContribution(BigDecimal... fundingContributions) {
         return withArray((fundingContribution, funding) -> funding.setFundingContribution(fundingContribution), fundingContributions);
     }
+
     public EuFundingBuilder withProjectCoordinator(Boolean... projectCoordinators) {
         return withArray((projectCoordinator, funding) -> funding.setProjectCoordinator(projectCoordinator), projectCoordinators);
     }
+
     public EuFundingBuilder withActionType(EuActionType... actionTypes) {
         return withArray((actionType, funding) -> funding.setActionType(actionType), actionTypes);
     }

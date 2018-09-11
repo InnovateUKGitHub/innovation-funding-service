@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.eugrant.domain.EuFundingBuilder.newEuFunding;
 import static org.innovateuk.ifs.eugrant.domain.EuGrantBuilder.newEuGrant;
 import static org.innovateuk.ifs.eugrant.domain.EuOrganisationBuilder.newEuOrganisation;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
@@ -47,7 +48,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void save() {
+    public void update() {
         setLoggedInUser(WebUserOnlyFilter.webUser);
 
         EuGrant euGrant = euGrantRepository.save(newEuGrant().build());
@@ -71,7 +72,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                 .withContact(euContactResource)
                 .build();
 
-        ServiceResult<Void> result = euGrantService.save(euGrantResource.getId(), euGrantResource);
+        ServiceResult<Void> result = euGrantService.update(euGrantResource.getId(), euGrantResource);
 
         assertTrue(result.isSuccess());
 
@@ -149,6 +150,6 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         assertTrue(result.isSuccess());
 
         euGrant = euGrantRepository.findOne(euGrant.getId());
-        assertTrue(euGrant.getShortCode() != null);
+        assertNotNull(euGrant.getShortCode());
     }
 }
