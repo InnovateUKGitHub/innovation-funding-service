@@ -22,7 +22,6 @@ include::{snippets}/organisation/find-by-application-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/organisation/find-by-application-id/curl-request.adoc[]
 
-
 === Retrieve primary organisation by user
 ==== Request
 include::{snippets}/organisation/get-primary-for-user/http-request.adoc[]
@@ -34,6 +33,30 @@ include::{snippets}/organisation/get-primary-for-user/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/organisation/get-primary-for-user/curl-request.adoc[]
+
+=== Get user organisation for application
+==== Request
+include::{snippets}/organisation/get-by-user-and-application-id/http-request.adoc[]
+include::{snippets}/organisation/get-by-user-and-application-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/get-by-user-and-application-id/http-response.adoc[]
+include::{snippets}/organisation/get-by-user-and-application-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/get-by-user-and-application-id/curl-request.adoc[]
+
+=== Get user organisation for project
+==== Request
+include::{snippets}/organisation/get-by-user-and-project-id/http-request.adoc[]
+include::{snippets}/organisation/get-by-user-and-project-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/get-by-user-and-project-id/http-response.adoc[]
+include::{snippets}/organisation/get-by-user-and-project-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/get-by-user-and-project-id/curl-request.adoc[]
 
 === Create or match organisation
 ==== Request
