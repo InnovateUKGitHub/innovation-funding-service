@@ -178,7 +178,7 @@ The user should not see the text in the element
 The user opens the link in new window
     # We need to eliminate the use of this keyword as it opens multiple browser tabs
     [Arguments]   ${link_text}
-    the user clicks the button/link   link=${link_text} (opens in a new window)
+    the user clicks the button/link   link=${link_text}
 
 the user expands the section
     [Arguments]  ${section}

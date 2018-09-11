@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
-
 
     @Mock
     private CompetitionService competitionServiceMock;
@@ -41,29 +40,30 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testUpdateCompetitionInitialDetails() throws Exception {
-        final Long competitionId = 1L;
-        final Long leadTechnologistUserId = 7L;
+    public void updateCompetitionInitialDetails() throws Exception {
+        long leadTechnologistUserId = 7L;
 
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
+        CompetitionResource competition = newCompetitionResource()
                 .withInnovationAreaNames(Collections.emptySet())
                 .withLeadTechnologist(leadTechnologistUserId)
                 .build();
 
-        when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
-        when(competitionSetupServiceMock.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
+        when(competitionServiceMock.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
+        when(competitionSetupServiceMock.updateCompetitionInitialDetails(eq(competition.getId()),
+                isA(CompetitionResource.class), eq(leadTechnologistUserId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/setup/{id}/update-competition-initial-details", competitionId)
+        mockMvc.perform(put("/competition/setup/{id}/update-competition-initial-details", competition.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(competitionResource)))
+                .content(toJson(competition)))
                 .andExpect(status().isOk());
 
-        verify(competitionServiceMock, only()).getCompetitionById(competitionId);
-        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(competitionId, competitionResource, leadTechnologistUserId);
+        verify(competitionServiceMock, only()).getCompetitionById(competition.getId());
+        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(competition.getId(),
+                competition, leadTechnologistUserId);
     }
 
     @Test
-    public void testMarkSectionAsComplete() throws Exception {
+    public void markSectionComplete() throws Exception {
         final Long competitionId = 5L;
         final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         final SetupStatusResource setupStatusResource = newSetupStatusResource().build();
@@ -79,7 +79,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testMarkSectionAsInComplete() throws Exception {
+    public void markSectionIncomplete() throws Exception {
         final Long competitionId = 5L;
         final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         final SetupStatusResource setupStatusResource = newSetupStatusResource().build();
@@ -95,7 +95,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testGetSectionStatuses() throws Exception {
+    public void getSectionStatuses() throws Exception {
         final Long competitionId = 5L;
         final Map<CompetitionSetupSection, Optional<Boolean>> sectionStatuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.of(TRUE),
                 CompetitionSetupSection.CONTENT, Optional.of(TRUE),
@@ -110,7 +110,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testMarkSubsectionAsComplete() throws Exception {
+    public void markSubsectionComplete() throws Exception {
         final Long competitionId = 5L;
         final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
@@ -128,7 +128,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
 
     @Test
-    public void testMarkSubsectionAsInComplete() throws Exception {
+    public void markSubsectionIncomplete() throws Exception {
         final Long competitionId = 5L;
         final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
@@ -145,7 +145,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testGetSubsectionStatuses() throws Exception {
+    public void getSubsectionStatuses() throws Exception {
         final Long competitionId = 5L;
         final Map<CompetitionSetupSubsection, Optional<Boolean>> subsectionStatuses = asMap(CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.of(TRUE),
                 CompetitionSetupSubsection.FINANCES, Optional.empty());
@@ -160,7 +160,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteCompetition() throws Exception {
         final long competitionId = 1L;
 
         when(competitionSetupServiceMock.deleteCompetition(competitionId)).thenReturn(serviceSuccess());
