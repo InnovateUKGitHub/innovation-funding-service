@@ -63,8 +63,9 @@ public class TokenServiceImpl implements TokenService {
         JsonNode extraInfo = token.getExtraInfo();
         if (User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")) {
             Long competitionId = extraInfo.get("competitionId").asLong();
-            if (competitionId != null && competitionId != 0L) {
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk());
+            Long organisationId = extraInfo.get("organisationId").asLong();
+            if (competitionId != null && competitionId != 0L && organisationId != null && organisationId != 0) {
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk(), organisationId);
             }
         }
     }

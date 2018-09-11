@@ -61,6 +61,11 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them")
+    public boolean assignedStakeholderCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Internal admin team (comp admin and project finance) users should be able to access the current status of project")
     public boolean internalAdminTeamCanViewProjectStatus(ProjectResource project, UserResource user){
         return isInternalAdmin(user);
@@ -75,5 +80,11 @@ public class StatusPermissionRules extends BasePermissionRules {
     public boolean assignedInnovationLeadCanViewProjectStatus(ProjectResource project, UserResource user){
         Application application = applicationRepository.findOne(project.getApplication());
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them")
+    public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 }

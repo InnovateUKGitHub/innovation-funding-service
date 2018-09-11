@@ -94,4 +94,12 @@ public class RegistrationCookieService {
         deleteInviteHashCookie(response);
         deleteCompetitionIdCookie(response);
     }
+
+    public boolean isCollaboratorJourney(HttpServletRequest request) {
+        return getInviteHashCookieValue(request).isPresent() && !getCompetitionIdCookieValue(request).isPresent();
+    }
+
+    public boolean isLeadJourney(HttpServletRequest request) {
+        return !isCollaboratorJourney(request);
+    }
 }

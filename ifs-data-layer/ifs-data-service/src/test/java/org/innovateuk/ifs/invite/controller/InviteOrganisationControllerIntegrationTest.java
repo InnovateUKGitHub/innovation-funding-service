@@ -65,7 +65,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getById_userIsLeadApplicant() throws Exception {
+    public void getById_userIsLeadApplicant() {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
@@ -75,19 +75,18 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getById_userIsCollaborator() throws Exception {
+    public void getById_userIsCollaborator() {
         loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
-
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, organisation));
         assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void getById_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
+    public void getById_userIsCollaboratorAndOrganisationUnconfirmed() {
         loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
@@ -97,7 +96,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getById_userIsCollaboratorForDifferentOrganisation() throws Exception {
+    public void getById_userIsCollaboratorForDifferentOrganisation() {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
@@ -107,7 +106,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getByOrganisationIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
+    public void getByOrganisationIdWithInvitesForApplication_userIsLeadApplicant() {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
@@ -117,7 +116,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() throws Exception {
+    public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() {
         loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
@@ -128,7 +127,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void getByOrganisationIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
+    public void getByOrganisationIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         setupInviteOrganisation(application, organisation);
@@ -138,7 +137,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void put() throws Exception {
+    public void put() {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
 
@@ -174,6 +173,8 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     private User setupCollaboratorForApplicationAndOrganisation(Application application, Organisation organisation) {
+        loginSteveSmith();
+
         User user = userRepository.save(newUser()
                 .with(id(null))
                 .withFirstName("Example")
@@ -182,14 +183,16 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build());
 
-        ProcessRole processRole = processRoleRepository.save(newProcessRole()
+        ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withUser(user)
                 .withRole(Role.COLLABORATOR)
                 .withOrganisationId(organisation.getId())
-                .build());
-
+                .build();
         processRole.setApplicationId(application.getId());
+
+        processRoleRepository.save(processRole);
+
         flushAndClearSession();
 
         return user;

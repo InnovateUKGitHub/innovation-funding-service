@@ -2,6 +2,7 @@ package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -11,12 +12,15 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -36,6 +40,9 @@ import static org.mockito.Mockito.when;
  * Tests the logic within the individual OrganisationRules methods that secures basic Organisation details
  */
 public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<OrganisationPermissionRules> {
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Test
     public void systemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
@@ -297,6 +304,21 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         assertFalse(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
 
         verify(projectUserRepositoryMock).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void usersCanViewOrganisationsTheyAreInvitedTo() {
+        UserResource invitedUser = newUserResource().build();
+        UserResource notInvitedUser = newUserResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
+
+        when(inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesUserId(organisation.getId(), invitedUser.getId()))
+                .thenReturn(Optional.of(newInviteOrganisation().build()));
+        when(inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesUserId(organisation.getId(), notInvitedUser.getId()))
+                .thenReturn(Optional.empty());
+
+        assertTrue(rules.usersCanViewOrganisationsTheyAreInvitedTo(organisation, invitedUser));
+        assertFalse(rules.usersCanViewOrganisationsTheyAreInvitedTo(organisation, notInvitedUser));
     }
 
     @Override
