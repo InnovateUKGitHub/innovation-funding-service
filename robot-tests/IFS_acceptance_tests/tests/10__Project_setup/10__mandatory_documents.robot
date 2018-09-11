@@ -141,10 +141,10 @@ Non-lead partner can view both documents
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page     ${project_in_setup_page}/team-status
@@ -164,8 +164,8 @@ PM can view both documents
     [Tags]
     Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user should see the element  link=${valid_pdf} (opens in a new window)
-    Then the user should see the element  link=${valid_pdf} (opens in a new window)
+    When the user should see the element  link=${valid_pdf}
+    Then the user should see the element  link=${valid_pdf}
     When the user navigates to the page   ${project_in_setup_page}/team-status
     Then the user should see the element  css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
@@ -240,10 +240,10 @@ PM can still view both documents after submitting
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
 
@@ -265,10 +265,10 @@ Lead partner cannot remove the documents after submission by PM
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    Then the user clicks the button/link    link=${valid_pdf}
     When the user should not see an error in the page
     Then the user closes the last opened tab
 
@@ -283,10 +283,10 @@ Non-lead partner cannot remove the documents after submission by PM
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    Then the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page    ${project_in_setup_page}
@@ -301,10 +301,9 @@ CompAdmin can see uploaded files
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element   link=All projects
     When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
-    Then the user should see the text in the page    Collaboration agreement
-    When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
+    And the user clicks the button/link    jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
     Then the user should see the file without error
-    When the user clicks the button/link    css=.uploaded-file:nth-of-type(2)
+    When the user clicks the button/link    jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
 
 CompAdmin rejects other documents
@@ -363,10 +362,10 @@ After rejection, lead partner can view both documents
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}
@@ -390,10 +389,10 @@ After rejection, non-lead partner cannot view both documents
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}
@@ -613,7 +612,7 @@ CompAdmin sees uploaded file and approves it
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
     Then the user should not see the text in the page  Collaboration
     And the user should see the element   jQuery=h2:contains("Exploitation plan")
-    When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
+    When the user clicks the button/link  jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
     When the user clicks the button/link  jQuery=button:contains("Accept document")
     And the user clicks the button/link  jQuery=.modal-accept-doc .govuk-button:contains("Accept document")
@@ -657,7 +656,7 @@ the user uploads to the exploitation plan question
 
 the user should see the file without error
     the user should not see an error in the page
-    the user goes back to the previous page
+    the user closes the last opened tab
 
 partners submit bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
