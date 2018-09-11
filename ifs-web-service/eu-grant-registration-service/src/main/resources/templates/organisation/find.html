@@ -21,12 +21,7 @@
              data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
             <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                    <li th:each="err : ${#fields.detailedErrors('${organisationForm.*}')}">
-                        <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                        <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
-                    </li>
-                </ul>
+                <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
             </div>
         </div>
 
