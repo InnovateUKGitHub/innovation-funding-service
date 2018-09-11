@@ -64,7 +64,7 @@
                 <th:block th:if="${model.collaborationAgreementRequired}">
                     <h2 class="govuk-heading-m">Collaboration agreement</h2>
                     <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-                    class="uploaded-file govuk-link" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                    class="uploaded-file govuk-link govuk-body" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
                 </th:block>
 
                 <h2 class="govuk-heading-m govuk-!-padding-top-7">Exploitation plan</h2>

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -32,17 +33,26 @@ public class ApplicationController {
 
     private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
 
-    @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
-    @Autowired
     private ApplicationProgressService applicationProgressService;
+
+    private CrmService crmService;
+
+    public ApplicationController() {}
+
+    @Autowired
+    public ApplicationController(IneligibleOutcomeMapper ineligibleOutcomeMapper, ApplicationService applicationService, ApplicationNotificationService applicationNotificationService, ApplicationProgressService applicationProgressService, CrmService crmService) {
+        this.ineligibleOutcomeMapper = ineligibleOutcomeMapper;
+        this.applicationService = applicationService;
+        this.applicationNotificationService = applicationNotificationService;
+        this.applicationProgressService = applicationProgressService;
+        this.crmService = crmService;
+    }
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
@@ -105,16 +115,20 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @PostMapping("/createApplicationByName/{competitionId}/{userId}")
+    @PostMapping("/createApplicationByName/{competitionId}/{userId}/{organisationId}")
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("userId") final Long userId,
+            @PathVariable("competitionId") final long competitionId,
+            @PathVariable("userId") final long userId,
+            @PathVariable("organisationId") final long organisationId,
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
-        ServiceResult<ApplicationResource> applicationResult =
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
-        return applicationResult.toPostCreateResponse();
+        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPostCreateResponse();
     }
 
     @PostMapping("/{applicationId}/ineligible")

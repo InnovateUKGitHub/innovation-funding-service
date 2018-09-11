@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -46,6 +47,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Mock
     private ApplicationProgressService applicationProgressServiceMock;
 
+    @Mock
+    private CrmService crmService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -231,24 +234,26 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
     @Test
     public void createApplicationByApplicationNameForUserIdAndCompetitionId() throws Exception {
-        Long competitionId = 1L;
-        Long userId = 1L;
+        long competitionId = 1L;
+        long userId = 1L;
+        long organisationId = 1L;
         String applicationName = "testApplication";
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
         ObjectNode applicationNameNode = objectMapper.createObjectNode().put("name", applicationName);
 
-        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, organisationId, userId)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition the new application is being created for."),
-                                parameterWithName("userId").description("Id of the user the new application is being created for.")
+                                parameterWithName("userId").description("Id of the user the new application is being created for."),
+                                parameterWithName("organisationId").description("Id of the organisation the new application is being created for.")
                         ),
                         requestFields(
                                 fieldWithPath("name").description("name of the application that will be created")
