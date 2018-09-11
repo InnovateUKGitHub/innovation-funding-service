@@ -155,7 +155,7 @@ the user marks the Finance section as complete if it's present
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link=Finances
-    the user selects the radio button  applicationFinanceType  NONE
+    the user selects the radio button  applicationFinanceType  NO_FINANCES
     the user clicks the button/link    jQuery=.govuk-button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
