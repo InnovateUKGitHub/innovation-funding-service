@@ -22,24 +22,74 @@ public class FileStorageHealthIndicator implements HealthIndicator {
     @Value("${ifs.data.service.file.storage.base}")
     private String fileStoragePath;
 
-    @Override public Health health() {
+    @Value("${ifs.data.service.file.storage.create:false}")
+    private boolean allowCreateStoragePath;
+
+    private FileOperationsWrapper fileOperationsWrapper = new FileOperationsWrapper();
+
+    public void setFileOperationsWrapper(FileOperationsWrapper fileOperationsWrapper) {
+        this.fileOperationsWrapper = fileOperationsWrapper;
+    }
+
+    public void setFileStoragePath(String fileStoragePath) {
+        this.fileStoragePath = fileStoragePath;
+    }
+
+    public void setAllowCreateStoragePath(boolean allowCreateStoragePath) {
+        this.allowCreateStoragePath = allowCreateStoragePath;
+    }
+
+    @Override
+    public Health health() {
         LOG.debug("checking filesystem health");
-        Path storagePath = FileSystems.getDefault().getPath(fileStoragePath);
-        createStoragePathIfNotExist(storagePath);
 
-        return createStatus(storagePath).build();
+        if (allowCreateStoragePath) {
+            createStoragePathIfNotExist(fileStoragePath);
+        }
+        return createStatus(fileStoragePath).build();
     }
 
-    private Health.Builder createStatus(final Path storagePath) {
+    private Health.Builder createStatus(final String storagePath) {
         Health.Builder builder = new Health.Builder();
-        return Files.isWritable(storagePath) ? builder.up() : builder.down();
+
+        boolean isWritable = fileOperationsWrapper.isWritable(storagePath);
+
+        if (isWritable) {
+            return builder.up();
+        }
+
+        LOG.debug("storage path [" + fileStoragePath + "] is not writable");
+
+        return builder.down();
     }
 
-    private void createStoragePathIfNotExist(final Path storagePath) {
-        if(!storagePath.toFile().exists()) {
+    private void createStoragePathIfNotExist(final String storagePath) {
+
+        boolean pathExists = fileOperationsWrapper.exists(storagePath);
+
+        if (!pathExists) {
+            fileOperationsWrapper.createDirectory(storagePath);
+        }
+    }
+
+    static class FileOperationsWrapper {
+
+        public boolean isWritable(String location) {
+            Path filePath = FileSystems.getDefault().getPath(location);
+            return Files.isWritable(filePath);
+        }
+
+        public boolean exists(String location) {
+            Path filePath = FileSystems.getDefault().getPath(location);
+            return filePath.toFile().exists();
+        }
+
+        public void createDirectory(String location) {
+            Path filePath = FileSystems.getDefault().getPath(location);
+
             try {
                 LOG.debug("trying to create directory");
-                Files.createDirectory(storagePath);
+                Files.createDirectory(filePath);
                 LOG.debug("directory created");
             } catch (IOException e) {
                 LOG.debug(e);

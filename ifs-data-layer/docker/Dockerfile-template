@@ -9,10 +9,6 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 
 VOLUME /tmp
 
-RUN mkdir -p /mnt/ifs_storage
-RUN chgrp -R 0 /mnt/ifs_storage && chmod -R g=u /mnt/ifs_storage
-
-
 ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import opennlp.tools.coref.sim.Gender;
 import org.hibernate.Hibernate;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -46,8 +45,6 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
             withServiceUnavailableFromEmailService(() -> {
 
-                Organisation organisation = getOrganisationForTest();
-
                 regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
 
                 testService.doWithinTransaction(this::loginSystemRegistrationUser);
@@ -61,7 +58,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         build();
 
                 return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
-                        registrationService.createOrganisationUser(organisation.getId(), registrationInfo));
+                        registrationService.createUser(registrationInfo));
             });
         });
     }
@@ -90,7 +87,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         build();
 
                 return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
-                        registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo));
+                        registrationService.createUserWithCompetitionContext(competition.getId(), organisation.getId(), registrationInfo));
             });
         });
     }

@@ -118,7 +118,7 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                                              BindingResult bindingResult,
@@ -163,6 +163,7 @@ public class ApplicationSectionController {
         Map<String, String[]> params = request.getParameterMap();
 
         boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
+                applicationId,
                 form, bindingResult,
                 applicantSection.getSection(),
                 params,
@@ -212,6 +213,7 @@ public class ApplicationSectionController {
     }
 
     private boolean validFinanceTermsForMarkAsComplete(
+            long applicationId,
             ApplicationForm form,
             BindingResult bindingResult,
             SectionResource section,
@@ -230,12 +232,12 @@ public class ApplicationSectionController {
                         && validateTermsAndConditionsAgreement(form, bindingResult);
 
             case PROJECT_COST_FINANCES:
-                return userIsResearch(userId) ?
+                return userIsResearch(userId, applicationId) ?
                         validateTermsAndConditionsAgreement(form, bindingResult) :
                         validateStateAidAgreement(form, bindingResult);
 
             case ORGANISATION_FINANCES:
-                return validateOrganisationSizeSelected(params, userId, bindingResult);
+                return validateOrganisationSizeSelected(applicationId, params, userId, bindingResult);
 
             case PROJECT_LOCATION:
                 return validateProjectLocation(params, bindingResult);
@@ -245,8 +247,8 @@ public class ApplicationSectionController {
         }
     }
 
-    private boolean userIsResearch(long userId) {
-        return organisationRestService.getOrganisationByUserId(userId).getSuccess().getOrganisationType() == OrganisationTypeEnum.RESEARCH.getId();
+    private boolean userIsResearch(long userId, long applicationId) {
+        return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
@@ -277,12 +279,13 @@ public class ApplicationSectionController {
     }
 
     private boolean validateOrganisationSizeSelected(
+            long applicationId,
             Map<String, String[]> params,
             Long userId,
             BindingResult bindingResult
     ) {
         List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
-        if (!financePositionKeys.isEmpty() || userIsResearch(userId)) {
+        if (!financePositionKeys.isEmpty() || userIsResearch(userId, applicationId)) {
             return true;
         }
         bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
