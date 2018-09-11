@@ -301,10 +301,9 @@ CompAdmin can see uploaded files
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element   link=All projects
     When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
-    Then the user should see the text in the page    Collaboration agreement
-    When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
+    And the user clicks the button/link    jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
     Then the user should see the file without error
-    When the user clicks the button/link    css=.uploaded-file:nth-of-type(2)
+    When the user clicks the button/link    jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
 
 CompAdmin rejects other documents
@@ -613,7 +612,7 @@ CompAdmin sees uploaded file and approves it
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
     Then the user should not see the text in the page  Collaboration
     And the user should see the element   jQuery=h2:contains("Exploitation plan")
-    When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
+    When the user clicks the button/link  jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
     When the user clicks the button/link  jQuery=button:contains("Accept document")
     And the user clicks the button/link  jQuery=.modal-accept-doc .govuk-button:contains("Accept document")
@@ -657,7 +656,7 @@ the user uploads to the exploitation plan question
 
 the user should see the file without error
     the user should not see an error in the page
-    the user goes back to the previous page
+    the user closes the last opened tab
 
 partners submit bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
