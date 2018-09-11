@@ -27,12 +27,11 @@ version project.version
 
 apply plugin: 'idea'
 
-def enabled = project.hasProperty('ifs.eu-grant-registration-service.enabled') ? project.property('ifs.eu-grant-registration-service.enabled').toBoolean() : false
+def enabled = project.hasProperty('ifs.eu-grant-registration-service.enabled') ? project.property('ifs.eu-grant-registration-service.enabled').toBoolean() : true
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
-
-ext.euGrantRegistrationDataServiceRestBaseURL="http://eu-grant-registration-data-service:8080"
+ext.EUGrantDataServiceRestBaseURL="http://eu-grant-registration-data-service:8080"
 
 project.version = euGrantRegistrationVersion
 tagDocker.tag = euGrantRegistrationVersion
@@ -54,11 +53,16 @@ prepareDockerBaseInput {
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
+    compile project(':ifs-resources:eu-grant-registration-resources')
+    compile project(':ifs-rest-api-service:eu-grant-registration-rest-api-service')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
