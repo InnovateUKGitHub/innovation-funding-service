@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -53,7 +54,7 @@ public class IneligibleApplicationsModelPopulator {
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
                 new Pagination(summaryPageResource, origin),
-                user.hasRole(INNOVATION_LEAD) || user.hasRole(SUPPORT)
+                user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)|| user.hasRole(SUPPORT)
         );
     }
 
