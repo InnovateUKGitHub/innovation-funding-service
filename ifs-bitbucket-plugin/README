@@ -2,7 +2,7 @@
 
 Install SDK as per https://developer.atlassian.com/server/framework/atlassian-sdk/downloads/
 
-Note that you will need to set appropriate environments for your atlassian SDK home, for example appropriate
+Note that you will need to set appropriate environments for your Atlassian SDK home, for example appropriate
 variation of:
 
     JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
@@ -14,10 +14,21 @@ Then check installed OK
 
     atlas-version
 
+# Releases
+
+When validating changes deploy the plugin with a SNAPSHOT release number.   When work is done, then remove the
+SNAPSHOT label from the version number in the maven pom.xml, and then build and deploy to Bitbucket so that
+a known version is deployed.  After release increase the version to the next SNAPSHOT version.
+
 # Installation
+
+Build the plugin :
 
     cd ifs-bitbucket-plugin
     atlas-mvn install
+
+Then log in to Bitbucket with account with admin access and click settings gear icon -> admin -> Manage add-ons ->
+Upload add-on.
 
 # Background Reading
 
