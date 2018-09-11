@@ -122,7 +122,8 @@ def getRemoteOCCredentials() {
         dockerRegistryCredentials.username = "unused"
         dockerRegistryCredentials.password = "echo $bamboo_OPENSHIFT_SVC_ACCOUNT_TOKEN".execute().text.trim()
         dockerRegistryCredentials.email = "unused"
-
+        println(dockerRegistryCredentials.password)
+        println($bamboo_OPENSHIFT_SVC_ACCOUNT_TOKEN)
     }
     catch (ignored) {
         println("Exception thrown creating the OpenShift docker registry credentials. " +
