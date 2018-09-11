@@ -80,7 +80,7 @@
                                 th:field="*{actionType}"
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
-                            <option value=""></option>
+                            <option value="">Select...</option>
                             <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="'(' + ${actionType.name + ')' + ' ' + actionType.description}"></option>
                         </select>
                     </div>
@@ -107,6 +107,20 @@
                                 Project start date
                             </legend>
                             <div class="date-group" data-past-date="">
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="startDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="startDateDay"
+                                           id="startDateDay">
+                                </div>
+
                                 <div class="month">
                                     <label class="govuk-label" for="startDateMonth">
                                         <span>Month</span>
@@ -150,6 +164,20 @@
                                 Project end date
                             </legend>
                             <div class="date-group" data-future-date="">
+
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="endDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="endDateDay"
+                                           id="endDateDay">
+                                </div>
 
                                 <div class="month">
                                     <label class="govuk-label" for="endDateMonth">
