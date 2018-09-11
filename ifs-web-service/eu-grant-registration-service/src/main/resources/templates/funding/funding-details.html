@@ -26,7 +26,7 @@
                         <dt>Participant identification code (PIC)</dt>
                         <dd th:text="${form.participantId}">12345689</dd>
                         <dt>Type of action</dt>
-                        <dd th:text="${actionType.name}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
+                        <dd th:text="'(' + ${actionType.name + ')' + ' ' + actionType.description}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
                         <dt>Project name</dt>
                         <dd th:text="${form.projectName}">My EU project name</dd>
                         <dt>Project start date</dt>

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -14,8 +15,8 @@ public class EuFundingForm {
     @NotBlank(message = "{validation.fundingForm.grant.aggreement.number}")
     private String grantAgreementNumber;
 
-    @NotNull
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code}")
+    @NotNull(message = "{validation.fundingForm.participant.identification.code}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.valid.code}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
@@ -26,7 +27,7 @@ public class EuFundingForm {
     private Integer startDateMonth;
 
     @NotNull(message = "{validation.fundingForm.date.year}")
-    @Range(max = 9999, message = "{validation.fundingForm.date.year}")
+    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer startDateYear;
 
     @NotNull(message = "{validation.fundingForm.date.month}")
@@ -34,7 +35,7 @@ public class EuFundingForm {
     private Integer endDateMonth;
 
     @NotNull(message = "{validation.fundingForm.date.year}")
-    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
+    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer endDateYear;
 
     @NotNull(message = "{validation.fundingForm.funding.contribution}")

@@ -52,7 +52,7 @@ public class EuFundingSaver {
 
     private LocalDate getLocalDate(int month, int year) {
 
-        String date = String.valueOf(year) + "-" + String.valueOf(month) + "-01";
+        String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
 
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
