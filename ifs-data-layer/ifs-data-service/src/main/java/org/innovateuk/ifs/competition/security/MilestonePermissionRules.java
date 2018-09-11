@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isStakeholder;
 
 /**
  * Provides the permissions around CRUD for Milestones
@@ -22,9 +23,14 @@ public class MilestonePermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competitionId.id(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_MILESTONE", description = "Internal users (except innovation leads) can view milestones on any competition.")
+    @PermissionRule(value = "VIEW_MILESTONE", description = "Stakeholders can view milestones on competitions assigned to them.")
+    public boolean stakeholdersCanViewMilestonesOnAssignedComps(CompetitionCompositeId competitionId, UserResource user) {
+        return userIsStakeholderInCompetition(competitionId.id(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_MILESTONE", description = "Internal users (except innovation leads and stakeholders) can view milestones on any competition.")
     public boolean allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(CompetitionCompositeId competitionId, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 
     @PermissionRule(value = "VIEW_MILESTONE_BY_TYPE", description = "Internal users can view milestones, by type, on any competition.")

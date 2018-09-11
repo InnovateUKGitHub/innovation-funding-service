@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 
 /**
  * Builds the model for the Competition Management Applications Menu view model.
@@ -28,7 +29,7 @@ public class ApplicationsMenuModelPopulator {
                 summary.getApplicationsInProgress(),
                 summary.getApplicationsSubmitted(),
                 summary.getIneligibleApplications(),
-                user.hasRole(INNOVATION_LEAD)
+                user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
         );
     }
 }
