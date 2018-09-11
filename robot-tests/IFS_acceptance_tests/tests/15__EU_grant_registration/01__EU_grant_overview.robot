@@ -15,17 +15,17 @@ ${EU_grant}    ${server}/eu-grant/overview
 User navigate to EU grant registration page
     [Documentation]  IFS-4231
     Given the guest user opens the browser
-    When the user navigates to the page     ${EU_grant}
-    Then the user should see the element    jQuery = h1:contains("Horizon 2020: UK government underwrite guarantee")
-    And the user should see the element     link = Contact details
-    And the user should see the element     link = Funding details
+    When the user navigates to the page            ${EU_grant}
+    Then the user should see the element           jQuery = h1:contains("Horizon 2020: UK government underwrite guarantee")
+    And the user should see the element            link = Contact details
+    And the user should see the element            link = Funding details
 
 User navigates to and selects business on the Organisation details page
     [Documentation]  IFS-4072
     [Tags]
-    When The user clicks the button/link    link = Your organisation
-    Then the user clicks the button/link    jQuery = span:contains("Business")
-    And the user clicks the button/link     jQuery = button:contains("Save and continue")
+    When The user clicks the button/link           link = Your organisation
+    Then the user clicks the button/link           jQuery = span:contains("Business")
+    And the user clicks the button/link            jQuery = button:contains("Save and continue")
 
 Companies House: Enter manually Valid company name
     [Documentation]  IFS-4072
@@ -68,12 +68,13 @@ Contact details validation
     [Tags]
     When the user clicks the button/link           link = Contact details
     Then the user clicks the button/link           jQuery = button:contains("Continue")
-    And the user clicks the button/link            jQuery = a:contains("Enter your full name")
-    And the user clicks the button/link            jQuery = a:contains("Your full name should have at least 2 characters.")
-    And the user clicks the button/link            jQuery = a:contains("Enter your job title.")
-    And the user clicks the button/link            jQuery = a:contains("Please enter a valid email.")
-    And the user clicks the button/link            jQuery = a:contains("Enter your telephone number.")
-    And the user clicks the button/link            jQuery = a:contains("Please enter a valid phone number between 8 and 20 digits.")
+    And the user should see the element            jQuery = a:contains("Enter your full name")
+    And the user should see the element            jQuery = a:contains("Your full name should have at least 2 characters.")
+    And the user should see the element            jQuery = a:contains("Enter your job title.")
+    And the user should see the element            jQuery = a:contains("Please enter a valid email.")
+    And the user should see the element            jQuery = a:contains("Enter your telephone number.")
+    And the user should see the element            jQuery = a:contains("Please enter a valid phone number between 8 and 20 digits.")
+#ToDo Validation messages will be updated
 
 Contact details Enter details and save
     [Documentation]  IFS-4231
