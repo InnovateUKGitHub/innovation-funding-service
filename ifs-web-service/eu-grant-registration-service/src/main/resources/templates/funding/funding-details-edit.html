@@ -45,7 +45,7 @@
                                type="text"
                                required="required"
                                th:field="*{grantAgreementNumber}"
-                               th:attr="data-required-errormessage=#{validation.standard.eugrant.notblank}">
+                               th:attr="data-required-errormessage=#{validation.fundingForm.grant.aggreement.number}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
@@ -61,7 +61,7 @@
                                type="text"
                                required="required"
                                th:field="*{participantId}"
-                               th:attr="data-required-errormessage=#{validation.standard.eugrant.notblank}">
+                               th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
@@ -79,9 +79,9 @@
                                 id="actionType"
                                 th:field="*{actionType}"
                                 required="required"
-                                data-required-errormessage="Please select an actions">
+                                th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
                             <option value=""></option>
-                            <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="${actionType.name}"></option>
+                            <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="'(' + ${actionType.name + ')' + ' ' + actionType.description}"></option>
                         </select>
                     </div>
 
@@ -98,7 +98,7 @@
                                type="text"
                                required="required"
                                th:field="*{projectName}"
-                               th:attr="data-required-errormessage=#{validation.standard.eugrant.notblank}">
+                               th:attr="data-required-errormessage=#{validation.fundingForm.project.name}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDateMonth')} or ${#fields.hasErrors('startDateYear')} ? 'govuk-form-group--error'">
@@ -121,7 +121,8 @@
                                            data-date=""
                                            data-autosave-disabled=""
                                            th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
-                                           th:field="*{startDateMonth}">
+                                           th:field="*{startDateMonth}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
                                 </div>
 
                                 <div class="year">
@@ -136,7 +137,8 @@
                                            data-date=""
                                            data-autosave-disabled=""
                                            th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
-                                           th:field="*{startDateYear}">
+                                           th:field="*{startDateYear}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
                                 </div>
                             </div>
                         </fieldset>
@@ -163,7 +165,8 @@
                                            data-date=""
                                            data-autosave-disabled=""
                                            th:classappend="${#fields.hasErrors('endDateMonth')} ? 'govuk-input--error'"
-                                           th:field="*{endDateMonth}">
+                                           th:field="*{endDateMonth}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
                                 </div>
 
                                 <div class="year">
@@ -178,7 +181,8 @@
                                            data-date=""
                                            data-autosave-disabled=""
                                            th:classappend="${#fields.hasErrors('endDateYear')} ? 'govuk-input--error'"
-                                           th:field="*{endDateYear}">
+                                           th:field="*{endDateYear}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
                                 </div>
                             </div>
                         </fieldset>
@@ -190,14 +194,15 @@
                                     The total amount in euros granted to your organisation at the point of the award for your project.
                                 </span>
                         <th:block th:if="${#fields.hasErrors('projectName')}">
-                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectName')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingContribution')}" th:text="${err}"></span>
                         </th:block>
                         <span class="govuk-body govuk-!-padding-right-1">€</span>
-                        <input class="govuk-input"
-                               id="fundingContribution govuk-input--width-10"
+                        <input class="govuk-input govuk-input govuk-input--width-10"
+                               id="fundingContribution"
                                type="text"
                                required="required"
-                               th:field="*{fundingContribution}">
+                               th:field="*{fundingContribution}"
+                               th:attr="data-required-errormessage=#{validation.fundingForm.funding.contribution}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCoordinator')} ? 'govuk-form-group--error'">

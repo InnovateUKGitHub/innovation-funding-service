@@ -62,11 +62,11 @@ public class EuFundingFormPopulatorTest extends BaseServiceUnitTest<EuFundingFor
         assertEquals(euFundingResource.getGrantAgreementNumber(), euFundingForm.getGrantAgreementNumber());
         assertEquals(euFundingResource.getActionType().getId(), euFundingForm.getActionType());
         assertEquals(euFundingResource.getFundingContribution(), euFundingForm.getFundingContribution());
-        assertEquals(euFundingResource.isProjectCoordinator(), euFundingForm.isProjectCoordinator());
-        assertEquals(euFundingResource.getProjectStartDate().getMonth().getValue(), euFundingForm.getStartDateMonth());
-        assertEquals(euFundingResource.getProjectStartDate().getYear(), euFundingForm.getStartDateYear());
-        assertEquals(euFundingResource.getProjectEndDate().getMonth().getValue(), euFundingForm.getEndDateMonth());
-        assertEquals(euFundingResource.getProjectEndDate().getYear(), euFundingForm.getEndDateYear());
+        assertEquals(euFundingResource.isProjectCoordinator(), euFundingForm.getProjectCoordinator());
+        assertEquals(euFundingResource.getProjectStartDate().getMonth().getValue(), euFundingForm.getStartDateMonth().intValue());
+        assertEquals(euFundingResource.getProjectStartDate().getYear(), euFundingForm.getStartDateYear().intValue());
+        assertEquals(euFundingResource.getProjectEndDate().getMonth().getValue(), euFundingForm.getEndDateMonth().intValue());
+        assertEquals(euFundingResource.getProjectEndDate().getYear(), euFundingForm.getEndDateYear().intValue());
         assertEquals(euFundingResource.getProjectName(), euFundingForm.getProjectName());
         assertEquals(euFundingResource.getParticipantId(), euFundingForm.getParticipantId());
     }
