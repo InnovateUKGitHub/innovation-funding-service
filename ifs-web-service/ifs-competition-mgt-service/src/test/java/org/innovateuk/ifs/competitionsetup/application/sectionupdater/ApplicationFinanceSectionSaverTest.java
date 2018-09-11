@@ -51,13 +51,11 @@ public class ApplicationFinanceSectionSaverTest {
     }
 
     @Test
-    public void saveCompetitionSetupSection() {
+    public void doSaveSection() {
         final boolean isIncludeGrowthTable = true;
-        final Long sectionId = 234L;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
         SectionResource overviewFinanceSection = newSectionResource()
-                .withId(sectionId)
                 .withType(SectionType.OVERVIEW_FINANCES)
                 .build();
 
@@ -65,9 +63,16 @@ public class ApplicationFinanceSectionSaverTest {
 
         assertTrue(competition.isFinanceType());
 
+        CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
+                .withCompetitionId(competition.getId())
+                .withApplicationFinanceType(STANDARD)
+                .withIncludeGrowthTable(isIncludeGrowthTable)
+                .build();
+
+        when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
         when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.OVERVIEW_FINANCES))
                 .thenReturn(asList(overviewFinanceSection));
-        when(questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
+        when(questionRestService.getQuestionsBySectionIdAndType(overviewFinanceSection.getId(), QuestionType.GENERAL))
                 .thenReturn(
                         restSuccess(newQuestionResource()
                                 .withName("FINANCE_OVERVIEW", null)
@@ -79,40 +84,39 @@ public class ApplicationFinanceSectionSaverTest {
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setApplicationFinanceType(STANDARD);
 
-        CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource()
-                .withCompetitionId(competition.getId())
-                .withApplicationFinanceType(STANDARD)
-                .withIncludeGrowthTable(isIncludeGrowthTable).build();
-        // Call the service under test
         service.saveSection(competition, competitionSetupForm);
-        // Verify Expectations.
-        verify(competitionSetupFinanceRestService).save(csfr);
+
+        verify(competitionSetupFinanceRestService).save(competitionSetupFinanceResource);
         verify(questionRestService, times(1)).save(any(QuestionResource.class));
     }
 
     @Test
-    public void testSaveCompetitionSetupSectionNoneFinance() {
-        final Long competitionId = 1L;
-
+    public void doSaveSection_noFinances() {
         CompetitionResource competition = newCompetitionResource()
-                .withId(competitionId)
                 .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
                 .build();
 
         assertTrue(competition.isNonFinanceType());
 
+        CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
+                .withCompetitionId(competition.getId())
+                .withApplicationFinanceType(NO_FINANCES)
+                .withIncludeGrowthTable(false)
+                .build();
+
+        when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
+
         FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setApplicationFinanceType(NO_FINANCES);
 
-        // Call the service under test
         service.saveSection(competition, competitionSetupForm);
-        // Verify Expectations.
-        verify(competitionSetupFinanceRestService, never()).save(any());
+
+        verify(competitionSetupFinanceRestService).save(competitionSetupFinanceResource);
         verify(questionRestService, never()).save(any(QuestionResource.class));
     }
 
     @Test
-    public void testsSupportsForm() {
+    public void supportsForm() {
         assertTrue(service.supportsForm(FinanceForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
