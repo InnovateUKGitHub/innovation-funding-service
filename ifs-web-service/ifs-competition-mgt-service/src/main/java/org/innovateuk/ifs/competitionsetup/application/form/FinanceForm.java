@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 public class FinanceForm extends CompetitionSetupForm {
 
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private ApplicationFinanceType applicationFinanceType;
 
     private boolean includeGrowthTable;

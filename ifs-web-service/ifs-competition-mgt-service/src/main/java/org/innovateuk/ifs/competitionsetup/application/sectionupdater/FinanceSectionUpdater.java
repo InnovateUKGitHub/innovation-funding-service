@@ -7,10 +7,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 
@@ -32,7 +30,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
 public class FinanceSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSubsectionUpdater {
 
     @Autowired
-    private CompetitionSetupFinanceService competitionSetupFinanceService;
+    private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 
     @Autowired
     private SectionService sectionService;
@@ -51,22 +49,20 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(
-            CompetitionResource competition,
-            CompetitionSetupForm competitionSetupForm
-    ) {
-        if (competition.isNonFinanceType()) {
-            return serviceSuccess();
-        } else {
-            FinanceForm form = (FinanceForm) competitionSetupForm;
-            CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
-            compSetupFinanceRes.setApplicationFinanceType(STANDARD);
-            compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
-            compSetupFinanceRes.setCompetitionId(competition.getId());
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition,
+                                                CompetitionSetupForm competitionSetupForm) {
+        FinanceForm form = (FinanceForm) competitionSetupForm;
 
+        if (competition.isFinanceType()) {
             updateFundingRulesQuestion(form.getFundingRules(), competition.getId());
-            return competitionSetupFinanceService.updateFinance(compSetupFinanceRes);
         }
+
+        CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
+        competitionSetupFinanceResource.setCompetitionId(competition.getId());
+        competitionSetupFinanceResource.setApplicationFinanceType(form.getApplicationFinanceType());
+        competitionSetupFinanceResource.setIncludeGrowthTable(form.isIncludeGrowthTable());
+
+        return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
     }
 
     private void updateFundingRulesQuestion(String fundingRules, Long competitionId) {

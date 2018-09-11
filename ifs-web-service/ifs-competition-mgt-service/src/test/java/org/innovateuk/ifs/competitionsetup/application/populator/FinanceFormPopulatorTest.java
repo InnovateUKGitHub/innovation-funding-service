@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -27,9 +27,7 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +37,7 @@ public class FinanceFormPopulatorTest {
     private FinanceFormPopulator populator;
 
     @Mock
-    private CompetitionSetupFinanceService competitionSetupFinanceService;
+    private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 
     @Mock
     private SectionService sectionService;
@@ -76,7 +74,7 @@ public class FinanceFormPopulatorTest {
 
         assertTrue(competition.isFinanceType());
 
-        when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(csfr);
+        when(competitionSetupFinanceRestService.getByCompetitionId(compId)).thenReturn(restSuccess(csfr));
         when(sectionService.getSectionsForCompetitionByType(compId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
         when(questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(restSuccess(newQuestionResource()
                 .withName("FINANCE_OVERVIEW", null)

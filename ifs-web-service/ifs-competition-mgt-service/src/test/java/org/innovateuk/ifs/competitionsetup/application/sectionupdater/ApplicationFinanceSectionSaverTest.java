@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -37,7 +37,7 @@ public class ApplicationFinanceSectionSaverTest {
     private FinanceSectionUpdater service;
 
     @Mock
-    private CompetitionSetupFinanceService competitionSetupFinanceService;
+    private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 
     @Mock
     private SectionService sectionService;
@@ -86,7 +86,7 @@ public class ApplicationFinanceSectionSaverTest {
         // Call the service under test
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
-        verify(competitionSetupFinanceService).updateFinance(csfr);
+        verify(competitionSetupFinanceRestService).save(csfr);
         verify(questionRestService, times(1)).save(any(QuestionResource.class));
     }
 
@@ -107,7 +107,7 @@ public class ApplicationFinanceSectionSaverTest {
         // Call the service under test
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
-        verify(competitionSetupFinanceService, never()).updateFinance(any());
+        verify(competitionSetupFinanceRestService, never()).save(any());
         verify(questionRestService, never()).save(any(QuestionResource.class));
     }
 

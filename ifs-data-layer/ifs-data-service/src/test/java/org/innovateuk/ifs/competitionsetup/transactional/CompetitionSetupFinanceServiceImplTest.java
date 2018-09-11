@@ -22,8 +22,7 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -87,32 +86,42 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void getForCompetition() {
-        boolean isIncludeGrowthTable = true;
-
-        // Set up a competition with consistent active form inputs
-        Competition c = newCompetition()
+    public void getForCompetition_standardFinanceType() {
+        Competition competition = newCompetition()
                 .withApplicationFinanceType(STANDARD)
                 .build();
-        when(competitionRepositoryMock.findOne(c.getId())).thenReturn(c);
-        // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).build();
-        // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(c.getId()))
-                .thenReturn(serviceSuccess(isIncludeGrowthTable));
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competition.getId())).thenReturn
+                (serviceSuccess(true));
 
-        // Method under test
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceRes = service.getForCompetition(c.getId());
+        CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
-        // Assertions
-        assertTrue(compSetupFinanceRes.isSuccess());
-        assertEquals(STANDARD, compSetupFinanceRes.getSuccess().getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccess().isIncludeGrowthTable());
+        assertEquals(STANDARD, result.getApplicationFinanceType());
+        assertTrue(result.isIncludeGrowthTable());
     }
 
+    @Test
+    public void getForCompetition_noFinanceType() {
+        Competition competition = newCompetition()
+                .withApplicationFinanceType(NO_FINANCES)
+                .build();
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
+
+        assertEquals(NO_FINANCES, result.getApplicationFinanceType());
+        assertFalse(result.isIncludeGrowthTable());
+    }
+
+    @Test
+    public void getForCompetition_nullFinanceType() {
+        Competition competition = newCompetition().build();
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
+
+        assertNull(result.getApplicationFinanceType());
+        assertFalse(result.isIncludeGrowthTable());
+    }
 }
