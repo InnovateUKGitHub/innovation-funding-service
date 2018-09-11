@@ -19,24 +19,24 @@ public class CompetitionKeyAssessmentStatisticsServiceSecurityTest extends
     @Test
     public void getReadyToOpenKeyStatisticsByCompetition() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getReadyToOpenKeyStatisticsByCompetition(1L),
-                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
+                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER);
     }
 
     @Test
     public void getOpenKeyStatisticsByCompetition() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getOpenKeyStatisticsByCompetition(1L),
-                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
+                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER);
     }
 
     @Test
     public void getClosedKeyStatisticsByCompetition() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getClosedKeyStatisticsByCompetition(1L),
-                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
+                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER);
     }
 
     @Test
     public void getInAssessmentKeyStatisticsByCompetition() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L),
-                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
+                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER);
     }
 }
