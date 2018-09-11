@@ -120,7 +120,7 @@ def getRemoteOCCredentials() {
         // Get the docker repository for the remote OS cluster
         dockerRegistryCredentials.url = project.dockerRegistry
         dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.password = "$bamboo_OPENSHIFT_SVC_ACCOUNT_TOKEN".execute().text.trim()
         dockerRegistryCredentials.email = "unused"
 
     }
