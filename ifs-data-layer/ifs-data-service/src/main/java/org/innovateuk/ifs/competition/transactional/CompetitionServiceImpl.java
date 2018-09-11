@@ -10,7 +10,15 @@ import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -42,8 +50,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.repository.CompetitionRepository.EOI_COMPETITION_TYPE;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -139,8 +149,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             List<Competition> competitions;
-            if (user.hasRole(INNOVATION_LEAD)) {
-                competitions = competitionRepository.findProjectSetupForInnovationLead(user.getId());
+            if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
+                competitions = competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId());
             } else {
                 competitions = competitionRepository.findProjectSetup();
             }
@@ -175,7 +185,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (user.hasRole(INNOVATION_LEAD)) {
+            if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
             } else if (user.hasRole(SUPPORT)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
@@ -235,22 +245,22 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     private Long getLiveCount(){
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                isInnovationLead(user) ?
-                        competitionRepository.countLiveForInnovationLead(user.getId()) : competitionRepository.countLive()
+                (isInnovationLead(user) || isStakeholder(user))?
+                        competitionRepository.countLiveForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countLive()
         ).getSuccess();
     }
 
     private Long getPSCount(){
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                isInnovationLead(user) ?
-                        competitionRepository.countProjectSetupForInnovationLead(user.getId()) : competitionRepository.countProjectSetup()
+                (isInnovationLead(user) || isStakeholder(user))?
+                        competitionRepository.countProjectSetupForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countProjectSetup()
         ).getSuccess();
     }
 
     private Long getFeedbackReleasedCount(){
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                isInnovationLead(user) ?
-                        competitionRepository.countFeedbackReleasedForInnovationLead(user.getId()) : competitionRepository.countFeedbackReleased()
+                (isInnovationLead(user) || isStakeholder(user)) ?
+                        competitionRepository.countFeedbackReleasedForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countFeedbackReleased()
         ).getSuccess();
     }
 

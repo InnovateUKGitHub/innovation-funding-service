@@ -8,10 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -91,6 +88,8 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionFunderService competitionFunderService;
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+    @Mock
+    private StakeholderRepository stakeholderRepository;
     @Mock
     private CompetitionSetupTemplateService competitionSetupTemplateService;
     @Mock
@@ -448,7 +447,7 @@ public class CompetitionSetupServiceImplTest {
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
                 setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
@@ -457,6 +456,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
+        inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
                 competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
