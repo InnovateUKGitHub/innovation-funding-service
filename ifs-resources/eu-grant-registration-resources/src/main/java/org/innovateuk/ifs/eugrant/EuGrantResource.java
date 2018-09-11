@@ -14,11 +14,14 @@ public class EuGrantResource {
 
     private EuOrganisationResource organisation;
 
+    private EuContactResource contact;
+
     private boolean organisationComplete;
 
     private boolean contactComplete;
 
     private boolean fundingComplete;
+
 
     public UUID getId() {
         return id;
@@ -34,6 +37,14 @@ public class EuGrantResource {
 
     public void setOrganisation(EuOrganisationResource organisation) {
         this.organisation = organisation;
+    }
+
+    public EuContactResource getContact() {
+        return contact;
+    }
+
+    public void setContact(EuContactResource contact) {
+        this.contact = contact;
     }
 
     public boolean isOrganisationComplete() {

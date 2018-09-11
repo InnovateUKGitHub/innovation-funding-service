@@ -13,6 +13,4 @@ public interface OrganisationSearchRestService {
     RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText);
 
     RestResult<OrganisationSearchResult> getOrganisation(Enum<?> organisationType, String searchOrganisationId);
-
-
 }

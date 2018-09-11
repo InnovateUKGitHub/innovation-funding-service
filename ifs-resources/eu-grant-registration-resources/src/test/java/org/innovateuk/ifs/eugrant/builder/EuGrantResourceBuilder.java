@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 
@@ -31,5 +32,9 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
 
     public EuGrantResourceBuilder withOrganisation(EuOrganisationResource... organisations) {
         return withArray((organisation, grant) -> grant.setOrganisation(organisation), organisations);
+    }
+
+    public EuGrantResourceBuilder withContact(EuContactResource... contacts) {
+        return withArray((contact, grant) -> grant.setContact(contact), contacts);
     }
 }

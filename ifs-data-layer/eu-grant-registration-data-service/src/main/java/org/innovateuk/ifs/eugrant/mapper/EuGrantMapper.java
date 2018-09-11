@@ -12,14 +12,16 @@ import java.util.UUID;
 
 @Mapper(
         config = GlobalMapperConfig.class,
-        uses = { EuOrganisationMapper.class }
+        uses = {
+                EuOrganisationMapper.class,
+                EuContactMapper.class,
+        }
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
             // TODO add to resource
-            @Mapping(target = "contact",  ignore = true),
-            @Mapping(target = "funding", ignore = true)
+            @Mapping(target = "funding", ignore = true),
     })
     @Override
     public abstract EuGrant mapToDomain(EuGrantResource resource);

@@ -6,10 +6,9 @@
 <body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/eu-grant/organisation/type'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -109,12 +108,12 @@
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
                                 <label class="govuk-label"
-                                       for="org-name">
+                                       for="organisationName">
                                     Organisation name
                                 </label>
                                 <span class="govuk-error-message" th:if="${#fields.hasErrors('*{organisationName}')}" th:errors="*{organisationName}"></span>
                                 <input class="govuk-input"
-                                       id="org-name"
+                                       id="organisationName"
                                        th:field="*{organisationName}"
                                        type="text" value="" />
                             </div>
@@ -128,7 +127,7 @@
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

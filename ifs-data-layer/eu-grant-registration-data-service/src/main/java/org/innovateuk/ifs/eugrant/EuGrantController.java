@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.controller;
+package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;

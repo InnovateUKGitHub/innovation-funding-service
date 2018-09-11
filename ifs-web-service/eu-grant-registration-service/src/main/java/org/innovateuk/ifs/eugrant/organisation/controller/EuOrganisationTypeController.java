@@ -18,7 +18,6 @@ import javax.validation.Valid;
 /**
  * Provides methods for picking an organisation type as a lead applicant after initialization or the registration process.
  */
-
 @Controller
 @RequestMapping(AbstractEuOrganisationController.BASE_URL + "/" + AbstractEuOrganisationController.ORGANISATION_TYPE)
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = EuOrganisationTypeController.class)

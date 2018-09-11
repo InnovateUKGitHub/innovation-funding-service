@@ -6,10 +6,9 @@
 <body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/eu-grant/overview',javascriptBackLink=true" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -78,7 +77,7 @@
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
