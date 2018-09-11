@@ -48,14 +48,14 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         CompetitionSetupFinanceResource compSetupFinanceRes = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competitionId)
                 .withIncludeGrowthTable(isIncludeGrowthTable)
-                .withApplicationFinanceType(NO_FINANCES)
+                .withApplicationFinanceType(STANDARD)
                 .build();
 
         // Make sure that the values in the competition and the form inputs are the negation of what we are changing
         // them to so that we can check they've been altered. Note that isIncludeGrowthTable being true should result in
         // deactivated turn over and count form inputs and activated financial inputs.
         Competition c = newCompetition().with(id(competitionId))
-                .withApplicationFinanceType(STANDARD)
+                .withApplicationFinanceType(NO_FINANCES)
                 .build();
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
         // Turnover and count - these should be active in sync with each other.
@@ -77,7 +77,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         // Assertions
         assertTrue(save.isSuccess());
-        assertEquals(NO_FINANCES, c.getApplicationFinanceType());
+        assertEquals(STANDARD, c.getApplicationFinanceType());
         assertEquals(isIncludeGrowthTable, !staffCountFormInput.getActive());
         assertEquals(isIncludeGrowthTable, !organisationTurnoverFormInput.getActive());
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
