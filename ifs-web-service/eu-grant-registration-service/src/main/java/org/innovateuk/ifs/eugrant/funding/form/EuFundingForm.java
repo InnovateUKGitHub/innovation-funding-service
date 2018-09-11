@@ -26,7 +26,7 @@ public class EuFundingForm {
     private Integer startDateMonth;
 
     @NotNull(message = "{validation.fundingForm.date.year}")
-    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
+    @Range(max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer startDateYear;
 
     @NotNull(message = "{validation.fundingForm.date.month}")
