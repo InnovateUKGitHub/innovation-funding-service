@@ -128,7 +128,7 @@ Collaborators can view a file when the question is assigned
     Given the user navigates to the page        ${DASHBOARD_URL}
     And the user clicks the button/link         link=Academic robot test application
     And the user clicks the button/link         link=5. Technical approach
-    And the user should see the element         link=${5mb_pdf} (opens in a new window)
+    And the user should see the element         link=${5mb_pdf}
     When The user opens the link in new window  ${5mb_pdf}
     And the user should not see an error in the page
     Then the user closes the last opened tab

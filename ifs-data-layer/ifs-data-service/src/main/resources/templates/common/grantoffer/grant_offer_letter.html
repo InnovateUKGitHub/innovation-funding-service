@@ -1,4 +1,5 @@
 <#ftl output_format="HTML" auto_esc=true>
+<#macro number_format number>${number?round}</#macro>
 <?xml version="1.0" encoding="UTF-8"?>
 <html dir="ltr" lang="en">
 <#import "include/css.html" as css>
@@ -16,7 +17,7 @@
       <p>
           <#if LeadContact?has_content>${LeadContact}<br/></#if>
           <#if LeadOrgName?has_content>${LeadOrgName}<br/></#if>
-          <#if Address1?has_content>${Address1} </#if>
+          <#if Address1?has_content>${Address1}<br/></#if>
           <#if Address2?has_content>${Address2}<br/></#if>
           <#if Address3?has_content>${Address3}<br/></#if>
           <#if TownCity?has_content>${TownCity}<br/></#if>
@@ -35,16 +36,16 @@
       <p>We are pleased to confirm your grant award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service. This includes any additional terms and conditions attached to this notice.</p>
       <p>Your individual grant allocations are detailed in the attached annexes. These allocations are final and not subject to further negotiation or amendment.</p>
       <p class="bold">Accepting your award</p>
-      <p>To confirm you want to accept, please complete and sign annex 1 attached to this notice. You should return this through the Innovation Funding Service.</p>
+      <p>To confirm you want to accept, please complete and sign the annex attached to this notice. You should return this through the Innovation Funding Service.</p>
       <p>Acceptance includes confirming your project start and end dates. Once your acceptance is approved, these can only be changed by submitting a request through your Monitoring Officer. </p>
       <p>Your award will be withdrawn if you do not confirm your start date within one calendar month of this letter. Any costs incurred before that start date will be ineligible for grant unless you have made other arrangements.</p>
       <p>We wish you every success with your project.</p>
       <p>Yours sincerely</p>
-      <p><br/>
+      <p><br/><br/>
           Ben Morris<br/>
           Delivery and Insight Manager
       </p>
-      <p class="textcenter"><br/>
+      <p class="textcenter"><br/><br/><br/><br/><br/><br/>
           Innovate UK is part of UK Research and Innovation <br/>
           Innovate UK, Polaris House, North Star Avenue, Swindon SN2 1FL <br/>
           Tel:+44 (0)1793 442 700 <br/>
@@ -71,12 +72,12 @@
       <p class="signature">Signed: ………………………………………………………….</p>
       <p>Project Manager for and on behalf of Empire Ltd</p>
       <p><br/></p>
-      <p class="signature">* Print name:.……………………………………......................... </p>
+      <p class="signature">Print name: .……………………………………...................... </p>
       <p>Date: …………………………………………………………….</p>
   </div>
   <div class="page">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+        <p><span class="bold">Project finances:</span> costs summary</p>
         <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -92,25 +93,25 @@
             <thead>
             <tr>
                 <th scope="col">Industry costs</th>
-                <th scope="col">Total eligible costs</th>
-                <th scope="col">Rate of grant</th>
-                <th scope="col">Total grant</th>
+                <th scope="col">Total eligible costs<br/>(£)</th>
+                <th scope="col">Rate of grant (%)</th>
+                <th scope="col">Total grant (£)</th>
             </tr>
             </thead>
             <tbody>
             <#list financeTotalsTable.industrialOrgs as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                    <td><@number_format number=financeTotalsTable.getTotalEligibleCosts(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getGrantClaim(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getTotalGrant(org)/></td>
                 </tr>
             </#list>
             <tr>
                 <td class="bold">Total (industry)</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getIndustryTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getIndustryTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -124,25 +125,25 @@
             <thead>
             <tr>
                 <th scope="col" class="bold">Academic costs</th>
-                <th scope="col">Total eligible costs</th>
-                <th scope="col">Rate of grant</th>
-                <th scope="col">Total grant</th>
+                <th scope="col">Total eligible costs<br/>(£)</th>
+                <th scope="col">Rate of grant (%)</th>
+                <th scope="col">Total grant (£)</th>
             </tr>
             </thead>
             <tbody>
             <#list financeTotalsTable.academicOrgs as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                    <td><@number_format number=financeTotalsTable.getTotalEligibleCosts(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getGrantClaim(org)/></td>
+                    <td><@number_format number=financeTotalsTable.getTotalGrant(org)/></td>
                 </tr>
             </#list>
             <tr>
                 <td class="bold">Total (academic)</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getAcademicTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAcademicTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -157,9 +158,9 @@
             <tbody>
             <tr>
                 <td class="bold">Total (all)</td>
-                <td class="bold">${financeTotalsTable.getAllTotalEligibleCosts()}</td>
-                <td class="bold">${financeTotalsTable.getAllTotalGrantClaim()}</td>
-                <td class="bold">${financeTotalsTable.getAllTotalGrant()}</td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalEligibleCosts()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalGrantClaim()/></td>
+                <td class="bold"><@number_format number=financeTotalsTable.getAllTotalGrant()/></td>
             </tr>
             </tbody>
         </table>
@@ -168,7 +169,7 @@
   <#if industrialFinanceTable?? && industrialFinanceTable.organisations??>
       <div class="page landscape">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+        <p><span class="bold">Project finances:</span> industry costs</p>
         <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -182,43 +183,44 @@
                 <th scope="col">Labour</th>
                 <th scope="col">Overheads</th>
                 <th scope="col">Materials</th>
-                <th scope="col">Capital usage</th>
+                <th scope="col">Capital<br/>usage</th>
                 <th scope="col">Subcontract</th>
-                <th scope="col">Travel and subsistence</th>
-                <th scope="col">Other costs</th>
+                <th scope="col">Travel and<br/>subsistence</th>
+                <th scope="col">Other<br/>costs</th>
             </tr>
             </thead>
             <tbody>
             <#list industrialFinanceTable.organisations as org>
                 <tr>
                     <td>${org}</td>
-                    <td>${industrialFinanceTable.getLabour(org)}</td>
-                    <td>${industrialFinanceTable.getOverheads(org)}</td>
-                    <td>${industrialFinanceTable.getMaterials(org)}</td>
-                    <td>${industrialFinanceTable.getCapitalUsage(org)}</td>
-                    <td>${industrialFinanceTable.getSubcontract(org)}</td>
-                    <td>${industrialFinanceTable.getTravel(org)}</td>
-                    <td>${industrialFinanceTable.getOtherCosts(org)}</td>
+                    <td><@number_format number=industrialFinanceTable.getLabour(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getOverheads(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getMaterials(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getCapitalUsage(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getSubcontract(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getTravel(org)/></td>
+                    <td><@number_format number=industrialFinanceTable.getOtherCosts(org)/></td>
                 </tr>
             </#list>
             <tr>
-                <td class="bold">Total (industry)</td>
-                <td class="bold">${industrialFinanceTable.getLabourTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getOverheadsTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getMaterialsTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getCapitalUsageTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getSubcontractTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getTravelTotal()}</td>
-                <td class="bold">${industrialFinanceTable.getOtherCostsTotal()}</td>
+                <td class="bold">Total (£) (industry)</td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getLabourTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getOverheadsTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getMaterialsTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getCapitalUsageTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getSubcontractTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getTravelTotal()/></td>
+                <td class="bold"><@number_format number=industrialFinanceTable.getOtherCostsTotal()/></td>
             </tr>
             </tbody>
         </table>
+        All figures are in GBP unless otherwise stated.
       </div>
   </#if>
   <#if academicFinanceTable?? && academicFinanceTable.organisations??>
       <div class="page landscape">
             <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #2</h2>
-            <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+            <p><span class="bold">Project finances:</span> academic costs</p>
             <p>
               <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
               <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -229,62 +231,63 @@
                 <thead>
                 <tr>
                     <th scope="col" class="bold">Academic costs</th>
-                    <th scope="col" colspan="4" class="textleft">Directly incurred</th>
-                    <th scope="col" colspan="3" class="textleft">Directly allocated</th>
+                    <th scope="col" colspan="4" class="textleft">Directly incurred costs</th>
+                    <th scope="col" colspan="3" class="textleft">Directly allocated costs</th>
                     <th scope="col" class="textleft">Indirect costs</th>
                     <th scope="col" colspan="4" class="textleft">Exceptions</th>
                 </tr>
                 <tr>
                     <td scope="col"></td>
                     <td scope="col">Staff</td>
-                    <td scope="col">Travel and subs</td>
+                    <td scope="col">Travel<br/>and<br/>subs</td>
                     <td scope="col">Equipment</td>
-                    <td scope="col">Other costs</td>
+                    <td scope="col">Other</td>
                     <td scope="col">Investigations</td>
                     <td scope="col">Estates</td>
-                    <td scope="col">Other DA</td>
-                    <td scope="col">Indirect costs</td>
+                    <td scope="col">Other</td>
+                    <td scope="col">Indirect</td>
                     <td scope="col">Staff</td>
-                    <td scope="col">Travel and subs</td>
+                    <td scope="col">Travel<br/>and<br/>subs</td>
                     <td scope="col">Equipment</td>
-                    <td scope="col">Other costs</td>
+                    <td scope="col">Other</td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <#list academicFinanceTable.organisations as org>
                         <td>${org}</td>
-                        <td>${academicFinanceTable.getIncurredStaff(org)}</td>
-                        <td>${academicFinanceTable.getIncurredTravelSubsistence(org)}</td>
-                        <td>${academicFinanceTable.getIncurredEquipment(org)}</td>
-                        <td>${academicFinanceTable.getIncurredOtherCosts(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedInvestigators(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedEstateCosts(org)}</td>
-                        <td>${academicFinanceTable.getAllocatedOtherCosts(org)}</td>
-                        <td>${academicFinanceTable.getIndirectCosts(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsStaff(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsTravelSubsistence(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsEquipment(org)}</td>
-                        <td>${academicFinanceTable.getExceptionsOtherCosts(org)}</td>
+                        <td><@number_format number=academicFinanceTable.getIncurredStaff(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredTravelSubsistence(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredEquipment(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIncurredOtherCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedInvestigators(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedEstateCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getAllocatedOtherCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getIndirectCosts(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsStaff(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsTravelSubsistence(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsEquipment(org)/></td>
+                        <td><@number_format number=academicFinanceTable.getExceptionsOtherCosts(org)/></td>
                     </#list>
                 </tr>
                 <tr>
-                    <td class="bold">Total (academic)</td>
-                    <td class="bold">${academicFinanceTable.getIncurredStaffTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredTravelSubsistenceTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredEquipmentTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIncurredOtherCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedInvestigatorsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedEstateCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getAllocatedOtherCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getIndirectCostsTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsStaffTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsTravelSubsistenceTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsEquipmentTotal()}</td>
-                    <td class="bold">${academicFinanceTable.getExceptionsOtherCostsTotal()}</td>
+                    <td class="bold">Total (£) (academic)</td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredStaffTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredTravelSubsistenceTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredEquipmentTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIncurredOtherCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedInvestigatorsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedEstateCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getAllocatedOtherCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getIndirectCostsTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsStaffTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsTravelSubsistenceTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsEquipmentTotal()/></td>
+                    <td class="bold"><@number_format number=academicFinanceTable.getExceptionsOtherCostsTotal()/></td>
                 </tr>
                 </tbody>
             </table>
+            All figures are in GBP unless otherwise stated.
       </div>
   </#if>
 </body>
