@@ -88,9 +88,9 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     private String generateShortCode() {
-        String shortCode = randomAlphanumeric(5);
+        String shortCode = randomAlphanumeric(5).toUpperCase();
         while (euGrantRepository.existsByShortCode(shortCode)) {
-            shortCode = randomAlphanumeric(5);
+            shortCode = randomAlphanumeric(5).toUpperCase();
         }
         return shortCode;
     }
