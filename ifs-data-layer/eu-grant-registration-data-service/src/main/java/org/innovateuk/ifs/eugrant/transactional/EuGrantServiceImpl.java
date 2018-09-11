@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -81,9 +82,17 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     private ServiceResult<EuGrantResource> submit(EuGrant euGrant) {
-        euGrant.submit();
-        return sendEmail(euGrant)
+        return serviceSuccess(euGrant.submit(generateShortCode()))
+                .andOnSuccess(this::sendEmail)
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
+    }
+
+    private String generateShortCode() {
+        String shortCode = randomAlphanumeric(5);
+        while (euGrantRepository.existsByShortCode(shortCode)) {
+            shortCode = randomAlphanumeric(5);
+        }
+        return shortCode;
     }
 
     private ServiceResult<EuGrant> sendEmail(EuGrant euGrant) {
