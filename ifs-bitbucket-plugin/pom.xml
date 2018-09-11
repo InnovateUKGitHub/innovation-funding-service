@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.innovateuk.ifs.bitbucket.plugin</groupId>
     <artifactId>ifs-bitbucket-plugin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <organization>
         <name>Innovate UK</name>
     </organization>
