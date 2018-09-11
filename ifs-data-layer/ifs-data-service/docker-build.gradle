@@ -31,7 +31,7 @@ ext.idpRestBaseURL="http://registration-svc:8080"
 
 ext.postcodeLookupKey=""
 
-ext.ifsFileStorageLocation="/mnt/ifs_storage"
+ext.ifsFileStorageLocation="/tmp"
 
 ext.ifsWebBaseURL="https://ifs.local-dev"
 
