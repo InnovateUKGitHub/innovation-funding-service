@@ -21,7 +21,6 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
@@ -97,7 +96,7 @@ public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthentic
             databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                 // assert that we got a failure indicating that the Registration API was not available
-                ServiceResult<UserResource> result = registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo);
+                ServiceResult<UserResource> result = registrationService.createUserWithCompetitionContext(competition.getId(), organisation.getId(), registrationInfo);
                 assertThat(result.isFailure()).isTrue();
                 assertThat(result.getFailure().is(new Error(GENERAL_UNEXPECTED_ERROR, SERVICE_UNAVAILABLE))).isTrue();
             });

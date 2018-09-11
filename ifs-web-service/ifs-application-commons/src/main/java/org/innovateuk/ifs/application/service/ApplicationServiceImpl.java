@@ -39,6 +39,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public ApplicationResource createApplication(long competitionId, long userId, long organisationId, String applicationName) {
+        return applicationRestService.createApplication(competitionId, userId, organisationId, applicationName).getSuccess();
+    }
+
+    @Override
     public ServiceResult<Void> save(ApplicationResource application) {
         return applicationRestService.saveApplication(application).toServiceResult();
     }

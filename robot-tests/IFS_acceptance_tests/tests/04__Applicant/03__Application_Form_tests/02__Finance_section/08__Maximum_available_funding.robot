@@ -9,8 +9,6 @@ Resource            ../../Applicant_Commons.robot
 
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
-#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
-#${openCompetitionRTO_name}            Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
@@ -73,6 +71,15 @@ Maximum funding level available for RTO lead
     And the correct funding displayed for lead applicant                    Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                            link=Application overview
+
+Editing research category does not reset your funding
+    [Documentation]  IFS-4127
+    [Tags]
+    Given the user edits the research category   Feasibility studies
+    And the user edits the organisation size     ${SMALL_ORGANISATION_SIZE}
+    And The user clicks the button/link          link = Your finances
+    Then the user should see the element         jQuery = li:contains("Your funding") .task-status-complete
+    [Teardown]  the user clicks the button/link  link=Application overview
 
 Lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
@@ -202,12 +209,15 @@ the funding displayed is as expected
 the user accepts the invite to collaborate
     [Arguments]  ${competition_name}  ${user_name}  ${password}
     the user reads his email and clicks the link     ${user_name}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
-    the user clicks the button/link                  jQuery=a:contains("Continue or sign in")
+    the user clicks the button/link                  jQuery=a:contains("Continue")
     the guest user inserts user email and password   ${user_name}  ${password}
     the guest user clicks the log-in button
-    the user clicks the button/link                  jQuery=a:contains("Confirm and accept invitation")
+    the user clicks the button/link                  css = .govuk-button[type="submit"]   #Save and continue
 
 the correct funding is displayed to academic user
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  Page Should Contain    Bath Spa University
+    Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user selects the radio button     selectedOrganisationId   125
+    ...                              AND                     the user clicks the button/link       jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link   link=Your finances
     the user should see the element   jQuery=td:contains("100%")
 

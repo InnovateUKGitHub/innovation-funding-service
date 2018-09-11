@@ -26,9 +26,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return !COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
 
-    @PermissionRule(value = "READ", description = "Internal users other than innovation lead users can see all competitions")
+    @PermissionRule(value = "READ", description = "Internal users other than innovation lead users and stakeholders can see all competitions")
     public boolean internalUserCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can view competitions that are assigned to them")
@@ -36,9 +36,14 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Internal users other than innovation leads can see all competition search results")
+    @PermissionRule(value = "READ", description = "Stakeholders can view competitions that are assigned to them")
+    public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Internal users other than innovation leads and stakeholders can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return isInternal(user) && !isInnovationLead(user);
+        return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation lead users can see competitions that are assigned to them")
@@ -46,18 +51,28 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can see competitions that are assigned to them")
+    public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
     public boolean internalAdminCanManageInnovationLeadsForCompetition(CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user);
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Internal users, barring innovation leads, and IFS Admin can view unsuccessful applications")
-    public boolean internalUsersAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
-        return (isInternal(user) && !isInnovationLead(user)) || isIFSAdmin(user);
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders), and IFS Admin can view previous applications")
+    public boolean internalUsersAndIFSAdminCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
+        return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || isIFSAdmin(user);
     }
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
-    public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Innovation leads for the competition can view previous applications")
+    public boolean innovationLeadForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Stakeholders for the competition can view previous applications")
+    public boolean stakeholderForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "DELETE",

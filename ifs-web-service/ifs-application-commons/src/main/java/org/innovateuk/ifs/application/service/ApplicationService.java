@@ -11,6 +11,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 public interface ApplicationService {
     ApplicationResource getById(Long applicationId);
 
+    ApplicationResource createApplication(long competitionId, long userId, long organisationId, String applicationName);
+
     ServiceResult<Void> save(ApplicationResource application);
 
     OrganisationResource getLeadOrganisation(Long applicationId);

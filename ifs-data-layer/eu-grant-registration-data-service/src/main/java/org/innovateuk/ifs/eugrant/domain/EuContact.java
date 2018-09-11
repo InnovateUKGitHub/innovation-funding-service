@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.eugrant.domain;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,9 +17,18 @@ public class EuContact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private String name;
-    private String email;
+
+    @NotBlank
     private String jobTitle;
+
+    @NotBlank
+    @Email
+    private String email;
+
+    @NotBlank
     private String telephone;
 
     EuContact() {
