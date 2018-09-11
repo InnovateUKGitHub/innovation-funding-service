@@ -240,7 +240,7 @@
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance (model, internalView)">
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
-            <p class="govuk-body">You must include VAT in figures where appropriate.</p>
+            <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
         </div>
 
         <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(model.question.name,'{organisationName}',
