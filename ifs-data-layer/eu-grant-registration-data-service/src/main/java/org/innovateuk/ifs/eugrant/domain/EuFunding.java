@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant.domain;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

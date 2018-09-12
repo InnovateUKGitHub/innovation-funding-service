@@ -5,18 +5,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.NumberFormat;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class EuFundingForm {
 
-    @NotBlank(message = "{validation.fundingForm.grant.aggreement.number}")
+    @NotBlank(message = "{validation.fundingForm.grant.agreement.number}")
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.valid.code}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
@@ -38,6 +38,7 @@ public class EuFundingForm {
     @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer endDateYear;
 
+    @Digits(integer = 10, fraction = 0, message = "{validation.fundingForm.funding.format.invalid}")
     @NotNull(message = "{validation.fundingForm.funding.contribution}")
     private BigDecimal fundingContribution;
 

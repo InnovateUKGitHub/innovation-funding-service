@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class EuActionTypeRestServiceImpl extends BaseRestService implements EuActionTypeRestService {
-    private static final String baseURL = "/eu-grant/action-type";
+    private static final String baseURL = "/action-type";
     @Override
     @Value("${ifs.eu-grant-registration.data.service.baseURL}")
     public void setServiceUrl(String serviceUrl) {

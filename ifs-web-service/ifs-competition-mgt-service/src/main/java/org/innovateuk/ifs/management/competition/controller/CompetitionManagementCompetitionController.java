@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition")
-@SecuredBySpring(value = "Controller", description = "Comp Admins, Project Finance users and Innovation Leads can view the competition dashboard", securedType = CompetitionManagementCompetitionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead')")
+@SecuredBySpring(value = "Controller", description = "Comp Admins, Project Finance users," +
+        "Innovation Leads and Stakeholders can view the competition dashboard", securedType = CompetitionManagementCompetitionController.class)
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead', 'stakeholder')")
 public class CompetitionManagementCompetitionController {
 
     @Autowired

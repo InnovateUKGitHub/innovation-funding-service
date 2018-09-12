@@ -9,10 +9,7 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -58,6 +55,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -315,6 +314,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     deleteFormValidatorsForCompetitionQuestions(competition);
                     deleteMilestonesForCompetition(competition);
                     deleteInnovationLead(competition);
+                    deleteAllStakeholders(competition);
                     deleteSetupStatus(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
@@ -332,6 +332,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private void deleteInnovationLead(Competition competition) {
         innovationLeadRepository.deleteAllInnovationLeads(competition.getId());
+    }
+
+    private void deleteAllStakeholders(Competition competition) {
+        stakeholderRepository.deleteAllStakeholders(competition.getId());
     }
 
     private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {

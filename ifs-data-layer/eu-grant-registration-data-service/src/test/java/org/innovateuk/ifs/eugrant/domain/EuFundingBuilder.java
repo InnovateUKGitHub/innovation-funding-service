@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant.domain;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

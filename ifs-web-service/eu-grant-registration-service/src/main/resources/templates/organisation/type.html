@@ -20,18 +20,11 @@
              data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
             <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                  <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationType}')}">
-                      <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                      <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
-                  </li>
-                </ul>
+                <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
             </div>
         </div>
 
-        <h1 class="govuk-heading-xl">
-            Choose your organisation type
-        </h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',size='govuk-heading-xl'" />
 
         <div class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Your organisation must be identified as a UK partner in the grant agreement to receive funding.</p>

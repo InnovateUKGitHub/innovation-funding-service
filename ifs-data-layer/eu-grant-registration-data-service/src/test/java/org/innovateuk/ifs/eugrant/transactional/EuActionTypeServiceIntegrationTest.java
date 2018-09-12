@@ -3,9 +3,10 @@ package org.innovateuk.ifs.eugrant.transactional;
 import com.drew.lang.Iterables;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.euactiontype.transactional.EuActionTypeService;
 import org.innovateuk.ifs.eugrant.*;
-import org.innovateuk.ifs.eugrant.domain.EuActionType;
-import org.innovateuk.ifs.eugrant.repository.EuActionTypeRepository;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
+import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

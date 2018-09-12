@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.eugrant.controller;
 
 import org.innovateuk.ifs.MockMvcTest;
-import org.innovateuk.ifs.eugrant.EuActionTypeController;
+import org.innovateuk.ifs.euactiontype.controller.EuActionTypeController;
 import org.innovateuk.ifs.eugrant.EuActionTypeResource;
-import org.innovateuk.ifs.eugrant.transactional.EuActionTypeService;
+import org.innovateuk.ifs.euactiontype.transactional.EuActionTypeService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -36,7 +36,7 @@ public class EuActionTypeControllerTest extends MockMvcTest<EuActionTypeControll
         when(euActionTypeService.getById(euActionTypeResource.getId())).thenReturn(serviceSuccess(euActionTypeResource));
 
         mockMvc.perform(
-                get("/eu-grant/action-type/get-by-id/{id}", euActionTypeResource.getId())
+                get("/action-type/get-by-id/{id}", euActionTypeResource.getId())
                         .content(json(euActionTypeResource))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -52,7 +52,7 @@ public class EuActionTypeControllerTest extends MockMvcTest<EuActionTypeControll
         when(euActionTypeService.findAll()).thenReturn(serviceSuccess(euActionTypeResources));
 
         mockMvc.perform(
-                get("/eu-grant/action-type/find-all")
+                get("/action-type/find-all")
                         .content(json(euActionTypeResources))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

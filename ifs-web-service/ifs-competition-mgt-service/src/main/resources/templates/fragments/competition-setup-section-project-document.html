@@ -28,11 +28,8 @@
                                     th:checked="${document.enabled}" />
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
                                 <span th:text=${document.title}>document_title</span>
-                                <span class="end-label-link">
-                                    <th>
-                                         <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
-                                    </th>
-                                </span>
+                                 <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
+                                    class="govuk-link govuk-!-margin-left-4">Edit</a>
                             </label>
                         </div>
                     </div>
