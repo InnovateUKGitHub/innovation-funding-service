@@ -7,7 +7,7 @@ ${euGrant.shortCode}
 Grant agreement number
 ${euGrant.funding.grantAgreementNumber}
 Organisation type
-${euGrant.organisation.organisationType}
+${euGrant.organisation.organisationType.name}
 Registered name
 ${euGrant.organisation.name}
 <#if euGrant.organisation.companiesHouseNumber??>
