@@ -120,11 +120,11 @@ Academic partner can upload file for field J-es PDF
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your project costs
     # Note the Jes form is already uploaded
-    Then the user should see the element     css=a.uploaded-file
+    Then the user should see the element     css=p.uploaded-file a
     When The user clicks the button/link       jQuery=button:contains("Remove")
     then the user should see the element       jQuery=label.button-secondary
-    and the user uploads the file  css=.upload-section input  ${valid_pdf}
-    and the user should see the text in the page    ${valid_pdf}
+    and the user uploads the file  css=.upload-section input  ${5mb_pdf}
+    and the user should see the text in the page    ${5mb_pdf}
 
 Compadmin can open the jes-file in applications
     [Documentation]     IFS-102

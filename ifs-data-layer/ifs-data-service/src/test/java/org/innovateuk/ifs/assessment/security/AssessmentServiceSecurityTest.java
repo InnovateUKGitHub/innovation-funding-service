@@ -135,7 +135,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.countByStateAndCompetition(state, competitionId),
                 COMP_ADMIN,
                 PROJECT_FINANCE,
-                INNOVATION_LEAD
+                INNOVATION_LEAD,
+                STAKEHOLDER
         );
     }
 
