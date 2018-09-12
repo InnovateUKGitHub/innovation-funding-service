@@ -5,6 +5,7 @@ package org.innovateuk.ifs.invite.resource;
  */
 public enum CompetitionParticipantRoleResource {
     INNOVATION_LEAD,
+    STAKEHOLDER,
     ASSESSOR,
     PANEL_ASSESSOR,
     INTERVIEW_ASSESSOR

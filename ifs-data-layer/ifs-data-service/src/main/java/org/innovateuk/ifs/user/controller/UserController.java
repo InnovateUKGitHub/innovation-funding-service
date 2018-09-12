@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -180,13 +181,13 @@ public class UserController {
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @RequestBody UserResource userResource) {
+        return registrationService.createUser(userResource).toPostCreateResponse();
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @PathVariable("competitionId") final long competitionId, @RequestBody UserResource userResource) {
+        return registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")
@@ -207,5 +208,11 @@ public class UserController {
     @GetMapping("/id/{id}/reactivate")
     public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
         return registrationService.activateUser(id).toGetResponse();
+    }
+
+    @PostMapping("{id}/grant/{role}")
+    public RestResult<Void> grantRole(@PathVariable("id") final long id,
+                                           @PathVariable("role") final Role role) {
+        return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
  }

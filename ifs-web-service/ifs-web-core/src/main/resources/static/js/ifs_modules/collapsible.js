@@ -8,15 +8,13 @@ IFS.core.collapsible = (function () {
   return {
     settings: {
       collapsibleEl: '.collapsible',
-      collapsibleTabs: '.tabs section',
       statelessClass: 'collapsible-stateless',
       expandedClass: 'collapsible-expanded'
     },
-    init: function (type) {
+    init: function () {
       s = this.settings
-      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
       // if this has to be more dynamically updated in the future we can add a custom event
-      jQuery(s.collapsible).each(function () {
+      jQuery(s.collapsibleEl).each(function () {
         var $el = jQuery(this)
         var stateless = $el.hasClass(s.statelessClass)
         var expanded = $el.hasClass(s.expandedClass)
@@ -124,9 +122,8 @@ IFS.core.collapsible = (function () {
       Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
     },
     destroy: function (type) {
-      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
-      jQuery('body').off('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]')
-      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
+      jQuery('body').off('click', s.collapsibleEl + ' > h2 > [aria-controls], ' + s.collapsibleEl + ' > h3 > [aria-controls]')
+      jQuery(s.collapsibleEl + ' > h2, ' + s.collapsibleEl + ' > h3').each(function () {
         IFS.core.collapsible.destroyHTHL(this)
       })
     },

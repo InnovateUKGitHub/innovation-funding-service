@@ -60,7 +60,8 @@
                     <tr class="govuk-table__row" th:each="app, iterStat : ${model.applications}">
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
-                               th:text="${app.applicationId}">123
+                               th:text="${app.applicationId}"
+                               class="govuk-link">123
                             </a>
                         </td>
                         <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
@@ -72,12 +73,12 @@
                                     <th:block th:if="${isError}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                     </th:block>
-                                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
+                                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
                                 </th:block>
                                 <th:block th:unless="${app.hasAttachment()}">
                                     <div class="upload-section">
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">+ Upload</label>
                                         <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
                                     </div>
                                 </th:block>
@@ -90,7 +91,7 @@
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                                target="_blank"
                                                class="govuk-link">Uploaded-file.pdf</a>
-                                            <p class="govuk-hint">(opens in a new window)</p>
+                                            <p class="govuk-hint">(opens in a new window).</p>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                             <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button-clear">Remove</button>

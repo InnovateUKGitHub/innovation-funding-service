@@ -8,10 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -92,6 +89,8 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
     @Mock
+    private StakeholderRepository stakeholderRepository;
+    @Mock
     private CompetitionSetupTemplateService competitionSetupTemplateService;
     @Mock
     private SetupStatusService setupStatusService;
@@ -155,6 +154,7 @@ public class CompetitionSetupServiceImplTest {
                 .build();
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.existsInnovationLead(competitionId, innovationLead.getId())).thenReturn(false);
 
@@ -163,6 +163,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).existsInnovationLead(competitionId, innovationLead.getId());
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -192,6 +193,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.findInnovationLead(competitionId, existingInnovationLeadId)).thenReturn(competitionParticipant);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
 
         ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingInnovationLeadId);
@@ -200,6 +202,7 @@ public class CompetitionSetupServiceImplTest {
         // Verify that the correct CompetitionParticipant is deleted
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -227,6 +230,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.existsInnovationLead(competitionId, newInnovationLeadId)).thenReturn(true);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.findInnovationLead(competitionId, newInnovationLeadId))
                 .thenReturn(newLeadTechCompetitionParticipant);
@@ -236,6 +240,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
         verify(innovationLeadRepository).existsInnovationLead(competitionId, newInnovationLeadId);
         verify(innovationLeadRepository, never()).save(any(InnovationLead.class));
@@ -442,7 +447,7 @@ public class CompetitionSetupServiceImplTest {
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
                 setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
@@ -451,6 +456,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
+        inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
                 competition.getId());
         inOrder.verify(competitionRepository).delete(competition);

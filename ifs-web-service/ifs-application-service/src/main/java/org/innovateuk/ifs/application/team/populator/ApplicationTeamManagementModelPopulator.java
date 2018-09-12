@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -172,9 +171,9 @@ public class ApplicationTeamManagementModelPopulator {
                 .getSuccess();
     }
 
-    private Long getApplicationTeamQuestion(long competitionId) {
+    private long getApplicationTeamQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
-                APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

@@ -7,20 +7,25 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-
 /**
  * View model for your funding section.
  */
 public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
-    private boolean researchCategoryComplete;
-    private boolean yourOrganisationComplete;
-    private long researchCategoryQuestionId;
+    private boolean fundingSectionLocked;
+    private boolean researchCategoryRequired;
+    private boolean yourOrganisationRequired;
+    private Long researchCategoryQuestionId;
     private long yourOrganisationSectionId;
 
-    public YourFundingSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+    public YourFundingSectionViewModel(ApplicantSectionResource applicantResource,
+                                       List<AbstractFormInputViewModel> formInputViewModels,
+                                       NavigationViewModel navigationViewModel,
+                                       boolean allReadOnly,
+                                       Optional<Long> applicantOrganisationId,
+                                       boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId,
+                readOnlyAllApplicantApplicationFinances);
     }
 
     public boolean isComplete() {
@@ -32,31 +37,34 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     }
 
     public boolean isFundingSectionLocked() {
-        return !getCompetition().getCompetitionStatus().isLaterThan(OPEN) &&
-                !(this.researchCategoryComplete && this.yourOrganisationComplete);
+        return fundingSectionLocked;
     }
 
-    public boolean isResearchCategoryComplete() {
-        return researchCategoryComplete;
+    public void setFundingSectionLocked(final boolean fundingSectionLocked) {
+        this.fundingSectionLocked = fundingSectionLocked;
     }
 
-    public void setResearchCategoryComplete(boolean researchCategoryComplete) {
-        this.researchCategoryComplete = researchCategoryComplete;
+    public boolean isResearchCategoryRequired() {
+        return researchCategoryRequired;
     }
 
-    public boolean isYourOrganisationComplete() {
-        return yourOrganisationComplete;
+    public void setResearchCategoryRequired(final boolean researchCategoryRequired) {
+        this.researchCategoryRequired = researchCategoryRequired;
     }
 
-    public void setYourOrganisationComplete(boolean yourOrganisationComplete) {
-        this.yourOrganisationComplete = yourOrganisationComplete;
+    public boolean isYourOrganisationRequired() {
+        return yourOrganisationRequired;
     }
 
-    public long getResearchCategoryQuestionId() {
+    public void setYourOrganisationRequired(final boolean yourOrganisationRequired) {
+        this.yourOrganisationRequired = yourOrganisationRequired;
+    }
+
+    public Long getResearchCategoryQuestionId() {
         return researchCategoryQuestionId;
     }
 
-    public void setResearchCategoryQuestionId(long researchCategoryQuestionId) {
+    public void setResearchCategoryQuestionId(Long researchCategoryQuestionId) {
         this.researchCategoryQuestionId = researchCategoryQuestionId;
     }
 
@@ -68,4 +76,3 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
     }
 }
-

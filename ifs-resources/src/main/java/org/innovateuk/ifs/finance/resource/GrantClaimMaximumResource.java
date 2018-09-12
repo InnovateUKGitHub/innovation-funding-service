@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.finance.resource;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
@@ -11,15 +13,11 @@ public class GrantClaimMaximumResource {
 
     private ResearchCategoryResource researchCategory;
 
-    private OrganisationTypeResource organisationType;
-
     private OrganisationSize organisationSize;
 
     private List<Long> competitions;
 
     private Integer maximum;
-
-    private Long competitionType;
 
     public Long getId() {
         return id;
@@ -37,12 +35,15 @@ public class GrantClaimMaximumResource {
         this.researchCategory = researchCategory;
     }
 
+    @ZeroDowntime(reference = "IFS-4271", description = "Retaining this method to support old REST clients. Returning" +
+            " the Business type here which represents all rows")
     public OrganisationTypeResource getOrganisationType() {
+        OrganisationTypeResource organisationType = new OrganisationTypeResource();
+        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        organisationType.setName("Business");
+        organisationType.setDescription("UK based business.");
+        organisationType.setVisibleInSetup(true);
         return organisationType;
-    }
-
-    public void setOrganisationType(OrganisationTypeResource organisationType) {
-        this.organisationType = organisationType;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -67,13 +68,5 @@ public class GrantClaimMaximumResource {
 
     public void setCompetitions(List<Long> competitions) {
         this.competitions = competitions;
-    }
-
-    public Long getCompetitionType() {
-        return competitionType;
-    }
-
-    public void setCompetitionType(Long competitionType) {
-        this.competitionType = competitionType;
     }
 }

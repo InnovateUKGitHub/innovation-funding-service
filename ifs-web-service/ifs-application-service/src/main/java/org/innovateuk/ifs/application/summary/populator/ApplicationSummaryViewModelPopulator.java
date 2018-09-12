@@ -55,11 +55,11 @@ public class ApplicationSummaryViewModelPopulator {
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
 
-        ApplicationTeamViewModel applicationTeamViewModel = competition.getUseNewApplicantMenu() ?
-                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), application.getCompetition()) : null;
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateSummaryModel(
+                applicationId, user.getId(), application.getCompetition());
 
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = competition.getUseNewApplicantMenu() ?
-                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant) : null;
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel =
+                researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant);
 
         return new ApplicationSummaryViewModel(
                 application,

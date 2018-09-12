@@ -27,11 +27,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -94,11 +93,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
         final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(applicationOrganisations);
-        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
-        Map<Long, Boolean> applicantOrganisationsAreAcademic = applicationOrganisations.stream().collect(Collectors.toMap(o -> o.getId(), o -> academicOrganisationIds.contains(o.getId())));
-        Map<Long, Boolean> showDetailedFinanceLink = applicationOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                organisation -> {
+        final List<Long> academicOrganisationIds = simpleMap(academicOrganisations, OrganisationResource::getId);
+        Map<Long, Boolean> applicantOrganisationsAreAcademic = simpleToMap
+                (applicationOrganisations, OrganisationResource::getId, o -> academicOrganisationIds.contains(o.getId
+                        ()));
 
+        Map<Long, Boolean> showDetailedFinanceLink = simpleToMap(applicationOrganisations, OrganisationResource::getId,
+                organisation -> {
                     boolean orgFinancesExist = ofNullable(organisationFinances)
                             .map(finances -> organisationFinances.get(organisation.getId()))
                             .map(BaseFinanceResource::getOrganisationSize)
@@ -107,8 +108,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                     boolean financesExist = orgFinancesExist || academicFinancesExist;
 
                     return isApplicationVisibleToUser(application, user) && financesExist;
-                })
-        );
+                });
 
         boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
                 completedSectionsByOrganisation, financeSectionId);
@@ -167,8 +167,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
     private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
         boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
-        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
-        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER);
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN && application.getApplicationState() != ApplicationState.CREATED;
 
         return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
     }

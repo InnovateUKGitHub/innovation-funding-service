@@ -80,14 +80,7 @@
                 </th:block>
             </div>
 
-            <div class="govuk-!-margin-top-6" th:unless="${model.useNewApplicantMenu}">
-                <button class="govuk-button" name="save-research-category">Save</button>
-                <a class="button-clear"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
-                </a>
-            </div>
-
-            <div class="govuk-!-margin-top-6" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
+            <div class="govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             </div>
@@ -95,19 +88,16 @@
             <input type="hidden" id="cacheTest" value=""/>
         </div>
 
-        <th:block th:if="${model.useNewApplicantMenu}">
-            <a th:href="${backURL}"
-               class="button-secondary"
-               th:if="${model.allReadOnly}"
-               th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-            <button th:unless="${model.allReadOnly}"
-                    id="application-question-save"
-                    type="submit"
-                    th:formaction="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                    class="govuk-button app-submit-btn"
-                    name="save-research-category">Save and return to application overview
-            </button>
-        </th:block>
+        <a th:href="${backURL}"
+           class="button-secondary"
+           th:if="${model.allReadOnly}"
+           th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+        <button th:unless="${model.allReadOnly}"
+                id="application-question-save"
+                type="submit"
+                class="govuk-button app-submit-btn"
+                name="save-research-category">Save and return to application overview
+        </button>
     </form>
 </th:block>
 
