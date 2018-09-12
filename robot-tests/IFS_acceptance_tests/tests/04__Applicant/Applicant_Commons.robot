@@ -213,8 +213,8 @@ the academic fills in the project costs
     The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
     The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
     Textfield Value Should Be             id=total  £23,789
-    the user uploads the file             css=.inputfile  ${valid_pdf}
-    the user should see the element       link=testing.pdf
+    the user uploads the file             css=.inputfile  ${5mb_pdf}
+    the user should see the element       link=${5mb_pdf}
     the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
