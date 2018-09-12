@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newA
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -78,7 +79,9 @@ public class YourProjectCostsSectionPopulatorTest {
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().build())
+                .withCompetition(newCompetitionResource()
+                        .withApplicationFinanceType(STANDARD_WITH_VAT)
+                        .build())
                 .withApplication(newApplicationResource().build())
                 .withApplicantQuestions(newApplicantQuestionResource().withQuestion(newQuestionResource().withType(QuestionType.GENERAL).build()).build(1))
                 .withApplicantChildrenSections(asList(costSection))
@@ -98,6 +101,7 @@ public class YourProjectCostsSectionPopulatorTest {
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
         assertThat(viewModel.getDefaultProjectCostSections().size(), equalTo(1));
+        assertThat(viewModel.isIncludeVat(), equalTo(true));
         DefaultProjectCostSection costSectionViewModel = viewModel.getDefaultProjectCostSections().get(0);
         assertThat(costSectionViewModel.getApplicantResource(), equalTo(section));
         assertThat(costSectionViewModel.getApplicantSection(), equalTo(costSection));

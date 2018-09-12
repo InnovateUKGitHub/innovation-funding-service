@@ -104,7 +104,7 @@ public class RegistrationController {
     @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response) {
-        userRestService.verifyEmail(hash);
+        userRestService.verifyEmail(hash).getSuccess();
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }
@@ -254,7 +254,8 @@ public class RegistrationController {
     private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
-            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash.get(), userResource.getId());
+            Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
+            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get());
             if (restResult.isSuccess()) {
                 registrationCookieService.deleteInviteHashCookie(response);
             }
