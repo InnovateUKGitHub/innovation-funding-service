@@ -10,12 +10,14 @@
 &{unsuccessful_released_credentials}      email=james.lewis@example.com    password=Passw0rd
 &{assessor_credentials}                   email=paul.plum@gmail.com    password=Passw0rd
 &{assessor2_credentials}                  email=felix.wilson@gmail.com    password=Passw0rd
+&{assessor_bob_credentials}               email=bob.malone@gmail.com    password=Passw0rd
 &{existing_assessor1_credentials}         email=${test_mailbox_one}+jeremy.alufson@gmail.com    password=Passw0rd
 &{nonregistered_assessor2_credentials}    email=${test_mailbox_one}+david.peters@gmail.com    password=Passw0rd
 &{nonregistered_assessor3_credentials}    email=${test_mailbox_one}+thomas.fister@gmail.com    password=Passw0rd123
 &{internal_finance_credentials}           email=lee.bowman@innovateuk.test    password=Passw0rd
 &{innovation_lead_one}                    email=ian.cooper@innovateuk.test    password=Passw0rd
 &{innovation_lead_two}                    email=peter.freeman@innovateuk.test    password=Passw0rd
+&{stakeholder_user}                       email=Rayon.Kevin@gmail.com    password=Passw0rd
 &{Multiple_user_credentials}              email=jo.peters@ntag.example.com    password=Passw0rd
 &{Ineligible_user}                        email=nancy.peterson@gmail.com    password=Passw0rd
 &{support_user_credentials}               email=support@innovateuk.test    password=Passw0rd

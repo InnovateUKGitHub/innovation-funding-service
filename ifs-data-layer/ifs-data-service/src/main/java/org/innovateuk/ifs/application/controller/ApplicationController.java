@@ -8,10 +8,12 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -29,19 +31,28 @@ public class ApplicationController {
 
     private static final String DEFAULT_SORT_BY = "id";
 
-    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
+    private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
 
-    @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
-    @Autowired
     private ApplicationProgressService applicationProgressService;
+
+    private CrmService crmService;
+
+    public ApplicationController() {}
+
+    @Autowired
+    public ApplicationController(IneligibleOutcomeMapper ineligibleOutcomeMapper, ApplicationService applicationService, ApplicationNotificationService applicationNotificationService, ApplicationProgressService applicationProgressService, CrmService crmService) {
+        this.ineligibleOutcomeMapper = ineligibleOutcomeMapper;
+        this.applicationService = applicationService;
+        this.applicationNotificationService = applicationNotificationService;
+        this.applicationProgressService = applicationProgressService;
+        this.crmService = crmService;
+    }
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
@@ -104,16 +115,20 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @PostMapping("/createApplicationByName/{competitionId}/{userId}")
+    @PostMapping("/createApplicationByName/{competitionId}/{userId}/{organisationId}")
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("userId") final Long userId,
+            @PathVariable("competitionId") final long competitionId,
+            @PathVariable("userId") final long userId,
+            @PathVariable("organisationId") final long organisationId,
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
-        ServiceResult<ApplicationResource> applicationResult =
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
-        return applicationResult.toPostCreateResponse();
+        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPostCreateResponse();
     }
 
     @PostMapping("/{applicationId}/ineligible")
@@ -142,13 +157,23 @@ public class ApplicationController {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
 
+    @ZeroDowntime(description = "delete this controller", reference = "IFS-2471")
     @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                            @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter) {
-        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
+    public RestResult<PreviousApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                    @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                                    @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/previous-applications")
+    public RestResult<PreviousApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                                @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
+        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/getLatestEmailFundingDate/{competitionId}")

@@ -5,10 +5,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -20,7 +23,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -58,6 +60,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private ProcessRole processRole2;
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
+    private UserResource stakeholderUserResourceOnCompetition;
     private UserResource user2;
     private UserResource user3;
     private UserResource assessor;
@@ -77,6 +80,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
+    @Mock
+    private StakeholderRepository stakeholderRepository;
+
     @Before
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
@@ -84,6 +90,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
+
+        User stakeholderUserOnCompetition = newUser().build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(Role.STAKEHOLDER).build();
+        Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
@@ -128,8 +139,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(interviewAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
 
-        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList
+        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
                 (innovationLead));
+        when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 
     @Test
@@ -149,10 +161,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void internalUsersOtherThanInnovationLeadUserCanViewApplications() {
+    public void internalUsersOtherThanInnovationLeadAndStakeholderCanViewApplications() {
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
         assertFalse(rules.internalUsersCanViewApplications(applicationResource1, innovationLeadUser()));
+        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, stakeholderUser()));
         assertFalse(rules.internalUsersCanViewApplications(applicationResource1, leadOnApplication1));
     }
 
@@ -160,6 +173,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
         assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
         assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
+    }
+
+    @Test
+    public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
+        assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUser()));
     }
 
     @Test
@@ -178,6 +197,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
                     user.hasRole(INNOVATION_LEAD) ||
+                    user.hasRole(STAKEHOLDER) ||
                     user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {

@@ -72,14 +72,15 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
     @Test
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId() {
-        Long competitionId = 123L;
-        Long userId = 456L;
+        long competitionId = 123L;
+        long userId = 456L;
+        long organisationId = 789L;
         setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(APPLICANT)).build());
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(newCompetitionResource()
                 .withId(competitionId).withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build());
         assertAccessDenied(
                 () -> classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application",
-                        competitionId, userId),
+                        competitionId, userId, organisationId),
                 () -> {
                     verify(applicationRules).userCanCreateNewApplication(isA(CompetitionResource.class), isA
                             (UserResource.class));
@@ -92,7 +93,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         setLoggedInUser(null);
         try {
-            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L, 789L);
             fail("Should not have been able to create an Application without first logging in");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -103,7 +104,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
 
         try {
-            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L, 789L);
             fail("Should not have been able to create an Application without the global Applicant role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -120,7 +121,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
             try {
                 classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L,
-                        456L);
+                        456L, 789L);
                 fail("Should not have been able to create an Application without the global Applicant role or as a " +
                         "system registrar");
             } catch (AccessDeniedException e) {
@@ -158,15 +159,16 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
+    public void findPreviousApplications() {
         Long competitionId = 1L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
 
-        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, "", "ALL"), () -> {
-            verify(competitionRules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
-            verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+        assertAccessDenied(() -> classUnderTest.findPreviousApplications(competitionId, 0, 0, "", "ALL"), () -> {
+            verify(competitionRules).internalUsersAndIFSAdminCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(competitionRules).innovationLeadForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(competitionRules).stakeholderForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
     }

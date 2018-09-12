@@ -131,7 +131,7 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager.</p>
             </th:block>
         </div>
 
@@ -192,7 +192,7 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager.</p>
             </th:block>
         </div>
         <th:block th:if="${model.collaborationAgreementRequired}">

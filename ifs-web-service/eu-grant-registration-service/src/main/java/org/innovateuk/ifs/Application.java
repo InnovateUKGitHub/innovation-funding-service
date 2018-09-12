@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 @EnableCircuitBreaker
-@PropertySource(value = { "classpath:/application.properties", "classpath:/euGrantRegistrationService.properties" })
+@PropertySource(value = { "classpath:/application.properties", "classpath:/eu-grant-registration-service.properties" })
 @SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {
