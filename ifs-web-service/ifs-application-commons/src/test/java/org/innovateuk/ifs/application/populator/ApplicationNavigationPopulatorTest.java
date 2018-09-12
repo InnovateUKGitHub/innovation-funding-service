@@ -45,7 +45,7 @@ public class ApplicationNavigationPopulatorTest {
     private ApplicationService applicationService;
 
     @Test
-    public void testAddNavigation() {
+    public void addNavigation() {
         SectionResource section = SectionResourceBuilder.newSectionResource().build();
         Long applicationId = 1L;
         String previousName = "prev";
@@ -70,7 +70,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSection(){
+    public void addAppropriateBackURLToModelWithoutSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
@@ -82,7 +82,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedApplication(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedApplication(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
@@ -94,7 +94,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedCompetition(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedCompetition(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
@@ -105,7 +105,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSection(){
+    public void addAppropriateBackURLToModelWithFinanceSubSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
@@ -119,7 +119,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithGeneralSection(){
+    public void addAppropriateBackURLToModelWithGeneralSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
@@ -132,7 +132,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithQuestionGroup() {
+    public void navigationSkipsExcludedSectionTypesWithQuestionGroup() {
         SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
         Long applicationId = 1L;
 
@@ -165,7 +165,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
+    public void navigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
         SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
         Long applicationId = 1L;
 
@@ -200,7 +200,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withCompetition(11L).withType(SectionType.OVERVIEW_FINANCES).build();
@@ -213,7 +213,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
