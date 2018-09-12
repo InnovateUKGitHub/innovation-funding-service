@@ -567,10 +567,10 @@
             <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? 'govuk-table\_\_cell' : 'govuk-table\_\_cell item-changed'"></td>
         </tr>
 
-        <tr th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? 'govuk-table\_\_row' : 'govuk-table\_\_row item-changed'">
+        <tr th:class="${#strings.equals(changePair.submitted.securedDate, changePair.changed.securedDate)} ? 'govuk-table\_\_row' : 'govuk-table\_\_row item-changed'">
             <th class="govuk-table__header" scope="row">Secured Date</th>
             <td class="govuk-table__cell" th:text="${changePair.submitted.securedDate}"></td>
-            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? 'govuk-table\_\_cell' : 'govuk-table\_\_cell item-changed'"></td>
+            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${#strings.equals(changePair.submitted.securedDate, changePair.changed.securedDate)} ? 'govuk-table\_\_cell' : 'govuk-table\_\_cell item-changed'"></td>
         </tr>
 
         <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">

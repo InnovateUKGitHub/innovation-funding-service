@@ -16,12 +16,11 @@ import java.time.ZonedDateTime;
  * Base class to provide Spring Data Auditing.
  * <p>
  * Concrete entities should be mapped on to a table with the following columns:
- *
  * <ul>
- *     <li><pre>created_by</pre></li>
- *     <li><pre>created_on</pre></li>
- *     <li><pre>modified_by</pre></li>
- *     <li><pre>modified_on</pre></li>
+ *     <li><pre>created_by bigint(20) NOT NULL</pre></li>
+ *     <li><pre>created_on datetime NOT NULL</pre></li>
+ *     <li><pre>modified_by bigint(20) NOT NULL</pre></li>
+ *     <li><pre>modified_on datetime NOT NULL</pre></li>
  * </ul>
  *
  * @see AuditConfig

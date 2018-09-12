@@ -4,7 +4,6 @@ import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,15 +28,8 @@ public class GrantClaimMaximum {
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private ResearchCategory researchCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organisationTypeId", referencedColumnName = "id")
-    private OrganisationType organisationType;
-
     @Column(name = "organisation_size_id")
     private OrganisationSize organisationSize;
-
-    @Column(name = "competition_type_id")
-    private Long competitionType;
 
     private Integer maximum;
 
@@ -65,14 +57,6 @@ public class GrantClaimMaximum {
         this.researchCategory = researchCategory;
     }
 
-    public OrganisationType getOrganisationType() {
-        return organisationType;
-    }
-
-    public void setOrganisationType(OrganisationType organisationType) {
-        this.organisationType = organisationType;
-    }
-
     public OrganisationSize getOrganisationSize() {
         return organisationSize;
     }
@@ -87,13 +71,5 @@ public class GrantClaimMaximum {
 
     public void setMaximum(Integer maximum) {
         this.maximum = maximum;
-    }
-
-    public Long getCompetitionType() {
-        return competitionType;
-    }
-
-    public void setCompetitionType(Long competitionType) {
-        this.competitionType = competitionType;
     }
 }

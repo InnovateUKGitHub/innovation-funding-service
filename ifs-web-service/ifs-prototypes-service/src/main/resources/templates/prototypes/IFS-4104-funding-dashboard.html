@@ -2,7 +2,7 @@
 <html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='UK government underwrite guarantee'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -15,7 +15,7 @@
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
 
@@ -42,7 +42,7 @@
 
                 <p class="govuk-body">Please enter your details to ensure that UK Research and Innovation:</p>
 
-                <ul class="govuk-list govuk-list__bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>has initial information about you and your project to underwrite guarantee payments if
                         required
                     </li>
@@ -92,7 +92,7 @@
                     <p class="govuk-body">You can only register one project at a time. If you or your organisation is
                         participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
                         on 000 000 0000 or email
-                        <a href="mailto:UKRIpublichelpdesk@ukri.org" class="govuk-link">UKRIpublichelpdesk@ukri.org</a>.</p>
+                        <a href="mailto:xxx@xxx" class="govuk-link">xxx@xxx</a>.</p>
                 </div>
 
                 <form action="IFS-4104-funding-registration-complete.html">
@@ -104,7 +104,7 @@
                             </legend>
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input id="termsAndConditions" class="govuk-checkboxes__input" value="1" type="checkbox" required="required" data-required-errormessage="To create a new account you must agree to the website terms and conditions." name="termsAndConditions"><input type="hidden" name="_termsAndConditions" value="on">
+                                    <input id="termsAndConditions" class="govuk-checkboxes__input" value="1" type="checkbox" required="required" data-required-errormessage="You must agree to the terms and conditions to register" name="termsAndConditions"><input type="hidden" name="_termsAndConditions" value="on">
                                     <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a>.</label>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
 
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
