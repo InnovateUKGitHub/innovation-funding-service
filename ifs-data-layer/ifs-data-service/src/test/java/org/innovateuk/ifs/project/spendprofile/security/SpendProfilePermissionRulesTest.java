@@ -6,8 +6,12 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
@@ -32,12 +36,14 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 import static org.junit.Assert.assertTrue;
@@ -49,6 +55,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
     private ProjectResource projectResource1;
     private UserResource innovationLeadUserResourceOnProject1;
+    private UserResource stakeholderUserResourceOnCompetition;
     private ProjectProcess projectProcess;
 
     @Mock
@@ -60,20 +67,35 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
+    @Mock
+    private StakeholderRepository stakeholderRepository;
+
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
+
+        User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
         projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
+        Project project = ProjectBuilder.newProject()
+                .withId(projectResource1.getId())
+                .withApplication(application1)
+                .build();
+
+        when(projectRepositoryMock.findById(projectResource1.getId())).thenReturn(Optional.of(project));
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcess);
         when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
+        when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 
     @Test
@@ -102,6 +124,12 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     public void testAssignedInnovationLeadCanViewProjectStatus(){
         assertTrue(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUser()));
+    }
+
+    @Test
+    public void assignedStakeholderCanViewSPStatus(){
+        assertTrue(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUser()));
     }
 
     @Test
@@ -232,6 +260,13 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 assertFalse(rules.supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void stakeholdersCanSeeSpendProfileCsv(){
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectResource1.getId(), newOrganisation().build().getId());
+        assertTrue(rules.stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, stakeholderUser()));
     }
 
     @Test

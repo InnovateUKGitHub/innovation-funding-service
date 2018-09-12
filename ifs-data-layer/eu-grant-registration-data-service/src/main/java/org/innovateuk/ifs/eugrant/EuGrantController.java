@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.controller;
+package org.innovateuk.ifs.eugrant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -18,8 +18,14 @@ public class EuGrantController {
     private EuGrantService euGrantService;
 
     @PostMapping("/eu-grant")
-    public RestResult<EuGrantResource> saveEuGrant(@RequestBody EuGrantResource euGrant) {
-        return euGrantService.save(euGrant).toPostCreateResponse();
+    public RestResult<EuGrantResource> create() {
+        return euGrantService.create().toPostCreateResponse();
+    }
+
+    @PutMapping("/eu-grant/{uuid}")
+    public RestResult<Void> update(@PathVariable("uuid") UUID uuid,
+                                              @RequestBody EuGrantResource euGrant) {
+        return euGrantService.save(euGrant).toPutResponse();
     }
 
     @GetMapping("/eu-grant/{uuid}")

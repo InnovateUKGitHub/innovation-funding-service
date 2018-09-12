@@ -114,6 +114,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).innovationLeadUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
@@ -195,6 +196,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             verify(spendProfilePermissionRules).internalAdminTeamCanViewCompetitionStatus(projectResource, getLoggedInUser());
             verify(spendProfilePermissionRules).supportCanViewCompetitionStatus(projectResource, getLoggedInUser());
             verify(spendProfilePermissionRules).assignedInnovationLeadCanViewSPStatus(projectResource, getLoggedInUser());
+            verify(spendProfilePermissionRules).assignedStakeholderCanViewSPStatus(projectResource, getLoggedInUser());
             verifyNoMoreInteractions(spendProfilePermissionRules);
         });
     }

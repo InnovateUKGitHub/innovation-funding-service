@@ -46,11 +46,11 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
     @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

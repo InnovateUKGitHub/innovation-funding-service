@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
@@ -24,6 +23,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.*;
@@ -31,6 +31,7 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.*;
 
 public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest<CompetitionSetupTemplateService>{
+
     public CompetitionSetupTemplateService supplyServiceUnderTest() {
         return new CompetitionSetupTemplateServiceImpl();
     }
@@ -48,7 +49,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private CompetitionTemplatePersistorImpl competitionTemplatePersistorMock;
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() throws Exception {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
@@ -66,7 +67,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_competitionCantBeFoundShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionCantBeFoundShouldResultInServiceFailure() throws Exception {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
@@ -84,7 +85,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_competitionNotInCompetitionSetupShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionNotInCompetitionSetupShouldResultInServiceFailure() throws Exception {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).withId(3L).build();
@@ -102,7 +103,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_templateCantBeFoundShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_templateCantBeFoundShouldResultInServiceFailure() throws Exception {
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
@@ -118,7 +119,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_competitionShouldBeCleanedAndPersistedWithTemplateSections() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionShouldBeCleanedAndPersistedWithTemplateSections() throws Exception {
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
 
         Competition competitionTemplate = newCompetition()
@@ -162,7 +163,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() throws Exception {
 
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
 
@@ -170,9 +171,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         GrantTermsAndConditions templateTermsAndConditions = new GrantTermsAndConditions();
 
         Competition competitionTemplate = newCompetition()
-                .withId(2L)
                 .withSections(templateSections)
-                .withFullApplicationFinance(false)
+                .withApplicationFinanceType(NO_FINANCES)
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
@@ -187,12 +187,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
 
         CompetitionType competitionType = newCompetitionType()
-                .withId(1L)
                 .withTemplate(competitionTemplate)
                 .build();
 
         Competition competition = newCompetition()
-                .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
@@ -204,10 +202,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
-
         assertTrue(result.isSuccess());
 
-        assertEquals(false, competition.isFullApplicationFinance());
         assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
         assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
         assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());

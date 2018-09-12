@@ -76,6 +76,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
         competition.setMinProjectDuration(template.getMinProjectDuration());
         competition.setMaxProjectDuration(template.getMaxProjectDuration());
+        competition.setApplicationFinanceType(template.getApplicationFinanceType());
         return competition;
     }
 

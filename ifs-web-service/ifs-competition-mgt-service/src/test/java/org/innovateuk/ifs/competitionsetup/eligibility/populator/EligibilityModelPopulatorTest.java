@@ -24,6 +24,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.NON_FINANCE_TYPES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -86,14 +87,13 @@ public class EligibilityModelPopulatorTest {
     }
 
     @Test
-    public void populateModelWithNoResearchParticipationAmounts() throws Exception {
+    public void populateModelWithNoResearchParticipationAmounts() {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withName("name")
-                .withId(8L)
+                .withCompetitionTypeName(NON_FINANCE_TYPES.iterator().next())
                 .withLeadApplicantType(asList(1L, 2L))
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-                .withFullApplicationFinance(null)
                 .build();
 
         List<ResearchCategoryResource> researchCategories = emptyList();

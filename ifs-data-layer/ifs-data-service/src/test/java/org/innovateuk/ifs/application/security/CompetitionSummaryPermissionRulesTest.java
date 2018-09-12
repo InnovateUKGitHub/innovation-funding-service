@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,6 +20,7 @@ import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newIn
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -25,6 +29,9 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+
+    @Mock
+    private StakeholderRepository stakeholderRepository;
 
     @Override
     protected CompetitionSummaryPermissionRules supplyPermissionRulesUnderTest() {
@@ -35,10 +42,10 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
     public void internalUsersCanViewCompetitionSummaryOtherThanInnovationLeads() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(INNOVATION_LEAD) && allInternalUsers.contains(user)) {
-                assertTrue(rules.allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeads(competitionResource, user));
+            if (!user.hasRole(INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER) && allInternalUsers.contains(user)) {
+                assertTrue(rules.allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeadsAndStakeholders(competitionResource, user));
             } else {
-                assertFalse(rules.allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeads(competitionResource, user));
+                assertFalse(rules.allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeadsAndStakeholders(competitionResource, user));
             }
         });
     }
@@ -56,5 +63,20 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
 
         assertTrue(rules.innovationLeadsCanViewCompetitionSummaryOnAssignedComps(competitionResource, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadsCanViewCompetitionSummaryOnAssignedComps(competitionResource, innovationLeadNotAssignedToCompetition));
+    }
+
+    @Test
+    public void stakeholdersCanViewCompetitionSummaryOnAssignedComps() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        List<Role> stakeholderRoles = singletonList(STAKEHOLDER);
+        UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
+        UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
+        List<Stakeholder> stakeholders = StakeholderBuilder.newStakeholder().withUser(newUser().withId
+                (stakeholderAssignedToCompetition.getId()).build()).build(1);
+
+        when(stakeholderRepository.findStakeholders(competitionResource.getId())).thenReturn(stakeholders);
+
+        assertTrue(rules.stakeholdersCanViewCompetitionSummaryOnAssignedComps(competitionResource, stakeholderAssignedToCompetition));
+        assertFalse(rules.stakeholdersCanViewCompetitionSummaryOnAssignedComps(competitionResource, stakeholderNotAssignedToCompetition));
     }
 }

@@ -192,6 +192,14 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/eu-grant/.*">
+      AuthType shibboleth
+      ShibRequireSession Off
+      ShibRequestSetting isPassive On
+      ShibRequestSetting applicationId default
+      require shibboleth
+  </Location>
+
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
     ProxyPass !
@@ -211,6 +219,7 @@ ShibCompatValidUser On
 
   ProxyPass  /assessment/ http://assessment-svc:8080/assessment/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /survey/ http://survey-svc:8080/survey/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /eu-grant/ ajp://eu-grant-registration-svc:8009/eu-grant/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /management/ http://competition-mgt-svc:8080/management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup-management/ http://project-setup-mgt-svc:8080/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup/ http://project-setup-svc:8080/project-setup/ timeout=30 connectiontimeout=30 retry=2

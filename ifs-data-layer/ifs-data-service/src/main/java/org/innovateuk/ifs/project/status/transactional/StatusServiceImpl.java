@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -266,7 +267,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 return COMPLETE;
             }
             else {
-                if(isSupport(user) || isInnovationLead(user)){
+                if(isSupport(user) || isInnovationLead(user) || isStakeholder(user)){
                     return NOT_STARTED;
                 } else {
                     return ACTION_REQUIRED;

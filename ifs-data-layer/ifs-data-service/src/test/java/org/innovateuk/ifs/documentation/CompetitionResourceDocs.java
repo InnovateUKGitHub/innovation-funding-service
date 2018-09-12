@@ -55,7 +55,11 @@ public class CompetitionResourceDocs {
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question").optional(),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application").optional(),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
+
+            // @ZeroDowntime(reference = "IFS-4280", description = "This field is being removed from CompetitionResource")
             fieldWithPath("fullApplicationFinance").description("If full finances are required for applications").optional(),
+
+            fieldWithPath("applicationFinanceType").description("The type of finances for the application").optional(),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date").optional(),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)").optional(),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition").optional(),

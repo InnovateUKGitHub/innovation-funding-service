@@ -6,7 +6,9 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
@@ -27,10 +29,12 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,6 +44,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     private ProjectResource projectResource1;
     private Role innovationLeadRole = Role.INNOVATION_LEAD;
     private UserResource innovationLeadUserResourceOnProject1;
+    private UserResource stakeholderUserResourceOnCompetition;
     private ProjectProcess projectProcess;
 
     @Mock
@@ -49,6 +54,9 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     private InnovationLeadRepository innovationLeadRepository;
 
     @Mock
+    private StakeholderRepository stakeholderRepository;
+
+    @Mock
     private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
@@ -56,6 +64,11 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
+
+        User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
+        Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
@@ -64,6 +77,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
+        when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 
     @Test
@@ -404,6 +418,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
+    public void onlyStakeholdersAssignedToCompetitionCanViewSendGrantOfferLetterStatus() {
+        assertTrue(rules.stakeholdersCanViewSendGrantOfferLetterStatus(projectResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanViewSendGrantOfferLetterStatus(projectResource1, stakeholderUser()));
+    }
+
+    @Test
     public void testSupportUsersCanDownloadGrantOfferLetter() {
 
         ProjectResource project = newProjectResource().build();
@@ -424,9 +444,21 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
+    public void onlyStakeholdersAssignedToCompetitionCanDownloadGrantOfferLetter() {
+        assertTrue(rules.stakeholdersCanDownloadGrantOfferLetter(projectResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanDownloadGrantOfferLetter(projectResource1, stakeholderUser()));
+    }
+
+    @Test
     public void testOnlyInnovationLeadUsersAssignedToCompetitionCanViewGrantOfferLetter() {
         assertTrue(rules.innovationLeadUsersCanViewGrantOfferLetter(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.innovationLeadUsersCanViewGrantOfferLetter(projectResource1, innovationLeadUser()));
+    }
+
+    @Test
+    public void onlyStakeholdersAssignedToCompetitionCanViewGrantOfferLetter() {
+        assertTrue(rules.stakeholdersCanViewGrantOfferLetter(projectResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanViewGrantOfferLetter(projectResource1, stakeholderUser()));
     }
 
     @Test
