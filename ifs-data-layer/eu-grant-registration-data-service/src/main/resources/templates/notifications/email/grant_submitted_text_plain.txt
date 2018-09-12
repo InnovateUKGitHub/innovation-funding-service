@@ -7,7 +7,7 @@ ${euGrant.shortCode}
 Grant agreement number
 ${euGrant.funding.grantAgreementNumber}
 Organisation type
-${euGrant.organisation.organisationType.name}
+${euGrant.organisation.organisationType.displayName}
 Registered name
 ${euGrant.organisation.name}
 <#if euGrant.organisation.companiesHouseNumber??>
@@ -23,7 +23,7 @@ ${euGrant.contact.email}
 Telephone
 ${euGrant.contact.telephone}
 Type of action
-${euGrant.funding.actionType.name}
+(${euGrant.funding.actionType.name}) ${euGrant.funding.actionType.description}
 Participant ID
 ${euGrant.funding.participantId}
 Project name

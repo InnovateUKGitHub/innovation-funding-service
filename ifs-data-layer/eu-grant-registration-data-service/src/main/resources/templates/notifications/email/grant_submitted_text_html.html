@@ -11,7 +11,7 @@
     <dt style="margin: 1em 0 0 0;"><strong>Grant agreement number</strong></dt>
     <dd style="margin-left: 0;">${euGrant.funding.grantAgreementNumber}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Organisation type</strong></dt>
-    <dd style="margin-left: 0;">${euGrant.organisation.organisationType.name}</dd>
+    <dd style="margin-left: 0;">${euGrant.organisation.organisationType.displayName}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Registered name</strong></dt>
     <dd style="margin-left: 0;">${euGrant.organisation.name}</dd>
     <#if euGrant.organisation.companiesHouseNumber??>
@@ -27,7 +27,7 @@
     <dt style="margin: 1em 0 0 0;"><strong>Telephone</strong></dt>
     <dd style="margin-left: 0;">${euGrant.contact.telephone}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Type of action</strong></dt>
-    <dd style="margin-left: 0;">${euGrant.funding.actionType.name}</dd>
+    <dd style="margin-left: 0;">(${euGrant.funding.actionType.name}) ${euGrant.funding.actionType.description}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Participant ID</strong></dt>
     <dd style="margin-left: 0;">${euGrant.funding.participantId}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Project name</strong></dt>
