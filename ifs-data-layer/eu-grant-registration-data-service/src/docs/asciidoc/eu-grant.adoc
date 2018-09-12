@@ -22,7 +22,7 @@ include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]
 
-=== Save
+=== Update
 ==== Request
 include::{snippets}/eu-grant/update/http-request.adoc[]
 include::{snippets}/eu-grant/update/path-parameters.adoc[]
