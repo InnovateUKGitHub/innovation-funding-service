@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -43,19 +42,11 @@ public class EuFundingSaver {
                 fundingForm.getGrantAgreementNumber(),
                 fundingForm.getParticipantId(),
                 fundingForm.getProjectName(),
-                getLocalDate(fundingForm.getStartDateMonth(), fundingForm.getStartDateYear()),
-                getLocalDate(fundingForm.getEndDateMonth(), fundingForm.getEndDateYear()),
+                fundingForm.getStartDate(),
+                fundingForm.getEndDate(),
                 fundingForm.getFundingContribution(),
                 fundingForm.getProjectCoordinator(),
                 euActionTypeResource
         );
     }
-
-    private LocalDate getLocalDate(int month, int year) {
-
-        String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
-
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    }
-
 }

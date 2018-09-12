@@ -4,11 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class EuFundingForm {
 
@@ -22,19 +23,15 @@ public class EuFundingForm {
     @NotBlank(message = "{validation.fundingForm.project.name}")
     private String projectName;
 
-    @NotNull(message = "{validation.fundingForm.date.month}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
     private Integer startDateMonth;
 
-    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer startDateYear;
 
-    @NotNull(message = "{validation.fundingForm.date.month}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
     private Integer endDateMonth;
 
-    @NotNull(message = "{validation.fundingForm.date.year}")
     @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
     private Integer endDateYear;
 
@@ -127,6 +124,40 @@ public class EuFundingForm {
     public void setActionType(Long actionType) {
         this.actionType = actionType;
     }
+
+    @NotNull(message = "{validation.standard.date.format}")
+    public LocalDate getStartDate() {
+        if (startDateYear == null || startDateMonth == null) {
+            return null;
+        }
+
+        try {
+            return getLocalDate(startDateMonth, startDateYear);
+        } catch (DateTimeException e) {
+            return null;
+        }
+    }
+
+    @NotNull(message = "{validation.standard.date.format}")
+    public LocalDate getEndDate() {
+        if (endDateYear == null || endDateMonth == null) {
+            return null;
+        }
+
+        try {
+            return getLocalDate(endDateMonth, endDateYear);
+        } catch (DateTimeException e) {
+            return null;
+        }
+    }
+
+    private LocalDate getLocalDate(int month, int year) {
+
+        String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
+
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
 
     @Override
     public boolean equals(Object o) {
