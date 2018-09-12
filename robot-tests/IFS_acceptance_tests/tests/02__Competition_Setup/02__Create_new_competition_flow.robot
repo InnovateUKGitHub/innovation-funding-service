@@ -749,8 +749,7 @@ The internal user cannot invite a Stakeholder when they have triggered the name 
 The internal user cannot invite a Stakeholder when they have triggered the email validation
     [Documentation]  IFS-4190
     [Tags]
-    When the user triggers the email validation
-    Then the user should see the email validation message
+    Then the user triggers the email validation
 
 The internal user cannot invite users with an Innovate UK email as Stakeholders
     [Documentation]  IFS-4190
@@ -951,8 +950,6 @@ the user triggers the email validation
     the user enters text to a text field             id = lastName      Holder
     the user enters text to a text field             id = emailAddress  stakeHoldertest.com
     the user clicks the button/link                  css = button[name = "inviteStakeholder"]
-
-the user should see the email validation message
     the user should see a field and summary error    Please enter a valid email address.
 
 the user enters an Innovate UK email
