@@ -45,7 +45,7 @@
                                type="text"
                                required="required"
                                th:field="*{grantAgreementNumber}"
-                               th:attr="data-required-errormessage=#{validation.fundingForm.grant.aggreement.number}">
+                               th:attr="data-required-errormessage=#{validation.fundingForm.grant.agreement.number}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
@@ -101,11 +101,14 @@
                                th:attr="data-required-errormessage=#{validation.fundingForm.project.name}">
                     </div>
 
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDateMonth')} or ${#fields.hasErrors('startDateYear')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDate*')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Project start date
                             </legend>
+                            <th:block th:if="${#fields.hasErrors('startDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
+                            </th:block>
                             <div class="date-group" data-past-date="">
                                 <div class="day govuk-visually-hidden">
                                     <label class="govuk-label" for="startDateDay">
@@ -158,11 +161,14 @@
                         </fieldset>
                     </div>
 
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('endDateMonth')} or ${#fields.hasErrors('endDateYear')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('endDate*')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <legend id="endDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Project end date
                             </legend>
+                            <th:block th:if="${#fields.hasErrors('endDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('endDate*')}" th:text="${err}"></span>
+                            </th:block>
                             <div class="date-group" data-future-date="">
 
                                 <div class="day govuk-visually-hidden">
@@ -238,7 +244,7 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectCoordinator')}" th:text="${err}"></span>
                         </th:block>
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <legend id="projectCoordinator" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Is your organisation the consortium lead on this project?
                             </legend>
                             <div class="govuk-radios" data-module="radios">
@@ -271,11 +277,11 @@
                             </div>
                         </fieldset>
                     </div>
-
+                   <!--  <input type="hidden" name="startDate" />
+                    <input type="hidden" name="endDate" /> -->
                     <button class="govuk-button govuk-!-margin-top-6" type="submit">Continue</button>
 
                 </fieldset>
-
             </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
