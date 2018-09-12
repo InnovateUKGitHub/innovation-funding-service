@@ -21,7 +21,7 @@ import java.util.UUID;
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
     @Mappings({
-            @Mapping(target = "funding", ignore = true)
+            @Mapping(target = "shortCode", ignore = true)
     })
     @Override
     public abstract EuGrant mapToDomain(EuGrantResource resource);

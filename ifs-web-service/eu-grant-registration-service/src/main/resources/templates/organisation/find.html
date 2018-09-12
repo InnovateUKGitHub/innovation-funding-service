@@ -108,12 +108,12 @@
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
                                 <label class="govuk-label"
-                                       for="org-name">
+                                       for="organisationName">
                                     Organisation name
                                 </label>
                                 <span class="govuk-error-message" th:if="${#fields.hasErrors('*{organisationName}')}" th:errors="*{organisationName}"></span>
                                 <input class="govuk-input"
-                                       id="org-name"
+                                       id="organisationName"
                                        th:field="*{organisationName}"
                                        type="text" value="" />
                             </div>

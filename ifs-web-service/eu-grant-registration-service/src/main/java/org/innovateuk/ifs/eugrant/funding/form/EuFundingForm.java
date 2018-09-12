@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,37 +12,39 @@ import java.math.BigDecimal;
 
 public class EuFundingForm {
 
-    @NotBlank
+    @NotBlank(message = "{validation.fundingForm.grant.aggreement.number}")
     private String grantAgreementNumber;
 
-    @NotNull
-    @Pattern(regexp="[\\d]{6}", message = "{validation.participantIdentificationCode}")
+    @NotNull(message = "{validation.fundingForm.participant.identification.code}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.valid.code}")
     private String participantId;
 
-    @NotBlank
+    @NotBlank(message = "{validation.fundingForm.project.name}")
     private String projectName;
 
-    @NotNull(message = "{validation.fundingForm.date.year}")
+    @NotNull(message = "{validation.fundingForm.date.month}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
-    private int startDateMonth;
+    private Integer startDateMonth;
 
     @NotNull(message = "{validation.fundingForm.date.year}")
-    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
-    private int startDateYear;
+    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
+    private Integer startDateYear;
 
-    @NotNull(message = "{validation.fundingForm.date.year}")
+    @NotNull(message = "{validation.fundingForm.date.month}")
     @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
-    private int endDateMonth;
+    private Integer endDateMonth;
 
     @NotNull(message = "{validation.fundingForm.date.year}")
-    @Range(min = 2000, max = 9999, message = "{validation.fundingForm.date.year}")
-    private int endDateYear;
+    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
+    private Integer endDateYear;
 
-    @NotNull
+    @NotNull(message = "{validation.fundingForm.funding.contribution}")
     private BigDecimal fundingContribution;
 
-    private boolean projectCoordinator;
+    @NotNull(message = "{validation.fundingForm.projectCoordinator}")
+    private Boolean projectCoordinator;
 
+    @NotNull(message = "{validation.fundingForm.action.type}")
     private Long actionType;
 
     public String getGrantAgreementNumber() {
@@ -68,36 +71,44 @@ public class EuFundingForm {
         this.projectName = projectName;
     }
 
-    public int getStartDateMonth() {
+    public Integer getStartDateMonth() {
         return startDateMonth;
     }
 
-    public void setStartDateMonth(int startDateMonth) {
+    public void setStartDateMonth(Integer startDateMonth) {
         this.startDateMonth = startDateMonth;
     }
 
-    public int getStartDateYear() {
+    public Integer getStartDateYear() {
         return startDateYear;
     }
 
-    public void setStartDateYear(int startDateYear) {
+    public void setStartDateYear(Integer startDateYear) {
         this.startDateYear = startDateYear;
     }
 
-    public int getEndDateMonth() {
+    public Integer getEndDateMonth() {
         return endDateMonth;
     }
 
-    public void setEndDateMonth(int endDateMonth) {
+    public void setEndDateMonth(Integer endDateMonth) {
         this.endDateMonth = endDateMonth;
     }
 
-    public int getEndDateYear() {
+    public Integer getEndDateYear() {
         return endDateYear;
     }
 
-    public void setEndDateYear(int endDateYear) {
+    public void setEndDateYear(Integer endDateYear) {
         this.endDateYear = endDateYear;
+    }
+
+    public Boolean getProjectCoordinator() {
+        return projectCoordinator;
+    }
+
+    public void setProjectCoordinator(Boolean projectCoordinator) {
+        this.projectCoordinator = projectCoordinator;
     }
 
     public BigDecimal getFundingContribution() {
@@ -106,14 +117,6 @@ public class EuFundingForm {
 
     public void setFundingContribution(BigDecimal fundingContribution) {
         this.fundingContribution = fundingContribution;
-    }
-
-    public boolean isProjectCoordinator() {
-        return projectCoordinator;
-    }
-
-    public void setProjectCoordinator(boolean projectCoordinator) {
-        this.projectCoordinator = projectCoordinator;
     }
 
     public Long getActionType() {

@@ -1,1 +1,1 @@
-Horizon 2020 grant
+Your Horizon 2020 project registration: ${euGrant.shortCode}

@@ -24,8 +24,8 @@ public class EuGrantController {
 
     @PutMapping("/eu-grant/{uuid}")
     public RestResult<Void> update(@PathVariable("uuid") UUID uuid,
-                                              @RequestBody EuGrantResource euGrant) {
-        return euGrantService.save(uuid, euGrant).toPutResponse();
+                                   @RequestBody EuGrantResource euGrant) {
+        return euGrantService.update(uuid, euGrant).toPutResponse();
     }
 
     @GetMapping("/eu-grant/{uuid}")

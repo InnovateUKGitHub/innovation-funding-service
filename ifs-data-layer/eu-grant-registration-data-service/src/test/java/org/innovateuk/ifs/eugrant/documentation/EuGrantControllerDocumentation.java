@@ -82,6 +82,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withContact(euContactResource)
                 .withOrganisation(euOrganisationResource)
                 .withFunding(euFundingResource)
+                .withShortCode("1234")
                 .build();
 
         uuid = UUID.randomUUID();
@@ -124,8 +125,8 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
     }
 
     @Test
-    public void save() throws Exception {
-        when(euGrantService.save(uuid, euGrantResource)).thenReturn(serviceSuccess());
+    public void update() throws Exception {
+        when(euGrantService.update(uuid, euGrantResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 put("/eu-grant/{uuid}", uuid.toString())

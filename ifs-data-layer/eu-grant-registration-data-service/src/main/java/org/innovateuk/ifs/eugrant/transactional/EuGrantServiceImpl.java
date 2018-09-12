@@ -44,7 +44,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     private SystemNotificationSource systemNotificationSource;
 
     @Override
-    public ServiceResult<Void> save(UUID id, EuGrantResource euGrantResource) {
+    public ServiceResult<Void> update(UUID id, EuGrantResource euGrantResource) {
         return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
                 .andOnSuccessReturn(db ->
@@ -117,7 +117,7 @@ public class EuGrantServiceImpl implements EuGrantService {
                 .andOnSuccessReturn(() -> euGrant);
     }
 
-    enum Notifications {
+    private enum Notifications {
         GRANT_SUBMITTED
     }
 }

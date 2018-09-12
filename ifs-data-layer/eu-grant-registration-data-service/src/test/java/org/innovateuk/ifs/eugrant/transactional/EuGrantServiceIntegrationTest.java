@@ -47,7 +47,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void save() {
+    public void update() {
         setLoggedInUser(WebUserOnlyFilter.webUser);
 
         EuGrant euGrant = euGrantRepository.save(newEuGrant().build());
@@ -71,7 +71,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                 .withContact(euContactResource)
                 .build();
 
-        ServiceResult<Void> result = euGrantService.save(euGrantResource.getId(), euGrantResource);
+        ServiceResult<Void> result = euGrantService.update(euGrantResource.getId(), euGrantResource);
 
         assertTrue(result.isSuccess());
 
