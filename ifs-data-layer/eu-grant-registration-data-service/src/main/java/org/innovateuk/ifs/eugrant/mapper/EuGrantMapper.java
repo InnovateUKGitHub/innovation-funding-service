@@ -5,20 +5,24 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import java.util.UUID;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        uses = {
+                EuOrganisationMapper.class,
+                EuContactMapper.class,
+        }
 )
 public abstract class EuGrantMapper extends BaseMapper<EuGrant, EuGrantResource, UUID> {
 
-    public String map(UUID value) {
-        return value == null ? null : value.toString();
-    }
-
-    public UUID map(String value) {
-        return value == null ? null : UUID.fromString(value);
-    }
-
+    @Mappings({
+            // TODO add to resource
+            @Mapping(target = "funding", ignore = true),
+    })
+    @Override
+    public abstract EuGrant mapToDomain(EuGrantResource resource);
 }

@@ -61,20 +61,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
-                                                                                                          Long competitionId,
-                                                                                                          Long userId) {
+                                                                                                          long competitionId,
+                                                                                                          long userId,
+                                                                                                          long organisationId
+    ) {
         return find(user(userId), competition(competitionId))
                 .andOnSuccess((user, competition) ->
-                        createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
+                        createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition, organisationId));
     }
 
-    private void generateProcessRolesForApplication(User user, Role role, Application application) {
-        List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
-        List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-        Long userOrganisationId = !usersProcessRoles.isEmpty()
-                ? usersProcessRoles.get(0).getOrganisationId()
-                : usersOrganisations.get(0).getId();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);
+    private void generateProcessRolesForApplication(User user, Role role, Application application, long organisationId) {
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisationId);
         processRoleRepository.save(processRole);
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
@@ -84,7 +81,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
                                                                                                            User user,
-                                                                                                           Competition competition) {
+                                                                                                           Competition competition,
+                                                                                                           long organisationId
+    ) {
         Application application = new Application(applicationName);
         application.setStartDate(null);
 
@@ -92,7 +91,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         Application savedApplication = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication, organisationId);
         savedApplication = applicationRepository.findOne(savedApplication.getId());
         return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }
@@ -278,20 +277,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<UnsuccessfulApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
-                                                                                           int pageIndex,
-                                                                                           int pageSize,
-                                                                                           String sortField,
-                                                                                           String filter) {
+    public ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId,
+                                                                                   int pageIndex,
+                                                                                   int pageSize,
+                                                                                   String sortField,
+                                                                                   String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
-        List<UnsuccessfulApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToUnsuccessfulApplicationResource);
+        List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
 
-        return serviceSuccess(new UnsuccessfulApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
@@ -311,9 +310,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
                 break;
 
+            case "SUCCESSFUL":
+                applicationStates = Sets.immutableEnumSet(ApplicationState.APPROVED);
+                break;
+
             case "ALL":
             default:
-                applicationStates = ApplicationState.unsuccessfulStates;
+                applicationStates = ApplicationState.previousStates;
                 break;
         }
 
@@ -326,12 +329,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
     }
 
-    private UnsuccessfulApplicationResource convertToUnsuccessfulApplicationResource(Application application) {
+    private PreviousApplicationResource convertToPreviousApplicationResource(Application application) {
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
         Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
 
-        return new UnsuccessfulApplicationResource(
+        return new PreviousApplicationResource(
                 applicationResource.getId(),
                 applicationResource.getName(),
                 leadOrganisation.getName(),

@@ -78,7 +78,7 @@ Academics upload
     And the user clicks the button/link                link=Your project costs
     When the academic partner uploads a file           ${valid_pdf}
     Then the user should not see the text in the page  No file currently uploaded
-    And the user should see the element                link=testing.pdf (opens in a new window)
+    And the user should see the element                link=testing.pdf
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
@@ -118,7 +118,7 @@ Mark all as complete
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     And the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link            link=Your project costs
-    And the user should see the element            link=testing.pdf (opens in a new window)
+    And the user should see the element            link=testing.pdf
     When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
     Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     And the user selects the checkbox              termsAgreed
