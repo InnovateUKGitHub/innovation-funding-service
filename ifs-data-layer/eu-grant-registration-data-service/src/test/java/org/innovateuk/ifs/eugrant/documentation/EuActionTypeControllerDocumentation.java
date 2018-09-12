@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.eugrant.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.euactiontype.controller.EuActionTypeController;
 import org.innovateuk.ifs.eugrant.*;
-import org.innovateuk.ifs.eugrant.transactional.EuActionTypeService;
+import org.innovateuk.ifs.euactiontype.transactional.EuActionTypeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,10 +49,10 @@ public class EuActionTypeControllerDocumentation extends BaseControllerMockMVCTe
 
         when(euActionTypeService.findAll()).thenReturn(serviceSuccess(actionTypeResources));
 
-        mockMvc.perform(get("/eu-grant/action-type/find-all"))
+        mockMvc.perform(get("/action-type/find-all"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(actionTypeResources)))
-                .andDo(document("eu-grant/{method-name}",
+                .andDo(document("action-type/{method-name}",
                         responseFields(fieldWithPath("[]").description("List of funding scheme actions"))
                         .andWithPrefix("[].", fields())
                 ));
@@ -70,11 +71,11 @@ public class EuActionTypeControllerDocumentation extends BaseControllerMockMVCTe
         when(euActionTypeService.getById(actionTypeResource.getId())).thenReturn(serviceSuccess(actionTypeResource));
 
         mockMvc.perform(
-                get("/eu-grant/action-type/get-by-id/{id}", actionTypeResource.getId()))
+                get("/action-type/get-by-id/{id}", actionTypeResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(actionTypeResource)))
                 .andDo(document(
-                        "eu-grant/{method-name}",
+                        "action-type/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id the action type.")
                         ),

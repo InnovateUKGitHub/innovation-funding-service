@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.domain;
+package org.innovateuk.ifs.euactiontype.domain;
 
 import org.hibernate.annotations.Immutable;
 

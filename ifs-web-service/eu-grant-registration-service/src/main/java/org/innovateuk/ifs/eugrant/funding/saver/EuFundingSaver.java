@@ -36,7 +36,8 @@ public class EuFundingSaver {
 
     private EuFundingResource getEuFundingResource(EuFundingForm fundingForm) {
 
-        EuActionTypeResource euActionTypeResource = euActionTypeRestService.getById(fundingForm.getActionType()).getSuccess();
+        EuActionTypeResource euActionTypeResource = new EuActionTypeResource();
+        euActionTypeResource.setId(fundingForm.getActionType());
 
         return new EuFundingResource(
                 fundingForm.getGrantAgreementNumber(),

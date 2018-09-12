@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.eugrant.transactional;
+package org.innovateuk.ifs.euactiontype.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.euactiontype.mapper.EuActionTypeMapper;
+import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
 import org.innovateuk.ifs.eugrant.EuActionTypeResource;
-import org.innovateuk.ifs.eugrant.domain.EuActionType;
-import org.innovateuk.ifs.eugrant.mapper.EuActionTypeMapper;
-import org.innovateuk.ifs.eugrant.repository.EuActionTypeRepository;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

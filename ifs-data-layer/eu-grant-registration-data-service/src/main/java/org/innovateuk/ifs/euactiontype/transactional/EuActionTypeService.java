@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.transactional;
+package org.innovateuk.ifs.euactiontype.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuActionTypeResource;
