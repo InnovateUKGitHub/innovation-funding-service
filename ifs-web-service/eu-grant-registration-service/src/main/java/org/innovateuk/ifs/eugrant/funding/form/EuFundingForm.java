@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 public class EuFundingForm {
 
-    @NotBlank(message = "{validation.fundingForm.grant.aggreement.number}")
+    @NotBlank(message = "{validation.fundingForm.grant.agreement.number}")
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
