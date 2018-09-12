@@ -9,18 +9,18 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.interview.domain.InterviewInvite;
-import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +37,13 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -62,9 +62,6 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
     @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -92,8 +89,18 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        loginCompAdmin();
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("innovation area").build());
+
+        setLoggedInUser(null);
+
         user = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
     }
@@ -179,7 +186,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
     }
 
     @Test
-    public void getAssessorsByCompetitionAndStatus() throws Exception {
+    public void getAssessorsByCompetitionAndStatus() {
         loginSteveSmith();
 
         User acceptedUser = newUser()
@@ -229,7 +236,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
     }
 
     @Test
-    public void getInterviewAcceptedAssessors() throws Exception {
+    public void getInterviewAcceptedAssessors() {
         loginSteveSmith();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
@@ -258,7 +265,11 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         applicationRepository.save(application);
 
-        ProcessRole processRole = newProcessRole().withApplication(application).withUser(user).build();
+        ProcessRole processRole = newProcessRole()
+                .withApplication(application)
+                .withUser(user)
+                .withRole(Role.INTERVIEW_ASSESSOR)
+                .build();
 
         processRoleRepository.save(processRole);
 
@@ -269,7 +280,6 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         List<InterviewParticipant> InterviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
 
         InterviewParticipants.get(0).getInvite().open();
-        CompetitionParticipantRole role = InterviewParticipants.get(0).getRole();
         InterviewParticipants.get(0).acceptAndAssignUser(user);
 
         repository.save(InterviewParticipants);

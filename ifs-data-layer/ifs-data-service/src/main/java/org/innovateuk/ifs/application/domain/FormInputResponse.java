@@ -22,29 +22,27 @@ public class FormInputResponse {
 
     private ZonedDateTime updateDate;
 
-    @Column(length=5000)
+    @Column(length = 5000)
     private String value;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="updatedById", referencedColumnName="id")
+    @JoinColumn(name = "updatedById", referencedColumnName = "id")
     private ProcessRole updatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="formInputId", referencedColumnName="id")
+    @JoinColumn(name = "formInputId", referencedColumnName = "id")
     private FormInput formInput;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationId", referencedColumnName="id")
+    @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fileEntryId", referencedColumnName="id")
+    @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
     private FileEntry fileEntry;
 
-
     public FormInputResponse() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public FormInputResponse(ZonedDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
@@ -80,10 +78,10 @@ public class FormInputResponse {
     }
 
     @JsonIgnore
-    public Integer getWordCount(){
+    public Integer getWordCount() {
         // this code removes the list items from the wysiwyg value.
         // If we don't then every list item will also count as one word.
-        if(value != null) {
+        if (value != null) {
             String cleanInput = this.value.replaceAll("([0-9]+\\. |\\* |\\*\\*|_)", "");
 
             if (cleanInput.isEmpty()) {
@@ -97,7 +95,7 @@ public class FormInputResponse {
     }
 
     @JsonIgnore
-    public Integer getWordCountLeft(){
+    public Integer getWordCountLeft() {
         return formInput.getWordCount() - this.getWordCount();
     }
 
@@ -141,6 +139,4 @@ public class FormInputResponse {
     public void setApplication(Application application) {
         this.application = application;
     }
-
-
 }

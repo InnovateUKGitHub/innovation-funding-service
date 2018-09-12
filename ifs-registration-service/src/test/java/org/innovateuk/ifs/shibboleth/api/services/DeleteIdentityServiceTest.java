@@ -6,7 +6,8 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.verify;
 
 public class DeleteIdentityServiceTest extends MockedService<DeleteIdentityService> {
 

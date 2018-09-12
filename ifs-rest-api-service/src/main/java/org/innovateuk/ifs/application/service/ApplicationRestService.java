@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -22,7 +18,7 @@ public interface ApplicationRestService {
     RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
     RestResult<Void> saveApplication(ApplicationResource application);
-    RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
+    RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName);
     RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
@@ -32,5 +28,5 @@ public interface ApplicationRestService {
     RestResult<Void> withdrawApplication(long applicationId);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
-    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
+    RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
 }

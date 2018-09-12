@@ -43,39 +43,39 @@
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-allocation-summary" />
 
-			<div class="grid-row extra-margin">
+			<div class="govuk-grid-row extra-margin">
 				<div class="column-quarter">
-					<p>Assigned <br /><span class="heading-medium">250</span></p>
+					<p class="govuk-body">Assigned <br /><span class="govuk-heading-m">250</span></p>
 				</div>
 
 				<div class="column-quarter">
-					<p>Accepted <br /><span class="heading-medium">225</span></p>
+					<p class="govuk-body">Accepted <br /><span class="govuk-heading-m">225</span></p>
 				</div>
 
 				<div class="column-quarter">
-					<p>Started <br /><span class="heading-medium">125</span></p>
+					<p class="govuk-body">Started <br /><span class="govuk-heading-m">125</span></p>
 				</div>
 
 				<div class="column-quarter">
-					<p>Completed <br /><span class="heading-medium">25</span></p>
+					<p class="govuk-body">Completed <br /><span class="govuk-heading-m">25</span></p>
 				</div>
 			</div>
 
 		    <div th:if="${param.sendAssignments != null}" th:remove="tag">
 		    	<div class="highlight-panel extra-margin">
 			        <div class="alignright-button" id="added-assessors">
-						<a href="/prototypes/1385-application-allocation-confirm" class="button">Send updates to assessors</a>
+						<a href="/prototypes/1385-application-allocation-confirm" class="govuk-button">Send updates to assessors</a>
 					</div>
 				</div>
 			</div>
 
 		</section>
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<section class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Application list</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" />
 

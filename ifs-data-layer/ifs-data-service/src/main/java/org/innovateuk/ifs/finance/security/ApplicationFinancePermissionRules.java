@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -9,13 +8,13 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -24,9 +23,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @Component
 @PermissionRules
 public class ApplicationFinancePermissionRules extends BasePermissionRules {
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -51,14 +47,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
     }
 
-    @PermissionRule(value = "ADD_COST", description = "The CSS user can add a cost to the application finances")
-    public boolean supportCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isSupport(user);
-    }
-
-    @PermissionRule(value = "ADD_COST", description = "Innovation lead users can add a cost to the application finances")
-    public boolean innovationLeadCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isInnovationLead(user);
+    @PermissionRule(value = "ADD_COST", description = "Internal users can add a cost to the application finances")
+    public boolean internalUserCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "An assessor can add a cost to the application finances")

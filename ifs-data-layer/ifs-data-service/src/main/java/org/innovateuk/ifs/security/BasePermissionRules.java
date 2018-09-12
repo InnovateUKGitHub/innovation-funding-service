@@ -3,19 +3,21 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,11 +55,19 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private InnovationLeadRepository innovationLeadRepository;
 
     @Autowired
+    private StakeholderRepository stakeholderRepository;
+
+    @Autowired
     private ProjectProcessRepository projectProcessRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
         return !partnerProjectUser.isEmpty();
+    }
+
+    protected boolean isMonitoringOfficer(long projectId, long userId) {
+        List<ProjectUser> monitoringOfficerForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, MONITORING_OFFICER);
+        return !monitoringOfficerForProject.isEmpty();
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {
@@ -92,6 +102,11 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId) {
         List<InnovationLead> competitionParticipants = innovationLeadRepository.findInnovationsLeads(competitionId);
+        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+    }
+
+    protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
+        List<Stakeholder> competitionParticipants = stakeholderRepository.findStakeholders(competitionId);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 

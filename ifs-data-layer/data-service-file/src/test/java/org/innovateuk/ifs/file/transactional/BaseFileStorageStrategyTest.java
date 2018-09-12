@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.file.transactional;
 
 import com.google.common.io.Files;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import static java.io.File.separator;
+import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -24,9 +27,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.FileFunctions.*;
-import static java.io.File.separator;
-import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 /**

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.publiccontent.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.publiccontent.modelpopulator.section.SummaryViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.viewmodel.section.SummaryViewModel;
 import org.junit.Test;
@@ -19,9 +19,10 @@ import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,7 +37,7 @@ public class SummaryViewModelPopulatorTest {
     private SummaryViewModelPopulator target;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Test
     public void testPopulate() {
@@ -53,7 +54,7 @@ public class SummaryViewModelPopulatorTest {
                 .withContentSections(asList(section)).build();
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         SummaryViewModel viewModel = target.populate(resource, readOnly);
 

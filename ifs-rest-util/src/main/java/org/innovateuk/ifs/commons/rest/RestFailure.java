@@ -9,10 +9,10 @@ import org.springframework.http.HttpStatus;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.MapFunctions.getSortedGroupingCounts;
 
 /**
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error

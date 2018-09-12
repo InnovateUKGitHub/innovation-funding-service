@@ -16,17 +16,16 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
     private String applicationFundingDecisionRestURL = "/applicationfunding";
 
-	@Override
-	public RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
-		 return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, applicationIdToFundingDecision, Void.class);
-	}
+    @Override
+    public RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
+        return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId, applicationIdToFundingDecision, Void.class);
+    }
 
-	protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
-		this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
-	}
+    protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
+        this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
+    }
 
-	public RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource) {
-		return postWithRestResult(applicationFundingDecisionRestURL + "/sendNotifications", fundingNotificationResource, Void.class);
-	}
-
+    public RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource) {
+        return postWithRestResult(applicationFundingDecisionRestURL + "/sendNotifications", fundingNotificationResource, Void.class);
+    }
 }

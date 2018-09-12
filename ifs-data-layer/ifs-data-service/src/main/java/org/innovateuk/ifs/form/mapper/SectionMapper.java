@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.mapstruct.Mapper;
 
 @Mapper(

@@ -1,19 +1,17 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -28,7 +26,7 @@ public class SetupSectionInternalUser {
         this.projectSetupProgressChecker = new SetupProgressChecker(projectStatusResource);
     }
 
-    public SectionAccess canAccessCompaniesHouseSection(UserResource userResource) {
+    public SectionAccess canAccessCompaniesHouseSection() {
         return NOT_ACCESSIBLE;
     }
 
@@ -45,7 +43,7 @@ public class SetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        if(isSupport(userResource) || isInnovationLead(userResource)){
+        if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)){
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
@@ -69,7 +67,7 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if(isSupport(userResource) || isInnovationLead(userResource)) {
+            if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if(approved) {
                     return ACCESSIBLE;
                 } else {
@@ -88,7 +86,7 @@ public class SetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if((isSupport(userResource) || isInnovationLead(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
+        if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
             return NOT_ACCESSIBLE;
         }
 
@@ -105,7 +103,7 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
         if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
-            if(isSupport(userResource) || isInnovationLead(userResource)) {
+            if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if(projectSetupProgressChecker.isGrantOfferLetterApproved()){
                     return ACCESSIBLE;
                 } else {

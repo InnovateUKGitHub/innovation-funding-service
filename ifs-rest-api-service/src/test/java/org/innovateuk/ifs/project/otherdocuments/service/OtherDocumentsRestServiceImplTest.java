@@ -11,13 +11,9 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+
+import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.*;
 
 public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<OtherDocumentsRestServiceImpl> {
     private static final String projectRestURL = "/project";

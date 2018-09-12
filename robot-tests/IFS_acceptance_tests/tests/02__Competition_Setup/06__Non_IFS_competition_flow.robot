@@ -38,10 +38,10 @@ Validation errors on non-IFS competition details
     And the user should see a field and summary error   Please enter a valid date.
     And the user should see a summary error             Please enter a valid date.
     When the user fills out the competition title and url
-    Then the user should not see the element  jQuery=.error-message:contains("Please enter a competition URL.")
-    And the user should not see the element   jQuery=.error-message:contains("Please enter a title.")
+    Then the user should not see the element  jQuery=.govuk-error-message:contains("Please enter a competition URL.")
+    And the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a title.")
     When the user fills out the non-IFS details
-    Then the user should not see the element   jQuery=.error-message   #Valid dates in milestones
+    Then the user should not see the element   jQuery=.govuk-error-message   #Valid dates in milestones
     And the user clicks the button/link       jQuery=button:contains("Save and continue")
 
 Submit non-IFS competition details

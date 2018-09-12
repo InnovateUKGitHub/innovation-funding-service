@@ -24,6 +24,10 @@ public interface QuestionStatusService {
     ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                              final long markedAsInCompleteById);
 
+    @PreAuthorize("hasPermission(#ids, 'MARK_TEAM_INCOMPLETE')")
+    ServiceResult<List<ValidationMessages>> markTeamAsInComplete(final QuestionApplicationCompositeId ids,
+                                                                 final long markedAsInCompleteById);
+
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<Void> assign(final QuestionApplicationCompositeId ids,
                                final long assigneeId,

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.mapper.AlertMapper;
-import org.innovateuk.ifs.repository.AlertRepository;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
+import org.innovateuk.ifs.mapper.AlertMapper;
+import org.innovateuk.ifs.repository.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

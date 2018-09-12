@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**

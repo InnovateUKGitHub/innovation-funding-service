@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.new
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGroupServiceImpl> {

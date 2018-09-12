@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.upcoming.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.upcoming.viewmodel.UpcomingCompetitionViewModel;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +33,7 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
     private UpcomingCompetitionModelPopulator upcomingCompetitionModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     private static final String restUrl = "/competition";
 
@@ -54,23 +55,23 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
         UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource);
 
-        when(competitionService.getById(1L)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(status().isOk());
 
-        verify(competitionService).getById(1L);
+        verify(competitionRestService).getCompetitionById(1L);
     }
 
     @Test
     public void viewSummary_competitionNotExists() throws Exception {
-        when(competitionService.getById(1L)).thenThrow(new ObjectNotFoundException());
+        when(competitionRestService.getCompetitionById(1L)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
-        verify(competitionService).getById(1L);
+        verify(competitionRestService).getCompetitionById(1L);
     }
 }

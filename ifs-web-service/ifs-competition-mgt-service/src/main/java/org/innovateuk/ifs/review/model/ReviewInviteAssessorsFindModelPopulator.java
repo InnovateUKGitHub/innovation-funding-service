@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsFindViewModel;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
+import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -45,7 +45,7 @@ public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssesso
         List<ReviewAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource, originQuery));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
 
         return model;

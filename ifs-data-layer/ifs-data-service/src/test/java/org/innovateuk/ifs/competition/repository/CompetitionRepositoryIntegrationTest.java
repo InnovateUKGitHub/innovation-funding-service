@@ -2,24 +2,25 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.competition.domain.*;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -93,7 +96,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndInformed() {
+    public void fundedAndInformed() {
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
@@ -119,8 +122,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testMultipleFundedAndInformed() {
-
+    public void multipleFundedAndInformed() {
+        loginCompAdmin();
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
@@ -164,8 +167,15 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testFundedAndNotInformed() {
-        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+    public void fundedAndNotInformed() {
+        loginCompAdmin();
+
+        Competition compFundedAndInformed = newCompetition()
+                .with(id(null))
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
@@ -178,8 +188,15 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testNotFundedAndInformed() {
-        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+    public void notFundedAndInformed() {
+        loginCompAdmin();
+
+        Competition compFundedAndInformed = newCompetition()
+                .with(id(null))
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
@@ -204,14 +221,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
-    public void testSearch() {
+    public void search() {
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
-        Competition openComp = new Competition(null, null, null, "openComp", null, null, null, termsAndConditions);
+        Competition openComp = new Competition(null, null, "openComp", null, null, null, termsAndConditions);
         openComp.setTermsAndConditions(termsAndConditions);
 
         openComp.setLeadTechnologist(leadTechnologist);
@@ -222,7 +239,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         AssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition earliestOpenComp = new Competition(null, null, null, "earliestOpenComp", null, null, null,
+        Competition earliestOpenComp = new Competition(null, null, "earliestOpenComp", null, null, null,
                 termsAndConditions);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
@@ -233,7 +250,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compWithNoInnovationLead = new Competition(null, null, null, "compWithNoInnovationLead", null,
+        Competition compWithNoInnovationLead = new Competition(null, null, "compWithNoInnovationLead", null,
                 null, null, termsAndConditions);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
@@ -244,7 +261,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInPreparation = new Competition(null, null, null, "compInPreparation", null, null, null,
+        Competition compInPreparation = new Competition(null, null, "compInPreparation", null, null, null,
                 termsAndConditions);
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
@@ -255,7 +272,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compReadyToOpen = new Competition(null, null, null, "compReadyToOpen", null, null, null,
+        Competition compReadyToOpen = new Competition(null, null, "compReadyToOpen", null, null, null,
                 termsAndConditions);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
@@ -266,7 +283,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInInform = new Competition(null, null, null, "compInInform", null, null, null,
+        Competition compInInform = new Competition(null, null, "compInInform", null, null, null,
                 termsAndConditions);
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
@@ -277,7 +294,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
         assessmentParticipantRepository.save(competitionParticipant);
 
-        Competition compInProjectSetup = new Competition(null, null, null, "compInProjectSetup", null, null, null,
+        Competition compInProjectSetup = new Competition(null, null, "compInProjectSetup", null, null, null,
                 termsAndConditions);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
@@ -344,8 +361,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectFinance() {
         List<Competition> comps = repository.findByName("Comp21001");
         assertTrue(comps.size() > 0);
-        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(0L, results.size());
     }
 
@@ -353,8 +370,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectManager() {
         List<Competition> comps = repository.findByName("Comp21002");
         assertTrue(comps.size() > 0);
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, results.size());
         List<Application> apps = applicationRepository.findByName("App21002");
         assertEquals(1L, apps.size());
@@ -370,8 +387,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectManagerAndResolved() {
         List<Competition> comps = repository.findByName("Comp21002");
         assertTrue(comps.size() > 0);
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, results.size());
         List<Application> apps = applicationRepository.findByName("App21002");
         assertEquals(1L, apps.size());
@@ -392,8 +409,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         // clean the cache and get some fresh results
         flushAndClearSession();
 
-        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(0L, newResults.size());
     }
 
@@ -401,8 +418,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectFinanceWithResponseFromProjectManager() {
         List<Competition> comps = repository.findByName("Comp21003");
         assertTrue(comps.size() > 0);
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, results.size());
         List<Application> apps = applicationRepository.findByName("App21003");
         assertEquals(1L, apps.size());
@@ -421,8 +438,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
 
         // and see that we now have a single query count because the 2 queries are from the same partner
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, newResults.size());
     }
 
@@ -433,8 +450,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
 
         // and see that we now have a single query count because the 2 queries are from the same partner
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, results.size());
 
         Long projectId = results.get(0).getProjectId();
@@ -454,8 +471,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         flushAndClearSession();
 
         // assert that we still see a count of one because not all of these partner org's queries are yet resolved
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, newResults.size());
     }
 
@@ -466,8 +483,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
 
         // and see that we now have a single query count because the 2 queries are from the same partner
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, results.size());
 
         Long projectId = results.get(0).getProjectId();
@@ -488,8 +505,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         flushAndClearSession();
 
         // and see that we now see all resolved
-        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(0L, newResults.size());
     }
 
@@ -497,8 +514,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void twoOpenQueryResponsesFromDifferentPartners() {
         List<Competition> comps = repository.findByName("Comp21005");
         assertTrue(comps.size() > 0);
-        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(2L, results.size());
         List<Application> apps = applicationRepository.findByName("App21005");
         assertEquals(1L, apps.size());
@@ -515,8 +532,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void twoOpenQueryResponsesFromDifferentPartnersAndOneIsResolved() {
         List<Competition> comps = repository.findByName("Comp21005");
         assertTrue(comps.size() > 0);
-        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(2L, results.size());
 
         Long projectId = results.get(0).getProjectId();
@@ -536,8 +553,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         flushAndClearSession();
 
         // and see that we now see one resolved
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, newResults.size());
     }
 
@@ -545,8 +562,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void twoProjectsHaveOpenQueries() {
         List<Competition> comps = repository.findByName("Comp21006");
         assertTrue(comps.size() > 0);
-        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(2L, results.size());
         List<Application> apps = applicationRepository.findByName("App21006a");
         assertEquals(1L, apps.size());
@@ -570,8 +587,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void twoProjectsHaveOpenQueriesAndOneIsResolved() {
         List<Competition> comps = repository.findByName("Comp21006");
         assertTrue(comps.size() > 0);
-        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(2L, results.size());
 
         Long projectId = results.get(0).getProjectId();
@@ -591,8 +608,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         flushAndClearSession();
 
         // and see that we now see one resolved
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(1L, newResults.size());
     }
 
@@ -600,27 +617,32 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectFinanceWithResponseFromProjectManagerButWithSpendProfileGenerated() {
         List<Competition> comps = repository.findByName("Comp21007");
         assertTrue(comps.size() > 0);
-        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(0L, results.size());
     }
 
     @Test
-    public void testCountLiveForInnovationLead() {
+    public void countLiveForInnovationLead() {
         // TODO: Improve once IFS-2222 is done.
         long innovationLead1Id = 51L;
         long innovationLead2Id = 52L;
 
-        Long count = repository.countLiveForInnovationLead(innovationLead2Id);
+        Long count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead2Id);
         assertEquals(new Long(1L), count);
 
-        count = repository.countLiveForInnovationLead(innovationLead1Id);
+        count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead1Id);
         assertEquals(new Long(0L), count);
     }
 
     @Test
     public void findByApplicationsId() {
-        Competition competition = repository.save(newCompetition().withId(7L).build());
+        loginCompAdmin();
+
+        Competition competition = repository.save(newCompetition()
+                .with(id(null))
+                .build());
+
         Application application = applicationRepository.save(newApplication().withId(11L).withCompetition
                 (competition).build());
 
@@ -632,14 +654,14 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     // IFS-2263 -- ensure milestone dates aren't rounded up
     @Test
     @Rollback
-    public void testMilestoneDatesTruncated() {
+    public void milestoneDatesTruncated() {
         final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
         final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
 
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
-        Competition competition = new Competition(null, null, null, "comp", dateTime, null, null, termsAndConditions);
+        Competition competition = new Competition(null, null, "comp", dateTime, null, null, termsAndConditions);
 
         Competition savedCompetition = repository.save(competition);
 
@@ -653,8 +675,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         // firstly assert that we have 2 unique queries for this competition as 2 partners have open queries currently
         List<Competition> comps = repository.findByName("Comp21005");
         assertTrue(comps.size() > 0);
-        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, repository.countOpenQueriesByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN)).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetitionAndProjectStateNotIn(comps.get(0).getId(), singleton(ProjectState.WITHDRAWN));
         assertEquals(2L, results.size());
 
         Long projectId = results.get(0).getProjectId();

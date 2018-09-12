@@ -21,21 +21,22 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 function upgradeServices {
     # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
-    oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "finance-data-service"
 
     # data-service
-    oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "data-service"
 
     # services
-    oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
@@ -49,7 +50,50 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
+    # conditionally deploy zipkin
+    if $(isPerfEnvironment ${TARGET}); then
+        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     watchStatus
+
+    upgradeSurvey
+
+    # EU Grant Registration is not ready for production release yet.
+    if ! $(isProductionEnvironment ${TARGET}); then
+        upgradeEuGrantRegistration
+    fi
+
+}
+
+function upgradeSurvey {
+    # Survey service
+    oc apply -f $(getBuildLocation)/survey/survey-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-data-service"
+    oc apply -f $(getBuildLocation)/survey/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-svc"
+}
+
+function upgradeEuGrantRegistration {
+    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-data-service"
+    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-service"
+}
+
+function forceReloadSurvey {
+    oc rollout latest dc/survey-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-data-service"
+    oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "survey-svc"
+}
+
+function forceReloadEuGrantRegistration {
+    oc rollout latest dc/eu-grant-registration-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-data-service"
+    oc rollout latest dc/eu-grant-registration-svc ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "eu-grant-registration-svc"
 }
 
 function forceReload {
@@ -80,6 +124,13 @@ function forceReload {
     fi
 
     watchStatus
+
+    forceReloadSurvey
+
+    # EU Grant Registration is not ready for production release yet.
+    if ! $(isProductionEnvironment ${TARGET}); then
+        forceReloadEuGrantRegistration
+    fi
 }
 
 function watchStatus {
@@ -142,4 +193,5 @@ then
     # We only scale up data-serviced once started up and performed the Flyway migrations on one thread
     scaleDataService
     scaleFinanceDataService
+    scaleSurveyDataService
 fi

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.team.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -32,14 +35,28 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ApplicationTeamManagementModelPopulator {
 
-    @Autowired
     private InviteOrganisationRestService inviteOrganisationRestService;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
+    private QuestionRestService questionRestService;
+
+    private UserRestService userRestService;
+
     private UserService userService;
+    
+    @Autowired
+    public ApplicationTeamManagementModelPopulator(InviteOrganisationRestService inviteOrganisationRestService,
+                                                   ApplicationService applicationService,
+                                                   QuestionRestService questionRestService,
+                                                   UserRestService userRestService,
+                                                   UserService userService) {
+        this.inviteOrganisationRestService = inviteOrganisationRestService;
+        this.applicationService = applicationService;
+        this.questionRestService = questionRestService;
+        this.userRestService = userRestService;
+        this.userService = userService;
+    }
 
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(Long applicationId, Long organisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
@@ -85,6 +102,7 @@ public class ApplicationTeamManagementModelPopulator {
                 .map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
 
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
+                getApplicationTeamQuestion(applicationResource.getCompetition()),
                 applicationResource.getName(),
                 organisationId,
                 ofNullable(inviteOrganisationResource).map(InviteOrganisationResource::getId).orElse(null),
@@ -102,6 +120,7 @@ public class ApplicationTeamManagementModelPopulator {
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
         boolean organisationExists = inviteOrganisationResource.getOrganisation() != null;
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
+                getApplicationTeamQuestion(applicationResource.getCompetition()),
                 applicationResource.getName(),
                 inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(),
@@ -135,7 +154,7 @@ public class ApplicationTeamManagementModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {
@@ -150,6 +169,11 @@ public class ApplicationTeamManagementModelPopulator {
     private InviteOrganisationResource getInviteOrganisationByInviteOrganisationId(long inviteOrganisationId) {
         return inviteOrganisationRestService.getById(inviteOrganisationId)
                 .getSuccess();
+    }
+
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

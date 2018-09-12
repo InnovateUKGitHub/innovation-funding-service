@@ -18,7 +18,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -29,7 +29,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Tags]
     When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the text in the page    Invitation withdrawn
-    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(Dashboard)
+    [Teardown]    the user clicks the button/link    jQuery=#navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
@@ -50,10 +50,6 @@ Details of the competition are visible
     ${date} =  request the date from the database
     And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("${date}")
 
-Competition brief link can be seen
-    [Documentation]    INFUND-5494
-    [Tags]
-    Then The user opens the link in new window   View competition brief
 
 User can view the competition brief
     [Documentation]    INFUND-5494
@@ -62,9 +58,9 @@ User can view the competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element                  jQuery=.list li:contains("Competition opens")
-    And the user should see the element                  jQuery=.list li:contains("Competition closes")
-    And the user should see the element                  jQuery=.button:contains("Start new application")
+    And the user should see the element                  jQuery=.govuk-list li:contains("Competition opens")
+    And the user should see the element                  jQuery=.govuk-list li:contains("Competition closes")
+    And the user should see the element                  jQuery=.govuk-button:contains("Start new application")
     [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
@@ -101,7 +97,7 @@ Reject an application for assessment
     And The user clicks the button/link                  jQuery=button:contains("Confirm")
     Then the user should see an error                    Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link                  jQuery=.button:contains("Confirm")
+    And the user clicks the button/link                  jQuery=.govuk-button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open
@@ -130,6 +126,12 @@ Comp admin can see the application is rejected on manage assessment page
     And the user should see the element      jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
+Custom Suite Setup
+   The user logs-in in new browser  &{assessor2_credentials}
+   ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Sign in successful")
+   Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
+   ...                              AND    the user clicks the button/link   css=.button[type="submit"]   #Continue
+
 the assessor fills all fields with valid inputs
     Select From List By Index                             id=rejectReasonValid    2
     The user should not see the text in the page          Please enter a reason

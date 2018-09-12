@@ -8,10 +8,9 @@ import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertFalse;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.when;
 
 public class PublicContentItemPermissionRulesTest extends BasePermissionRulesTest<PublicContentItemPermissionRules> {

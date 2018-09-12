@@ -55,7 +55,7 @@ Logout as user
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Logout as user from the Dashboard
-    the user clicks the button/link    id=proposition-name
+    the user clicks the button/link    jQuery=a:contains("Innovation Funding Service")
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 

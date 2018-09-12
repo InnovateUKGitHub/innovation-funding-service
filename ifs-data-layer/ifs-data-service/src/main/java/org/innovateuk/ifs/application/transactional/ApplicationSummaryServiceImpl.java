@@ -3,16 +3,16 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,25 +71,34 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             SUBMITTED_STATES.stream(),
             INELIGIBLE_STATES.stream()).collect(toSet()));
 
-    private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
-        put("name", new Sort(ASC, new String[]{"name", "id"}));
-        put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
-        put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC, "id")));
-    }};
+    private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS;
 
-    // TODO These comparators are used to sort application after loading them in memory.
-    // TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
-    // TODO Ideally they should all be replaced
-    private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS =
-            new HashMap<String, Comparator<ApplicationSummaryResource>>() {{
-        put("lead", new ApplicationSummaryResourceLeadComparator());
-        put("leadApplicant", new ApplicationSummaryResourceLeadApplicantComparator());
-        put("numberOfPartners", new ApplicationSummaryResourceNumberOfPartnersComparator());
-        put("grantRequested", new ApplicationSummaryResourceGrantRequestedComparator());
-        put("totalProjectCost", new ApplicationSummaryResourceTotalProjectCostComparator());
-    }};
+    private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS;
 
-    private static final Collection<String> FIELDS_NOT_SORTABLE_IN_DB = SUMMARY_COMPARATORS.keySet();
+    private static final Collection<String> FIELDS_NOT_SORTABLE_IN_DB;
+
+    static {
+        Map<String, Sort> sortFieldToDbSortFields = new HashMap<>();
+        sortFieldToDbSortFields.put("name", new Sort(ASC, new String[]{"name", "id"}));
+        sortFieldToDbSortFields.put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
+        sortFieldToDbSortFields.put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC, "id")));
+
+        SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
+
+        // TODO These comparators are used to sort application after loading them in memory.
+        // TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
+        // TODO Ideally they should all be replaced - IFS-3759
+        Map<String, Comparator<ApplicationSummaryResource>> summaryComparators = new HashMap<>();
+        summaryComparators.put("lead", new ApplicationSummaryResourceLeadComparator());
+        summaryComparators.put("leadApplicant", new ApplicationSummaryResourceLeadApplicantComparator());
+        summaryComparators.put("numberOfPartners", new ApplicationSummaryResourceNumberOfPartnersComparator());
+        summaryComparators.put("grantRequested", new ApplicationSummaryResourceGrantRequestedComparator());
+        summaryComparators.put("totalProjectCost", new ApplicationSummaryResourceTotalProjectCostComparator());
+
+        SUMMARY_COMPARATORS = Collections.unmodifiableMap(summaryComparators);
+
+        FIELDS_NOT_SORTABLE_IN_DB = SUMMARY_COMPARATORS.keySet();
+    }
 
     @Autowired
     private ApplicationSummaryMapper applicationSummaryMapper;

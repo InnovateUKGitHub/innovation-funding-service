@@ -1,7 +1,7 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: "../flyway.gradle"
@@ -13,6 +13,12 @@ apply from: "finance-data-service-sync.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
+
+group 'innovateuk'
+version project.version
 
 
 project.version = dataServiceVersion
@@ -22,6 +28,7 @@ tagDockerLocal.tag = dataServiceVersion
 osStageLocal.tag = dataServiceVersion
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
@@ -75,7 +82,6 @@ prepareDockerBaseInput {
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-data-layer:data-service-file")
-    compile project(":ifs-data-layer:data-service-alerts")
     compile project(":ifs-sil-resources")
     compile project(":ifs-error-util")
 
@@ -148,3 +154,6 @@ task syncShib(type:Exec) {
 }
 
 flywayMigrate.dependsOn processResources
+
+ext.ifsDataServiceRestBaseURL="http://data-service:8080"
+ext.serverPort=8080

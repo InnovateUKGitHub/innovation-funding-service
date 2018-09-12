@@ -14,9 +14,9 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -91,13 +92,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private RegistrationService registrationService;
 
     @Autowired
-    private EthnicityMapper ethnicityMapper;
-
-    @Autowired
     private UserOrganisationRepository userOrganisationRepository;
 
     @Autowired
     private UserOrganisationMapper userOrganisationMapper;
+
+    private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -147,7 +147,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
-            return notificationService.sendNotification(notification, EMAIL);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
         } else if (userIsExternalNotOnlyAssessor(user) &&
                 userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
@@ -179,7 +179,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private String getRandomHash() {
-        return UUID.randomUUID().toString();
+        return randomHashSupplier.get();
     }
 
     private String getPasswordResetLink(String hash) {
@@ -197,9 +197,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
-        existingUser.setGender(updatedUserResource.getGender());
-        existingUser.setDisability(updatedUserResource.getDisability());
-        existingUser.setEthnicity(ethnicityMapper.mapIdToDomain(updatedUserResource.getEthnicity()));
         existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
@@ -240,19 +237,19 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
-            List<UserOrganisation> userOrganisations;
+            Set<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByUserEmailAsc(searchStringExpr, roleTypes);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
@@ -267,6 +264,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                     userRepository.save(user);
                     return serviceSuccess();
                 }));
+    }
+
+    @Override
+    public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
+        return getUser(grantRoleCommand.getUserId())
+                .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

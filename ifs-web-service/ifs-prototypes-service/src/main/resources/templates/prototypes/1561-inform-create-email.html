@@ -21,28 +21,28 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Funding decision notification'}, ${null})" />
 
-  <p>This email can be edited and customised. Once sent it will be received by all applicants associated with each of the applications you selected. If you want to remove recipients, select 'remove' from the list of recipients. This will remove the application from the list, including all applicants.</p>
+  <p class="govuk-body">This email can be edited and customised. Once sent it will be received by all applicants associated with each of the applications you selected. If you want to remove recipients, select 'remove' from the list of recipients. This will remove the application from the list, including all applicants.</p>
 
-  <h2 class="heading-medium">Key statistics</h2>
+  <h2 class="govuk-heading-m">Key statistics</h2>
 
-  <div class="grid-row extra-margin-bottom">
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
+        <span class="govuk-heading-l">3</span><br />
         <small>successful</small>
       </div>
 		</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">0</span><br />
+        <span class="govuk-heading-l">0</span><br />
         <small>unsuccessful</small>
       </div>
 		</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">0</span><br />
+        <span class="govuk-heading-l">0</span><br />
         <small>on hold</small>
       </div>
 		</div>
@@ -50,52 +50,52 @@
 
   <form>
 
-    <h2 class="heading-small">Recipients</h2>
+    <h2 class="govuk-heading-s">Recipients</h2>
 
     <details>
       <summary><span class="summary">Review list of recipients</span></summary>
 
-      <div class="panel">
+      <div class="govuk-body panel">
 
         <div class="table-overflow">
   				<table id="application-list">
-  					<thead>
-  						<tr>
-  							<th scope="col">Application number</th>
-  							<th scope="col">Project title</th>
-  							<th scope="col">Lead</th>
-                <th scope="col">Funding decision</th>
+  					<thead class="govuk-table__head">
+  						<tr class="govuk-table__row">
+  							<th class="govuk-table__header" scope="col">Application number</th>
+  							<th class="govuk-table__header" scope="col">Project title</th>
+  							<th class="govuk-table__header" scope="col">Lead</th>
+                <th class="govuk-table__header" scope="col">Funding decision</th>
                 <th scope="col" class="alignright">Remove application</th>
   						</tr>
   					</thead>
-  					<tbody>
-  						<tr>
-  							<td>194731</td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-                <td>Successful</td>
-                <td class="alignright"><a href="#">Remove</a></td>
+  					<tbody class="govuk-table__body">
+  						<tr class="govuk-table__row">
+  							<td class="govuk-table__cell">194731</td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
   						</tr>
-  						<tr>
-  							<td>194732</td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-                <td>Successful</td>
-                <td class="alignright"><a href="#">Remove</a></td>
+  						<tr class="govuk-table__row">
+  							<td class="govuk-table__cell">194732</td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
   						</tr>
-  						<tr>
-  							<td>194733</td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-                <td>Successful</td>
-                <td class="alignright"><a href="#">Remove</a></td>
+  						<tr class="govuk-table__row">
+  							<td class="govuk-table__cell">194733</td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
   						</tr>
-  						<tr>
-  							<td>194734</td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-                <td>Successful</td>
-                <td class="alignright"><a href="#">Remove</a></td>
+  						<tr class="govuk-table__row">
+  							<td class="govuk-table__cell">194734</td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
   						</tr>
   					</tbody>
   				</table>
@@ -107,24 +107,24 @@
 
     <fieldset class="extra-margin-top">
 
-      <legend class="visuallyhidden">Email notification</legend>
+      <legend class="govuk-visually-hidden">Email notification</legend>
 
-      <div class="form-group">
+      <div class="govuk-form-group">
         <label class="form-label-bold" for="notification-subject">Subject</label>
         <input class="form-control" type="text" name="notification-subject" id="notification-subject" value="" required="required" />
       </div>
 
-      <div class="form-group">
+      <div class="govuk-form-group">
         <label class="form-label-bold" for="notification-message">Message</label>
-        <textarea  class="form-control " name="notification-message" id="notification-message" cols="30" rows="10" required="required"></textarea>
+        <textarea  class="govuk-textarea" name="notification-message" id="notification-message" cols="30" rows="10" required="required"></textarea>
       </div>
 
       <input type="hidden" name="comp" value="panel" />
       <input type="hidden" name="action" value="emails-sent" />
 
-      <button class="button" formaction="/prototypes/1561-funding-notifications" >Send email to all applicants</button>
+      <button class="govuk-button" formaction="/prototypes/1561-funding-notifications" >Send email to all applicants</button>
 
-      <a href="#" class="button-link-style">Cancel</a>
+      <a href="#" class="govuk-button-link-style">Cancel</a>
 
     </fieldset>
 
@@ -134,7 +134,7 @@
 
 
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 
@@ -236,4 +236,4 @@
 </body>
 </html>
 <label class="form-label" for="filterSearch">Search</label>
-<input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+<input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />

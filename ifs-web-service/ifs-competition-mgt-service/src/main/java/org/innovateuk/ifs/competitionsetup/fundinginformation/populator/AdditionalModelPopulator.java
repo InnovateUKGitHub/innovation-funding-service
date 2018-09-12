@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.competitionsetup.fundinginformation.viewmodel.AdditionalModelViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.fundinginformation.viewmodel.AdditionalModelViewModel;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,22 +17,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdditionalModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-	@Autowired
-	private CompetitionService competitionService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private CategoryRestService categoryRestService;
-	
-	@Override
-	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.ADDITIONAL_INFO;
-	}
+    @Autowired
+    private CategoryRestService categoryRestService;
 
     @Override
-	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-		return new AdditionalModelViewModel(generalViewModel);
-	}
+    public CompetitionSetupSection sectionToPopulateModel() {
+        return CompetitionSetupSection.ADDITIONAL_INFO;
+    }
+
+    @Override
+    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+        return new AdditionalModelViewModel(generalViewModel);
+    }
 }

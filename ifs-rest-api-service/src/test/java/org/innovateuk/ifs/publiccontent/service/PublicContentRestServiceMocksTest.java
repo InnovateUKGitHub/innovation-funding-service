@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<PublicContentRestServiceImpl> {
 

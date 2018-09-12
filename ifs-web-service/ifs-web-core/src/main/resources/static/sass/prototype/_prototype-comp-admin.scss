@@ -5,7 +5,7 @@
   color: white;
 
   span{
-    background: $govuk-blue;
+    background: govuk-colour("blue");
     padding: 20px;
   }
 
@@ -23,9 +23,9 @@
 /*----- State of submission ----*/
 
 .marked-complete-alert{
-  background: $grey-4;
+  background: govuk-colour("grey-4");
   padding: 20px 20px 10px 30px;
-  border-left: 5px solid $border-colour;
+  border-left: 5px solid $govuk-border-colour;
   margin: 10px 0 30px 0;
   clear: both;
 }
@@ -46,18 +46,18 @@
 
 .status-project-warning{
   @extend %status-marker;
-  background: $red
+  background: $govuk-error-colour
 }
 
 .status-project-progress{
   @extend %status-marker;
-  background: $yellow;
-  color: $black;
+  background: $govuk-focus-colour;
+  color: govuk-colour("black");
 }
 
 .status-project-ok{
   @extend %status-marker;
-  background: $green;
+  background: govuk-colour("green");
 }
 
 /*----- Comp admin tables styles----*/
@@ -125,14 +125,14 @@ table.project-changes{
 .assessment-panel-start{
   td,
   th{
-    border-top: 2px solid $black;
+    border-top: 2px solid govuk-colour("black");
   }
 }
 
 .assessment-panel-end{
   td,
   th{
-    border-bottom: 2px solid $black;
+    border-bottom: 2px solid govuk-colour("black");
   }
 }
 
@@ -158,11 +158,11 @@ table.project-changes{
     padding-right: 0.625em;
 
   		&.na{
-      background: $grey-3;
+      background: govuk-colour("grey-3");
   		}
 
     &.ok{
-      color: $green;
+      color: govuk-colour("green");
       font-weight: bold;
       //text-indent: 100%;
       white-space: nowrap;
@@ -177,7 +177,7 @@ table.project-changes{
     }
 
     &.action{
-      //background: $red;
+      //background: $govuk-error-colour;
       background-image: url('../images/flag-icon.png');
       background-repeat: no-repeat;
       background-position: 50% 50%;
@@ -196,7 +196,7 @@ table.project-changes{
 	}
 
 	tr.project-divide{
-    border-bottom: 2px solid $black;
+    border-bottom: 2px solid govuk-colour("black");
 	}
 
 }
@@ -365,17 +365,17 @@ table.project-changes{
       }
 
       &.header-span{
-        background: $grey-4;
+        background: govuk-colour("grey-4");
         text-align: center;
       }
     }
   }
 
   .separate-cell{
-    border-right: 12px solid $white;
+    border-right: 12px solid govuk-colour("white");
 
     &.year{
-      border-right: 1px solid $grey-2;
+      border-right: 1px solid govuk-colour("grey-2");
 
       & + th{
         padding-left: 1.25em;
@@ -392,13 +392,13 @@ table.project-changes{
  }
 
   .total{
-    background: $grey-3;
+    background: govuk-colour("grey-3");
     padding-left: 0.625em;
     padding-right: 0.625em;
     font-weight: bold;
 
     &.eligible{
-      background: $grey-4;
+      background: govuk-colour("grey-4");
     }
   }
 
@@ -414,15 +414,15 @@ table.project-changes{
       }
 
       td{
-        background: $highlight-colour;
+        background: govuk-colour("grey-4");
 
         &.total{
-          background: $red;
-          color: $white;
+          background: $govuk-error-colour;
+          color: govuk-colour("white");
 
           &.eligible{
-            background: $grey-4;
-            color: $text-colour;
+            background: govuk-colour("grey-4");
+            color: $govuk-text-colour;
           }
        }
 			  }
@@ -469,7 +469,6 @@ table.project-changes{
 
     display: table;
     width: 100%;
-    min-width: $site-width;
 
     li {
       display: table-row;
@@ -478,7 +477,7 @@ table.project-changes{
       &:first-child{
         h3,
         p{
-          border-top: 1px solid $border-colour;
+          border-top: 1px solid $govuk-border-colour;
         }
       }
     }
@@ -487,7 +486,7 @@ table.project-changes{
     li p{
       display: table-cell;
       padding: 0.5em 0;
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
     }
 
     li h3{
@@ -496,7 +495,7 @@ table.project-changes{
 
     li p{
       width: 20%;
-      color: $secondary-text-colour;
+      color: $govuk-secondary-text-colour;
     }
 
     li p + p{
@@ -519,7 +518,7 @@ table.project-changes{
 }
 
 
-@include media($min-width: 1200px){
+@include govuk-media-query(desktop){
   .full-width{
 
     .info-area{
@@ -543,20 +542,19 @@ table.project-changes{
         margin-bottom: 0;
         margin-right: 0;
 
-        .column-half,
-        .column-third{
+        .govuk-grid-column-one-half,
+        .govuk-grid-column-one-third{
           padding-left: 0;
         }
       }
 
-      .grid-row{
+      .govuk-grid-row{
         margin: 0;
       }
 
-      .column-one,
-      .column-half,
-      .column-quarter,
-      .column-third{
+      .govuk-grid-column-one-half,
+      .govuk-grid-column-one-quarter,
+      .govuk-grid-column-one-third{
         width: 100%;
         clear: both;
         padding: 0;
@@ -567,7 +565,7 @@ table.project-changes{
       float: right;
       width: 80%;
 
-      & > .heading-large:first-child{
+      & > .govuk-heading-l:first-child{
         margin-top: 0;
       }
    }
@@ -587,8 +585,8 @@ table.project-changes{
 /* @include media($min-width: 1700px){
 	.full-width{
 		.info-area{
-			.column-quarter,
-			.column-third{
+			.govuk-grid-column-one-quarter,
+			.govuk-grid-column-one-third{
 				width: 50%;
 				clear: none;
 			}

@@ -134,6 +134,10 @@ include::question.adoc[]
 == Question setup
 include::questionSetup.adoc[]
 
+[[questionStatus]]
+== Question status
+include::question-status.adoc[]
+
 [[section]]
 == Section
 include::section.adoc[]
@@ -225,6 +229,10 @@ include::formInput.adoc[]
 [[formInputResponse]]
 == FormInputResponse
 include::formInputResponse.adoc[]
+
+[[grantClaimMaximum]]
+== Grant Claim Maximum
+include::grant-claim-maximum.adoc[]
 
 [[project]]
 == Project

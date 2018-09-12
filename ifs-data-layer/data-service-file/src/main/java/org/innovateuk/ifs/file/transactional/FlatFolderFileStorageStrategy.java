@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Long.parseLong;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
-import static java.lang.Long.parseLong;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * A strategy for storing files in a single folder with no hierarchy

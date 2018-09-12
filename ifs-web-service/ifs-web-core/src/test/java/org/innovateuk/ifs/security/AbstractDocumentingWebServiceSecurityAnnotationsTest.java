@@ -4,12 +4,9 @@ import org.innovateuk.ifs.commons.AbstractDocumentingServiceSecurityAnnotationsT
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.innovateuk.ifs.exception.IfsErrorController;
 import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;

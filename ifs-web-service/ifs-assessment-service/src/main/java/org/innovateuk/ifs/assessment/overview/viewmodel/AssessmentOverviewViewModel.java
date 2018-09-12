@@ -10,19 +10,21 @@ import java.util.List;
  */
 public class AssessmentOverviewViewModel {
 
-    private long assessmentId;
-    private long applicationId;
-    private String applicationName;
-    private long competitionId;
-    private long daysLeftPercentage;
-    private long daysLeft;
-    private List<AssessmentOverviewSectionViewModel> sections;
-    private List<AssessmentOverviewAppendixViewModel> appendices;
+    private final long assessmentId;
+    private final long applicationId;
+    private final String applicationName;
+    private final long competitionId;
+    private final String competitionName;
+    private final long daysLeftPercentage;
+    private final long daysLeft;
+    private final List<AssessmentOverviewSectionViewModel> sections;
+    private final List<AssessmentOverviewAppendixViewModel> appendices;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
                                        String applicationName,
                                        long competitionId,
+                                       String competitionName,
                                        long daysLeftPercentage,
                                        long daysLeft,
                                        List<AssessmentOverviewSectionViewModel> sections,
@@ -31,6 +33,7 @@ public class AssessmentOverviewViewModel {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
+        this.competitionName = competitionName;
         this.daysLeftPercentage = daysLeftPercentage;
         this.daysLeft = daysLeft;
         this.sections = sections;
@@ -51,6 +54,10 @@ public class AssessmentOverviewViewModel {
 
     public long getCompetitionId() {
         return competitionId;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getDaysLeftPercentage() {
@@ -85,6 +92,7 @@ public class AssessmentOverviewViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(applicationId, that.applicationId)
                 .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
                 .append(daysLeft, that.daysLeft)
                 .append(applicationName, that.applicationName)
@@ -100,6 +108,7 @@ public class AssessmentOverviewViewModel {
                 .append(applicationId)
                 .append(applicationName)
                 .append(competitionId)
+                .append(competitionName)
                 .append(daysLeftPercentage)
                 .append(daysLeft)
                 .append(sections)

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -12,7 +13,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -28,6 +28,8 @@ import static org.junit.Assert.*;
 
 @Rollback
 public class QuestionControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionController> {
+
+    public static final List<Long> QUESTION_LIST = asList(248L, 9L, 249L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L);
 
     @Autowired
     private FormInputRepository formInputRepository;
@@ -89,12 +91,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
     }
 
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
     @Test
     public void testFindByCompetition() throws Exception {
         List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
@@ -105,17 +101,17 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetNextQuestion() throws Exception {
-        QuestionResource nextQuestion = controller.getNextQuestion(9L).getSuccess();
+        QuestionResource nextQuestion = controller.getNextQuestion(12L).getSuccess();
         assertNotNull(nextQuestion);
-        assertEquals(new Long(11L), nextQuestion.getId());
+        assertEquals(new Long(13L), nextQuestion.getId());
     }
 
     @Test
     public void testGetPreviousQuestion() throws Exception {
-        QuestionResource previousQuestion = controller.getPreviousQuestion(11L).getSuccess();
+        QuestionResource previousQuestion = controller.getPreviousQuestion(12L).getSuccess();
 
         assertNotNull(previousQuestion);
-        assertEquals(new Long(9L), previousQuestion.getId());
+        assertEquals(new Long(11L), previousQuestion.getId());
     }
 
     @Test
@@ -151,7 +147,17 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
         List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccess();
         // Since the assessment is for an application of competition 1, expect all of the questions of this competition that are visible for assessment
-        assertEquals(asList(9L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
-                simpleMap(questions, QuestionResource::getId));
+        assertEquals(QUESTION_LIST, simpleMap(questions, QuestionResource::getId));
+    }
+
+    @Test
+    public void getQuestionByCompetitionIdAndQuestionSetupType() {
+        long competitionId = 1L;
+        QuestionSetupType type = QuestionSetupType.APPLICATION_DETAILS;
+
+        QuestionResource question = questionService.getQuestionByCompetitionIdAndQuestionSetupType
+                (competitionId, type).getSuccess();
+
+        assertEquals(9L, question.getId().longValue());
     }
 }

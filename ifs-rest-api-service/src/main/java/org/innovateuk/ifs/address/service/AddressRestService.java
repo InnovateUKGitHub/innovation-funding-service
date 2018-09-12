@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.address.service;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.List;
 

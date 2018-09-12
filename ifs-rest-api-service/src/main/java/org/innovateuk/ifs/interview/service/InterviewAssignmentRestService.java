@@ -42,4 +42,6 @@ public interface InterviewAssignmentRestService {
     RestResult<FileEntryResource> findFeedback(long applicationId);
 
     RestResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId);
+
+    RestResult<Void> resendInvite(long applicationId, AssessorInviteSendResource assessorInviteSendResource);
 }

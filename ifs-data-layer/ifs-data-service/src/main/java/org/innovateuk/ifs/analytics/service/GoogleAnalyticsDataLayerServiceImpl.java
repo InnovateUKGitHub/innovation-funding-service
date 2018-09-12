@@ -69,4 +69,11 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
                 ));
 
     }
+
+    @Override
+    public ServiceResult<Long> getApplicationIdForProject(long projectId) {
+        return find(getProject(projectId)).andOnSuccessReturn(
+                project -> project.getApplication().getId()
+        );
+    }
 }

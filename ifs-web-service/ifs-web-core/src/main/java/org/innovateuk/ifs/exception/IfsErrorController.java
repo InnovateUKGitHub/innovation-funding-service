@@ -29,10 +29,8 @@ public class IfsErrorController extends BasicErrorController {
         final Object status = errorAttributes.get("status");
         if (status instanceof Integer){
             if (status.equals(NOT_FOUND.value())) {
-                final Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, TEXT_HTML));
                 return new ModelAndView(NOT_FOUND.toString());
             } else if (status.equals(PAYLOAD_TOO_LARGE)){
-                final Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, TEXT_HTML));
                 return new ModelAndView(PAYLOAD_TOO_LARGE.toString());
             }
         }

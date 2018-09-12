@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.fundingdecision.mapper;
 
-import org.mapstruct.Mapper;
-
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.mapstruct.Mapper;
 
 @Mapper(
 	    config = GlobalMapperConfig.class

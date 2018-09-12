@@ -21,7 +21,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventBuilder.newContentEvent;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEventServiceImpl> {

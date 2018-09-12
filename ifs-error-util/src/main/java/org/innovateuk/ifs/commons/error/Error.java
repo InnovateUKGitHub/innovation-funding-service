@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import java.io.Serializable;
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 /**

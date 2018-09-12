@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.validator;
 
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 

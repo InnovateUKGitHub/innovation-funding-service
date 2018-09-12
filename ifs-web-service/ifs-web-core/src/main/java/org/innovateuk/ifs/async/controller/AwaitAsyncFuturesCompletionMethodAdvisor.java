@@ -4,6 +4,7 @@ import org.aopalliance.aop.Advice;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
@@ -16,7 +17,7 @@ import java.lang.reflect.Method;
 
 /**
  * Places {@link AwaitAsyncFuturesCompletionMethodInterceptor} around {@link Controller} methods to ensure that any
- * Futures generated with {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator} and all of their
+ * Futures generated with {@link AsyncFuturesGenerator} and all of their
  * descendants complete before the Controller method can complete.
  *
  * This advice targets Controller methods that have explicitly been annotated with

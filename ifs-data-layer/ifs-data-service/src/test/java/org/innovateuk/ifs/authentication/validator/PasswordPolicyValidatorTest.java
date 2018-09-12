@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.authentication.validator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,12 +18,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME;
+import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME;
-import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -182,7 +181,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         org2.addUser(user);
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -215,7 +214,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         org1.addUser(user);
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1));
+        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -235,7 +234,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         org2.addUser(user);
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -254,7 +253,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         Organisation org2 = newOrganisation().withName().withId(456L).build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).

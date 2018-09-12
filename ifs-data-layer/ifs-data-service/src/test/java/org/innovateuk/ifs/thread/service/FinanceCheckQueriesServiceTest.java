@@ -14,6 +14,8 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
@@ -25,9 +27,7 @@ import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.builder.UserBuilder;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
@@ -55,10 +55,10 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -101,7 +101,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findOne() throws Exception {
+    public void findOne() throws Exception {
 
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
@@ -116,7 +116,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findAll() throws Exception {
+    public void findAll() throws Exception {
 
         Long contextId = 22L;
         Query query1 = new Query(1L, null, null, null, null, null);
@@ -139,7 +139,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -209,17 +209,17 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         Long result = service.create(queryToCreate).getSuccess();
 
         assertEquals(result, Long.valueOf(1L));
 
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
-    public void test_createNoFinanceContact() throws Exception {
+    public void createNoFinanceContact() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -278,7 +278,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_createNotificationNotSent() throws Exception {
+    public void createNotificationNotSent() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -347,13 +347,13 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertEquals(false, service.create(queryToCreate).isSuccess());
     }
 
     @Test
-    public void test_createNoProjectFinance() throws Exception {
+    public void createNoProjectFinance() throws Exception {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -419,7 +419,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPost() throws Exception {
+    public void addPost() throws Exception {
 
         Long queryId = 1L;
 
@@ -493,15 +493,15 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         assertTrue(service.addPost(post, queryId).isSuccess());
 
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
-    public void test_addPostNotFinanceTeam() throws Exception {
+    public void addPostNotFinanceTeam() throws Exception {
 
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
@@ -517,7 +517,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findOne(targetedQuery.id())).thenReturn(targetedQuery);
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
@@ -530,7 +530,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostSuperAddPostFails() throws Exception {
+    public void addPostSuperAddPostFails() throws Exception {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
@@ -540,7 +540,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNoQueryToAddPostTo() throws Exception {
+    public void addPostNoQueryToAddPostTo() throws Exception {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
@@ -550,7 +550,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNoFinanceContact() {
+    public void addPostNoFinanceContact() {
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
@@ -596,7 +596,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNotificationNotSent() throws Exception {
+    public void addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
 
         User user = newUser()
@@ -676,7 +676,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertTrue(service.addPost(post, queryId).isFailure());
     }

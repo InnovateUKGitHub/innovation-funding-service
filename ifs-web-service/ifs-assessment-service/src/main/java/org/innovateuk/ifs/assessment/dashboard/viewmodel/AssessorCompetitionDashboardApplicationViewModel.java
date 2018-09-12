@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 

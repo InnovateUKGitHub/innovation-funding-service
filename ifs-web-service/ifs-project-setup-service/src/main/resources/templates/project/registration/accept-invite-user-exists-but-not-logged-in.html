@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Join a project'" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join a project',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p>You have been invited to join a project</p>
-    <div class="grid-row">
-        <div class="column-half">
-            <p>You already have an account with us. Please sign in with your existing account.</p>
-            <p><a th:href="@{/registration/accept-invite-user-exist-show-project}">Sign into the Innovation Funding Service.</a></p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join a project',size='govuk-heading-xl'" />
+
+        <p class="govuk-body">You have been invited to join a project</p>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <p class="govuk-body">You already have an account with us. Please sign in with your existing account.</p>
+                <p class="govuk-body"><a th:href="@{/registration/accept-invite-user-exist-show-project}" class="govuk-link">Sign into the Innovation Funding Service.</a></p>
+            </div>
         </div>
-    </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

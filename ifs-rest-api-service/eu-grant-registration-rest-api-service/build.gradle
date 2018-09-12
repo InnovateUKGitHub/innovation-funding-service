@@ -1,0 +1,14 @@
+apply from: rootProject.file("gradle-support/java.gradle")
+
+dependencies {
+    compile project(':ifs-rest-api-service')
+    compile project(':ifs-resources')
+    compile project(':ifs-resources:eu-grant-registration-resources')
+    compile project(':ifs-security')
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
+}
+
+ext.ifsSurveyAuthSecretKey="supersecretkey"
+ext.ifsEuGrantRegistrationDataServiceBaseUrl="eu-grant-registration-data-service"

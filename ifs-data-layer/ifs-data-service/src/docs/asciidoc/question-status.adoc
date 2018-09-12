@@ -1,0 +1,69 @@
+=== Mark question as complete
+==== Request
+include::{snippets}/question-status/mark-as-complete/http-request.adoc[]
+include::{snippets}/question-status/mark-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/mark-as-complete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/mark-as-complete/curl-request.adoc[]
+
+
+=== Mark question as incomplete
+==== Request
+include::{snippets}/question-status/mark-as-incomplete/http-request.adoc[]
+include::{snippets}/question-status/mark-as-incomplete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/mark-as-incomplete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/mark-as-incomplete/curl-request.adoc[]
+
+=== Assign
+==== Request
+include::{snippets}/question-status/assign/http-request.adoc[]
+include::{snippets}/question-status/assign/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/assign/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/assign/curl-request.adoc[]
+
+=== Retrieve questions that have been marked as complete
+==== Request
+include::{snippets}/question-status/get-marked-as-complete/http-request.adoc[]
+include::{snippets}/question-status/get-marked-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/get-marked-as-complete/http-response.adoc[]
+include::{snippets}/question-status/get-marked-as-complete/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/get-marked-as-complete/curl-request.adoc[]
+
+
+=== Update Notify
+==== Request
+include::{snippets}/question-status/update-notify/http-request.adoc[]
+include::{snippets}/question-status/update-notify/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/update-notify/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/update-notify/curl-request.adoc[]
+
+
+=== Mark team question as incomplete
+==== Request
+include::{snippets}/question-status/mark-team-as-in-complete/http-request.adoc[]
+include::{snippets}/question-status/mark-team-as-in-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-status/mark-team-as-in-complete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-status/mark-team-as-in-complete/curl-request.adoc[]

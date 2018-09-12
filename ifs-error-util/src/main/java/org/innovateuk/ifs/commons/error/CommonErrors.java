@@ -19,8 +19,9 @@ import static org.springframework.http.HttpStatus.*;
  */
 public final class CommonErrors {
 
-	private CommonErrors() {}
-	
+    private CommonErrors() {
+    }
+
     public static Error notFoundError(Class<?> entityClazz, List<Object> arguments) {
         List<Object> allArguments = new ArrayList<>();
         allArguments.add(entityClazz.getSimpleName());

@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +24,10 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -40,6 +46,14 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     @Mock
     private TestTeamManagementService testTeamManagementService;
 
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private QuestionRestService questionRestService;
+
+    private static final Long COMPETITION_ID = 36L;
+
     protected AbstractTeamManagementController supplyControllerUnderTest() {
        return new TestTeamManagementController();
     }
@@ -56,7 +70,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
+    @Ignore("This test is ignored due to the bug described in IFS-2598. The offending code is likely to be rewritten/removed as part of the person-to-org decoupling work IFS-3513, but if it is not then this bug should be fixed and test reinstated.")
     public void getUpdateOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
@@ -124,7 +138,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     public void inviteApplicant_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true"))
@@ -139,7 +153,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -165,7 +179,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -210,10 +224,18 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
         when(testTeamManagementService.removeInvite(3L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
+        setupApplicationResource();
+
+        QuestionResource applicationTeamQuestion = new QuestionResource();
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
+                .thenReturn(restSuccess(applicationTeamQuestion));
+
+        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
+                testApplicationId, testOrganisationId)
                 .param("removeInvite", "3"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/application/%s/team", testApplicationId)));
+                .andExpect(view().name(format("redirect:/application/%s/form/question/%s", testApplicationId,
+                        applicationTeamQuestion.getId())));
     }
 
     @Test
@@ -229,29 +251,23 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
-    public void confirmDeleteInviteOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
-        when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
-
-        mockMvc.perform(get("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
-                .param("confirmDeleteOrganisation", "true"))
-                .andExpect(status().is4xxClientError())
-                .andExpect(view().name("404"));
-
-        verify(testTeamManagementService, never()).createViewModel(anyLong(), anyLong(), any());
-    }
-
-    @Test
     public void deleteOrganisation_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
         when(testTeamManagementService.getInviteIds(same(testApplicationId), same(testOrganisationId))).thenReturn(Arrays.asList(1L, 2L, 3L));
         when(testTeamManagementService.removeInvite(anyLong())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
+        setupApplicationResource();
+        QuestionResource applicationTeamQuestion = new QuestionResource();
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
+                .thenReturn(restSuccess(applicationTeamQuestion));
+
+        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
+                testApplicationId, testOrganisationId)
                 .param("deleteOrganisation", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/application/%s/team", testApplicationId)));
+                .andExpect(view().name(format("redirect:/application/%s/form/question/%s", testApplicationId,
+                        applicationTeamQuestion.getId())));
     }
 
     @Test
@@ -279,7 +295,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
+        public ServiceResult<Void> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
             return null;
         }
 
@@ -297,7 +313,25 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         }
     }
 
+    private ApplicationResource setupApplicationResource() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(COMPETITION_ID)
+                .build();
+
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        return applicationResource;
+    }
+
     private static ApplicationTeamManagementViewModel createAViewModel() {
-        return new ApplicationTeamManagementViewModel(1L,"application name", 2L, 3L, "organisation name", true, true, emptyList(), true);
+        return new ApplicationTeamManagementViewModel(1L,
+                2L,
+                "application name",
+                3L,
+                4L,
+                "organisation name",
+                true,
+                true,
+                emptyList(),
+                true);
     }
 }

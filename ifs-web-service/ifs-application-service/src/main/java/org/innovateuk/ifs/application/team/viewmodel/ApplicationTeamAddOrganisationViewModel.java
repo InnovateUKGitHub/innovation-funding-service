@@ -3,16 +3,22 @@ package org.innovateuk.ifs.application.team.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import static java.lang.String.format;
+
 /**
  * Holder of model attributes for the Add Organisation view.
  */
 public class ApplicationTeamAddOrganisationViewModel {
 
     private long applicationId;
+    private long questionId;
     private String applicationName;
 
-    public ApplicationTeamAddOrganisationViewModel(long applicationId, String applicationName) {
+    public ApplicationTeamAddOrganisationViewModel(long applicationId,
+                                                   long questionId,
+                                                   String applicationName) {
         this.applicationId = applicationId;
+        this.questionId = questionId;
         this.applicationName = applicationName;
     }
 
@@ -24,8 +30,12 @@ public class ApplicationTeamAddOrganisationViewModel {
         return applicationName;
     }
 
+    public String getBackUrl() {
+        return format("/application/%s/form/question/%s", applicationId, questionId);
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -34,10 +44,11 @@ public class ApplicationTeamAddOrganisationViewModel {
             return false;
         }
 
-        ApplicationTeamAddOrganisationViewModel that = (ApplicationTeamAddOrganisationViewModel) o;
+        final ApplicationTeamAddOrganisationViewModel that = (ApplicationTeamAddOrganisationViewModel) o;
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
+                .append(questionId, that.questionId)
                 .append(applicationName, that.applicationName)
                 .isEquals();
     }
@@ -46,6 +57,7 @@ public class ApplicationTeamAddOrganisationViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
+                .append(questionId)
                 .append(applicationName)
                 .toHashCode();
     }

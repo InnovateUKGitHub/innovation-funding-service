@@ -4,11 +4,11 @@
 <!-- ===========================Question - other funding  =========================== -->
 
 <div th:fragment="finance-question-other-funding">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Other funding</legend>
-		<table>
-			<thead>
-				<tr>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Other funding</legend>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" id="other-source">Source of funding</th>
 					<th scope="col" id="other-date">Date secured</th>
 					<th scope="col" id="other-amount" class="numeric">Funding amount (&pound;)</th>
@@ -16,25 +16,25 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th colspan="2">Total other funding</th>
-					<td class="numeric">-&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;20,000</td>
 					<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">&nbsp;</td>
 				</tr>
 			</tfoot>
 			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<td style="width: 50%">
-							<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-full" value="NERC" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-source" />
+							<input type="text" id="other-row-1-source" name="other-row-1-source" class="govuk-input width-full" value="NERC" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-source" />
 						</td>
-						<td>
-							<input type="text" id="other-row-1-date-month" name="other-row-1-date-month" class="form-control width-small" value="09" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-date" />
+						<td class="govuk-table__cell">
+							<input type="text" id="other-row-1-date-month" name="other-row-1-date-month" class="govuk-input width-small" value="09" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-date" />
 
-							<input type="text" id="other-row-1-date-year" name="other-row-1-date-year" class="form-control width-small" value="2016" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" />
+							<input type="text" id="other-row-1-date-year" name="other-row-1-date-year" class="govuk-input width-small" value="2016" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" />
 						</td>
 						<td class="alignright numeric">
-							<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-medium" value="20,000" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-amount" />
+							<input type="text" id="other-row-1-source" name="other-row-1-source" class="govuk-input govuk-input--width-10" value="20,000" th:readonly="${param.status == null or param.status[0] != 'edit-other'}"  aria-labelledby="other-amount" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">
 							<a href="#">Remove</a>
@@ -44,11 +44,11 @@
 			</th:block>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
-						<td>NERC</td>
-						<td>02/2016</td>
-						<td class="numeric">&pound;20,000</td>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">NERC</td>
+						<td class="govuk-table__cell">02/2016</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
 					</tr>
 				</tbody>
 			</th:block>
@@ -63,10 +63,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-other'}">
-				<a th:href="@{'?status=edit-other'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-other'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
-				<a th:href="@{'?status=save-other'}" class="button">Save</a>
+				<a th:href="@{'?status=save-other'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -76,20 +76,20 @@
 <!-- ===========================Question - labour  =========================== -->
 
 <div th:fragment="finance-question-labour">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Labour</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Labour</legend>
 
-		<p>Labour costs of all individuals you have working on your project.</p>
+		<p class="govuk-body">Labour costs of all individuals you have working on your project.</p>
 
-		<table>
-			<tbody>
-				<tr>
+		<table class="govuk-table">
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 						<th class="width-large">
-							<label class="form-label" for="working-days">Working days per year</label>
+							<label class="govuk-label" for="working-days">Working days per year</label>
 						</th>
-						<td>
-							<input type="text" class="width-small form-control" id="working-days" name="working-days" value="232" th:readonly="${param.status == null or param.status[0] == 'save-labour'}" />
+						<td class="govuk-table__cell">
+							<input type="text" class="width-small govuk-input" id="working-days" name="working-days" value="232" th:readonly="${param.status == null or param.status[0] == 'save-labour'}" />
 						</td>
 					</th:block>
 
@@ -97,7 +97,7 @@
 						<th class="width-large">
 							Working days per year
 						</th>
-						<td>
+						<td class="govuk-table__cell">
 							232
 						</td>
 					</th:block>
@@ -106,8 +106,8 @@
 		</table>
 
 		<table id="labour-costs-table">
-			<thead>
-				<tr>
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" id="labour-role">Role within project</th>
 					<th scope="col" id="labour-gross-salary" class="numeric">Gross employee cost</th>
 					<th scope="col" id="labour-rate" class="numeric">Rate (&pound;/day)</th>
@@ -117,51 +117,51 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th colspan="4">Total labour costs</th>
-					<td class="numeric">&pound;126,207</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;126,207</td>
 					<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">&nbsp;</td>
 				</tr>
 			</tfoot>
 
 			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<td style="width: 30%">
-							<input type="text" id="other-row-1-source" name="other-row-1-source" class="form-control width-full" value="Manager" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}"  aria-labelledby="labour-role" />
+							<input type="text" id="other-row-1-source" name="other-row-1-source" class="govuk-input" value="Manager" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}"  aria-labelledby="labour-role" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-1-gross-salary" name="labour-row-1-gross-salary" class="form-control width-medium" value="&pound;50,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-1-gross-salary" name="labour-row-1-gross-salary" class="govuk-input govuk-input--width-10" value="&pound;50,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-1-rate" name="labour-row-1-rate" class="form-control width-small" value="&pound;216" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-1-rate" name="labour-row-1-rate" class="govuk-input width-small" value="&pound;216" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-1-days-spent" name="labour-row-1-days-spent" class="form-control width-small" value="168" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-1-days-spent" name="labour-row-1-days-spent" class="govuk-input width-small" value="168" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-1-total-costs" name="labour-row-1-total-costs" class="form-control width-medium" value="&pound;36,207" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-1-total-costs" name="labour-row-1-total-costs" class="govuk-input govuk-input--width-10" value="&pound;36,207" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">
 							<a href="#">Remove</a>
 						</td>
 					</tr>
 
-					<tr>
+					<tr class="govuk-table__row">
 						<td style="width: 30%">
-							<input type="text" id="labour-row-2-role" name="labour-row-2-role" class="form-control width-full" value="Engineer" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-role" />
+							<input type="text" id="labour-row-2-role" name="labour-row-2-role" class="govuk-input width-full" value="Engineer" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-role" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-2-gross-salary" name="labour-row-2-gross-salary" class="form-control width-medium" value="&pound;30,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-2-gross-salary" name="labour-row-2-gross-salary" class="govuk-input govuk-input--width-10" value="&pound;30,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-gross-salary" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-2-rate" name="labour-row-2-rate" class="form-control width-small" value="&pound;129" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-2-rate" name="labour-row-2-rate" class="govuk-input width-small" value="&pound;129" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-rate" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-2-days-spent" name="labour-row-2-days-spent" class="form-control width-small" value="696" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-2-days-spent" name="labour-row-2-days-spent" class="govuk-input width-small" value="696" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-days-spent" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="labour-row-2-total-costs" name="labour-row-2-total-costs" class="form-control width-medium" value="&pound;90,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="labour-row-2-total-costs" name="labour-row-2-total-costs" class="govuk-input govuk-input--width-10" value="&pound;90,000" th:readonly="${param.status == null or param.status[0] != 'edit-labour'}" aria-labelledby="labour-total-costs" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">
 							<a href="#">Remove</a>
@@ -171,20 +171,20 @@
 			</th:block>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<td style="width: 30%">Manager</td>
-						<td class="numeric">&pound;50,000</td>
-						<td class="numeric">&pound;216</td>
-						<td class="numeric">168</td>
-						<td class="numeric">&pound;36,207</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;50,000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;216</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">168</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;36,207</td>
 					</tr>
-					<tr>
+					<tr class="govuk-table__row">
 						<td style="width: 30%">Engineer</td>
-						<td class="numeric">&pound;30,000</td>
-						<td class="numeric">&pound;129</td>
-						<td class="numeric">696</td>
-						<td class="numeric">&pound;90,000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;129</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">696</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;90,000</td>
 					</tr>
 				</tbody>
 			</th:block>
@@ -199,10 +199,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-labour'}">
-				<a th:href="@{'?status=edit-labour'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-labour'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-labour'}">
-				<a th:href="@{'?status=save-labour'}" class="button">Save</a>
+				<a th:href="@{'?status=save-labour'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -216,10 +216,10 @@
 
 <div th:fragment="finance-question-admin-support">
 
-	<p>Overheads are related expenses incurred as a result of delivering the project.</p>
+	<p class="govuk-body">Overheads are related expenses incurred as a result of delivering the project.</p>
 
-	<fieldset class="extra-margin">
-		<legend class="visuallyhidden">Admin support</legend>
+	<fieldset class="govuk-fieldset extra-margin">
+		<legend class="govuk-visually-hidden">Admin support</legend>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'edit-admin'}">
 
@@ -246,37 +246,37 @@
 
 	</fieldset>
 
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 
-		<legend class="visuallyhidden">Support details</legend>
+		<legend class="govuk-visually-hidden">Support details</legend>
 
 		<div id="admin-support-1">
-			<h3 class="heading-small">No Administration support cost funding</h3>
+			<h3 class="govuk-heading-s">No Administration support cost funding</h3>
 		</div>
 
 		<div id="admin-support-2">
 
-			<table>
-				<tbody>
-					<tr>
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<th scope="row">Calulated overheads</th>
-						<td class="alignright">
+						<td class="govuk-table__cell alignright">
 							&nbsp;
 						</td>
 					</tr>
-          <tr>
-            <td>
-              <div class="form-group download">
-        	        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <div class="govuk-form-group download">
+        	        <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
         	        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
         	    </div>
             </td>
           </tr>
 				</tbody>
 				<tfoot>
-					<tr>
-						<th scope="col">Total cost of overheads as calculated in the spreadsheet</th>
-						<td class="alignright">&pound;50,400</td>
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header" scope="col">Total cost of overheads as calculated in the spreadsheet</th>
+						<td class="govuk-table__cell alignright">&pound;50,400</td>
 					</tr>
 				</tfoot>
 			</table>
@@ -286,22 +286,22 @@
 
 		<div id="admin-support-3">
 
-			<table>
-				<tbody>
-					<tr>
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<th scope="row">Custom administration support costs</th>
-						<td class="alignright">
+						<td class="govuk-table__cell alignright">
 							<label>
 								Rate calculated (%)
-								<input type="number" id="admin-support-custom" name="admin-support-custom" class="form-control width-medium alignright" value="" />
+								<input type="number" id="admin-support-custom" name="admin-support-custom" class="govuk-input govuk-input--width-10 alignright" value="" />
 							</label>
 						</td>
 					</tr>
 				</tbody>
 				<tfoot>
-					<tr>
-						<th scope="col">Total administration support cost</th>
-						<td class="alignright">&pound;0</td>
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header" scope="col">Total administration support cost</th>
+						<td class="govuk-table__cell alignright">&pound;0</td>
 					</tr>
 				</tfoot>
 			</table>
@@ -310,22 +310,22 @@
 
 		<div id="admin-support-4">
 
-			<table>
-				<tbody>
-					<tr>
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<th scope="row">Special rate agreed with Innovate UK</th>
-						<td class="alignright">
+						<td class="govuk-table__cell alignright">
 							<label>
 								Rate agreed with Innovate UK (%)
-								<input type="number" id="admin-support-special" name="admin-support-special" class="form-control width-medium alignright" value="&pound;0" />
+								<input type="number" id="admin-support-special" name="admin-support-special" class="govuk-input govuk-input--width-10 alignright" value="&pound;0" />
 							</label>
 						</td>
 					</tr>
 				</tbody>
 				<tfoot>
-					<tr>
-						<th scope="col">Total administration support cost</th>
-						<td class="alignright">&pound;0</td>
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header" scope="col">Total administration support cost</th>
+						<td class="govuk-table__cell alignright">&pound;0</td>
 					</tr>
 				</tfoot>
 			</table>
@@ -333,10 +333,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-admin'}">
-				<a th:href="@{'?status=edit-admin'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-admin'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-admin'}">
-				<a th:href="@{'?status=save-admin'}" class="button">Save</a>
+				<a th:href="@{'?status=save-admin'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -349,14 +349,14 @@
 <!-- ===========================Question - admin support  =========================== -->
 
 <div th:fragment="finance-question-materials">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Materials</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Materials</legend>
 
-		<p>The costs of materials used on your project</p>
+		<p class="govuk-body">The costs of materials used on your project</p>
 
 		<table id="materials-costs-table">
-			<thead>
-				<tr>
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" id="material-item">Item</th>
 					<th scope="col" id="material-quantity" class="numeric">Quantity</th>
 					<th scope="col" id="material-cost" class="numeric">Cost per item</th>
@@ -365,63 +365,63 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th colspan="3">Total materials costs</th>
-					<td class="numeric">&pound;8,600</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;8,600</td>
 					<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">&nbsp;</td>
 				</tr>
 			</tfoot>
 
 			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<td style="width: 30%">
-							<input type="text" id="material-row-1-item" name="material-row-1-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
+							<input type="text" id="material-row-1-item" name="material-row-1-item" class="govuk-input" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Powder" aria-labelledby="material-item" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-1-quantity" name="material-row-1-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="20" aria-labelledby="quantity" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-1-quantity" name="material-row-1-quantity" class="govuk-input govuk-input--width-10" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="20" aria-labelledby="quantity" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-1-cost" name="material-row-1-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;100" aria-labelledby="cost" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-1-cost" name="material-row-1-cost" class="govuk-input width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;100" aria-labelledby="cost" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-1-total-costs" name="material-row-1-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;2000" aria-labelledby="material-total-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-1-total-costs" name="material-row-1-total-costs" class="govuk-input govuk-input--width-10" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;2000" aria-labelledby="material-total-costs" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
 							<a href="#">Remove</a>
 						</td>
 					</tr>
 
-					<tr>
+					<tr class="govuk-table__row">
 						<td style="width: 30%">
-							<input type="text" id="material-row-1-item" name="material-row-2-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Crucibles" aria-labelledby="material-item" />
+							<input type="text" id="material-row-1-item" name="material-row-2-item" class="govuk-input" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Crucibles" aria-labelledby="material-item" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-2-quantity" name="material-row-2-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="6" aria-labelledby="quantity" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-2-quantity" name="material-row-2-quantity" class="govuk-input govuk-input--width-10" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="6" aria-labelledby="quantity" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-2-cost" name="material-row-2-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;600" aria-labelledby="cost" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-2-cost" name="material-row-2-cost" class="govuk-input width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;600" aria-labelledby="cost" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-2-total-costs" name="material-row-2-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3600" aria-labelledby="material-total-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-2-total-costs" name="material-row-2-total-costs" class="govuk-input govuk-input--width-10" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3600" aria-labelledby="material-total-costs" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
 							<a href="#">Remove</a>
 						</td>
 					</tr>
 
-					<tr>
+					<tr class="govuk-table__row">
 						<td style="width: 30%">
-							<input type="text" id="material-row-1-item" name="material-row-3-item" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Valves" aria-labelledby="material-item" />
+							<input type="text" id="material-row-1-item" name="material-row-3-item" class="govuk-input" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="Valves" aria-labelledby="material-item" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-3-quantity" name="material-row-3-quantity" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="12" aria-labelledby="quantity" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-3-quantity" name="material-row-3-quantity" class="govuk-input width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="12" aria-labelledby="quantity" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-3-cost" name="material-row-3-cost" class="form-control width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;250" aria-labelledby="cost" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-3-cost" name="material-row-3-cost" class="govuk-input width-small" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;250" aria-labelledby="cost" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="material-row-3-total-costs" name="material-row-3-total-costs" class="form-control width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3000" aria-labelledby="material-total-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="material-row-3-total-costs" name="material-row-3-total-costs" class="govuk-input width-medium" th:readonly="${param.status == null or param.status[0] != 'edit-materials'}" value="&pound;3000" aria-labelledby="material-total-costs" />
 						</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-materials'}">
 							<a href="#">Remove</a>
@@ -431,24 +431,24 @@
 			</th:block>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
-					<tr>
-						<td>Powder</td>
-						<td class="numeric">20</td>
-						<td class="numeric">&pound;100</td>
-						<td class="numeric">&pound;2000</td>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Powder</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;100</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;2000</td>
 					</tr>
-					<tr>
-						<td>Crucibles</td>
-						<td class="numeric">6</td>
-						<td class="numeric">&pound;600</td>
-						<td class="numeric">&pound;3600</td>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Crucibles</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">6</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;600</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;3600</td>
 					</tr>
-					<tr>
-						<td>Valves</td>
-						<td class="numeric">12</td>
-						<td class="numeric">&pound;250</td>
-						<td class="numeric">&pound;3000</td>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Valves</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">12</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;250</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;3000</td>
 					</tr>
 				</tbody>
 			</th:block>
@@ -463,10 +463,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-materials'}">
-				<a th:href="@{'?status=edit-materials'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-materials'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-materials'}">
-				<a th:href="@{'?status=save-materials'}" class="button">Save</a>
+				<a th:href="@{'?status=save-materials'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -478,14 +478,14 @@
 <!-- ===========================Question -  Capital usage  =========================== -->
 
 <div th:fragment="finance-question-capital">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Capital usage</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Capital usage</legend>
 
-		<p>Details of capital equipment and tools you will buy for, or use on, your project.</p>
+		<p class="govuk-body">Details of capital equipment and tools you will buy for, or use on, your project.</p>
 
 		<div class="table-overflow">
 			<table id="capital-usage-table">
-				<thead>
+				<thead class="govuk-table__head">
 					<th scope="col" id="cap-usage-description">
 						Item description
 					</th>
@@ -511,35 +511,35 @@
 				</thead>
 
 				<tfoot>
-					<tr>
+					<tr class="govuk-table__row">
 						<th colspan="6">Total capital usage</th>
-						<td class="numeric">&pound;0</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">&nbsp;</td>
 					</tr>
 				</tfoot>
 
 				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-				<tbody>
+				<tbody class="govuk-table__body">
 					<td style="width: 30%">
-						<input type="text" id="cap-usage-row-1-description" name="cap-usage-row-1-description" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-description" />
+						<input type="text" id="cap-usage-row-1-description" name="cap-usage-row-1-description" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-description" />
 					</td>
-					<td>
-						<input type="text" id="cap-usage-row-1-new-existing" name="cap-usage-row-1-new-existing" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-new-existing" />
+					<td class="govuk-table__cell">
+						<input type="text" id="cap-usage-row-1-new-existing" name="cap-usage-row-1-new-existing" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-new-existing" />
 					</td>
-					<td>
-						<input type="text" id="cap-usage-row-1-depreciation-period" name="cap-usage-row-1-depreciation-period" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-depreciation-period" />
+					<td class="govuk-table__cell">
+						<input type="text" id="cap-usage-row-1-depreciation-period" name="cap-usage-row-1-depreciation-period" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-depreciation-period" />
 					</td>
-					<td class="numeric">
-						<input type="text" id="cap-usage-row-1-net-present-value" name="cap-usage-row-1-net-present-value" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-net-present-value" />
+					<td class="govuk-table__cell govuk-table__cell--numeric">
+						<input type="text" id="cap-usage-row-1-net-present-value" name="cap-usage-row-1-net-present-value" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-net-present-value" />
 					</td>
-					<td class="numeric">
-						<input type="text" id="cap-usage-row-1-residual-value" name="cap-usage-row-1-residual-value" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-residual-value" />
+					<td class="govuk-table__cell govuk-table__cell--numeric">
+						<input type="text" id="cap-usage-row-1-residual-value" name="cap-usage-row-1-residual-value" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-residual-value" />
 					</td>
-					<td class="numeric">
-						<input type="text" id="cap-usage-row-1-utilisation" name="cap-usage-row-1-utilisation" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-utilisation" />
+					<td class="govuk-table__cell govuk-table__cell--numeric">
+						<input type="text" id="cap-usage-row-1-utilisation" name="cap-usage-row-1-utilisation" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-utilisation" />
 					</td>
-					<td class="numeric">
-						<input type="text" id="cap-usage-row-1-costs" name="cap-usage-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-costs" />
+					<td class="govuk-table__cell govuk-table__cell--numeric">
+						<input type="text" id="cap-usage-row-1-costs" name="cap-usage-row-1-costs" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-costs" />
 					</td>
 
 					<td th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">
@@ -561,10 +561,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-cap-usage'}">
-				<a th:href="@{'?status=edit-cap-usage'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-cap-usage'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-cap-usage'}">
-				<a th:href="@{'?status=save-cap-usage'}" class="button">Save</a>
+				<a th:href="@{'?status=save-cap-usage'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -576,14 +576,14 @@
 
 
 <div th:fragment="finance-question-subcontracting">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Subcontracting costs</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Subcontracting costs</legend>
 
-		<p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
+		<p class="govuk-body">Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
 
 		<div class="table-overflow">
 			<table id="subcontracting-table">
-				<thead>
+				<thead class="govuk-table__head">
 					<th scope="col" id="subcontracting-name">
 						Subcontractor name
 					</th>
@@ -600,26 +600,26 @@
 				</thead>
 
 				<tfoot>
-					<tr>
+					<tr class="govuk-table__row">
 						<th colspan="3">Total subcontracting costs</th>
-						<td class="numeric">&pound;150,000</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;150,000</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">&nbsp;</td>
 					</tr>
 				</tfoot>
 
 				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-					<tbody>
+					<tbody class="govuk-table__body">
 						<td style="width: 30%">
-							<input type="text" id="subcontracting-row-1-name" name="subcontracting-row-1-name" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Mr Francis Bois" aria-labelledby="subcontracting-name" />
+							<input type="text" id="subcontracting-row-1-name" name="subcontracting-row-1-name" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Mr Francis Bois" aria-labelledby="subcontracting-name" />
 						</td>
-						<td>
-							<input type="text" id="subcontracting-row-1-country" name="subcontracting-row-1-country" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="France" aria-labelledby="subcontracting-country" />
+						<td class="govuk-table__cell">
+							<input type="text" id="subcontracting-row-1-country" name="subcontracting-row-1-country" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="France" aria-labelledby="subcontracting-country" />
 						</td>
-						<td>
-							<input type="text" id="subcontracting-row-1-role" name="subcontracting-row-1-role" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Specialist consultant" aria-labelledby="subcontracting-role" />
+						<td class="govuk-table__cell">
+							<input type="text" id="subcontracting-row-1-role" name="subcontracting-row-1-role" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Specialist consultant" aria-labelledby="subcontracting-role" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="subcontracting-row-1-costs" name="subcontracting-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="150,000" aria-labelledby="subcontracting-costs" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="subcontracting-row-1-costs" name="subcontracting-row-1-costs" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="150,000" aria-labelledby="subcontracting-costs" />
 						</td>
 
 						<td th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">
@@ -629,12 +629,12 @@
 				</th:block>
 
 				<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-					<tbody>
-						<tr>
-							<td>Mr Francis Bois</td>
-							<td>France</td>
-							<td>Specialist consultant</td>
-							<td class="numeric">&pound;150,000</td>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Mr Francis Bois</td>
+							<td class="govuk-table__cell">France</td>
+							<td class="govuk-table__cell">Specialist consultant</td>
+							<td class="govuk-table__cell govuk-table__cell--numeric">&pound;150,000</td>
 						</tr>
 					</tbody>
 				</th:block>
@@ -651,10 +651,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-subcontracting'}">
-				<a th:href="@{'?status=edit-subcontracting'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-subcontracting'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-subcontracting'}">
-				<a th:href="@{'?status=save-subcontracting'}" class="button">Save</a>
+				<a th:href="@{'?status=save-subcontracting'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -664,14 +664,14 @@
 <!-- ===========================Question - Travel and subsistence  =========================== -->
 
 <div th:fragment="finance-question-travel">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Travel and sudsistence</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Travel and sudsistence</legend>
 
-		<p>Itemised travel and subsistence costs that relate only to this project</p>
+		<p class="govuk-body">Itemised travel and subsistence costs that relate only to this project</p>
 
 		<div class="table-overflow">
 			<table id="travel-table">
-				<thead>
+				<thead class="govuk-table__head">
 					<th scope="col" id="travel-purpose">
 						Purpose of journey or description of subsistence cost
 					</th>
@@ -688,26 +688,26 @@
 				</thead>
 
 				<tfoot>
-					<tr>
+					<tr class="govuk-table__row">
 						<th colspan="3">Total travel and subsistence</th>
-						<td class="numeric">&pound;0</td>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-travel'}">&nbsp;</td>
 					</tr>
 				</tfoot>
 
 				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-					<tbody>
+					<tbody class="govuk-table__body">
 						<td style="width: 30%">
-							<input type="text" id="travel-row-1-purpose" name="travel-row-1-purpose" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-purpose" />
+							<input type="text" id="travel-row-1-purpose" name="travel-row-1-purpose" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-purpose" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="travel-row-1-amount" name="travel-row-1-amount" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-amount" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="travel-row-1-amount" name="travel-row-1-amount" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-amount" />
 						</td>
-						<td>
-							<input type="text" id="travel-row-1-cost-each" name="travel-row-1-cost-each" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-cost-each" />
+						<td class="govuk-table__cell">
+							<input type="text" id="travel-row-1-cost-each" name="travel-row-1-cost-each" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-cost-each" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="travel-row-1-total" name="travel-row-1-total" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-total" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="travel-row-1-total" name="travel-row-1-total" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-total" />
 						</td>
 
 						<td th:unless="${param.status == null or param.status[0] != 'edit-travel'}">
@@ -728,10 +728,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-travel'}">
-				<a th:href="@{'?status=edit-travel'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-travel'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-travel'}">
-				<a th:href="@{'?status=save-travel'}" class="button">Save</a>
+				<a th:href="@{'?status=save-travel'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -741,14 +741,14 @@
 <!-- ===========================Question - Other costs  =========================== -->
 
 <div th:fragment="finance-question-other">
-	<fieldset class="collapsible-content">
-		<legend class="visuallyhidden">Other costs</legend>
+	<fieldset class="govuk-fieldset collapsible-content">
+		<legend class="govuk-visually-hidden">Other costs</legend>
 
-		<p>Costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p>
+		<p class="govuk-body">Costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p>
 
 		<div class="table-overflow">
 			<table id="other-costs-table">
-				<thead>
+				<thead class="govuk-table__head">
 					<th scope="col" id="other-description">
 						Description and justification of the cost
 					</th>
@@ -759,20 +759,20 @@
 				</thead>
 
 				<tfoot>
-					<tr>
-						<th>Total other costs</th>
-						<td class="numeric">&pound;0</td>
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header" scope="col">Total other costs</th>
+						<td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
 						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">&nbsp;</td>
 					</tr>
 				</tfoot>
 
 				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
-					<tbody>
-						<td>
-							<input type="text" id="other-row-1-description" name="other-row-1-description" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-description" />
+					<tbody class="govuk-table__body">
+						<td class="govuk-table__cell">
+							<input type="text" id="other-row-1-description" name="other-row-1-description" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-description" />
 						</td>
-						<td class="numeric">
-							<input type="text" id="other-row-1-cost" name="other-row-1-cost" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-cost" />
+						<td class="govuk-table__cell govuk-table__cell--numeric">
+							<input type="text" id="other-row-1-cost" name="other-row-1-cost" class="govuk-input width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-cost" />
 						</td>
 
 						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">
@@ -793,10 +793,10 @@
 
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-other'}">
-				<a th:href="@{'?status=edit-other'}" class="button button-secondary">Edit</a>
+				<a th:href="@{'?status=edit-other'}" class="govuk-button button-secondary">Edit</a>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
-				<a th:href="@{'?status=save-other'}" class="button">Save</a>
+				<a th:href="@{'?status=save-other'}" class="govuk-button">Save</a>
 			</th:block>
 		</div>
 
@@ -808,37 +808,37 @@
 
 <div th:fragment="finance-question-changes">
 
-	<h2 class="heading-medium">Application finances</h2>
+	<h2 class="govuk-heading-m">Application finances</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
-					<th scope="col">Total costs</th>
-					<th scope="col" class="numeric">% grant</th>
-					<th scope="col" class="numeric">Funding sought</th>
-					<th scope="col" class="numeric">Other public sector funding</th>
-					<th scope="col" class="numeric">Contribution to project</th>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<th class="govuk-table__header" scope="col">Total costs</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">% grant</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>&pound;286,283</td>
-					<td class="numeric">70%</td>
-					<td class="numeric">&pound;180,399</td>
-					<td class="numeric">&pound;20,000</td>
-					<td class="numeric">&pound;85,885</td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">&pound;286,283</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">70%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;180,399</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-	<h2 class="heading-medium">Section changes</h2>
+	<h2 class="govuk-heading-m">Section changes</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th class="numeric" scope="col">Labour</th>
 					<th class="numeric" scope="col">Admin support costs</th>
 					<th class="numeric" scope="col">Materials</th>
@@ -848,26 +848,26 @@
 					<th class="numeric" scope="col">Other costs</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td class="numeric">-&pound;3,000</td>
-					<td class="numeric">-&pound;50,000</td>
-					<td class="numeric">-&pound;50</td>
-					<td class="numeric">-&pound;4,500</td>
-					<td class="numeric">-&pound;2,000</td>
-					<td class="numeric">-&pound;500</td>
-					<td class="numeric">-&pound;3,700</td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;3,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;50,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;50</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;4,500</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;2,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;500</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">-&pound;3,700</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-	<h2 class="heading-medium">Changes from submitted finances</h2>
+	<h2 class="govuk-heading-m">Changes from submitted finances</h2>
 
 	<div class="table-overflow">
 		<table class="project-changes">
-			<thead>
-				<tr>
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 15%">Action</th>
 					<th scope="col" style="width: 15%">Section</th>
 					<th scope="col" style="width: 15%">Detail</th>
@@ -877,32 +877,32 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<tr>
-					<th>Overall</th>
+				<tr class="govuk-table__row">
+					<th class="govuk-table__header" scope="col">Overall</th>
 					<th colspan="5" class="numeric">-&pound;60,045</th>
 				</tr>
 			</tfoot>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Labour</td>
 					<th scope="row">Role</th>
-					<td>Programmer</td>
+					<td class="govuk-table__cell">Programmer</td>
 					<td colspan="2">Programmer</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Gross employee cost</th>
-					<td>&pound;25,000</td>
+					<td class="govuk-table__cell">&pound;25,000</td>
 					<td colspan="2">&pound;25,000</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Rate</th>
-					<td>24</td>
+					<td class="govuk-table__cell">24</td>
 					<td colspan="2">24</td>
 				</tr>
 				<tr class="item-changed">
 					<th scope="row">Days to be spent</th>
-					<td>258</td>
+					<td class="govuk-table__cell">258</td>
 					<td colspan="2" class="item-changed">189</td>
 				</tr>
 				<tr class="change-row">
@@ -912,10 +912,10 @@
 				</tr>
 
 				<tr class="item-changed">
-					<td>Change</td>
-					<td>Admin support costs</td>
+					<td class="govuk-table__cell">Change</td>
+					<td class="govuk-table__cell">Admin support costs</td>
 					<th scope="row">Percentage of labour costs</th>
-					<td>35%</td>
+					<td class="govuk-table__cell">35%</td>
 					<td class="item-changed" colspan="2">20%</td>
 				</tr>
 				<tr class="change-row">
@@ -924,26 +924,26 @@
 					</td>
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Materials</td>
 					<th scope="row">Item</th>
-					<td>Office chair</td>
+					<td class="govuk-table__cell">Office chair</td>
 					<td colspan="2">Office chair</td>
 				</tr>
 				<tr class="item-changed">
 					<th scope="row">Quantity</th>
-					<td>18</td>
+					<td class="govuk-table__cell">18</td>
 					<td colspan="2">17</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Cost per item</th>
-					<td>&pound;45</td>
+					<td class="govuk-table__cell">&pound;45</td>
 					<td colspan="2">&pound;45</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Total</th>
-					<td>&pound;810</td>
+					<td class="govuk-table__cell">&pound;810</td>
 					<td colspan="2">&pound;765</td>
 				</tr>
 				<tr class="change-row">
@@ -952,41 +952,41 @@
 					</td>
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<td rowspan="7">Remove</td>
 					<td rowspan="7">Capital usage</td>
 					<th scope="row">Item description</th>
-					<td>Description of capital usage</td>
+					<td class="govuk-table__cell">Description of capital usage</td>
 					<td colspan="2">Removed</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">New or existing</th>
-					<td>New</td>
+					<td class="govuk-table__cell">New</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Depreciation period</th>
-					<td>12 months</td>
+					<td class="govuk-table__cell">12 months</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Net present value</th>
-					<td>&pound;4,500</td>
+					<td class="govuk-table__cell">&pound;4,500</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Residual value</th>
-					<td>&pound;0</td>
+					<td class="govuk-table__cell">&pound;0</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Utilisation</th>
-					<td>100%</td>
+					<td class="govuk-table__cell">100%</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Net cost</th>
-					<td>&pound;4,500</td>
+					<td class="govuk-table__cell">&pound;4,500</td>
 					<td colspan="2">&nbsp;</td>
 				</tr>
 				<tr class="change-row">
@@ -995,26 +995,26 @@
 					</td>
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Subcontracting costs</td>
 					<th scope="row">Subcontractor name</th>
-					<td>Paul Davidson</td>
+					<td class="govuk-table__cell">Paul Davidson</td>
 					<td colspan="2">Paul Davidson</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Country</th>
-					<td>United Kingdom</td>
+					<td class="govuk-table__cell">United Kingdom</td>
 					<td colspan="2">United Kingdom</td>
 				</tr>
 				<tr class="item-changed">
 					<th scope="row">Role</th>
-					<td>Overall design of the website for the product</td>
+					<td class="govuk-table__cell">Overall design of the website for the product</td>
 					<td colspan="2">Supporting design of the website for the product</td>
 				</tr>
 				<tr class="change-row item-changed">
 					<th scope="row">Cost</th>
-					<td>&pound;4,000</td>
+					<td class="govuk-table__cell">&pound;4,000</td>
 					<td colspan="2">&pound;2,000</td>
 				</tr>
 				<tr class="change-row">
@@ -1024,26 +1024,26 @@
 				</tr>
 
 
-				<tr>
+				<tr class="govuk-table__row">
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Travel and subsistance</td>
 					<th scope="row">Purpose of journey</th>
-					<td>Commute to Glasgow</td>
+					<td class="govuk-table__cell">Commute to Glasgow</td>
 					<td colspan="2">Commute to Glasgow</td>
 				</tr>
 				<tr class="item-changed">
 					<th scope="row">Number of times</th>
-					<td>50</td>
+					<td class="govuk-table__cell">50</td>
 					<td colspan="2">0</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Cost each</th>
-					<td>&pound;10</td>
+					<td class="govuk-table__cell">&pound;10</td>
 					<td colspan="2">&pound;0</td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Total</th>
-					<td>&pound;500</td>
+					<td class="govuk-table__cell">&pound;500</td>
 					<td colspan="2">&pound;0</td>
 				</tr>
 				<tr class="change-row">
@@ -1052,16 +1052,16 @@
 					</td>
 				</tr>
 
-				<tr>
+				<tr class="govuk-table__row">
 					<td rowspan="2">New</td>
 					<td rowspan="2">Other costs</td>
 					<th scope="row">Description and justification of cost</th>
-					<td>New</td>
+					<td class="govuk-table__cell">New</td>
 					<td colspan="2">An additional cost that could not be added to the other sections.</td>
 				</tr>
 				<tr class="item-changed">
 					<th scope="row">Total</th>
-					<td>-</td>
+					<td class="govuk-table__cell">-</td>
 					<td colspan="2">&pound;3,700</td>
 				</tr>
 				<tr class="change-row">

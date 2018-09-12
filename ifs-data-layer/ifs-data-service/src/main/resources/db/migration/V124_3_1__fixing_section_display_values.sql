@@ -1,0 +1,1 @@
+update section set display_in_assessment_application_summary=0 where parent_section_id IS NOT NULL;

@@ -4,14 +4,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
-import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
@@ -182,23 +181,13 @@ public class UserController {
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
-                {
-                    registrationService.sendUserVerificationEmail(created, empty()).getSuccess();
-                    return created;
-                }
-        ).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @RequestBody UserResource userResource) {
+        return registrationService.createUser(userResource).toPostCreateResponse();
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
-                {
-                    registrationService.sendUserVerificationEmail(created, of(competitionId)).getSuccess();
-                    return created;
-                }
-        ).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @PathVariable("competitionId") final long competitionId, @RequestBody UserResource userResource) {
+        return registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")
@@ -219,5 +208,11 @@ public class UserController {
     @GetMapping("/id/{id}/reactivate")
     public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
         return registrationService.activateUser(id).toGetResponse();
+    }
+
+    @PostMapping("{id}/grant/{role}")
+    public RestResult<Void> grantRole(@PathVariable("id") final long id,
+                                           @PathVariable("role") final Role role) {
+        return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
  }

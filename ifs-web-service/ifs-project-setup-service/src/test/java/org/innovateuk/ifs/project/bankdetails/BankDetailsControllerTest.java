@@ -9,14 +9,15 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
-import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
+import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -36,10 +37,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -53,6 +54,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Mock
     private BankDetailsRestService bankDetailsRestService;
@@ -73,7 +77,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         OrganisationResource organisationResource = newOrganisationResource().build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
 
         BankDetailsForm form = new BankDetailsForm();
@@ -103,7 +107,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         BankDetailsResource bankDetailsResource = newBankDetailsResource().withOrganiationAddress(organisationAddressResource).build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(RestResult.restSuccess(bankDetailsResource, HttpStatus.OK));
         when(organisationAddressRestService.findOne(bankDetailsResource.getOrganisationAddress().getId())).thenReturn(RestResult.restSuccess(organisationAddressResource, HttpStatus.OK));
 
@@ -145,7 +149,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 withProject(projectResource.getId()).build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(bankDetailsRestService.submitBankDetails(projectResource.getId(), bankDetailsResource)).thenReturn(restSuccess());
 
@@ -257,7 +261,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         OrganisationResource organisationResource = newOrganisationResource().build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
 
         return projectResource;

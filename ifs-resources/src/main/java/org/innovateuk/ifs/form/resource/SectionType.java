@@ -14,6 +14,7 @@ import static java.util.Arrays.asList;
 public enum SectionType {
 	FINANCE(Optional.empty()),
 	PROJECT_COST_FINANCES(Optional.of(FINANCE)),
+    PROJECT_LOCATION(Optional.of(FINANCE)),
 	ORGANISATION_FINANCES(Optional.of(FINANCE)),
 	FUNDING_FINANCES(Optional.of(FINANCE)),
     OVERVIEW_FINANCES(Optional.empty()),

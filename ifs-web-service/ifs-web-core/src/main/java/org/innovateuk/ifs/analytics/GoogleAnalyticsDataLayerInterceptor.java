@@ -42,6 +42,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         setCompetitionName(dl, request);
         setUserRoles(dl, request);
+        setApplicationId(dl, request);
     }
 
     private static GoogleAnalyticsDataLayer getOrCreateDataLayer(ModelAndView modelAndView) {
@@ -52,24 +53,32 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         return (GoogleAnalyticsDataLayer) model.get(ANALYTICS_DATA_LAYER_NAME);
     }
 
-    private void setCompetitionName(GoogleAnalyticsDataLayer dl, HttpServletRequest request) {
-        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+    private void setCompetitionName(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(COMPETITION_ID)) {
-            setCompetitionNameFromRestService(dl, googleAnalyticsDataLayerRestService::getCompetitionName, pathVariables, COMPETITION_ID);
+            setCompetitionNameFromRestService(dataLayer,
+                                              googleAnalyticsDataLayerRestService::getCompetitionName,
+                                              getIdFromPathVariable(pathVariables, COMPETITION_ID));
         }
         else if (pathVariables.containsKey(PROJECT_ID)) {
-            setCompetitionNameFromRestService(dl, googleAnalyticsDataLayerRestService::getCompetitionNameForProject, pathVariables, PROJECT_ID);
+            setCompetitionNameFromRestService(dataLayer,
+                                              googleAnalyticsDataLayerRestService::getCompetitionNameForProject,
+                                              getIdFromPathVariable(pathVariables, PROJECT_ID));
         }
         else if (pathVariables.containsKey(APPLICATION_ID)) {
-            setCompetitionNameFromRestService(dl, googleAnalyticsDataLayerRestService::getCompetitionNameForApplication, pathVariables, APPLICATION_ID);
+            setCompetitionNameFromRestService(dataLayer,
+                                              googleAnalyticsDataLayerRestService::getCompetitionNameForApplication,
+                                              getIdFromPathVariable(pathVariables, APPLICATION_ID));
         }
         else if (pathVariables.containsKey(ASSESSMENT_ID)) {
-            setCompetitionNameFromRestService(dl, googleAnalyticsDataLayerRestService::getCompetitionNameForAssessment, pathVariables, ASSESSMENT_ID);
+            setCompetitionNameFromRestService(dataLayer,
+                                              googleAnalyticsDataLayerRestService::getCompetitionNameForAssessment,
+                                              getIdFromPathVariable(pathVariables, ASSESSMENT_ID));
         }
     }
 
-    private void setUserRoles(GoogleAnalyticsDataLayer dl, HttpServletRequest request) {
+    private void setUserRoles(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof UserAuthentication) {
@@ -80,32 +89,56 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
                     authority -> Role.getByName(authority.getAuthority().toLowerCase())
             );
 
-            dl.setUserRoles(userRoles);
+            dataLayer.setUserRoles(userRoles);
         }
 
-        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(APPLICATION_ID)) {
-            setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, APPLICATION_ID, googleAnalyticsDataLayerRestService::getRolesByApplicationId);
+            setApplicationOrProjectSpecificRolesFromRestService(dataLayer,
+                                                                googleAnalyticsDataLayerRestService::getRolesByApplicationId,
+                                                                getIdFromPathVariable(pathVariables, APPLICATION_ID));
         }
 
         if (pathVariables.containsKey(PROJECT_ID)) {
-            setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, PROJECT_ID, googleAnalyticsDataLayerRestService::getRolesByProjectId);
+            setApplicationOrProjectSpecificRolesFromRestService(dataLayer,
+                                                                googleAnalyticsDataLayerRestService::getRolesByProjectId,
+                                                                getIdFromPathVariable(pathVariables, PROJECT_ID));
         }
     }
 
-    private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<String>> f, final Map pathVariables, String pathVariable) {
-        final long id = parseLong((String) pathVariables.get(pathVariable));
+    private void setApplicationId(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        if (pathVariables.containsKey(APPLICATION_ID)) {
+            final long applicationId = getIdFromPathVariable(pathVariables, APPLICATION_ID);
+            dataLayer.setApplicationId(applicationId);
+        }
+
+        if (pathVariables.containsKey(PROJECT_ID)) {
+            final long projectId = getIdFromPathVariable(pathVariables, PROJECT_ID);
+            final long applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForProject(projectId).getSuccess();
+            dataLayer.setApplicationId(applicationId);
+        }
+    }
+
+    private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl,
+                                                          Function<Long, RestResult<String>> f,
+                                                          final long id) {
         final String competitionName = f.apply(id).getSuccess();
         if (competitionName != null) {
             dl.setCompetitionName(fromJson(competitionName, String.class));
         }
     }
 
-    private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, final Map pathVariables, String pathVariable, Function<Long, RestResult<List<Role>>> f) {
-        final long id = parseLong((String) pathVariables.get(pathVariable));
+    private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<List<Role>>> f, final long id) {
         final List<Role> roles = f.apply(id).getSuccess();
         dl.addUserRoles(roles);
     }
+
+    private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
+        return parseLong(pathVariables.get(pathVariable));
+    }
+
 
 }

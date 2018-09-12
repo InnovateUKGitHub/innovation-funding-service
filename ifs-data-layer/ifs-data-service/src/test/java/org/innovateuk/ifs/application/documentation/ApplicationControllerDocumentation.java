@@ -3,15 +3,13 @@ package org.innovateuk.ifs.application.documentation;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder;
 import org.innovateuk.ifs.application.controller.ApplicationController;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -29,9 +27,7 @@ import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResour
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceFields;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -51,6 +47,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Mock
     private ApplicationProgressService applicationProgressServiceMock;
 
+    @Mock
+    private CrmService crmService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -236,24 +234,26 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
     @Test
     public void createApplicationByApplicationNameForUserIdAndCompetitionId() throws Exception {
-        Long competitionId = 1L;
-        Long userId = 1L;
+        long competitionId = 1L;
+        long userId = 1L;
+        long organisationId = 1L;
         String applicationName = "testApplication";
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
         ObjectNode applicationNameNode = objectMapper.createObjectNode().put("name", applicationName);
 
-        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, organisationId, userId)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition the new application is being created for."),
-                                parameterWithName("userId").description("Id of the user the new application is being created for.")
+                                parameterWithName("userId").description("Id of the user the new application is being created for."),
+                                parameterWithName("organisationId").description("Id of the organisation the new application is being created for.")
                         ),
                         requestFields(
                                 fieldWithPath("name").description("name of the application that will be created")
@@ -315,25 +315,25 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
+    public void findPreviousApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
         String filter = "ALL";
 
-        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
-        ApplicationPageResource applicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
+        List<PreviousApplicationResource> applicationResources = PreviousApplicationResourceBuilder.newPreviousApplicationResource().build(4);
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPageResource));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
-        mockMvc.perform(get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
+        mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)))
+                .andExpect(content().json(JsonMappingUtil.toJson(previousApplicationPageResource)))
                 .andDo(document(
                         "application/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                                parameterWithName("id").description("The competition for which previous applications need to be found")
                         ),
                         requestParameters(
                                 parameterWithName("page").description("The page number to be retrieved"),
@@ -344,7 +344,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         responseFields(PageResourceDocs.pageResourceFields)
                 ));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
+        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
 
     }
 

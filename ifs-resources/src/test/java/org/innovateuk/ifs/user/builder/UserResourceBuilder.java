@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
@@ -41,6 +42,10 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((roles, user) -> user.setRoles(roles), rolesList);
     }
 
+    public final UserResourceBuilder withRoleGlobal(Role role) {
+        return withRolesGlobal(singletonList(role));
+    }
+
     public UserResourceBuilder withId(Long... ids) {
         return withArray((id, user) -> setField("id", id, user), ids);
     }
@@ -67,18 +72,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withUid(String... uids) {
         return withArray((uid, user) -> setField("uid", uid, user), uids);
-    }
-
-    public UserResourceBuilder withDisability(Disability... disabilities) {
-        return withArray((disability, user) -> setField("disability", disability, user), disabilities);
-    }
-
-    public UserResourceBuilder withEthnicity(Long... ethnicities) {
-        return withArray((ethnicity, user) -> setField("ethnicity", ethnicity, user), ethnicities);
-    }
-
-    public UserResourceBuilder withGender(Gender... genders) {
-        return withArray((gender, user) -> setField("gender", gender, user), genders);
     }
 
     public UserResourceBuilder withPhoneNumber(String... phoneNumbers) {

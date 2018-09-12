@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.async.executor;
 
 import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
-import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.controller.AwaitModelFuturesCompletionMethodInterceptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
 
     /**
      * This test case asserts that the ThreadLocal value of
-     * {@link org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal} is transferred from the top-level
+     * {@link AsyncAllowedThreadLocal} is transferred from the top-level
      * Thread to its child Threads (and their children).
      *
      * This gives us the ability to know that the currentlyexecuting Thread was generated from a code block

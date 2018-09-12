@@ -24,20 +24,21 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
     private StatusService statusServiceMock;
 
     @Test
-    public void testGetCompetitionStatus() throws Exception {
+    public void getCompetitionStatus() throws Exception {
         final Long competitionId = 123L;
+        String applicationSearchString = "12";
         final CompetitionProjectsStatusResource cpsr = newCompetitionProjectsStatusResource().
                 withCompetitionName("ABC").
                 withCompetitionNumber(competitionId).
                 withProjectStatusResources(newProjectStatusResource().withProjectNumber().build(3)).build();
         ServiceResult<CompetitionProjectsStatusResource> expected = serviceSuccess(cpsr);
-        when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(expected);
+        when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(expected);
 
-        mockMvc.perform(get("/project/competition/{competitionId}", 123L)).
+        mockMvc.perform(get("/project/competition/{competitionId}?applicationSearchString=" + applicationSearchString, 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(cpsr)));
 
-        verify(statusServiceMock).getCompetitionStatus(competitionId);
+        verify(statusServiceMock).getCompetitionStatus(competitionId, applicationSearchString);
     }
 
     @Test

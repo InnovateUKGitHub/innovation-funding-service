@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 
 /**
@@ -29,14 +31,40 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
     }
 
     private Optional<QuestionResource> getPreviousQuestion(final long questionId) {
-        return questionService.getPreviousQuestion(questionId);
+        return getPreviousAllowedQuestion(questionId);
     }
 
     private Optional<QuestionResource> getNextQuestion(final long questionId) {
-        return questionService.getNextQuestion(questionId).filter(this::isAssessmentQuestion);
+        return getNextAllowedQuestion(questionId);
+    }
+
+    private Optional<QuestionResource> getNextAllowedQuestion(long questionId) {
+        Optional<QuestionResource> optionalQuestion = questionService.getNextQuestion(questionId);
+        if (optionalQuestion.isPresent()) {
+            QuestionResource question = optionalQuestion.get();
+            if(isAssessmentQuestion(question)) {
+                return Optional.of(question);
+            }
+            return getNextAllowedQuestion(question.getId());
+        }
+        return Optional.empty();
+    }
+
+    private Optional<QuestionResource> getPreviousAllowedQuestion(long questionId) {
+        Optional<QuestionResource> optionalQuestion = questionService.getPreviousQuestion(questionId);
+        if (optionalQuestion.isPresent()) {
+            QuestionResource question = optionalQuestion.get();
+            if(isAssessmentQuestion(question)) {
+                return Optional.of(question);
+            }
+            return getPreviousQuestion(question.getId());
+        }
+        return Optional.empty();
     }
 
     private boolean isAssessmentQuestion(QuestionResource question) {
-        return sectionService.getById(question.getSection()).getType() == GENERAL;
+        return sectionService.getById(question.getSection()).getType() == GENERAL
+                && (question.getQuestionSetupType() != APPLICATION_TEAM)
+                && (question.getQuestionSetupType() != RESEARCH_CATEGORY);
     }
 }

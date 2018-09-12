@@ -19,7 +19,7 @@ ShibCompatValidUser On
   Header set X-XSS-Protection "1; mode=block"
   Header set X-Content-Type-Options "nosniff"
   Header set Access-Control-Allow-Origin "https://${IDP_DOMAIN}"
-  Header set Content-Security-Policy "default-src 'none'; frame-src 'self' https://${IDP_DOMAIN} https://*.hotjar.com; img-src 'self' data: https://assets.publishing.service.gov.uk https://www.google-analytics.com https://www.googletagmanager.com https://tagmanager.google.com http://*.hotjar.com https://*.hotjar.com; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com https://tagmanager.google.com http://*.hotjar.com https://*.hotjar.com 'unsafe-eval'; style-src 'self' https://${IDP_DOMAIN} 'unsafe-inline'; font-src 'self' data: http://*.hotjar.com https://*.hotjar.com; connect-src 'self' http://*.hotjar.com:* https://*.hotjar.com:* ws://*.hotjar.com wss://*.hotjar.com https://www.google-analytics.com; object-src 'self' https://${SP_DOMAIN}"
+  Header set Content-Security-Policy "default-src 'none'; frame-src 'self' https://${IDP_DOMAIN} https://*.hotjar.com; img-src 'self' data: https://assets.publishing.service.gov.uk https://www.google-analytics.com https://www.googletagmanager.com https://tagmanager.google.com http://*.hotjar.com https://*.hotjar.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com https://tagmanager.google.com http://*.hotjar.com https://*.hotjar.com 'unsafe-eval'; style-src 'self' https://${IDP_DOMAIN}  https://tagmanager.google.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' data: http://*.hotjar.com https://*.hotjar.com; connect-src 'self' http://*.hotjar.com:* https://*.hotjar.com:* ws://*.hotjar.com wss://*.hotjar.com https://www.google-analytics.com; object-src 'self' https://${SP_DOMAIN}"
 
   DocumentRoot /var/www/html
 
@@ -192,6 +192,14 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/eu-grant/.*">
+      AuthType shibboleth
+      ShibRequireSession Off
+      ShibRequestSetting isPassive On
+      ShibRequestSetting applicationId default
+      require shibboleth
+  </Location>
+
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
     ProxyPass !
@@ -210,6 +218,8 @@ ShibCompatValidUser On
   ProxyPass /Logout !
 
   ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /survey/ ajp://survey-svc:8009/survey/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /eu-grant/ ajp://eu-grant-registration-svc:8009/eu-grant/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /management/ ajp://competition-mgt-svc:8009/management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup/ ajp://project-setup-svc:8009/project-setup/ timeout=30 connectiontimeout=30 retry=2

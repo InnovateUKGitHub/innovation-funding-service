@@ -7,9 +7,9 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementMo
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,9 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -58,9 +58,10 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
         UserResource userResource = newUserResource().build();
 
         ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+                2L,
                 null,
-                1L,
-                1L,
+                3L,
+                4L,
                 null,
                 false,
                 false,
@@ -94,14 +95,12 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
                 .withInviteOrganisation(inviteOrganisationId)
                 .withHash().build();
 
-        InviteResultsResource expectedInviteResultsResource = new InviteResultsResource();
+        when(inviteRestServiceMock.saveInvites(any())).thenReturn(RestResult.restSuccess());
 
-        when(inviteRestServiceMock.saveInvites(any())).thenReturn(RestResult.restSuccess(expectedInviteResultsResource));
+        ServiceResult<Void> result = service.executeStagedInvite(applicationId, inviteOrganisationId, form);
 
-        InviteResultsResource result = service.executeStagedInvite(applicationId, inviteOrganisationId, form).getSuccess();
-
-        assertEquals(result, expectedInviteResultsResource);
-        verify(inviteRestServiceMock, times(1)).saveInvites(Arrays.asList(expectedInviteResource));
+        assertTrue(result.isSuccess());
+        verify(inviteRestServiceMock, times(1)).saveInvites(singletonList(expectedInviteResource));
     }
 
     @Test

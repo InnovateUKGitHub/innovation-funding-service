@@ -13,7 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AssessorFormInputResponseBuilderTest {
 

@@ -3,10 +3,10 @@ package org.innovateuk.ifs.project.status.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,9 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +40,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     @Test
     public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
+        String applicationSearchString = "12";
+
         CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().
                 withCompetitionName("ABC").
                 withCompetitionNumber(competitionId).
@@ -60,12 +60,15 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         build(3)).
                 build();
 
-        when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
+        when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
-        mockMvc.perform(get("/project/competition/{id}", competitionId))
+        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
+                        ),
+                        requestParameters(
+                                parameterWithName("applicationSearchString").description("The filter to search by application number.")
                         ),
                         responseFields(competitionProjectsStatusResourceFields)
                 ));

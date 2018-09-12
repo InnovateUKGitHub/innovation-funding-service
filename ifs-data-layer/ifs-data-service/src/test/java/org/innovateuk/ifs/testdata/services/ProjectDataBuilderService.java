@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.testdata.builders.ProjectDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
@@ -98,12 +99,21 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
             return currentBuilder;
         };
 
+        UnaryOperator<ProjectDataBuilder> withdrawIfNecessary = builder -> {
+            if (ProjectState.WITHDRAWN.equals(line.projectState)) {
+                return builder.withAmendedStatus(ProjectState.WITHDRAWN);
+            } else {
+                return builder;
+            }
+        };
+
         testService.doWithinTransaction(() ->
                 assignProjectManagerIfNecessary.
                         andThen(setProjectAddressIfNecessary).
                         andThen(setMonitoringOfficerIfNecessary).
                         andThen(selectFinanceContactsIfNecessary).
                         andThen(submitBankDetailsIfNecessary).
+                        andThen(withdrawIfNecessary).
                         apply(baseBuilder).
                         build());
 

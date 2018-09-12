@@ -4,11 +4,11 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
-import java.util.*;
+import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ProjectDetailsState implements ProcessState, IdentifiableEnum<ProjectDetailsState> {
+public enum ProjectDetailsState implements ProcessState, IdentifiableEnum {
 
     PENDING(6, State.PENDING),
     DECIDE_IF_READY_TO_SUBMIT(-1, State.PENDING), // pseudo state

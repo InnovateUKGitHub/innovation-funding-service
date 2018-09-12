@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 
 public class AffiliationBuilderTest {

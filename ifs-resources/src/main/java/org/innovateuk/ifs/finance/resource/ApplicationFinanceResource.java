@@ -25,13 +25,12 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
-    public ApplicationFinanceResource(Long id, Long organisation, Long application, Long organisationSize, Long financeFileEntry) {
-        super(id, organisation, application, organisationSize);
-        this.financeFileEntry = financeFileEntry;
-    }
-
-    public ApplicationFinanceResource(Long id, Long organisation, Long application, Long organisationSize) {
-        super(id, organisation, application, organisationSize);
+    public ApplicationFinanceResource(long id,
+                                      long organisation,
+                                      long application,
+                                      OrganisationSize organisationSize,
+                                      String projectLocation) {
+        super(id, organisation, application, organisationSize, projectLocation);
     }
 
     public Long getFinanceFileEntry() {
@@ -57,4 +56,5 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     public void setMaximumFundingLevel(Integer maximumFundingLevel) {
         this.maximumFundingLevel = maximumFundingLevel;
     }
+
 }

@@ -1,8 +1,8 @@
 package ut.org.innovateuk.ifs.bitbucket.plugin;
 
-import org.junit.Test;
 import org.innovateuk.ifs.bitbucket.plugin.api.MyPluginComponent;
 import org.innovateuk.ifs.bitbucket.plugin.impl.MyPluginComponentImpl;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 

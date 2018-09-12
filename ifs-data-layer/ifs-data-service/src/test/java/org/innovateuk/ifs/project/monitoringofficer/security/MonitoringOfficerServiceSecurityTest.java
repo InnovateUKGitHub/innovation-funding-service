@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
 

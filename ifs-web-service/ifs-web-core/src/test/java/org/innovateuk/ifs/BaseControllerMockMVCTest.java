@@ -10,7 +10,6 @@ import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
-import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -89,6 +88,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.APPLICANT))
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
+    protected UserResource support = newUserResource().withId(2L)
+            .withFirstName("Support")
+            .withLastName("Support")
+            .withEmail("support@email.co.uk")
+            .withRolesGlobal(singletonList(Role.SUPPORT))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
     protected UserResource loggedInUser = applicant;
 
     @Before
@@ -108,7 +114,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         FormattingConversionService formattingConversionService = new DefaultFormattingConversionService();
         formattingConversionService.addFormatter(new RejectionReasonFormatter());
-        formattingConversionService.addFormatter(new EthnicityFormatter());
 
         MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)

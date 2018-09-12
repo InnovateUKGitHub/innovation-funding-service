@@ -1,26 +1,22 @@
 package org.innovateuk.ifs.assessment.summary.populator;
 
-import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Build the model for the Assessment Application Summary view.
@@ -32,7 +28,7 @@ public class AssessmentSummaryModelPopulator {
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public AssessmentSummaryViewModel populateModel(AssessmentResource assessment) {
         CompetitionResource competition = getCompetition(assessment.getCompetition());
@@ -42,7 +38,7 @@ public class AssessmentSummaryModelPopulator {
     }
 
     private CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getById(competitionId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
     private List<AssessmentSummaryQuestionViewModel> getQuestionsViewModel(long assessmentId) {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -25,8 +26,12 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
     }
 
-    public S withOrganisationSize(Long... value) {
+    public S withOrganisationSize(OrganisationSize... value) {
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
+    }
+
+    public S withWorkPostcode(String... value) {
+        return withArray((v, finance) -> finance.setWorkPostcode(v), value);
     }
 
     public S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {

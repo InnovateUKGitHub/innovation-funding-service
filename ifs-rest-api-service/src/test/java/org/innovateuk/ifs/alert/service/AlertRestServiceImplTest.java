@@ -13,7 +13,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -34,7 +35,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void test_findAllVisible() throws Exception {
+    public void findAllVisible() throws Exception {
         final AlertResource expected1 = new AlertResource();
         expected1.setId(8888L);
 
@@ -49,7 +50,13 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void test_findAllVisibleByType() throws Exception {
+    public void findAllVisibleFallback() {
+        assertTrue(service.findAllVisibleFallback(new Throwable()).getSuccess().isEmpty());
+    }
+
+
+    @Test
+    public void findAllVisibleByType() throws Exception {
         final AlertResource expected1 = new AlertResource();
         expected1.setId(8888L);
 
@@ -64,7 +71,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void test_getAlertById() throws Exception {
+    public void getAlertById() throws Exception {
         final AlertResource expected = new AlertResource();
         expected.setId(9999L);
 
@@ -74,7 +81,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         final AlertResource alertResource = sampleAlert();
 
         setupPostWithRestResultExpectations(alertRestURL + "/", AlertResource.class, alertResource, alertResource, CREATED);
@@ -94,14 +101,14 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void test_delete() throws Exception {
+    public void delete() throws Exception {
         setupDeleteWithRestResultExpectations(alertRestURL + "/9999");
         service.delete(9999L);
         setupDeleteWithRestResultVerifications(alertRestURL + "/9999");
     }
 
     @Test
-    public void test_deleteAllByType() throws Exception {
+    public void deleteAllByType() throws Exception {
         setupDeleteWithRestResultExpectations(alertRestURL + "/delete/MAINTENANCE");
         service.deleteAllByType(AlertType.MAINTENANCE);
         setupDeleteWithRestResultVerifications(alertRestURL + "/delete/MAINTENANCE");

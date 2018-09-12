@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.testdata.builders.data.AcademicCostData;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.testdata.builders.data.AcademicCostData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +85,20 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
             applicationFinanceRepository.save(finance);
         });
     }
+
+    public AcademicCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
 
     private AcademicCostDataBuilder addCostItem(String financeRowName, Supplier<FinanceRowItem> cost) {
         return with(data -> {

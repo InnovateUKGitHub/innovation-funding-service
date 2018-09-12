@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.profiling;
 
-import org.innovateuk.ifs.cache.RestCacheInvalidationAdvisor;
 import org.aopalliance.aop.Advice;
+import org.innovateuk.ifs.cache.RestCacheInvalidationAdvisor;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;

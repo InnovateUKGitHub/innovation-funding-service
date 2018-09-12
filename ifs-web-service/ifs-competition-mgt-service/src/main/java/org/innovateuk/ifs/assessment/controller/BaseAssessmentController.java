@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.application.resource.AssessmentCountSummaryPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -12,14 +11,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = BaseAssessmentController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public abstract class BaseAssessmentController<T extends AssessmentCountSummaryPageResource> {
+public abstract class BaseAssessmentController {
 
     protected static final int PAGE_SIZE = 20;
 
     @Autowired
-    private CompetitionRestService competitionService;
+    private CompetitionRestService competitionRestService;
 
     protected CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).getSuccess();
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 }

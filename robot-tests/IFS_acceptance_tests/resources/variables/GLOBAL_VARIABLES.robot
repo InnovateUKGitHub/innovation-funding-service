@@ -107,7 +107,19 @@ ${INFORM_COMPETITION_NAME_1}              Climate control solution
 ${INFORM_COMPETITION_NAME_1_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_1}']}
 ${INFORM_COMPETITION_NAME_2}              High Performance Gasoline Stratified
 ${INFORM_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_2}']}
+${WITHDRAWN_PROJECT_COMPETITION_NAME}     Integrated delivery programme - solar vehicles
+${WITHDRAWN_PROJECT_COMPETITION}          ${competition_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME}']}
+${WITHDRAWN_PROJECT_COMPETITION_NAME_1}   Low-friction wheel coatings
+${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}       ${application_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME_1}']}
+${INELIGIBLE_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
+${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INELIGIBLE_PROJECT_COMPETITION_NAME_2}']}
+${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}     Electricity harvesting from rough terrain driving
+${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}']}
+
+
+
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
+
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
@@ -157,8 +169,8 @@ ${WITHDRAWN_ASSESSMENT}     ${assessment_ids["Plastic reprocessing with zero was
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
-${assessment_declaration_url}    ${server}/assessment/profile/declaration
-${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_declaration_url}    ${assessment_details_url}/declaration
+${assessment_skills_url}     ${assessment_details_url}/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 

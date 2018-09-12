@@ -8,9 +8,9 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
@@ -19,14 +19,16 @@ import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
-import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
-import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
-import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
-import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApplicationViewModel;
+import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingNotificationsController;
+import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
+import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -98,13 +100,13 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     private CookieUtil cookieUtil;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
     @Mock
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
@@ -124,7 +126,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         super.setUp();
         setupCookieUtil(cookieUtil);
         competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
     }
 
     @Test
@@ -152,7 +154,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new Pagination(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
 
         when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(simpleMap(applications, ApplicationSummaryResource::getId)));
@@ -296,7 +298,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTest() throws Exception {
 
-        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -306,13 +308,13 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingDecisionService).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionRestService).sendApplicationFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestMultipleApplications() throws Exception {
 
-        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -322,12 +324,12 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingDecisionService).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionRestService).sendApplicationFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
-        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
         when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel());
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -336,12 +338,12 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(model().attributeHasFieldErrors("form", "message"))
                 .andReturn();
 
-        verify(applicationFundingDecisionService, never()).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionRestService, never()).sendApplicationFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
-        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
         when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
@@ -351,7 +353,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(model().attributeHasFieldErrors("form", "fundingDecisions"))
                 .andReturn();
 
-        verify(applicationFundingDecisionService, never()).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionRestService, never()).sendApplicationFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,20 +45,20 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    /* Filters by innovation lead id and in project setup state */
-    String INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role = 'INNOVATION_LEAD' " +
+    /* Filters by innovation lead id or stakeholder id and in project setup state */
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
+            "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
             "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
 
-    /* Filters by innovation lead and in feedback released state */
-    String INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
+    /* Filters by innovation lead or stakeholder and in feedback released state */
+    String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = ap.competition.id) AND " +
             "ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
 
-    /* Filters by innovation lead and in live state */
-    String INNOVATION_LEAD_LIVE_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role = 'INNOVATION_LEAD' " +
+    /* Filters by innovation lead or stakeholder and in live state */
+    String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
+            "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
             "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = ap.competition.id) " +
             "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = ap.competition.id) " +
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
@@ -84,21 +86,21 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_LIVE_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
     String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
     String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 
@@ -109,11 +111,12 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
-    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
+    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE a.competition.id = :competitionId " +
+            "AND pr.id = pp.target.id AND pp.activityState NOT IN :states " +
+            "AND t.closedDate IS NULL " +
             "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
             "AND NOT EXISTS (SELECT 1 FROM u.roles r WHERE r = org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE) " +
-            "AND a.competition.id = :competitionId " +
             "AND (post.thread.id, post.createdOn) IN ( " +
             "    SELECT p.thread.id, MAX(p.createdOn) " +
             "    FROM Post p " +
@@ -127,7 +130,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN post.author u " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
-            "JOIN pr.application a " +
+            "JOIN pr.application a, ProjectProcess pp " +
             OPEN_QUERIES_WHERE_CLAUSE;
 
     String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
@@ -137,16 +140,18 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
-            "JOIN pf.organisation o " +
+            "JOIN pf.organisation o, ProjectProcess pp " +
             OPEN_QUERIES_WHERE_CLAUSE +
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
     String GET_PENDING_SPEND_PROFILES_CRITERIA =
-                    " from project p, application a, competition c " +
+                    " from project p, application a, competition c, process pp " +
                     " where c.id = :competitionId " +
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
+                    " and pp.target_id = p.id and pp.process_type = 'ProjectProcess' " +
+                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state = 'WITHDRAWN') " +
 
                     // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
@@ -222,8 +227,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
-    @Query(INNOVATION_LEAD_LIVE_COUNT_QUERY)
-    Long countLiveForInnovationLead(@Param("userId") Long userId);
+    @Query(INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY)
+    Long countLiveForInnovationLeadOrStakeholder(@Param("userId") Long userId);
 
     @Query(LIVE_COUNT_QUERY)
     Long countLive();
@@ -231,14 +236,14 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(PROJECT_SETUP_QUERY)
     List<Competition> findProjectSetup();
 
-    @Query(INNOVATION_LEAD_PROJECT_SETUP_QUERY)
-    List<Competition> findProjectSetupForInnovationLead(@Param("userId") Long userId);
+    @Query(INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY)
+    List<Competition> findProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId);
 
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();
 
-    @Query(INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY)
-    Long countProjectSetupForInnovationLead(@Param("userId") Long userId);
+    @Query(INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY)
+    Long countProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId);
 
     @Query(UPCOMING_QUERY)
     List<Competition> findUpcoming();
@@ -258,8 +263,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
 
-    @Query(INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY)
-    Long countFeedbackReleasedForInnovationLead(@Param("userId") Long userId);
+    @Query(INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_COUNT_QUERY)
+    Long countFeedbackReleasedForInnovationLeadOrStakeholder(@Param("userId") Long userId);
 
     @Query(SEARCH_QUERY)
     Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
@@ -284,10 +289,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByInnovationSectorCategoryId(Long id);
 
     @Query(COUNT_OPEN_QUERIES)
-    Long countOpenQueries(@Param("competitionId") Long competitionId);
+    Long countOpenQueriesByCompetitionAndProjectStateNotIn(@Param("competitionId") Long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(GET_OPEN_QUERIES)
-    List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
+    List<CompetitionOpenQueryResource> getOpenQueryByCompetitionAndProjectStateNotIn(@Param("competitionId") long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);

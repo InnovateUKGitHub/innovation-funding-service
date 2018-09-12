@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static java.lang.String.join;
 import static java.util.Collections.nCopies;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.review.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;

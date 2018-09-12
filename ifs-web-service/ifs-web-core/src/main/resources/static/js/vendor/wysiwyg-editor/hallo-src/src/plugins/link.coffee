@@ -31,11 +31,11 @@
       butUpdateTitle = @options.dialogOpts.buttonUpdateTitle
       dialog = jQuery "<div id=\"#{dialogId}\">
         <form action=\"#\" method=\"post\" class=\"linkForm\">
-          <div class=\"form-group\">
+          <div class=\"govuk-form-group\">
             <label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label>
             <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"#{@options.defaultUrl}\" />
           </div>
-          <div class=\"form-group\">
+          <div class=\"govuk-form-group\">
             <input type=\"submit\" id=\"addlinkButton\" class=\"button\" value=\"#{butTitle}\"/>
           </div>
         </form></div>"

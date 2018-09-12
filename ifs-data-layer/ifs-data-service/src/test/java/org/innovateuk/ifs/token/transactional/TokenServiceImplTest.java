@@ -15,12 +15,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
-import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
-import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static java.time.ZonedDateTime.now;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
+import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -121,13 +121,23 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_handleExtraAttributes() throws Exception {
-        final Long competitionId = 999L;
-        final Long userId = 888L;
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb", now(), JsonNodeFactory.instance.objectNode().put("competitionId", competitionId));
+        final long competitionId = 999L;
+        final long userId = 888L;
+        final long organisationId = 777L;
+        final Token token = new Token(
+                VERIFY_EMAIL_ADDRESS,
+                User.class.getName(),
+                userId,
+                "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb",
+                now(),
+                JsonNodeFactory.instance.objectNode()
+                        .put("competitionId", competitionId)
+                        .put("organisationId", organisationId)
+        );
 
         tokenService.handleExtraAttributes(token);
 
-        verify(applicationServiceMock, only()).createApplicationByApplicationNameForUserIdAndCompetitionId(EMPTY, competitionId, userId);
+        verify(applicationServiceMock, only()).createApplicationByApplicationNameForUserIdAndCompetitionId(EMPTY, competitionId, userId, organisationId);
     }
 
     @Test
@@ -136,7 +146,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
         tokenService.handleExtraAttributes(token);
 
-        verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(String.class), isA(Long.class), isA(Long.class));
+        verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(String.class), isA(Long.class), isA(Long.class), isA(Long.class));
     }
 
     /**

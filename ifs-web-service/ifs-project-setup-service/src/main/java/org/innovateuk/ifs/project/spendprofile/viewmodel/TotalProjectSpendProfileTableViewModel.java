@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.spendprofile.viewmodel;
 
-import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.math.BigDecimal;

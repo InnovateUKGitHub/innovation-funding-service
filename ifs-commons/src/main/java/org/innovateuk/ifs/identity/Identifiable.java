@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.toMap;
 /**
  * An enum with identity.
  */
-public interface Identifiable<T> {
+public interface Identifiable {
 
     long getId();
 

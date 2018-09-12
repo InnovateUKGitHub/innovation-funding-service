@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.format.DateTimeFormatter;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
@@ -45,7 +45,7 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
     @Mock
-    private FinanceRowRestService financeRowRestService;
+    private DefaultFinanceRowRestService financeRowRestService;
 
     private ApplicationResource application;
     private Long questionId;
@@ -343,7 +343,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
 
     }
 
-    //TODO: Change this to AutosaveElementException
     @Test
     public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
         String questionId = "application_details-startdate_day";

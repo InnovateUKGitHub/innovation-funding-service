@@ -15,7 +15,7 @@ import static org.junit.Assert.fail;
 
 public class DatabasePatchingTest extends BaseIntegrationTest {
 
-    private static final String[] PATCH_FOLDERS_TO_BE_RUN_ON_PROD = {"db/migration", "db/setup"};
+    private static final String[] PATCH_FOLDERS_TO_BE_RUN_ON_PROD = {"db/migration", "db/setup", "db/reference"};
 
     @Value("${flyway.url}")
     private String databaseUrl;

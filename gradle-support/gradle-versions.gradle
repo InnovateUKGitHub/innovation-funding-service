@@ -1,0 +1,11 @@
+apply plugin: com.github.benmanes.gradle.versions.VersionsPlugin
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+    }
+}

@@ -2,23 +2,24 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
 import org.innovateuk.ifs.project.status.viewmodel.SectionStatusList;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.sections.SectionStatus;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private ProjectService projectService;
 
     @Autowired
+    private ProjectRestService projectRestService;
+
+    @Autowired
     private StatusService statusService;
 
     @Autowired
@@ -48,15 +52,18 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
-    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId, UserResource loggedInUser) {
+    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
+                                                                     UserResource loggedInUser,
+                                                                     String originQuery) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
-        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
+        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
-        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application -> competitionService.getById(application.getCompetition()));
+        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
+                competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
         CompletableFuture<BasicDetails> basicDetailsRequest = awaitAll(projectRequest, competitionRequest, organisationRequest).thenApply(BasicDetails::new);
 
         CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
@@ -72,11 +79,22 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             boolean isProjectManager = isProjectManagerRequest.get();
             List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
 
-            return getSetupStatusViewModel(basicDetails, teamStatus, monitoringOfficer, isProjectManager, partnerOrganisations);
+            return getSetupStatusViewModel(
+                    basicDetails,
+                    teamStatus,
+                    monitoringOfficer,
+                    isProjectManager,
+                    partnerOrganisations,
+                    originQuery);
         });
     }
 
-    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager, List<OrganisationResource> partnerOrganisations) {
+    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
+                                                         ProjectTeamStatusResource teamStatus,
+                                                         Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                         boolean isProjectManager,
+                                                         List<OrganisationResource> partnerOrganisations,
+                                                         String originQuery) {
         SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
         SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
 
@@ -96,7 +114,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 sectionStatuses,
                 collaborationAgreementRequired,
                 isProjectManager,
-                pendingQueries);
+                pendingQueries,
+                originQuery);
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {

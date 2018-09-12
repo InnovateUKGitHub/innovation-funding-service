@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.config;
 
+import org.innovateuk.ifs.async.executor.AsyncExecutorFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

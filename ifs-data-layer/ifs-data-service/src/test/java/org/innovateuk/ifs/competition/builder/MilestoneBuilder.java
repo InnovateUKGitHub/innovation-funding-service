@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.builder;
 
-
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;

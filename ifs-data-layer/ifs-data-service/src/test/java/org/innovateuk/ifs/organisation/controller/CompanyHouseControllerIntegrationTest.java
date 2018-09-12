@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.hamcrest.text.IsEqualIgnoringCase;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.hamcrest.text.IsEqualIgnoringCase;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

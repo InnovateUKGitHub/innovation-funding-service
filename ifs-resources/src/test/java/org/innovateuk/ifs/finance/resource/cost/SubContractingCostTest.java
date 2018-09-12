@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.junit.Before;
 import org.junit.Test;
 

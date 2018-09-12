@@ -1,18 +1,17 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.5'
-    compile "commons-io:commons-io:2.5"
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'org.jsoup:jsoup:1.10.3'
-    compile "org.javassist:javassist:3.18.1-GA"
-    compile "com.google.guava:guava:21.0"
-    compile "org.apache.httpcomponents:httpclient:4.5.3"
     compile project(':ifs-error-util')
     compile project(":ifs-commons")
 
-    testCompile "net.sf.opencsv:opencsv:2.3"
+    testCompile "org.springframework.boot:spring-boot-starter-web:1.5.11.RELEASE"
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.11.RELEASE'
 }
 
 configurations {
@@ -25,5 +24,3 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-bootRepackage.enabled=false

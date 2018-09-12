@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
 import org.innovateuk.ifs.competition.status.PublicContentStatusText;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
@@ -45,13 +44,11 @@ public class PublicContentStatusDeterminerTest {
         assertEquals(PublicContentStatusText.OPEN_NOW, result);
     }
 
-    //TODO IFS-948: Fix this test - intermittently fails
-    @Ignore
     @Test
     public void getApplicablePublicContentStatusText_openDateInPastAndClosingDateInLessThanTwoWeeksAwayReturnsClosingSoon() throws Exception {
         PublicContentStatusDeterminer publicContentStatusDeterminer = new PublicContentStatusDeterminer();
 
-        ZonedDateTime inTwoWeeks = ZonedDateTime.now().plusDays(14L);
+        ZonedDateTime inTwoWeeks = ZonedDateTime.now().plusDays(14L).minusHours(1);
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1L);
 
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource()

@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route
@@ -23,12 +24,13 @@ Non registered users non companies house route
     Given the user navigates to the page           ${frontDoor}
     And the user clicks the button/link in the paginated list            link=${createApplicationOpenCompetition}
     And the user clicks the button/link            jQuery=a:contains("Start new application")
-    And the user clicks the button/link            jQuery=.button:contains("Create account")
+    And the user clicks the button/link            link = Continue and create an account
     And the user selects the radio button          organisationTypeId    radio-1
-    And the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     When the user clicks the Not on company house link
-    And the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    Then The user should see the text in the page  Your details
+    Then the user fills in the non CH address
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
+    Then The user should see the element           jQuery=h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -52,7 +54,7 @@ Verify the name of the new application
     And the user edits the application title
     Then the user should see the text in the page                 ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link                           link=view and manage contributors and collaborators
+    And the user clicks the button/link                           link=Application team
     And the user should see the text in the page                  Application team
     And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
     And the user can see this new application on their dashboard  ${test_title}
@@ -69,23 +71,13 @@ the new application should be visible in the dashboard page
     the user should see the text in the page  ${test_title}
     the user should see the text in the page  Application number:
 
-the user clicks the Not on company house link
-    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    the user clicks the button/link       name=manual-address
-    The user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    street
-    The user enters text to a text field  id=addressForm.selectedPostcode.town    town
-    The user enters text to a text field  id=addressForm.selectedPostcode.county    country
-    The user enters text to a text field  id=addressForm.selectedPostcode.postcode    post code
-    The user enters text to a text field  name=organisationName    org2
-    the user clicks the button/link       jQuery=.button:contains("Continue")
-
 the user edits the application title
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user should see the element         link=Application details
     the user clicks the button/link         link=Application details
     The project start date is blank
     The user enters text to a text field    css=[id="application.name"]    ${test_title}
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=.govuk-button:contains("Save and return")
 
 the progress indicator should show 0
     Element Should Contain  css=.progress-indicator    0
@@ -109,7 +101,7 @@ the user directed to correct dashboard
     [Arguments]    ${Application_name}
     the user should see the text in the page  Dashboard
     the user clicks the button/link           link=${Application_name}
-    the user should see the element           jQuery=a:contains("Begin application")
+    the user should see the element           jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link           link=Application overview
     the user is redirected to overview page if he has been there already
 
@@ -117,9 +109,12 @@ the user is redirected to overview page if he has been there already
     log in as a different user           ${test_mailbox_one}+business@gmail.com    ${correct_password}
     the user clicks the button/link      link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user should see the element      jQuery=h1:contains("Application overview")
-    the user clicks the button/link      link=view and manage contributors and collaborators
-    the user should not see the element  jQuery=a:contains("Begin application")
+    the user clicks the button/link      link=Application team
     logout as user
 
-
-
+the user fills in the non CH address
+    And the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
+    Then the user should see the element           css=#select-address-block
+    And the user clicks the button/link            css=#select-address-block > button
+    And the user clicks the button/link            jQuery = .govuk-button:contains("Continue")

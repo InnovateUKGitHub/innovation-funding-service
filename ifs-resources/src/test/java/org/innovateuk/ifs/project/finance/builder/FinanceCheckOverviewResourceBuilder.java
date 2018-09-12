@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 

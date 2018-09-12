@@ -60,8 +60,8 @@ all the questions should be visible
     the user should see the element    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
 
 the Scope section should be expanded
-    the user should see the element    css=.section-overview > section:nth-of-type(1) .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
-    the user should see the element    css=.section-overview > section:nth-of-type(1) .collapsible:nth-of-type(4) > div[aria-hidden="false"]
+    the user should see the element    jQuery=h3:contains("Scope") button[aria-expanded="true"]
+    the user should see the element    jQuery=h3:contains("Scope") ~ div[aria-hidden="false"]
 
 the Project summary question should be marked as complete
     Element Should Contain    jQuery=button:contains("Project summary")    Complete

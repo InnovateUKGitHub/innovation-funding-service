@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.innovateuk.ifs.shibboleth.api.models.Identity.Constants.*;
 
-@Entry(objectClasses = { "inetOrgPerson", "person", "top"})
+@Entry(objectClasses = {"inetOrgPerson", "person", "top"})
 public final class Identity {
 
     @Id
@@ -132,15 +132,18 @@ public final class Identity {
         static final String USER_STATUS_ACTIVE = "active";
         static final String USER_STATUS_INACTIVE = "inactive";
 
-        private Constants() {}
+        private Constants() {
+        }
 
-        public static final String[] ATTRIBUTES = {
-            UUID,
-            EMAIL,
-            PASSWORD,
-            CREATED,
-            MODIFIED,
-            USER_STATUS,
-        };
+        public static String[] allAttributes() {
+            return new String[]{
+                    UUID,
+                    EMAIL,
+                    PASSWORD,
+                    CREATED,
+                    MODIFIED,
+                    USER_STATUS,
+            };
+        }
     }
 }

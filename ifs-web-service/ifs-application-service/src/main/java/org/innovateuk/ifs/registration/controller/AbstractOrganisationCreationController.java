@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,8 +104,8 @@ public abstract class AbstractOrganisationCreationController {
             AddressForm addressForm = organisationForm.getAddressForm();
             if (addressForm.getSelectedPostcode() != null) {
                 validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
-            } else if (!addressForm.isManualAddress()) {
-                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered address as your operating address.");
+            }  else if (!addressForm.isManualAddress()) {
+                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "{validation.standard.organisation.address.required}");
             }
         }
     }

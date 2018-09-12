@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static java.util.Arrays.asList;

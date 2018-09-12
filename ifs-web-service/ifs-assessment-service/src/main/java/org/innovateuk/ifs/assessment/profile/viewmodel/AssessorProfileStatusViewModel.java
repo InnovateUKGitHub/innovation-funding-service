@@ -13,16 +13,9 @@ public class AssessorProfileStatusViewModel {
     private final boolean agreementComplete;
 
     public AssessorProfileStatusViewModel(UserProfileStatusResource userProfileStatusResource) {
-        this(userProfileStatusResource.isSkillsComplete(),
-                userProfileStatusResource.isAffiliationsComplete(),
-                userProfileStatusResource.isAgreementComplete()
-        );
-    }
-
-    private AssessorProfileStatusViewModel(boolean skillsComplete, boolean affiliationsComplete, boolean agreementComplete) {
-        this.skillsComplete = skillsComplete;
-        this.affiliationsComplete = affiliationsComplete;
-        this.agreementComplete = agreementComplete;
+        this.skillsComplete = userProfileStatusResource.isSkillsComplete();
+        this.affiliationsComplete = userProfileStatusResource.isAffiliationsComplete();
+        this.agreementComplete = userProfileStatusResource.isAgreementComplete();
     }
 
     public boolean isSkillsComplete() {

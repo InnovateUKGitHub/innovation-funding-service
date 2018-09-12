@@ -6,7 +6,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.junit.Test;
 
 import static java.lang.String.format;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
 
 public class ApplicantRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicantRestServiceImpl> {
 

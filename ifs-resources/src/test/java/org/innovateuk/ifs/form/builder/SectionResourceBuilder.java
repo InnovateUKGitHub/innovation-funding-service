@@ -7,8 +7,8 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 public class SectionResourceBuilder extends BaseBuilder<SectionResource, SectionResourceBuilder> {
 
@@ -30,6 +30,10 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
 
     public SectionResourceBuilder withQuestions(List<Long>... questions) {
         return withArraySetFieldByReflection("questions", questions);
+    }
+
+    public SectionResourceBuilder withLeadQuestions(List<Long>... leadQuestions) {
+        return withArraySetFieldByReflection("leadQuestions", leadQuestions);
     }
 
     public SectionResourceBuilder withCompetitionAndPriority(Long competition, Integer priority) {

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.review.viewmodel;
 
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
-import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
 
 /**
  * Holder of model attributes for the Invite assessors 'Overview' view.

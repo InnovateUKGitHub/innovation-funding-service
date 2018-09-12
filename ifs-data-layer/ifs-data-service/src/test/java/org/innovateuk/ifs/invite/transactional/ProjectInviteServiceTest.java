@@ -6,14 +6,14 @@ import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,12 +29,12 @@ import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +66,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Test
-    public void testAcceptProjectInviteSuccess() throws Exception {
+    public void acceptProjectInvite_success() throws Exception {
         Project project = newProject().build();
         Organisation organisation = newOrganisation().build();
         User user = newUser().withEmailAddress("email@example.com").build();
@@ -82,7 +82,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testAcceptProjectInviteHashDoesNotExist() throws Exception {
+    public void acceptProjectInvite_hashDoesNotExist() throws Exception {
         String hash = "hash";
         User user = newUser().withEmailAddress("email@example.com").build();
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
@@ -93,7 +93,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testAcceptProjectInviteUserDoesNotExist() throws Exception {
+    public void acceptProjectInvite_userDoesNotExist() throws Exception {
         Long userId = 1L;
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
@@ -105,7 +105,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testCheckUserExistingByInviteHashSuccess() throws Exception {
+    public void checkUserExistsForInvite_success() throws Exception {
         User user = newUser().withEmailAddress("email@example.com").build();
         ProjectInvite projectInvite = newProjectInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
@@ -116,7 +116,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
+    public void checkUserExistsForInvite_hashHashNotFound() throws Exception {
         String hash = "hash";
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
         ServiceResult<Boolean> result = projectInviteService.checkUserExistsForInvite(hash);
@@ -125,7 +125,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCheckUserExistingByInviteHashNoUserFound() throws Exception {
+    public void checkUserExistsForInvite_hashNoUserFound() throws Exception {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
@@ -136,9 +136,9 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testSaveFinanceContactInviteSuccess() throws Exception {
+    public void saveProjectInvite_success() throws Exception {
         Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findByUsers(any(User.class))).thenReturn(singletonList(organisation));
+        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
 
         Project project = newProject().withName("project name").build();
         User user = newUser().
@@ -158,7 +158,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testSaveFinanceContactInviteValidationFailure() throws Exception {
+    public void saveProjectInvite_validationFailure() throws Exception {
         Organisation organisation = newOrganisation().build();
         Project project = newProject().withName("project name").build();
         User user = newUser().withEmailAddress("email@example.com").build();
@@ -201,7 +201,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testGetInvitesByProject() throws Exception {
+    public void getInvitesByProject() throws Exception {
 
         ProjectResource projectResource = newProjectResource()
                 .build();

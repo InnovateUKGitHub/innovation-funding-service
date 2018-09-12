@@ -4,9 +4,9 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.form.AssessmentAssessorsFilterForm;
-import org.innovateuk.ifs.management.model.ManageAssessorsModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.assessment.form.AssessmentAssessorsFilterForm;
+import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessments", securedType = AssessmentAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
-public class AssessmentAssessorsController extends BaseAssessmentController<AssessorCountSummaryPageResource> {
+public class AssessmentAssessorsController extends BaseAssessmentController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     @Autowired
@@ -45,7 +45,7 @@ public class AssessmentAssessorsController extends BaseAssessmentController<Asse
 
         AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, filterForm.getInnovationSector(), filterForm.getBusinessType(), page );
 
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_ASSESSORS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.MANAGE_ASSESSORS, queryParams);
 
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, originQuery));
         model.addAttribute("originQuery", originQuery);

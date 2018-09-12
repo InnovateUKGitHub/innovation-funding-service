@@ -2,9 +2,9 @@ package org.innovateuk.ifs.organisation.controller;
 
 import com.google.gson.Gson;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -81,7 +81,25 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     public void getPrimaryForUserShouldReturnOrganisation() throws Exception {
         when(organisationServiceMock.getPrimaryForUser(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(get("/organisation/getPrimaryForUser/1"))
+        mockMvc.perform(get("/organisation/primary-for-user/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
+    }
+
+    @Test
+    public void getByUserAndApplicationId() throws Exception {
+        when(organisationServiceMock.getByUserAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
+
+        mockMvc.perform(get("/organisation/by-user-and-application-id/1/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
+    }
+
+    @Test
+    public void getByUserAndProjectId() throws Exception {
+        when(organisationServiceMock.getByUserAndProjectId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
+
+        mockMvc.perform(get("/organisation/by-user-and-project-id/1/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
     }

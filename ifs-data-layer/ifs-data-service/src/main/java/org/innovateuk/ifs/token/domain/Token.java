@@ -2,10 +2,10 @@ package org.innovateuk.ifs.token.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.commons.util.JpaJsonConverter;
-import org.innovateuk.ifs.token.resource.TokenType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.util.JpaJsonConverter;
+import org.innovateuk.ifs.token.resource.TokenType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;

@@ -1,8 +1,5 @@
-ext.ifsDataServiceRestBaseURL="http://localhost:8080"
-ext.ifsWebBaseURL="http://localhost:8080"
 ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 
-ext.serverPort=""
 ext.activeProfile="environment"
 
 ext.ifsDatasourceUrl=""

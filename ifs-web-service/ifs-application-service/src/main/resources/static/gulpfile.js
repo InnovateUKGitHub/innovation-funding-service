@@ -4,24 +4,23 @@ var standard = require('gulp-standard')
 var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 
-gulp.task('default', ['js', 'css'])
-
 // build all js
-gulp.task('js', function () {
+gulp.task('application:js', function () {
   return gulp.src([
-    'js/ifsApplicationLoader.js',
-    'js/ifs_modules/*.js',
-    'js/ifs_pages/*.js'
+    __dirname + '/js/ifsApplicationLoader.js',
+    __dirname + '/js/ifs_modules/*.js',
+    __dirname + '/js/ifs_pages/*.js'
   ])
   .pipe(standard())
   .pipe(concat('application.min.js'))
   .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
+  .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
 })
-gulp.task('css', function () {})
-gulp.task('css:watch', function () {})
+gulp.task('application:css', function (done) { done() })
+gulp.task('application:css:watch', function () {})
+gulp.task('default', gulp.parallel('application:js', 'application:css'))

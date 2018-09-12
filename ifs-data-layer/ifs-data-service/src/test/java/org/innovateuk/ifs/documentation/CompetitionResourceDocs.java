@@ -55,7 +55,11 @@ public class CompetitionResourceDocs {
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
+
+            // @ZeroDowntime(reference = "IFS-4280", description = "This field is being removed from CompetitionResource")
             fieldWithPath("fullApplicationFinance").description("If full finances are required for applications"),
+
+            fieldWithPath("applicationFinanceType").description("The type of finances for the application"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
@@ -66,7 +70,13 @@ public class CompetitionResourceDocs {
             fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition"),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last"),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
-            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility")
+            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
+            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition"),
+            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase"),
+            fieldWithPath("createdBy").description("user who created this competition"),
+            fieldWithPath("createdOn").description("when the competition was created"),
+            fieldWithPath("modifiedBy").description("user who modified this competition"),
+            fieldWithPath("modifiedOn").description("when the competition was modified")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

@@ -3,10 +3,6 @@ package org.innovateuk.ifs.thread.domain;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.user.domain.User;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.nOf;
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.nOf;
+import static org.junit.Assert.assertEquals;
 
 public class PostTest {
 
@@ -36,7 +34,7 @@ public class PostTest {
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() {
+    public void itReturnsValuesAsTheyWereDefined() {
         assertEquals(post.id(), id);
         assertEquals(post.author(), author);
         assertEquals(post.body(), body);
@@ -45,7 +43,7 @@ public class PostTest {
     }
 
     @Test
-    public void testItReturnsAttachmentInSameOrderAsDefined() {
+    public void itReturnsAttachmentInSameOrderAsDefined() {
         attachments = nOf(3, new Attachment());
         Post currentPost = new Post(id, author, body, attachments, createdOn);
         assertEquals(currentPost.attachments(), attachments);

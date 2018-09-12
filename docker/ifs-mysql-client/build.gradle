@@ -4,6 +4,9 @@ tagDockerLocal.tag = mysqlClientVersion
 osStageRemote.tag = mysqlClientVersion
 osStageLocal.tag = mysqlClientVersion
 
+buildscript {
+    repositories { jcenter() }
+}
 
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = false

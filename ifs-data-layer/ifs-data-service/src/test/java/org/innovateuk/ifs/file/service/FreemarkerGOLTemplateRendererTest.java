@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.file.service;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mock;
 

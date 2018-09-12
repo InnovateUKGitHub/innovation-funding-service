@@ -15,7 +15,7 @@
 // For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
 // Please think before adding javascript, this project should work without any of this scripts.
 
-if (typeof (IFS) === 'undefined') { var IFS = {} } // jshint ignore:line
+if (typeof (IFS) === 'undefined') { var IFS = {} } // eslint-disable-line
 IFS.core = {}
 IFS.core.loadOrder = {
   common: {
@@ -42,20 +42,7 @@ IFS.core.loadOrder = {
       IFS.core.unsavedChanges.init()
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
-    }
-  },
-  commonStateManaged: {
-    mobile: function () {
-      IFS.core.collapsible.init('tabs')
-    },
-    desktop: function () {
-      IFS.core.tabs.init()
-    },
-    mobileLeave: function () {
-      IFS.core.collapsible.destroy('tabs')
-    },
-    desktopLeave: function () {
-      IFS.core.tabs.destroy()
+      IFS.core.sortingErrors.init()
     }
   },
   'finance': {

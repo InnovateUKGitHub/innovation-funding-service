@@ -52,7 +52,7 @@ the user changes the application name
     [Arguments]    ${application_name}
     the user navigates to the page          ${DASHBOARD_URL}
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link         jQuery=a:contains("Begin application")
+    the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link         jQuery=a:contains("Application details")
     the user enters text to a text field    css=[id="application.name"]  ${application_name}
     the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
@@ -77,10 +77,10 @@ the user inserts the address of his research organisation
 the user verifies account and starts his application
     [Arguments]  ${email}
     the user reads his email and clicks the link  ${email}  Please verify your email address  you can sign into your account.
-    the user clicks the button/link               jQuery=.button:contains("Sign in")
+    the user clicks the button/link               jQuery=.govuk-button:contains("Sign in")
     logging in and error checking                 ${email}  ${correct_password}
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link               link=Begin application
+    the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link               link=Application details
     the user enters text to a text field          css=[id="application.name"]  ${email}'s Application
     the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
@@ -89,12 +89,12 @@ the user navigates to the Application Team Page
     [Arguments]  ${email}
     the user navigates to the page   ${dashboard_url}
     the user clicks the button/link  link=${email}'s Application
-    the user clicks the button/link  link=view and manage contributors and collaborators
+    the user clicks the button/link  link=Application team
 
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
     the user clicks the button/link       link=Update and add contributors from University of Warwick
-    the user clicks the button/link       jQuery=.buttonlink:contains("Add another contributor")
+    the user clicks the button/link       jQuery=.button-clear:contains("Add another contributor")
     the user enters text to a text field  stagedInvite.name  ${name}
     the user enters text to a text field  stagedInvite.email  ${email}
     the user clicks the button/link       css=button[name="executeStagedInvite"]

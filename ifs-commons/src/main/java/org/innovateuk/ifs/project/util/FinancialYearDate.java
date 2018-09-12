@@ -43,15 +43,4 @@ public class FinancialYearDate {
         return calendarDate.get(Calendar.YEAR);
     }
 
-    private static Calendar setDate(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        return calendar;
-    }
 }

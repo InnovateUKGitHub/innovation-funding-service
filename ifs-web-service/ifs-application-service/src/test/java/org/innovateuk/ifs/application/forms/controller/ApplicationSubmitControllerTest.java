@@ -4,6 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -12,7 +13,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -81,6 +82,9 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @Mock
     private CategoryRestService categoryRestServiceMock;
 
+    @Mock
+    private InviteService inviteService;
+
     @Override
     protected ApplicationSubmitController supplyControllerUnderTest() {
         return new ApplicationSubmitController();
@@ -103,13 +107,13 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationSummaryReadyForReviewAction() throws Exception {
+    public void applicationSummaryReadyForReviewAction() throws Exception {
         ApplicationResource app = applications.get(0);
         QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
                 .param(ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
@@ -120,13 +124,13 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationSummaryMarkAsCompleteAction() throws Exception {
+    public void applicationSummaryMarkAsCompleteAction() throws Exception {
         ApplicationResource app = applications.get(0);
         QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
                 .param(MARK_AS_COMPLETE, question.getId().toString())
@@ -137,13 +141,13 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationSummaryMarkAsCompleteActionWithFailure() throws Exception {
+    public void applicationSummaryMarkAsCompleteActionWithFailure() throws Exception {
         ApplicationResource app = applications.get(0);
         QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
         ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        when(userRestService.findProcessRole(user.getId(), app.getId())).thenReturn(restSuccess(processRole));
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.addError(Error.fieldError("asdf", new Error("as", HttpStatus.BAD_REQUEST)));
         when(questionService.markAsComplete(question.getId(), app.getId(), user.getId())).thenReturn(asList(validationMessages));
@@ -157,7 +161,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationConfirmSubmit() throws Exception {
+    public void applicationConfirmSubmit() throws Exception {
         ApplicationResource app = applications.get(0);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -171,15 +175,18 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
+    public void applicationSubmitAgreeingToTerms() throws Exception {
+        ApplicationResource app = newApplicationResource()
+                .withId(1L)
+                .withCompetitionStatus(OPEN)
+                .withCompetition(competitionId)
+                .build();
         when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
@@ -190,7 +197,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationSubmitAppisNotSubmittable() throws Exception {
+    public void applicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
@@ -208,11 +215,10 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testApplicationTrack() throws Exception {
+    public void applicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(view().name("application-track"))
@@ -222,12 +228,11 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Test
-    public void testNotSubmittedApplicationTrack() throws Exception {
+    public void notSubmittedApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.OPEN);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(status().is3xxRedirection())

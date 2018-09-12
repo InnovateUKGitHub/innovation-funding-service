@@ -5,7 +5,7 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;

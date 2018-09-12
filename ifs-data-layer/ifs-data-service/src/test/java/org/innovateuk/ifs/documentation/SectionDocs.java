@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
-
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class SectionDocs {
@@ -18,6 +17,7 @@ public class SectionDocs {
             fieldWithPath("questionGroup").description("group the question belongs to"),
             fieldWithPath("competition").description("competition the section belongs to"),
             fieldWithPath("questions").description("list of questions belonging to the section"),
+            fieldWithPath("leadQuestions").description("list of lead questions belonging to the section"),
             fieldWithPath("parentSection").description("parent section of this section"),
             fieldWithPath("childSections").description("list of child sections"),
             fieldWithPath("displayInAssessmentApplicationSummary").description("whether to display this section in the assessment summary"),

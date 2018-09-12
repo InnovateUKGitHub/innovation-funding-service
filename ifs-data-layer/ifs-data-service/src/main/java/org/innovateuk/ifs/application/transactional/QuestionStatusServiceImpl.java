@@ -45,7 +45,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     private QuestionStatusMapper questionStatusMapper;
 
     @Autowired
-    private ApplicationProgressServiceImpl applicationProgressService;
+    private ApplicationProgressService applicationProgressService;
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
@@ -70,6 +70,13 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                                     final long markedAsInCompleteById) {
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<ValidationMessages>> markTeamAsInComplete(final QuestionApplicationCompositeId ids,
+                                                                        final long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
     }
 

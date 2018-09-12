@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;

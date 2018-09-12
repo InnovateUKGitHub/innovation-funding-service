@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class OtherFundingTest {
     }
 
     @Test
-    public void otherFundingShouldReturnCorrectBaseAttributesTest() throws Exception {
+    public void otherFundingShouldReturnCorrectBaseAttributesTest() {
         assert(otherFunding.getId().equals(id));
         assert(otherFunding.getOtherPublicFunding().equals(otherPublicFunding));
         assert(otherFunding.getFundingSource().equals(fundingSource));
@@ -36,7 +35,7 @@ public class OtherFundingTest {
     }
 
     @Test
-    public void calculateTotalsForOtherFundingTest() throws Exception {
+    public void calculateTotalsForOtherFundingTest() {
         BigDecimal expected = new BigDecimal(100243);
         assertEquals(expected, otherFunding.getTotal());
     }

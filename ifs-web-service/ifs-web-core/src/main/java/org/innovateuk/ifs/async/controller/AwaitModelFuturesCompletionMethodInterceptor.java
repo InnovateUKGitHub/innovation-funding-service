@@ -10,7 +10,8 @@ import static org.innovateuk.ifs.application.service.Futures.callAllFutures;
 
 /**
  * This method interceptor targets request-handling Controller methods and ensures that any Futures created via
- * {@link AsyncFuturesGenerator} (and any descendant Futures) are completed before the Controller completes.
+ * {@link AsyncFuturesGenerator} (and any descendant Futures) are completed before
+ * the Controller completes.
  */
 @Component
 public class AwaitModelFuturesCompletionMethodInterceptor implements MethodInterceptor {

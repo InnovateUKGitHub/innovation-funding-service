@@ -1,6 +1,31 @@
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.dependsOn prepareDockerInput
+buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+
+buildscript {
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+}
+
 bootRun {
     addResources = false
 }
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 project.version = applicationServiceVersion
 tagDocker.tag = applicationServiceVersion
@@ -25,17 +50,14 @@ prepareDockerBaseInput {
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-
+    compile project(':ifs-web-service:ifs-application-commons')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
-
-    testCompile "com.openpojo:openpojo:0.8.6"
-    testCompile "org.skyscreamer:jsonassert:1.5.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 

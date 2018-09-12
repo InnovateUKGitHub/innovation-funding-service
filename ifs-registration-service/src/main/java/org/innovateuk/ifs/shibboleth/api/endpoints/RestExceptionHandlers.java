@@ -17,9 +17,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
 
 public interface RestExceptionHandlers {
 
@@ -29,16 +30,16 @@ public interface RestExceptionHandlers {
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
         logger.debug("Duplicate Identity: ", exception);
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonList(exception.toErrorResponse()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(singletonList(exception.toErrorResponse()));
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
     default ResponseEntity<List<ErrorResponse>> handleInvalidPasswordException(final InvalidPasswordException exception) {
 
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
-        logger.debug("Invalid Password: ", exception);
+        logger.warn("Invalid Password: ", exception.getErrorResponses());
 
-        return ResponseEntity.badRequest().body(Collections.singletonList(exception.toErrorResponse()));
+        return ResponseEntity.badRequest().body(exception.getErrorResponses());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -46,8 +47,7 @@ public interface RestExceptionHandlers {
         final HttpMessageNotReadableException exception) {
 
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
-        logger.warn("Invalid request body on [{}] for [{}]", request.getRequestURL(), exception.getMessage());
-        logger.debug("Invalid request body - stacktrace.", exception);
+        logger.warn("Invalid request body on [{}] for [{}]", request.getRequestURL(), exception);
 
         return ResponseEntity.unprocessableEntity().body(new ExceptionResponse(exception));
     }
@@ -58,7 +58,6 @@ public interface RestExceptionHandlers {
 
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
         logger.warn("Invalid method arguments on [{}] for [{}]", request.getRequestURL(), exception.getMessage());
-        logger.debug("Invalid method arguments - stacktrace.", exception);
 
         // TODO - Verify this generates correct JSON response
 
@@ -97,7 +96,7 @@ public interface RestExceptionHandlers {
             String.valueOf(exception.getValue())
         );
 
-        final List<ErrorResponse> errorMessages = Collections.singletonList(
+        final List<ErrorResponse> errorMessages = singletonList(
             new ErrorResponse("INVALID_PARAMETER_TYPE", arguments)
         );
 
@@ -110,7 +109,7 @@ public interface RestExceptionHandlers {
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
         logger.debug("Password policy failure: ", exception);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(exception.toErrorResponse()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(singletonList(exception.toErrorResponse()));
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = UpcomingCompetitionController.class)
-@PreAuthorize("hasAuthority('assessor')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPCOMING_COMPETITION')")
 public class UpcomingCompetitionController {
 
     @Autowired

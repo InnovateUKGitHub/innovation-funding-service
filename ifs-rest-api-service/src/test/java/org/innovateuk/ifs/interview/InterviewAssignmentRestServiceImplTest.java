@@ -16,12 +16,12 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.junit.Assert.*;
@@ -221,5 +221,17 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         RestResult<InterviewApplicationSentInviteResource> actual = service.getSentInvite(applicationId);
 
         assertEquals(invite, actual.getSuccess());
+    }
+
+    @Test
+    public void resendInvite() {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = AssessorInviteSendResourceBuilder.newAssessorInviteSendResource()
+                .withContent("content").withSubject("subject").build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "resend-invite", applicationId), sendResource, OK);
+
+        RestResult<Void> actual = service.resendInvite(applicationId, sendResource);
+        assertTrue(actual.isSuccess());
     }
 }

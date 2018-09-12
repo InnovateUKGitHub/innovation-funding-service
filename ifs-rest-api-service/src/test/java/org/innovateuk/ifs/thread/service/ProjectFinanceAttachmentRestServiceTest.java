@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.upload.service.ProjectFinancePostAttachmentRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.upload.service.ProjectFinancePostAttachmentRestService;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 

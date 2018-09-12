@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.commons.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;

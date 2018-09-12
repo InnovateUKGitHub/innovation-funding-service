@@ -20,8 +20,9 @@ import static java.util.stream.Collectors.toList;
 
 public final class Futures {
 
-	private Futures() {}
-	
+    private Futures() {
+    }
+
     public static void callAllFutures(Model modelWithFutures) throws InterruptedException {
         for (Entry<String, Object> entry : modelWithFutures.asMap().entrySet()) {
             String key = entry.getKey();
@@ -36,7 +37,7 @@ public final class Futures {
         }
     }
 
-    public static <S> Stream<S> call(Stream<Future<S>> streamWithFutures){
+    public static <S> Stream<S> call(Stream<Future<S>> streamWithFutures) {
         return streamWithFutures.map(call());
     }
 
@@ -72,6 +73,7 @@ public final class Futures {
     /**
      * Adapt with a map Function. Note that there is no way of dealing with Exceptions in the adaptee, These will get
      * propagated as ExecutionExceptions.
+     *
      * @param base
      * @param adaptor
      * @param <T>
@@ -92,5 +94,4 @@ public final class Futures {
         settable.set(toSet);
         return settable;
     }
-
 }

@@ -1,19 +1,14 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
-import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<CompetitionSetupFinanceResource, CompetitionSetupFinanceResourceBuilder> {
 
@@ -29,8 +24,8 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
         return withArray((competitionId, competitionSetupFinance) -> setField("competitionId", competitionId, competitionSetupFinance), competitionIds);
     }
 
-    public CompetitionSetupFinanceResourceBuilder withFullApplicationFinance(Boolean... fullApplicationFinances) {
-        return withArray((fullApplicationFinance, competitionSetupFinance) -> setField("fullApplicationFinance", fullApplicationFinance, competitionSetupFinance), fullApplicationFinances);
+    public CompetitionSetupFinanceResourceBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceTypes) {
+        return withArray((applicationFinanceType, competitionSetupFinance) -> setField("applicationFinanceType", applicationFinanceType, competitionSetupFinance), applicationFinanceTypes);
     }
 
     public CompetitionSetupFinanceResourceBuilder withIncludeGrowthTable(Boolean... includeGrowthTables) {

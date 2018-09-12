@@ -8,7 +8,7 @@
 
   a {
     &.back {
-      font-size: 16px;
+      @include govuk-font(16);
       display: block;
       margin-top: 1em;
     }
@@ -17,6 +17,19 @@
   .question {
     overflow: hidden;
     margin: 20px 0;
+  }
+
+  .collapsible {
+    table {
+      th,
+      td {
+        @include govuk-font(16);
+      }
+
+      th {
+        font-weight: 700;
+      }
+    }
   }
 }
 
@@ -73,15 +86,15 @@
 
     button {
       &[aria-expanded] {
-        background-color: $grey-3;
+        @include govuk-font(19);
+        background-color: govuk-colour("grey-3");
         border: 0;
         border-radius: 0;
         box-shadow: 0 2px 0 #b5babe;
         box-sizing: border-box;
-        color: $black;
+        color: govuk-colour("black");
         cursor: pointer;
         display: inline-block;
-        font-size: 1em;
         font-weight: 400;
         line-height: 1.25;
         padding: .526315em .789473em .263157em;
@@ -99,5 +112,17 @@
 
   form {
     margin-top: 1em;
+  }
+}
+
+.collapsible-finances-summary{
+  section{
+    &:last-child{
+      .collapsible{
+        >div{
+          padding: 0;
+        }
+      }
+    }
   }
 }

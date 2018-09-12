@@ -35,7 +35,7 @@ public class NoteTest {
     }
 
     @Test
-    public void testItReturnsValuesAsTheyWereDefined() throws Exception {
+    public void itReturnsValuesAsTheyWereDefined() throws Exception {
         Assert.assertEquals(note.id(), id);
         Assert.assertEquals(note.contextClassPk(), classPk);
         Assert.assertEquals(note.contextClassName(), className);
@@ -45,12 +45,12 @@ public class NoteTest {
     }
 
     @Test
-    public void testItReturnsOptionalEmptyWhenNoPosts() {
+    public void itReturnsOptionalEmptyWhenNoPosts() {
         Assert.assertEquals(note.latestPost(), Optional.empty());
     }
 
     @Test
-    public void testItReturnsLatestAddedPostCorrectly() {
+    public void itReturnsLatestAddedPostCorrectly() {
         final Post p1 = new Post(33L, null, null, null, null);
         final Post p2 = new Post(44L, null, null, null, null);
         note.addPost(p1);

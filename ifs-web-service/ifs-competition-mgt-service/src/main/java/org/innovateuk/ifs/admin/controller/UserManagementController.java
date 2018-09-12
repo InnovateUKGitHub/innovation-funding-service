@@ -5,7 +5,7 @@ import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +14,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
@@ -53,6 +53,8 @@ public class UserManagementController extends AsyncAdaptor {
     private static final String DEFAULT_PAGE_SIZE = "40";
 
     private static final String FORM_ATTR_NAME = "form";
+
+    private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
 
     @Autowired
     private UserRestService userRestService;
@@ -121,9 +123,9 @@ public class UserManagementController extends AsyncAdaptor {
                     activeInternalUsers.getTotalElements(),
                     inactiveInternalUsers.getTotalElements(),
                     pendingInternalUserInvites.getTotalElements(),
-                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
-                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
-                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString));
+                    new Pagination(activeInternalUsers, "active?" + existingQueryString),
+                    new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
+                    new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString));
 
             model.addAttribute("model",
                     viewModel);
@@ -189,7 +191,7 @@ public class UserManagementController extends AsyncAdaptor {
         });
     }
 
-    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
+    private static EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
@@ -223,10 +225,10 @@ public class UserManagementController extends AsyncAdaptor {
         return emptyPage(model);
     }
 
-    private String emptyPage(Model model){
+    private static String emptyPage(Model model){
         model.addAttribute("mode", "init");
         model.addAttribute("users", emptyList());
-        return "admin/search-external-users";
+        return SEARCH_PAGE_TEMPLATE;
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
@@ -261,7 +263,7 @@ public class UserManagementController extends AsyncAdaptor {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "users");
                                 model.addAttribute("users", users.getSuccess());
-                                return "admin/search-external-users";
+                                return SEARCH_PAGE_TEMPLATE;
                             }
                     );
         });
@@ -277,7 +279,7 @@ public class UserManagementController extends AsyncAdaptor {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "invites");
                                 model.addAttribute("invites", invites.getSuccess());
-                                return "admin/search-external-users";
+                                return SEARCH_PAGE_TEMPLATE;
                             }
                     );
         });

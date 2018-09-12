@@ -45,7 +45,7 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
         try {
             alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
         } catch (ExecutionException e) {
-            LOG.error("exception thrown adding alert messages", e);
+            LOG.error("exception thrown getting alert messages", e);
             alerts = emptyList();
         }
 

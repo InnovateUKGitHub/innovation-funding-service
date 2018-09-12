@@ -22,10 +22,10 @@
 		<div id="sticky-zone">
 			<section class="info-area">
 				<div class="boxed">
-					<h2 class="heading-large no-margin" th:text="${(param.assessorName != null ? param.assessorName[0] : 'John Smith')}"></h2>
+					<h2 class="govuk-heading-l govuk-!-margin-0" th:text="${(param.assessorName != null ? param.assessorName[0] : 'John Smith')}"></h2>
 
-					<h2 class="heading-small">Contact details</h2>
-			        <p><a href="#">jsmith@asdf.com</a><br />
+					<h2 class="govuk-heading-s">Contact details</h2>
+			        <p class="govuk-body"><a href="#">jsmith@asdf.com</a><br />
 			        	0289 1814900</p>
 
 			        <dl class="standard-definition-list">
@@ -37,13 +37,13 @@
 
 		    <section class="data-area">
 
-		    	<h2 class="heading-large">Affiliations</h2>
+		    	<h2 class="govuk-heading-l">Affiliations</h2>
 
 
-		    	<div class="grid-row">
-		    		<div class="column-half">
+		    	<div class="govuk-grid-row">
+		    		<div class="govuk-grid-column-one-half">
 
-		    			<h3 class="heading-medium no-margin-top">Principal employer &#38; role</h3>
+		    			<h3 class="govuk-heading-m govuk-!-margin-top-0">Principal employer &#38; role</h3>
 
 		    			<dl class="standard-definition-list">
 							<dt>Principal employer</dt>
@@ -54,80 +54,80 @@
 
 		    		</div>
 
-		    		<div class="column-half">
-		    			<h3 class="heading-medium no-margin-top">Personal affiliations</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
+		    		<div class="govuk-grid-column-one-half">
+		    			<h3 class="govuk-heading-m govuk-!-margin-top-0">Personal affiliations</h3>
+						<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
 		    		</div>
 
 		    	</div>
 
-		    	<div class="grid-row">
-		    		<div class="column-half">
-		    			<h3 class="heading-medium no-margin-top">Appointments, directorships and consultancies</h3>
-						 <table>
-							<thead>
-								<tr>
-									<th>Organisation</th>
-									<th>Position</th>
+		    	<div class="govuk-grid-row">
+		    		<div class="govuk-grid-column-one-half">
+		    			<h3 class="govuk-heading-m govuk-!-margin-top-0">Appointments, directorships and consultancies</h3>
+						 <table class="govuk-table">
+							<thead class="govuk-table__head">
+								<tr class="govuk-table__row">
+									<th class="govuk-table__header" scope="col">Organisation</th>
+									<th class="govuk-table__header" scope="col">Position</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>NSPCC</td>
-									<td>Assistant director</td>
+							<tbody class="govuk-table__body">
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">NSPCC</td>
+									<td class="govuk-table__cell">Assistant director</td>
 
 								</tr>
-								<tr>
-									<td>BGMP</td>
-									<td>Consultant</td>
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">BGMP</td>
+									<td class="govuk-table__cell">Consultant</td>
 								</tr>
 
 							</tbody>
 						</table>
 		    		</div>
 
-		    		<div class="column-half">
-		    			<h3 class="heading-medium no-margin-top">Other pecuniary interests</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
+		    		<div class="govuk-grid-column-one-half">
+		    			<h3 class="govuk-heading-m govuk-!-margin-top-0">Other pecuniary interests</h3>
+						<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
 		    		</div>
 
 		    	</div>
 
-		    	<hr />
+		    	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-				<h2 class="heading-large">Close family member affiliations</h2>
+				<h2 class="govuk-heading-l">Close family member affiliations</h2>
 
-		    	<div class="grid-row">
+		    	<div class="govuk-grid-row">
 
-					<div class="column-half">
-						<h3 class="heading-medium no-margin-top">Close family member appointments, directorships and consultancies</h3>
-						<table>
-							<thead>
-								<tr>
-									<th>Relation</th>
-									<th>Organisation</th>
-									<th>Position</th>
+					<div class="govuk-grid-column-one-half">
+						<h3 class="govuk-heading-m govuk-!-margin-top-0">Close family member appointments, directorships and consultancies</h3>
+						<table class="govuk-table">
+							<thead class="govuk-table__head">
+								<tr class="govuk-table__row">
+									<th class="govuk-table__header" scope="col">Relation</th>
+									<th class="govuk-table__header" scope="col">Organisation</th>
+									<th class="govuk-table__header" scope="col">Position</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>Daughter</td>
-									<td>Npower</td>
-									<td>Vice chair</td>
+							<tbody class="govuk-table__body">
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">Daughter</td>
+									<td class="govuk-table__cell">Npower</td>
+									<td class="govuk-table__cell">Vice chair</td>
 								</tr>
-								<tr>
-									<td>Wife</td>
-									<td>EON</td>
-									<td>Director</td>
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">Wife</td>
+									<td class="govuk-table__cell">EON</td>
+									<td class="govuk-table__cell">Director</td>
 								</tr>
 
 							</tbody>
 						</table>
 					</div>
 
-					<div class="column-half">
-		    			<h3 class="heading-medium no-margin-top">Close family member other pecuniary interests</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
+					<div class="govuk-grid-column-one-half">
+		    			<h3 class="govuk-heading-m govuk-!-margin-top-0">Close family member other pecuniary interests</h3>
+						<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
 					</div>
 
 		    	</div>

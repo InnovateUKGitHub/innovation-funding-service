@@ -4,9 +4,9 @@ package org.innovateuk.ifs.review.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -80,6 +80,7 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
         return this;
     }
 
+    @Override
     public void setStatus(ParticipantStatus status) {
         super.setStatus(status);
     }

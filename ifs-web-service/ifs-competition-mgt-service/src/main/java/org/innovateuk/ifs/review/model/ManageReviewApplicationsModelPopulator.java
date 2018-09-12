@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.model;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.innovateuk.ifs.review.viewmodel.ManageReviewApplicationsRowViewModel;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class ManageReviewApplicationsModelPopulator {
                 simpleMap(assignedApplications, ManageReviewApplicationsModelPopulator::getRowViewModel),
                 filter,
                 sort,
-                new PaginationViewModel(applications, origin));
+                new Pagination(applications, origin));
         return model;
     }
 

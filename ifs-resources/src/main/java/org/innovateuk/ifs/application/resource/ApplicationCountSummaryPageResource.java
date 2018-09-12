@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.commons.resource.PageResource;
-
 import java.util.List;
 
 /**

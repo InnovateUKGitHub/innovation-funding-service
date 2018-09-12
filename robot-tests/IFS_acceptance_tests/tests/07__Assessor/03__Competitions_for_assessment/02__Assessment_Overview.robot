@@ -20,7 +20,9 @@ Assessment overview should show all the questions
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When the user clicks the button/link     link=${IN_ASSESSMENT_APPLICATION_5_TITLE}
-    Then The user should see the element     jQuery=h2:contains("Project details")
+    Then the user should see the element     jQuery=dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
+    And the user should see the element      jQuery=dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And The user should see the element      jQuery=h2:contains("Project details")
     And The user should see the element      jQuery=h2:contains("Application questions")
     And The user should see the element      jQuery=h2:contains("Finances")
 
@@ -36,7 +38,7 @@ Reject application (Unable to assess this application)
     ...
     ...    INFUND-5379
     [Tags]
-    When the user clicks the button/link                      jQuery=.summary:contains("Unable to assess this application")
+    When the user clicks the button/link                      jQuery=.govuk-details__summary-text:contains("Unable to assess this application")
     And the user fills in rejection details
     And the user clicks the button/link                       jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}

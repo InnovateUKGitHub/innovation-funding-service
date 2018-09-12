@@ -9,16 +9,15 @@ import java.util.Comparator;
  */
 public class ApplicationSummaryResourceLeadApplicantComparator extends DualFieldComparator<String, Long> implements Comparator<ApplicationSummaryResource> {
 
-	@Override
-	public int compare(ApplicationSummaryResource resource1, ApplicationSummaryResource resource2) {
-		
-		String o1LeadApplicant = resource1.getLeadApplicant();
-		String o2LeadApplicant = resource2.getLeadApplicant();
-		
-		Long o1Id = resource1.getId();
-		Long o2Id = resource2.getId();
-		
-		return compare(o1LeadApplicant, o2LeadApplicant, o1Id, o2Id);
-	}
+    @Override
+    public int compare(ApplicationSummaryResource resource1, ApplicationSummaryResource resource2) {
 
+        String o1LeadApplicant = resource1.getLeadApplicant();
+        String o2LeadApplicant = resource2.getLeadApplicant();
+
+        Long o1Id = resource1.getId();
+        Long o2Id = resource2.getId();
+
+        return compare(o1LeadApplicant, o2LeadApplicant, o1Id, o2Id);
+    }
 }

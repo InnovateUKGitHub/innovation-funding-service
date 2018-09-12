@@ -13,6 +13,7 @@ public final class ApplicationFormUtil {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
     public static final String APPLICATION_ID = "applicationId";
     public static final String APPLICATION_FORM = "application-form";
+    public static final String APPLICATION_FORM_LEAD = "application-lead-form";
     public static final String SECTION_URL = "/section/";
     public static final String EDIT_QUESTION = "edit_question";
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
@@ -30,6 +31,7 @@ public final class ApplicationFormUtil {
     public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
     public static final String ORGANISATION_SIZE_KEY = "organisationSize";
+    public static final String PROJECT_LOCATION_KEY = "projectLocation";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
 

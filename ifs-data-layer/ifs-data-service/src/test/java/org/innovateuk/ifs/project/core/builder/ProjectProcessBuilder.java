@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.project.core.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -9,10 +12,6 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-
-import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 
 /**
  * Builder for {@link ProjectProcess} entities.

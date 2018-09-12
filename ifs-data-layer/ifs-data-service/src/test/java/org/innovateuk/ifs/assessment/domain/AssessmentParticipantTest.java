@@ -9,9 +9,9 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
@@ -173,13 +173,10 @@ public class AssessmentParticipantTest {
         assertEquals("", competitionParticipant.getRejectionReasonComment());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void reject_noComment() throws Exception {
         AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, empty());
-        assertEquals(REJECTED, competitionParticipant.getStatus());
-        assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
-        assertNull(competitionParticipant.getRejectionReasonComment());
+        competitionParticipant.reject(rejectionReason, null);
     }
 }

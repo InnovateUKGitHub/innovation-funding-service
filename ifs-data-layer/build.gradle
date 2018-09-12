@@ -1,7 +1,7 @@
+group 'innovateuk'
+version project.version
 
-subprojects {
-    ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
-}
+apply plugin: 'idea'
 
 ext {
     pactDir = file('ifs-data-service/build/pacts')

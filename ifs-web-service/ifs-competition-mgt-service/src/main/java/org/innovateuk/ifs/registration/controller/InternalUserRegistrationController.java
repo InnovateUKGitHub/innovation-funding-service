@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * Controller to manage internal user registration.
@@ -71,8 +70,16 @@ public class InternalUserRegistrationController {
         } else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 ServiceResult<Void> result = internalUserService.createInternalUser(inviteHash, registrationForm);
-                return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                        failNowOrSucceedWith(failureView, () -> format("redirect:/registration/%s/register/account-created", inviteHash));
+                result.getErrors().forEach(error -> {
+                    if (StringUtils.hasText(error.getFieldName())) {
+                        bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
+                    } else {
+                        bindingResult.reject("registration." + error.getErrorKey());
+                    }
+                });
+                return validationHandler.
+                            failNowOrSucceedWith(failureView,
+                                                 () -> format("redirect:/registration/%s/register/account-created", inviteHash));
             });
         }
     }

@@ -32,27 +32,26 @@ Non-registered assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
-    Then the user should see the element    jQuery=.button:contains("Create account")
+    Then the user should see the element    jQuery=.govuk-button:contains("Create account")
 
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
-    When the user clicks the button/link           jQuery=.button:contains("Create account")
-    Then the user should see the element           jQuery=.heading-small:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            jQuery=.link-back:contains("Back")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Create account")
+    Then the user should see the element           jQuery=.govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    And the user clicks the button/link            jQuery=.govuk-back-link:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
-    Given the user clicks the button/link  jQuery=.button:contains("Create account")
+    Given the user clicks the button/link  jQuery=.govuk-button:contains("Create account")
     When the user clicks the button/link   jQuery=button:contains("Continue")
     Then the user should see an error      Please enter a first name.
     And the user should see an error       Please enter a last name.
     And the user should see an error       Please enter a phone number.
     And the user should see an error       Please enter your password.
-    And the user should see an error       Please enter a valid phone number.
-    And the user should see an error       Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error       Please enter a valid phone number between 8 and 20 digits.
     And the user should see an error       Your last name should have at least 2 characters.
     And the user should see an error       Your first name should have at least 2 characters.
     And the user should see an error       Password must be at least 8 characters.
@@ -66,8 +65,7 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form  Please enter a last name.
     When the user enters text to a text field                                      id=phoneNumber    123123123123
     Then the user should not see the validation error in the create assessor form  Please enter a phone number.
-    And the user should not see the validation error in the create assessor form   Please enter a valid phone number.
-    And the user should not see the validation error in the create assessor form   Input for your phone number has a minimum length of 8 characters.
+    And the user should not see the validation error in the create assessor form   Please enter a valid phone number between 8 and 20 digits.
     When The user enters text to a text field                                      id=password    ${correct_password}
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
@@ -106,7 +104,7 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
-    Then the user should see the element   jQuery=h3:contains("Innovation areas") ~ ul li:contains("Emerging and enabling") li:contains("Satellite applications")
+    Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
@@ -134,7 +132,7 @@ the user should not see the validation error in the create assessor form
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Continue")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the assessor shouldn't be able to reject the rejected competition
@@ -147,4 +145,4 @@ the assessor shouldn't be able to accept the rejected competition
 
 The assessor is unable to see the invitation
     the user should see the element   jQuery=h1:contains("This invitation is now closed")
-    The user should see the element   jQuery=span:contains("You have already accepted or rejected this invitation.")
+    The user should see the element   jQuery=p:contains("You have already accepted or rejected this invitation.")

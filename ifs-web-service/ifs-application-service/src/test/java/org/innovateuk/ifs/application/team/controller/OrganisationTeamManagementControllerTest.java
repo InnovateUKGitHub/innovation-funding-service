@@ -37,8 +37,15 @@ public class OrganisationTeamManagementControllerTest extends BaseControllerMock
     }
 
     private static ApplicationTeamManagementViewModel createAViewModel() {
-        return new ApplicationTeamManagementViewModel(1L,"application name", 2L, 3L, "organisation name", true, true, emptyList(), true);
+        return new ApplicationTeamManagementViewModel(1L,
+                2L,
+                "application name",
+                3L,
+                4L,
+                "organisation name",
+                true,
+                true,
+                emptyList(),
+                true);
     }
-
-
 }

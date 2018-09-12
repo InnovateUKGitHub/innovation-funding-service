@@ -132,4 +132,9 @@ public class InterviewAssignmentController {
     public RestResult<InterviewApplicationSentInviteResource> getSentInvite(@PathVariable("applicationId") long applicationId) throws IOException {
         return interviewApplicationInviteService.getSentInvite(applicationId).toGetResponse();
     }
+
+    @PostMapping("/resend-invite/{applicationId}")
+    public RestResult<Void> resendInvite(@PathVariable long applicationId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return interviewApplicationInviteService.resendInvite(applicationId, assessorInviteSendResource).toPostWithBodyResponse();
+    }
 }

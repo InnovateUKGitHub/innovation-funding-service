@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.controller.QuestionController;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.documentation.QuestionDocs.questionBuilder;
 import static org.innovateuk.ifs.documentation.QuestionDocs.questionFields;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
@@ -173,6 +175,25 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
                         responseFields(
                                 fieldWithPath("[]").description("An array of the questions which are visible for the specified assessment")
                         )
+                ));
+    }
+
+    @Test
+    public void getQuestionByCompetitionIdAndQuestionSetupType() throws Exception {
+        final Long competitionId = 1L;
+        final QuestionSetupType setupQuestionType = APPLICATION_TEAM;
+
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                setupQuestionType)).thenReturn(serviceSuccess(questionBuilder.build()));
+
+        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}",
+                            competitionId, setupQuestionType))
+                .andDo(document("question/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition for which a question should be returned for"),
+                                parameterWithName("type").description("QuestionSetupType of the question we want to be returned")
+                        ),
+                        responseFields(questionFields)
                 ));
     }
 }

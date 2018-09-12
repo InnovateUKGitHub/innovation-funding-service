@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 

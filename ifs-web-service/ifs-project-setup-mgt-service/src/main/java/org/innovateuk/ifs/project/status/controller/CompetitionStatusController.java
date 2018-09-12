@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -52,21 +54,22 @@ public class CompetitionStatusController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
-                                           @PathVariable Long competitionId) {
+                                           @PathVariable Long competitionId,
+                                           @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString) {
 
         boolean isUserRoleProjectFinance = loggedInUser.hasRole(PROJECT_FINANCE);
 
         model.addAttribute("model",
-                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccess(),
+                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess(),
                         loggedInUser,
                         isUserRoleProjectFinance ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess() : 0L,
                         isUserRoleProjectFinance ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0,

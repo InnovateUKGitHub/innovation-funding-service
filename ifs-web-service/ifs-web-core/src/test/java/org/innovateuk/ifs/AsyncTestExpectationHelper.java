@@ -3,7 +3,7 @@ package org.innovateuk.ifs;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
-import org.innovateuk.ifs.async.util.*;
+import org.innovateuk.ifs.async.generation.handler.*;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.util.*;
 import org.mockito.Matchers;

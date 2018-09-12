@@ -12,8 +12,6 @@ import java.util.List;
  */
 public interface ResearchCategoryRepository extends CrudRepository<ResearchCategory, Long> {
 
-    ResearchCategory findById(long id);
-
     ResearchCategory findByName(String name);
 
     List<ResearchCategory> findAll();

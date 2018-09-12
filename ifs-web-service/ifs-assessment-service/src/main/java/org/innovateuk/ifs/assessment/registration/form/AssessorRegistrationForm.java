@@ -5,14 +5,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.Gender;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
 
 /**
  * Form field model for the Assessor Registration
@@ -41,30 +39,12 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     })
     private String password;
 
-    @NotNull(message = "{validation.standard.gender.selectionrequired}")
-    private Gender gender = Gender.NOT_STATED;
-
-    @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
-    private EthnicityResource ethnicity;
-
-    @NotNull(message = "{validation.standard.disability.selectionrequired}")
-    private Disability disability = Disability.NOT_STATED;
-
     @Valid
     private AddressForm addressForm = new AddressForm();
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Size.List ({
-            @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
-            @Size(max=20, message="{validation.standard.phonenumber.length.max}")
-    })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
-
-    public AssessorRegistrationForm() {
-        this.ethnicity = new EthnicityResource();
-        ethnicity.setId(7L);
-    }
 
     public String getFirstName() {
         return firstName;
@@ -88,30 +68,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public EthnicityResource getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(EthnicityResource ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
     }
 
     public AddressForm getAddressForm() {
@@ -143,9 +99,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(password, that.password)
-                .append(gender, that.gender)
-                .append(ethnicity, that.ethnicity)
-                .append(disability, that.disability)
                 .append(addressForm, that.addressForm)
                 .append(phoneNumber, that.phoneNumber)
                 .isEquals();
@@ -157,9 +110,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName)
                 .append(lastName)
                 .append(password)
-                .append(gender)
-                .append(ethnicity)
-                .append(disability)
                 .append(addressForm)
                 .append(phoneNumber)
                 .toHashCode();

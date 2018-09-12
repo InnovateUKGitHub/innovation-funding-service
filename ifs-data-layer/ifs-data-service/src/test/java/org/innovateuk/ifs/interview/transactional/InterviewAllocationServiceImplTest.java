@@ -17,12 +17,9 @@ import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -49,6 +46,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.n
 import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -76,7 +74,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     @Mock
     private SystemNotificationSource systemNotificationSourceMock;
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
     @Mock
     private ApplicationRepository applicationRepositoryMock;
     @Mock
@@ -371,14 +369,14 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         when(interviewParticipantRepositoryMock
                 .findByUserIdAndCompetitionIdAndRole(user.getId(), competition.getId(), CompetitionParticipantRole.INTERVIEW_ASSESSOR))
                 .thenReturn(interviewParticipant);
-        when(notificationSenderMock.sendNotification(expectedNotification)).thenReturn(serviceSuccess(expectedNotification));
+        when(notificationServiceMock.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
         service.notifyAllocation(interviewNotifyAllocationResource).getSuccess();
 
-        InOrder inOrder = inOrder(notificationSenderMock, applicationRepositoryMock, interviewParticipantRepositoryMock, interviewWorkflowHandlerMock, interviewRepositoryMock);
+        InOrder inOrder = inOrder(notificationServiceMock, applicationRepositoryMock, interviewParticipantRepositoryMock, interviewWorkflowHandlerMock, interviewRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(applications.get(0).getId());
         inOrder.verify(interviewWorkflowHandlerMock).notifyInvitation(interview);
-        inOrder.verify(notificationSenderMock).sendNotification(expectedNotification);
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(expectedNotification, EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 

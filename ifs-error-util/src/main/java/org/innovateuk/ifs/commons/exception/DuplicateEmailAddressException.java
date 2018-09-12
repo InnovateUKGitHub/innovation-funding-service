@@ -8,7 +8,7 @@ import java.util.List;
 public class DuplicateEmailAddressException extends IFSRuntimeException {
 
     public DuplicateEmailAddressException() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public DuplicateEmailAddressException(List<Object> arguments) {

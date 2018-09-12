@@ -19,6 +19,7 @@ public interface QuestionStatusRestService {
     RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, long applicationId, long organisationId);
     RestResult<List<ValidationMessages>> markAsComplete(long questionId, long applicationId, long markedAsCompleteById);
     RestResult<Void> markAsInComplete(long questionId, long applicationId, long markedAsInCompleteById);
+    RestResult<Void> markTeamAsInComplete(long questionId, long applicationId, long markedAsInCompleteById);
     RestResult<Void> assign(long questionId, long applicationId, long assigneeId, long assignedById);
     RestResult<Void> updateNotification(long questionStatusId, boolean notify);
     Future<Set<Long>> getMarkedAsComplete(long applicationId, long organisationId);

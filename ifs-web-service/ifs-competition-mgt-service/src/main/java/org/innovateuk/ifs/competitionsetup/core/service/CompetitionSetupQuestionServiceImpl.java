@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -13,6 +10,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private SectionService sectionService;
@@ -96,7 +97,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
     private List<Long> getAllQuestionIds(Long competitionId) {
-        List<QuestionResource> questionResources = questionService.findByCompetition(competitionId);
+        List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionId).getSuccess();
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionId);
 
         Set<SectionResource> parentSections = sections.stream()
@@ -109,7 +110,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .collect(Collectors.toSet());
 
         return questionResources.stream()
-                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()) && !"Application details".equals(question.getName()))
+                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
+                .filter(question -> question.getType() != QuestionType.LEAD_ONLY)
                 .map(questionResource -> questionResource.getId())
                 .collect(Collectors.toList());
     }

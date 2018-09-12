@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
-import org.innovateuk.ifs.application.service.QuestionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.viewmodel.LandingViewModel;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 
 /**
  * populates the model for the Application Questions landing page of the competition setup section.
@@ -33,11 +34,11 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class LandingModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-	@Autowired
-	private SectionService sectionService;
+    @Autowired
+    private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -46,14 +47,14 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     private QuestionSetupRestService questionSetupRestService;
 
     @Override
-	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.APPLICATION_FORM;
-	}
+    public CompetitionSetupSection sectionToPopulateModel() {
+        return CompetitionSetupSection.APPLICATION_FORM;
+    }
 
-	@Override
-	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-		List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
-		List<QuestionResource> questionResources = questionService.findByCompetition(competitionResource.getId());
+    @Override
+    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+        List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
+        List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
         List<SectionResource> generalSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL)
                 .collect(Collectors.toList());
@@ -77,7 +78,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
                 allStatusesComplete);
     }
 
-    private Map<CompetitionSetupSubsection,Boolean> convertWithDefaultsIfNotPresent(Map<CompetitionSetupSubsection, Optional<Boolean>> subSectionsStatuses) {
+    private Map<CompetitionSetupSubsection, Boolean> convertWithDefaultsIfNotPresent(Map<CompetitionSetupSubsection, Optional<Boolean>> subSectionsStatuses) {
         return subSectionsStatuses.entrySet().stream().collect(toMap(o -> o.getKey(), o -> o.getValue().orElse(Boolean.FALSE)));
     }
 
@@ -90,8 +91,8 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
         return section.isPresent() ? questionResources.stream()
-                .filter(questionResource ->  section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> !questionResource.getQuestionSetupType().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS))
+                .filter(questionResource -> section.get().getQuestions().contains(questionResource.getId()))
+                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
                 .collect(Collectors.toList())
                 : new ArrayList<>();
     }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.commons;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 

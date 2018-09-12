@@ -43,7 +43,7 @@ public class HttpConfig {
     }
 
     private RestTemplate configureRestTemplate(RestTemplate restTemplate) {
-        restTemplate.getMessageConverters().stream().filter(m -> m.getClass().getName().equals(MappingJackson2HttpMessageConverter.class.getName())).forEach(m ->
+        restTemplate.getMessageConverters().stream().filter(m -> m.getClass().isAssignableFrom(MappingJackson2HttpMessageConverter.class)).forEach(m ->
             ((MappingJackson2HttpMessageConverter) m).getObjectMapper().registerModule(new JacksonZoneDateDeserializerModule())
         );
         return restTemplate;

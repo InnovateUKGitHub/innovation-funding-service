@@ -7,8 +7,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -102,7 +102,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void consortiumCanSeeTheApplicationFinancesForTheirOrganisationTest() {
+    public void consortiumCanSeeTheApplicationFinancesForTheirOrganisation() {
         assertTrue(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(applicationFinance, collaborator));
 
@@ -130,7 +130,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testUpdateCosts() {
+    public void updateCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
@@ -139,21 +139,26 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testAddCosts() {
+    public void addCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
-        assertTrue(rules.supportCanAddACostToApplicationFinance(applicationFinance, supportUser()));
-        assertTrue(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, supportUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, ifsAdminUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, compAdminUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, projectFinanceUser()));
+
         assertTrue(rules.assessorCanAddACostToApplicationFinance(applicationFinance, assessor));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
-        assertFalse(rules.supportCanAddACostToApplicationFinance(applicationFinance, compAdmin));
-        assertFalse(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, compAdmin));
+
+        assertFalse(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, systemRegistrationUser()));
     }
 
     @Test
-    public void testLeadCanGetFileResourceForPartner() {
+    public void leadCanGetFileResourceForPartner() {
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
         assertTrue(rules.assessorUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, assessor));
@@ -162,7 +167,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testInternalUserCanGetFileResourceForPartner(){
+    public void internalUserCanGetFileResourceForPartner(){
         assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
         assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
         assertFalse(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
@@ -170,28 +175,28 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testConsortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
+    public void consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
         assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
         assertFalse(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
     }
 
     @Test
-    public void testConsortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(){
+    public void consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(){
         assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
         assertFalse(rules.consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
     }
 
     @Test
-    public void testConsortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(){
+    public void consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(){
         assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
         assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
     }
 
     @Test
-    public void testInternalUserCanGetApplicationFinance(){
+    public void internalUserCanGetApplicationFinance(){
         assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
         assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, projectFinanceUser()));
         assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));

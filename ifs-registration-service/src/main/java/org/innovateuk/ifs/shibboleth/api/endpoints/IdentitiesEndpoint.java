@@ -11,12 +11,16 @@ import org.innovateuk.ifs.shibboleth.api.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/identities")
@@ -46,8 +50,17 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Identity> createIdentity(@Valid @RequestBody final NewIdentity newIdentity)
+    public ResponseEntity<Identity> createIdentity(@Valid @RequestBody final NewIdentity newIdentity,
+                                                   BindingResult bindingResult)
         throws DuplicateEmailException, InvalidPasswordException {
+
+        if (bindingResult.hasFieldErrors("password")) {
+            throwExceptionOnInvalidPassword(bindingResult);
+        }
+
+        if (bindingResult.hasFieldErrors("email")) {
+            throw new DuplicateEmailException();
+        }
 
         LOG.debug("create request: {}", newIdentity);
 
@@ -66,7 +79,6 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
                 identity
             );
     }
-
 
     @RequestMapping(path = "/{uuid}", method = RequestMethod.GET)
     public Identity getIdentity(@PathVariable final UUID uuid) {
@@ -89,7 +101,8 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
 
 
     @RequestMapping(path = "/{uuid}/email", method = RequestMethod.PUT)
-    public ResponseEntity<Void> changeEmail(@PathVariable final UUID uuid, @Valid @RequestBody final ChangeEmail change)
+    public ResponseEntity<Void> changeEmail(@PathVariable final UUID uuid,
+                                            @Valid @RequestBody final ChangeEmail change)
         throws DuplicateEmailException {
 
         LOG.debug("change email request: UUID [{}], [{}]", uuid, change);
@@ -102,9 +115,13 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
 
     @RequestMapping(path = "/{uuid}/password", method = RequestMethod.PUT)
     public ResponseEntity<Void> changePassword(@PathVariable final UUID uuid,
-        @Valid @RequestBody final ChangePassword change) throws InvalidPasswordException {
+                                               @Valid @RequestBody final ChangePassword change,
+                                               BindingResult bindingResult)
+            throws InvalidPasswordException {
 
-        LOG.debug("change password request: UUID [{}], [{}]", uuid, change);
+        if (bindingResult.hasFieldErrors("password")) {
+            throwExceptionOnInvalidPassword(bindingResult);
+        }
 
         updateService.changePassword(uuid, change.getPassword());
 
@@ -143,5 +160,13 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
     public Boolean getAccountLockStatus(@PathVariable final UUID uuid) throws PasswordPolicyException {
         LOG.debug("get account lock request: UUID [{}]", uuid);
         return userAccountLockoutService.getAccountLockStatus(uuid);
+    }
+
+    private void throwExceptionOnInvalidPassword (BindingResult bindingResult) throws InvalidPasswordException {
+        List<String> errors = bindingResult.getFieldErrors("password")
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+        throw new InvalidPasswordException(errors);
     }
 }

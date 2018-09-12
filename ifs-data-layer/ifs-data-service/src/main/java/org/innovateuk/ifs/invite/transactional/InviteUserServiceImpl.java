@@ -18,9 +18,8 @@ import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.util.EmailService;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -47,6 +46,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -55,6 +55,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
+
+    private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
     @Autowired
     private RoleInviteRepository roleInviteRepository;
@@ -69,12 +71,13 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private RoleInviteMapper roleInviteMapper;
 
     @Autowired
-    private EmailService emailService;
+    private NotificationService notificationService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
-    private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -158,10 +161,11 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         try {
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
 
-            ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
+            Notification notification = new Notification(systemNotificationSource,
                     singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
-                    globalArgs,
-                    Notifications.INVITE_INTERNAL_USER);
+                    Notifications.INVITE_INTERNAL_USER, globalArgs);
+
+            ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
             inviteContactEmailSendResult.handleSuccessOrFailure(
                     failure -> handleInviteError(roleInvite, failure),

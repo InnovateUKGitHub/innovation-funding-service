@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.registration.populator;
 
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrationBecomeAnAssessorViewModel;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

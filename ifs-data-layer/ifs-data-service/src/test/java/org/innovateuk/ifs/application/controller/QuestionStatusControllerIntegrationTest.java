@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -105,30 +104,24 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         );
     }
 
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
     @Test
     public void testGetMarkedAsComplete() throws Exception {
         // Start with zero completed
         Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(7, markedAsComplete.size());
+        assertEquals(9, markedAsComplete.size());
 
         // Complete one section
         controller.markAsComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(8, markedAsComplete.size());
+        assertEquals(10, markedAsComplete.size());
 
         // Mark section as incomplete again.
         controller.markAsInComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(7, markedAsComplete.size());
+        assertEquals(9, markedAsComplete.size());
     }
 
     @Test
@@ -186,7 +179,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
 
         List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccess();
         // Since the assessment is for an application of competition 1, expect all of the questions of this competition that are visible for assessment
-        assertEquals(asList(9L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
+        assertEquals(asList(248L, 9L, 249L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
                 simpleMap(questions, QuestionResource::getId));
     }
 }

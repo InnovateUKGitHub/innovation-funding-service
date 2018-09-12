@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
 

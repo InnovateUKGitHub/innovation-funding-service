@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.util;
 
-import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
