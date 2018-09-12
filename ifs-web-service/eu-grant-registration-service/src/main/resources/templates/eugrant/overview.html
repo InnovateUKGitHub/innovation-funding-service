@@ -94,13 +94,13 @@
                 </legend>
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" />
+                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" data-switches-button-status="#submit-grant" />
                         <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a>.</label>
                     </div>
                 </div>
             </div>
 
-            <button name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
+            <button id="submit-grant" name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
                 Submit
             </button>
 
