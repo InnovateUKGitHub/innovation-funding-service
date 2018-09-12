@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.eugrant.repository;
+package org.innovateuk.ifs.euactiontype.repository;
 
-import org.innovateuk.ifs.eugrant.domain.EuActionType;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
