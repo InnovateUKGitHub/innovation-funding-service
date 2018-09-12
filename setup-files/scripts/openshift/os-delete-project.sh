@@ -18,7 +18,7 @@ echo "Deleting $PROJECT Openshift project"
 
 oc delete project ${PROJECT} ${SVC_ACCOUNT_CLAUSE}
 
-until oc get project ${PROJECT} ${SVC_ACCOUNT_CLAUSE}; do
+until RESULT=$(oc get project ${PROJECT} ${SVC_ACCOUNT_CLAUSE} 2>&1); echo $RESULT | grep "not found"; do
     echo "Project is not deleted yet.."
     sleep 15
 done
