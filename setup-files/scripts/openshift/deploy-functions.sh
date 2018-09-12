@@ -283,12 +283,17 @@ function pushAnonymisedDatabaseDumpImages() {
 }
 
 function blockUntilServiceIsUp() {
+    while oc get pods ${SVC_ACCOUNT_CLAUSE} 2>&1 | grep "No resources found."; do
+        echo "No pods are deployed yet.."
+        sleep 15
+    done
+
     UNREADY_PODS=1
     while [ ${UNREADY_PODS} -ne "0" ]
     do
         UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
         oc get pods ${SVC_ACCOUNT_CLAUSE}
-        echo "$UNREADY_PODS pods still not ready"
+        echo "$UNREADY_PODS pods still not ready.."
         sleep 5s
     done
     oc get routes ${SVC_ACCOUNT_CLAUSE}
