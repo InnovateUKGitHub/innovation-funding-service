@@ -128,7 +128,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         if(userResult.isPresent()) {
             Optional<OrganisationResource> organisationResult = organisationService.getByUserAndApplicationId(userResult.get().getId(), applicationId).getOptionalSuccessObject();
             if(organisationResult.isPresent()) {
-                return OrganisationTypeEnum.RESEARCH.getId().equals(organisationResult.get().getOrganisationType());
+                return OrganisationTypeEnum.RESEARCH.getId() == organisationResult.get().getOrganisationType();
             }
         }
 

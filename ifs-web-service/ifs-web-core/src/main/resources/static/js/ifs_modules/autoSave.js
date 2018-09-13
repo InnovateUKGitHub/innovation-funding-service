@@ -9,7 +9,7 @@ IFS.core.autoSave = (function () {
 
   return {
     settings: {
-      inputs: '[data-autosave] input:not([type="button"],[readonly="readonly"],[type="hidden"],[data-autosave-disabled])',
+      inputs: '[data-autosave] input:not([type="button"],[type="file"],[readonly="readonly"],[type="hidden"],[data-autosave-disabled])',
       select: '[data-autosave] select:not([readonly="readonly"],[data-autosave-disabled])',
       textareas: '[data-autosave] textarea:not([readonly="readonly"],[data-autosave-disabled])',
       typeTimeout: 500,
@@ -38,6 +38,7 @@ IFS.core.autoSave = (function () {
     },
     fieldChanged: function (element) {
       var field = jQuery(element)
+
       // per field we handle the request on a promise base, this means that ajax calls should be per field sequental
       // this means we can still have async as two fields can still be processed at the same time
       // http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
@@ -189,7 +190,7 @@ IFS.core.autoSave = (function () {
         }
 
         var name = field.prop('name')
-        var formGroup = field.closest('.form-group')
+        var formGroup = field.closest('.govuk-form-group')
         var autoSaveInfo = formGroup.find('.autosave-info')
         var startAjaxTime = new Date().getTime()
 
@@ -243,7 +244,7 @@ IFS.core.autoSave = (function () {
                 return true
               } else {
                 var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-                autoSaveInfo.html('<span class="error-message">' + errorMessage + '</span>')
+                autoSaveInfo.html('<span class="govuk-error-message">' + errorMessage + '</span>')
               }
             }
           }).always(function () {

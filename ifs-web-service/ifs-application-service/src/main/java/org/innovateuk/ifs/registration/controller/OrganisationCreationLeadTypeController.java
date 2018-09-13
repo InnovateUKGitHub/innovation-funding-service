@@ -115,10 +115,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
-        if(organisationTypeId != null) {
-            return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
-        }
-        return true;
+        return organisationTypeId != null && OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
     private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {

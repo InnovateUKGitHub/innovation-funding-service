@@ -36,171 +36,171 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications not submitted'}, ${null})" />
 
-  <h2 class="heading-medium">Key statistics</h2>
+  <h2 class="govuk-heading-m">Key statistics</h2>
 
-  <div class="grid-row">
+  <div class="govuk-grid-row">
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">4</span><br />
+        <span class="govuk-heading-l">4</span><br />
         <small>applications submitted</small>
       </div>
     </div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">18</span><br />
+        <span class="govuk-heading-l">18</span><br />
         <small>applications not submitted</small>
       </div>
     </div>
 
   </div>
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='notSubmittedApplications'" />
 
 			<div class="table-overflow">
 				<table id="application-list">
-					<thead>
-						<tr>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-							<th scope="col">Area</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Application number</th>
+							<th class="govuk-table__header" scope="col">Project title</th>
+							<th class="govuk-table__header" scope="col">Lead</th>
+							<th class="govuk-table__header" scope="col">Area</th>
 							<th scope="col" class="alignright">Percentage complete</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 
 						<tr class="filtered-result">
-							<th scope="col">
+							<th class="govuk-table__header" scope="col">
 								<a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194735</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">89</td>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">89</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194736</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">86</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194736</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">86</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194737</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">86</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194737</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">86</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194738</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">84</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194738</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">84</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194739</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">85</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194739</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">85</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194740</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">83</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194740</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">83</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194741</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">82</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194741</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">82</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194742</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">81</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194742</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">81</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194743</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">76</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194743</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">76</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194744</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">75</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194744</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">75</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194745</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">70</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194745</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">70</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194746</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">67</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194746</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">67</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194747</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">65</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194747</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">65</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194748</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">60</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194748</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">60</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194749</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">59</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194749</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">59</td>
 						</tr>
 
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194750</a></th>
-							<td>Example application</td>
-							<td>Example lead</td>
-							<td>HVM</td>
-							<td class="alignright">50</td>
+							<th class="govuk-table__header" scope="col"><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194750</a></th>
+							<td class="govuk-table__cell">Example application</td>
+							<td class="govuk-table__cell">Example lead</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">50</td>
 						</tr>
 
 					</tbody>

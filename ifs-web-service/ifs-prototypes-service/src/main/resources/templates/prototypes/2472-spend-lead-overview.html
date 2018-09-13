@@ -20,35 +20,35 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" />
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
-		<div class="success-alert extra-margin-bottom">
-			<p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<p class="govuk-body"><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
 		</div>
 	</div>
 
-	<p>This overview shows the spend profile status of each partner in your project.</p>
+	<p class="govuk-body">This overview shows the spend profile status of each partner in your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
-		<h2 class="heading-medium">Spend profile</h2>
-		<p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application. You may view the submitted spend profiles.</p>
+		<h2 class="govuk-heading-m">Spend profile</h2>
+		<p class="govuk-body">All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application. You may view the submitted spend profiles.</p>
 
 		<a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project spend profile</a>
 
 	</div>
 
 
-	<h2 class="heading-medium">Partner progress</h2>
+	<h2 class="govuk-heading-m">Partner progress</h2>
 
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Partner</th>
 					<th scope="col" style="width: 50%">Progress</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<td th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}">
 						<a th:href="${param.status != null and param.status[0] == 'Submitted' ? '/prototypes/3100-spend?status=Submitted':'/prototypes/3100-spend'}">Aptrans Ltd (Lead)</a>
 					</td>
@@ -59,21 +59,21 @@
 						In progress
 					</td>
 					<div th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-						<td>
+						<td class="govuk-table__cell">
 							<span class="yes">Complete</span>
 						</td>
 					</div>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a href="/prototypes/3100-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">Biotech Corp</a>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						University of Cardiff
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'Submitted'}">
@@ -89,9 +89,9 @@
 
 	<div th:if="${param.status == null or param.status[0] != 'Submitted'}" th:remove="tag">
 
-		<p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must make sure they fit the timelines of your project plan.</p>
+		<p class="govuk-body extra-margin">Please review each partner's spend profile once they are marked as complete. You must make sure they fit the timelines of your project plan.</p>
 
-		<a href="/prototypes/3100-spend?task=reviewProject" class="button">Review and submit total project spend profile</a>
+		<a href="/prototypes/3100-spend?task=reviewProject" class="govuk-button">Review and submit total project spend profile</a>
 
 	</div>
 

@@ -40,7 +40,6 @@ ${application_name}    Invite robot test application
 ${newLeadApplicant}  kevin@worth.systems
 ${newCollaborator}   jerry@worth.systems
 ${organisation}   org2
-#TODO formularise the changes!!
 
 *** Test Cases ***
 Application team page
@@ -126,7 +125,7 @@ Partner organisation Server-side validations
     And The user enters text to a text field   name=applicants[0].name    ${EMPTY}
     And The user enters text to a text field   name=applicants[0].email    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        jQuery=.button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link        jQuery=.govuk-button:contains("Add organisation and invite applicants")
     Then the user should see an error          An organisation name is required.
     And the user should see an error           Please enter a name.
     And the user should see an error           Please enter an email address.
@@ -170,9 +169,9 @@ Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button               organisationType    1
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
     And the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
@@ -183,7 +182,7 @@ Partner requests new verification email via password reset
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field       id=email    ${invite_email}
-    And the user clicks the button/link            css=button
+    And the user clicks the button/link            jQuery=#forgotten-password-cta
     Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
 
 Complete account verification
@@ -197,7 +196,7 @@ Partner should be able to log-in and see the new company name
     ...
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link                   jQuery=.button:contains("Sign in")
+    Given the user clicks the button/link                   link = Sign in
     When the user logs-in in new browser                    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page  ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
@@ -254,10 +253,10 @@ Registered partner should not create new org but should follow the create accoun
     [Tags]    Email
     When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
-    And the user clicks the button/link                    jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation
     And the user should see the element                    link=email the lead applicant
-    And the user clicks the button/link                    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Confirm and continue")
     And the invited user fills the create account form     Roger  Axe
     And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
@@ -299,7 +298,7 @@ The lead applicant should have the correct status
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 The lead applicant should have the correct org status
-    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")   #forularise
+    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -343,7 +342,7 @@ the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
@@ -356,7 +355,7 @@ the lead applicant invites the collaborator
 the collaborator accepts the invite and is able to see the application without any errors
     The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
     The user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
-    The user should see the element               jQuery=h1:contains("Choose your organisation type")
+    The user should see the element               jQuery=h1:contains("Choose organisation type")
     The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
     The user clicks the button/link               jQuery=.progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page

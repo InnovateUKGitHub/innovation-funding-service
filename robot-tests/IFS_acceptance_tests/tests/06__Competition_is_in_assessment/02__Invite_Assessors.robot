@@ -36,6 +36,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-1146 Assessor management - Resending invite emails in bulk
 ...
 ...               IFS-1445 Assessor management- 'Accepted' tab on invite assessors dashboard
+...
+...               IFS-3943 Assessor profile view - Internal
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -72,7 +74,7 @@ The User can Add and Remove Assessors
     And the user clicks the button/link    jQuery=a:contains("41 to")
     And the user clicks the button/link    jQuery=a:contains("61 to")
     Then the user clicks the button/link   jQuery=input[value="${getUserId("${invitedAssessor}")}"] ~ label
-    And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
+    And the user should see the element    jQuery=.govuk-hint:contains("1 assessors selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     Then The user should see the text in the page  ${invitedAssessor}
     And The user should see the element  jQuery=td:contains("Will Smith") ~ td .yes
@@ -80,7 +82,7 @@ The User can Add and Remove Assessors
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     When The user clicks the button/link               link=Invite
-    And The user clicks the button/link                jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
+    And The user clicks the button/link                jQuery=td:contains("Will Smith") ~ td .button-clear:contains("Remove")
     Then The user should not see the text in the page  Will Smith
     [Teardown]    The user clicks the button/link      link=Find
 
@@ -113,23 +115,25 @@ Next/Previous pagination on Find tab
     Then the user should see the element   jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=.pagination-label:contains("Next")
 
-The user can select the profile link
-    [Documentation]    INFUND-6669
+Assessor link goes to the assessor profile
+    [Documentation]    INFUND-6669  IFS-3943
     [Tags]
-    Given the user clicks the button/link  jQuery=a:contains("41 to")
-    Given the user clicks the button/link  jQuery=a:contains("61 to")
-    When the user clicks the button/link   link=Will Smith
-    Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
-    Then the user should see the element   jQuery=h3:contains("Phone") + p:contains("28572565937")
-    Then the user should see the element   jQuery=h3:contains("Skill areas") + p:contains("Solar energy research")
-    Then the user should see the element   jQuery=h3:contains("Innovation areas") + ul:contains("Precision medicine")
-    Then the user should see the element   jQuery=h3:contains("Assessor type") + p:contains("Business")
-    [Teardown]  The user clicks the button/link  link=Back
+    Given the user clicks the button/link  jQuery = a:contains("41 to")
+    Given the user clicks the button/link  jQuery = a:contains("61 to")
+    When the user clicks the button/link   link = Will Smith
+    Then the user should see the element   jQuery = dt:contains("Email address") ~ dd:contains("${invitedAssessor}")
+    And the user should see the element    jQuery = dt:contains("Assessor type") + dd:contains("Business")
+    And the user should see the element    jQuery = dt:contains("Phone") + dd:contains("28572565937")
+    And the user should see the element    jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Health and life sciences")
+    And the user should see the element    jQuery = h3:contains("Skill areas") ~ p:contains("Solar energy research")
+    When the user clicks the button/link   link = DOI
+    Then the user should see the element   jQuery = h2:contains("Principal employer and role") ~ p:contains(" Smith Systems")
+    [Teardown]  The user clicks the button/link  link = Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
     [Tags]
-    Given the user should see the element  jQuery=.heading-secondary:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    Given the user should see the element  jQuery=.govuk-caption-l:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
@@ -145,7 +149,7 @@ Invite multiple assessors
     And The user should see the text in the page       Please visit our online Innovation Funding Service to respond to this request
     And the user should see the client and server side validation for subject
     And The user enters text to a text field           css=#subject  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}' @
-    And the user clicks the button/link                jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                jQuery=.govuk-button:contains("Send invite")
     And the user clicks the button/link                link=Invite
     Then The user should not see the text in the page  ${assessor_to_add}
     And The user clicks the button/link                link=Find
@@ -156,7 +160,7 @@ Invite non-registered assessors server side validations
     [Tags]
     Given the user clicks the button/link   link=Invite
     When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
-    And the user clicks the button/link     jQuery=.button:contains("Add assessors to list")
+    And the user clicks the button/link     jQuery=.govuk-button:contains("Add assessors to list")
     Then the user should see a field error  Please enter an innovation sector and area.
     And the user should see a field error   Please enter a name.
     And the user should see a field error   Please enter an email address.
@@ -164,7 +168,7 @@ Invite non-registered assessors server side validations
 Invite non-registered users
     [Documentation]    INFUND-6411 INFUND-6448
     [Tags]
-    When the user moves focus to the element                 jQuery=.button:contains("Add assessors to list")
+    When the user moves focus to the element                 jQuery=.govuk-button:contains("Add assessors to list")
     And the user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input   Olivier Giroud
     And the user should not see the element                  jQuery=label:contains("Please enter a name.")    #check for the client side validation
     And the user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input   ${test_mailbox_one}+OlivierGiroud@gmail.com
@@ -172,12 +176,12 @@ Invite non-registered users
     And the user selects the option from the drop-down menu  Emerging and enabling    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu  Emerging technology    id=grouped-innovation-area
     And the user should not see the element                  jQuery=label:contains("Please enter an innovation sector and area.")    #check for the client side validation
-    And the user clicks the button/link                      jQuery=.button:contains("Add assessors to list")
+    And the user clicks the button/link                      jQuery=.govuk-button:contains("Add assessors to list")
     Then the user should see the element                     css=.no
     And the user should see the element                      jQuery=td:contains("Olivier Giroud")
     And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
     And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
-    And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
+    And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td .button-clear:contains("Remove")
 
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449

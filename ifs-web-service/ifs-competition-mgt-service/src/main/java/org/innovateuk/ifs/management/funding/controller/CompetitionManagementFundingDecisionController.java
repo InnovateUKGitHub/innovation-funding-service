@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.registration.controller.OrganisationCreationContributorTypeController;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -70,7 +69,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/organisation-type"))
+                .andExpect(view().name("registration/organisation/contributor-organisation-type"))
                 .andExpect(model().attributeExists("form", "model"));
     }
 

@@ -5,10 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -230,21 +227,21 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
+    public void findPreviousApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
         String filter = "ALL";
 
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
+        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)));
+                .andExpect(content().json(toJson(previousApplicationPageResource)));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
+        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }
 }

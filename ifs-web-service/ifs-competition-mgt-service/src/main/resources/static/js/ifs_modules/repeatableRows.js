@@ -21,10 +21,10 @@ IFS.competitionManagement.repeatableRows = (function () {
     addRow: function (el) {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
-      var newRow = jQuery('<tr class="form-group-row-validated">' +
-        '<td class="width-40-percent form-group">' +
+      var newRow = jQuery('<tr class="govuk-table__row form-group-row-validated">' +
+        '<td class="govuk-table__cell width-40-percent govuk-form-group">' +
         '<label></label>' +
-        '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +
+        '<input aria-labelledby="invite-label-assessor-name" class="govuk-input" type="text" ' +
         'id="invites[' + uniqueRowId + '].name" ' +
         'name="invites[' + uniqueRowId + '].name" value="" ' +
         'minlength="2" ' +
@@ -34,15 +34,15 @@ IFS.competitionManagement.repeatableRows = (function () {
         'data-required-errormessage="Please enter a name." ' +
         'data-pattern-errormessage="Please enter a valid name." /> ' +
         '</td>' +
-        '<td class="width-40-percent form-group">' +
+        '<td class="govuk-table__cell width-40-percent govuk-form-group">' +
         '<label></label>' +
-        '<input aria-labelledby="invite-label-assessor-email" class="form-control width-full" type="email" ' +
+        '<input aria-labelledby="invite-label-assessor-email" class="govuk-input" type="email" ' +
         'id="invites' + uniqueRowId + '.email" ' +
         'name="invites[' + uniqueRowId + '].email" value="" ' +
         'data-required-errormessage="Please enter an email address." required="required" />' +
         '</td>' +
-        '<td class="alignright width-20-percent">' +
-        '<button class="remove-another-row buttonlink" name="removeNewUser" type="button" value="0">Remove</button>' +
+        '<td class="govuk-table__cell alignright width-20-percent">' +
+        '<button class="remove-another-row button-clear" name="removeNewUser" type="button" value="0">Remove</button>' +
         '</td>' +
         '</tr>')
 

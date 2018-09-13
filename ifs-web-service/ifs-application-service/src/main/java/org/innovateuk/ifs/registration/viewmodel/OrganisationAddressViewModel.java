@@ -16,7 +16,7 @@ public class OrganisationAddressViewModel {
     }
 
     public boolean isResearch() {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(organisationType.getId());
+        return OrganisationTypeEnum.RESEARCH.getId() == organisationType.getId();
     }
 
     public OrganisationTypeResource getOrganisationType() {

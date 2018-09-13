@@ -20,6 +20,7 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.
 
@@ -45,22 +46,16 @@ public class Organisation {
     public Organisation() {
     }
 
-    public Organisation(Long id, String name) {
-        this.id = id;
+    public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(Long id, String name, String companyHouseNumber) {
-        this.id = id;
+    public Organisation(String name, String companyHouseNumber) {
         this.name = name;
         this.companyHouseNumber = companyHouseNumber;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

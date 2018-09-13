@@ -1,7 +1,12 @@
-// Import all of the govuk-elements-sass files
+// Path to assets for use with the file-url function
+// in the govuk frontend url-helpers partial
+$govuk-images-path: "/images/";
+$govuk-fonts-path: "/css/fonts/";
+
+// Import all of the govuk-frontend files
 // ===========================================
-@import "govuk-template";
-@import "govuk-elements";
+@import "govuk-frontend/all";
+
 @import "components";
 
 /* Prototype css for testing */

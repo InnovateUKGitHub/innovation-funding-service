@@ -23,7 +23,7 @@
 
 	<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-intro" />
 
-	<ul class="inline-nav">
+	<ul class="govuk-list inline-nav">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
 			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}"><strong>Find</strong></a>
 		</li>

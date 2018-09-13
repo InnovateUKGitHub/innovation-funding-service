@@ -23,7 +23,7 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
@@ -32,15 +32,15 @@
 	</th:block>
 
 	<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
-		<div class="panel" th:unless="${param.status != null and param.status[0] == 'approved'}">
-			<h2 class="heading-medium no-margin-top">Company name updated since original application</h2>
+		<div class="govuk-body panel" th:unless="${param.status != null and param.status[0] == 'approved'}">
+			<h2 class="govuk-heading-m govuk-!-margin-top-0">Company name updated since original application</h2>
 
 			<dl class="standard-definition-list">
 				<dt>Name in application</dt>
 				<dd>Aptran</dd>
 			</dl>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label for="company-reviewed" class="block-label selection-button-checkbox">
 					The updated company details have been reviewed
 					<input type="checkbox" id="company-reviewed" name="company-reviewed" />
@@ -49,7 +49,7 @@
 		</div>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
-			<div class="panel">
+			<div class="govuk-body panel">
 				<dl class="standard-definition-list">
 					<dt>Name in application</dt>
 					<dd>Aptran</dd>
@@ -59,32 +59,32 @@
 
 	</th:block>
 
-	<h2 class="heading-medium">Finances overview</h2>
+	<h2 class="govuk-heading-m">Finances overview</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
-					<th scope="col">Total costs</th>
-					<th scope="col" class="numeric">% grant</th>
-					<th scope="col" class="numeric">Funding sought</th>
-					<th scope="col" class="numeric">Other public sector funding</th>
-					<th scope="col" class="numeric">Contribution to project</th>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<th class="govuk-table__header" scope="col">Total costs</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">% grant</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding</th>
+					<th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>&pound;286,283</td>
-					<td class="numeric">55%</td>
-					<td class="numeric">&pound;180,399</td>
-					<td class="numeric">20,000</td>
-					<td class="numeric">&pound;85,885</td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">&pound;286,283</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">55%</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;180,399</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">20,000</td>
+					<td class="govuk-table__cell govuk-table__cell--numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-	<h2 class="heading-medium">Organisation information</h2>
+	<h2 class="govuk-heading-m">Organisation information</h2>
 
 	<dl class="standard-definition-list">
 		<dt>Company name</dt>
@@ -109,9 +109,9 @@
 
 			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Large'}">
 
-				<div class="panel">
+				<div class="govuk-body panel">
 
-					<h3 class="heading-small no-margin">Business size has been changed from medium (60%) to large (50% grant).</h3>
+					<h3 class="govuk-heading-s govuk-!-margin-0">Business size has been changed from medium (60%) to large (50% grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % has been set to</dt>
@@ -130,9 +130,9 @@
 
 			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Micro'}">
 
-				<div class="panel">
+				<div class="govuk-body panel">
 
-					<h3 class="heading-small no-margin">Changing the business size from medium (60% grant) to small (70% grant).</h3>
+					<h3 class="govuk-heading-s govuk-!-margin-0">Changing the business size from medium (60% grant) to small (70% grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % will remain at</dt>
@@ -143,7 +143,7 @@
 
 					</dl>
 
-					<p>The applicant  could have claimed more funding, but this cannot be increased due as the maximum funding amount has been aproved.</p>
+					<p class="govuk-body">The applicant  could have claimed more funding, but this cannot be increased due as the maximum funding amount has been aproved.</p>
 
 				</div>
 
@@ -159,8 +159,8 @@
 
 		<form>
 			<fieldset class="extra-margin">
-				<legend class="heading-medium" id="change-org-title">Change organisation size</legend>
-				<p class="form-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
+				<legend class="govuk-heading-m" id="change-org-title">Change organisation size</legend>
+				<p class="govuk-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
 				<div class="form-block">
 					<label class="block-label selection-button-radio" for="orgSizeSmall">
 						<input id="orgSizeSmall" type="radio" name="orgSizeGroup" value="Micro"/>
@@ -178,17 +178,17 @@
 			</fieldset>
 
 			<div class="extra-margin">
-				<button data-js-modal="change-org-size" id="change-org-button" class="button" disabled="disabled">Change organisation size</button>
+				<button data-js-modal="change-org-size" id="change-org-button" class="govuk-button" disabled="disabled">Change organisation size</button>
 			</div>
 
 			<div class="change-org-size" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Change organisation size</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Change organisation size</h2>
 
 					<div id="org-text-small" style="display: none">
-						<p>Changing the business size from Medium (60% Grant) to Small (70% Grant).</p>
+						<p class="govuk-body">Changing the business size from Medium (60% Grant) to Small (70% Grant).</p>
 
 						<dl class="standard-definition-list">
 							<dt>The grant will remain at</dt>
@@ -198,12 +198,12 @@
 							<dd>&pound;50,000</dd>
 						</dl>
 
-						<p>The applicant  could have claimed more funding, but this cannot be increased due as the maximum funding amount has been aproved.</p>
+						<p class="govuk-body">The applicant  could have claimed more funding, but this cannot be increased due as the maximum funding amount has been aproved.</p>
 
 					</div>
 
 					<div id="org-text-large" style="display: none">
-						<p>Changing the business size from Medium (60% Grant) to Large (50% Grant) will reduce the amount of funding available to the partner.</p>
+						<p class="govuk-body">Changing the business size from Medium (60% Grant) to Large (50% Grant) will reduce the amount of funding available to the partner.</p>
 
 						<dl class="standard-definition-list">
 							<dt>The grant will be set to</dt>
@@ -217,15 +217,15 @@
 						</dl>
 					</div>
 
-					<hr />
+					<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 		        	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
 						<input type="hidden" id="status" name="status" value="orgSizeChanged" />
 
-		        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Change organisation size</button>
+		        		<button class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Change organisation size</button>
 		        	</div>
 
 		        </div>
@@ -240,7 +240,7 @@
 		<dd>No</dd>
 	</dl>
 
-	<h2 class="heading-medium">Credit check</h2>
+	<h2 class="govuk-heading-m">Credit check</h2>
 
 	<dl class="standard-definition-list">
 		<dt>Date of incorporation</dt>
@@ -266,8 +266,8 @@
 	</dl>
 
 
-	<h2 class="heading-medium">Credit report</h2>
-	 <div class="form-group">
+	<h2 class="govuk-heading-m">Credit report</h2>
+	 <div class="govuk-form-group">
     	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
 	     	A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
@@ -275,26 +275,26 @@
     </div>
 
 	<div class="extra-margin">
-    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
-    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
+    	<a href="/prototypes/3807-finance-queries" class="govuk-button button-secondary">Queries</a>
+    	<a href="/prototypes/3990-finance-notes" class="govuk-button button-secondary">Notes</a>
     </div>
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-			<h3 class="heading-medium">Approve viability</h3>
-		    <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
-		    <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
+			<h3 class="govuk-heading-m">Approve viability</h3>
+		    <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+		    <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
 
-		    <div class="form-group">
+		    <div class="govuk-form-group">
 		    	<label class="block-label selection-button-checkbox" for="project-viable">
 			      <input id="project-viable" value="project-viable" type="checkbox" />
 			     	Aptrans Ltd is viable for this project
 			    </label>
 		    </div>
 
-		    <div class="form-group hidden" id="add-rag-rating">
+		    <div class="govuk-form-group hidden" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-                <select id="rag-rating" name="rag-rating" class="form-control" >
+                <select id="rag-rating" name="rag-rating" class="govuk-select" >
                 	<option value="">--</option>
                 	<option value="Green">Green</option>
                 	<option value="Amber">Amber</option>
@@ -303,24 +303,24 @@
             </div>
 
 			<div class="extra-margin">
-				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="button" disabled="disabled">Confirm viability</button>
+				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="govuk-button" disabled="disabled">Confirm viability</button>
 			</div>
 
 			<div class="confirm-viability-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-		        	<h2 class="heading-medium no-margin-top">Confirm viability</h2>
+		        	<h2 class="govuk-heading-m govuk-!-margin-top-0">Confirm viability</h2>
 
-					<p>This partner will now be marked as viable for this project.</p>
+					<p class="govuk-body">This partner will now be marked as viable for this project.</p>
 
 					<form>
 
-						<hr />
+						<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 			        	<div class="alignright-button">
 
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+							<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
 							<input type="hidden" id="status" name="status" value="approved" />
 
@@ -332,7 +332,7 @@
 								<input type="hidden" name="compName" th:value="${param.compName[0]}" />
 							</th:block>
 
-							<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
+							<button class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
 
 
 			        	</div>
@@ -342,10 +342,10 @@
 
 	</th:block>
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<div class="extra-margin">
-		<a href="/prototypes/1199-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
+		<a href="/prototypes/1199-project-finances" class="govuk-button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

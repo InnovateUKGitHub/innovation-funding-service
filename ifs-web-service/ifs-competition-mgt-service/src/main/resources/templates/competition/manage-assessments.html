@@ -1,86 +1,85 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessments'" />
 </head>
 
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+              th:with="linkTitle='Competition', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='govuk-heading-xl'" />
 
-    <div class="no-constrain-width justify-left">
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
-        <h2 class="heading-medium">Key statistics</h2>
+        <ul class="govuk-list govuk-grid-row">
 
-        <ul class="grid-row">
-
-            <li class="column-fifth">
+            <li class="grid-column-one-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.totalAssessments}">50</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.totalAssessments}">50</span>
                     <small>Total assignments</small>
                 </div>
             </li>
 
-            <li class="column-fifth">
+            <li class="grid-column-one-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsAwaitingResponse}">25</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessmentsAwaitingResponse}">25</span>
                     <small>Assignments awaiting response</small>
                 </div>
             </li>
 
-            <li class="column-fifth">
+            <li class="grid-column-one-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsAccepted}">10</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessmentsAccepted}">10</span>
                     <small>Assignments accepted</small>
                 </div>
             </li>
 
-            <li class="column-fifth">
+            <li class="grid-column-one-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsStarted}">4</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessmentsStarted}">4</span>
                     <small>Assessments started</small>
                 </div>
             </li>
 
-            <li class="column-fifth">
+            <li class="grid-column-one-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsCompleted}">5</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessmentsCompleted}">5</span>
                     <small>Assessments completed</small>
                 </div>
             </li>
 
         </ul>
 
-        <h2 class="heading-medium">Actions</h2>
+        <h2 class="govuk-heading-m">Actions</h2>
 
-        <ul class="link-list">
+        <ul class="govuk-list link-list">
 
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})} + ${originQuery}"
-                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'">
+                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'"
+                   class="govuk-link">
                     Allocate/Manage assessors
                 </a>
             </li>
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})} + ${originQuery}"
-                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">
+                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'"
+                   class="govuk-link">
                     Allocate/Manage applications
                 </a>
             </li>
-
         </ul>
 
-    </div>
-
-    <th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

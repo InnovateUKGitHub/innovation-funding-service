@@ -47,7 +47,7 @@ IFS.application.applicationPage = (function () {
             var assignButtonContainer = sectionToUpdate.find('.assign-button')
             assignButtonContainer.children('button').attr('aria-hidden', 'false')
             sectionToUpdate.find('img.section-status').attr('aria-hidden', 'false')
-            sectionToUpdate.find('.reassign-status').html('<div class="error-message">' + errorMessage + '</div>')
+            sectionToUpdate.find('.reassign-status').html('<div class="govuk-error-message">' + errorMessage + '</div>')
           }
         })
         e.preventDefault()

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -13,13 +14,8 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
-import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
-import static org.innovateuk.ifs.user.resource.Disability.YES;
-import static org.innovateuk.ifs.user.resource.Gender.FEMALE;
-import static org.innovateuk.ifs.user.resource.Gender.MALE;
 import static org.innovateuk.ifs.user.resource.Title.Miss;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
@@ -60,9 +56,6 @@ public class UserBuilderTest {
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
         Set<Role> expectedRoles = new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER));
-        Gender expectedGender = FEMALE;
-        Disability expectedDisability = NOT_STATED;
-        Ethnicity expectedEthnicity = newEthnicity().build();
         Long expectedProfileId = 1L;
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL)
                 .build(2);
@@ -80,9 +73,6 @@ public class UserBuilderTest {
                 .withUid(expectedUid)
                 .withEmailAddress(expectedEmail)
                 .withRoles(expectedRoles)
-                .withGender(expectedGender)
-                .withDisability(expectedDisability)
-                .withEthnicity(expectedEthnicity)
                 .withProfileId(expectedProfileId)
                 .withAffiliations(expectedAffiliations)
                 .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
@@ -99,9 +89,6 @@ public class UserBuilderTest {
         assertEquals(expectedUid, user.getUid());
         assertEquals(expectedEmail, user.getEmail());
         assertEquals(expectedRoles, user.getRoles());
-        assertEquals(expectedGender, user.getGender());
-        assertEquals(expectedDisability, user.getDisability());
-        assertEquals(expectedEthnicity, user.getEthnicity());
         assertEquals(expectedProfileId, user.getProfileId());
         assertEquals(expectedAffiliations, user.getAffiliations());
         assertEquals(expectedTermsAndConditionsIds, user.getTermsAndConditionsIds());
@@ -121,9 +108,6 @@ public class UserBuilderTest {
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
         List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER)), new HashSet<>
                 (asList(Role.COLLABORATOR, Role.COMP_ADMIN)));
-        Gender[] expectedGenders = {FEMALE, MALE};
-        Disability[] expectedDisabilities = {NOT_STATED, YES};
-        Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);
         Long[] expectedProfileIds = {1L, 2L};
         List<Affiliation>[] expectedAffiliations = new List[]{
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
@@ -145,9 +129,6 @@ public class UserBuilderTest {
                 .withUid(expectedUids)
                 .withEmailAddress(expectedEmails)
                 .withRoles(expectedRoles.get(0), expectedRoles.get(1))
-                .withGender(expectedGenders)
-                .withDisability(expectedDisabilities)
-                .withEthnicity(expectedEthnicities)
                 .withProfileId(expectedProfileIds)
                 .withAffiliations(expectedAffiliations)
                 .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
@@ -167,9 +148,6 @@ public class UserBuilderTest {
         assertEquals(expectedUids[0], first.getUid());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedRoles.get(0), first.getRoles());
-        assertEquals(expectedGenders[0], first.getGender());
-        assertEquals(expectedDisabilities[0], first.getDisability());
-        assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedProfileIds[0], first.getProfileId());
         assertEquals(expectedAffiliations[0], first.getAffiliations());
         assertEquals(expectedTermsAndConditionsIds[0], first.getTermsAndConditionsIds());
@@ -187,9 +165,6 @@ public class UserBuilderTest {
         assertEquals(expectedUids[1], second.getUid());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedRoles.get(1), second.getRoles());
-        assertEquals(expectedGenders[1], second.getGender());
-        assertEquals(expectedDisabilities[1], second.getDisability());
-        assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedProfileIds[1], second.getProfileId());
         assertEquals(expectedAffiliations[1], second.getAffiliations());
         assertEquals(expectedTermsAndConditionsIds[1], second.getTermsAndConditionsIds());

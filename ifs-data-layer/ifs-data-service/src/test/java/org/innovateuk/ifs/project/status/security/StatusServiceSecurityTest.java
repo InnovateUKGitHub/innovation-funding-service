@@ -57,6 +57,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
             verify(statusPermissionRules).internalAdminTeamCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).supportCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).assignedInnovationLeadCanViewCompetitionStatus(competition, getLoggedInUser());
+            verify(statusPermissionRules).assignedStakeholderCanViewCompetitionStatus(competition, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

@@ -2,10 +2,8 @@ package org.innovateuk.ifs.organisation.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class OrganisationType {
@@ -21,10 +19,10 @@ public class OrganisationType {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType parentOrganisationType;
 
-    @OneToMany(mappedBy="organisationType")
-    private List<GrantClaimMaximum> grantClaimMaximums;
+    private boolean visibleInSetup;
 
-    private Boolean visibleInSetup;
+    public OrganisationType() {
+    }
 
     public OrganisationType(String name, String description, OrganisationType parentOrganisationType) {
         this.name = name;
@@ -32,24 +30,12 @@ public class OrganisationType {
         this.parentOrganisationType = parentOrganisationType;
     }
 
-    public OrganisationType() {
-    	// no-arg constructor
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -64,24 +50,8 @@ public class OrganisationType {
         return parentOrganisationType;
     }
 
-    public void setParentOrganisationType(OrganisationType parentOrganisationType) {
-        this.parentOrganisationType = parentOrganisationType;
-    }
-
-    public List<GrantClaimMaximum> getGrantClaimMaximums() {
-        return grantClaimMaximums;
-    }
-
-    public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
-        this.grantClaimMaximums = grantClaimMaximums;
-    }
-
-    public Boolean getVisibleInSetup() {
+    public boolean getVisibleInSetup() {
         return visibleInSetup;
-    }
-
-    public void setVisibleInSetup(Boolean visibleInSetup) {
-        this.visibleInSetup = visibleInSetup;
     }
 
     @Override
@@ -97,7 +67,6 @@ public class OrganisationType {
                 .append(name, that.name)
                 .append(description, that.description)
                 .append(parentOrganisationType, that.parentOrganisationType)
-                .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(visibleInSetup, that.visibleInSetup)
                 .isEquals();
     }
@@ -109,7 +78,6 @@ public class OrganisationType {
                 .append(name)
                 .append(description)
                 .append(parentOrganisationType)
-                .append(grantClaimMaximums)
                 .append(visibleInSetup)
                 .toHashCode();
     }

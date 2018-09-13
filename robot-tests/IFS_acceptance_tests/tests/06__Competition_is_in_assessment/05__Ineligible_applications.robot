@@ -20,6 +20,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-1491 Inform Applicant - Ineligible page - couple of issues
 ...
 ...               IFS-3132 Email content templates for notifications
+...
+...               IFS-2994 New Stakeholder role and permissions
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -32,6 +34,10 @@ ${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSME
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
 ${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
+${submittedApplication}           Living with Digital Rights Management
+${submittedApplicationNumber}     ${application_ids['${submittedApplication}']}
+${ineligibleApplication}          Ineligible Vlogging
+${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -41,7 +47,7 @@ A non submitted application cannot be marked as ineligible
     Then the user should see the element           jQuery=td:contains("Rainfall") ~ td:contains("Started")
     When the user clicks the button/link           link=${application_ids["Rainfall"]}
     Then the user should not see the element       jQuery=h2 button:contains("Mark application as ineligible")
-    [Teardown]    the user clicks the button/link  jQuery=.link-back:contains("Back")
+    [Teardown]    the user clicks the button/link  jQuery=.govuk-back-link:contains("Back")
 
 Ineligigle button is shown on submitted applications
     [Documentation]    INFUND-7370
@@ -65,7 +71,7 @@ Clicking the ineligible button
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
     [Tags]  HappyPath  InnovationLead
-    When the user clicks the button/link      jQuery=.button:contains("Cancel")
+    When the user clicks the button/link      jQuery=.button-clear:contains("Cancel")
     Then the user should not see the element  css=[aria-hidden="false"] [id="ineligibleReason"]
 
 Client side validation - mark an application as ineligible
@@ -82,7 +88,7 @@ Marking an application as ineligible moves it to the ineligible view
     [Tags]  HappyPath  InnovationLead
     Given the user clicks the button/link       jQuery=h2 button:contains("Mark application as ineligible")
     Then the user enters text to a text field   id=ineligibleReason  This is the reason of why this application is ineligible
-    When the user clicks the button/link        jQuery=.button:contains("Mark application as ineligible")
+    When the user clicks the button/link        jQuery=.govuk-button:contains("Mark application as ineligible")
     Then the user should be redirected to the correct page  ${ineligibleApplications}
     And the user should see the element         jQuery=td:contains("${ineligibleApplication}")
     And the user should not see the element     jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
@@ -99,8 +105,8 @@ Filter ineligible applications
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
     When the user selects the option from the drop-down menu  No  id=filterInform
-    When the user clicks the button/link       jQuery=.button:contains("Filter")
-    Then the user should see the element       jQuery=td:contains("${ineligibleApplication}") ~ td .button:contains("Inform applicant")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Filter")
+    Then the user should see the element       jQuery=td:contains("${ineligibleApplication}") ~ td .govuk-button:contains("Inform applicant")
     And the user should not see the element    jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")
     When the user clicks the button/link       jQuery=a:contains("Clear all filters")
     Then the user should see the element       jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")
@@ -150,6 +156,20 @@ Reinstate an application
     And the reinstated application in no longer shown in the unsuccessful list
     And the applicant can see his application in the right section  Applications in progress
 
+Stakeholders cannot mark applications as ineligible
+    [Documentation]  IFS-2994
+    [Tags]
+    Given Log in as a different user            &{stakeholder_user}
+    When the user navigates to the page         ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${submittedApplicationNumber}?origin=SUBMITTED_APPLICATIONS
+    Then the user should see the element        jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And the user should not see the element     jQuery = button:contains("Mark application as ineligible")
+
+Stakeholders cannot reinstate an application
+    [Documentation]  IFS-2994
+    [Tags]
+    When the user navigates to the page        ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}?origin=INELIGIBLE_APPLICATIONS
+    Then the user should see the element       jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And the user should not see the element    css = a[data-js-modal = "modal-reinstate"]
 
 *** Keywords ***
 the applicant can see his application in the right section

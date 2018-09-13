@@ -9,12 +9,10 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -24,25 +22,26 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
-import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
@@ -52,7 +51,8 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +118,7 @@ public class ProjectFinanceChecksController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -145,7 +145,7 @@ public class ProjectFinanceChecksController {
     private FinanceUtil financeUtil;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -357,7 +357,7 @@ public class ProjectFinanceChecksController {
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -372,7 +372,7 @@ public class ProjectFinanceChecksController {
     public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, Model model, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
@@ -381,7 +381,7 @@ public class ProjectFinanceChecksController {
         Long projectId = compositeId.getProjectId();
         Long organisationId = compositeId.getOrganisationId();
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         Map<Long, String> attachmentLinks =
                 simpleToMap(attachments, identity(), id -> financeCheckService.getAttachmentInfo(id).getName());
@@ -504,7 +504,7 @@ public class ProjectFinanceChecksController {
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
     }
 

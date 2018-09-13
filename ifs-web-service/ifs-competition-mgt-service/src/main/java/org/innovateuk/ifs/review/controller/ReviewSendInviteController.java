@@ -184,10 +184,6 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
                 .toUriString();
     }
 
-    private String redirectToResendView(long competitionId) {
-        return format("redirect:/assessment/panel/competition/%s/assessors/invite", competitionId);
-    }
-
     private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assessment panel for '%s'", assessorInviteToSendResource.getCompetitionName()));
     }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -12,15 +11,16 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
-import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.spendprofile.SpendProfileService;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,7 +60,7 @@ public class ProjectSpendProfileController {
     private StatusService statusService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private SpendProfileService spendProfileService;
@@ -285,7 +285,7 @@ public class ProjectSpendProfileController {
                                                                     final UserResource loggedInUser) {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());

@@ -74,23 +74,10 @@ the user inserts the address of his research organisation
     the user clicks the button/link       jQuery=button:contains("Save organisation and continue")
     the user clicks the button/link       jQuery=button:contains("Save and continue")
 
-the user inserts the address of his research organisation updated
-    [Arguments]  ${streetOne}  ${city}  ${postcode}
-    #the user enters text to a text field  organisationSearchName  Warwick
-    #the user clicks the button/link       css=[id="org-search"]
-    #the user clicks the button/link       link=University of Warwick
-   # the user clicks the button/link       jQuery=button:contains("Enter address manually")
-    the user enters text to a text field  addressForm.selectedPostcode.addressLine1  ${streetOne}
-    the user enters text to a text field  addressForm.selectedPostcode.town  ${city}
-    the user enters text to a text field  addressForm.selectedPostcode.postcode  ${postcode}
-    the user clicks the button/link       jQuery=button:contains("Save organisation and continue")
-    the user clicks the button/link       jQuery=button:contains("Save and continue")
-
-
 the user verifies account and starts his application
     [Arguments]  ${email}
     the user reads his email and clicks the link  ${email}  Please verify your email address  you can sign into your account.
-    the user clicks the button/link               jQuery=.button:contains("Sign in")
+    the user clicks the button/link               jQuery=.govuk-button:contains("Sign in")
     logging in and error checking                 ${email}  ${correct_password}
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
@@ -107,7 +94,7 @@ the user navigates to the Application Team Page
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
     the user clicks the button/link       link=Update and add contributors from University of Warwick
-    the user clicks the button/link       jQuery=.buttonlink:contains("Add another contributor")
+    the user clicks the button/link       jQuery=.button-clear:contains("Add another contributor")
     the user enters text to a text field  stagedInvite.name  ${name}
     the user enters text to a text field  stagedInvite.email  ${email}
     the user clicks the button/link       css=button[name="executeStagedInvite"]
@@ -116,7 +103,7 @@ the user updates his organisation inviting the user
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
 New Research user applies to Competition and starts application
     the user applies to competition and enters organisation type  ${openCompetitionResearch}  radio-2
-    the user inserts the address of his research organisation updated  p.o. box 42  coventry  cv4 7al
+    the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
     the user enters text to a text field    email  ${bob}
     the invited user fills the create account form  Bob  Minion
     the user verifies account and starts his application  ${bob}

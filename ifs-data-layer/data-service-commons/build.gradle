@@ -3,7 +3,7 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 group 'innovateuk'
@@ -12,10 +12,6 @@ version project.version
 apply plugin: 'idea'
 
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
-
-bootRepackage {
-    enabled = false
-}
 
 configurations {
     testArtifacts
@@ -33,15 +29,15 @@ dependencies {
     compile project(":ifs-security")
 
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:1.5.11.RELEASE"
     compile "org.apache.tika:tika-parsers:1.14"
-    compile "org.apache.httpcomponents:httpasyncclient"
+    compile "org.apache.httpcomponents:httpasyncclient:4.1.3"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
 
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.2.4.RELEASE'
     testCompile "net.sf.opencsv:opencsv:2.3"
 
 }

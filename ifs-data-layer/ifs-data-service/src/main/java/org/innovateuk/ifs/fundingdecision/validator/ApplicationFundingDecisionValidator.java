@@ -10,11 +10,8 @@ import org.springframework.stereotype.Component;
 public class ApplicationFundingDecisionValidator {
     public boolean isValid(Application application) {
 
-        if(!hasBeenSubmitted(application)) {
-            return false;
-        }
-        else if(decisionIsSuccessful(application)
-                && decisionNotificationWasSent(application)) {
+        if(!hasBeenSubmitted(application) ||
+                (decisionIsSuccessful(application) && decisionNotificationWasSent(application))) {
             return false;
         }
 

@@ -26,8 +26,16 @@ public final class PrioritySorting<T> {
      */
     public <E extends Comparable<? super E>> PrioritySorting(List<T> list, T priority, Function<T, E> field) {
         sortedList = list.stream()
-                .sorted((a, b) -> is(a, priority, field) ? BEFORE : is(b, priority, field) ? AFTER
-                        : field.apply(a).compareTo(field.apply(b))).collect(toList());
+                .sorted((a, b) -> {
+
+                    if(is(a, priority, field)) {
+                        return BEFORE;
+                    } else if(is(b, priority, field)) {
+                        return AFTER;
+                    } else {
+                        return field.apply(a).compareTo(field.apply(b));
+                    }
+                }).collect(toList());
     }
 
     private <E extends Comparable<? super E>> boolean is(T a, T b, Function<T, E> field) {

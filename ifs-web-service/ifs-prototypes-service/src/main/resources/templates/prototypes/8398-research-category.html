@@ -22,17 +22,17 @@
     <th:block
         th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Research category')"/>
 
-    <div class="message-alert extra-margin-bottom">
-        <h2 class="heading-small no-margin">What type of research are you undertaking in this project? </h2>
-        <p>The type of research affects the level of funding a business can receive under UK state aid rules. Changing
+    <div class="message-alert govuk-!-margin-bottom-6">
+        <h2 class="govuk-heading-s govuk-!-margin-0">What type of research are you undertaking in this project? </h2>
+        <p class="govuk-body">The type of research affects the level of funding a business can receive under UK state aid rules. Changing
             the research category will reset the funding level for all business participants.</p>
     </div>
 
     <form action="#">
-        <fieldset>
-            <legend class="extra-margin-bottom">
-                <span class="heading-medium">Research category</span>
-                <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-!-margin-bottom-6">
+                <span class="govuk-heading-m">Research category</span>
+                <span class="govuk-hint">What type of research is your project undertaking? Further guidance is available from <a
                     href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                     target="_blank">Innovate UK funding rules</a>.</span>
             </legend>
@@ -54,20 +54,20 @@
         </fieldset>
 
         <div class="extra-margin-top">
-            <button class="button" data-js-modal="change-research-modal">Save</button>
-            <a href="#" class="button-link-style">Cancel</a>
+            <button class="govuk-button" data-js-modal="change-research-modal">Save</button>
+            <a href="#" class="govuk-button-link-style">Cancel</a>
         </div>
 
         <div class="modal-overlay js-close" aria-hidden="true"></div>
         <div class="change-research-modal warning-alert" role="dialog" aria-hidden="true">
             <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-            <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this
+            <h2 class="govuk-heading-m govuk-!-margin-0">Changing research category will reset the funding level of this
                 application</h2>
-            <p>All partner organisations that have supplied their funding information will have to review and mark the
+            <p class="govuk-body">All partner organisations that have supplied their funding information will have to review and mark the
                 section as complete again.</p>
-            <hr>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <div>
-                <button class="button" formaction="/prototypes/5452-application-details">Save</button>
+                <button class="govuk-button" formaction="/prototypes/5452-application-details">Save</button>
                 <a href="#" class="js-close button-link-style">Cancel</a>
             </div>
         </div>

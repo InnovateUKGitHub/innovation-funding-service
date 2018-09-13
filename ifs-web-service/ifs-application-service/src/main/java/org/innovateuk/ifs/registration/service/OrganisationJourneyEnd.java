@@ -2,7 +2,6 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -31,9 +30,6 @@ public class OrganisationJourneyEnd {
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     @Autowired
     private InviteRestService inviteRestService;

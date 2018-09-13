@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionStatus;
 
-import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
+import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
  * A convenient container for multiple Project Setup sections' current statuses

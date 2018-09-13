@@ -6,8 +6,8 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
  * Form field model for the total spend profile
  */
 public class TotalSpendProfileForm extends BaseBindingResultTarget {
-    // for spring form binding
-    public TotalSpendProfileForm() {
 
+    public TotalSpendProfileForm() {
+        // for spring form binding
     }
 }

@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.sections.SectionAccess.*;
+import static org.innovateuk.ifs.sections.SectionAccess.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

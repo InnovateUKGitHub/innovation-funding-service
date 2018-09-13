@@ -2,13 +2,13 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.sections.SectionStatus;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
-import static org.innovateuk.ifs.project.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section

@@ -42,6 +42,9 @@ public class AssessmentDetailsResource {
     public AssessmentDetailsResource() {
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public AssessmentDetailsResource(List<QuestionResource> questions,
                                      Map<Long, List<FormInputResource>> assessmentFormInputs,

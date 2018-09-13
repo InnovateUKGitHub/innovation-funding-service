@@ -8,8 +8,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
@@ -142,9 +140,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected OrganisationRepository organisationRepository;
 
     @Autowired
-    private NotificationSender emailNotificationSender;
-
-    @Autowired
     private BankDetailsService bankDetailsService;
 
     @Autowired
@@ -240,9 +235,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
 
-        EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
-        ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
-
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
     }
@@ -265,10 +257,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
-
-        CompletableFuture<Void> competitionQuestionsForApplicantMenuFutures =
-                waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
-                handleCorrectQuestionsForApplicantMenu(createCompetitionFutures), taskExecutor);
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 fillInAndCompleteApplications(createCompetitionFutures);
@@ -293,8 +281,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
-        CompletableFuture.allOf(competitionQuestionsForApplicantMenuFutures,
-                                competitionFundersFutures,
+        CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture
@@ -339,15 +326,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessors(competitions, filteredAssessorLines, filteredAssessorInviteLines);
         assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions, filteredAssessorInviteLines);
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
-    }
-
-    private void handleCorrectQuestionsForApplicantMenu(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
-        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
-        competitions.forEach(competition -> {
-            if (!competition.getCompetition().getUseNewApplicantMenu()) {
-                competitionDataBuilderService.removeApplicationTeamForCompetition(competition);
-            }
-        });
     }
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {

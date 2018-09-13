@@ -13,7 +13,7 @@ Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    Then the user should see the element    jQuery=.form-label span:contains("Organisation name")
+    Then the user should see the element    jQuery = .govuk-label:contains("Organisation name")
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
@@ -61,8 +61,8 @@ Manually add the details and pass to the confirmation page
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
     And the user enters text to a text field      id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link           jQuery = .button:contains("Find UK address")
-    And the user clicks the button/link           jQuery = .button:contains("Find UK address")
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element          css=#select-address-block
     And the user clicks the button/link           css=#select-address-block > button
     And the user clicks the button/link           jQuery = button:contains("Continue")
@@ -75,7 +75,7 @@ Applicant goes to the organisation search page
     the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
-    And the user clicks the button/link     link=Continue without an account
+    And the user clicks the button/link     link = Continue and create an account
     And the user clicks the button/link     jQuery=span:contains("Business")
     And the user clicks the button/link     jQuery=button:contains("Save and continue")
 

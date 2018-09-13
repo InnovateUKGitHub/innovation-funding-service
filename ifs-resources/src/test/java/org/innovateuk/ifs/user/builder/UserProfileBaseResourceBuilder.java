@@ -32,18 +32,6 @@ public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseRe
         return withArraySetFieldByReflection("phoneNumber", phoneNumbers);
     }
 
-    public S withGender(Gender... genders) {
-        return withArraySetFieldByReflection("gender", genders);
-    }
-
-    public S withDisability(Disability... disabilities) {
-        return withArraySetFieldByReflection("disability", disabilities);
-    }
-
-    public S withEthnicity(EthnicityResource... ethnicities) {
-        return withArraySetFieldByReflection("ethnicity", ethnicities);
-    }
-
     public S withAddress(AddressResource... addresses) {
         return withArraySetFieldByReflection("address", addresses);
     }

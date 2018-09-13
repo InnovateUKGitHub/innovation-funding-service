@@ -3,21 +3,22 @@ package org.innovateuk.ifs.project.status.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,8 +39,8 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
@@ -69,6 +70,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Mock
     private OrganisationService organisationServiceMock;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private StatusService statusServiceMock;
@@ -301,9 +305,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userResource = newUserResource().withId(userId).build();
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
-        when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(organisationResource);
+        when(organisationRestService.getByUserAndProjectId(userId, projectId)).thenReturn(restSuccess(organisationResource));
         assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(new ProjectOrganisationCompositeId(projectId, organisationId), userResource));
-        verify(organisationServiceMock).getByUserAndProjectId(userId, projectId);
+        verify(organisationRestService).getByUserAndProjectId(userId, projectId);
     }
 
     @Test
@@ -315,9 +319,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userResource = newUserResource().withId(userId).build();
         OrganisationResource organisationResource = newOrganisationResource().withId(otherOrganisationId).build();
 
-        when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(organisationResource);
+        when(organisationRestService.getByUserAndProjectId(userId, projectId)).thenReturn(restSuccess(organisationResource));
         assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(new ProjectOrganisationCompositeId(projectId, organisationId), userResource));
-        verify(organisationServiceMock).getByUserAndProjectId(userId, projectId);
+        verify(organisationRestService).getByUserAndProjectId(userId, projectId);
     }
 
     @Test

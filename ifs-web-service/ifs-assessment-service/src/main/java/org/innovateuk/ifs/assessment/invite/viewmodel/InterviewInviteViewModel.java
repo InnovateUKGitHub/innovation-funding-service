@@ -23,8 +23,6 @@ public class InterviewInviteViewModel  extends BaseInviteViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewInviteViewModel that = (InterviewInviteViewModel) o;
-
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .isEquals();

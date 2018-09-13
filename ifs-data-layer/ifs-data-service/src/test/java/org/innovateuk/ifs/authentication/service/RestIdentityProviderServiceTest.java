@@ -63,8 +63,8 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     public void testCreateUserRecordWithUid() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
-        CreateUserResponse successResponse = new CreateUserResponse();
-        successResponse.setUuid("new-uid");
+        CreateUserResponse successResponse = new CreateUserResponse("new-uid", "email@example.com", null, null);
+
         ResponseEntity<String> successResponseEntity = new ResponseEntity<>(asJson(successResponse), CREATED);
 
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(successResponseEntity);

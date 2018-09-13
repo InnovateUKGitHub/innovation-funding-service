@@ -20,17 +20,17 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Project manager'}, ${null})" />
 
-    <p>As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
+    <p class="govuk-body">As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
 	<form>
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<legend class="heading-medium no-margin">Project Manager</legend>
+			<legend class="govuk-heading-m govuk-!-margin-0">Project Manager</legend>
 
-			<p class="form-hint">Who will be the Project Manager for your project?</p>
+			<p class="govuk-hint">Who will be the Project Manager for your project?</p>
 
-			<div class="form-group extra-margin">
+			<div class="govuk-form-group extra-margin">
                 <div class="multiple-choice">
                     <input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" checked="checked"/>
                     <label for="pm-name-1" class="block-label selection-button-radio">
@@ -56,7 +56,7 @@
                     <input id="add-pm" type="radio" name="pm-name-group" value="Add new team member" />
                     <label for="add-pm" class="block-label selection-button-radio">
                         Add new team member
-                        <span class="form-hint">A new team member will be invited to join the project</span>
+                        <span class="govuk-hint">A new team member will be invited to join the project</span>
                     </label>
                 </div>
 			</div>
@@ -65,25 +65,25 @@
 
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('pm')" />
 
-		<p>You can change your Project Manager up until your grant offer letter is generated.</p>
+		<p class="govuk-body">You can change your Project Manager up until your grant offer letter is generated.</p>
 
 		<div class="extra-margin">
-			<a href="#" class="button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
+			<a href="#" class="govuk-button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
 		</div>
 
 		<div class="modal-assign" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			<button class="js-close close" aria-label="Close Popup">Close</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Assign Project Manager</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Assign Project Manager</h2>
 
-				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
+				<p class="govuk-body">This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 				<div>
-                    <button class="button button-large" formaction="/prototypes/IFS-1984-project-details">Save</button>
-                    <button aria-label="Close Popup" class="buttonlink js-close">Cancel</button>
+                    <button class="govuk-button button-large" formaction="/prototypes/IFS-1984-project-details">Save</button>
+                    <button aria-label="Close Popup" class="button-clear js-close">Cancel</button>
 				</div>
 
 			</div>
@@ -93,15 +93,15 @@
 			<button class="js-close close" aria-label="Close Popup">Close</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Project Manager cannot be assigned</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Project Manager cannot be assigned</h2>
 
-				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
+				<p class="govuk-body"><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 				<div>
-                    <a href="#" class="button js-close">OK</a>
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <a href="#" class="govuk-button js-close">OK</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 				</div>
 
 			</div>

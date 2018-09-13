@@ -1,0 +1,31 @@
+---
+- name: install python and pip
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - python2.7
+    - python-pip
+# - name: Install python
+#   apt: name=python2.7 state=present
+#
+# - name: Install pip
+#   apt: name=python-pip state=present
+
+# - name: Install python-pycurl
+#   apt: name=python-pycurl
+#
+# - name: Add python apt repository
+#   apt_repository: repo={{python_ppa}} update_cache=yes
+#   when: python_ppa != False and python_ppa != ""
+#
+# - name: Install python
+#   apt: name=python{{item}} state=present
+#   with_items: "{{ python_versions }}"
+#
+# - name: Install python-dev
+#   apt: name=python{{item}}-dev state=present
+#   with_items: "{{ python_versions }}"
+#
+# - name: Install python-distutils
+#   apt: name=python{{item}}-distutils state=present
+#   when: item >= 3
+#   with_items: "{{ python_versions }}"

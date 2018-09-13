@@ -2,7 +2,6 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private OrganisationJourneyEnd organisationJourneyEnd;
@@ -55,6 +55,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
@@ -97,7 +98,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
         organisationResource.setAddresses(organisationAddressResources);
 
-        if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
@@ -108,10 +109,10 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
         if (registrationCookieService.isCollaboratorJourney(request)) {
-            return organisationService.createAndLinkByInvite(organisationResource,
-                    registrationCookieService.getInviteHashCookieValue(request).get());
+            return organisationRestService.createAndLinkByInvite(organisationResource,
+                    registrationCookieService.getInviteHashCookieValue(request).get()).getSuccess();
         } else {
-            return organisationService.createOrMatch(organisationResource);
+            return organisationRestService.createOrMatch(organisationResource).getSuccess();
         }
     }
 }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -43,9 +42,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Mock
     private RegistrationCookieService registrationCookieService;
-
-    @Mock
-    private OrganisationService organisationService;
 
     @Mock
     private InviteRestService inviteRestService;

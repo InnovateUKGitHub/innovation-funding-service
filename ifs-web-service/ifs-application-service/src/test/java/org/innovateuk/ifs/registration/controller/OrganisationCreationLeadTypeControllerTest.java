@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static java.lang.String.valueOf;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
@@ -56,7 +57,7 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Test
     public void testSelectedLeadOrganisationTypeEligible() throws Exception {
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
-                .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString()))
+                .param("organisationTypeId", valueOf(OrganisationTypeEnum.RTO.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"));
     }
@@ -64,7 +65,7 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Test
     public void testSelectedLeadOrganisationTypeNotEligible() throws Exception {
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
-                .param("organisationTypeId", OrganisationTypeEnum.RESEARCH.getId().toString()))
+                .param("organisationTypeId", valueOf(OrganisationTypeEnum.RESEARCH.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/lead-organisation-type/not-eligible"));
     }

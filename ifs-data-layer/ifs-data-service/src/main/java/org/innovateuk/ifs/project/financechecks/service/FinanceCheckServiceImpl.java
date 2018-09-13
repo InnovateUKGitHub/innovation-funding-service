@@ -10,14 +10,11 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.*;
@@ -71,9 +68,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private FinanceService financeService;
-
-    @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
@@ -96,12 +90,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private CompetitionSetupTransactionalService competitionSetupTransactionalService;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;

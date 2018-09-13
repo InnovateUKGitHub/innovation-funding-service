@@ -30,6 +30,10 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
         return with(finance -> finance.setOrganisation(organisation));
     }
 
+    public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
+        return with(finance -> finance.setWorkPostcode(workPostcode));
+    }
+
     private ApplicationFinanceBuilder(List<BiConsumer<Integer, ApplicationFinance>> newMultiActions) {
         super(newMultiActions);
     }

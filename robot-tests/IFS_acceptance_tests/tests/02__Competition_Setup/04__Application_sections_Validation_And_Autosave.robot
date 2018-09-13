@@ -11,16 +11,16 @@ Resource          CompAdmin_Commons.robot
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
-    Given The user clicks the button/link  link=Application
-    And The user clicks the button/link    jQuery=a:contains("Business opportunity")
+    Given The user clicks the button/link  link = Application
+    And The user clicks the button/link    jQuery = a:contains("Business opportunity")
     When the user leaves all the question field empty
     And The user clicks the button/link                             css=button[type="submit"]
-    Then the validation error above the question should be visible  css=label[for="question.shortTitle"]        This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="question.title"]             This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="question.guidanceTitle"]     This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="question.maxWords"]          This field cannot be left blank.
-    And the validation error above the question should be visible   id=question.allowedFileTypes                This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="question.appendixGuidance"]  This field cannot be left blank.
+    Then the user should see the element   jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery = .govuk-label:contains("Question guidance title") ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery = .govuk-label:contains("Max word count") ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted appendix file type") ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery = .govuk-label:contains("Appendix guidance") ~ .govuk-error-message:contains("This field cannot be left blank.")
     And the user should see a summary error                         This field cannot be left blank.
 
 Business opportunity Sever-side validations assessment questions
@@ -28,10 +28,10 @@ Business opportunity Sever-side validations assessment questions
     [Tags]    HappyPath
     [Setup]
     Given the user leaves all the assessment questions empty
-    When the user clicks the button/link                            css=button[type="submit"]
-    Then the validation error above the question should be visible  css=label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
-    And the validation error above the question should be visible   css=label[for="guidanceRows[0].justification"]  This field cannot be left blank.
+    When the user clicks the button/link  css = button[type="submit"]
+    Then the user should see the element  jQuery = .govuk-label[for="guidanceRows[0].scoreFrom"] ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element   jQuery = .govuk-label[for="guidanceRows[0].scoreTo"] ~ .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element   jQuery = .govuk-label[for="guidanceRows[0].justification"] ~ .govuk-error-message:contains("This field cannot be left blank.")
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
@@ -112,7 +112,7 @@ the validation error above the question should be visible
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    css=button[type="submit"]
-    Wait Until Element Is Not Visible Without Screenshots    css=error-message
+    Wait Until Element Is Not Visible Without Screenshots    css=.govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user moves focus and waits for autosave
@@ -143,7 +143,7 @@ The user should see the correct inputs in assessment questions
 
 User creates a new competition for Application tests
     Given the user navigates to the page    ${CA_UpcomingComp}
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Create competition")
     And the user clicks the button/link     link=Initial details
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId

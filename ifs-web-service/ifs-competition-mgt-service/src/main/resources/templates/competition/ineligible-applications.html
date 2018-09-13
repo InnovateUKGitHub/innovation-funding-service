@@ -1,100 +1,115 @@
 <!DOCTYPE html>
-<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Ineligible applications - ${model.competitionName}|" />
     </head>
 
-    <body class="dashboard-internal wide-page">
+    <body class="govuk-template__body dashboard-internal wide-page">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">
-                    <th:block th:text="|${model.competitionId}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
-                </span>
-                Ineligible applications
-            </h1>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <h1 class="govuk-heading-xl">
+                    <span class="heading-secondary">
+                        <th:block th:text="|${model.competitionId}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
+                    </span>
+                    Ineligible applications
+                </h1>
 
-            <form method="GET" th:object="${filterForm}">
-                <div class="search-filters extra-margin">
-                    <fieldset>
-                        <legend class="heading-medium no-margin-top">Filter applications</legend>
-                        <div class="grid-row">
-                            <div class="column-half">
-                                <label class="form-label" for="filterSearch">Search by application number.</label>
-                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:field="*{filterSearch}"/>
+                <form method="GET" th:object="${filterForm}">
+                    <div class="search-filters govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                                <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                            </legend>
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-half">
+                                    <label class="govuk-label"
+                                           for="filterSearch">Search by application number.</label>
+                                    <input type="text"
+                                           class="govuk-input govuk-!-margin-bottom-6"
+                                           id="filterSearch"
+                                           name="filterSearch"
+                                           th:field="*{filterSearch}"/>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <label class="govuk-label"
+                                           for="filterInform">Informed</label>
+                                    <select name="filterInform"
+                                            id="filterInform"
+                                            class="govuk-select govuk-!-margin-bottom-6"
+                                            th:field="*{filterInform}">
+                                        <option value="">All</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="column-half">
-                                <label class="form-label" for="filterInform">Informed</label>
-                                <select name="filterInform" id="filterInform" class="form-control extra-margin-bottom" th:field="*{filterInform}">
-                                    <option value="">All</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-full alignright">
+                                    <button class="govuk-button govuk-!-margin-0" type="submit">Filter</button>
+                                </div>
                             </div>
+                        </fieldset>
+                        <div class="clear-search-filters">
+                            <a href="?" th:href="'?sort=' + ${model.sorting}" class="govuk-body govuk-link">Clear all filters</a>
                         </div>
-                        <div class="grid-row">
-                            <div class="column-one alignright">
-                                <button class="button no-margin" type="submit">Filter</button>
-                            </div>
+                    </div>
+                    <div class="govuk-body govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half">
+                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">22</span>
+                            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
                         </div>
-                    </fieldset>
-                    <div class="clear-search-filters">
-                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <label for="sort-by" class="govuk-label display-inline">Sort by</label>
+                            <select id="sort-by"
+                                    name="sort"
+                                    class="js-auto-submit govuk-select govuk-input--width-20">
+                                <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
+                                <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
+                            </select>
+                            <button type="submit" class="button-secondary govuk-!-margin-0 js-hidden">Sort</button>
+                        </div>
                     </div>
+                </form>
+                <div class="table-overflow">
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                <th class="govuk-table__header" scope="col">Lead applicant</th>
+                                <th class="govuk-table__header" scope="col" th:unless="${model.readOnly}"><span class="govuk-visually-hidden">Informed</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
+                                <td class="govuk-table__cell">
+                                    <a
+                                    th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                    th:text="${row.id}"
+                                    class="govuk-link">194731</a>
+                                </td>
+                                <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
+                                <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
+                                <td class="govuk-table__cell" th:text="${row.leadApplicant}">HVM</td>
+                                <td class="govuk-table__cell" th:unless="${model.readOnly}">
+                                    <span th:if="${row.informed}">Informed</span>
+                                    <a class="govuk-button govuk-!-margin-right-0" th:href="@{/competition/application/{applicationId}/ineligible(applicationId=${row.id})}" th:if="${!row.informed}">Inform applicant</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="grid-row sorting">
-                    <div class="column-half">
-                        <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
-                            <span class="heading-small">applications</span>
-                        </p>
-                    </div>
-                    <div class="column-half alignright">
-                        <label for="sort-by">Sort by</label>
-                        <select id="sort-by" name="sort" class="js-auto-submit form-control">
-                            <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
-                            <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
-                        </select>
-                        <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
-                    </div>
-                </div>
-            </form>
-            <div class="table-overflow">
-                <table id="application-list">
-                    <thead>
-                        <tr>
-                            <th scope="col">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Lead organisation</th>
-                            <th scope="col">Lead applicant</th>
-                            <th scope="col" th:unless="${model.readOnly}"><span class="hidden">Informed</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                            <td>
-                                <a
-                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                th:text="${row.id}">194731</a>
-                            </td>
-                            <td th:text="${row.projectTitle}">Machine learning in robots</td>
-                            <td th:text="${row.lead}">PWC</td>
-                            <td th:text="${row.leadApplicant}">HVM</td>
-                            <td th:unless="${model.readOnly}">
-                                <span th:if="${row.informed}">Informed</span>
-                                <a class="button no-margin-right" th:href="@{/competition/application/{applicationId}/ineligible(applicationId=${row.id})}" th:if="${!row.informed}">Inform applicant</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
-
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
     </body>

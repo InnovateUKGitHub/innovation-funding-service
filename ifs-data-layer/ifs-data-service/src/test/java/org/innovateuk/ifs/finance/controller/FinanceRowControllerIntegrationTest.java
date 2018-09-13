@@ -539,31 +539,6 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
-    @Rollback
-    @Ignore
-    @Test
-    public void testValidationOtherFundingUpdateIncorrectValues() {
-
-        assertEquals("Yes", otherFunding.getOtherPublicFunding());
-        otherFundingCost.setOtherPublicFunding("Yes");
-        otherFundingCost.setFundingSource("");
-        otherFundingCost.setSecuredDate("15-asdf");
-        otherFundingCost.setFundingAmount(new BigDecimal("0"));
-
-        RestResult<ValidationMessages> validationMessages = controller.update(otherFundingCost.getId(), otherFundingCost);
-        ValidationMessages messages = validationMessages.getSuccess();
-
-        assertEquals(otherFundingCost.getId(), messages.getObjectId());
-        assertEquals("costItem", messages.getObjectName());
-
-        List<Error> expectedErrors = asList(
-                fieldError("securedDate", "15-asdf", "validation.finance.secured.date.invalid"),
-                fieldError("fundingSource", "", "validation.finance.funding.source.blank"),
-                fieldError("fundingAmount", new BigDecimal("0"), "validation.field.max.value.or.higher", 1));
-
-        assertErrorsAsExpected(messages, expectedErrors);
-    }
-
     /* Grant Claim Section Tests - Small Organisation Size */
 
     @Rollback

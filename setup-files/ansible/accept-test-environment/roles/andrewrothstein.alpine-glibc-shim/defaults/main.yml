@@ -1,0 +1,14 @@
+---
+alpine_glibc_shim_key_mirror: https://raw.githubusercontent.com/andyshinn/alpine-pkg-glibc/master
+alpine_glibc_shim_key: sgerrand.rsa.pub
+alpine_glibc_shim_mirror: https://github.com/sgerrand/alpine-pkg-glibc/releases/download
+alpine_glibc_shim_ver: '2.26-r0'
+alpine_glibc_shim_pkg_prefixes:
+  - glibc
+  - glibc-bin
+  - glibc-i18n
+alpine_glibc_shim_checksums:
+  '2.26-r0':
+    glibc: sha256:cece2d9ae482be7278c3122e4d26606db47a903cd011e1a27794261e8e6bfb39
+    glibc-bin: sha256:5ebd010410d014d6b6469902fdc0eb9adf7abfce0d3fa79d0b93ced59a358f8c
+    glibc-i18n: sha256:af7177bd8722d4b18c1bd5065fbcfcd001d9a13bafdde1912b369717c54886fc
