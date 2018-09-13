@@ -26,6 +26,10 @@ public class EuGrantCookieService {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private EuGrantHttpServlet euGrantHttpServlet;
+
+
     public EuGrantResource get() {
         Optional<UUID> uuid = getIdFromCookie();
         if (!uuid.isPresent()) {
@@ -50,15 +54,15 @@ public class EuGrantCookieService {
     }
 
     public void clear() {
-        cookieUtil.removeCookie(EuGrantHttpServlet.response(), EU_GRANT_ID);
+        cookieUtil.removeCookie(euGrantHttpServlet.response(), EU_GRANT_ID);
     }
 
     private void saveToEuGrantCookie(UUID uuid) {
-        cookieUtil.saveToCookie(EuGrantHttpServlet.response(), EU_GRANT_ID, uuid.toString());
+        cookieUtil.saveToCookie(euGrantHttpServlet.response(), EU_GRANT_ID, uuid.toString());
     }
 
     private Optional<UUID> getIdFromCookie() {
-        String cookie = cookieUtil.getCookieValue(EuGrantHttpServlet.request(), EU_GRANT_ID);
+        String cookie = cookieUtil.getCookieValue(euGrantHttpServlet.request(), EU_GRANT_ID);
 
         if (!cookie.isEmpty()) {
             return Optional.of(UUID.fromString(cookie));

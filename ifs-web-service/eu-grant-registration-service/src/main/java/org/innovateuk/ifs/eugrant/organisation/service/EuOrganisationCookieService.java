@@ -19,16 +19,19 @@ public class EuOrganisationCookieService {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private EuGrantHttpServlet euGrantHttpServlet;
+
     public void saveToOrganisationTypeCookie(EuOrganisationTypeForm organisationTypeForm) {
-        cookieUtil.saveToCookie(EuGrantHttpServlet.response(), ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
+        cookieUtil.saveToCookie(euGrantHttpServlet.response(), ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
     }
 
     public Optional<EuOrganisationTypeForm> getOrganisationTypeCookieValue() {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(EuGrantHttpServlet.request(), ORGANISATION_TYPE), EuOrganisationTypeForm.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(euGrantHttpServlet.request(), ORGANISATION_TYPE), EuOrganisationTypeForm.class));
     }
 
     public void clear() {
-        cookieUtil.removeCookie(EuGrantHttpServlet.response(), ORGANISATION_TYPE);
+        cookieUtil.removeCookie(euGrantHttpServlet.response(), ORGANISATION_TYPE);
     }
 
 }

@@ -57,8 +57,6 @@ dependencies {
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
