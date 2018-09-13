@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -32,16 +33,14 @@ import org.springframework.validation.Validator;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -53,6 +52,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.*;
 import static org.innovateuk.ifs.competitionsetup.initialdetail.sectionupdater.InitialDetailsSectionUpdater.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -378,7 +378,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertEquals(bindingResult.getFieldErrorCount("openingDate"), 2);
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
         assertTrue(bindingResult.hasFieldErrors("innovationSectorCategoryId"));
@@ -565,7 +565,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("openingDate"));
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
@@ -617,7 +617,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount("openingDate"));
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
@@ -767,7 +767,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withFullApplicationFinance(true)
+                .withApplicationFinanceType(STANDARD)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
@@ -796,7 +796,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withFullApplicationFinance(null)
+                .withApplicationFinanceType(null)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
@@ -909,9 +909,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withId(COMPETITION_ID)
                 .build();
-
-        Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-        sectionSetupStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
