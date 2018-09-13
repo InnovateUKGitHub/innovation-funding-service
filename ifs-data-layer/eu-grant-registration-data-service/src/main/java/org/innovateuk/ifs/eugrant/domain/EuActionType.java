@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Immutable
 public class EuActionType {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
