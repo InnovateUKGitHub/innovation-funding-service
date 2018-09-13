@@ -25,12 +25,13 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
         int activeExecutorThreads = executor.getActiveCount();
         int poolSize = executor.getPoolSize();
         int maxPoolSize = executor.getMaxPoolSize();
+        int largestPoolSize = executor.getThreadPoolExecutor().getLargestPoolSize();
 
         LOG.debug(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
         // TODO DW - 100 is an arbitrary amount - should be based on some average or maximum number of threads that a
         // Controller can produce concurrently whilst doing some work
-        if ((maxPoolSize - activeExecutorThreads) > 100) {
+        if ((maxPoolSize - activeExecutorThreads) > largestPoolSize) {
             return Health.up().build();
         } else {
             LOG.warn("Running out of available async executor threads - reporting this service as unavailable");

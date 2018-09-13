@@ -3,6 +3,7 @@ package org.innovateuk.ifs.async.generation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,11 @@ public final class AsyncFuturesHolder {
     private static final ThreadLocal<Queue<RegisteredAsyncFutureDetails<?>>> ASYNC_FUTURES = new ThreadLocal<>();
     private static final ThreadLocal<AsyncFutureDetails> CURRENTLY_EXECUTING_ASYNC_FUTURE = new ThreadLocal<>();
 
-    private AsyncFuturesHolder() {}
+    @Value("${ifs.web.async.max.timeout}")
+    private static int timeoutValue;
+
+    private AsyncFuturesHolder() {
+    }
 
     /**
      * This method, given a future, will register this future as a future to be tracked by this Thread (and by the parent
@@ -208,7 +213,7 @@ public final class AsyncFuturesHolder {
 
                 try {
                     // TODO DW - add configuration for this
-                    futureBatch.get(600, TimeUnit.SECONDS);
+                    futureBatch.get(timeoutValue, TimeUnit.SECONDS);
                 } catch (Exception e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);
 
