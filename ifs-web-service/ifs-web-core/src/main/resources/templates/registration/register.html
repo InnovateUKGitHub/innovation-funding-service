@@ -112,7 +112,7 @@
                 </th:block>
             </div>
 
-            <th:block th:insert="fragments/password :: registration"/>
+            <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
