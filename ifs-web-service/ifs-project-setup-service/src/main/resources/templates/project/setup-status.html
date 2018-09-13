@@ -75,6 +75,38 @@
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
+                <!--/* ========================= Other documents ========================= */-->
+                <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="govuk-heading-s">
+                            <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/partner/documents(id=${model.projectId})}"
+                               class="govuk-link">Other documents</a>
+                            <a th:if="${model.projectComplete}"
+                               th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}"
+                               class="govuk-link">Other
+                                documents</a>
+                            <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
+                        </h2>
+
+                        <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
+                        <th:block th:if="${model.projectManager}">
+                            <p class="govuk-body">You need to upload the following:</p>
+                        </th:block>
+                        <th:block th:unless="${model.projectManager}">
+                            <p class="govuk-body">Your Project Manager needs to upload the following:</p>
+                        </th:block>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:if="${model.collaborationAgreementRequired}">
+                                <li>a collaboration agreement</li>
+                            </th:block>
+                            <li>exploitation plan</li>
+                        </ul>
+                    </div>
+                    <th:block
+                        th:insert="project/fragments :: project-setup-status-indicator(${model.otherDocumentsStatus.getSectionStatus()})"
+                        th:if="${model.otherDocumentsSection.accessible}"/>
+                </li>
                 <!--/* ========================= Monitoring Officer ========================= */-->
                 <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
                     <div class="task">
@@ -157,38 +189,6 @@
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
                               th:if="${model.spendProfileSection.accessible}"/>
-                </li>
-                <!--/* ========================= Other documents ========================= */-->
-                <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
-                    <div class="task">
-                        <h2 class="govuk-heading-s">
-                            <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/partner/documents(id=${model.projectId})}"
-                               class="govuk-link">Other documents</a>
-                            <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}"
-                               class="govuk-link">Other
-                                documents</a>
-                            <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
-                        </h2>
-
-                        <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
-                        <th:block th:if="${model.projectManager}">
-                            <p class="govuk-body">You need to upload the following:</p>
-                        </th:block>
-                        <th:block th:unless="${model.projectManager}">
-                            <p class="govuk-body">Your Project Manager needs to upload the following:</p>
-                        </th:block>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <th:block th:if="${model.collaborationAgreementRequired}">
-                                <li>a collaboration agreement</li>
-                            </th:block>
-                            <li>exploitation plan</li>
-                        </ul>
-                    </div>
-                    <th:block
-                        th:insert="project/fragments :: project-setup-status-indicator(${model.otherDocumentsStatus.getSectionStatus()})"
-                        th:if="${model.otherDocumentsSection.accessible}"/>
                 </li>
                 <!--/* ========================= GOL ========================= */-->
                 <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
