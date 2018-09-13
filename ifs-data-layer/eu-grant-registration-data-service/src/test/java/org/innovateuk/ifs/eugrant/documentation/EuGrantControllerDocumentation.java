@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.eugrant.builder.EuFundingResourceBuilder.newEuF
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.innovateuk.ifs.eugrant.builder.EuOrganisationResourceBuilder.newEuOrganisationResource;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -132,7 +133,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
     @Test
     public void update() throws Exception {
 
-        when(euGrantService.save(any(EuGrantResource.class))).thenReturn(serviceSuccess());
+        when(euGrantService.save(isA(EuGrantResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 put("/eu-grant/{uuid}", uuid.toString())

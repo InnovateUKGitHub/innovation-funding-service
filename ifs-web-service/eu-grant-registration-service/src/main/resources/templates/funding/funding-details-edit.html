@@ -61,7 +61,9 @@
                                type="text"
                                required="required"
                                th:field="*{participantId}"
-                               th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code}">
+                               pattern="[0-9]{6}"
+                               th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code},
+                               data-pattern-errormessage=#{validation.fundingForm.participant.identification.code.format.invalid}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
@@ -236,7 +238,11 @@
                                type="number"
                                required="required"
                                th:field="*{fundingContribution}"
-                               th:attr="data-required-errormessage=#{validation.fundingForm.funding.contribution}">
+                               min="0"
+                               th:attr=
+                               "data-required-errormessage=#{validation.fundingForm.funding.contribution},
+                               data-min-errormessage=#{validation.fundingForm.funding.positive},
+                               data-number-errormessage=#{validation.fundingForm.funding.format.invalid}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCoordinator')} ? 'govuk-form-group--error'">

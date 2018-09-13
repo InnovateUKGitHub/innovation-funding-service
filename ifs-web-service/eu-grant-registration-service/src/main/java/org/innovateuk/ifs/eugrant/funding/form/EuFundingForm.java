@@ -19,7 +19,7 @@ public class EuFundingForm {
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
@@ -38,6 +38,7 @@ public class EuFundingForm {
     private Integer endDateYear;
 
     @Digits(integer = 10, fraction = 0, message = "{validation.fundingForm.funding.format.invalid}")
+    @Range(min = 0, message = "{validation.fundingForm.funding.positive}")
     @NotNull(message = "{validation.fundingForm.funding.contribution}")
     private BigDecimal fundingContribution;
 
@@ -193,7 +194,6 @@ public class EuFundingForm {
                 .append(projectName)
                 .append(startDateMonth)
                 .append(startDateYear)
-                .append(startDateMonth)
                 .append(endDateMonth)
                 .append(endDateYear)
                 .append(fundingContribution)
