@@ -45,7 +45,10 @@
                                type="text"
                                required="required"
                                th:field="*{grantAgreementNumber}"
-                               th:attr="data-required-errormessage=#{validation.fundingForm.grant.agreement.number}">
+                               pattern="[0-9]{6}"
+                               th:attr="
+                               data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
+                               data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">

@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class EuFundingForm {
 
     @NotBlank(message = "{validation.fundingForm.grant.agreement.number}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.grant.agreement.format.invalid}")
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
