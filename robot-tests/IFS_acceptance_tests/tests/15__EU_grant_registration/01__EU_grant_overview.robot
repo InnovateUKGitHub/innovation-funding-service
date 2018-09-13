@@ -98,16 +98,7 @@ Funding details initial validation
     [Tags]
     When the user clicks the button/link                 link = Funding details
     Then the user clicks the button/link                 jQuery = button:contains("Continue")
-    And the user should see a field and summary error    Enter a grant agreement number.
-    And the user should see a field and summary error    Enter a participant identification code (PIC).
-    And the user should see a field and summary error    Select a type of action.
-    And the user should see a field and summary error    Enter a project name.
-    And the user should see a field and summary error    Please enter a past date.
-    And the user should see a field and summary error    Please enter a valid date.
-    And the user should see a field and summary error    Please enter a future date.
-    And the user should see a field and summary error    Please enter a valid date.
-    And the user should see a field and summary error    Please enter a valid number.
-    And the user should see a field and summary error    Select an option.
+    And the user should see the validation messages for the funding details
 
 Funding details fill in details
     [Documentation]  IFS-4077
@@ -132,3 +123,16 @@ Dashboard should reflect the updates
     When the user should see the element           jQuery = li:contains("Your organisation") .task-status-complete
     Then the user should see the element           jQuery = li:contains("Contact details") .task-status-complete
     And the user should see the element            jQuery = li:contains("Funding details") .task-status-complete
+
+*** Keywords ***
+the user should see the validation messages for the funding details
+    And the user should see a field and summary error    Enter a grant agreement number.
+    And the user should see a field and summary error    Enter a participant identification code (PIC).
+    And the user should see a field and summary error    Select a type of action.
+    And the user should see a field and summary error    Enter a project name.
+    And the user should see a field and summary error    Please enter a past date.
+    And the user should see a field and summary error    Please enter a valid date.
+    And the user should see a field and summary error    Please enter a future date.
+    And the user should see a field and summary error    Please enter a valid date.
+    And the user should see a field and summary error    Please enter a valid number.
+    And the user should see a field and summary error    Select an option.
