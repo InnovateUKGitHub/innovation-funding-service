@@ -96,18 +96,18 @@ Contact details Enter details and save
 Funding details initial validation
     [Documentation]  IFS-4077
     [Tags]
-    When the user clicks the button/link           link = Funding details
-    Then the user clicks the button/link           jQuery = button:contains("Continue")
-    And the user should see the element            jQuery = a:contains("Enter a grant agreement number.")
-    And the user should see the element            jQuery = a:contains("Enter a participant identification code (PIC).")
-    And the user should see the element            jQuery = a:contains("Select a type of action.")
-    And the user should see the element            jQuery = a:contains("Enter a project name.")
-    And the user should see the element            jQuery = a:contains("Please enter a past date.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid date.")
-    And the user should see the element            jQuery = a:contains("Please enter a future date.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid date.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid number.")
-    And the user should see the element            jQuery = a:contains("Select an option.")
+    When the user clicks the button/link                 link = Funding details
+    Then the user clicks the button/link                 jQuery = button:contains("Continue")
+    And the user should see a field and summary error    Enter a grant agreement number.
+    And the user should see a field and summary error    Enter a participant identification code (PIC).
+    And the user should see a field and summary error    Select a type of action.
+    And the user should see a field and summary error    Enter a project name.
+    And the user should see a field and summary error    Please enter a past date.
+    And the user should see a field and summary error    Please enter a valid date.
+    And the user should see a field and summary error    Please enter a future date.
+    And the user should see a field and summary error    Please enter a valid date.
+    And the user should see a field and summary error    Please enter a valid number.
+    And the user should see a field and summary error    Select an option.
 
 Funding details fill in details
     [Documentation]  IFS-4077
