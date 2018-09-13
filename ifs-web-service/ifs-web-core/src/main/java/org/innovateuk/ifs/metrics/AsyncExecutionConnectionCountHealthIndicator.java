@@ -3,6 +3,7 @@ package org.innovateuk.ifs.metrics;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -19,19 +20,19 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
     @Autowired
     private ThreadPoolTaskExecutor executor;
 
+    @Value("${ifs.web.async.max.thread}")
+    private int maxThread;
+
     @Override
     public Health health() {
 
         int activeExecutorThreads = executor.getActiveCount();
         int poolSize = executor.getPoolSize();
         int maxPoolSize = executor.getMaxPoolSize();
-        int largestPoolSize = executor.getThreadPoolExecutor().getLargestPoolSize();
 
         LOG.debug(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
-        // TODO DW - 100 is an arbitrary amount - should be based on some average or maximum number of threads that a
-        // Controller can produce concurrently whilst doing some work
-        if ((maxPoolSize - activeExecutorThreads) > largestPoolSize) {
+        if ((maxPoolSize - activeExecutorThreads) > maxThread) {
             return Health.up().build();
         } else {
             LOG.warn("Running out of available async executor threads - reporting this service as unavailable");
