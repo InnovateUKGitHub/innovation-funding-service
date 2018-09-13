@@ -145,7 +145,7 @@ public class CompetitionManagementApplicationsController {
                                        @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter,
                                        UserResource loggedInUser) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(NavigationOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.PREVIOUS_APPLICATIONS, queryParams);
         model.addAttribute("model", previousApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
