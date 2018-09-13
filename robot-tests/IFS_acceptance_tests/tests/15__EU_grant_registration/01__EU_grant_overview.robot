@@ -113,6 +113,7 @@ Funding details fill in details
     And the user enters text to a text field       id = endDateYear                     2020
     And the user enters text to a text field       id = fundingContribution             123456
     Then the user clicks the button/link           jQuery = label:contains("Yes")
+    And the user should not see an error in the page
     Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user clicks the button/link            jQuery = a:contains("Save and return")
 
