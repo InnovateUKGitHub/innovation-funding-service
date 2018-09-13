@@ -25,7 +25,6 @@ if (!isNamedEnv()) {
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
-    project.logger.info("THIS IS A TEST!!")
     from('os-files/') {
         include '**/*.yml'
     }

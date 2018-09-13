@@ -12,17 +12,6 @@ RUN apt-get update && \
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
-# RUN pip install -U selenium==3.3.1 && \
-#     pip install robotframework \
-#                 robotframework-selenium2library \
-#                 robotframework-imaplibrary \
-#                 robotframework-xvfb \
-#                 robotframework-excellibrary \
-#                 robotframework-ftplibrary \
-#                 openpyxl \
-#                 simplejson \
-#                 requests \
-#                 robotframework-databaselibrary \
 
 WORKDIR robot-tests
 COPY ./ ./

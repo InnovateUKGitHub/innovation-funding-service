@@ -20,7 +20,6 @@ items:
             medium: Memory
         containers:
         - image: selenium/standalone-chrome:3.14.0-arsenic
-        # - image: selenium/standalone-chrome-debug:3.0.1-dysprosium
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
