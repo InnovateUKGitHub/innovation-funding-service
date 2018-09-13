@@ -52,7 +52,7 @@
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
                                 <a th:if="${showAssessorDetailedFinanceLink}"
-                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}+${queryParams}, organisationId=${applicationOrganisation.id})}"
+                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}+${queryParams}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})}"
                                    th:style="'font-weight: normal;'"
                                    class="govuk-link">
                                     View finances

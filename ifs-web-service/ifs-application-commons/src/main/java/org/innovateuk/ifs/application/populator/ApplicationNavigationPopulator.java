@@ -134,7 +134,11 @@ public class ApplicationNavigationPopulator {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute(BACK_TITLE, "Your finances");
             if (applicantOrganisationId.isPresent()) {
-                model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
+                if (queryParam.isPresent()) {
+                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get() + queryParam.get());
+                } else {
+                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
+                }
             } else {
                 model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/" + SectionType.FINANCE.name());
             }
@@ -146,6 +150,7 @@ public class ApplicationNavigationPopulator {
                 model.addAttribute(BACK_TITLE, "Application overview");
                 if (queryParam.isPresent()) {
                     backURL = ("/management/competition/" + section.getCompetition() + backURL + queryParam.get());
+                    model.addAttribute("queryParams", queryParam.get());
                 } else {
                     backURL = ("/management/competition/" + section.getCompetition() + backURL);
                 }
