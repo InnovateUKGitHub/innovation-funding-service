@@ -4,6 +4,8 @@ Documentation    IFS-4231 EU2020 - Create webservice & Landing page
 ...              IFS-4232 EU2020 - Contact details
 ...
 ...              IFS-4072 EU2020 - Organisation selection
+...
+...              IFS-4077 EU2020 - Grant information form
 Resource         ../../resources/defaultResources.robot
 Resource         ../10__Project_setup/PS_Common.robot
 
@@ -91,8 +93,42 @@ Contact details Enter details and save
     And the user should see the element            jQuery = dl:contains("012345678901")
     And the user clicks the button/link            link = Save and return
 
+Funding details initial validation
+    [Documentation]  IFS-4077
+    [Tags]
+    When the user clicks the button/link           link = Funding details
+    Then the user clicks the button/link           jQuery = button:contains("Continue")
+    And the user should see the element            jQuery = a:contains("Enter a grant agreement number.")
+    And the user should see the element            jQuery = a:contains("Enter a participant identification code (PIC).")
+    And the user should see the element            jQuery = a:contains("Select a type of action.")
+    And the user should see the element            jQuery = a:contains("Enter a project name.")
+    And the user should see the element            jQuery = a:contains("Please enter a past date.")
+    And the user should see the element            jQuery = a:contains("Please enter a valid date.")
+    And the user should see the element            jQuery = a:contains("Please enter a future date.")
+    And the user should see the element            jQuery = a:contains("Please enter a valid date.")
+    And the user should see the element            jQuery = a:contains("Please enter a valid number.")
+    And the user should see the element            jQuery = a:contains("Select an option.")
+
+Funding details fill in details
+    [Documentation]  IFS-4077
+    [Tags]
+    When the user enters text to a text field      id = grantAgreementNumber            123456
+    Then the user enters text to a text field      id = participantId                   123456
+    And the user selects the option from the drop-down menu                             12   id=actionType  #(IA) Innovation action
+    And the user enters text to a text field       id = projectName                     (IA) Innovation action
+    And the user enters text to a text field       id = startDateMonth                  10
+    And the user enters text to a text field       id = startDateYear                   2010
+    And the user enters text to a text field       id = endDateMonth                    10
+    And the user enters text to a text field       id = endDateYear                     2020
+    And the user enters text to a text field       id = fundingContribution             123456
+    Then the user clicks the button/link           jQuery = label:contains("Yes")
+    Then the user clicks the button/link           jQuery = button:contains("Continue")
+    And the user clicks the button/link            jQuery = a:contains("Save and return")
+
 Dashboard should reflect the updates
     [Documentation]  IFS-4231
-    Given the user navigates to the page            ${EU_grant}
-    When the user should see the element            jQuery = li:contains("Your organisation") .task-status-complete
-    When the user should see the element            jQuery = li:contains("Contact details") .task-status-complete
+    [Tags]
+    Given the user navigates to the page           ${EU_grant}
+    When the user should see the element           jQuery = li:contains("Your organisation") .task-status-complete
+    Then the user should see the element           jQuery = li:contains("Contact details") .task-status-complete
+    And the user should see the element            jQuery = li:contains("Funding details") .task-status-complete
