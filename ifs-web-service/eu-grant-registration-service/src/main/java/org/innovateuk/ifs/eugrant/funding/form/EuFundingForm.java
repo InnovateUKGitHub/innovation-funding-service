@@ -5,8 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
-import org.innovateuk.ifs.commons.validation.constraints.PastLocalDate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
@@ -130,7 +130,6 @@ public class EuFundingForm {
     }
 
     @NotNull(message = "{validation.standard.date.format}")
-    @PastLocalDate(message = "{validation.standard.past.mm.yyyy.not.past.format}")
     public LocalDate getStartDate() {
         if (startDateYear == null || startDateMonth == null) {
             return null;

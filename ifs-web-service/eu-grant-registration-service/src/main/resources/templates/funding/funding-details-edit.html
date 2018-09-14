@@ -4,7 +4,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding details'" />
 </head>
-<body class="govuk-template__body">
+<body class="govuk-template__body funding-details">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
@@ -114,7 +114,7 @@
                             <th:block th:if="${#fields.hasErrors('startDate*')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
                             </th:block>
-                            <div class="date-group" data-past-date="">
+                            <div class="date-group">
                                 <div class="day govuk-visually-hidden">
                                     <label class="govuk-label" for="startDateDay">
                                         <span>Day</span>
@@ -298,5 +298,6 @@
 </div>
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="eugrant/fragments/layout :: body-end" />
 </body>
 </html>

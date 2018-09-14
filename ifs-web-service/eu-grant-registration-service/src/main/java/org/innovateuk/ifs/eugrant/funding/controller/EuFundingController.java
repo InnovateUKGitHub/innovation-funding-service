@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,6 +80,10 @@ public class EuFundingController {
         return "funding/funding-details-edit";
     }
 
+    private boolean validateDateOrdering(EuFundingForm form) {
+        return form.getStartDate().isBefore(form.getEndDate());
+    }
+
     @PostMapping("/funding-details/edit")
     public String submitFundingDetails(@ModelAttribute("form") @Valid EuFundingForm form,
                                        BindingResult bindingResult,
@@ -87,6 +92,11 @@ public class EuFundingController {
 
         Supplier<String> failureView = () -> fundingDetailsEdit(form, bindingResult, model);
         Supplier<String> successView = () -> "redirect:/funding-details";
+
+        // custom validation for start date being before end date
+        if(!validateDateOrdering(form)) {
+            bindingResult.addError(new FieldError("form", "endDateMonth", "End date must be after end date."));
+        }
 
         if (bindingResult.hasErrors()) {
             return failureView.get();
