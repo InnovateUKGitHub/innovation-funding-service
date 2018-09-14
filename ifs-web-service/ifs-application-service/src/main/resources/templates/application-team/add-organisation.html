@@ -33,7 +33,7 @@
                     <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="organisationName">
+                        <label class="govuk-label--s" for="organisationName">
                             Organisation name
                         </label>
                         <th:block th:if="${#fields.hasErrors('organisationName')}">
