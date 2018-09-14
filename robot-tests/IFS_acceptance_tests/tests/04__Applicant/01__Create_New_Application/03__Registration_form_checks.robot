@@ -10,6 +10,8 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...               INFUND-1147: Further acceptance tests for the create account page
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
+...
+...               IFS-4298 Registration redirect doesn't check results of verification
 Suite Setup       the guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -71,6 +73,12 @@ Email duplication check
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account
+
+User can not verify email with invalid hash
+    [Documentation]  IFS-4298
+    [Tags]
+    When the user navigates to the page        ${SERVER}/registration/verify-email/200b9a1534649f4ba1dc581c9da2a77
+    Then the user should see the element       jQuery = h1:contains("Invalid URL")
 
 *** Keywords ***
 the user cannot login with the invalid email

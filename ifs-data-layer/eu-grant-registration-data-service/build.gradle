@@ -1,12 +1,5 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
-
-if(targetBuild == 'docker') {
-    apply from: "docker-build.gradle"
-} else {
-    apply from: "automated-build.gradle"
-    //This workaround can be removed once this work is done
-    //currently fails bamboo as - for example it is looking for sysint-build.gradle which doesn't exist.
-}
+apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
@@ -112,8 +105,3 @@ test {
 
 
 flywayMigrate.dependsOn processResources
-
-ext.serverPort=8080
-
-//TODO remove when ready of OS deployment
-osStageRemote.enabled = false

@@ -9,8 +9,8 @@ function getLocalRegistryUrl() {
 
 function replacePersistentFileClaim() {
 
-    sed -i.bak "s#persistentVolumeClaim:#emptyDir: {}#g" $(getBuildLocation)/31-data-service.yml
-    sed -i.bak "s#claimName: file-upload-claim##g" $(getBuildLocation)/31-data-service.yml
-    sed -i.bak "s/imagePullPolicy: Always/imagePullPolicy: IfNotPresent/g" $(getBuildLocation)/31-data-service.yml
+    sed -i.bak "s#persistentVolumeClaim:#emptyDir: {}#g" $(getBuildLocation)/ifs-services/31-data-service.yml
+    sed -i.bak "s#claimName: file-upload-claim##g" $(getBuildLocation)/ifs-services/31-data-service.yml
+    sed -i.bak "s/imagePullPolicy: Always/imagePullPolicy: IfNotPresent/g" $(getBuildLocation)/ifs-services/31-data-service.yml
 
 }

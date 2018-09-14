@@ -9,6 +9,7 @@ import java.util.UUID;
  * Service for saving and getting eu grant registrations.
  */
 public interface EuGrantService {
-    ServiceResult<EuGrantResource> save(EuGrantResource externalFundingResource);
+    ServiceResult<Void> save(EuGrantResource externalFundingResource);
     ServiceResult<EuGrantResource> findById(UUID id);
+    ServiceResult<EuGrantResource> create();
 }
