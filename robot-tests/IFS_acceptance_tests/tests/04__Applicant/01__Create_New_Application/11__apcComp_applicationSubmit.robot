@@ -19,7 +19,7 @@ ${apcApplicationTitle}  Advanced Propulsion Centre Application
 *** Test Cases ***
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
-    [Tags]  HappyPath
+    [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
@@ -40,14 +40,14 @@ Comp Admin creates an APC competition
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${apccompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)

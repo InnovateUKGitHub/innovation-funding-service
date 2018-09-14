@@ -57,7 +57,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
-    [Tags]  HappyPath
+    [Tags]
     Given the user should see the element  jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done  no  Programme
     And the user fills in the CS Assessors
@@ -76,7 +76,7 @@ Competition is Open to Applications
     The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]  MySQL
+    [Tags]
     Given Log in as a different user  &{lead_applicant_credentials}
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 
@@ -134,7 +134,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]    MySQL
+    [Tags]
     Given Log in as a different user  &{lead_applicant_credentials}
     And logged in user applies to competition                   ${compWithGrowth}  1
     When the user clicks the button/link                         link=Your finances
@@ -308,8 +308,7 @@ Newly created collaborator can view and edit project Growth table
 
 Invite Collaborator in Application with Growth table
     [Documentation]    INFUND-8518 INFUND-8561
-    [Tags]  Email  MySQL
-    [Setup]
+    [Tags]
     Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
     When log in as a different user                    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2

@@ -31,7 +31,7 @@ Resource          ../../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
-    [Tags]    Email    HappyPath
+    [Tags]
     [Setup]  Log in as a different user                ${submit_bus_email}  ${correct_password}
     Given the user navigates to the page               ${DASHBOARD_URL}
     When the user clicks the button/link               link=${application_bus_name}
@@ -49,7 +49,7 @@ Submit button disabled when application is incomplete
 
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link=${application_bus_name}
     When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
@@ -69,7 +69,7 @@ Your Project costs section is read-only once application is marked as complete
 
 Submit flow business lead (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
-    [Tags]    HappyPath    Email    SmokeTest
+    [Tags]
     Given log in as a different user                        ${submit_bus_email}  ${correct_password}
     And the user clicks the button/link                     link=${application_bus_name}
     And the user should see the text in the element         css=.message-alert  Now your application is complete, you need to review and then submit.
@@ -102,12 +102,12 @@ Applicant submit satisfaction survey after submitting application
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath    SmokeTest
+    [Tags]
     Then the user reads his email    ${submit_bus_email}    Successful submission of application    You have successfully submitted an application
 
 Submitted application is read only
     [Documentation]    INFUND-1938, INFUND-9058
-    [Tags]    Email    SmokeTest
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link=${application_bus_name}
     When the user clicks the button/link    link=View application
@@ -116,7 +116,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]    Email
+    [Tags]
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user should see the element  jQuery=.in-progress li:contains("${application_bus_name}") .msg-progress:contains("Application submitted")
     And the user clicks the button/link   link=${application_bus_name}
@@ -125,7 +125,7 @@ Status of the submitted application
 
 RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link=${application_rto_name}
@@ -154,7 +154,7 @@ Submit flow rto lead (complete application)
 
 Applications are on Dashboard when Competition is Closed
     [Documentation]  IFS-1149
-    [Tags]  MySQL
+    [Tags]
     [Setup]  Get the original values of the competition's milestones
     Given the competition is closed
     Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}

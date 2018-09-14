@@ -101,7 +101,7 @@ Overhead cost server side
 
 Materials client side
     [Documentation]    INFUND-844
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
@@ -111,7 +111,7 @@ Materials client side
 
 Materials server side
     [Documentation]    INFUND-844
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    1212121212121212121212

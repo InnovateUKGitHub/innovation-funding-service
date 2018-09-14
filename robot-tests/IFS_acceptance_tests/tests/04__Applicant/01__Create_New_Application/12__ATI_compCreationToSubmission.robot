@@ -19,7 +19,7 @@ ${ATIapplicationTitle}  ATI application
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
-    [Tags]  HappyPath
+    [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
@@ -41,14 +41,14 @@ Comp Admin creates an ATI competition
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     When the competition is open                                 ${ATIcompetitionTitle}
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-2332  IFS-1497
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team

@@ -33,7 +33,7 @@ Appendices available only for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link=Academic robot test application
@@ -52,7 +52,7 @@ Non pdf uploads not allowed
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
-    [Tags]    HappyPath    SmokeTest
+    [Tags]
     [Setup]
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
@@ -62,7 +62,7 @@ Lead applicant can upload a pdf file
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]    HappyPath    SmokeTest
+    [Tags]
     Given The user opens the link in new window  ${5mb_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
@@ -85,7 +85,7 @@ Internal users can view uploaded files
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]    HappyPath    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
@@ -103,13 +103,13 @@ Collaborators cannot upload a file if not assigned
 
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
-    [Tags]    HappyPath
+    [Tags]
     When the user should see the text in the page      ${5mb_pdf}
     Then the user should not see the text in the page  Remove
 
 Questions can be assigned with appendices
     [Documentation]    INFUND-832  INFUND-409
-    [Tags]    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user                   &{lead_applicant_credentials}
     Given the user navigates to the page                    ${DASHBOARD_URL}
     And the user clicks the button/link                     link=Academic robot test application
@@ -123,7 +123,7 @@ Questions can be assigned with appendices
 
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
-    [Tags]    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${DASHBOARD_URL}
     And the user clicks the button/link         link=Academic robot test application
@@ -145,7 +145,7 @@ Collaborator can remove a file when the question is assigned
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]    SmokeTest
+    [Tags]
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Academic robot test application
     And the user clicks the button/link            link=6. Innovation

@@ -28,7 +28,6 @@ Applicant can't access the assessment overview page
 Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]
-    [Setup]
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
 
 Applicant can't access the assessor's review application page

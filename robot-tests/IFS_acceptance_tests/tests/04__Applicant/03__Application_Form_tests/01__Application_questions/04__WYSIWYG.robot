@@ -8,7 +8,7 @@ Resource          ../../../../resources/defaultResources.robot
 *** Test Cases ***
 Bold text format
     [Documentation]    INFUND-187
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=1. Business opportunity
@@ -17,7 +17,7 @@ Bold text format
 
 Italic text format
     [Documentation]    INFUND-187
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant clicks on the Italic button in the "business opportunity" field
     Then all text entered should be Italic and stay the same after page refresh
 

@@ -56,8 +56,7 @@ Application details: Innovation area section is visible
 
 Autosave in the form questions
     [Documentation]    INFUND-189
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=${aeroApplication}
     When the user clicks the button/link  link=Application details
@@ -70,7 +69,7 @@ Autosave in the form questions
 
 Word count works
     [Documentation]    INFUND-198
-    [Tags]    HappyPath
+    [Tags]
     When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
 
@@ -83,7 +82,7 @@ Guidance of the questions
 Marking a question as complete
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
     And the word count should be correct for the Project summary
@@ -92,7 +91,7 @@ Marking a question as complete
 
 Mark a question as incomplete
     [Documentation]  INFUND-210, INFUND-202
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    link=Project summary
     When the user clicks the button/link     jQuery=button:contains("Edit")
     Then the text box should be editable
@@ -110,7 +109,7 @@ Review and submit button
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
-    [Tags]  MySQL
+    [Tags]
     Given the user should see the element  jQuery=button:contains("Application details") .section-incomplete
     When the user expands the section      Application details
     Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")

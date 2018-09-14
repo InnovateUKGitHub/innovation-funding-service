@@ -10,7 +10,7 @@ Resource          CompAdmin_Commons.robot
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]    HappyPath
+    [Tags]
     Given The user clicks the button/link  link = Application
     And The user clicks the button/link    jQuery = a:contains("Business opportunity")
     When the user leaves all the question field empty
@@ -25,7 +25,7 @@ Business opportunity Server-side validations setup questions
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
-    [Tags]    HappyPath
+    [Tags]
     [Setup]
     Given the user leaves all the assessment questions empty
     When the user clicks the button/link  css = button[type="submit"]
@@ -35,7 +35,7 @@ Business opportunity Sever-side validations assessment questions
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]    HappyPath
+    [Tags]
     Given the user fills the empty question fields
     And the user enters text to a text field    id=question.shortTitle    Test Heading
     And the user moves focus and waits for autosave
@@ -53,7 +53,7 @@ Business opportunity: Client side validations
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]  HappyPath
+    [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    jQuery=a:contains("Test Heading")
@@ -62,7 +62,7 @@ Business opportunity: Autosave
 
 Test Heading: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]    HappyPath
+    [Tags]
     When The user clicks the button/link         css=button[type="submit"]
     And the user clicks the button/link          jQuery=a:contains("Test Heading")
     Then the user should see the element         jQuery=h1:contains("Test Heading")
