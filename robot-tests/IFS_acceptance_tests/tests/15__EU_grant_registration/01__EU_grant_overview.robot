@@ -128,6 +128,7 @@ Dashboard should reflect the updates
 *** Keywords ***
 the user should see the validation messages for the funding details
     And the user should see a field and summary error    Enter a grant agreement number.
+    And the user should see a field and summary error    Invalid grant agreement format.
     And the user should see a field and summary error    Invalid participant identification code (PIC) format.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
