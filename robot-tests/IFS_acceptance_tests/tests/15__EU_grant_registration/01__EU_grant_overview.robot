@@ -132,7 +132,6 @@ the user should see the validation messages for the funding details
     And the user should see a field and summary error    Invalid participant identification code (PIC) format.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
-    And the user should see a field and summary error    Please enter a past date.
     And the user should see a field and summary error    Please enter a valid date.
     And the user should see a field and summary error    Please enter a future date.
     And the user should see a field and summary error    Please enter a valid date.
