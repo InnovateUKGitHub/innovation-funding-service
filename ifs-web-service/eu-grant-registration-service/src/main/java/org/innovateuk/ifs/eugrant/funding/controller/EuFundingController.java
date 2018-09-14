@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -81,7 +82,10 @@ public class EuFundingController {
     }
 
     private boolean validateDateOrdering(EuFundingForm form) {
-        return form.getStartDate().isBefore(form.getEndDate());
+        LocalDate startDate = form.getStartDate();
+        LocalDate endDate = form.getEndDate();
+        // if either date is not provided / invalid we will not raise this error as there will be more specific ones.
+        return startDate == null || endDate == null || startDate.isBefore(endDate);
     }
 
     @PostMapping("/funding-details/edit")
@@ -95,7 +99,7 @@ public class EuFundingController {
 
         // custom validation for start date being before end date
         if(!validateDateOrdering(form)) {
-            bindingResult.addError(new FieldError("form", "endDateMonth", "End date must be after end date."));
+            bindingResult.addError(new FieldError("form", "endDateMonth", "End date must be after start date."));
         }
 
         if (bindingResult.hasErrors()) {
