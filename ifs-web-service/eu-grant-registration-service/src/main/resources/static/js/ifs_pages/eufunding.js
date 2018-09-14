@@ -17,13 +17,14 @@ IFS.euGrantRegistration.eufunding = (function () {
          jQuery('#endDateMonth').val() &&
          jQuery('#startDateYear').val() &&
          jQuery('#startDateMonth').val()) {
+        // only raise/hide errors if all fields are filled in.
         if (jQuery('#endDateYear').val() > jQuery('#startDateYear').val() ||
         (jQuery('#endDateYear').val() === jQuery('#startDateYear').val() &&
             jQuery('#endDateMonth').val() > jQuery('#startDateMonth').val())) {
-          // good
+          // hide error as start is before end
           IFS.core.formValidation.setValid(jQuery('#endDateMonth'), 'End date must be after end date.', 'show')
         } else {
-          // bad
+          // show error as start is after end
           IFS.core.formValidation.setInvalid(jQuery('#endDateMonth'), 'End date must be after end date.', 'show')
         }
       }
