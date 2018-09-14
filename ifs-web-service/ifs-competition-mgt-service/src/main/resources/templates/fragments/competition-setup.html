@@ -11,7 +11,7 @@
             </div>
         </div>
         <ul class="task-list">
-            <li th:each="(section, iteration : ${sections})" th:if="${model.sectionIsNotHome(section)}">
+            <li th:each="(section, iteration : ${sections})" th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section)}">
                 <div class="task">
                     <h2 class="govuk-heading-s">
                         <a th:if="${model.initialCompleteOrSectionIsInitial(section)}"

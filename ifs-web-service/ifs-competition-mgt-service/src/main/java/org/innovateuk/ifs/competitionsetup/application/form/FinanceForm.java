@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.application.form;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
+
+import javax.validation.constraints.NotNull;
 
 public class FinanceForm extends CompetitionSetupForm {
 
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private ApplicationFinanceType applicationFinanceType;
 
     private boolean includeGrowthTable;
