@@ -1,4 +1,4 @@
-include 'docker:oracle-jre'
+include 'docker:openjdk'
 include 'docker:app-base-image'
 include 'docker:ifs-mysql'
 include 'docker:ifs-mysql:ifs-database'
