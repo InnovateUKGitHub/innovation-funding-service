@@ -68,6 +68,7 @@ Other documents section is read-only
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
     And the user should not see the element    jQuery=.govuk-button:contains("Submit documents")
+    And the use can see the mandatory documents
     [Teardown]    the user goes back to the previous page
 
 
@@ -217,6 +218,7 @@ Other documents section is read-only for academic partner
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
     And the user should not see the element    jQuery=.govuk-button:contains("Submit documents")
+    And the use can see the mandatory documents
     [Teardown]    the user goes back to the previous page
 
 
@@ -268,3 +270,11 @@ grant offer letter is approved
     the user selects the radio button  approvalType  acceptGOL
     the user clicks the button/link    id=submit-button
     the user clicks the button/link    jQuery=.modal-accept-signed-gol .govuk-button:contains("Accept signed grant offer letter")
+
+the use can see the mandatory documents
+    the user clicks the button/link        jQuery = h2:contains("Exploitation plan") ~ .uploaded-file a
+    the user should not see an error in the page
+    the user closes the last opened tab
+    the user clicks the button/link        jQuery = h2:contains("Collaboration agreement") ~ .uploaded-file a
+    the user should not see an error in the page
+    the user closes the last opened tab
