@@ -129,6 +129,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
         return responses.stream()
                     .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
+                    .filter(response -> response.getValue() != null)
                     .collect(
                             Collectors.groupingBy(
                                     x -> x.getFormInput().getQuestion().getId(),
