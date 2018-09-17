@@ -35,7 +35,7 @@ ${projectEndDate}
 EU funding contribution for above project
 €${euGrant.funding.fundingContribution}
 Is your consortium the lead on this project?
-${euGrant.funding.projectCoordinator?string('yes', 'no')}
+${euGrant.funding.projectCoordinator?string('Yes', 'No')}
 
 If you spot any errors in the information above, please ring 000 000 0000 or email UKRIpublichelpdesk@ukri.org
 Yours sincerely,
