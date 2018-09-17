@@ -12,9 +12,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -51,7 +51,19 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
@@ -91,7 +103,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private InviteProjectMapper inviteProjectMapper;
+    private ProjectInviteMapper projectInviteMapper;
 
     @Autowired
     private ProjectInviteRepository projectInviteRepository;
@@ -385,7 +397,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource inviteResource) {
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT));
@@ -393,16 +405,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, ProjectInviteResource inviteResource) {
 
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, ProjectInviteResource projectResource, Notifications kindOfNotification) {
 
-        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        ProjectInvite projectInvite = projectInviteMapper.mapToDomain(projectResource);
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         projectInviteRepository.save(projectInvite);
 
@@ -415,7 +427,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return new UserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ProjectInviteResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
@@ -430,7 +442,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
+    private String getInviteUrl(String baseUrl, ProjectInviteResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 }

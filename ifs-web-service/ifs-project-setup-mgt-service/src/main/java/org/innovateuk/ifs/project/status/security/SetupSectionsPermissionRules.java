@@ -61,6 +61,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInnovationLead);
     }
 
+    @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "Stakeholder can access after project details are submitted by the lead")
+    public boolean stakeholderCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isStakeholder);
+    }
+
     @PermissionRule(value = "EDIT_MONITORING_OFFICER_SECTION", description = "An internal user can access after project details are submitted by the lead")
     public boolean internalCanEditMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
@@ -95,6 +100,12 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInnovationLead);
     }
 
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Stakeholder can access the Spend Profile " +
+            "section when the lead partner submits the project spendprofile")
+    public boolean stakeholderCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isStakeholder);
+    }
+
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal user can access the Other Documents " +
             "section when the lead partner submits the documents")
     public boolean internalCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
@@ -113,6 +124,12 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInnovationLead);
     }
 
+    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An stakeholder can access the Other Documents " +
+            "section when the lead partner submits the documents")
+    public boolean stakeholderCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isStakeholder);
+    }
+
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +
             "section when the lead partner submits the documents")
     public boolean internalCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
@@ -127,6 +144,11 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "Innovation lead user can access the Grant Offer Letter send section when the lead partner submits the documents")
     public boolean innovationLeadCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isInnovationLead);
+    }
+
+    @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "Stakeholder can access the Grant Offer Letter send section when the lead partner submits the documents")
+    public boolean stakeholderCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isStakeholder);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A finance team user can always access the Finance checks queries section")
