@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${euGrant.contact.name},
 Thank you for registering your Horizon 2020 funding details. This is the first step to transitioning your funding during the Brexit process. You will receive further instruction from us to complete the process over the coming months.
-Reference number
+Reference code
 ${euGrant.shortCode}
 Grant agreement number
 ${euGrant.funding.grantAgreementNumber}
@@ -35,7 +35,7 @@ ${projectEndDate}
 EU funding contribution for above project
 €${euGrant.funding.fundingContribution}
 Is your consortium the lead on this project?
-${euGrant.funding.projectCoordinator?string('yes', 'no')}
+${euGrant.funding.projectCoordinator?string('Yes', 'No')}
 
 If you spot any errors in the information above, please ring 000 000 0000 or email UKRIpublichelpdesk@ukri.org
 Yours sincerely,

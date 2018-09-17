@@ -4,7 +4,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding details'"/>
 </head>
-<body class="govuk-template__body">
+<body class="govuk-template__body funding-details">
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
@@ -41,17 +41,19 @@
                     <span id="grant-agreement-number-hint" class="govuk-hint">
                                     This might also be referred to as your project ID, agreement number or proposal ID.
                                 </span>
-                    <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('grantAgreementNumber')}"
-                              th:text="${err}"></span>
-                    </th:block>
-                    <input class="govuk-input govuk-input--width-10"
-                           id="grantAgreementNumber"
-                           type="text"
-                           required="required"
-                           th:field="*{grantAgreementNumber}"
-                           th:attr="data-required-errormessage=#{validation.fundingForm.grant.agreement.number}">
-                </div>
+                        <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('grantAgreementNumber')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="grantAgreementNumber"
+                               type="text"
+                               required="required"
+                               th:field="*{grantAgreementNumber}"
+                               pattern="[0-9]{6}"
+                               th:attr="
+                               data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
+                               data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
+                    </div>
 
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
@@ -62,17 +64,18 @@
                         href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
                         target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
                                 </span>
-                    <th:block th:if="${#fields.hasErrors('participantId')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('participantId')}"
-                              th:text="${err}"></span>
-                    </th:block>
-                    <input class="govuk-input govuk-input--width-10"
-                           id="participantId"
-                           type="text"
-                           required="required"
-                           th:field="*{participantId}"
-                           th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code}">
-                </div>
+                        <th:block th:if="${#fields.hasErrors('participantId')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('participantId')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="participantId"
+                               type="text"
+                               required="required"
+                               th:field="*{participantId}"
+                               pattern="[0-9]{6}"
+                               th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code},
+                               data-pattern-errormessage=#{validation.fundingForm.participant.identification.code.format.invalid}">
+                    </div>
 
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
@@ -116,30 +119,28 @@
                            th:attr="data-required-errormessage=#{validation.fundingForm.project.name}">
                 </div>
 
-                <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('startDate*')} ? 'govuk-form-group--error'">
-                    <fieldset class="govuk-fieldset">
-                        <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            Project start date
-                        </legend>
-                        <th:block th:if="${#fields.hasErrors('startDate*')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('startDate*')}"
-                                  th:text="${err}"></span>
-                        </th:block>
-                        <div class="date-group" data-past-date="">
-                            <div class="day govuk-visually-hidden">
-                                <label class="govuk-label" for="startDateDay">
-                                    <span>Day</span>
-                                </label>
-                                <input class="govuk-input govuk-input--width-3 null "
-                                       type="number"
-                                       required="required"
-                                       value="1"
-                                       data-date=""
-                                       data-autosave-disabled=""
-                                       name="startDateDay"
-                                       id="startDateDay">
-                            </div>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDate*')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Project start date
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('startDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="date-group">
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="startDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="startDateDay"
+                                           id="startDateDay">
+                                </div>
 
                             <div class="month">
                                 <label class="govuk-label" for="startDateMonth">
@@ -248,18 +249,21 @@
                     <span id="funding-committed-hint" class="govuk-hint">
                                     The total amount in euros granted to your organisation at the point of the award for your project.
                                 </span>
-                    <th:block th:if="${#fields.hasErrors('projectName')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingContribution')}"
-                              th:text="${err}"></span>
-                    </th:block>
-                    <span class="govuk-body govuk-!-padding-right-1">€</span>
-                    <input class="govuk-input govuk-input govuk-input--width-10"
-                           id="fundingContribution"
-                           type="number"
-                           required="required"
-                           th:field="*{fundingContribution}"
-                           th:attr="data-required-errormessage=#{validation.fundingForm.funding.contribution}">
-                </div>
+                        <th:block th:if="${#fields.hasErrors('projectName')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingContribution')}" th:text="${err}"></span>
+                        </th:block>
+                        <span class="govuk-body govuk-!-padding-right-1">€</span>
+                        <input class="govuk-input govuk-input govuk-input--width-10"
+                               id="fundingContribution"
+                               type="number"
+                               required="required"
+                               th:field="*{fundingContribution}"
+                               min="0"
+                               th:attr=
+                               "data-required-errormessage=#{validation.fundingForm.funding.contribution},
+                               data-min-errormessage=#{validation.fundingForm.funding.positive},
+                               data-number-errormessage=#{validation.fundingForm.funding.format.invalid}">
+                    </div>
 
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('projectCoordinator')} ? 'govuk-form-group--error'">
@@ -309,7 +313,8 @@
         </form>
     </main>
 </div>
-<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="eugrant/fragments/layout :: body-end" />
 </body>
 </html>

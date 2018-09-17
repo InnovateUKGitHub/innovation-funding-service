@@ -5,8 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
-import org.innovateuk.ifs.commons.validation.constraints.PastLocalDate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
@@ -16,10 +16,11 @@ import java.time.format.DateTimeFormatter;
 public class EuFundingForm {
 
     @NotBlank(message = "{validation.fundingForm.grant.agreement.number}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.grant.agreement.format.invalid}")
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code}")
+    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
@@ -38,6 +39,7 @@ public class EuFundingForm {
     private Integer endDateYear;
 
     @Digits(integer = 10, fraction = 0, message = "{validation.fundingForm.funding.format.invalid}")
+    @Range(min = 0, message = "{validation.fundingForm.funding.positive}")
     @NotNull(message = "{validation.fundingForm.funding.contribution}")
     private BigDecimal fundingContribution;
 
@@ -128,7 +130,6 @@ public class EuFundingForm {
     }
 
     @NotNull(message = "{validation.standard.date.format}")
-    @PastLocalDate(message = "{validation.standard.past.mm.yyyy.not.past.format}")
     public LocalDate getStartDate() {
         if (startDateYear == null || startDateMonth == null) {
             return null;
@@ -193,7 +194,6 @@ public class EuFundingForm {
                 .append(projectName)
                 .append(startDateMonth)
                 .append(startDateYear)
-                .append(startDateMonth)
                 .append(endDateMonth)
                 .append(endDateYear)
                 .append(fundingContribution)

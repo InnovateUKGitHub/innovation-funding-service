@@ -68,14 +68,14 @@ Companies House: Valid registration number
 Contact details validation
     [Documentation]  IFS-4231
     [Tags]
-    When the user clicks the button/link           link = Contact details
-    Then the user clicks the button/link           jQuery = button:contains("Continue")
-    And the user should see the element            jQuery = a:contains("Enter your full name")
-    And the user should see the element            jQuery = a:contains("Your full name should have at least 2 characters.")
-    And the user should see the element            jQuery = a:contains("Enter your job title.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid email.")
-    And the user should see the element            jQuery = a:contains("Enter your telephone number.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid phone number between 8 and 20 digits.")
+    When the user clicks the button/link                  link = Contact details
+    Then the user clicks the button/link                  jQuery = button:contains("Continue")
+    And the user should see a field and summary error     Enter your full name
+    And the user should see a field and summary error     Your full name should have at least 2 characters.
+    And the user should see a field and summary error     Enter your job title.
+    And the user should see a field and summary error     Please enter a valid email.
+    And the user should see a field and summary error     Enter your telephone number.
+    And the user should see a field and summary error     Please enter a valid phone number between 8 and 20 digits.
 #ToDo Validation messages will be updated
 
 Contact details Enter details and save
@@ -95,8 +95,8 @@ Contact details Enter details and save
 Funding details initial validation
     [Documentation]  IFS-4077
     [Tags]
-    When the user clicks the button/link                 link = Funding details
-    Then the user clicks the button/link                 jQuery = button:contains("Continue")
+    When the user clicks the button/link           link = Funding details
+    Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user should see the validation messages for the funding details
 
 Funding details fill in details
@@ -112,6 +112,7 @@ Funding details fill in details
     And the user enters text to a text field       id = endDateYear                     2020
     And the user enters text to a text field       id = fundingContribution             123456
     Then the user clicks the button/link           jQuery = label:contains("Yes")
+    And the user should not see an error in the page
     Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user clicks the button/link            jQuery = a:contains("Save and return")
 
@@ -124,28 +125,28 @@ Dashboard should reflect the updates
     And the user should see the element            jQuery = li:contains("Funding details") .task-status-complete
 
 Submit button is disabled before checkbox is checked
-    [Documentation]
-    Given the user should see that the element is disabled  id=submit-grant
+    [Documentation]   IFS-4254
+    Given the user should see that the element is disabled  id = submit-grant
     When the user selects the checkbox                      termsAndConditions
-    And the user clicks the button/link                     id=submit-grant
-    And the user clicks the button/link                     css=.registration-modal button[type="submit"]
-    Then the user should see the element                    jQuery=h1:contains("Registration complete")
+    And the user clicks the button/link                     id = submit-grant
+    And the user clicks the button/link                     css = .registration-modal button[type="submit"]
+    Then the user should see the element                    jQuery = h1:contains("Registration complete")
     And the user reads his email                            test@test.com  	Your Horizon 2020 project registration   Thank you for registering your Horizon 2020 funding details
 
 Register another project
-   [Documentation]
-   Given the user clicks the button/link  link=Register another project
-   Then the user should see the element   jQuery=.task:contains("Your organisation") ~.task-status-incomplete
+   [Documentation]   IFS-4254
+   Given the user clicks the button/link  link = Register another project
+   Then the user should see the element   jQuery = .task:contains("Your organisation") ~.task-status-incomplete
 
 *** Keywords ***
 the user should see the validation messages for the funding details
     And the user should see a field and summary error    Enter a grant agreement number.
-    And the user should see a field and summary error    Enter a participant identification code (PIC).
+    And the user should see a field and summary error    Invalid grant agreement format.
+    And the user should see a field and summary error    Invalid participant identification code (PIC) format.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
-    And the user should see a field and summary error    Please enter a past date.
     And the user should see a field and summary error    Please enter a valid date.
     And the user should see a field and summary error    Please enter a future date.
     And the user should see a field and summary error    Please enter a valid date.
-    And the user should see a field and summary error    Please enter a valid number.
+    And the user should see a field and summary error    Enter the EU funding contribution.
     And the user should see a field and summary error    Select an option.
