@@ -48,7 +48,7 @@
         <ul class="govuk-body task-list">
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.organisationComplete ? '/eu-grant/organisation/view' : '/eu-grant/organisation/type'}">Your organisation</a>
+                    <a class="govuk-heading-s" th:href="@{model.organisationComplete ? '/organisation/view' : '/organisation/type'}">Your organisation</a>
                 </div>
                 <div th:unless="${model.organisationComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -59,7 +59,7 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.contactComplete ? '/eu-grant/contact-details' : '/eu-grant/contact-details/edit'}">Contact details</a>
+                    <a class="govuk-heading-s" th:href="@{model.contactComplete ? '/contact-details' : '/contact-details/edit'}">Contact details</a>
                 </div>
                 <div th:unless="${model.contactComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -70,7 +70,7 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.fundingComplete ? '/eu-grant/funding-details' : '/eu-grant/funding-details/edit'}">Funding details</a>
+                    <a class="govuk-heading-s" th:href="@{model.fundingComplete ? '/funding-details' : '/funding-details/edit'}">Funding details</a>
                 </div>
                 <div th:unless="${model.fundingComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>

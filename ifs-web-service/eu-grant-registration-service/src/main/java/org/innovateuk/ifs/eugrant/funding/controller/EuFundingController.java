@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -79,6 +81,13 @@ public class EuFundingController {
         return "funding/funding-details-edit";
     }
 
+    private boolean validateDateOrdering(EuFundingForm form) {
+        LocalDate startDate = form.getStartDate();
+        LocalDate endDate = form.getEndDate();
+        // if either date is not provided / invalid we will not raise this error as there will be more specific ones.
+        return startDate == null || endDate == null || startDate.isBefore(endDate);
+    }
+
     @PostMapping("/funding-details/edit")
     public String submitFundingDetails(@ModelAttribute("form") @Valid EuFundingForm form,
                                        BindingResult bindingResult,
@@ -87,6 +96,11 @@ public class EuFundingController {
 
         Supplier<String> failureView = () -> fundingDetailsEdit(form, bindingResult, model);
         Supplier<String> successView = () -> "redirect:/funding-details";
+
+        // custom validation for start date being before end date
+        if(!validateDateOrdering(form)) {
+            bindingResult.addError(new FieldError("form", "endDateMonth", "End date must be after start date."));
+        }
 
         if (bindingResult.hasErrors()) {
             return failureView.get();

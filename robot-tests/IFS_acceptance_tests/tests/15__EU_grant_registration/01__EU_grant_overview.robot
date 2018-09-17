@@ -68,14 +68,14 @@ Companies House: Valid registration number
 Contact details validation
     [Documentation]  IFS-4231
     [Tags]
-    When the user clicks the button/link           link = Contact details
-    Then the user clicks the button/link           jQuery = button:contains("Continue")
-    And the user should see the element            jQuery = a:contains("Enter your full name")
-    And the user should see the element            jQuery = a:contains("Your full name should have at least 2 characters.")
-    And the user should see the element            jQuery = a:contains("Enter your job title.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid email.")
-    And the user should see the element            jQuery = a:contains("Enter your telephone number.")
-    And the user should see the element            jQuery = a:contains("Please enter a valid phone number between 8 and 20 digits.")
+    When the user clicks the button/link                  link = Contact details
+    Then the user clicks the button/link                  jQuery = button:contains("Continue")
+    And the user should see a field and summary error     Enter your full name
+    And the user should see a field and summary error     Your full name should have at least 2 characters.
+    And the user should see a field and summary error     Enter your job title.
+    And the user should see a field and summary error     Please enter a valid email.
+    And the user should see a field and summary error     Enter your telephone number.
+    And the user should see a field and summary error     Please enter a valid phone number between 8 and 20 digits.
 #ToDo Validation messages will be updated
 
 Contact details Enter details and save
@@ -95,8 +95,8 @@ Contact details Enter details and save
 Funding details initial validation
     [Documentation]  IFS-4077
     [Tags]
-    When the user clicks the button/link                 link = Funding details
-    Then the user clicks the button/link                 jQuery = button:contains("Continue")
+    When the user clicks the button/link           link = Funding details
+    Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user should see the validation messages for the funding details
 
 Funding details fill in details
@@ -112,6 +112,7 @@ Funding details fill in details
     And the user enters text to a text field       id = endDateYear                     2020
     And the user enters text to a text field       id = fundingContribution             123456
     Then the user clicks the button/link           jQuery = label:contains("Yes")
+    And the user should not see an error in the page
     Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user clicks the button/link            jQuery = a:contains("Save and return")
 
@@ -140,12 +141,12 @@ Register another project
 *** Keywords ***
 the user should see the validation messages for the funding details
     And the user should see a field and summary error    Enter a grant agreement number.
-    And the user should see a field and summary error    Enter a participant identification code (PIC).
+    And the user should see a field and summary error    Invalid grant agreement format.
+    And the user should see a field and summary error    Invalid participant identification code (PIC) format.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
-    And the user should see a field and summary error    Please enter a past date.
     And the user should see a field and summary error    Please enter a valid date.
     And the user should see a field and summary error    Please enter a future date.
     And the user should see a field and summary error    Please enter a valid date.
-    And the user should see a field and summary error    Please enter a valid number.
+    And the user should see a field and summary error    Enter the EU funding contribution.
     And the user should see a field and summary error    Select an option.
