@@ -24,8 +24,8 @@ public class EuGrantController {
 
     @PutMapping("/eu-grant/{uuid}")
     public RestResult<Void> update(@PathVariable("uuid") UUID uuid,
-                                              @RequestBody EuGrantResource euGrant) {
-        return euGrantService.save(euGrant).toPutResponse();
+                                   @RequestBody EuGrantResource euGrant) {
+        return euGrantService.update(uuid, euGrant).toPutResponse();
     }
 
     @GetMapping("/eu-grant/{uuid}")
@@ -33,4 +33,8 @@ public class EuGrantController {
         return euGrantService.findById(uuid).toGetResponse();
     }
 
+    @PostMapping("/eu-grant/{uuid}/submit")
+    public RestResult<EuGrantResource> submit(@PathVariable("uuid") UUID uuid) {
+        return euGrantService.submit(uuid).toPostWithBodyResponse();
+    }
 }

@@ -51,7 +51,7 @@
                                    th:value="${type.name()}" />
                             <label th:for="'radio-'+ ${type.name()}"
                                    class="govuk-label govuk-radios__label">
-                                <span th:text="${type.name}"></span>
+                                <span th:text="${type.displayName}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
                         </div>

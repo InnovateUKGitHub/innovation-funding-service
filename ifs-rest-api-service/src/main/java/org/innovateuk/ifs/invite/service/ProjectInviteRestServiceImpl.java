@@ -2,14 +2,20 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteProjectResourceListType;
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectInviteResourceListType;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.ACCEPT_INVITE;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.CHECK_EXISTING_USER_URL;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_INVITE_BY_HASH;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_PROJECT_INVITE_LIST;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.PROJECT_INVITE_BASE_URL;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.PROJECT_INVITE_SAVE;
 
 /**
  * A typical RestService to use as a client API on the web-service side for the data-service functionality .
@@ -30,9 +36,9 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<InviteProjectResource> getInviteByHash(String hash) {
+    public RestResult<ProjectInviteResource> getInviteByHash(String hash) {
         String url = PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + hash;
-        return getWithRestResultAnonymous(url, InviteProjectResource.class);
+        return getWithRestResultAnonymous(url, ProjectInviteResource.class);
     }
 
     @Override
@@ -42,14 +48,14 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource) {
+    public RestResult<Void> saveProjectInvite(ProjectInviteResource projectInviteResource) {
         String url = PROJECT_INVITE_BASE_URL + PROJECT_INVITE_SAVE;
-        return postWithRestResult(url, inviteProjectResource, Void.class);
+        return postWithRestResult(url, projectInviteResource, Void.class);
     }
 
     @Override
-    public RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId){
+    public RestResult<List<ProjectInviteResource>> getInvitesByProject (Long projectId){
         String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
-        return getWithRestResult(url, inviteProjectResourceListType());
+        return getWithRestResult(url, projectInviteResourceListType());
     }
 }

@@ -14,16 +14,16 @@ public enum EuOrganisationType {
     PUBLIC_SECTOR_OR_CHARITY("Public sector, charity or non Je-S registered research organisation",
                              "A not-for-profit public sector body or charity working on innovation.");
 
-    private final String name;
+    private final String displayName;
     private final String description;
 
-    EuOrganisationType(final String name, final String description) {
-        this.name = name;
+    EuOrganisationType(final String displayName, final String description) {
+        this.displayName = displayName;
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getDescription() {
