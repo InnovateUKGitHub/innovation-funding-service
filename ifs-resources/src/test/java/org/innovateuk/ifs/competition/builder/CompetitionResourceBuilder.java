@@ -191,8 +191,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setLocationPerPartner(locationPerPartner));
     }
 
-    public CompetitionResourceBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
-        return with(competitionResource -> competitionResource.setFullApplicationFinance(fullApplicationFinance));
+    public CompetitionResourceBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceType) {
+        return withArraySetFieldByReflection("applicationFinanceType", applicationFinanceType);
     }
 
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
@@ -229,10 +229,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withStateAid(Boolean... stateAid) {
         return withArraySetFieldByReflection("stateAid", stateAid);
-    }
-
-    public CompetitionResourceBuilder withUseNewApplicantMenu(Boolean... useNewApplicantMenu) {
-        return withArraySetFieldByReflection("useNewApplicantMenu", useNewApplicantMenu);
     }
 
     public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {

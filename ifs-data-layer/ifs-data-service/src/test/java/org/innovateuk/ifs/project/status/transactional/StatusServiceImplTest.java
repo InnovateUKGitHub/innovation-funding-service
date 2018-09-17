@@ -1027,7 +1027,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
      * Tests MO requirement for IFS-1307
      */
     @Test
-    public void getProjectStatusShowMOStatusForSupportAndInnoLeadAsNotStarted() {
+    public void getProjectStatusShowMOStatusForSupportAndInnoLeadAndStakeholder() {
         Long projectId = 2345L;
         Long organisationId = 123L;
 
@@ -1062,6 +1062,22 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         // Status shown to innovation lead user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to stakeholder when MO is set is COMPLETE
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.STAKEHOLDER)).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to stakeholder when MO is not set is NOT_STARTED and not ACTION_REQUIRED
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.STAKEHOLDER)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());

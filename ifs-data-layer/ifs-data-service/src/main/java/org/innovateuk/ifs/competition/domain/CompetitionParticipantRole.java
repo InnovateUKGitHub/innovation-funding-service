@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantRole;
  */
 public enum CompetitionParticipantRole implements ParticipantRole {
     INNOVATION_LEAD,
+    STAKEHOLDER,
     ASSESSOR,
     PANEL_ASSESSOR,
     INTERVIEW_ASSESSOR

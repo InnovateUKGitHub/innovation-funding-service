@@ -12,7 +12,8 @@ public interface InviteRestService {
     RestResult<Void> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
-    RestResult<Void> acceptInvite(String inviteHash, Long userId);
+    RestResult<Void> acceptInvite(String inviteHash, long userId);
+    RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId);
     RestResult<Void> removeApplicationInvite(Long inviteId);
 
     RestResult<Boolean> checkExistingUser(String inviteHash);

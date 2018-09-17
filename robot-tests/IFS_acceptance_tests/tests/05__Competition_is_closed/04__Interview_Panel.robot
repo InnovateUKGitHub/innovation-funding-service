@@ -146,7 +146,7 @@ CompAdmin view invite sent to the applicant and resend invite
     Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
     When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td a:contains("View invite")
     Then the user should see the element    jQuery = h1:contains("Review invite email")
-    And the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("testing.pdf")
+    And the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("${5mb_pdf}")
     When the user clicks the button/link    link = Edit and resend invite
     Then the compAdmin can cancel resend inivte to an applicant
     When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
@@ -345,7 +345,7 @@ the compAdmin uploads additional feedback for an application
     the user goes back to the previous page
     the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
-    the compAdmin/applicant upload feedback     id = feedback[0]  ${valid_pdf}  link = testing.pdf
+    the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf}
 
 the compAdmin/applicant upload feedback
     [Arguments]   ${uploadId}  ${FileToUpload}  ${uploadedFile}
@@ -359,7 +359,7 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    jQuery = td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
 
 the applicant upload the response to the interview panel
-    the user uploads the file              css = .inputfile   ${valid_pdf}
+    the user uploads the file              css = .inputfile   ${5mb_pdf}
     the user should see the element        link = testing.pdf
 
 the compAdmin checks the status for response uploaded applicantion

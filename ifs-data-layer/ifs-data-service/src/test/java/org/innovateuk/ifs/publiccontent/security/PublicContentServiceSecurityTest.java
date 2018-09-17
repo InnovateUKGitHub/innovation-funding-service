@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<PublicContentService> {
 
     private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
-    private static final EnumSet<Role> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD);
+    private static final EnumSet<Role> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
 
 
     @Override

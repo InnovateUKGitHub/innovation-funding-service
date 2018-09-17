@@ -8,6 +8,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -43,6 +44,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private OrganisationJourneyEnd organisationJourneyEnd;
+
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
@@ -51,6 +55,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
@@ -59,6 +64,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @PostMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                    Model model,
+                                   UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -75,7 +81,6 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
 
         List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
-
 
         if (address != null && !organisationForm.isUseSearchResultAddress()) {
             organisationAddressResources.add(
@@ -98,16 +103,16 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
-        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-        return "redirect:" + RegistrationController.BASE_URL;
+
+        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
     }
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
-        if(cookieHash.isPresent()) {
-            return organisationRestService.createAndLinkByInvite(organisationResource, cookieHash.get()).getSuccess();
+        if (registrationCookieService.isCollaboratorJourney(request)) {
+            return organisationRestService.createAndLinkByInvite(organisationResource,
+                    registrationCookieService.getInviteHashCookieValue(request).get()).getSuccess();
+        } else {
+            return organisationRestService.createOrMatch(organisationResource).getSuccess();
         }
-
-        return organisationRestService.createOrMatch(organisationResource).getSuccess();
     }
 }

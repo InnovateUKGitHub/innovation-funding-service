@@ -11,7 +11,7 @@
 
     <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
     <th:block th:insert="fragments/layout :: body-start" />
-    <th:block th:insert="fragments/layout :: global-header" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper" id="content">
@@ -39,6 +39,9 @@
                         </li>
                         <li>
                             <a class="govuk-link" href="/prototypes/IFS-4104-funding-org-selected">Confirm your business</a>
+                        </li>
+                        <li>
+                            <a class="govuk-link" href="/prototypes/IFS-4104-funding-org-selected?entry=manual">Confirm your business - (manual entry)</a>
                         </li>
                         <li>
                             <a class="govuk-link" href="/prototypes/IFS-4104-funding-org-selected?status=readonly&section1=true">Edit your organisation</a>

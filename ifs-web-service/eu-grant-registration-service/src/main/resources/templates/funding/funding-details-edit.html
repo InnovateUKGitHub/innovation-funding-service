@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding details'" />
+</head>
+<body class="govuk-template__body funding-details">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/overview}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding details',size='govuk-heading-xl'" />
+
+            <form th:action="@{/funding-details/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+
+                <fieldset class="govuk-fieldset">
+
+                    <p class="govuk-body govuk-!-margin-bottom-6">Make sure you have your grant agreement to hand before you start.</p>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('grantAgreementNumber')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="grantAgreementNumber">Grant agreement number</label>
+                        <span id="grant-agreement-number-hint" class="govuk-hint">
+                                    This might also be referred to as your project ID, agreement number or proposal ID.
+                                </span>
+                        <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('grantAgreementNumber')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="grantAgreementNumber"
+                               type="text"
+                               required="required"
+                               th:field="*{grantAgreementNumber}"
+                               pattern="[0-9]{6}"
+                               th:attr="
+                               data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
+                               data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="participantId">Participant identification code (PIC)</label>
+                        <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
+                                    The 6-digit number unique to your organisation that you can find in the Horizon 2020 <a href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html" target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
+                                </span>
+                        <th:block th:if="${#fields.hasErrors('participantId')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('participantId')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-input--width-10"
+                               id="participantId"
+                               type="text"
+                               required="required"
+                               th:field="*{participantId}"
+                               pattern="[0-9]{6}"
+                               th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code},
+                               data-pattern-errormessage=#{validation.fundingForm.participant.identification.code.format.invalid}">
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="actionType">
+                            Type of action
+                        </label>
+                        <span id="grant-action-type-hint" class="govuk-hint">
+                                    The funding scheme you applied for.
+                                </span>
+                        <th:block th:if="${#fields.hasErrors('actionType')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('actionType')}" th:text="${err}"></span>
+                        </th:block>
+                        <select name="actionType"
+                                class="govuk-select govuk-!-width-three-quarters"
+                                id="actionType"
+                                th:field="*{actionType}"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
+                            <option value="">Select...</option>
+                            <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="${'(' + actionType.name + ') ' + actionType.description}"></option>
+                        </select>
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="projectName">Project name</label>
+                        <span id="project-name-hint" class="govuk-hint govuk-!-width-two-thirds">
+                            The name of your project as used in your proposal.
+                                </span>
+                        <th:block th:if="${#fields.hasErrors('projectName')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-input--width-3"
+                               id="projectName"
+                               type="text"
+                               required="required"
+                               th:field="*{projectName}"
+                               th:attr="data-required-errormessage=#{validation.fundingForm.project.name}">
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDate*')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Project start date
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('startDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="date-group">
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="startDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="startDateDay"
+                                           id="startDateDay">
+                                </div>
+
+                                <div class="month">
+                                    <label class="govuk-label" for="startDateMonth">
+                                        <span>Month</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="startDateMonth"
+                                           min="1"
+                                           max="12"
+                                           placeholder="MM"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
+                                           th:field="*{startDateMonth}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
+                                </div>
+
+                                <div class="year">
+                                    <label class="govuk-label" for="startDateYear">
+                                        <span>Year</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="startDateYear"
+                                           placeholder="YYYY"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
+                                           th:field="*{startDateYear}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('endDate*')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend id="endDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Project end date
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('endDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('endDate*')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="date-group" data-future-date="">
+
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="endDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="endDateDay"
+                                           id="endDateDay">
+                                </div>
+
+                                <div class="month">
+                                    <label class="govuk-label" for="endDateMonth">
+                                        <span>Month</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="endDateMonth"
+                                           min="1"
+                                           max="12"
+                                           placeholder="MM"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('endDateMonth')} ? 'govuk-input--error'"
+                                           th:field="*{endDateMonth}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
+                                </div>
+
+                                <div class="year">
+                                    <label class="govuk-label" for="endDateYear">
+                                        <span>Year</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           id="endDateYear"
+                                           placeholder="YYYY"
+                                           required="required"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           th:classappend="${#fields.hasErrors('endDateYear')} ? 'govuk-input--error'"
+                                           th:field="*{endDateYear}"
+                                           th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingContribution')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="projectName">EU funding contribution for above project (EUR)</label>
+                        <span id="funding-committed-hint" class="govuk-hint">
+                                    The total amount in euros granted to your organisation at the point of the award for your project.
+                                </span>
+                        <th:block th:if="${#fields.hasErrors('projectName')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingContribution')}" th:text="${err}"></span>
+                        </th:block>
+                        <span class="govuk-body govuk-!-padding-right-1">€</span>
+                        <input class="govuk-input govuk-input govuk-input--width-10"
+                               id="fundingContribution"
+                               type="number"
+                               required="required"
+                               th:field="*{fundingContribution}"
+                               min="0"
+                               th:attr=
+                               "data-required-errormessage=#{validation.fundingForm.funding.contribution},
+                               data-min-errormessage=#{validation.fundingForm.funding.positive},
+                               data-number-errormessage=#{validation.fundingForm.funding.format.invalid}">
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCoordinator')} ? 'govuk-form-group--error'">
+                        <th:block th:if="${#fields.hasErrors('projectCoordinator')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectCoordinator')}" th:text="${err}"></span>
+                        </th:block>
+                        <fieldset class="govuk-fieldset">
+                            <legend id="projectCoordinator" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Is your organisation the consortium lead on this project?
+                            </legend>
+                            <div class="govuk-radios" data-module="radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="consortium-lead-yes"
+                                           name="consortium-lead"
+                                           type="radio"
+                                           th:field="*{projectCoordinator}"
+                                           value="yes"
+                                           required="required"
+                                           data-required-errormessage="Select an option">
+                                    <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           id="consortium-lead-no"
+                                           name="consortium-lead"
+                                           type="radio"
+                                           th:field="*{projectCoordinator}"
+                                           value="no"
+                                           required="required"
+                                           data-required-errormessage="Select an option">
+                                    <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                   <!--  <input type="hidden" name="startDate" />
+                    <input type="hidden" name="endDate" /> -->
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit">Continue</button>
+
+                </fieldset>
+            </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="eugrant/fragments/layout :: body-end" />
+</body>
+</html>

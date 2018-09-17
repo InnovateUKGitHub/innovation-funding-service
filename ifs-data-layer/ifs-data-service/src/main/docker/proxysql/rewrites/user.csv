@@ -3,7 +3,4 @@ first_name|MASK(2, 'x')
 last_name|MASK(2, 'y')
 invite_name|MASK(2, 'x')
 phone_number|MASK(2, 'x')
-disability|'NOT_STATED'
-gender|'NOT_STATED'
 uid|UUID_REPLACEMENT
-ethnicity_id|7
