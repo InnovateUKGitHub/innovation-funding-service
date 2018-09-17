@@ -32,6 +32,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/eu-grant-registration-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
 
@@ -58,7 +59,14 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
+    oc create -f $(getBuildLocation)/ifs-services/ ${SVC_ACCOUNT_CLAUSE}
+    oc create -f $(getBuildLocation)/survey/ ${SVC_ACCOUNT_CLAUSE}
+
+    # EU Grant Registration is not ready for production release yet.
+    if ! $(isProductionEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/eu-grant-registration/ ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 }

@@ -15,6 +15,3 @@ createContainer.portBindings = ['3309:3306']
 createContainer.hostName = "eu-grant-registration-database"
 
 startDbIfNotStarted.containerId = "eu-grant-registration-database"
-
-//TODO remove when ready of OS deployment
-osStageRemote.enabled = false

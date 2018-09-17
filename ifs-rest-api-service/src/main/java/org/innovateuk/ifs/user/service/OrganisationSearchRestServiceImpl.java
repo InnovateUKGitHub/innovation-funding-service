@@ -28,4 +28,14 @@ public class OrganisationSearchRestServiceImpl extends BaseRestService implement
     public RestResult<OrganisationSearchResult> getOrganisation(Long organisationTypeId, String searchOrganisationId) {
         return getWithRestResultAnonymous(organisationRestURL + "/getOrganisation/" + organisationTypeId + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
     }
+
+    @Override
+    public RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText) {
+        return getWithRestResultAnonymous(organisationRestURL + "/searchOrganisations/enum/" + organisationType.name() + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+    }
+
+    @Override
+    public RestResult<OrganisationSearchResult> getOrganisation(Enum<?> organisationType, String searchOrganisationId) {
+        return getWithRestResultAnonymous(organisationRestURL + "/getOrganisation/enum/" + organisationType.name() + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
+    }
 }
