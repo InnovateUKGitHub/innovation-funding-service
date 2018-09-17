@@ -31,7 +31,6 @@ Other funding client side
 Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user selects the checkbox    agree-terms-page
     And the user clicks the button/link  jQuery = button:contains("Mark as complete")

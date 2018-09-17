@@ -8,7 +8,7 @@ Documentation     INFUND-832
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Upload    Applicant    Email
+Force Tags        Upload    Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically

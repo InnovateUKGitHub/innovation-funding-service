@@ -26,7 +26,6 @@ Business opportunity Server-side validations setup questions
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]
-    [Setup]
     Given the user leaves all the assessment questions empty
     When the user clicks the button/link  css = button[type="submit"]
     Then the user should see the element  jQuery = .govuk-label[for="guidanceRows[0].scoreFrom"] ~ .govuk-error-message:contains("This field cannot be left blank.")

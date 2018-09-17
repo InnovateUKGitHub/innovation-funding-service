@@ -12,7 +12,7 @@ Documentation   Suite description
 ...             IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
-Force Tags      compAdmin  Applicant  Assessor
+Force Tags      CompAdmin  Applicant  Assessor
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -26,7 +26,7 @@ ${EOI_application}   EOI Application
 *** Test Cases ***
 Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192
-    [Tags]  CompAdmin
+    [Tags]
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 

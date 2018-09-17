@@ -121,7 +121,7 @@ The Administrator should see the ineligible applications in unsuccessful list bu
 
 Inform a user their application is ineligible
     [Documentation]  INFUND-7374  IFS-1491  IFS-3132
-    [Tags]  HappyPath  Applicant
+    [Tags]  Applicant
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${ineligibleApplications}
     And the user clicks the button/link       jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")

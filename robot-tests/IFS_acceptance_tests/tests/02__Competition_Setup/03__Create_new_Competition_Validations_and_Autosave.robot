@@ -141,8 +141,8 @@ Eligibility server-side validations
     And The user should see a field and summary error    Please select an override funding rules option.
 
 Eligibility funding level validation
-    [Documentation]
-    [Tags]  IFS-3622
+    [Documentation]  IFS-3622
+    [Tags]
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
     Then The user should see a field and summary error  Please select a funding level.

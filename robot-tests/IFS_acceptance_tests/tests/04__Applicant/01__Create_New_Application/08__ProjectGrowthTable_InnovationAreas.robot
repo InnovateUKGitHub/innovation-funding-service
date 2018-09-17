@@ -16,7 +16,7 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
-Force Tags      Applicant  CompAdmin  HappyPath
+Force Tags      Applicant  CompAdmin
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../10__Project_setup/PS_Common.robot

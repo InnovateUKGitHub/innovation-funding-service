@@ -5,7 +5,6 @@ Documentation     INFUND-1683 As a user of IFS application, if I attempt to perf
 ...
 ...               INFUND-4562: Securing of services related to Assessor Journey changes - Sprint 14
 Suite Teardown    The user closes the browser
-Test Teardown
 Force Tags        Assessor
 Resource          ../../../../resources/defaultResources.robot
 
