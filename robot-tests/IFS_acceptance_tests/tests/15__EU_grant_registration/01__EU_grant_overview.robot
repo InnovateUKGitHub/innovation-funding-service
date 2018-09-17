@@ -125,18 +125,18 @@ Dashboard should reflect the updates
     And the user should see the element            jQuery = li:contains("Funding details") .task-status-complete
 
 Submit button is disabled before checkbox is checked
-    [Documentation]
-    Given the user should see that the element is disabled  id=submit-grant
+    [Documentation]   IFS-4254
+    Given the user should see that the element is disabled  id = submit-grant
     When the user selects the checkbox                      termsAndConditions
-    And the user clicks the button/link                     id=submit-grant
-    And the user clicks the button/link                     css=.registration-modal button[type="submit"]
-    Then the user should see the element                    jQuery=h1:contains("Registration complete")
+    And the user clicks the button/link                     id = submit-grant
+    And the user clicks the button/link                     css = .registration-modal button[type="submit"]
+    Then the user should see the element                    jQuery = h1:contains("Registration complete")
     And the user reads his email                            test@test.com  	Your Horizon 2020 project registration   Thank you for registering your Horizon 2020 funding details
 
 Register another project
-   [Documentation]
-   Given the user clicks the button/link  link=Register another project
-   Then the user should see the element   jQuery=.task:contains("Your organisation") ~.task-status-incomplete
+   [Documentation]   IFS-4254
+   Given the user clicks the button/link  link = Register another project
+   Then the user should see the element   jQuery = .task:contains("Your organisation") ~.task-status-incomplete
 
 *** Keywords ***
 the user should see the validation messages for the funding details
