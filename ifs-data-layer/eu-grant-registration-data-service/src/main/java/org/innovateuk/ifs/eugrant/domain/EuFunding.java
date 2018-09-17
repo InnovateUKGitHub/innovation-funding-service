@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant.domain;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,10 +31,11 @@ public class EuFunding {
 
     @NotNull
     private LocalDate projectStartDate;
+
     @NotNull
     private LocalDate projectEndDate;
 
-    @NotBlank
+    @NotNull
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
@@ -42,25 +44,7 @@ public class EuFunding {
     @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
 
-    EuFunding() {
-    }
-
-    public EuFunding(EuActionType actionType,
-                     String grantAgreementNumber,
-                     String particpantId,
-                     String projectName,
-                     LocalDate projectStartDate,
-                     LocalDate projectEndDate,
-                     BigDecimal fundingContribution,
-                     boolean projectCoordinator) {
-        this.actionType = actionType;
-        this.participantId = particpantId;
-        this.projectName = projectName;
-        this.projectStartDate = projectStartDate;
-        this.projectEndDate = projectEndDate;
-        this.grantAgreementNumber = grantAgreementNumber;
-        this.fundingContribution = fundingContribution;
-        this.projectCoordinator = projectCoordinator;
+    public EuFunding() {
     }
 
     public Long getId() {
@@ -75,11 +59,11 @@ public class EuFunding {
         this.grantAgreementNumber = grantAgreementNumber;
     }
 
-    public String getParticpantId() {
+    public String getParticipantId() {
         return participantId;
     }
 
-    public void setParticpantId(String particpantId) {
+    public void setParticipantId(String particpantId) {
         this.participantId = particpantId;
     }
 
