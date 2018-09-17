@@ -69,4 +69,9 @@
 </th:block>
 
 
+<th:block th:fragment="body-end">
+    <script th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/dest/eu-grant-registration.min.js')}}" type="text/javascript"></script>
+</th:block>
+
+
 </html>

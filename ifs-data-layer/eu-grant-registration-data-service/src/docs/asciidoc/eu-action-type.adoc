@@ -1,0 +1,23 @@
+=== Get By Id
+==== Request
+include::{snippets}/action-type/get-by-id/http-request.adoc[]
+include::{snippets}/action-type/get-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/action-type/get-by-id/http-response.adoc[]
+include::{snippets}/action-type/get-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/action-type/get-by-id/curl-request.adoc[]
+
+=== Find All
+==== Request
+include::{snippets}/action-type/find-all/http-request.adoc[]
+include::{snippets}/action-type/find-all/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/action-type/find-all/http-response.adoc[]
+include::{snippets}/action-type/find-all/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/action-type/find-all/curl-request.adoc[]
