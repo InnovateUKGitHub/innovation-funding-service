@@ -13,8 +13,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Horizon 20/EuGrantController.java
-20: UK government underwrite guarantee',size='govuk-heading-xl'" />
+                  th:with="pageTitle='Horizon 2020: UK government underwrite guarantee',size='govuk-heading-xl'" />
 
         <p class="govuk-body">The
             <a class="govuk-link"
@@ -49,7 +48,7 @@
         <ul class="govuk-body task-list">
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.organisationComplete ? '/eu-grant/organisation/view' : '/eu-grant/organisation/type'}">Your organisation</a>
+                    <a class="govuk-heading-s" th:href="@{model.organisationComplete ? '/organisation/view' : '/organisation/type'}">Your organisation</a>
                 </div>
                 <div th:unless="${model.organisationComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -60,7 +59,7 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.contactComplete ? '/eu-grant/contact-details' : '/eu-grant/contact-details/edit'}">Contact details</a>
+                    <a class="govuk-heading-s" th:href="@{model.contactComplete ? '/contact-details' : '/contact-details/edit'}">Contact details</a>
                 </div>
                 <div th:unless="${model.contactComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -71,10 +70,13 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" disabled="disabled">Funding details</a>
+                    <a class="govuk-heading-s" th:href="@{model.fundingComplete ? '/funding-details' : '/funding-details/edit'}">Funding details</a>
                 </div>
-                <div class="task-status-incomplete">
+                <div th:unless="${model.fundingComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
+                </div>
+                <div th:if="${model.fundingComplete}" class="task-status-complete">
+                    <span>Complete</span>
                 </div>
             </li>
         </ul>
@@ -86,9 +88,22 @@
                 <a href="mailto:xxx@xxx" class="govuk-link">xxx@xxx</a>.</p>
         </div>
 
-        <form action="#">
+        <form th:action="@{/overview}" th:object="${form}" method="POST" novalidate="novalidate"
+              enctype="multipart/form-data">
 
-            <button type="button" class="govuk-button" data-js-modal="registration-modal" disabled="disabled">
+            <div th:if="${model.allComplete()}" class="govuk-form-group">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                    <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                </legend>
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" data-switches-button-status="#submit-grant" />
+                        <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link">terms and conditions</a>.</label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="submit-grant" name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
                 Submit
             </button>
 
@@ -100,8 +115,8 @@
                     your registration.</p>
                 <hr>
                 <div>
-                    <button type="submit" class="govuk-button">Submit</button>
-                    <a class="button-clear js-close" href="#" aria-label="Close Popup">Cancel</a>
+                    <button type="submit" class="govuk-button govuk-!-margin-bottom-0">Submit</button>
+                    <button class="js-close button-clear" type="button">Cancel</button>
                 </div>
             </div>
 
