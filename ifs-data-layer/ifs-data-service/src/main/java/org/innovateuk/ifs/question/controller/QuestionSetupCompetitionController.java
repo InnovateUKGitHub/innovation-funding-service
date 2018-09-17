@@ -33,7 +33,7 @@ public class QuestionSetupCompetitionController {
     }
 
     @DeleteMapping("/deleteById/{id}")
-    public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
+    public RestResult<Void> deleteById(@PathVariable("id") final long questionId) {
         return questionService.delete(questionId).toDeleteResponse();
     }
 

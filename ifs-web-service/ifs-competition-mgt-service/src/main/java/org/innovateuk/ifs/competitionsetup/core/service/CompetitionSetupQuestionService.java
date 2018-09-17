@@ -18,6 +18,4 @@ public interface CompetitionSetupQuestionService {
     ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource question);
 
     ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId);
-
-    ServiceResult<Void> deleteQuestion(Long questionId);
 }

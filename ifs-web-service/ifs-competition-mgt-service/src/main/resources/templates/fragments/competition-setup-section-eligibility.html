@@ -107,7 +107,8 @@
                 </div>
             </div>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('overrideFundingRules')} ? 'govuk-form-group--error'">
+            <div id="override-funding-rules" class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('overrideFundingRules')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="overrideFundingRules">
                         <h2 class="govuk-fieldset__heading">Override funding rules</h2>
@@ -116,8 +117,7 @@
                     <span th:if="${#fields.hasErrors('overrideFundingRules')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"/>
                     <div class="govuk-radios govuk-radios--inline">
-                        <div class="govuk-radios__item" data-target="funding-level"
-                             data-target-clear-validation="true"  data-target-clear-form="true">
+                        <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-overrideFundingRules-yes"
@@ -289,16 +289,18 @@
                 <dd th:each="(collaborationLevel : ${model.collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Research categories</dt>
-                <dd th:text="${model.researchCategoriesFormatted}"></dd>
+                <dd th:text="${competitionSetupForm.researchCategoriesApplicable ? model.researchCategoriesFormatted : 'Not applicable'}"></dd>
 
                 <dt>Lead applicant</dt>
                 <dd th:text="${model.leadApplicantTypesText}"></dd>
 
-                <dt>Override funding rules</dt>
-                <dd th:text="${#bools.isTrue(competitionSetupForm.overrideFundingRules) ? 'Yes' : 'No'}"></dd>
+                <th:block th:if="${competitionSetupForm.overrideFundingRules != null}">
+                    <dt>Override funding rules</dt>
+                    <dd th:text="${#bools.isTrue(competitionSetupForm.overrideFundingRules) ? 'Yes' : 'No'}"></dd>
+                </th:block>
 
-                <th:block th:if="${competitionSetupForm.overrideFundingRules}">
-                    <dt>Set funding level</dt>
+                <th:block th:if="${competitionSetupForm.fundingLevelPercentage}">
+                    <dt>Funding level</dt>
                     <dd th:text="${competitionSetupForm.fundingLevelPercentage + '%'}"></dd>
                 </th:block>
 

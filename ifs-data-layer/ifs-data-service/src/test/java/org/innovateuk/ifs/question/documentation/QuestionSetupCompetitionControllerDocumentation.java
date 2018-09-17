@@ -80,7 +80,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
     @Test
     public void deleteById() throws Exception {
-        final Long questionId = 1L;
+        final long questionId = 1L;
         when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).

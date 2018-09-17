@@ -126,10 +126,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Override
     @Transactional
-    public ServiceResult<Void> delete(Long questionId) {
-        questionSetupTemplateService.deleteQuestionInCompetition(questionId);
-
-        return serviceSuccess();
+    public ServiceResult<Void> delete(long questionId) {
+        return questionSetupTemplateService.deleteQuestionInCompetition(questionId);
     }
 
     @Override

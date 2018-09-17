@@ -15,5 +15,5 @@ public interface QuestionSetupCompetitionRestService {
 
     RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId);
 
-    RestResult<Void> deleteById(Long questionId);
+    RestResult<Void> deleteById(long questionId);
 }

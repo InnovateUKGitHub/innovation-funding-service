@@ -63,7 +63,7 @@ public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMV
 
     @Test
     public void deleteById() throws Exception {
-        final Long questionId = 1L;
+        final long questionId = 1L;
 
         when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 

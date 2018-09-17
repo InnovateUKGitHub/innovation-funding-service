@@ -85,7 +85,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private QuestionSetupTemplateService questionSetupTemplateService;
 
     @Test
-    public void test_getByQuestionId() {
+    public void getByQuestionId() {
         Long questionId = 1L;
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(1);
         Question question = newQuestion().
@@ -169,7 +169,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_update() {
+    public void update() {
         long questionId = 1L;
 
         List<GuidanceRowResource> guidanceRows = newFormInputGuidanceRowResourceBuilder().build(1);
@@ -242,7 +242,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldNotChangeAppendixFormInputWhenOptionIsNull() {
+    public void update_shouldNotChangeAppendixFormInputWhenOptionIsNull() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -276,7 +276,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldResetAppendixOptionsFormInputWhenItsNotSelected() {
+    public void update_shouldResetAppendixOptionsFormInputWhenItsNotSelected() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -308,7 +308,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldSetAppendixOptionsFormInputWhenSelected() {
+    public void update_shouldSetAppendixOptionsFormInputWhenSelected() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -333,7 +333,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldAppendFileTypeSeparatedByComma() {
+    public void update_shouldAppendFileTypeSeparatedByComma() {
         Long questionId = 1L;
 
         setMocksForSuccessfulUpdate();
@@ -354,7 +354,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldNotUpdateApplicationDetailsHeading() {
+    public void update_shouldNotUpdateApplicationDetailsHeading() {
         long questionId = 1L;
         String oldShortTitle = "Application details";
 
@@ -413,7 +413,6 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     private void setMocksForSuccessfulUpdate() {
-        long questionId = 1L;
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
 
         Question question = newQuestion().
@@ -428,46 +427,44 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withGuidanceRows(newFormInputGuidanceRow().build(2))
                 .build();
 
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(questionId)).thenReturn(question);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType
+                .TEXTAREA)).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(questionRepository.findOne(question.getId())).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
 
         doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
         when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
     }
 
     @Test
-    public void test_delete() {
-        final Long questionId = 1L;
+    public void delete() {
+        long questionId = 1L;
 
         when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
-        ServiceResult<Void> resultAssessedQuestion = service.delete(questionId);
-        assertTrue(resultAssessedQuestion.isSuccess());
+        assertTrue(service.delete(questionId).isSuccess());
     }
 
     @Test
-    public void test_createByCompetitionId() {
-        Long competitionId = 22L;
-        Long questionId = 33L;
+    public void createByCompetitionId() {
         Competition competition = newCompetition().build();
-        Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        Question newlyCreatedQuestion = newQuestion().build();
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
-        when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
+        when(questionRepository.findOne(newlyCreatedQuestion.getId())).thenReturn(newlyCreatedQuestion);
 
-        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isSuccess());
 
         CompetitionSetupQuestionResource resource = result.getSuccess();
-        assertEquals(questionId, resource.getQuestionId());
+        assertEquals(newlyCreatedQuestion.getId(), resource.getQuestionId());
     }
 
     @Test
-    public void test_createByCompetitionIdWithNonExistentCompId() {
+    public void createByCompetitionId_withNonExistentCompId() {
         Long competitionId = 22L;
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
 
@@ -477,13 +474,12 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_createByCompetitionIdWhenDefaultCreationFails() {
-        Long competitionId = 22L;
+    public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
-        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
     }

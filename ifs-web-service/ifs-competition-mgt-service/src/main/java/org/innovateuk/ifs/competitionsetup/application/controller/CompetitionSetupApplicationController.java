@@ -19,6 +19,7 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,6 +72,9 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    @Autowired
     private QuestionSetupRestService questionSetupRestService;
 
     @Autowired
@@ -94,7 +98,7 @@ public class CompetitionSetupApplicationController {
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
                                          @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+        questionSetupCompetitionRestService.deleteById(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 

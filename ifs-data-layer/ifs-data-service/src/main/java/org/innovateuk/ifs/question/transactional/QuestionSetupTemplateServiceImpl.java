@@ -62,10 +62,10 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
     }
 
     @Override
-    public ServiceResult<Void> deleteQuestionInCompetition(Long questionId) {
+    public ServiceResult<Void> deleteQuestionInCompetition(long questionId) {
         return find(questionRepository.findFirstById(questionId),
                 notFoundError(Question.class, questionId))
-                .andOnSuccess(question -> deleteQuestion(question));
+                .andOnSuccess(this::deleteQuestion);
     }
 
     private ServiceResult<Void> deleteQuestion(Question question) {

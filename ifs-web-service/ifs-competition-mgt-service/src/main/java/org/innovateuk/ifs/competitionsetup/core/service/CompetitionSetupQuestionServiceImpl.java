@@ -20,8 +20,8 @@ import org.springframework.validation.BindingResult;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 @Service
@@ -69,18 +69,12 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         return questionSetupCompetitionRestService.save(competitionSetupQuestionResource).toServiceResult();
     }
 
-    @Override
-    public ServiceResult<Void> deleteQuestion(Long questionId) {
-        return questionSetupCompetitionRestService.deleteById(questionId).toServiceResult();
-    }
-
     private boolean hasIncompleteSections(Long competitionId) {
         Map<CompetitionSetupSubsection, Optional<Boolean>> sectionSetupStatusAsMap = competitionSetupRestService
                 .getSubsectionStatuses(competitionId)
                 .getSuccess();
 
-        return asList(CompetitionSetupSubsection.APPLICATION_DETAILS, CompetitionSetupSubsection.FINANCES)
-                .stream()
+        return Stream.of(CompetitionSetupSubsection.APPLICATION_DETAILS, CompetitionSetupSubsection.FINANCES)
                 .map(subsection -> sectionSetupStatusAsMap.get(subsection).orElse(Boolean.FALSE))
                 .anyMatch(aBoolean -> aBoolean.equals(Boolean.FALSE));
     }
@@ -89,11 +83,9 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         List<Long> allQuestions = getAllQuestionIds(competitionId);
         Map<Long, Boolean> questionSetupStatuses = questionSetupRestService.getQuestionStatuses(competitionId, CompetitionSetupSection.APPLICATION_FORM).getSuccess();
 
-        boolean hasNotCompletedQuestion = allQuestions.stream()
+        return allQuestions.stream()
                 .map(questionId -> questionSetupStatuses.getOrDefault(questionId, Boolean.FALSE))
                 .anyMatch(status -> status.equals(Boolean.FALSE));
-
-        return hasNotCompletedQuestion;
     }
 
     private List<Long> getAllQuestionIds(Long competitionId) {
@@ -112,7 +104,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         return questionResources.stream()
                 .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
                 .filter(question -> question.getType() != QuestionType.LEAD_ONLY)
-                .map(questionResource -> questionResource.getId())
+                .map(QuestionResource::getId)
                 .collect(Collectors.toList());
     }
 

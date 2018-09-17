@@ -94,7 +94,7 @@ public class QuestionSetupCompetitionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteAllowedIfGlobalCompAdminRole() {
-        final Long questionId = 1L;
+        final long questionId = 1L;
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.delete(questionId);
@@ -102,7 +102,7 @@ public class QuestionSetupCompetitionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteAllowedIfNoGlobalRolesAtAll() {
-        final Long questionId = 1L;
+        final long questionId = 1L;
 
         try {
             classUnderTest.delete(questionId);
@@ -114,7 +114,7 @@ public class QuestionSetupCompetitionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteDeniedIfNotCorrectGlobalRoles() {
-        final Long questionId = 1L;
+        final long questionId = 1L;
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());

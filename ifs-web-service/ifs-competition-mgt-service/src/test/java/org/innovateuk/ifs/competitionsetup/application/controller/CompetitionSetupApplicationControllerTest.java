@@ -17,6 +17,7 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,6 +84,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Mock
     private QuestionSetupRestService questionSetupRestService;
+
+    @Mock
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -797,13 +801,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testDeleteQuestion() throws Exception {
+    public void deleteQuestion() throws Exception {
         Long questionId = 1L;
 
         CompetitionResource competition = newCompetitionResource().build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionRestService.deleteById(questionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("deleteQuestion", questionId.toString()))
@@ -811,6 +815,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
-        verify(competitionSetupQuestionService).deleteQuestion(questionId);
+        verify(questionSetupCompetitionRestService).deleteById(questionId);
     }
 }

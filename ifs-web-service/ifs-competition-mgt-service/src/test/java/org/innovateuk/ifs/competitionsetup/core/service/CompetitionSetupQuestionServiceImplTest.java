@@ -16,14 +16,15 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupQuestionServiceImplTest {
-    @InjectMocks
-	private CompetitionSetupQuestionServiceImpl service;
 
-	@Mock
-	private QuestionSetupCompetitionRestService restService;
+    @InjectMocks
+    private CompetitionSetupQuestionServiceImpl service;
+
+    @Mock
+    private QuestionSetupCompetitionRestService restService;
 
     @Test
-    public void testGetQuestion() {
+    public void getQuestion() {
         long questionId = 1L;
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
 
@@ -36,7 +37,7 @@ public class CompetitionSetupQuestionServiceImplTest {
     }
 
     @Test
-    public void testSave() {
+    public void updateQuestion() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
 
         when(restService.save(resource)).thenReturn(restSuccess());
@@ -47,7 +48,7 @@ public class CompetitionSetupQuestionServiceImplTest {
     }
 
     @Test
-    public void testCreateDefaultQuestion() throws Exception {
+    public void createDefaultQuestion() {
         long competitionId = 1L;
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
 
@@ -57,14 +58,5 @@ public class CompetitionSetupQuestionServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), resource);
-    }
-
-    @Test
-    public void testDeleteQuestion() throws Exception {
-        final Long questionId = 1L;
-
-        when(restService.deleteById(questionId)).thenReturn(restSuccess());
-        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestion(questionId);
-        assertTrue(resultAssessedQuestion.isSuccess());
     }
 }

@@ -29,7 +29,7 @@ public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<Void> deleteById(Long questionId) {
+    public RestResult<Void> deleteById(long questionId) {
         return deleteWithRestResult(QUESTION_SETUP_REST_URL + "/deleteById/" + questionId, Void.class);
     }
 }

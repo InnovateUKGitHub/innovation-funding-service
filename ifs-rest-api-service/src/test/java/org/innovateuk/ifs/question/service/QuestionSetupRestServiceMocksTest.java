@@ -21,7 +21,7 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_getByQuestionId() {
+    public void getByQuestionId() {
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
@@ -34,7 +34,7 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_save() {
+    public void save() {
         long questionId = 1L;
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
@@ -47,7 +47,7 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_deleteById() {
+    public void deleteById() {
         long questionId = 1L;
         setupDeleteWithRestResultExpectations(questionRestURL + "/deleteById/" + questionId);
 
@@ -57,7 +57,7 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_addDefaultToCompetition() {
+    public void addDefaultToCompetition() {
         long competitionId = 1L;
 
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
