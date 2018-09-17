@@ -53,10 +53,12 @@ prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
     inputs.file("$rootProject.projectDir/ifs-security/build/classes")
 
 
     dependsOn ":ifs-commons:build"
+    dependsOn ":ifs-data-layer:data-service-notifications:build"
     dependsOn ":ifs-resources:build"
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-security:build"
@@ -73,6 +75,7 @@ dependencies {
     compile project(':ifs-resources:eu-grant-registration-resources')
     compile project(':ifs-security')
     compile project(':ifs-data-layer:data-service-commons')
+    compile project(":ifs-data-layer:data-service-notifications")
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile 'com.h2database:h2'
@@ -82,6 +85,7 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
 
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }

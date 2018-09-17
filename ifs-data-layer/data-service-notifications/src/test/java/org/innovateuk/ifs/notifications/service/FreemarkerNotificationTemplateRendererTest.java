@@ -3,14 +3,17 @@ package org.innovateuk.ifs.notifications.service;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.NotificationSource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -27,7 +30,8 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitTest<FreemarkerNotificationTemplateRenderer> {
+@RunWith(MockitoJUnitRunner.class)
+public class FreemarkerNotificationTemplateRendererTest extends BaseUnitTestMocksTest {
 
     @Mock
     private Configuration freemarkerConfigurationMock;
@@ -38,10 +42,8 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
     @Mock
     private SystemNotificationSource systemNotificationSource;
 
-    @Override
-    protected FreemarkerNotificationTemplateRenderer supplyServiceUnderTest() {
-        return new FreemarkerNotificationTemplateRenderer();
-    }
+    @InjectMocks
+    private FreemarkerNotificationTemplateRenderer service;
 
     @Test
     public void testRenderTemplate() throws IOException, TemplateException {

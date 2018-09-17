@@ -30,9 +30,6 @@ public class EuContact {
 
     @NotBlank
     private String telephone;
-    
-    public EuContact() {
-    }
 
     public Long getId() {
         return id;
