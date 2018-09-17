@@ -20,15 +20,17 @@ public class ManageStakeholderModelPopulatorTest {
 
     @Test
     public void populateModel() {
+
+        String competitionName = "competition1";
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
-                .withName("competitionName")
+                .withName(competitionName)
                 .build();
 
         ManageStakeholderViewModel viewModel = populator.populateModel(competitionResource);
 
         assertEquals(COMPETITION_ID, viewModel.getCompetitionId());
-        assertEquals("competitionName", viewModel.getCompetitionName());
+        assertEquals(competitionName, viewModel.getCompetitionName());
     }
 }
 

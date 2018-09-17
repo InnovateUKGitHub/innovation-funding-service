@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.projectdocument.controller.CompetitionSetupProjectDocumentController;
 import org.innovateuk.ifs.competitionsetup.stakeholder.form.InviteStakeholderForm;
 import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
 import org.innovateuk.ifs.competitionsetup.stakeholder.viewmodel.ManageStakeholderViewModel;
@@ -22,13 +21,14 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INV
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
- * Class for testing public functions of {@link CompetitionSetupProjectDocumentController}
+ * Class for testing public functions of {@link CompetitionSetupStakeholderController}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupStakeholderControllerTest extends BaseControllerMockMVCTest<CompetitionSetupStakeholderController> {
@@ -83,7 +83,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     @Test
     public void inviteStakeholderWhenInviteFails() throws Exception {
 
-        when(competitionSetupStakeholderRestService.inviteStakeholder(Mockito.any(), eq(COMPETITION_ID)))
+        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID)))
                 .thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
 
         String competitionName = "competitionName";
@@ -110,7 +110,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     @Test
     public void inviteStakeholderSuccess() throws Exception {
 
-        when(competitionSetupStakeholderRestService.inviteStakeholder(Mockito.any(), eq(COMPETITION_ID))).thenReturn(restSuccess());
+        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restSuccess());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder", COMPETITION_ID).
                 param("firstName", "First").
