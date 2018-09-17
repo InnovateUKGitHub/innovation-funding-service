@@ -121,6 +121,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private long getAveragePercentage(List<AssessorFormInputResponse> responses) {
         return Math.round(responses.stream()
                     .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .filter(response -> response.getValue() != null)
                     .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
                     .average()
                     .orElse(0.0));
