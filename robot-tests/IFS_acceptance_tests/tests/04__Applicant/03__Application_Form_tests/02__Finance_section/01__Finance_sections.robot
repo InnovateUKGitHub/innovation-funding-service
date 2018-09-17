@@ -175,12 +175,15 @@ Custom Suite Setup
 the user adds three material rows
     the user expands the section          Materials
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
+    wait for autosave
     ${pagination}=  Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css=#material-costs-table tr:nth-of-type(2)
     run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .button-clear:contains("Remove")
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
+    wait for autosave
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
+    wait for autosave
     the user moves focus to the element   link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
