@@ -13,9 +13,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -80,8 +80,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
@@ -149,7 +149,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
-    private InviteProjectMapper inviteProjectMapperMock;
+    private ProjectInviteMapper projectInviteMapperMock;
 
     @Mock
     private UserRepository userRepositoryMock;
@@ -725,7 +725,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
@@ -734,7 +734,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         when(projectRepositoryMock.findById(projectId)).thenThrow(new IllegalArgumentException());
 
@@ -763,7 +763,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .build();
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
@@ -785,7 +785,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteProjectManagerWhenUnableToSendNotification() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -821,7 +821,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("A B")
                 .build();
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
@@ -838,7 +838,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteProjectManagerSuccess() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -874,7 +874,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withName("A B").
                 build();
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
@@ -890,7 +890,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
@@ -916,7 +916,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteFinanceContactSuccess() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -951,7 +951,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withEmail("a@b.com")
                 .build();
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
@@ -1076,7 +1076,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteProjectFinanceUser(){
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -1122,7 +1122,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("A B")
                 .build();
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> success = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
@@ -1130,7 +1130,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
 
         verify(projectInviteRepositoryMock).save(projectInvite);
-        verify(inviteProjectMapperMock).mapToDomain(inviteResource);
+        verify(projectInviteMapperMock).mapToDomain(inviteResource);
     }
 
     @Override

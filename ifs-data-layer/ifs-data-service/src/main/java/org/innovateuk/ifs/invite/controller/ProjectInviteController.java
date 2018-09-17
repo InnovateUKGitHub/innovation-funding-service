@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.*;
 
 /**
  * Project Invite controller to handle RESTful service related to Project Invite
@@ -18,24 +18,24 @@ import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
 
 @RestController
 @RequestMapping(PROJECT_INVITE_BASE_URL)
-public class InviteProjectController {
+public class ProjectInviteController {
 
     @Autowired
     private ProjectInviteService projectInviteService;
 
     @PostMapping(PROJECT_INVITE_SAVE)
-    public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
+    public RestResult<Void> saveProjectInvites(@RequestBody @Valid ProjectInviteResource projectInviteResource) {
 
-        return projectInviteService.saveProjectInvite(inviteProjectResource).toPostResponse();
+        return projectInviteService.saveProjectInvite(projectInviteResource).toPostResponse();
     }
 
     @GetMapping(GET_INVITE_BY_HASH + "{hash}")
-    public RestResult<InviteProjectResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
+    public RestResult<ProjectInviteResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
         return projectInviteService.getInviteByHash(hash).toGetResponse();
     }
 
     @GetMapping(GET_PROJECT_INVITE_LIST + "{projectId}")
-    public RestResult<List<InviteProjectResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
+    public RestResult<List<ProjectInviteResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
         return projectInviteService.getInvitesByProject(projectId).toGetResponse();
     }
 

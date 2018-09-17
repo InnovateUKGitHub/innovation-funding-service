@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
@@ -19,7 +19,13 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsAddressViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectFinanceContactViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectProjectManagerViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -43,14 +49,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
@@ -58,7 +70,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
@@ -72,12 +84,20 @@ import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInv
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -256,7 +276,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        List<InviteProjectResource> invitedUsers = newInviteProjectResource().build(2);
+        List<ProjectInviteResource> invitedUsers = newProjectInviteResource().build(2);
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -463,11 +483,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        InviteProjectResource inviteProjectResource = new InviteProjectResource(invitedUserName, invitedUserEmail, projectId);
-        inviteProjectResource.setUser(invitedUserId);
-        inviteProjectResource.setOrganisation(organisationId);
-        inviteProjectResource.setApplicationId(applicationId);
-        inviteProjectResource.setLeadOrganisationId(leadOrganisation.getId());
+        ProjectInviteResource projectInviteResource = new ProjectInviteResource(invitedUserName, invitedUserEmail, projectId);
+        projectInviteResource.setUser(invitedUserId);
+        projectInviteResource.setOrganisation(organisationId);
+        projectInviteResource.setApplicationId(applicationId);
+        projectInviteResource.setLeadOrganisationId(leadOrganisation.getId());
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId)).thenReturn(serviceSuccess());
@@ -477,8 +497,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
-        when(projectDetailsService.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
-        when(projectDetailsService.inviteFinanceContact(projectId, inviteProjectResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.saveProjectInvite(projectInviteResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.inviteFinanceContact(projectId, projectInviteResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -608,8 +628,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(view().name("redirect:/project/" + projectId + "/details")).
                 andReturn();
 
-        verify(projectDetailsService, never()).saveProjectInvite(any(InviteProjectResource.class));
-        verify(projectDetailsService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
+        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectInviteResource.class));
+        verify(projectDetailsService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(ProjectInviteResource.class));
     }
 
     @Test
@@ -636,7 +656,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionResource.getId()).build();
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -659,8 +679,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(view().name("project/finance-contact")).
                 andReturn();
 
-        verify(projectDetailsService, never()).saveProjectInvite(any(InviteProjectResource.class));
-        verify(projectDetailsService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
+        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectInviteResource.class));
+        verify(projectDetailsService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(ProjectInviteResource.class));
     }
 
     @Test
@@ -687,7 +707,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        InviteProjectResource createdInvite = newInviteProjectResource().withId()
+        ProjectInviteResource createdInvite = newProjectInviteResource().withId()
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -697,7 +717,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         createdInvite.setApplicationId(projectResource.getApplication());
         createdInvite.setApplicationId(applicationId);
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -900,7 +920,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -950,7 +970,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -988,7 +1008,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(inviteId)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -1015,7 +1035,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
+        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(inviteId)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)

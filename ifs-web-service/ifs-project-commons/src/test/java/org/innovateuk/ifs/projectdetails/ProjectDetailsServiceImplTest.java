@@ -2,8 +2,8 @@ package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -118,7 +118,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectFinanceUser() throws Exception {
 
-        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
+        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
 
         when(projectDetailsRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
 
@@ -132,7 +132,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectManagerUser() throws Exception {
 
-        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
+        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
 
         when(projectDetailsRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
 
@@ -146,7 +146,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testSaveProjectInvite() throws Exception {
 
-        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
+        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
 
         when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
 

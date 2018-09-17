@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostFilter;
@@ -15,11 +15,11 @@ import java.util.List;
 public interface ProjectInviteService {
 
 
-    @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")
-    ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);
+    @PreAuthorize("hasPermission(#projectInviteResource, 'SAVE_PROJECT_INVITE')")
+    ServiceResult<Void> saveProjectInvite(@P("projectInviteResource") ProjectInviteResource projectInviteResource);
 
     @PostFilter("hasPermission(filterObject, 'READ_PROJECT_INVITE')")
-    ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
+    ServiceResult<List<ProjectInviteResource>> getInvitesByProject(Long projectId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ACCEPT_INVITE",
@@ -31,7 +31,7 @@ public interface ProjectInviteService {
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<InviteProjectResource> getInviteByHash(String hash);
+    ServiceResult<ProjectInviteResource> getInviteByHash(String hash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTENCE_OF_INVITE_ON_HASH",

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,11 +58,11 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
 
     @Test
     public void testSaveFinanceContact() {
-        final InviteProjectResource invite = newInviteProjectResource().build();
+        final ProjectInviteResource invite = newProjectInviteResource().build();
         assertAccessDenied(
                 () -> classUnderTest.saveProjectInvite(invite),
                 () -> verify(projectInvitePermissionRules)
-                        .partnersOnProjectCanSaveInvite(any(InviteProjectResource.class), any(UserResource.class))
+                        .partnersOnProjectCanSaveInvite(any(ProjectInviteResource.class), any(UserResource.class))
         );
     }
 
@@ -71,12 +71,12 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
         long projectId = 1L;
 
         when(classUnderTestMock.getInvitesByProject(projectId))
-                .thenReturn(serviceSuccess(newInviteProjectResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+                .thenReturn(serviceSuccess(newProjectInviteResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
 
-        ServiceResult<List<InviteProjectResource>> invitesByProject = classUnderTest.getInvitesByProject(projectId);
+        ServiceResult<List<ProjectInviteResource>> invitesByProject = classUnderTest.getInvitesByProject(projectId);
 
         verify(projectInvitePermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .partnersOnProjectCanViewInvite(any(InviteProjectResource.class), any(UserResource.class));
+                .partnersOnProjectCanViewInvite(any(ProjectInviteResource.class), any(UserResource.class));
 
         assertTrue(invitesByProject.getSuccess().isEmpty());
     }
