@@ -19,7 +19,6 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
-${valid_pdf}      testing.pdf
 ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
@@ -115,7 +114,7 @@ Comp admin can open the view mode of the application
     [Tags]    HappyPath
     [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
     When the user can see the option to upload a file on the page        ${APPLICATION_OVERVIEW_URL}
-    Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
+    Then the user uploads the file to the 'technical approach' question  ${5mb_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
     And the user navigates to the page                      ${applicationsForRTOComp}
     #Then the user should see the element  id=sort-by
@@ -125,7 +124,7 @@ Comp admin can open the view mode of the application
     Then the user should be redirected to the correct page  ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element                     link=Print application
     And the user should see the text in the page            Climate science the history of Greenland's ice
-    And the user should see the text in the page            ${valid_pdf}
+    And the user should see the text in the page            ${5mb_pdf}
     And the user can view this file without any errors
     And the user closes the last opened tab
     #    And the user should see the text in the page    ${quarantine_pdf}
@@ -162,7 +161,7 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    The user opens the link in new window  ${valid_pdf}, 10 KB
+    The user opens the link in new window    ${5mb_pdf}, 4 MB
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message

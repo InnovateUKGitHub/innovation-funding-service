@@ -69,10 +69,4 @@ public class GrantClaimMaximumResource {
     public void setCompetitions(List<Long> competitions) {
         this.competitions = competitions;
     }
-
-    @ZeroDowntime(reference = "IFS-4160", description = "Retaining this method to support old REST clients. Returning" +
-            " null here since the value is no longer used")
-    public Long getCompetitionType() {
-        return null;
-    }
 }
