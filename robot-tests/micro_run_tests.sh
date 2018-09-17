@@ -233,7 +233,7 @@ webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="ifs.local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
-baseFileStorage="/mnt/ifs_storage"
+baseFileStorage="/tmp"
 storedFileFolder="${baseFileStorage}/ifs/"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
