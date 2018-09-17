@@ -292,6 +292,7 @@ rerunFailed=0
 stopGrid=0
 showZapReport=0
 compress=0
+eu=0
 dryRun=0
 
 testDirectory='IFS_acceptance_tests/tests'
