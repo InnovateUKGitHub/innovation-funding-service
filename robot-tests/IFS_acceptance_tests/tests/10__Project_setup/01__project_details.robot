@@ -487,7 +487,7 @@ Academic Partner nominates Finance contact
     And select the project location         EGGS
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(1)
-    And the user should see the element     jQuery=li.require-action:nth-child(3)
+    And the user should see the element     jQuery=li.require-action:nth-child(4)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
@@ -517,7 +517,7 @@ Lead partner can see the status update when all Project details are submitted
     [Tags]
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   css=ul li.complete:nth-child(1)
-    And the user should see the element    css=ul li.require-action:nth-child(3)
+    And the user should see the element    css=ul li.require-action:nth-child(4)
     When the user clicks the button/link   link=View the status of partners
     Then the user should see the element   id=table-project-status
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)

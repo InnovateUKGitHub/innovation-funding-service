@@ -138,8 +138,7 @@ Non-lead partner can view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -386,8 +385,8 @@ After rejection, non-lead partner cannot view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(2)
+    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -404,7 +403,7 @@ After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
     When the user clicks the button/link    link=Set up your project
-    Then the user should not see the element    css=ul li.complete:nth-child(6)
+    Then the user should not see the element    css=ul li.complete:nth-child(2)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
@@ -623,7 +622,7 @@ Sole applicant can see documents approval
     [Tags]
     [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
-    Then the user should see the element  css=ul li.complete:nth-child(6)
+    Then the user should see the element  css=ul li.complete:nth-child(2)
     When the user clicks the button/link  link=Other documents
     Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
 

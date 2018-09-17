@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
@@ -16,7 +16,7 @@ import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -38,8 +38,8 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
     private UserResource userNotOnProject;
     private ProjectUser projectUserForUserOnOgranisationOne;
     private ProjectUser projectUserForUserOnOgranisationTwo;
-    private InviteProjectResource inviteProjectResourceForOrganisationOne;
-    private InviteProjectResource inviteProjectResourceForOrganisationTwo;
+    private ProjectInviteResource projectInviteResourceForOrganisationOne;
+    private ProjectInviteResource projectInviteResourceForOrganisationTwo;
     private ProjectProcess projectProcess;
 
     @Mock
@@ -69,11 +69,11 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
                 .withProject(project)
                 .withUser(newUser().withId(userOnProjectForOrganisationTwo.getId()).build())
                 .build();
-        inviteProjectResourceForOrganisationOne = newInviteProjectResource()
+        projectInviteResourceForOrganisationOne = newProjectInviteResource()
                 .withProject(project.getId())
                 .withOrganisation(organisationOne.getId())
                 .build();
-        inviteProjectResourceForOrganisationTwo = newInviteProjectResource()
+        projectInviteResourceForOrganisationTwo = newProjectInviteResource()
                 .withProject(project.getId())
                 .withOrganisation(organisationTwo.getId())
                 .build();
@@ -92,25 +92,25 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
 
     @Test
     public void testPartnersOnProjectCanSaveInvite() {
-        assertTrue(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
     }
 
     @Test
     public void testPartnersOnProjectCanSendInvite() {
-        assertTrue(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
 
     }
 
     @Test
     public void testPartnersOnProjectCanViewInvite(){
-        assertTrue(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
     }
 }

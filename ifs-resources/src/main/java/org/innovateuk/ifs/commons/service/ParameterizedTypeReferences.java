@@ -165,8 +165,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
-        return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
+    public static ParameterizedTypeReference<List<ProjectInviteResource>> projectInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectInviteResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ExternalInviteResource>> externalInviteResourceListType() {
