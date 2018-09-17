@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 @Service
 public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements GrantClaimMaximumRestService {
 
-    private final String grantClaimMaximumRestURL = "/grant-claim-maximum";
+    private static final String grantClaimMaximumRestURL = "/grant-claim-maximum";
 
     @Override
     public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -27,5 +27,10 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
         return postWithRestResult(grantClaimMaximumRestURL + "/", grantClaimMaximumResource, GrantClaimMaximumResource.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+        return getWithRestResult(grantClaimMaximumRestURL + "/maximum-funding-level-overridden/" + competitionId, Boolean.class);
     }
 }

@@ -54,107 +54,123 @@
                 <div id="editDetails" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/details/edit}">Edit</a></div>
             </div>
 
-            <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-                <li class="not-selected">
-                    <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/skills}">Skills</a>
-                    <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">Skills</a>
-                </li>
-                <li class="selected">
-                    <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/declaration}">DOI</a>
-                    <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">DOI</a>
-                </li>
-            </ul>
+            <div class="govuk-tabs govuk-!-margin-top-6">
+                <h2 class="govuk-tabs__title">
+                    Profile
+                </h2>
+                <ul class="govuk-tabs__list">
+                    <li class="govuk-tabs__list-item">
+                        <a th:if="${!model.compAdminUser}"
+                           th:href="@{/profile/details/skills}"
+                           class="govuk-tabs__tab">Skills</a>
+                        <a th:unless="${!model.compAdminUser}"
+                           th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                           class="govuk-tabs__tab">Skills</a>
+                    </li>
+                    <li class="govuk-tabs__list-item">
+                        <a th:if="${!model.compAdminUser}"
+                           th:href="@{/profile/details/declaration}"
+                           class="govuk-tabs__tab"
+                           aria-selected="true">DOI</a>
+                        <a th:unless="${!model.compAdminUser}"
+                           th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                           class="govuk-tabs__tab"
+                           aria-selected="true">DOI</a>
+                    </li>
+                </ul>
+                <section class="govuk-tabs__panel">
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Principal employer and role</h2>
+                    <p class="govuk-body" th:if="${model.principalEmployer}">
+                        <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
+                        <th:block th:text="${model.role}">CEO</th:block>
+                    </p>
+                    <p class="govuk-body" th:unless="${model.principalEmployer}">Not answered</p>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Principal employer and role</h2>
-            <p class="govuk-body" th:if="${model.principalEmployer}">
-                <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
-                <th:block th:text="${model.role}">CEO</th:block>
-            </p>
-            <p class="govuk-body" th:unless="${model.principalEmployer}">Not answered</p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Professional affiliations</h2>
+                    <p th:text="${model.professionalAffiliations}"
+                       th:unless="${#strings.isEmpty(model.professionalAffiliations)}"
+                       class="govuk-body">
+                        Professional affiliation
+                    </p>
+                    <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
+                       th:text="${model.completed} ? 'None declared' : 'Not answered'"
+                       class="govuk-body">
+                        None declared
+                    </p>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Professional affiliations</h2>
-            <p th:text="${model.professionalAffiliations}"
-               th:unless="${#strings.isEmpty(model.professionalAffiliations)}"
-               class="govuk-body">
-                Professional affiliation
-            </p>
-            <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'"
-               class="govuk-body">
-                None declared
-            </p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Appointments, directorships and consultancies</h2>
+                    <div class="table-overflow govuk-!-margin-bottom-6" th:unless="${#lists.isEmpty(model.appointments)}">
+                        <table class="govuk-table govuk-!-margin-top-6">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Organisation</th>
+                                <th class="govuk-table__header" scope="col">Position</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="appointment : ${model.appointments}">
+                                <td class="govuk-table__cell" th:text="${appointment.organisation}">Aptrans Ltd</td>
+                                <td class="govuk-table__cell" th:text="${appointment.position}">Executive consultant</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p th:if="${#lists.isEmpty(model.appointments)}"
+                       th:text="${model.completed} ? 'None declared' : 'Not answered' "
+                       class="govuk-body">
+                        None declared
+                    </p>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Appointments, directorships and consultancies</h2>
-            <div class="table-overflow govuk-!-margin-bottom-6" th:unless="${#lists.isEmpty(model.appointments)}">
-                <table class="govuk-table govuk-!-margin-top-6">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Organisation</th>
-                        <th class="govuk-table__header" scope="col">Position</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="appointment : ${model.appointments}">
-                        <td class="govuk-table__cell" th:text="${appointment.organisation}">Aptrans Ltd</td>
-                        <td class="govuk-table__cell" th:text="${appointment.position}">Executive consultant</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p th:if="${#lists.isEmpty(model.appointments)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered' "
-               class="govuk-body">
-                None declared
-            </p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other financial interests</h2>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other financial interests</h2>
+                    <p class="govuk-body" th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
+                    <p th:unless="${model.financialInterests}"
+                       th:text="${model.completed} ? 'None declared' : 'Not answered'"
+                       class="govuk-body">
+                        None declared
+                    </p>
 
-            <p class="govuk-body" th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
-            <p th:unless="${model.financialInterests}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'"
-               class="govuk-body">
-                None declared
-            </p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
+                    <div class="table-overflow govuk-!-margin-bottom-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
+                        <table class="govuk-table govuk-!-margin-top-6">
+                            <thead class="govuk-head">
+                            <tr class="govuk-table__header">
+                                <th class="govuk-table__header" scope="col">Relation</th>
+                                <th class="govuk-table__header" scope="col">Organisation</th>
+                                <th class="govuk-table__header" scope="col">Position</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table-body">
+                            <tr class="govuk-table__row" th:each="familyAffiliation : ${model.familyAffiliations}">
+                                <td class="govuk-table__cell" th:text="${familyAffiliation.relation}">Sister</td>
+                                <td class="govuk-table__cell" th:text="${familyAffiliation.organisation}">Innovate UK</td>
+                                <td class="govuk-table__cell" th:text="${familyAffiliation.position}">Executive consultant</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
+                       th:text="${model.completed} ? 'None declared' : 'Not answered' "
+                       class="govuk-body">
+                        None declared
+                    </p>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
-            <div class="table-overflow govuk-!-margin-bottom-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
-                <table class="govuk-table govuk-!-margin-top-6">
-                    <thead class="govuk-head">
-                    <tr class="govuk-table__header">
-                        <th class="govuk-table__header" scope="col">Relation</th>
-                        <th class="govuk-table__header" scope="col">Organisation</th>
-                        <th class="govuk-table__header" scope="col">Position</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table-body">
-                    <tr class="govuk-table__row" th:each="familyAffiliation : ${model.familyAffiliations}">
-                        <td class="govuk-table__cell" th:text="${familyAffiliation.relation}">Sister</td>
-                        <td class="govuk-table__cell" th:text="${familyAffiliation.organisation}">Innovate UK</td>
-                        <td class="govuk-table__cell" th:text="${familyAffiliation.position}">Executive consultant</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered' "
-               class="govuk-body">
-                None declared
-            </p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family members' other financial interests</h2>
+                    <p class="govuk-body" th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
+                    <p th:unless="${model.familyFinancialInterests}"
+                       th:text="${model.completed} ? 'None declared' : 'Not answered'"
+                       class="govuk-body">
+                        None declared
+                    </p>
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family members' other financial interests</h2>
-            <p class="govuk-body" th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
-            <p th:unless="${model.familyFinancialInterests}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'"
-               class="govuk-body">
-                None declared
-            </p>
+                    <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
+                        <div id="editDOI" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/declaration/edit}">Edit</a></div>
+                    </div>
 
-            <div class="govuk-body form-footer" th:if="${!model.compAdminUser}">
-                <div id="editDOI" class="form-footer__actions"><a class="govuk-link" th:href="@{/profile/declaration/edit}">Edit</a></div>
-            </div>
-
-            <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
-                <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                    <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
+                        <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                    </div>
+                </section>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

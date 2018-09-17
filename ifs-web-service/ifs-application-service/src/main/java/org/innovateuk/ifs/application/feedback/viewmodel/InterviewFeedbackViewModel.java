@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.application.feedback.viewmodel;
 
 public class InterviewFeedbackViewModel {
-    final static String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +
+    static final String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +
             " This response will be noted by the interview panel.";
-    final static String LEAD_WITHOUT_RESPONSE_BANNER =  "As the lead applicant you can respond to feedback." +
+    static final String LEAD_WITHOUT_RESPONSE_BANNER =  "As the lead applicant you can respond to feedback." +
             " This response will be noted by the interview panel.";
-    final static String COLLAB_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
+    static final String COLLAB_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
             " This response will be noted by the interview panel.";
-    final static String COLLAB_WITHOUT_RESPONSE_BANNER =  "The lead applicant can respond to feedback." +
+    static final String COLLAB_WITHOUT_RESPONSE_BANNER =  "The lead applicant can respond to feedback." +
             " This response will be noted by the interview panel.";
-    final static String ASSESSOR_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
+    static final String ASSESSOR_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
             " Download and review all attachments before the interview panel.";
-    final static String ASSESSOR_WITHOUT_RESPONSE_BANNER =  "The lead applicant has not responded to feedback.";
+    static final String ASSESSOR_WITHOUT_RESPONSE_BANNER =  "The lead applicant has not responded to feedback.";
 
     private final String responseFilename;
     private final String feedbackFilename;

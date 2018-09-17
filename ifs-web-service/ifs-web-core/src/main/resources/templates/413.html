@@ -11,7 +11,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <main tabindex="-1" id="content">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
         <h1 class="govuk-heading-l" th:text="${title}">Payload too large</h1>
 
         <p class="govuk-body" th:if="${status}">
@@ -19,8 +19,10 @@
             <span th:if="${error}" th:text="'('+${error}+')'">error ...</span>
         </p>
 
-        We are unable to complete your request because the size of file or request being submitted is too large.
-        Please limit the size of your file to the sizes specified. You can now return to <a th:href="${userDashboardLink}" class="govuk-link">your dashboard</a> or use your back button.
+        <p class="govuk-body">
+            We are unable to complete your request because the size of file or request being submitted is too large.
+            Please limit the size of your file to the sizes specified. You can now return to <a
+                th:href="${userDashboardLink}" class="govuk-link">your dashboard</a> or use your back button.</p>
 
         <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
             Error message will be displayed here for developers on dev/UAT environments.

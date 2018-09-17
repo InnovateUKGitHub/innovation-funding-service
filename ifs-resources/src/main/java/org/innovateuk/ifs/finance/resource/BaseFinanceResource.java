@@ -32,7 +32,7 @@ public abstract class BaseFinanceResource {
     }
 
     public BaseFinanceResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public BaseFinanceResource(long id,

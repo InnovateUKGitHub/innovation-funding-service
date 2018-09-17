@@ -246,7 +246,6 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     private boolean requiresSecuredBySpringAnnotation(List<String> values) {
         return !simpleFilter(values, value ->
                 value.contains("Authority") ||
-                        value.contains("Role") ||
                         value.contains("Authenticated") ||
                         value.contains("Anonymous")).isEmpty();
     }
