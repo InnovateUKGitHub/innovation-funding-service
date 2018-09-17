@@ -52,8 +52,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        Long competitionId = competitionIdOpt.isPresent() ? competitionIdOpt.get() : null;
-        model.addAttribute(COMPETITION_ID, competitionId);
+        model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
