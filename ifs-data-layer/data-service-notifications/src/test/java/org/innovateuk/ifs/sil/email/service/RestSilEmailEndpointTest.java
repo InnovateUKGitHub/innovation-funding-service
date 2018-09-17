@@ -3,13 +3,13 @@ package org.innovateuk.ifs.sil.email.service;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -20,6 +20,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -44,10 +45,13 @@ public class RestSilEmailEndpointTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setupServiceWithMockTemplate() {
-        final RestTemplateAdaptorFactory factory = new RestTemplateAdaptorFactory();
         service = new RestSilEmailEndpoint();
-        ;
-        adaptor = factory.silAdaptor();
+        adaptor = new AbstractRestTemplateAdaptor() {
+            @Override
+            public HttpHeaders getHeaders() {
+                return getJSONHeaders();
+            }
+        };
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
         ReflectionTestUtils.setField(service, "silSendmailPath", "/silstub/sendmail");
