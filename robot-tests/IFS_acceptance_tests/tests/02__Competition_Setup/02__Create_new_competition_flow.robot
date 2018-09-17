@@ -75,6 +75,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3916 Configurable Project Setup documents: Configuration
 ...
 ...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
+...
+...               IFS-4190 Create new user in stakeholder role
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -737,6 +739,31 @@ The Applicant see the correct Questions
     And the user should not see the element          jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
+The internal user cannot invite a Stakeholder when they have triggered the name validation
+    [Documentation]  IFS-4190
+    [Tags]
+    Given log in as a different user                     &{Comp_admin1_credentials}
+    And the user navigates to the page                   ${SERVER}/management/competition/setup/${competitionId}/manage-stakeholders
+    When the user triggers the name validation
+    Then the user should see the name validation messages
+
+The internal user cannot invite a Stakeholder when they have triggered the email validation
+    [Documentation]  IFS-4190
+    [Tags]
+    Then the user triggers the email validation
+
+The internal user cannot invite users with an Innovate UK email as Stakeholders
+    [Documentation]  IFS-4190
+    [Tags]
+    When the user enters an Innovate UK email
+    Then the user should see a field and summary error    Stakeholders cannot be registered with an Innovate UK email address.
+
+The internal user invites a Stakeholder
+    [Documentation]  IFS-4190
+    [Tags]
+    Then the user enters the correct details of a Stakeholder
+    # There's no way of verifying if this has been successful yet, which is why there is no check.
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
@@ -907,3 +934,33 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+the user triggers the name validation
+    the user clicks the button/link         jQuery = span:contains("Invite a new stakeholder")
+    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]
+
+the user should see the name validation messages
+    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error    Your first name should have at least 2 characters.
+    the user should see a field and summary error    Please enter a last name.
+    the user should see a field and summary error    Your last name should have at least 2 characters.
+
+the user triggers the email validation
+    the user enters text to a text field             id = firstName     Stake
+    the user enters text to a text field             id = lastName      Holder
+    the user enters text to a text field             id = emailAddress  stakeHoldertest.com
+    the user clicks the button/link                  css = button[name = "inviteStakeholder"]
+    the user should see a field and summary error    Please enter a valid email address.
+
+the user enters an Innovate UK email
+    the user enters text to a text field    id = firstName     Stake
+    the user enters text to a text field    id = lastName      Holder
+    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.test
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]
+
+the user enters the correct details of a Stakeholder
+    the user enters text to a text field    id = firstName     Stake
+    the user enters text to a text field    id = lastName      Holder
+    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]

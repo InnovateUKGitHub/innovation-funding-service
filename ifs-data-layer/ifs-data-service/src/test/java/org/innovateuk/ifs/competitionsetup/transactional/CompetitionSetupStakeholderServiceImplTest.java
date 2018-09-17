@@ -47,7 +47,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the CompetitionSetupProjectDocumentServiceImpl with mocked repository.
+ * Tests the CompetitionSetupStakeholderServiceImpl with mocked repository.
  */
 public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitTest<CompetitionSetupStakeholderServiceImpl> {
 
