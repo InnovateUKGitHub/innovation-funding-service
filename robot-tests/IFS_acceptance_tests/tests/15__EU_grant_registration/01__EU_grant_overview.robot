@@ -16,6 +16,7 @@ ${EU_grant}    ${server}/eu-grant/overview
 *** Test Cases ***
 User navigate to EU grant registration page
     [Documentation]  IFS-4231
+    [Tags]  EU2020
     Given the guest user opens the browser
     When the user navigates to the page     ${EU_grant}
     Then the user should see the element    jQuery = h1:contains("Horizon 2020: UK government underwrite guarantee")
@@ -25,14 +26,14 @@ User navigate to EU grant registration page
 
 User navigates to and selects business on the Organisation details page
     [Documentation]  IFS-4072
-    [Tags]
+    [Tags]  EU2020
     When The user clicks the button/link           link = Your organisation
     Then the user clicks the button/link           jQuery = span:contains("Business")
     And the user clicks the button/link            jQuery = button:contains("Save and continue")
 
 Companies House: Enter manually Valid company name
     [Documentation]  IFS-4072
-    [Tags]
+    [Tags]  EU2020
     Given the user clicks the button/link          jQuery = summary:contains("Enter details manually")
     When the user enters text to a text field      id = organisationSearchName    Hive IT
     Then the user clicks the button/link           jQuery = button:contains("Search")
@@ -43,7 +44,7 @@ Companies House: Enter manually Valid company name
 
 Companies House: Invalid company name
     [Documentation]  IFS-4072
-    [Tags]
+    [Tags]  EU2020
     When the user clicks the button/link           link = Edit your organisation details
     And the user clicks the button/link            jQuery = span:contains("Business")
     And the user clicks the button/link            jQuery = button:contains("Save and continue")
@@ -53,14 +54,14 @@ Companies House: Invalid company name
 
 Companies House: Empty company name field
     [Documentation]  IFS-4072
-    [Tags]
+    [Tags]  EU2020
     When the user enters text to a text field      id = organisationSearchName    ${EMPTY}
     Then the user clicks the button/link           id = org-search
     And the user should see an error               Please enter an organisation name to search
 
 Companies House: Valid registration number
     [Documentation]  IFS-4072
-    [Tags]
+    [Tags]  EU2020
     When the user enters text to a text field      id = organisationSearchName    05493105
     Then the user clicks the button/link           id = org-search
     And the user clicks the button/link            jQuery = button:contains("HIVE IT LIMITED")
@@ -68,7 +69,7 @@ Companies House: Valid registration number
 
 Contact details validation
     [Documentation]  IFS-4231
-    [Tags]
+    [Tags]  EU2020
     When the user clicks the button/link                  link = Contact details
     Then the user clicks the button/link                  jQuery = button:contains("Continue")
     And the user should see a field and summary error     Enter your full name
@@ -81,7 +82,7 @@ Contact details validation
 
 Contact details Enter details and save
     [Documentation]  IFS-4231
-    [Tags]
+    [Tags]  EU2020
     When the user enters text to a text field      id = name        Name
     Then the user enters text to a text field      id = jobTitle    Job title
     And the user enters text to a text field       id = email       test@test.com
@@ -95,14 +96,14 @@ Contact details Enter details and save
 
 Funding details initial validation
     [Documentation]  IFS-4077
-    [Tags]
+    [Tags]  EU2020
     When the user clicks the button/link           link = Funding details
     Then the user clicks the button/link           jQuery = button:contains("Continue")
     And the user should see the validation messages for the funding details
 
 Funding details fill in details
     [Documentation]  IFS-4077
-    [Tags]
+    [Tags]  EU2020
     When the user enters text to a text field      id = grantAgreementNumber            123456
     Then the user enters text to a text field      id = participantId                   123456
     And the user selects the option from the drop-down menu                             12   id=actionType  #(IA) Innovation action
@@ -119,7 +120,7 @@ Funding details fill in details
 
 Dashboard should reflect the updates
     [Documentation]  IFS-4231
-    [Tags]
+    [Tags]  EU2020
     Given the user navigates to the page           ${EU_grant}
     When the user should see the element           jQuery = li:contains("Your organisation") .task-status-complete
     Then the user should see the element           jQuery = li:contains("Contact details") .task-status-complete
