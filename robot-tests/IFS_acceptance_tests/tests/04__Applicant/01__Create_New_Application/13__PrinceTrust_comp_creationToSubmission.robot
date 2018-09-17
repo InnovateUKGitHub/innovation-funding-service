@@ -25,7 +25,8 @@ Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
     When the competition is open                                 ${comp_name}
-    Then Lead Applicant applies to the new created competition   ${comp_name}  &{RTO_lead_applicant_credentials}
+        And Log in as a different user            &{RTO_lead_applicant_credentials}
+        Then logged in user applies to competition                  ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688
@@ -52,7 +53,8 @@ The competition admin creates The Prince's Trust Comp
     the user fills in the CS Milestones         ${month}  ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
     the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link             link = Return to setup overview

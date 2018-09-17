@@ -20,6 +20,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount.NONE;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+
 /**
  * Competition setup section saver for the eligibility section.
  */
@@ -40,7 +43,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     @Override
     public CompetitionSetupSection sectionToSave() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return ELIGIBILITY;
     }
 
     @Override
@@ -52,14 +55,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
         competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
 
-        if (competition.isFullApplicationFinance() != null) {
+        if (competition.isNonFinanceType()) {
+            competition.setMaxResearchRatio(NONE.getAmount());
+        } else {
             ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
 
             if (amount != null) {
                 competition.setMaxResearchRatio(amount.getAmount());
             }
-        } else {
-            competition.setMaxResearchRatio(ResearchParticipationAmount.NONE.getAmount());
         }
 
         boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());

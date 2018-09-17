@@ -29,10 +29,10 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
     }
 
     @Test
-    public void save() throws Exception {
+    public void create() throws Exception {
         EuGrantResource euGrantResource = newEuGrantResource().build();
 
-        when(euGrantService.save(euGrantResource)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.create()).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
                 post("/eu-grant")
@@ -40,7 +40,7 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(euGrantService).save(euGrantResource);
+        verify(euGrantService).create();
     }
 
     @Test

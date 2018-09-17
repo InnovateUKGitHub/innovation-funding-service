@@ -17,43 +17,12 @@ public class EuOrganisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @NotBlank
-    private final String name;
-
+    private String name;
     @NotNull
     @Enumerated(STRING)
-    private final EuOrganisationType organisationType;
-
-    private final String companiesHouseNumber;
-
-    EuOrganisation() {
-        name = null;
-        organisationType = null;
-        companiesHouseNumber = null;
-    }
-
-    public EuOrganisation(final String name, final EuOrganisationType organisationType,
-                          final String companiesHouseNumber) {
-        if (name == null) {
-            throw new NullPointerException("name connect be null");
-        }
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("name cannot be empty");
-        }
-        if (organisationType == null) {
-            throw new NullPointerException("organisationType cannot be null");
-        }
-        if (companiesHouseNumber == null) {
-            throw new NullPointerException("companiesHouseNumber cannot be null");
-        }
-        if (companiesHouseNumber.isEmpty()) {
-            throw new IllegalArgumentException("companiesHouseNumber cannot be empty");
-        }
-        this.companiesHouseNumber = companiesHouseNumber;
-        this.name = name;
-        this.organisationType = organisationType;
-    }
+    private EuOrganisationType organisationType;
+    private String companiesHouseNumber;
 
     public Long getId() {
         return id;
@@ -63,11 +32,23 @@ public class EuOrganisation {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public EuOrganisationType getOrganisationType() {
         return organisationType;
     }
 
+    public void setOrganisationType(EuOrganisationType organisationType) {
+        this.organisationType = organisationType;
+    }
+
     public String getCompaniesHouseNumber() {
         return companiesHouseNumber;
+    }
+
+    public void setCompaniesHouseNumber(String companiesHouseNumber) {
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 }

@@ -67,7 +67,7 @@ Bank details page
     [Tags]    HappyPath
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_TITLE}
-    Then the user should see the element    css=ul li.require-action:nth-child(3)
+    Then the user should see the element    css=ul li.require-action:nth-child(4)
     When the user clicks the button/link    link=View the status of partners
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
@@ -168,7 +168,7 @@ Bank details submission
     And the user clicks the button/link               id=submit-bank-details
     And the user should see the text in the page      The bank account details below are being reviewed
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element               jQuery=ul li.waiting:nth-child(3)
+    And the user should see the element               jQuery=ul li.waiting:nth-child(4)
     When the user clicks the button/link              link=View the status of partners
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page      Project team status

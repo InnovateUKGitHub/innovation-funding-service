@@ -2,11 +2,11 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -40,10 +40,10 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
 
     @Test
     public void testGetInviteByHash() {
-        InviteProjectResource invite = new InviteProjectResource();
+        ProjectInviteResource invite = new ProjectInviteResource();
         invite.setHash("hash");//.build();
-        setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), InviteProjectResource.class, invite);
-        RestResult<InviteProjectResource> returnedResponse = service.getInviteByHash(invite.getHash());
+        setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), ProjectInviteResource.class, invite);
+        RestResult<ProjectInviteResource> returnedResponse = service.getInviteByHash(invite.getHash());
         assertTrue(returnedResponse.isSuccess());
         assertEquals(invite, returnedResponse.getSuccess());
     }
