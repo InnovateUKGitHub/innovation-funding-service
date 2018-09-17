@@ -16,12 +16,15 @@ public class EuGrantResource {
 
     private EuContactResource contact;
 
+    private EuFundingResource funding;
+
     private boolean organisationComplete;
 
     private boolean contactComplete;
 
     private boolean fundingComplete;
 
+    private String shortCode;
 
     public UUID getId() {
         return id;
@@ -45,6 +48,14 @@ public class EuGrantResource {
 
     public void setContact(EuContactResource contact) {
         this.contact = contact;
+    }
+
+    public EuFundingResource getFunding() {
+        return funding;
+    }
+
+    public void setFunding(EuFundingResource funding) {
+        this.funding = funding;
     }
 
     public boolean isOrganisationComplete() {
@@ -71,6 +82,14 @@ public class EuGrantResource {
         this.fundingComplete = fundingComplete;
     }
 
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +104,8 @@ public class EuGrantResource {
                 .append(fundingComplete, that.fundingComplete)
                 .append(id, that.id)
                 .append(organisation, that.organisation)
+                .append(contact, that.contact)
+                .append(funding, that.funding)
                 .isEquals();
     }
 
@@ -93,6 +114,8 @@ public class EuGrantResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(organisation)
+                .append(contact)
+                .append(funding)
                 .append(organisationComplete)
                 .append(contactComplete)
                 .append(fundingComplete)
