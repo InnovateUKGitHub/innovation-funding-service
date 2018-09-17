@@ -2,7 +2,7 @@
 <html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact details'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -14,7 +14,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
 
 <div class="govuk-width-container">
 
@@ -50,31 +50,56 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
                                 <label class="govuk-label" for="name">
                                     Full name
                                 </label>
-                                <input class="govuk-input" id="name" name="name" type="text" th:value="${edit ? 'Joe Bloggs' : ''}" required>
+                                <input class="govuk-input"
+                                       id="name" name="name"
+                                       type="text"
+                                       th:value="${edit ? 'Joe Bloggs' : ''}"
+                                       required="required"
+                                       data-required-errormessage="Enter your full name">
                             </div>
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="jobTitle">
                                     Job title
                                 </label>
-                                <input class="govuk-input" id="jobTitle" name="jobTitle" type="text" th:value="${edit ? 'Executive' : ''}" required>
+                                <input class="govuk-input"
+                                       id="jobTitle"
+                                       name="jobTitle"
+                                       type="text"
+                                       th:value="${edit ? 'Executive' : ''}"
+                                       required="required"
+                                       data-required-errormessage="Enter your job title">
                             </div>
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="email">
                                     Email
                                 </label>
-                                <input class="govuk-input" id="email" name="email" type="email" th:value="${edit ? 'joebloggs@gmail.com' : ''}" required>
+                                <input class="govuk-input"
+                                       id="email"
+                                       name="email"
+                                       type="email"
+                                       th:value="${edit ? 'joebloggs@gmail.com' : ''}"
+                                       required="required"
+                                       data-required-errormessage="Enter your email">
                             </div>
 
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="telephone">
                                     Telephone
                                 </label>
-                                <input class="govuk-input" id="telephone" name="telephone" type="text" th:value="${edit ? '07986543211' : ''}" required>
+                                <input class="govuk-input"
+                                       id="telephone"
+                                       name="telephone"
+                                       type="text" th:value="${edit ? '07986543211' : ''}"
+                                       required="required"
+                                       data-required-errormessage="Enter your telephone number">
                             </div>
 
-                            <button class="govuk-button govuk-!-margin-top-6" type="submit" th:text="${edit ? 'Save and return' : 'Continue'}">Continue</button>
+                            <button class="govuk-button govuk-!-margin-top-6"
+                                    type="submit" th:text="${edit ? 'Save and return' : 'Continue'}">
+                                Continue
+                            </button>
 
                         </fieldset>
 
@@ -111,7 +136,7 @@ section3=${param.section3 != null and param.section3[0] == 'true' ? TRUE : FALSE
 
 </div>
 
-    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
     <th:block th:insert="fragments/layout :: body-end" />
     <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
     <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>

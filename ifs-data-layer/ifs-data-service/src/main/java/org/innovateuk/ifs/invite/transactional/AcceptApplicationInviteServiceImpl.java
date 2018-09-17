@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -60,7 +61,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
 
     @Override
     @Transactional
-    public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
+    public ServiceResult<Void> acceptInvite(String inviteHash, long userId, Optional<Long> organisationId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (!invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 LOG.error(
@@ -78,10 +79,10 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
             invite.open();
 
             if (invite.getInviteOrganisation().getOrganisation() == null) {
-                // A bit contentious, but we assume that the first organisation
-                // that a user belongs to is their 'current' organisation.
-                organisationRepository.findFirstByUsers(user)
-                        .ifPresent(organisation -> assignOrganisationToInvite(invite, organisation));
+                if (!organisationId.isPresent()) {
+                    return serviceFailure(notFoundError(Organisation.class));
+                }
+                assignOrganisationToInvite(invite, organisationRepository.findOne(organisationId.get()));
             }
 
             initializeInvitee(invite, user);

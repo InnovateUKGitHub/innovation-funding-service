@@ -38,7 +38,7 @@ public class CompetitionSetupController {
                                                             @PathVariable("id") final long id) {
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccess();
         return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource,
-                existingCompetitionResource.getLeadTechnologist()).toPutResponse();
+                    existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }
 
     @PostMapping("/{id}/initialise-form/{competitionTypeId}")

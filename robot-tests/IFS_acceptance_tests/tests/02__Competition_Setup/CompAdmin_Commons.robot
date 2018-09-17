@@ -95,16 +95,17 @@ the user fills in the CS Milestones
     the user clicks the button/link              link = Competition setup
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
-the user fills in the CS Documents in other projects
-    the user clicks the button/link          link = Documents in project setup
-    the user clicks the button/link          link = Add document type
-    the user enters text to a text field     id = title    Test document type
-    the user clicks the button/link          jQuery = span:contains("PDF")
-    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
-    the user enters text to a text field     css = .editor    Guidance test.
-    the user clicks the button/link          css = button[type = "submit"]
-    the user should see the element          jQuery = span:contains("Test document type")
-    the user clicks the button/link          link = Competition setup
+# TODO IFS-4186 Uncomment when this functionality is enabled.
+#the user fills in the CS Documents in other projects
+#    the user clicks the button/link          link = Documents in project setup
+#    the user clicks the button/link          link = Add document type
+#    the user enters text to a text field     id = title    Test document type
+#    the user clicks the button/link          jQuery = span:contains("PDF")
+#    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+#    the user enters text to a text field     css = .editor    Guidance test.
+#    the user clicks the button/link          css = button[type = "submit"]
+#    the user should see the element          jQuery = span:contains("Test document type")
+#    the user clicks the button/link          link = Competition setup
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -155,7 +156,7 @@ the user marks the Finance section as complete if it's present
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link=Finances
-    the user selects the radio button  applicationFinanceType  NONE
+    the user selects the radio button  applicationFinanceType  NO_FINANCES
     the user clicks the button/link    jQuery=.govuk-button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
@@ -190,6 +191,7 @@ the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
+    the user selects the radio button     applicationFinanceType  STANDARD
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
     the user should see the element       jQuery=li:contains("Finances") .task-status-complete

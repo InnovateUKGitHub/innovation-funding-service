@@ -32,7 +32,7 @@
                     <h2 class="govuk-fieldset__heading">Project duration in months</h2>
                 </legend>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" for="minProjectDuration">
+                    <label class="govuk-label" for="minProjectDuration">
                         Minimum
                     </label>
                     <th:block th:if="${#fields.hasErrors('minProjectDuration')}">

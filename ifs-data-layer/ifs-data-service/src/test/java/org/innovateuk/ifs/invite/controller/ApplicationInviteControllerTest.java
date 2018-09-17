@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
@@ -56,6 +57,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private CrmService crmService;
 
     @Before
     public void setUp() {
@@ -122,11 +126,27 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String hash = "abcdef";
         long userId = 1L;
 
-        when(acceptApplicationInviteService.acceptInvite(hash, userId)).thenReturn(serviceSuccess());
+        when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}", hash, userId))
                 .andExpect(status().isOk());
 
-        verify(acceptApplicationInviteService).acceptInvite(hash, userId);
+        verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.empty());
+        verify(crmService).syncCrmContact(userId);
+    }
+
+    @Test
+    public void acceptInvite_withOrganisationId() throws Exception {
+        String hash = "abcdef";
+        long userId = 1L;
+        long organisationId = 2L;
+
+        when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}/{organisationId}", hash, userId, organisationId))
+                .andExpect(status().isOk());
+
+        verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.of(organisationId));
+        verify(crmService).syncCrmContact(userId);
     }
 }

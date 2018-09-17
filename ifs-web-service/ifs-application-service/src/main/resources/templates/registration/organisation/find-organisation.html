@@ -11,20 +11,19 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/contributor-organisation-type',currentApplication=${currentApplication}" />
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/lead-organisation-type'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:with="orgTitle=${organisationType.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:unless="${organisationForm.research}">
-            <div class="message-alert">
+            <div class="message-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
             </div>
-            <p class="govuk-body">You can identify your organisation through Companies House or enter your details manually.</p>
             <h2 class="govuk-heading-m">Search on Companies House</h2>
         </th:block>
         <th:block th:if="${organisationForm.research}">
@@ -35,13 +34,13 @@
 
         <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
-                <label class="govuk-label"
-                       th:for="*{organisationSearchName}"
-                       th:text="${searchLabel}">
-                    Find your ? organisation
-                </label>
-                <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group-error'">
+            <label class="govuk-label"
+                   th:for="*{organisationSearchName}"
+                   th:text="${searchLabel}">
+                Find your ? organisation
+            </label>
+            <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
                 <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>

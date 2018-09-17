@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.eugrant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.eugrant.EuContactResource;
+import org.innovateuk.ifs.eugrant.EuFundingResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -28,4 +31,15 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
         return new EuGrantResource();
     }
 
+    public EuGrantResourceBuilder withOrganisation(EuOrganisationResource... organisations) {
+        return withArray((organisation, grant) -> grant.setOrganisation(organisation), organisations);
+    }
+
+    public EuGrantResourceBuilder withContact(EuContactResource... contacts) {
+        return withArray((contact, grant) -> grant.setContact(contact), contacts);
+    }
+
+    public EuGrantResourceBuilder withFunding(EuFundingResource... fundings) {
+        return withArray((funding, grant) -> grant.setFunding(funding), fundings);
+    }
 }

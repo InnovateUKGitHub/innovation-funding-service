@@ -258,10 +258,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
 
-        CompletableFuture<Void> competitionQuestionsForApplicantMenuFutures =
-                waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
-                handleCorrectQuestionsForApplicantMenu(createCompetitionFutures), taskExecutor);
-
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 fillInAndCompleteApplications(createCompetitionFutures);
 
@@ -285,8 +281,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
-        CompletableFuture.allOf(competitionQuestionsForApplicantMenuFutures,
-                                competitionFundersFutures,
+        CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture
@@ -331,15 +326,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessors(competitions, filteredAssessorLines, filteredAssessorInviteLines);
         assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions, filteredAssessorInviteLines);
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
-    }
-
-    private void handleCorrectQuestionsForApplicantMenu(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
-        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
-        competitions.forEach(competition -> {
-            if (!competition.getCompetition().getUseNewApplicantMenu()) {
-                competitionDataBuilderService.removeApplicationTeamForCompetition(competition);
-            }
-        });
     }
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
