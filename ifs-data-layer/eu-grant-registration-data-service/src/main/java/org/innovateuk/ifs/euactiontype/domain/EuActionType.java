@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.domain;
+package org.innovateuk.ifs.euactiontype.domain;
 
 import org.hibernate.annotations.Immutable;
 
@@ -13,6 +13,7 @@ import javax.persistence.Id;
 @Entity
 @Immutable
 public class EuActionType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,15 +33,31 @@ public class EuActionType {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getPriority() {
         return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

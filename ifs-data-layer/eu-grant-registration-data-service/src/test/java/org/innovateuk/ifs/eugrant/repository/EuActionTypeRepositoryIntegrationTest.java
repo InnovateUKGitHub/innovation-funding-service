@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.eugrant.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.eugrant.domain.EuActionType;
+import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
+import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
