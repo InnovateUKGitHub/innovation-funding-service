@@ -8,8 +8,6 @@ import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.innovateuk.ifs.async.exceptions.AsyncException.unwrapOriginalExceptionFromAsyncException;
 
 /**
@@ -43,7 +41,7 @@ public class AwaitAsyncFuturesCompletionMethodInterceptor implements MethodInter
             // Wait for all CompletableFutures generated via {@link AsyncFuturesGenerator} or manually registered with
             // {@link AsyncFuturesHolder} in some other way to complete before allowing the Controller to return
             //
-            AsyncFuturesHolder.waitForAllFuturesToComplete(timeoutValue, TimeUnit.SECONDS);
+            AsyncFuturesHolder.waitForAllFuturesToComplete(timeoutValue);
 
             return returnValue;
 
@@ -61,9 +59,5 @@ public class AwaitAsyncFuturesCompletionMethodInterceptor implements MethodInter
             // ensure that this Thread is clear of registered Futures
             AsyncFuturesHolder.clearFutures();
         }
-    }
-
-    public long getTimeoutValue() {
-        return timeoutValue;
     }
 }
