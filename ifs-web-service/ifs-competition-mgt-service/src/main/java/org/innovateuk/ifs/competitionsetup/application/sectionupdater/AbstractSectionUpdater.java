@@ -29,7 +29,7 @@ public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater 
         try {
             form.setMarkAsCompleteAction(false);
             Class<?> propertyType = getPropertyType(form, fieldName);
-            setNestedProperty(form, fieldName, convert(value, propertyType));
+            setNestedProperty(form, fieldName, convertValue(value, propertyType));
             return saveSection(competitionResource, form);
         } catch (Exception e) {
             LOG.error("exception thrown auto saving section field", e);
@@ -55,4 +55,10 @@ public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater 
         return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
     }
 
+    private Object convertValue(String value, Class propertyType) {
+        if (propertyType.isEnum()) {
+            return Enum.valueOf(propertyType, value);
+        }
+        return convert(value, propertyType);
+    }
 }

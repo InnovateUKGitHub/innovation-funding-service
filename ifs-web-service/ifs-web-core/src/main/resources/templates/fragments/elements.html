@@ -74,7 +74,7 @@
 <!-- =========================== Element: Competition Closing soon? =========================== -->
 <th:block th:fragment="competition-closing-warning (competition) ">
     <th:block th:if="${competition.isClosingSoon()}">
-        <p class="warning-alert">
+        <div class="warning-alert">
             <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.</p>
         </div>
     </th:block>
@@ -184,7 +184,8 @@
                 <label for="stateAidAgreed"
                        class="govuk-label govuk-checkboxes__label">
                     By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-                    <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance (opens in a new window)</a>
+                    <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance</a>
+                    (opens in a new window).
                 </label>
             </div>
         </div>
