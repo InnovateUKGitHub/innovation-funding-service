@@ -35,7 +35,7 @@ Companies House: Enter manually Valid company name
     Given the user clicks the button/link          jQuery = summary:contains("Enter details manually")
     When the user enters text to a text field      id = organisationSearchName    Hive IT
     Then the user clicks the button/link           jQuery = button:contains("Search")
-    And the user clicks the button/link            jQuery = button:contains("HIVE IT LIMITED")
+    And the user clicks the button/link            jQuery = button:contains("HIVE IT \ LIMITED")
     Then the user should see the element           jQuery = h3:contains("Registered name")
     And the user should see the element            jQuery = h3:contains("Registered Address")
     And the user should see the element            jQuery = h3:contains("Registration number")
@@ -62,7 +62,7 @@ Companies House: Valid registration number
     [Tags]
     When the user enters text to a text field      id = organisationSearchName    05493105
     Then the user clicks the button/link           id = org-search
-    And the user clicks the button/link            jQuery = button:contains("HIVE IT LIMITED")
+    And the user clicks the button/link            jQuery = button:contains("INNOVATE \ LTD")
     And the user clicks the button/link            link = Save and return
 
 Contact details validation
@@ -70,11 +70,11 @@ Contact details validation
     [Tags]
     When the user clicks the button/link                  link = Contact details
     Then the user clicks the button/link                  jQuery = button:contains("Continue")
-    And the user should see a field and summary error     Enter your full name
-    And the user should see a field and summary error     Your full name should have at least 2 characters.
-    And the user should see a field and summary error     Enter your job title.
+    And the user should see a field and summary error     Enter a full name
+    And the user should see a field and summary error     The full name should have at least 2 characters.
+    And the user should see a field and summary error     Enter a job title.
     And the user should see a field and summary error     Please enter a valid email.
-    And the user should see a field and summary error     Enter your telephone number.
+    And the user should see a field and summary error     Enter a telephone number.
     And the user should see a field and summary error     Please enter a valid phone number between 8 and 20 digits.
 #ToDo Validation messages will be updated
 
@@ -124,11 +124,9 @@ Dashboard should reflect the updates
     Then the user should see the element           jQuery = li:contains("Contact details") .task-status-complete
     And the user should see the element            jQuery = li:contains("Funding details") .task-status-complete
 
-Submit button is disabled before checkbox is checked
+Submit the grant registration
     [Documentation]   IFS-4254
-    Given the user should see that the element is disabled  id = submit-grant
-    When the user selects the checkbox                      termsAndConditions
-    And the user clicks the button/link                     id = submit-grant
+    When the user clicks the button/link                    id = submit-grant
     And the user clicks the button/link                     css = .registration-modal button[type="submit"]
     Then the user should see the element                    jQuery = h1:contains("Registration complete")
     And the user reads his email                            test@test.com  	Your Horizon 2020 project registration   Thank you for registering your Horizon 2020 funding details
