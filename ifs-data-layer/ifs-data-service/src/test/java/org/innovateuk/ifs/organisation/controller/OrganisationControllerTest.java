@@ -35,7 +35,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     public void findByIdShouldReturnOrganisation() throws Exception {
         when(organisationServiceMock.findById(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(get("/organisation/findById/1"))
+        mockMvc.perform(get("/organisation/find-by-id/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
     }
@@ -49,7 +49,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
 
         when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(post("/organisation/createOrMatch")
+        mockMvc.perform(post("/organisation/create-or-match")
                 .contentType(MediaType.APPLICATION_JSON).
                         content(json))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
 
         when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(post("/organisation/createAndLinkByInvite")
+        mockMvc.perform(post("/organisation/create-and-link-by-invite")
                 .contentType(MediaType.APPLICATION_JSON).
                         content(json).param("inviteHash", "thisisahash"))
                 .andExpect(status().isCreated())
