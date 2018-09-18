@@ -100,7 +100,8 @@ User can create a new competition
     And The user should not see the element    link = Milestones
     And The user should not see the element    link = Application
     And The user should not see the element    link = Assessors
-    And The user should not see the element    link = Documents in project setup
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+#    And The user should not see the element    link = Documents in project setup
     And The user should not see the element    link = Public content
     And The user should see the element        link = Initial details
     And The user should not see the element    link = Stakeholders
@@ -172,7 +173,8 @@ User should have access to all the sections
     And The user should see the element     link = Milestones
     And The user should see the element     link = Application
     And The user should see the element     link = Assessors
-    And the user should see the element     link = Documents in project setup
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+#    And the user should see the element     link = Documents in project setup
     And The user should see the element     link = Public content
     And The user should see the element     link = Stakeholders
 
@@ -518,10 +520,7 @@ Application: Finances
     Given the user clicks the button/link    link=Finances
     When the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    Then the user should see the element     css=input:checked ~ label[for="application-finance-full"]
-    And the user should see the element      css=label[for="application-finance-light"]
-#   Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
-    And the user should see the element      css=label[for="application-finance-none"]
+    And the user selects the radio button    applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element  css=input[id="include-growth-table-no"]
     When the user selects the radio button    includeGrowthTable  true
@@ -540,26 +539,28 @@ Application: Done enabled when all questions are marked as complete
     When The user clicks the button/link      link=Return to setup overview
     Then the user should see the element      jQuery=li:contains("Application") .task-status-complete
 
-Documents in project setup: The competition admin adds document requirements
-    [Documentation]    IFS-3916
-    [Tags]
-    Given the user clicks the button/link        link = Documents in project setup
-    And the user clicks the button/link          link = Add document type
-    When the user enters text to a text field    id = title    Test document type
-    And the user clicks the button/link          jQuery = span:contains("PDF")
-    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
-    And the user enters text to a text field     css = .editor    Guidance test.
-    And the user clicks the button/link          css = button[type = "submit"]
-    And the user should see the element          jQuery = span:contains("Test document type")
+# TODO IFS-4186 Uncomment when this functionality is enabled.
+#Documents in project setup: The competition admin adds document requirements
+#    [Documentation]    IFS-3916
+#    [Tags]
+#    Given the user clicks the button/link        link = Documents in project setup
+#    And the user clicks the button/link          link = Add document type
+#    When the user enters text to a text field    id = title    Test document type
+#    And the user clicks the button/link          jQuery = span:contains("PDF")
+#    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+#    And the user enters text to a text field     css = .editor    Guidance test.
+#    And the user clicks the button/link          css = button[type = "submit"]
+#    And the user should see the element          jQuery = span:contains("Test document type")
 
-Documents in project setup: The competition admin removes a document
-    [Documentation]    IFS-3916
-    [Tags]
-    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ span:contains("Edit")
-    When the user clicks the button/link        css = button[name = "removeDocument"]
-    And the user clicks the button/link         jQuery = button:contains("Confirm")
-    Then the user should not see the element    jQuery = span:contains("Test document type")
-    And the user clicks the button/link         link = Competition setup
+# TODO IFS-4186 Uncomment when this functionality is enabled.
+#Documents in project setup: The competition admin removes a document
+#    [Documentation]    IFS-3916
+#    [Tags]
+#    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ a:contains("Edit")
+#    When the user clicks the button/link        css = button[name = "removeDocument"]
+#    And the user clicks the button/link         jQuery = button:contains("Confirm")
+#    Then the user should not see the element    jQuery = span:contains("Test document type")
+#    And the user clicks the button/link         link = Competition setup
 
 Public content is required for a Competition to be setup
     [Documentation]
@@ -695,7 +696,7 @@ Innovation leads can be added to a competition
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
-    When the user clicks the button/link      jQuery = .inline-nav a:contains("Find")
+    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Find")
     Then the user should see the element      jQuery = td:contains(${peter_freeman}) button:contains("Add")
 
 User deletes the competition
@@ -720,7 +721,7 @@ The Applicant is able to apply to the competition once is Open
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
-    And logged in user applies to competition       ${competitionTitle}
+    And logged in user applies to competition       ${competitionTitle}  1
 
 The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
@@ -733,7 +734,7 @@ The Applicant should see the selected research cartegories
 The Applicant see the correct Questions
     [Documentation]   IFS-182
     Given the user should see the element            jQuery=li:contains("${customQuestion}")
-    And the user should not see the element         jQuery=li:contains("Costs and value for money")
+    And the user should not see the element          jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 *** Keywords ***

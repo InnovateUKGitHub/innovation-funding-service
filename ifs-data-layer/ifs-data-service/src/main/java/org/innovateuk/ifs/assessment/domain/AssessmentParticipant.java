@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.domain;
 
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -101,22 +100,21 @@ public class AssessmentParticipant extends CompetitionParticipant<AssessmentInvi
         if (rejectionReason == null) {
             throw new NullPointerException("rejectionReason cannot be null");
         }
-        if (rejectionComment == null) {
-            throw new NullPointerException("rejectionComment cannot be null");
-        }
 
         if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a AssessmentInvite that hasn't been opened");
         }
+
         if (getStatus() == ACCEPTED) {
             throw new IllegalStateException("Cannot reject a AssessmentInvite that has been accepted");
         }
+
         if (getStatus() == REJECTED) {
             throw new IllegalStateException("AssessmentInvite has already been rejected");
         }
 
         super.setRejectionReason(rejectionReason);
-        super.setRejectionReasonComment(rejectionComment.orElse(null));
+        super.setRejectionReasonComment(rejectionComment.orElseThrow(() -> new NullPointerException("rejectionComment cannot be null")));
         super.setStatus(REJECTED);
 
         return this;

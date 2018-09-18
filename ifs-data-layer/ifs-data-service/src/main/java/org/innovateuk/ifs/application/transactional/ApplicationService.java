@@ -2,10 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
@@ -25,7 +22,7 @@ import java.util.List;
 public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CREATE')")
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, @P("competitionId") final Long competitionId, final Long userId);
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, final long competitionId, final long userId, long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> saveApplicationDetails(@P("applicationId") final Long id, ApplicationResource application);
@@ -81,6 +78,6 @@ public interface ApplicationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
-    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PREVIOUS_APPLICATIONS')")
+    ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
 }

@@ -41,64 +41,71 @@
             <dd th:text="${model.innovationArea}">Agriculture and food</dd>
         </dl>
 
-        <ul class="govuk-list inline-nav govuk-!-margin-top-6">
-            <li class="not-selected">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
-            </li>
-            <li class="not-selected">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
-            </li>
-            <li class="selected">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
-            </li>
-        </ul>
+        <div class="govuk-tabs">
+            <h2 class="govuk-tabs__title">
+                Invite assessors to interview panel
+            </h2>
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="govuk-tabs__tab" aria-selected="true">View status</a>
+                </li>
+            </ul>
+            <section class="govuk-tabs__panel">
+                <div class="govuk-body govuk-grid-row sorting">
+                    <div class="govuk-grid-column-one-half">
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications assigned</span>
+                    </div>
 
-            <div class="govuk-body govuk-grid-row sorting">
-                <div class="govuk-grid-column-one-half">
-                    <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                    <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications assigned</span>
                 </div>
 
-            </div>
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header width-80">Application number</th>
+                            <th class="govuk-table__header" scope="col">Project title</th>
+                            <th class="govuk-table__header" scope="col">Lead organisation</th>
+                            <th class="govuk-table__header" scope="col">Status</th>
+                            <th class="govuk-table__header" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="app : ${model.applications}">
+                            <td class="govuk-table__cell">
+                                <a th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})} + ${originQuery}"
+                                   th:text="${app.applicationId}"
+                                   class="govuk-link">123
+                                </a>
+                            </td>
+                            <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                            <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
 
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header width-80">Application number</th>
-                        <th class="govuk-table__header" scope="col">Project title</th>
-                        <th class="govuk-table__header" scope="col">Lead organisation</th>
-                        <th class="govuk-table__header" scope="col">Status</th>
-                        <th class="govuk-table__header" scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="app : ${model.applications}">
-                        <td class="govuk-table__cell">
-                            <a th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})} + ${originQuery}"
-                               th:text="${app.applicationId}"
-                               class="govuk-link">123
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
-                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
+                            <td class="govuk-table__cell" th:if="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}"><span class="yes"></span>Responded to feedback</td>
+                            <td class="govuk-table__cell" th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
+                            <td class="govuk-table__cell">
+                                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
+                                   class="button-secondary">View invite</a>
+                            </td>
 
-                        <td class="govuk-table__cell" th:if="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}"><span class="yes"></span>Responded to feedback</td>
-                        <td class="govuk-table__cell" th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
-                        <td class="govuk-table__cell">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                               class="button-secondary">View invite</a>
-                        </td>
+                        </tr>
+                        <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.applications)}">
+                            <td class="govuk-table__cell" colspan="5">There are no applications to be invited to this panel.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    </tr>
-                    <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.applications)}">
-                        <td class="govuk-table__cell" colspan="5">There are no applications to be invited to this panel.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+            </section>
+        </div>
 
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

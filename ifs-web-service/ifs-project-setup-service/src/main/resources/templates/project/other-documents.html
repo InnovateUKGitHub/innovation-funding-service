@@ -98,7 +98,7 @@
                     <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
-                        <li>be less than 1mb in file size</li>
+                        <li>be less than 10MB in file size</li>
                     </ul>
                 </div>
             </details>
@@ -131,7 +131,7 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager.</p>
             </th:block>
         </div>
 
@@ -158,7 +158,7 @@
                     <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
-                        <li>be less than 1mb in file size</li>
+                        <li>be less than 10MB in file size</li>
                     </ul>
                 </div>
             </details>
@@ -192,7 +192,7 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager.</p>
             </th:block>
         </div>
         <th:block th:if="${model.collaborationAgreementRequired}">

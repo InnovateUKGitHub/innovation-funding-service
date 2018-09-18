@@ -17,7 +17,6 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +42,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
         .newCompetitionSetupQuestionResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -138,15 +139,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
                 .thenReturn(ServiceResult.serviceSuccess());
 
-        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.FULL;
-        final boolean includeGrowthTable = false;
-        final String fundingRules = "Funding rules for this competition";
-
         mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("fullApplicationFinance", String.valueOf(applicationFinanceType))
-                .param("includeGrowthTable", String.valueOf(includeGrowthTable))
-                .param("fundingRules", String.valueOf(fundingRules)))
+                .param("applicationFinanceType", String.valueOf(STANDARD))
+                .param("includeGrowthTable", String.valueOf(false))
+                .param("fundingRules", String.valueOf("Funding rules for this competition")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
@@ -163,11 +160,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
                 .thenReturn(ServiceResult.serviceSuccess());
 
-        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
-
         mockMvc.perform(post(URL_PREFIX + "/question/finance/none/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("fullApplicationFinance", String.valueOf(applicationFinanceType)))
+                .param("applicationFinanceType", String.valueOf(NO_FINANCES)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 

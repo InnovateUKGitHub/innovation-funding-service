@@ -80,6 +80,7 @@ public class OtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/readonly")
     public String viewDocumentsPageAsReadOnly(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
+                                              @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
                                               UserResource loggedInUser) {
 
         if (isProjectManager(projectId, loggedInUser)) {

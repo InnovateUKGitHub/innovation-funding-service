@@ -29,9 +29,6 @@ Resource          PS_Common.robot
 # This suite is using Competition: Internet of Things
 # and Application: Sensing & Control network using the lighting infrastructure
 
-*** Variables ***
-${opens_in_new_window}    (opens in a new window)
-
 # TODO actually check the downloading of the pdf files. In this suite is only checked that the link to the file is visible to the user.
 # But no actual download is happening. This suite used to click all the links and in that way increasing the amount of browser tabs open. This is now removed.
 # TODO IFS-2716
@@ -358,25 +355,25 @@ Project finance can upload a pdf file to notes
     [Tags]
     Given the user clicks the button/link  jQuery=.govuk-button:contains("Create a new note")
     When the user uploads the file         name=attachment  ${valid_pdf}
-    Then the user should see the element   jQuery=h2:contains("Supporting documentation") + ul:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user should see the element   jQuery=h2:contains("Supporting documentation") + ul:contains("${valid_pdf}")
 
 Project finance can remove the file from notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
 Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user should see the element  link=${valid_pdf} ${opens_in_new_window}
+    Given the user should see the element  link=${valid_pdf}
     Then the user should see the element   jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
@@ -476,19 +473,19 @@ Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
 Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
+    Given the user should see the element    link=${valid_pdf}
     When the file has been scanned for viruses
     And the user should see the element    jQuery=button:contains("Save comment")
 
