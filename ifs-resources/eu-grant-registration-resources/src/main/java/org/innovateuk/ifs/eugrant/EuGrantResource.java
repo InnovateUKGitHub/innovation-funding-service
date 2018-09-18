@@ -24,6 +24,7 @@ public class EuGrantResource {
 
     private boolean fundingComplete;
 
+    private String shortCode;
 
     public UUID getId() {
         return id;
@@ -79,6 +80,14 @@ public class EuGrantResource {
 
     public void setFundingComplete(boolean fundingComplete) {
         this.fundingComplete = fundingComplete;
+    }
+
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 
     @Override
