@@ -330,7 +330,8 @@ public class FinanceChecksQueriesController {
                 attachmentLinks,
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
-                queryId
+                queryId,
+                project.getApplication()
         );
     }
 

@@ -141,7 +141,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary
                 = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(),
-                project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(),
+                project.getApplication().getCompetition().getName(), project.getId(), project.getName(), project.getApplication().getId(),
                 bankDetailsStatusResources, leadOrganisation.getName());
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
