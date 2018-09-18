@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Find organisation',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/eu-grant/organisation/type'" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${organisationForm.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
+            </div>
+        </div>
+
+        <th:block th:with="orgTitle=${model.type.displayName}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},size='govuk-heading-xl'" />
+        </th:block>
+
+        <th:block th:unless="${model.type.research}">
+            <div class="message-alert">
+                <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
+            </div>
+            <p class="govuk-body">You can identify your organisation through Companies House or enter your details manually.</p>
+            <h2 class="govuk-heading-m">Search on Companies House</h2>
+        </th:block>
+        <th:block th:if="${model.type.research}">
+            <div class="message-alert">
+                <p class="govuk-body">Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
+            </div>
+        </th:block>
+
+        <form th:action="@{/organisation/find}" th:object="${organisationForm}" method="POST">
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') } ? 'govuk-form-group--error'">
+                <label class="govuk-label"
+                       th:for="*{organisationSearchName}"
+                       th:text="${model.searchLabel}">
+                    Find your ? organisation
+                </label>
+                <span class="govuk-hint" th:text="${model.searchHint}">Enter your organisation name</span>
+                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+                </th:block>
+                <input class="govuk-input govuk-!-width-one-half"
+                       th:field="*{organisationSearchName}"
+                       th:classappend="${#fields.hasErrors('*{organisationSearchName}')} ? 'govuk-input--error'"
+                       type="text"
+                       value="" />
+                <button type="submit" id="org-search" name="organisationSearching" value="true" class="govuk-button govuk-!-margin-0">Search</button>
+            </div>
+            <th:block th:if="${organisationForm.organisationSearching and model.results.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                <th:block th:if="${model.type.research}">
+                    <p class="govuk-body govuk-hint">Choose your organisation:</p>
+                </th:block>
+                <th:block th:unless="${model.type.research}">
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
+                    <p class="govuk-body govuk-hint">Select your organisation from the options below</p>
+                </th:block>
+            </th:block>
+            <ul id="org-results" class="govuk-list results-list panel" th:if="${organisationForm.organisationSearching}"
+                th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                <li class="type-company" th:each="organisation : ${model.results}">
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                        <button title="View organisation"
+                                th:text="${organisation.name}"
+                                class="govuk-button button-clear govuk-!-margin-0"
+                                name="selectedOrganisationId"
+                                th:value="${organisation.organisationSearchId}">
+                        </button>
+                    </h3>
+                    <th:block th:unless="${model.type.research}">
+                        <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                        <p class="govuk-body" th:text="${organisation.location}"></p>
+                    </th:block>
+                </li>
+                <li th:unless="${model.results.size()}">
+                    <p class="govuk-body">No results found.<br/>Please check your search criteria and try again.</p>
+                </li>
+            </ul>
+            <th:block th:unless="${model.type.research}">
+                <h2 class="govuk-heading-m">Not on Companies House?</h2>
+                <p class="govuk-body">Enter your organisation details manually. You may need to supply additional details at a later point.</p>
+                <th:block th:with="isOpen=${organisationForm.manualEntry}">
+                    <details class="govuk-details" th:attr="open=${isOpen} ? 'open' : null ">
+                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"
+                                 class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Enter details manually</span>
+                        </summary>
+                        <div class="govuk-details__text" th:attr="aria-hidden=${isOpen} ? 'false' : null">
+                            <h2 class="govuk-heading-m">Enter your organisation details</h2>
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
+                                <label class="govuk-label"
+                                       for="organisationName">
+                                    Organisation name
+                                </label>
+                                <span class="govuk-error-message" th:if="${#fields.hasErrors('*{organisationName}')}" th:errors="*{organisationName}"></span>
+                                <input class="govuk-input"
+                                       id="organisationName"
+                                       th:field="*{organisationName}"
+                                       type="text" value="" />
+                            </div>
+                            <button type="submit" name="manualEntry" value="true" class="govuk-button govuk-!-margin-top-6">Continue</button>
+                        </div>
+                    </details>
+                </th:block>
+            </th:block>
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

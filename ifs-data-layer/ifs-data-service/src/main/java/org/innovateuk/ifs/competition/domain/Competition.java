@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -23,13 +25,12 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -110,6 +111,7 @@ public class Competition implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
+    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
     private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
@@ -133,6 +135,9 @@ public class Competition implements ProcessActivity {
     private boolean locationPerPartner = true;
 
     private Boolean stateAid;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationFinanceType applicationFinanceType;
 
     public Competition() {
         setupComplete = false;
@@ -595,10 +600,12 @@ public class Competition implements ProcessActivity {
         return "";
     }
 
+    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
     public Boolean isFullApplicationFinance() {
         return fullApplicationFinance;
     }
 
+    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
     public void setFullApplicationFinance(Boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
     }
@@ -744,9 +751,12 @@ public class Competition implements ProcessActivity {
         this.stateAid = stateAid;
     }
 
-    public boolean getUseNewApplicantMenu() {
-        return questions.stream().anyMatch(
-                question -> APPLICATION_TEAM == question.getQuestionSetupType());
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
+    }
+
+    public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
     }
 }
 

@@ -37,7 +37,7 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="assessorPay">
+                <label class="govuk-label--s" for="assessorPay">
                     How much do assessors receive per application?
                 </label>
                 <span class="govuk-hint">This information will be available in the assessor invites.</span>
@@ -182,7 +182,7 @@
 
                 <div th:unless="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                         <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
-                        <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
+                        <span class="govuk-body" th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
                 </div>
             </div>
 

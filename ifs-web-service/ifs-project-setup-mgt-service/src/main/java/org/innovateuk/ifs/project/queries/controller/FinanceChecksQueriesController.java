@@ -299,7 +299,7 @@ public class FinanceChecksQueriesController {
 
         if (queriesResult.isSuccess()) {
             return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
-                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser());
+                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser(projectId));
 
         } else {
             return emptyList();
@@ -330,7 +330,8 @@ public class FinanceChecksQueriesController {
                 attachmentLinks,
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
-                queryId
+                queryId,
+                project.getApplication()
         );
     }
 

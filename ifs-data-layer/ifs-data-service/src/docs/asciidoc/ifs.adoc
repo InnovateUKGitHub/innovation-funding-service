@@ -230,6 +230,10 @@ include::formInput.adoc[]
 == FormInputResponse
 include::formInputResponse.adoc[]
 
+[[grantClaimMaximum]]
+== Grant Claim Maximum
+include::grant-claim-maximum.adoc[]
+
 [[project]]
 == Project
 include::project.adoc[]
@@ -238,7 +242,7 @@ include::bank-details.adoc[]
 include::project-finance.adoc[]
 include::project-finance-queries.adoc[]
 include::project-finance-attachments.adoc[]
-include::invite-project.adoc[]
+include::project-invite.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary

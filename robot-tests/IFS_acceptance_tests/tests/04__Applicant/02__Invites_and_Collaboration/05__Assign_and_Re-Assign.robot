@@ -162,12 +162,13 @@ Appendices are assigned along with the question
     And the user clicks the button/link   jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page  Upload
 
-Collaborator can see that Research area is not selected
-    [Documentation]  INFUND-6823
+RTO Collaborator is not guided that the research area is not selected
+    [Documentation]  IFS-4099
     [Tags]
     Given the user navigates to Your-finances page  Assign test
-    When the user clicks the button/link  link=Your funding
-    Then The user should see the element  jQuery=.govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    When the user clicks the button/link            link = Your funding
+    Then The user should not see the element        jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    And the user should see the element             css = [name^="finance-grantclaimpercentage"]
 
 Lead selects Research category
     [Documentation]  INFUND-6823  IFS-3938
@@ -268,7 +269,3 @@ Steve smith assigns a question to the collaborator
     the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     the user clicks the button/link   jQuery=a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
-
-the user fills out the research category
-    the user clicks the button/link    css=label[for="researchCategoryChoice-33"]
-    the user clicks the button/link    jQuery=button:contains(Save)

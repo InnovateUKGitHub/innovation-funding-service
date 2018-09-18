@@ -53,15 +53,17 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the competition management dashboard")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of live competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of live competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
@@ -69,8 +71,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of competitions in project setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of competitions in project setup")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
@@ -104,8 +107,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of previous competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of previous competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
@@ -122,8 +126,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the search page for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
                          @RequestParam(name = "page", defaultValue = "1") int page, Model model,

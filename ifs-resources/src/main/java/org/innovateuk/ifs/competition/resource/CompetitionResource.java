@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -85,7 +86,6 @@ public class CompetitionResource {
 
     private String activityCode;
 
-    private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
     private Boolean useResubmissionQuestion;
@@ -101,10 +101,14 @@ public class CompetitionResource {
     private boolean locationPerPartner = true;
     private Boolean stateAid;
 
-    // IFS-3088 & IFS-2123 & IFS-3753: This is temporary until all competitions with the old menu view are complete
-    private boolean useNewApplicantMenu;
-
     private Set<Long> grantClaimMaximums;
+
+    private ApplicationFinanceType applicationFinanceType;
+
+    private String createdBy;
+    private ZonedDateTime createdOn;
+    private String modifiedBy;
+    private ZonedDateTime modifiedOn;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -539,12 +543,10 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
+    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
+            " value dependent on applicationFinanceType")
+    public boolean isFullApplicationFinance() {
+        return ApplicationFinanceType.STANDARD == applicationFinanceType;
     }
 
     public boolean getSetupComplete() {
@@ -645,14 +647,6 @@ public class CompetitionResource {
         this.stateAid = stateAid;
     }
 
-    public boolean getUseNewApplicantMenu() {
-        return useNewApplicantMenu;
-    }
-
-    public void setUseNewApplicantMenu(boolean useNewApplicantMenu) {
-        this.useNewApplicantMenu = useNewApplicantMenu;
-    }
-
     public Set<Long> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
@@ -661,9 +655,49 @@ public class CompetitionResource {
         this.grantClaimMaximums = grantClaimMaximums;
     }
 
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
+    }
+
+    public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(final ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(final ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
 
@@ -677,7 +711,6 @@ public class CompetitionResource {
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
                 .append(locationPerPartner, that.locationPerPartner)
-                .append(useNewApplicantMenu, that.useNewApplicantMenu)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -721,7 +754,6 @@ public class CompetitionResource {
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
-                .append(fullApplicationFinance, that.fullApplicationFinance)
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
@@ -730,6 +762,11 @@ public class CompetitionResource {
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
+                .append(applicationFinanceType, that.applicationFinanceType)
+                .append(createdBy, that.createdBy)
+                .append(createdOn, that.createdOn)
+                .append(modifiedBy, that.modifiedBy)
+                .append(modifiedOn, that.modifiedOn)
                 .isEquals();
     }
 
@@ -779,7 +816,6 @@ public class CompetitionResource {
                 .append(assessorCount)
                 .append(assessorPay)
                 .append(activityCode)
-                .append(fullApplicationFinance)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
                 .append(hasAssessmentPanel)
@@ -790,8 +826,12 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
-                .append(useNewApplicantMenu)
                 .append(grantClaimMaximums)
+                .append(applicationFinanceType)
+                .append(createdBy)
+                .append(createdOn)
+                .append(modifiedBy)
+                .append(modifiedOn)
                 .toHashCode();
     }
 }
