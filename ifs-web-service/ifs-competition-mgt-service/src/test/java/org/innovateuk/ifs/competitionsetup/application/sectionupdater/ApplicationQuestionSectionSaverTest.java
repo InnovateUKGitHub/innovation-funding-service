@@ -22,6 +22,8 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
+        .newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -44,7 +46,7 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
-    public void testSaveCompetitionSetupSection() {
+    public void saveSection() {
         QuestionForm competitionSetupForm = new QuestionForm();
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(1L);
@@ -61,7 +63,7 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
-    public void test_doSaveSectionShouldTriggerIrregularSaveActionAndAppendFileTypes() {
+    public void doSaveSectionShouldTriggerIrregularSaveActionAndAppendFileTypes() {
         List<FileTypeCategory> fileTypeCategories = asList(PDF, SPREADSHEET);
         Set<String> fileTypeCategoriesStringList = simpleMapSet(fileTypeCategories, FileTypeCategory::name);
         String fileTypeCategoriesString = String.join(",", fileTypeCategoriesStringList);
@@ -90,10 +92,11 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
-    public void test_doSaveSectionShouldTriggerIrregularSaveActionAndUpdateWithEmptyFileTypes() {
+    public void doSaveSectionShouldTriggerIrregularSaveActionAndUpdateWithEmptyFileTypes() {
         QuestionForm competitionSetupForm = new QuestionForm();
-        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
-        question.setQuestionId(1L);
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(1L)
+                .build();
         competitionSetupForm.setQuestion(question);
 
         CompetitionResource competition = newCompetitionResource()
@@ -116,7 +119,7 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
-    public void testsSupportsForm() {
+    public void supportsForm() {
         assertTrue(service.supportsForm(QuestionForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }

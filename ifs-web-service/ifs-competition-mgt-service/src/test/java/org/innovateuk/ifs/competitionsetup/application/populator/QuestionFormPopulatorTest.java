@@ -47,7 +47,7 @@ public class QuestionFormPopulatorTest {
 
 
     @Test
-    public void testPopulateFormWithoutErrors() {
+    public void populateForm_withoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionResource = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
@@ -63,7 +63,7 @@ public class QuestionFormPopulatorTest {
     }
 
     @Test
-    public void testPopulate_questionShouldNotBeRemovableIfLastInSection() {
+    public void populateForm_questionShouldNotBeRemovableIfLastInSection() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionWithOneQuestion = newSectionResource().withQuestions(Arrays.asList(1L)).build();
 
@@ -77,7 +77,7 @@ public class QuestionFormPopulatorTest {
     }
 
     @Test
-    public void testPopulate_questionShouldBeRemovableIfNotLastInSection() {
+    public void populateForm_questionShouldBeRemovableIfNotLastInSection() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         SectionResource sectionWithMultipleQuestions = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
@@ -91,7 +91,7 @@ public class QuestionFormPopulatorTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
-    public void testPopulateFormWithErrors() {
+    public void populateForm_withErrors() {
         when(questionSetupCompetitionRestService.getByQuestionId(questionNotFoundId)).thenThrow(
                 new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
@@ -99,9 +99,8 @@ public class QuestionFormPopulatorTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
-    public void testPopulateFormWithNoObjectIdErrors() {
-        CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.empty());
-        assertEquals(null, result);
+    public void populateForm_formWithNoObjectIdErrors() {
+        assertNull(populator.populateForm(competitionResource, Optional.empty()));
     }
 
 }
