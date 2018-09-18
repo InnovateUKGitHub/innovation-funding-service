@@ -95,12 +95,12 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
                     <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
                 </legend>
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" data-switches-button-status="#submit-grant" />
-                        <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link">terms and conditions</a>.</label>
-                    </div>
-                </div>
+
+                <p class="govuk-body">
+                    Your information will be used to keep you updated on developments which may affect you. All data
+                    is managed in line with the General Data Protection Regulation and the UK Research and Innovation
+                    <a href="https://www.ukri.org/privacy-notice/" class="govuk-link">privacy notice</a>.
+                </p>
             </div>
 
             <button id="submit-grant" name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
