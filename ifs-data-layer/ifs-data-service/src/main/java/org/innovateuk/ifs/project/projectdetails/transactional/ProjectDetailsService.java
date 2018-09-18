@@ -4,7 +4,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,8 +39,8 @@ public interface ProjectDetailsService {
     ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
-    ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
+    ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
-    ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
+    ServiceResult<Void> inviteProjectManager(Long projectId, ProjectInviteResource inviteResource);
 }
