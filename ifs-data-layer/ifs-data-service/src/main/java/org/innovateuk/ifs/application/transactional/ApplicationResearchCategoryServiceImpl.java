@@ -9,11 +9,14 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -60,12 +64,23 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     @Autowired
     private UsersRolesService usersRolesService;
 
+    @Autowired
+    private OrganisationService organisationService;
+
+    @Autowired
+    private GrantClaimMaximumService grantClaimMaximumService;
+
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> setResearchCategory(Long applicationId, Long researchCategoryId) {
         return find(application(applicationId)).andOnSuccess(application ->
-                findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->
-                        saveApplicationWithResearchCategory(application, researchCategory))).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
+        {
+            if (researchCategoryId == null) {
+                return clearResearchCategory(application);
+            }
+            return findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->
+                    saveApplicationWithResearchCategory(application, researchCategory));
+        }).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
     }
 
     private ServiceResult<ResearchCategory> findResearchCategory(Long researchCategoryId) {
@@ -73,18 +88,28 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {
-
         Application origApplication = applicationRepository.findOne(application.getId());
 
         if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
 
-            markAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
-
-            resetFundingLevels(application.getCompetition().getId(), application.getId());
+            if (canResetFundingLevels(application)) {
+                markAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
+                resetFundingLevels(application.getCompetition().getId(), application.getId());
+            }
         }
 
         application.setResearchCategory(researchCategory);
 
+        return serviceSuccess(applicationRepository.save(application));
+    }
+
+    private ServiceResult<Application> clearResearchCategory(Application application) {
+        boolean resetRequired = application.getResearchCategory() != null;
+        if (resetRequired) {
+            markAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
+            resetFundingLevels(application.getCompetition().getId(), application.getId());
+        }
+        application.setResearchCategory(null);
         return serviceSuccess(applicationRepository.save(application));
     }
 
@@ -109,12 +134,21 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         financeService.financeDetails(applicationId)
                 .getOptionalSuccessObject()
                 .ifPresent(applicationFinanceResources ->
-                    applicationFinanceResources.forEach(applicationFinance -> {
-                        if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
-                            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-                            financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
-                        }
-                    })
+                        applicationFinanceResources.forEach(applicationFinance -> {
+                            if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
+                                applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+                                financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
+                            }
+                        })
                 );
+    }
+
+    private boolean canResetFundingLevels(Application application) {
+        OrganisationResource organisation = organisationService.findById(application.getLeadOrganisationId()).getSuccess();
+
+        boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
+                application.getCompetition().getId()).getSuccess();
+
+        return organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden;
     }
 }

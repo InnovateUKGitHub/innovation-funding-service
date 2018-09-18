@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -33,6 +33,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
     private UserService userService;
@@ -71,11 +74,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<List<ProjectResource>> findByUser(Long userId) {
-        return projectRestService.findByUserId(userId).toServiceResult();
-    }
-
-    @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
@@ -88,17 +86,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccess();
-    }
-
-    @Override
     public List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId) {
 
-        List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
+        List<PartnerOrganisationResource> partnerOrganisationResources = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
 
-        List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
-        List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationRestService::getOrganisationById);
+        List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
+        List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationId -> organisationRestService.getOrganisationById(organisationId));
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
         return organisationResultsCombined.getSuccess();
@@ -137,16 +130,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public final Boolean isProjectManager(Long userId, Long projectId) {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
-    }
-
-    @Override
-    public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
-        return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-    }
-
-    @Override
-    public ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId) {
-        return projectRestService.createProjectFromApplicationId(applicationId).toServiceResult();
     }
 
     @Override

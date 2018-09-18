@@ -10,10 +10,12 @@
         <div class="readonly" th:text="${currentCompetition.name}" />
     </div>
 
-    <h2 class="govuk-heading-s">Research category</h2>
-    <div class="textarea-wrapped">
-        <div class="readonly" th:text="${applicationResearchCategory}" />
-    </div>
+    <th:block th:if="${researchCategoryRequired}">
+        <h2 class="govuk-heading-s">Research category</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly" th:text="${currentApplication.researchCategory.name}" />
+        </div>
+    </th:block>
 
     <h2 class="govuk-heading-s">Innovation area</h2>
     <div class="textarea-wrapped">
@@ -39,7 +41,7 @@
             <div class="readonly" th:text="${currentApplication.previousApplicationTitle} ?: 'Not listed'" />
         </div>
     </div>
-    
+
     <h2 class="govuk-heading-s">Estimated timescales</h2>
 
     <dl class="govuk-list">
@@ -51,10 +53,10 @@
             />
         </dd>
         <dt>Duration in months:</dt>
-        <dd th:classappend="${applicationDuration == null} ? 'govuk-hint'">
+        <dd th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-hint'">
             <span
-                th:classappend="${applicationDuration == null} ? 'govuk-!-font-size-16'"
-                th:text="${applicationDuration} ?: 'This field has not been completed.'"
+                th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-!-font-size-16'"
+                th:text="${currentApplication.durationInMonths} ?: 'This field has not been completed.'"
             />
         </dd>
     </dl>

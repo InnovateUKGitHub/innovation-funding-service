@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.overview.controller;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -9,10 +8,10 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,20 +39,24 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
         description = "Only applicants on an application are allowed to view the corresponding application overview",
         securedType = ApplicationController.class)
 public class ApplicationController {
-    @Autowired
+
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
+    private UserRestService userRestService;
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    public ApplicationController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
+                                 QuestionService questionService,
+                                 UserRestService userRestService,
+                                 ApplicationRestService applicationRestService,
+                                 CookieFlashMessageFilter cookieFlashMessageFilter) {
+        this.applicationOverviewModelPopulator = applicationOverviewModelPopulator;
+        this.questionService = questionService;
+        this.userRestService = userRestService;
+        this.applicationRestService = applicationRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+    }
 
     @GetMapping("/{applicationId}")
     public String applicationOverview(ApplicationForm form,
@@ -91,7 +94,7 @@ public class ApplicationController {
     }
 
     private boolean userIsLeadApplicant(long userId, long applicationId) {
-        return processRoleService.findProcessRole(userId, applicationId)
+        return userRestService.findProcessRole(userId, applicationId).getSuccess()
                 .getRole() == LEADAPPLICANT;
     }
 
@@ -100,7 +103,7 @@ public class ApplicationController {
                                      UserResource user,
                                      HttpServletRequest request) {
 
-        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/" + applicationId;
@@ -131,7 +134,7 @@ public class ApplicationController {
     }
 
     private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
-        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");

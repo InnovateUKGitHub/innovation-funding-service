@@ -47,13 +47,6 @@ View the list of assessors
     When The user clicks the button/link  jQuery=a:contains("Manage assessors")
     Then the assessor list is correct before changes
 
-Assessor link goes to the assessor profile
-    [Documentation]  IFS-319
-    [Tags]
-    Given the user clicks the button/link  link=Paul Plum
-    Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
-    [Teardown]    the user clicks the button/link  link=Back
-
 Filter assessors
     [Documentation]    IFS-399
     [Tags]
@@ -85,7 +78,7 @@ Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
     [Tags]
     Given the user clicks the button/link  link=Review assessor
-    Then the user should see the element   jQuery=h3:contains("Name") + p:contains("Paul Plum")
+    Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Paul Plum")
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321

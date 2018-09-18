@@ -69,7 +69,6 @@
                     </div>
                 </form>
 
-
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
@@ -85,7 +84,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
-                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}" class="govuk-link"/></td>
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/assessors/profile/{aid}/skills(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}" class="govuk-link"/></td>
                                 <td class="govuk-table__cell" th:text="${assessor.skillAreas}">skill areas</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.total}">4</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assigned}">4</td>

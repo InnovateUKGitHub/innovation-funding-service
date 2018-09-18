@@ -73,7 +73,10 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">Bank account number / Sort code</td>
-                        <td class="govuk-table__cell" th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
+                        <td class="govuk-table__cell">
+                            <th:block th:unless="${model.approved}" th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
+                            <th:block th:if="${model.approved}" th:text="${'*****'+#strings.substring(model.bankAccountNumber,5,8) +' / '+ '****'+#strings.substring(model.sortCode,4,6)}" />
+                        </td>
                         <td class="govuk-table__cell"><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
                     </tr>
                     <tr class="govuk-table__row">

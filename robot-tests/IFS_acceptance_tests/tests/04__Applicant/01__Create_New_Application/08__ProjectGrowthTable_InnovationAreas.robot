@@ -12,6 +12,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
+...
+...            IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
@@ -36,12 +38,14 @@ Comp Admin starts a new Competition
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery=.govuk-button:contains("Create competition")
+    When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -74,10 +78,11 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
+    Given Log in as a different user  &{lead_applicant_credentials}
+    Then logged in user applies to competition    ${compWithoutGrowth}  1
 
 Applicant visits his Finances
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-3938
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
@@ -108,7 +113,7 @@ Once the project growth table is selected
     [Tags]
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery=.govuk-button:contains("Create competition")
+    When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
@@ -117,20 +122,23 @@ Once the project growth table is selected
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    When the user clicks the button/link                 link=Public content
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #And the user fills in the CS Documents in other projects
+    When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
-    And the user clicks the button/link                  link=Return to setup overview
-    And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery=a:contains("Complete")
-    Then the user clicks the button/link                 css=button[type="submit"]
+    And the user clicks the button/link                  link = Return to setup overview
+    And the user should see the element                  jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                 jQuery = a:contains("Complete")
+    Then the user clicks the button/link                 css = button[type = "submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
-    Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}  &{lead_applicant_credentials}
+    Given Log in as a different user  &{lead_applicant_credentials}
+    And logged in user applies to competition                   ${compWithGrowth}  1
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)
@@ -308,8 +316,8 @@ Invite Collaborator in Application with Growth table
     When log in as a different user                    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     When the user should see the element               jQuery=h2:contains("We have found an account with the invited email address")
-    Then the user clicks the button/link               link=Continue or sign in
-    And the user clicks the button/link                link=Confirm and accept invitation
+    Then the user clicks the button/link               link=Continue
+    And the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
 
 Non-lead can mark Organisation as complete
     [Documentation]    INFUND-8518 INFUND-8561
@@ -332,14 +340,14 @@ Non-lead can can edit and remark Organisation as Complete
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
-    Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
+    Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
     When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
-    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}
+    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
     When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
@@ -352,7 +360,7 @@ the user should see the dates in full format
 
 the user should see that the funding depends on the research area
     the user clicks the button/link  link=Your funding
-    the user should see the element  jQuery=li:contains("you must select a") a:contains("research category")
+    the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link=Your finances
 
 
@@ -446,7 +454,7 @@ Newly invited collaborator can create account and sign in
     logout as user
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
-    the user should see the element               jquery=h1:contains("Choose your organisation type")
+    the user should see the element               jquery=h1:contains("Choose organisation type")
     the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
@@ -467,8 +475,11 @@ the user fills in the Open-All Initial details
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
-    [Arguments]  ${email}  ${competition}
-    log in as a different user       ${email}  ${short_password}
-    the user clicks the button/link  jQuery=a:contains("Innovation Funding Service")
+    [Arguments]  ${email}  ${competition}  ${applicationType}
+    log in as a different user          ${email}  ${short_password}
+    the user clicks the button/link     link = Innovation Funding Service
     the user clicks the button/link in the paginated list  link=${competition}
-    the user clicks the button/link  link=Start new application
+    the user clicks the button/link     link=Start new application
+    the user clicks the button/link     link=Apply with a different organisation.
+    the user selects the radio button   organisationTypeId  ${applicationType}
+    the user clicks the button/link     jQuery = button:contains("Save and continue")

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+   <head>
+      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+   </head>
+   <body class="govuk-template__body competition-management competition-setup">
+      <th:block th:insert="fragments/modals :: modal-overlay" />
+      <th:block th:insert="fragments/layout :: body-start" />
+      <th:block th:insert="fragments/layout :: global-header" />
+      <div class="govuk-width-container">
+         <th:block th:insert="fragments/layout :: phase-banner" />
+         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents in project setup',linkUrl=@{/competition/setup/{competitionId}/section/project-document/landing-page(competitionId=${model.general.competition.id})}" />
+
+         <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1">
+                 <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+             </div>
+
+             <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
+                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',subTitle=${competitionTitle},size='govuk-heading-xl'" />
+             </th:block>
+
+            <form method="post"
+               novalidate="novalidate"
+               th:object="${form}"
+               th:action="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}"
+               data-single-submit=""
+               >
+               <input type="hidden" th:field="${form.enabled}" />
+               <input type="hidden" th:field="${form.projectDocumentId}" />
+               <input type="hidden" th:field="${form.editable}" />
+               <th:block id="section-input">
+                  <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'" >
+                     <label class="govuk-label govuk-label--s" for="title">
+                        <span>Title</span>
+                        <th:block th:if="${#fields.hasErrors('title')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                        </th:block>
+                     </label>
+                     <input id="title"
+                        class="govuk-input govuk-input--width-10"
+                        th:errorclass="govuk-input--error"
+                        type="text"
+                        th:field="${form.title}"
+                        required="required"
+                        th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                  </div>
+
+                  <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptedFileTypesId')} ? 'govuk-form-group--error'">
+
+                     <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="acceptedFileTypesId">
+                           <h2 class="govuk-fieldset__heading">Accepted file types</h2>
+                        </legend>
+                        <th:block th:if="${#fields.hasErrors('acceptedFileTypesId')}">
+                          <span class="govuk-error-message"  th:each="err : ${#fields.errors('acceptedFileTypesId')}" th:text="${err}"></span>
+                       </th:block>
+                        <div class="govuk-checkboxes">
+                           <div class="govuk-checkboxes__item">
+                              <input id="pdf"
+                                 class="govuk-checkboxes__input"
+                                 type="checkbox"
+                                 data-required-group="acceptedFileTypesId"
+                                 th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                                 value="pdf"
+                                 th:field="${form.pdf}"
+                                 />
+                              <label th:for="pdf" class="govuk-label govuk-checkboxes__label">
+                                 <span>PDF</span>
+                              </label>
+                           </div>
+                           <div class="govuk-checkboxes__item">
+                              <input id="spreadsheet"
+                                 class="govuk-checkboxes__input"
+                                 type="checkbox"
+                                 data-required-group="acceptedFileTypesId"
+                                 th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                                 value="spreadsheet"
+                                 th:field="${form.spreadsheet}"
+                                 />
+                              <label th:for="spreadsheet" class="govuk-label govuk-checkboxes__label">
+                                 <span>Spreadsheet</span>
+                              </label>
+                           </div>
+                        </div>
+                     </fieldset>
+                  </div>
+                  <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-form-group--error'">
+                     <label class="govuk-label govuk-label--s" for="guidance">
+                        <span>Guidance</span>
+                        <th:block th:if="${#fields.hasErrors('guidance')}">
+                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}"></span>
+                       </th:block>
+                     </label>
+                     <div class="textarea-wrapped" id="guidance_wrapper">
+                        <textarea id="guidance"
+                           rows="16"
+                           class="govuk-textarea"
+                           data-editor="html"
+                           th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-textarea--error'"
+                           maxlength="5000"
+                           th:field="${form.guidance}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.documentform.guidance.required}"></textarea>
+                     </div>
+                  </div>
+               </th:block>
+               <th:form th:if="${form.projectDocumentId}">
+                  <p>
+                     <button type="submit" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>
+                  </p>
+               </th:form>
+               <th:block th:insert="fragments/modals :: modal-confirm-document-remove" />
+               <div class="extra-margin">
+                  <button type="submit" class="govuk-button" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}">
+                  Done
+                  </button>
+               </div>
+            </form>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+         </main>
+      </div>
+      <th:block th:insert="fragments/layout :: footer" />
+      <th:block th:insert="fragments/layout :: body-end" />
+      <th:block th:insert="fragments/service-layout :: body-end" />
+   </body>
+</html>

@@ -39,7 +39,7 @@
         </div>
 
         <div class="govuk-body govuk-!-margin-top-3 govuk-!-bottom-top-6">
-            <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
+            <a th:href="@{/competition/{cid}/assessors/profile/{aid}/skills(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
                th:text="'Review assessor'"
                class="govuk-link" />
         </div>

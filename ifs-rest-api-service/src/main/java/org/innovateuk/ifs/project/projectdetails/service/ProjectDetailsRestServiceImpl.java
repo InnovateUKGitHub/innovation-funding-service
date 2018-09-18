@@ -4,7 +4,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +43,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
         return postWithRestResult(projectRestURL + "/" + composite.getProjectId() + "/organisation/" + composite.getOrganisationId() + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
     }
 
-    public RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
+    public RestResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource inviteResource) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-finance-contact", inviteResource, Void.class);
     }
 
@@ -52,7 +52,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
         return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, Void.class);
     }
 
-    @Override public RestResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteResource) {
+    @Override public RestResult<Void> inviteProjectManager(final Long projectId, final ProjectInviteResource inviteResource) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-project-manager", inviteResource, Void.class);
     }
 }

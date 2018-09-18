@@ -69,7 +69,7 @@ Assessor link goes to the assessor profile
     [Documentation]  IFS-17
     [Tags]
     Given the user clicks the button/link        link=Madeleine Martin
-    Then the user should see the element         jQuery=h1:contains("Assessor profile") ~ p:contains("Madeleine Martin")
+    Then the user should see the element         jQuery = dt:contains("Name") ~ dd:contains("Madeleine Martin")
     [Teardown]  the user clicks the button/link  link=Back
 
 Assessor Progress page

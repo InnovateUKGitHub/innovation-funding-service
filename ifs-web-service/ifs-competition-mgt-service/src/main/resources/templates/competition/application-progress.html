@@ -61,7 +61,7 @@
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="assessor : ${model.assigned}">
                                 <td class="govuk-table__cell">
-                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                        th:text="${assessor.name}"
                                        class="govuk-link">Oliver Romero</a>
                                 </td>
@@ -123,7 +123,7 @@
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="assessor : ${model.rejected}">
                             <td class="govuk-table__cell">
-                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                    th:text="${assessor.name}"
                                    class="govuk-link">Irving Wolfe</a>
                             </td>
@@ -160,7 +160,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="assessor : ${model.previouslyAssigned}">
-                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                        th:text="${assessor.name}"
                                        class="govuk-link">Dave Smith</a></td>
                                 <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
@@ -236,7 +236,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="assessor : ${model.available}">
-                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                        th:text="${assessor.name}"
                                        class="govuk-link">John Barnes</a></td>
                                 <td class="govuk-table__cell" th:text="${assessor.skillAreas}">skills</td>

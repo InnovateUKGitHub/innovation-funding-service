@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.finance.view;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -15,7 +15,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -41,17 +45,23 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
     private final FinanceService financeService;
     private final FundingLevelResetHandler fundingLevelResetHandler;
     private final ApplicationFinanceRestService applicationFinanceRestService;
+    private final GrantClaimMaximumRestService grantClaimMaximumRestService;
+    private final OrganisationRestService organisationRestService;
 
     @Autowired
     public DefaultFinanceFormHandler(final FinanceService financeService,
                                      final DefaultFinanceRowRestService defaultFinanceRowRestService,
                                      final UnsavedFieldsManager unsavedFieldsManager,
                                      final ApplicationFinanceRestService applicationFinanceRestService,
-                                     final FundingLevelResetHandler fundingLevelResetHandler) {
+                                     final FundingLevelResetHandler fundingLevelResetHandler,
+                                     final GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                     final OrganisationRestService organisationRestService) {
         super(defaultFinanceRowRestService, unsavedFieldsManager);
         this.financeService = financeService;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.fundingLevelResetHandler = fundingLevelResetHandler;
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     @Override
@@ -159,7 +169,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                                               OrganisationSize oldValue,
                                               OrganisationSize newValue) {
         if (null != oldValue  && oldValue != newValue) {
-            fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+            OrganisationResource organisation = organisationRestService.getOrganisationById(applicationFinance.getOrganisation()).getSuccess();
+            boolean maximumFundingLevelOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
+
+            if (organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden) {
+                fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+            }
         }
     }
 

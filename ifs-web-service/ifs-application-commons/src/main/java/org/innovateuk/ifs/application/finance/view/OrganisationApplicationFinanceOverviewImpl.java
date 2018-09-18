@@ -50,10 +50,9 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
 
     public Map<Long, Pair<BaseFinanceResource, FileEntryResource>> getAcademicOrganisationFileEntries() {
         ArrayList<BaseFinanceResource> applicationFinance = new ArrayList<>(this.getFinancesByOrganisation().values());
-        Map<Long, Pair<BaseFinanceResource, FileEntryResource>> files = applicationFinance.stream()
+        return applicationFinance.stream()
                 .filter(o -> ((ApplicationFinanceResource) o).getFinanceFileEntry() != null)
                 .collect(HashMap::new, (m, v) -> m.put(v.getOrganisation(), Pair.of(v, getFileEntry(v))), HashMap::putAll);
-        return files;
     }
 
     public FileEntryResource getFileEntry(BaseFinanceResource orgFinance) {
@@ -81,30 +80,28 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
 
     public BigDecimal getTotal() {
         return applicationFinances.stream()
-                .map(of -> of.getTotal())
+                .map(ApplicationFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalFundingSought() {
-        BigDecimal totalFundingSought = applicationFinances.stream()
+        return applicationFinances.stream()
                 .filter(of -> of != null && of.getGrantClaimPercentage() != null)
-                .map(of -> of.getTotalFundingSought())
+                .map(ApplicationFinanceResource::getTotalFundingSought)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return totalFundingSought;
     }
 
     public BigDecimal getTotalContribution() {
         return applicationFinances.stream()
-                .filter(of -> of != null)
-                .map(of -> of.getTotalContribution())
+                .filter(Objects::nonNull)
+                .map(ApplicationFinanceResource::getTotalContribution)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalOtherFunding() {
         return applicationFinances.stream()
-                .filter(of -> of != null)
-                .map(of -> of.getTotalOtherFunding())
+                .filter(Objects::nonNull)
+                .map(ApplicationFinanceResource::getTotalOtherFunding)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -126,7 +126,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                                        Optional<OrganisationSize> organisationSize, int expectedMaximumGrant) {
 
         UserResource leadApplicant = applicationData.getLeadApplicant();
-        Organisation leadOrganisation = organisationRepository.findOneByName(applicationData.getApplication().getLeadOrganisationName());
+        Organisation leadOrganisation = organisationRepository.findOne(applicationData.getApplication().getLeadOrganisationId());
 
         Long applicationId = applicationData.getApplication().getId();
         Long leadOrganisationId = leadOrganisation.getId();
@@ -153,7 +153,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         Organisation applicantOrganisation = organisationRepository.findOneByName(organisationName);
 
         ApplicationData applicationData = createApcApplication(competitionData, applicant, organisationSize, applicantOrganisation, academic);
-        applicationData.getApplication().setLeadOrganisationName(applicantOrganisation.getName());
+        applicationData.getApplication().setLeadOrganisationId(applicantOrganisation.getId());
         return applicationData;
     }
 
@@ -168,7 +168,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         return applicationDataBuilder.
                 withCompetition(competitionData.getCompetition()).
-                withBasicDetails(applicant, "APC Application", "Feasibility studies", false).
+                withBasicDetails(applicant, "APC Application", "Feasibility studies", false, applicantOrganisation.getId()).
                 beginApplication().
                 withFinances(financeBuilder -> {
 
@@ -214,7 +214,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "", "Yes").
+                        50, false, "").
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

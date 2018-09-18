@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test that Spring is correctly injecting the correct System values into SystemNotificationSource
  */
-public class SystemNotificationSourceIntegrationTest extends BaseIntegrationTest{
+public class SystemNotificationSourceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private SystemNotificationSource source;

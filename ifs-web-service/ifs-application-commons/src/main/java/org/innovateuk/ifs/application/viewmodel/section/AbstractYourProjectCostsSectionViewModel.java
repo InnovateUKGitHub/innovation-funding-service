@@ -9,6 +9,9 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+
 /**
  * Abstract view model for project costs section.
  */
@@ -52,7 +55,13 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
     }
 
     public boolean getShowTerms() {
-        return !(getCurrentApplicant().isResearch() || isAllReadOnly());
+        return !(getCurrentApplicant().isResearch() ||
+                isAllReadOnly() ||
+                getApplication().getCompetitionStatus().isLaterThan(OPEN));
+    }
+
+    public boolean isIncludeVat() {
+        return STANDARD_WITH_VAT.equals(this.getCompetition().getApplicationFinanceType());
     }
 }
 

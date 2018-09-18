@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
@@ -39,6 +40,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private ProjectService projectService;
 
     @Autowired
+    private ProjectRestService projectRestService;
+
+    @Autowired
     private StatusService statusService;
 
     @Autowired
@@ -55,7 +59,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                      String originQuery) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
-        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
+        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.GET_USER_BY_HASH_MAPPING;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
 /*
 * A typical RestService to use as a client API on the web-service side for the data-service functionality .
@@ -65,8 +65,14 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public RestResult<Void> acceptInvite(String inviteHash, Long userId) {
+    public RestResult<Void> acceptInvite(String inviteHash, long userId) {
         String url = inviteRestUrl + String.format("/acceptInvite/%s/%s", inviteHash, userId);
+        return putWithRestResultAnonymous(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId) {
+        String url = inviteRestUrl + String.format("/acceptInvite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
 

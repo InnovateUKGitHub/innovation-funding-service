@@ -69,4 +69,6 @@ public interface UserRestService {
 
     RestResult<Void> deactivateUser(Long userId);
     RestResult<Void> reactivateUser(Long userId);
+    RestResult<Void> grantRole(Long userId, Role targetRole);
+
 }

@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
                 <h2 class="govuk-heading-m">Review notes</h2>
                 <p class="govuk-body">
@@ -69,10 +69,11 @@
                     <div class="upload-section govuk-!-width-one-half">
                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                             <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
-                            <ul>
+                            <ul class="govuk-list">
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
-                                    <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
+                                    <span class="govuk-body"> (opens in a new window)</span>
+                                    <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button>
                                 </li>
                             </ul>
                         </th:block>

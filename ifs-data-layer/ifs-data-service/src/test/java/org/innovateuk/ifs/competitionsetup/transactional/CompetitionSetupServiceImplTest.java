@@ -5,20 +5,22 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -26,6 +28,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -64,6 +67,12 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private CompetitionRepository competitionRepository;
     @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    @Mock
+    private FileTypeRepository fileTypeRepository;
+    @Mock
+    private PublicContentService publicContentService;
+    @Mock
     private FormInputRepository formInputRepository;
     @Mock
     private PublicContentRepository publicContentRepository;
@@ -79,6 +88,8 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionFunderService competitionFunderService;
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+    @Mock
+    private StakeholderRepository stakeholderRepository;
     @Mock
     private CompetitionSetupTemplateService competitionSetupTemplateService;
     @Mock
@@ -143,6 +154,7 @@ public class CompetitionSetupServiceImplTest {
                 .build();
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.existsInnovationLead(competitionId, innovationLead.getId())).thenReturn(false);
 
@@ -151,6 +163,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).existsInnovationLead(competitionId, innovationLead.getId());
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -180,6 +193,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.findInnovationLead(competitionId, existingInnovationLeadId)).thenReturn(competitionParticipant);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
 
         ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingInnovationLeadId);
@@ -188,6 +202,7 @@ public class CompetitionSetupServiceImplTest {
         // Verify that the correct CompetitionParticipant is deleted
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
 
         InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
@@ -215,6 +230,7 @@ public class CompetitionSetupServiceImplTest {
         when(innovationLeadRepository.existsInnovationLead(competitionId, newInnovationLeadId)).thenReturn(true);
         when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
         when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(competitionRepository.save(competition)).thenReturn(competition);
         when(innovationLeadRepository.findInnovationLead(competitionId, newInnovationLeadId))
                 .thenReturn(newLeadTechCompetitionParticipant);
@@ -224,6 +240,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
         verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
         verify(competitionFunderService).reinsertFunders(competitionResource);
+        verify(competitionRepository).findOne(competition.getId());
         verify(competitionRepository).save(competition);
         verify(innovationLeadRepository).existsInnovationLead(competitionId, newInnovationLeadId);
         verify(innovationLeadRepository, never()).save(any(InnovationLead.class));
@@ -430,7 +447,7 @@ public class CompetitionSetupServiceImplTest {
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
                 setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
@@ -439,6 +456,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
+        inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
                 competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
@@ -469,5 +487,33 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionRepository).findOne(competition.getId());
         verifyNoMoreInteractions(competitionRepository);
+    }
+
+    @Test
+    public void create() {
+        Competition competition = newCompetition().build();
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        GrantTermsAndConditions grantTermsAndConditions = new GrantTermsAndConditions();
+        FileType pdfFileType = new FileType();
+        when(grantTermsAndConditionsRepository.findOneByTemplate(GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME)).thenReturn(grantTermsAndConditions);
+        when(fileTypeRepository.findByName("PDF")).thenReturn(pdfFileType);
+        when(competitionRepository.save(any(Competition.class))).thenReturn(competition);
+        when(publicContentService.initialiseByCompetitionId(competition.getId())).thenReturn(serviceSuccess());
+        when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+
+        ServiceResult<CompetitionResource> result = service.create();
+
+        assertTrue(result.isSuccess());
+
+        ArgumentCaptor<Competition> captor = ArgumentCaptor.forClass(Competition.class);
+        verify(competitionRepository).save(captor.capture());
+        Competition savedCompetition = captor.getValue();
+        assertEquals(false, savedCompetition.getSetupComplete());
+        assertEquals(grantTermsAndConditions, savedCompetition.getTermsAndConditions());
+        assertEquals(2, savedCompetition.getProjectDocuments().size());
+        assertEquals("Collaboration agreement", savedCompetition.getProjectDocuments().get(0).getTitle());
+        assertEquals("Exploitation plan", savedCompetition.getProjectDocuments().get(1).getTitle());
     }
 }
