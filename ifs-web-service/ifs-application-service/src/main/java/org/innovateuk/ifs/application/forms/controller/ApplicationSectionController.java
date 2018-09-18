@@ -48,6 +48,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.jsoup.helper.StringUtil.isBlank;
 
@@ -116,7 +117,8 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty());
+        boolean isSupport = user.hasRole(SUPPORT);
+        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
         return APPLICATION_FORM;
     }
 
@@ -135,6 +137,8 @@ public class ApplicationSectionController {
 
         String queryParam = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
+        boolean isSupport = user.hasRole(SUPPORT);
+
         ApplicationResource application = applicationService.getById(applicationId);
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
@@ -145,7 +149,7 @@ public class ApplicationSectionController {
                 .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(queryParam));
+        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(queryParam), isSupport);
         return APPLICATION_FORM;
     }
 
@@ -168,6 +172,8 @@ public class ApplicationSectionController {
         model.addAttribute("form", form);
 
         Map<String, String[]> params = request.getParameterMap();
+
+        boolean isSupport = user.hasRole(SUPPORT);
 
         boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
                 applicationId,
@@ -193,7 +199,7 @@ public class ApplicationSectionController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty());
+            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
             return APPLICATION_FORM;
         } else {
             return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
@@ -207,9 +213,10 @@ public class ApplicationSectionController {
                                  boolean readOnly,
                                  Optional<Long> applicantOrganisationId,
                                  boolean readOnlyAllApplicantApplicationFinances,
-                                 Optional<String> queryParam) {
+                                 Optional<String> queryParam,
+                                 boolean isSupport) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, queryParam);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, queryParam, isSupport);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }

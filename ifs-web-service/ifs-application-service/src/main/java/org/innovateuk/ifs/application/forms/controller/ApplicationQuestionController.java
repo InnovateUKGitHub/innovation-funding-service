@@ -22,6 +22,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -220,7 +222,9 @@ public class ApplicationQuestionController {
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty());
+        boolean isSupport = user.hasRole(SUPPORT);
+
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
 
         if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
             model.addAttribute("applicationTeamModel",
