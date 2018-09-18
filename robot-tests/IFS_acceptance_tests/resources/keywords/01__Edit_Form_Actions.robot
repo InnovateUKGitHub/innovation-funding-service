@@ -75,6 +75,7 @@ The user enters text to a text field
     Mouse Out    ${TEXT_FIELD}
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
+    Wait for autosave
 
 The user enters large text to a text field
     # Note that here we give extra time of execution compared to keyword "The user enters text to a text field"
