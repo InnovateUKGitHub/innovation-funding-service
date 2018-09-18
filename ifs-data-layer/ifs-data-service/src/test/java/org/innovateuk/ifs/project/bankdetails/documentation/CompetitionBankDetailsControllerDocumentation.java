@@ -67,7 +67,8 @@ public class CompetitionBankDetailsControllerDocumentation extends BaseControlle
 
         when(bankDetailsRepositoryMock.findByProjectApplicationCompetitionId(competitionId)).thenReturn(bankDetailsList);
 
-        mockMvc.perform(get("/competition/{competitionId}/bank-details/export", competitionId))
+        mockMvc.perform(get("/competition/{competitionId}/bank-details/export", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"Company name\",\"Application Number\",\"Company address\",\"Company address 2\",\"Company address 3\",\"Company address 4\",\"Company town/city\",\"Company county\",\"Company postcode\",\"Bank account name\",\"Bank account number\",\"Bank sort code\"\n"+
                         "\"Hive IT\",\"1\",\"The Electric Works Concourse Way\",\"Sheaf St\",\"\",\"\",\"Sheffield\",\"South Yorkshire\",\"S1 2BJ\",\"Hive IT\",\"12345678\",\"123456\"\n" +

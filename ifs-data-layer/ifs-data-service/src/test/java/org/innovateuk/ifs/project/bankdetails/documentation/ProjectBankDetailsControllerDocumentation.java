@@ -65,7 +65,8 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         mockMvc.perform(
                 put("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
-                        content(toJson(bankDetailsResource)))
+                        content(toJson(bankDetailsResource))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -98,6 +99,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId).
+                        header("IFS_AUTH_TOKEN", "123abc").
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())

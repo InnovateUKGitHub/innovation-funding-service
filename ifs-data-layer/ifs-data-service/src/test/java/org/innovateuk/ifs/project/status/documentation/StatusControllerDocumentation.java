@@ -62,7 +62,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
-        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId))
+        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
@@ -78,7 +79,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
-        mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
                 andDo(document("project/{method-name}",
@@ -93,7 +95,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L).
-                param("filterByUserId", "456")).
+                param("filterByUserId", "456")
+                .header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
                 andDo(document("project/{method-name}",
@@ -115,7 +118,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
-        mockMvc.perform(get("/project/{id}/status", projectId))
+        mockMvc.perform(get("/project/{id}/status", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project that is being requested")

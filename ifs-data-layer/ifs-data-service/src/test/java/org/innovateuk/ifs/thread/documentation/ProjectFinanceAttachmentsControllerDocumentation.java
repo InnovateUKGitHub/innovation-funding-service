@@ -48,7 +48,8 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234, now());
         when(projectFinanceAttachmentServiceMock.findOne(id)).thenReturn(serviceSuccess(attachmentResource));
 
-        mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id))
+        mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(attachmentResource)))
                 .andDo(document(identifier,
