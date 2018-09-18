@@ -37,7 +37,7 @@ EU funding contribution for above project
 Is your consortium the lead on this project?
 ${euGrant.funding.projectCoordinator?string('Yes', 'No')}
 
-If you spot any errors in the information above, please ring 000 000 0000 or email UKRIpublichelpdesk@ukri.org
+If you spot any errors in the information above, please ring 0300 321 4357 or email EUGrantsFunding@ukri.org
 Yours sincerely,
 <@layout.senderPlainText />
 </@layout.defaultPlainText>
