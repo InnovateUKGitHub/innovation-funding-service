@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -52,21 +51,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         } else {
             return competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM).toServiceResult();
         }
-    }
-
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId) {
-        return questionSetupCompetitionRestService.addDefaultToCompetition(competitionId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
-        return questionSetupCompetitionRestService.getByQuestionId(questionId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return questionSetupCompetitionRestService.save(competitionSetupQuestionResource).toServiceResult();
     }
 
     private boolean hasIncompleteSections(Long competitionId) {

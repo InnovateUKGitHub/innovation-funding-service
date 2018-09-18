@@ -91,4 +91,20 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
                         )
                 ));
     }
+
+    @Test
+    public void addResearchCategoryQuestionToCompetition() throws Exception {
+        final long competitionId = 1L;
+
+        when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(baseUrl + "/addResearchCategoryQuestionToCompetition/{id}", competitionId))
+                .andExpect(status().isCreated())
+                .andDo(document("question-setup/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to which the " +
+                                        "research category question will be added")
+                        )
+                ));
+    }
 }

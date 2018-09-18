@@ -86,11 +86,12 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = questionSetupCompetitionRestService
+                .addDefaultToCompetition(competitionId).toServiceResult();
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
-        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
+        Supplier<String> successView = () -> successViewFunction.apply(result.getSuccess());
 
         return successView.get();
     }
@@ -396,7 +397,8 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
-        ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
+        ServiceResult<String> view = questionSetupCompetitionRestService.getByQuestionId(questionId).toServiceResult()
+                .andOnSuccessReturn(
                 questionResource -> {
                     QuestionSetupType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;

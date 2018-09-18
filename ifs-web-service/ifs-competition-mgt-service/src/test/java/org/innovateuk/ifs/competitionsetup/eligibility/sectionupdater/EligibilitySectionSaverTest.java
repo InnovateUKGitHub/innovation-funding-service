@@ -174,8 +174,8 @@ public class EligibilitySectionSaverTest {
         verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY);
         verify(competitionSetupRestService).update(competition);
-
-        // TODO IFS-3287 Verify the question is not created
+        verify(questionSetupCompetitionRestService, never()).deleteById(isA(Long.class));
+        verify(questionSetupCompetitionRestService, never()).addResearchCategoryQuestionToCompetition(isA(Long.class));
     }
 
     @Test
@@ -209,6 +209,7 @@ public class EligibilitySectionSaverTest {
                 QuestionSetupType.RESEARCH_CATEGORY);
         verify(competitionSetupRestService).update(competition);
         verify(questionSetupCompetitionRestService, never()).deleteById(isA(Long.class));
+        verify(questionSetupCompetitionRestService, never()).addResearchCategoryQuestionToCompetition(isA(Long.class));
     }
 
     @Test
@@ -239,8 +240,7 @@ public class EligibilitySectionSaverTest {
         verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY);
         verify(competitionSetupRestService).update(competition);
-
-        // TODO IFS-3287 Verify the question is created
+        verify(questionSetupCompetitionRestService, only()).addResearchCategoryQuestionToCompetition(competition.getId());
     }
 
     @Test

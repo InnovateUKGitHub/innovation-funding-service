@@ -11,13 +11,16 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -27,17 +30,23 @@ import java.util.List;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
+        .newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -45,9 +54,6 @@ import static org.mockito.Mockito.*;
  * Tests the QuestionCompetitionServiceImpl with mocked repositories/mappers.
  */
 public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest<QuestionSetupCompetitionServiceImpl> {
-
-    @Mock
-    private CompetitionRepository competitionRepositoryMock;
 
     @Override
     protected QuestionSetupCompetitionServiceImpl supplyServiceUnderTest() {
@@ -70,10 +76,16 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private static QuestionSetupType questionSetupType = QuestionSetupType.SCOPE;
 
     @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
     private QuestionRepository questionRepository;
 
     @Mock
     private FormInputRepository formInputRepository;
+
+    @Mock
+    private SectionRepository sectionRepository;
 
     @Mock
     private GuidanceRowMapper guidanceRowMapper;
@@ -83,6 +95,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private QuestionSetupTemplateService questionSetupTemplateService;
+
+    @Mock
+    private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Test
     public void getByQuestionId() {
@@ -484,8 +499,30 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
     }
 
+    @Test
+    public void addResearchCategoryQuestionToCompetition() {
+        Competition competition = newCompetition().build();
+        Section section = newSection().build();
+        Question createdQuestion = newQuestion().build();
+
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName()))
+                .thenReturn(section);
+        when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))
+                .thenReturn(createdQuestion);
+
+        ServiceResult<Void> result = service.addResearchCategoryQuestionToCompetition(competition.getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepositoryMock).findById(competition.getId());
+        verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName());
+        verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
+        verify(questionPriorityOrderService).prioritiseAssessedQuestionAfterCreation(createdQuestion);
+    }
+
     private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
-        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+        return newCompetitionSetupQuestionResource()
                 .withAppendix(false)
                 .withGuidance(guidance)
                 .withGuidanceTitle(guidanceTitle)
@@ -503,7 +540,19 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)
                 .build();
+    }
 
-        return resource;
+    private Question createResearchCategoryQuestionExpectations(Competition competition, Section section) {
+        return createLambdaMatcher(question -> {
+            assertNull(question.getId());
+            assertEquals("Description not used", question.getDescription());
+            assertTrue(question.getMarkAsCompletedEnabled());
+            assertEquals("Research category", question.getName());
+            assertEquals("Research category", question.getShortName());
+            assertEquals(competition, question.getCompetition());
+            assertEquals(section, question.getSection());
+            assertEquals(LEAD_ONLY, question.getType());
+            assertEquals(RESEARCH_CATEGORY, question.getQuestionSetupType());
+        });
     }
 }

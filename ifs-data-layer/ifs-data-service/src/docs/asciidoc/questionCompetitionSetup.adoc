@@ -33,6 +33,17 @@ include::{snippets}/question-setup/add-default-to-competition/response-fields.ad
 ==== Curl Example
 include::{snippets}/question-setup/add-default-to-competition/curl-request.adoc[]
 
+=== Add Research Category Question To Competition
+==== Request
+include::{snippets}/question-setup/add-research-category-question-to-competition/http-request.adoc[]
+include::{snippets}/question-setup/add-research-category-question-to-competition/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question-setup/add-research-category-question-to-competition/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question-setup/add-research-category-question-to-competition/curl-request.adoc[]
+
 === Delete competition setup question
 ==== Request
 include::{snippets}/question-setup/delete-by-id/http-request.adoc[]

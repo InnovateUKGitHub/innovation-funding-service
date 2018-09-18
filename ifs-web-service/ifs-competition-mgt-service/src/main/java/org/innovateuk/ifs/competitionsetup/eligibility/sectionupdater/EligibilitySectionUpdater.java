@@ -108,7 +108,8 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
         if (eligibilityForm.getResearchCategoriesApplicable()) {
             if (!researchCategoryQuestionIfExists.isPresent()) {
-                // TODO IFS-3287 create the question
+                questionSetupCompetitionRestService.addResearchCategoryQuestionToCompetition(competitionResource
+                        .getId());
             }
         } else {
             if (researchCategoryQuestionIfExists.isPresent()) {

@@ -5,8 +5,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.application.form.QuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -20,7 +20,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
@@ -36,7 +36,7 @@ public class ApplicationQuestionSectionSaverTest {
     private QuestionSectionUpdater service;
 
     @Mock
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     @Test
     public void testSectionToSave() {
@@ -53,11 +53,11 @@ public class ApplicationQuestionSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
 
-        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
-        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionRestService.getByQuestionId(1L)).thenReturn(restSuccess(question));
+        when(questionSetupCompetitionRestService.save(question)).thenReturn(restSuccess());
 
         assertTrue(service.saveSection(competition, competitionSetupForm).isSuccess());
-        verify(competitionSetupQuestionService).updateQuestion(question);
+        verify(questionSetupCompetitionRestService).save(question);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class ApplicationQuestionSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
 
-        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
-        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionRestService.getByQuestionId(1L)).thenReturn(restSuccess(question));
+        when(questionSetupCompetitionRestService.save(question)).thenReturn(restSuccess());
 
         service.autoSaveSectionField(competition,
                 competitionSetupForm,
@@ -84,7 +84,7 @@ public class ApplicationQuestionSectionSaverTest {
                 Optional.of(1L));
 
         ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
-        verify(competitionSetupQuestionService).updateQuestion(captor.capture());
+        verify(questionSetupCompetitionRestService).save(captor.capture());
 
         assertThat(captor.getValue().getAllowedFileTypes()).containsExactlyInAnyOrderElementsOf(fileTypeCategories);
     }
@@ -99,8 +99,8 @@ public class ApplicationQuestionSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
 
-        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
-        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionRestService.getByQuestionId(1L)).thenReturn(restSuccess(question));
+        when(questionSetupCompetitionRestService.save(question)).thenReturn(restSuccess());
 
         service.autoSaveSectionField(competition,
                 competitionSetupForm,
@@ -110,7 +110,7 @@ public class ApplicationQuestionSectionSaverTest {
         );
 
         ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
-        verify(competitionSetupQuestionService).updateQuestion(captor.capture());
+        verify(questionSetupCompetitionRestService).save(captor.capture());
 
         assertThat(captor.getValue().getAllowedFileTypes()).isEmpty();
     }

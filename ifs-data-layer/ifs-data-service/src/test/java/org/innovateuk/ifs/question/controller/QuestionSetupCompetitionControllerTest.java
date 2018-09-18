@@ -62,6 +62,20 @@ public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMV
     }
 
     @Test
+    public void addResearchCategoryQuestionToCompetition() throws Exception {
+        final long competitionId = 1L;
+
+        when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/question-setup/addResearchCategoryQuestionToCompetition/{competitionId}",
+                competitionId))
+                .andExpect(status().isCreated());
+
+        verify(questionSetupCompetitionServiceMock, only()).addResearchCategoryQuestionToCompetition(competitionId);
+    }
+
+    @Test
     public void deleteById() throws Exception {
         final long questionId = 1L;
 
