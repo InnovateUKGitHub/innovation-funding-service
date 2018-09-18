@@ -35,8 +35,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
-        .newCompetitionSetupQuestionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -46,7 +45,7 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -506,7 +505,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Question createdQuestion = newQuestion().build();
 
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
-        when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName()))
+        when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName()))
                 .thenReturn(section);
         when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))
                 .thenReturn(createdQuestion);
@@ -516,7 +515,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(competitionRepositoryMock).findById(competition.getId());
-        verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName());
+        verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName());
         verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
         verify(questionPriorityOrderService).prioritiseAssessedQuestionAfterCreation(createdQuestion);
     }
@@ -545,6 +544,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private Question createResearchCategoryQuestionExpectations(Competition competition, Section section) {
         return createLambdaMatcher(question -> {
             assertNull(question.getId());
+            assertFalse(question.getAssignEnabled());
             assertEquals("Description not used", question.getDescription());
             assertTrue(question.getMarkAsCompletedEnabled());
             assertEquals("Research category", question.getName());

@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -134,9 +134,10 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addResearchCategoryQuestionToCompetition(long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(this::doAddResearchCategoryQuestionToCompetition)
+                .andOnSuccess(this::saveNewResearchCategoryQuestionForCompetition)
                 .andOnSuccessReturnVoid();
     }
 
@@ -252,10 +253,11 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private ServiceResult<Question> doAddResearchCategoryQuestionToCompetition(Competition competition) {
-        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS
+    private ServiceResult<Question> saveNewResearchCategoryQuestionForCompetition(Competition competition) {
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS
                 .getName()), notFoundError(Section.class)).andOnSuccessReturn(section -> {
             Question question = new Question();
+            question.setAssignEnabled(false);
             question.setDescription("Description not used");
             question.setMarkAsCompletedEnabled(true);
             question.setName(RESEARCH_CATEGORY.getShortName());
