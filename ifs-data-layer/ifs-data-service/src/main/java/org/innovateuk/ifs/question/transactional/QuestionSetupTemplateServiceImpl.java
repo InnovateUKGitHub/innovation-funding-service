@@ -8,6 +8,7 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
+import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
     @Autowired
     private QuestionPriorityOrderService questionPriorityService;
 
+    @Autowired
+    private QuestionNumberOrderService questionNumberOrderService;
+
     @Override
     public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
         if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
@@ -82,7 +86,8 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
         }
 
         questionTemplatePersistorServiceImpl.deleteEntityById(question.getId());
-        questionPriorityService.reprioritiseAssessedQuestionsAfterDeletion(question);
+        questionPriorityService.reprioritiseQuestionsAfterDeletion(question);
+        questionNumberOrderService.updateAssessedQuestionsNumbers(question.getCompetition().getId());
 
         return serviceSuccess();
     }

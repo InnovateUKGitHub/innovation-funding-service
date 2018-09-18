@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
@@ -13,12 +14,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 
 
-public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPriorityOrderService>{
+public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<QuestionPriorityOrderService>{
 
     @Mock
     private QuestionRepository questionRepositoryMock;
@@ -57,7 +59,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
     }
 
     @Test
-    public void reprioritiseAssessedQuestionsAfterDeletion_deleteMiddleQuestionShouldAffectOnlySubsequentPriorities() throws Exception {
+    public void reprioritiseQuestionsAfterDeletion_deleteMiddleQuestionShouldAffectOnlySubsequentPriorities() throws Exception {
         Competition competition = newCompetition().withId(1L).build();
 
         List<Question> existingQuestions = newQuestion()
@@ -66,10 +68,15 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
+        Section section = newSection()
+                .withName(APPLICATION_QUESTIONS.getName())
+                .build();
+
         Question deletedQuestion = newQuestion()
                 .withId(3L)
                 .withPriority(3)
                 .withCompetition(competition)
+                .withSection(section)
                 .build();
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
@@ -78,7 +85,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
-        service.reprioritiseAssessedQuestionsAfterDeletion(deletedQuestion);
+        service.reprioritiseQuestionsAfterDeletion(deletedQuestion);
 
         List<Question> expectedQuestions = newQuestion()
                 .withId(1L, 2L, 4L)
@@ -90,7 +97,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
     }
 
     @Test
-    public void reprioritiseAssessedQuestionsAfterDeletion_deleteFirstQuestionShouldAffectAllPriorities() throws Exception {
+    public void reprioritiseQuestionsAfterDeletion_deleteFirstQuestionShouldAffectAllPriorities() throws Exception {
         Competition competition = newCompetition().withId(1L).build();
 
         List<Question> existingQuestions = newQuestion()
@@ -99,10 +106,15 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
+        Section section = newSection()
+                .withName(APPLICATION_QUESTIONS.getName())
+                .build();
+
         Question deletedQuestion = newQuestion()
                 .withId(1L)
                 .withPriority(1)
                 .withCompetition(competition)
+                .withSection(section)
                 .build();
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
@@ -111,7 +123,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
-        service.reprioritiseAssessedQuestionsAfterDeletion(deletedQuestion);
+        service.reprioritiseQuestionsAfterDeletion(deletedQuestion);
 
         List<Question> expectedQuestions = newQuestion()
                 .withId(2L, 3L, 4L)
@@ -123,7 +135,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
     }
 
     @Test
-    public void reprioritiseAssessedQuestionsAfterDeletion_deleteLastQuestionShouldAffectNoPriorities() throws Exception {
+    public void reprioritiseQuestionsAfterDeletion_deleteLastQuestionShouldAffectNoPriorities() throws Exception {
         Competition competition = newCompetition().withId(1L).build();
 
         List<Question> existingQuestions = newQuestion()
@@ -132,10 +144,15 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
+        Section section = newSection()
+                .withName(APPLICATION_QUESTIONS.getName())
+                .build();
+
         Question lastQuestion = newQuestion()
                 .withId(4L)
                 .withPriority(3)
                 .withCompetition(competition)
+                .withSection(section)
                 .build();
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
@@ -144,7 +161,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 lastQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
-        service.reprioritiseAssessedQuestionsAfterDeletion(lastQuestion);
+        service.reprioritiseQuestionsAfterDeletion(lastQuestion);
 
         List<Question> expectedQuestions = newQuestion()
                 .withId(1L, 2L, 3L)

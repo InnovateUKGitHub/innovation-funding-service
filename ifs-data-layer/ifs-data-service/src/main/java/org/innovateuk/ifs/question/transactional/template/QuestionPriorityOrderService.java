@@ -3,29 +3,33 @@ package org.innovateuk.ifs.question.transactional.template;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
+
 /**
  * Service that can reorder questions by priority after creation or deletion.
  */
 @Service
 public class QuestionPriorityOrderService {
+
     @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
     private QuestionNumberOrderService questionNumberOrderService;
 
-    private static final String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
-
     @Transactional
     @NotSecured("Must be secured by other services.")
     public Question prioritiseAssessedQuestionAfterCreation(Question createdQuestion) {
-        Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME);
+        Question assessedQuestionWithHighestPriority = questionRepository
+                .findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(),
+                        APPLICATION_QUESTIONS.getName());
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
         Question questionSaved = questionRepository.save(createdQuestion);
@@ -37,15 +41,20 @@ public class QuestionPriorityOrderService {
 
     @Transactional
     @NotSecured("Must be secured by other services.")
-    public void reprioritiseAssessedQuestionsAfterDeletion(Question deletedQuestion) {
-        updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId());
-        questionNumberOrderService.updateAssessedQuestionsNumbers(deletedQuestion.getCompetition().getId());
+    public void reprioritiseQuestionsAfterDeletion(Question deletedQuestion) {
+        QuestionSection questionSection = QuestionSection.findByName(deletedQuestion.getSection().getName());
+        updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId(), questionSection);
     }
 
-    private void updateFollowingQuestionsPrioritiesByDelta(int delta, Integer priority, Long competitionId) {
-        List<Question> subsequentQuestions = questionRepository.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(competitionId, ASSESSED_QUESTIONS_SECTION_NAME, priority);
+    private void updateFollowingQuestionsPrioritiesByDelta(int delta,
+                                                           Integer priority,
+                                                           long competitionId,
+                                                           QuestionSection questionSection) {
+        List<Question> subsequentQuestions = questionRepository
+                .findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(competitionId,
+                        questionSection.getName(), priority);
 
-        subsequentQuestions.stream().forEach(question -> question.setPriority(question.getPriority() + delta));
+        subsequentQuestions.forEach(question -> question.setPriority(question.getPriority() + delta));
 
         questionRepository.save(subsequentQuestions);
     }
