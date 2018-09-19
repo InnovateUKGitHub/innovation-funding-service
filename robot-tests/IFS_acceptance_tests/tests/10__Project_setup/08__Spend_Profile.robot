@@ -85,7 +85,7 @@ ${project_duration}    36
 *** Test Cases ***
 Project Finance completes previous sections of the project
     [Documentation]  IFS-2221
-    [Tags]  HappyPath
+    [Tags]
     #Added a check in this keyword to ensure bank details are required before generating a spend profile.
     #This needs to be kept as the FIRST test case in this suite.
     all previous sections of the project are completed
@@ -102,7 +102,7 @@ Check if target start date can be changed until SP approval
 
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
@@ -120,7 +120,7 @@ Project Finance cancels the generation of the Spend Profile
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
     [Documentation]    IFS-2062
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page      ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}/query
     When the user clicks the button/link      link=Post a new query
     And the user enters text to a text field  id=queryTitle  Eligibility query's title
@@ -129,7 +129,7 @@ Project finance sends a query to lead organisation
 
 Lead partner responds to query
     [Documentation]    IFS-2062
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  Log in as a different user        &{lead_applicant_credentials_sp}
     Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/finance-checks
     When the user clicks the button/link       link=Respond
@@ -138,7 +138,7 @@ Lead partner responds to query
 
 Project Finance goes through the Generate Spend Profile tab to generate the Spend Profile and should not see query responses flagged
     [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
     And the user clicks the button/link     jQuery=a:contains("Generate spend profile")
@@ -160,7 +160,7 @@ Project Finance should no longer see the project in the Generate Spend Profile t
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=View the status of partners
@@ -187,7 +187,7 @@ Lead partner can see correct project start date and duration
 
 Calculations in the spend profile table
     [Documentation]    INFUND-3764, INFUND-6148
-    [Tags]    HappyPath
+    [Tags]
     Given the user should see the element  css=.spend-profile-table
     Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£3,081")
     And the user should see the element    jQuery=th:contains("Overheads") ~ td.fix-right:contains("£0")
@@ -241,7 +241,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page       ${external_spendprofile_summary}/review
     When the user clicks the button/link       jQuery=.button-secondary:contains("Edit spend profile")
     And the user should see the element        css=table [type="number"]    # checking here that the table is not read-only
@@ -266,7 +266,7 @@ Project Manager can see Spend Profile in Progress
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765, INFUND-6138
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user        ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user navigates to the page       ${external_spendprofile_summary}/review
     When the user clicks the button/link       css=[name="mark-as-complete"]
@@ -281,7 +281,7 @@ Lead partner marks spend profile as complete
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element            link = Monitoring Officer
@@ -292,7 +292,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=View the status of partners
@@ -323,7 +323,7 @@ Industrial partner can choose cancel on the dialogue
 
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link           link=Submit to lead partner
     And the user clicks the button/link            jQuery=.govuk-button:contains("Submit")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
@@ -353,7 +353,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
 
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
@@ -416,7 +416,7 @@ Academic partner edits spend profile and this updates on the table
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link           link=Submit to lead partner
     And the user clicks the button/link            jQuery=button.govuk-button:contains("Submit")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
@@ -433,7 +433,7 @@ Status updates for academic user after spend profile submission
 
 Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user           ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
@@ -464,7 +464,7 @@ Partners are not able to see the spend profile summary page
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.govuk-button:contains("Review and send total project spend profile")
@@ -495,7 +495,7 @@ Other partners cannot enable edit-ability by themselves
 
 PM can return edit rights to partners
     [Documentation]    INFUND-6350
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
     When the user clicks the button/link     jQuery=.govuk-button:contains("Allow edits")
@@ -505,7 +505,7 @@ PM can return edit rights to partners
 
 Partner can receive edit rights to his SP
     [Documentation]    INFUND-6350
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user     ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     Then the user should see the element    css=li.require-action:nth-child(6)
@@ -516,7 +516,7 @@ Partner can receive edit rights to his SP
 
 Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.govuk-button:contains("Review and send total project spend profile")
@@ -556,7 +556,7 @@ Partners can see the Spend Profile section completed
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(5) td.status.action:nth-child(6) a
@@ -620,7 +620,7 @@ Comp Admin can download the Spend Profile csv
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
-    [Tags]    Experian    HappyPath
+    [Tags]    Experian
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element     css=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok         # Project details
@@ -744,7 +744,7 @@ Lead partner can send the combined spend profile
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507, INFUND-5549
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     When the user selects the checkbox      approvedByLeadTechnologist
