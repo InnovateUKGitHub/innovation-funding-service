@@ -268,7 +268,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             question.setQuestionSetupType(RESEARCH_CATEGORY);
 
             Question createdQuestion = questionRepository.save(question);
-            return questionPriorityOrderService.prioritiseAssessedQuestionAfterCreation(createdQuestion);
+            return questionPriorityOrderService.prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
         });
     }
 }

@@ -517,7 +517,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         verify(competitionRepositoryMock).findById(competition.getId());
         verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName());
         verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
-        verify(questionPriorityOrderService).prioritiseAssessedQuestionAfterCreation(createdQuestion);
+        verify(questionPriorityOrderService).prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
     }
 
     private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
