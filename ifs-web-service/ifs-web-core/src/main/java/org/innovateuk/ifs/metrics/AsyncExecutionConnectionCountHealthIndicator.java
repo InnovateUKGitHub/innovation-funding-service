@@ -32,11 +32,7 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
 
         LOG.debug(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
-<<<<<<< HEAD
         if ((maxPoolSize - activeExecutorThreads) > maxThread) {
-=======
-        if ((maxPoolSize - activeExecutorThreads) > 100) {
->>>>>>> origin/development
             return Health.up().build();
         } else {
             LOG.warn("Running out of available async executor threads - reporting this service as unavailable");
