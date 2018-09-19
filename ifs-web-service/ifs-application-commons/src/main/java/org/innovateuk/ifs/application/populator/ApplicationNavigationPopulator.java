@@ -130,7 +130,7 @@ public class ApplicationNavigationPopulator {
      * This method creates a URL looking at referrer in request.  Because 'back' will be different depending on
      * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892 & IFS-401)
      */
-    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, Optional<String> queryParam) {
+    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, Optional<String> queryParam, boolean isSupport) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute(BACK_TITLE, "Your finances");
             if (applicantOrganisationId.isPresent()) {
@@ -147,12 +147,17 @@ public class ApplicationNavigationPopulator {
             String backURL = APPLICATION_BASE_URL + applicationId;
 
             if (applicantOrganisationId.isPresent() && section != null) {
-                model.addAttribute(BACK_TITLE, "Application overview");
-                if (queryParam.isPresent()) {
-                    backURL = ("/management/competition/" + section.getCompetition() + backURL + queryParam.get());
-                    model.addAttribute("queryParams", queryParam.get());
+                if (isSupport) {
+                    model.addAttribute(BACK_TITLE, "Application summary");
+                    backURL = (backURL + "/summary");
                 } else {
-                    backURL = ("/management/competition/" + section.getCompetition() + backURL);
+                    model.addAttribute(BACK_TITLE, "Application overview");
+                    if (queryParam.isPresent()) {
+                        backURL = ("/management/competition/" + section.getCompetition() + backURL + queryParam.get());
+                        model.addAttribute("queryParams", queryParam.get());
+                    } else {
+                        backURL = ("/management/competition/" + section.getCompetition() + backURL);
+                    }
                 }
             } else {
                 if (eitherApplicationOrCompetitionAreNotOpen(application)) {
