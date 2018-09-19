@@ -35,7 +35,7 @@ Companies House: Enter manually Valid company name
     Given the user clicks the button/link          jQuery = summary:contains("Enter details manually")
     When the user enters text to a text field      id = organisationSearchName    Hive IT
     Then the user clicks the button/link           jQuery = button:contains("Search")
-    And the user clicks the button/link            jQuery = button:contains("HIVE IT \ LIMITED")
+    And the user clicks the button/link            jQuery = button:contains("HIVE IT")
     Then the user should see the element           jQuery = h3:contains("Registered name")
     And the user should see the element            jQuery = h3:contains("Registered Address")
     And the user should see the element            jQuery = h3:contains("Registration number")
@@ -62,7 +62,7 @@ Companies House: Valid registration number
     [Tags]
     When the user enters text to a text field      id = organisationSearchName    05493105
     Then the user clicks the button/link           id = org-search
-    And the user clicks the button/link            jQuery = button:contains("INNOVATE \ LTD")
+    And the user clicks the button/link            jQuery = button:contains("INNOVATE")
     And the user clicks the button/link            link = Save and return
 
 Contact details validation
