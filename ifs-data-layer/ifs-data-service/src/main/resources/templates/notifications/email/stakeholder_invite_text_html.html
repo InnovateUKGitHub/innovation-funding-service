@@ -1,0 +1,22 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+
+<p style="margin: 0 0 1em 0;">You have been invited to view the following competition on the Innovation Funding Service:</p>
+<p style="margin: 0 0 1em 0;"><b>${competitionName}</b></p>
+
+
+<p style="margin: 0 0 1em 0;">Please create an account to view this competition.</p>
+
+<p style="margin: 0 0 1em 0;">
+    Name: ${notificationTarget.name}<br />
+    Role: Stakeholder
+</p>
+
+<a href="${inviteUrl}" class="govuk-button">Create account</a>
+
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+
+<p style="margin: 0 0 1em 0;">IFS Team</p>
+</@layout.default>
