@@ -37,7 +37,7 @@ Companies House: Enter manually Valid company name
     Then the user clicks the button/link           jQuery = button:contains("Search")
     And the user clicks the button/link            jQuery = button:contains("HIVE IT")
     Then the user should see the element           jQuery = h3:contains("Registered name")
-    And the user should see the element            jQuery = h3:contains("Registered Address")
+    And the user should see the element            jQuery = h3:contains("Registered address")
     And the user should see the element            jQuery = h3:contains("Registration number")
 
 Companies House: Invalid company name
