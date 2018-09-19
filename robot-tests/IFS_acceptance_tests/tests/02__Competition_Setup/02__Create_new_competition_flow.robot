@@ -752,7 +752,7 @@ The internal user cannot invite a Stakeholder when they have triggered the email
     [Tags]
     Then the user triggers the email validation
 
-The internal user cannot invite users with an Innovate UK email as Stakeholders
+The internal user cannot invite a user with an Innovate UK email as a Stakeholder
     [Documentation]  IFS-4190
     [Tags]
     When the user enters an Innovate UK email
@@ -762,7 +762,13 @@ The internal user invites a Stakeholder
     [Documentation]  IFS-4190
     [Tags]
     Then the user enters the correct details of a Stakeholder
-    # There's no way of verifying if this has been successful yet, which is why there is no check.
+    # A check to verify the invite will come in another ticket.
+
+The invited Stakeholder accepts the invite in his or her email
+    [Documentation]  IFS-4253
+    [Tags]
+    Given the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
+    # A check will be added here in the next ticket, when the account creation stage comes in.
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -962,5 +968,5 @@ the user enters an Innovate UK email
 the user enters the correct details of a Stakeholder
     the user enters text to a text field    id = firstName     Stake
     the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user enters text to a text field    id = emailAddress  ${test_mailbox_one}+stakeHolder@test.com
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
