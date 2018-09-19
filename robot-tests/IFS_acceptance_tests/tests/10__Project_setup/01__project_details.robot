@@ -69,7 +69,7 @@ Internal finance can see Project details not yet completed
 
 Competition admin can see Project details not yet completed
     [Documentation]    INFUND-5856
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user            &{Comp_admin1_credentials}
     Given the user navigates to the page           ${internal_competition_status}
     And the user should not see the element        css = #table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
@@ -78,7 +78,7 @@ Competition admin can see Project details not yet completed
 
 Status updates correctly for internal user's table    # This uses the Elbow grease project
     [Documentation]    INFUND-4049, INFUND-5507, INFUND-5543
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${internal_competition_status}
     And the competition admin should see the status of each project setup stage
     #Internal user can view project details via the clickable 'hour glass' for Project details
@@ -89,7 +89,7 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user                &{collaborator1_credentials}
     When The user clicks the button/link            link = ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the element             link = view application feedback
@@ -104,7 +104,7 @@ Non-lead partner can see the project setup page
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page        ${project_in_setup_page}
     Then the user should not see the element   link = Monitoring Officer
     And the user should not see the element    link = Bank details
@@ -114,14 +114,14 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 Non-lead partner can see the application overview
     [Documentation]    INFUND-2612
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    the user navigates to the page        ${project_in_setup_page}
     When the user clicks the button/link             link = view application feedback
     Then the user should see the element             jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
 
 Lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827, INFUND-5805
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user           &{lead_applicant_credentials}
     When the user navigates to the page             ${project_in_setup_page}
     And the user should see the project setup stages
@@ -139,7 +139,7 @@ Lead partner can click the Dashboard link
 
 Lead partner can see the application feedback overview
     [Documentation]    INFUND-2612
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link = view application feedback
     Then the user should see the element    jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
@@ -154,7 +154,7 @@ Lead partner is able to see finances without an error
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page   ${project_in_setup_page}
     When the user clicks the button/link   link = Project details
     Then the user should see the element   jQuery = p:contains("Please supply the following details for your project and the team")
@@ -165,7 +165,7 @@ Lead partner can see the overview of the project details
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
@@ -184,7 +184,7 @@ Lead partner can change the Start Date
 
 Option to invite a project manager
     [Documentation]    INFUND-3483
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -229,7 +229,7 @@ Inviting project manager client side validations
 
 Partner invites a project manager
     [Documentation]    INFUND-3483
-    [Tags]    HappyPath    Email
+    [Tags]
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
@@ -237,14 +237,14 @@ Partner invites a project manager
 
 Lead Applicant resends the invite to the Project manager
     [Documentation]  IFS-2642
-    [Tags]    HappyPath    Email
+    [Tags]
     When the user resends and clicks the button    Cancel
     Then the user resends and clicks the button    Resend
     [Teardown]  logout as user
 
 Invited project manager registration validation
     [Documentation]  INFUND-3550 INFUND-3554
-    [Tags]  HappyPath  Email
+    [Tags]
     Given the user accepts invitation                   ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project  managing the project
     When the user clicks the button/link                css=button[type="submit"][name="create-account"]
     Then The user should see a field and summary error  Please enter a first name.
@@ -255,7 +255,7 @@ Invited project manager registration validation
 
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
-    [Tags]  HappyPath  Email
+    [Tags]
     Given the user selects the checkbox                 termsAndConditions
     And the invited user fills the create account form  Bob  Jones
     And the user cannot see a validation error in the page
@@ -265,7 +265,7 @@ Invited project manager registration flow
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
-    [Tags]  Email
+    [Tags]
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
@@ -273,7 +273,7 @@ Invited project manager shows on the project manager selection screen
 
 Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save")
@@ -292,7 +292,7 @@ Lead partner selects a project manager
 
 Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save")
@@ -313,14 +313,14 @@ Lead partner can change the project address
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
-    [Tags]  HappyPath
+    [Tags]
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
-    [Tags]  HappyPath
+    [Tags]
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
@@ -338,7 +338,7 @@ Non lead partner invites finance contact
 
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
-    [Tags]  HappyPath
+    [Tags]
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}  providing finance details  Ludlow's  FinContact
     When log in as a different user       &{collaborator1_credentials}
     Then the user navigates to the page   ${project_in_setup_page}/details
@@ -351,7 +351,7 @@ Invited Fin Contact for non lead partner
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
-    [Tags]  HappyPath
+    [Tags]
     Given log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(1)
@@ -372,7 +372,7 @@ Other partners can see who needs to provide Bank Details
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]  HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page             ${project_in_setup_page}
     And the user clicks the button/link              link=Project details
@@ -411,7 +411,7 @@ Inviting finance contact client side validations
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
-    [Tags]  HappyPath  Email
+    [Tags]
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user enters text to a text field    id=email-finance-contact  ${invitedFinanceContact}
     And the user clicks the button/link    id=invite-finance-contact
@@ -419,14 +419,14 @@ Partner invites a finance contact
 
 Lead applicant resends the invite to the Finance contact
     [Documentation]  IFS-2642
-    [Tags]    HappyPath    Email
+    [Tags]
     When the user resends and clicks the button    Cancel
     Then the user resends and clicks the button    Resend
     [Teardown]  logout as user
 
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
-    [Tags]  HappyPath  Email
+    [Tags]
     Given the user accepts invitation                   ${invitedFinanceContact}  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}   providing finance details
     And the invited user fills the create account form  John  Smith
     When the invited user signs in                      ${invitedFinanceContact}  John  Smith
@@ -434,14 +434,14 @@ Invited finance contact registration flow
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
-    [Tags]  Email
+    [Tags]
     Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
     And the user clicks the button/link   jQuery=td:contains("${EMPIRE_LTD_NAME}") ~ td a:contains("Select finance contact")
     Then the user should see the element  jQuery=#finance-contact-section:contains("John Smith")
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
-    [Tags]  HappyPath
+    [Tags]
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
@@ -455,7 +455,6 @@ Lead partner selects a finance contact
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
     [Tags]
-    [Setup]
     Given log in as a different user    &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should not see the element    link=Target start date
@@ -472,7 +471,7 @@ Internal user should see project details are incomplete
 
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
-    [Tags]  HappyPath
+    [Tags]
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
@@ -504,7 +503,7 @@ Validation for project location
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
-    [Tags]  HappyPath
+    [Tags]
     [Setup]    log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page  ${project_in_setup_details_page}
     And select the project location       Empire
@@ -515,8 +514,7 @@ Project details submission flow
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
-    [Tags]  HappyPath
-    [Setup]
+    [Tags]
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   css=ul li.complete:nth-child(1)
     And the user should see the element    css=ul li.require-action:nth-child(4)
@@ -536,7 +534,7 @@ Project details links are still enabled after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
-    [Tags]  HappyPath
+    [Tags]
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page  ${organisationLudlowName}
@@ -583,7 +581,7 @@ Internal user can see the Project details as submitted
 
 Invited Finance contact is able to see the Finances
     [Documentation]  IFS-1209
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user   ${invitedFinanceContact}  ${correct_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks
     When the user clicks the button/link  link=your finances

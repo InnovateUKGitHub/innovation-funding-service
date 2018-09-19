@@ -28,7 +28,7 @@ Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
     ...    INFUND-4145
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
@@ -44,7 +44,7 @@ User can navigate back to Become an Assessor page
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link  jQuery=.govuk-button:contains("Create account")
     When the user clicks the button/link   jQuery=button:contains("Continue")
     Then the user should see an error      Please enter a first name.
@@ -58,7 +58,7 @@ Create assessor account: server-side validations
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
-    [Tags]    HappyPath
+    [Tags]
     When The user enters text to a text field                                      id=firstName    Thomas
     Then the user should not see the validation error in the create assessor form  Please enter a first name.
     When The user enters text to a text field                                      id=lastName    Fister
@@ -74,7 +74,7 @@ Create assessor account: client-side validations
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
-    [Tags]    HappyPath
+    [Tags]
     When The user enters text to a text field               id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link                     id=postcode-lookup
     Then the user should see the element                    id=addressForm.selectedPostcodeIndex
