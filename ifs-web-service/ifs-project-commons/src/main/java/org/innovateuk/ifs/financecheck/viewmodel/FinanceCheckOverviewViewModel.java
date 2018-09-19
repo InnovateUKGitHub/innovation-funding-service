@@ -8,13 +8,16 @@ public class FinanceCheckOverviewViewModel {
     private FinanceCheckSummariesViewModel summaries;
     private ProjectFinanceCostBreakdownViewModel breakdown;
 
+    private Long applicationId;
+
     public FinanceCheckOverviewViewModel() {}
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel projectFinanceOverviewViewModel, FinanceCheckSummariesViewModel financeCheckSummaries,
-                                         ProjectFinanceCostBreakdownViewModel projectCostsBreakdown) {
+                                         ProjectFinanceCostBreakdownViewModel projectCostsBreakdown, Long applicationId) {
         this.overview = projectFinanceOverviewViewModel;
         this.summaries = financeCheckSummaries;
         this.breakdown = projectCostsBreakdown;
+        this.applicationId = applicationId;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -40,4 +43,13 @@ public class FinanceCheckOverviewViewModel {
     public void setBreakdown(ProjectFinanceCostBreakdownViewModel breakdown) {
         this.breakdown = breakdown;
     }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
 }
