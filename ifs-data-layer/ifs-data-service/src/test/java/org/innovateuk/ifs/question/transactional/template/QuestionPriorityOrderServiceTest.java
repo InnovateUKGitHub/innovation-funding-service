@@ -71,8 +71,6 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .build(3);
 
         verify(questionRepositoryMock).save(refEq(expectedQuestions));
-        verify(questionRepositoryMock).save(createQuestionPriorityExpectations(newlyCreatedQuestion.getId(),
-                applicationDetailsQuestion.getPriority() + 1));
         verify(questionRepositoryMock).save(refEq(newlyCreatedQuestion));
     }
 
