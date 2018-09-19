@@ -37,7 +37,6 @@ public class FileControllerUtils {
      */
     public ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
 
-        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
 
             ServiceResult<? extends FileAndContents> getFileResult = fileResultSupplier.get();
