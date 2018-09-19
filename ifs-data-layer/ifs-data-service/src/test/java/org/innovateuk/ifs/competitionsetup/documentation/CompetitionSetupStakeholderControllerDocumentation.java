@@ -55,6 +55,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
 
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/invite", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk())

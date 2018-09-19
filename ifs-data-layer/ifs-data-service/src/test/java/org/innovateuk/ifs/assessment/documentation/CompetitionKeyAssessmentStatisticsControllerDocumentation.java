@@ -91,7 +91,8 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         when(competitionKeyAssessmentStatisticsService.getClosedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-assessment-statistics/{id}/closed", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/closed", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(
@@ -111,7 +112,8 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         when(competitionKeyAssessmentStatisticsService.getInAssessmentKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-assessment-statistics/{id}/in-assessment", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/in-assessment", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(

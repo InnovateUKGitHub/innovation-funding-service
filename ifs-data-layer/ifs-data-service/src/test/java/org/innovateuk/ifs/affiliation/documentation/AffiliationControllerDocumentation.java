@@ -62,6 +62,7 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
         when(affiliationServiceMock.updateUserAffiliations(userId, affiliationListResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/affiliation/id/{id}/updateUserAffiliations", userId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(affiliationListResource)))
                 .andExpect(status().isOk())
