@@ -35,7 +35,7 @@ Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715  IFS-1947
     ...
     ...    INFUND-7060  IFS-3942
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    link = your details
     And the user clicks the button/link      link = DOI
     When the user clicks the button/link     id = editDOI
@@ -44,7 +44,7 @@ Server-side validations when No selected at yes/no
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]
     Given the user selects the radio button    hasAppointments    yes
     When the user clicks the button/link       jQuery=button:contains("Save and return to your declaration of interest")
     Then the user should see a field error     Please enter an organisation.
@@ -64,7 +64,7 @@ Server-side when Yes selected at yes/no
 
 Client-side validations
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]
     When the user correctly fills out the role, principle employer and accurate fields
     Then The user should not see the element    jQuery=span:contains("Please enter a principal employer.")
     And The user should not see the element     jQuery=span:contains("Please enter your role with your principal employer.")

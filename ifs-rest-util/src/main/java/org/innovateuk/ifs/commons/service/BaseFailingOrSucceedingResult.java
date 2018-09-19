@@ -225,8 +225,6 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
         return isRight() ? emptyList() : getFailure().getErrors();
     }
 
-    // TODO DW - INFUND-1555 - remove "BACKWARDS COMPATIBILITY" method here (for "not found" nulls)
-
     /**
      * @deprecated Should handled either success or failure case explicitly, usually by using handlesuccessorfailure()
      */
