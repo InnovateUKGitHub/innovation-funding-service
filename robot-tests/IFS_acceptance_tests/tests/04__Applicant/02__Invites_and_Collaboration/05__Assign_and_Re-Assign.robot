@@ -16,6 +16,8 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Set predefined date variables
 Suite Teardown    The user closes the browser
 Test Teardown
@@ -30,7 +32,7 @@ Resource          ../Applicant_Commons.robot
 Lead applicant can assign a question
     [Documentation]  INFUND-275, INFUND-280, IFS-265
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     [Setup]  the user logs-in in new browser   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the applicant changes the name of the application
     And the user clicks the button/link        link=Public description
@@ -43,7 +45,7 @@ Lead applicant can assign a question
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]
     When the user assigns the question to the collaborator      Stuart Anderson
     And the user should see the element                         jQuery=.assign-container:contains("you")
     And the applicant assigns the question to the collaborator  Dennis Bergkamp
@@ -53,7 +55,7 @@ Lead applicant can assign question multiple times
 The question is enabled for the assignee
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]  HappyPath  Email
+    [Tags]
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test  #Application Title
@@ -68,7 +70,7 @@ The question is enabled for the assignee
 Collaborator should see the terms and conditions from the overview page
     [Documentation]  INFUND-2417
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
+    [Tags]
     Given the user clicks the button/link          link=Application overview
     When The user clicks the button/link           link=View the grant terms and conditions
     Then the user should see the text in the page  Terms and conditions of an Innovate UK grant award
@@ -77,7 +79,7 @@ Collaborator should see the terms and conditions from the overview page
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Assign test
     Then the user should not see the element      jQuery=.govuk-button:contains("Review and submit")
@@ -88,7 +90,7 @@ Collaborator should see the review button instead of the review and submit
 Last update message is correctly updating
     [Documentation]  INFUND-280
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link= Assign test
     And the user clicks the button/link   link= Public description
@@ -98,7 +100,7 @@ Last update message is correctly updating
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test
     And the user clicks the button/link   link=Public description
@@ -107,7 +109,7 @@ Collaborators cannot assign a question
 Collaborators can mark as ready for review
     [Documentation]  INFUND-877
     ...  This test depends on the previous test suite to run first
-    [Tags]  HappyPath  Email
+    [Tags]
     When the user clicks the button/link       jQuery=button:contains("Assign to lead for review")
     Then the user should see the notification  Question assigned successfully
     And the user should see the text in the page  You have reassigned this question to
@@ -115,13 +117,13 @@ Collaborators can mark as ready for review
 Collaborator cannot edit after marking ready for review
     [Documentation]  INFUND-275
     ...    This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Then the user should see the element  css=.textarea-wrapped .readonly
 
 Collaborators should not be able to edit application details
     [Documentation]  INFUND-2298
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
+    [Tags]
     Given the user navigates to the page      ${DASHBOARD_URL}
     And the user clicks the button/link       link= Assign test
     And the user clicks the button/link       link=Application details
@@ -132,7 +134,7 @@ Collaborators should not be able to edit application details
 The question should be reassigned to the lead applicant
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     [Setup]  log in as a different user      ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user navigates to the page     ${DASHBOARD_URL}
     And the user clicks the button/link      link= Assign test
@@ -146,7 +148,7 @@ The question should be reassigned to the lead applicant
 Appendices are assigned along with the question
     [Documentation]  INFUND-409
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link= Assign test
     And the user clicks the button/link   link=6. Innovation
@@ -160,21 +162,22 @@ Appendices are assigned along with the question
     And the user clicks the button/link   jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page  Upload
 
-Collaborator can see that Research area is not selected
-    [Documentation]  INFUND-6823
+RTO Collaborator is not guided that the research area is not selected
+    [Documentation]  IFS-4099
     [Tags]
     Given the user navigates to Your-finances page  Assign test
-    When the user clicks the button/link  link=Your funding
-    Then The user should see the element  jQuery=.govuk-list li:contains("the lead applicant must select a research category")
+    When the user clicks the button/link            link = Your funding
+    Then The user should not see the element        jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    And the user should see the element             css = [name^="finance-grantclaimpercentage"]
 
 Lead selects Research category
-    [Documentation]  INFUND-6823
-    [Tags]  Email
+    [Documentation]  INFUND-6823  IFS-3938
+    [Tags]
     [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
     And the user clicks the button/link   link=Your funding
-    Then the user should see the element  jQuery=li:contains("you must select a"):contains("research category")
+    Then the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user clicks the button/link  link=Assign test
     When the user selects Research category  Feasibility studies
@@ -266,7 +269,3 @@ Steve smith assigns a question to the collaborator
     the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     the user clicks the button/link   jQuery=a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
-
-the user fills out the research category
-    the user clicks the button/link    css=label[for="researchCategoryChoice-33"]
-    the user clicks the button/link    jQuery=button:contains(Save)

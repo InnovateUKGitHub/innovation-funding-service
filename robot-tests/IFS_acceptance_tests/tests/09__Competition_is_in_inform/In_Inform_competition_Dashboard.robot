@@ -44,7 +44,7 @@ ${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 *** Test Cases ***
 Competition Dashboard
     [Documentation]    INFUND-7365
-    [Tags]    HappyPath
+    [Tags]
     When The user clicks the button/link            link=${INFORM_COMPETITION_NAME}
     Then The user should see the element            jQuery=span:contains("${INFORM_COMPETITION_NAME}")
     And The user should see the element             jQuery=h1:contains("Inform")
@@ -88,7 +88,7 @@ Checking release feedback button state is correct
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email    HappyPath
+    [Tags]
     When The user clicks the button/link                 jQuery=button:contains("Release feedback")
     Then The user should not see the element             jQuery=h1:contains("Inform")
     When The user clicks the button/link                 jQuery=a:contains("Live")
@@ -97,7 +97,7 @@ Release feedback
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
-    [Tags]    Email
+    [Tags]
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
     When the user clicks the button/link     jQuery=a:contains("Electric Drive")
@@ -105,14 +105,14 @@ Unsuccessful applicant sees unsuccessful alert
 
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
-    [Tags]  HappyPath
+    [Tags]
     When the user checks the ineligible and unsuccessful applications in the Previous tab    ${Comp_admin1_credentials["email"]}  ${short_password}
     Then the user checks the ineligible and unsuccessful applications in the Previous tab    ${innovation_lead_one["email"]}  ${short_password}
     #TODO IFS-2744 Is there a better way to pass emails as variables? If not, we can continue to use what's in this test case.
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
-    [Tags]    Email    HappyPath
+    [Tags]
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
     When the user clicks the button/link     jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
@@ -120,14 +120,14 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ .wysiwyg-styles p:contains("I have no problem recommending this application")
     And the user should see the element     jQuery=h3:contains("Assessor 2") ~ .wysiwyg-styles p:contains("Very good, but could have been better in areas")
     And the user should see the element     jQuery=h3:contains("Assessor 3") ~ .wysiwyg-styles p:contains("I enjoyed reading this application, well done")
 
 Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the application question scores are correct
     And the application details are correct
 
@@ -151,7 +151,7 @@ User can see feedback to individual questions
 
 The finance details are shown
     [Documentation]    INFUND-8168
-    [Tags]    Email
+    [Tags]
     When the user clicks the button/link       css=.collapsible button
     Then the user should see the element       css=.collapsible div[aria-hidden="false"]
     And the user should not see the element    css=.collapsible div[aria-hidden="true"]
@@ -216,8 +216,8 @@ The user checks the Scope functionality
 
 The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
-    log in as a different user             ${email}  ${password}
-    the user clicks the button/link        jQuery=a:contains("Previous")
-    the user clicks the button/link        link=${NOT_EDITABLE_COMPETITION_NAME}
-    the user should see the element        jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
-    the user should not see the element    jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
+    log in as a different user         ${email}  ${password}
+    the user clicks the button/link    jQuery = a:contains("Previous")
+    the user clicks the button/link    link = ${NOT_EDITABLE_COMPETITION_NAME}
+    the user should see the element    jQuery = td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
+    the user should see the element    jQuery = td:contains("${INFORM_COMPETITION_NAME_1}") ~ td:contains("Successful")

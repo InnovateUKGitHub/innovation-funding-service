@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -97,8 +98,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("activityCode", activityCode, competition));
     }
 
-    public CompetitionBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
-        return with(competition -> setField("fullApplicationFinance", fullApplicationFinance, competition));
+    public CompetitionBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceTypes) {
+        return withArray((applicationFinanceType, competition) ->
+                setField("applicationFinanceType", applicationFinanceType, competition), applicationFinanceTypes);
     }
 
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
@@ -266,5 +268,21 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
+    }
+
+    public CompetitionBuilder withCreatedBy(User... users) {
+        return withArraySetFieldByReflection("createdBy", users);
+    }
+
+    public CompetitionBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArraySetFieldByReflection("createdOn", createdOns);
+    }
+
+    public CompetitionBuilder withModifiedBy(User... users) {
+        return withArraySetFieldByReflection("modifiedBy", users);
+    }
+
+    public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
 }

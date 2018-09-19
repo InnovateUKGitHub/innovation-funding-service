@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,23 +32,35 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
 
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
+    private UserRestService userRestService;
     private ApplicationService applicationService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
+    private QuestionRestService questionRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
+    private ApplicationQuestionFileSaver fileSaver;
+    private ApplicationQuestionNonFileSaver nonFileSaver;
+
+    public ApplicationQuestionSaver(UserRestService userRestService,
+                                    ApplicationService applicationService,
+                                    UserService userService,
+                                    QuestionService questionService,
+                                    QuestionRestService questionRestService,
+                                    CookieFlashMessageFilter cookieFlashMessageFilter,
+                                    ApplicationQuestionApplicationDetailsSaver detailsSaver,
+                                    ApplicationQuestionFileSaver fileSaver,
+                                    ApplicationQuestionNonFileSaver nonFileSaver) {
+        this.userRestService = userRestService;
+        this.applicationService = applicationService;
+        this.userService = userService;
+        this.questionService = questionService;
+        this.questionRestService = questionRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.detailsSaver = detailsSaver;
+        this.fileSaver = fileSaver;
+        this.nonFileSaver = nonFileSaver;
+    }
 
     public ValidationMessages saveApplicationForm(Long applicationId,
                                                   ApplicationForm form,
@@ -58,16 +70,18 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   HttpServletResponse response,
                                                   Optional<Boolean> markAsCompleteRequest) {
         final ApplicationResource application = applicationService.getById(applicationId);
-        final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
+
+        final List<QuestionResource> questionList = singletonList(questionRestService.findById(questionId).getSuccess());
         final Map<String, String[]> params = request.getParameterMap();
         final ValidationMessages errors = new ValidationMessages();
         final boolean ignoreEmpty = !params.containsKey(MARK_AS_COMPLETE);
 
-        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, application.getId());
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, application.getId()).getSuccess();
         ApplicationResource updatedApplication = form.getApplication();
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {
-            errors.addAll(saveQuestionResponses(request, questionList, userId, processRole.getId(), application.getId(), ignoreEmpty));
+            errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questionList, request, userId, applicationId, ignoreEmpty));
+            errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questionList, request.getParameterMap(), request, applicationId, processRole.getId()));
         }
 
         detailsSaver.setApplicationDetails(application, updatedApplication);

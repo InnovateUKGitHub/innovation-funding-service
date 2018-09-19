@@ -19,7 +19,7 @@ ${ATIapplicationTitle}  ATI application
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
-    [Tags]  HappyPath
+    [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
@@ -31,7 +31,8 @@ Comp Admin creates an ATI competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
-    And the user fills in the CS Documents in other projects
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #And the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  ATI
     When the user clicks the button/link           link = Return to setup overview
@@ -41,13 +42,14 @@ Comp Admin creates an ATI competition
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     When the competition is open                                 ${ATIcompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
+    And Log in as a different user            &{lead_applicant_credentials}
+    Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-2332  IFS-1497
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
@@ -55,6 +57,7 @@ Applicant submits his application
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     And the user checks the override value is applied
+    And the user selects research category              Feasibility studies
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
@@ -78,7 +81,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]
     Given Log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery=tr:contains("org2") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Then the user should see the element   jQuery=a:contains("${excel_file}")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22

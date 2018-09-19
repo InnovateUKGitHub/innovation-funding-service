@@ -13,7 +13,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private String currentCompetitionName;
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
-    private boolean useNewApplicantMenu;
     private String researchCategory;
     private boolean userLeadApplicant;
     private String leadApplicantName;
@@ -23,7 +22,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      Long questionId,
                                      List<ResearchCategoryResource> availableResearchCategories,
                                      boolean hasApplicationFinances,
-                                     boolean useNewApplicantMenu,
                                      String researchCategory,
                                      boolean closed,
                                      boolean complete,
@@ -35,7 +33,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         this.currentCompetitionName = currentCompetitionName;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
-        this.useNewApplicantMenu = useNewApplicantMenu;
         this.researchCategory = researchCategory;
         this.userLeadApplicant = userLeadApplicant;
         this.leadApplicantName = leadApplicantName;
@@ -53,10 +50,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return hasApplicationFinances;
     }
 
-    public boolean isUseNewApplicantMenu() {
-        return useNewApplicantMenu;
-    }
-
     public String getResearchCategory() {
         return researchCategory;
     }
@@ -67,6 +60,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public String getLeadApplicantName() {
         return leadApplicantName;
+    }
+
+    public boolean getUseSelectState() {
+        return availableResearchCategories.size() > 1;
     }
 
     @Override

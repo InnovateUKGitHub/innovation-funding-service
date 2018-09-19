@@ -4,13 +4,13 @@ Documentation     INFUND-39: As an applicant and I am on the application overvie
 ...               INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Status changes when we assign a question
     [Documentation]    INFUND-39
-    [Tags]    HappyPath
+    [Tags]
     [Setup]     Log in as a different user         &{lead_applicant_credentials}
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Academic robot test application

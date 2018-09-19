@@ -4,6 +4,8 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6394: As an Applicant I will be invited to input my Organisation size within a new ‘Your organisation’ page navigated to from ‘Your finances’
 ...
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Custom Suite Setup
 Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant
@@ -15,15 +17,15 @@ Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Before org size is selected, your funding link is not available
-    [Documentation]    INFUND-6394
+    [Documentation]    INFUND-6394  IFS-3938
     [Tags]
     Given applicant navigates to the finances of the robot application
     When the user clicks the button/link        link=Your funding
-    Then the user should see the element        jQuery=li:contains("you must state"):contains("your organisation size")
+    Then the user should see the element        jQuery=li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
-    [Tags]    HappyPath
+    [Tags]
     Given applicant navigates to the finances of the robot application
     And the user clicks the button/link    link=Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
@@ -31,7 +33,7 @@ Small org can be selected
 
 Funding section is now available
     [Documentation]    INFUND-6394
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your funding
     Then the user should see the text in the page    Enter your funding level
 
@@ -44,20 +46,20 @@ Small org can't have more than 70% funding level
 
 Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
-    [Tags]    HappyPath
+    [Tags]
     When the user completes the funding section with funding level    45
     Then the user should not see the element    jQuery=.govuk-error-message
 
 User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your organisation
     Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
     And the user should see the text in the page    Changing this selection will reset your funding level.
 
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${MEDIUM_ORGANISATION_SIZE}
 
@@ -68,7 +70,7 @@ Funding section shows as incomplete
 
 Funding section has been reset
     [Documentation]    INFUND-6894
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your funding
     Then the funding section has been reset including funding level    45
 
@@ -80,14 +82,14 @@ Medium org can't have more than 60% level
 
 Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
-    [Tags]    HappyPath
+    [Tags]
     When the user completes the funding section with funding level    35
     Then the user should not see the element    css=.govuk-error-message
 
 
 User still sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your organisation
     Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
     And the user should see the text in the page    Changing this selection will reset your funding level.
@@ -95,7 +97,7 @@ User still sees warning that the funding section will be reset
 
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
 
@@ -107,7 +109,7 @@ Funding section shows as incomplete again
 
 Funding section has been reset again
     [Documentation]    INFUND-6894
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your funding
     Then the funding section has been reset including funding level    35
 
@@ -119,7 +121,7 @@ Large org can't have more than 50% level
 
 Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
-    [Tags]    HappyPath
+    [Tags]
     When the user completes the funding section with funding level    25
     Then the user should not see the element    jQuery=.govuk-error-message
     And the user marks the 'your funding' section as incomplete again

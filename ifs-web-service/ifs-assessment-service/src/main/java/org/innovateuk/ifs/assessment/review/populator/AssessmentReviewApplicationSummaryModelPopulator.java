@@ -13,7 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -51,7 +51,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     }
 
     private AssessmentReviewFeedbackViewModel assessmentDetails(long applicationId, UserResource user, SummaryViewModel viewModel) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
         if (isAssessorForApplication(userApplicationRoles, user)) {
             List<AssessorFormInputResponseResource> allAssessorResponses = assessorFormInputResponseRestService
                     .getAllAssessorFormInputResponsesForPanel(applicationId)

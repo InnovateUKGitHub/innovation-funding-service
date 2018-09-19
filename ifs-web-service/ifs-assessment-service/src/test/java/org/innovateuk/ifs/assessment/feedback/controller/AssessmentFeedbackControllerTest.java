@@ -29,8 +29,10 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +76,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -136,7 +139,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     private FormInputResponseService formInputResponseService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private InviteService inviteService;
@@ -378,6 +381,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
+                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
 

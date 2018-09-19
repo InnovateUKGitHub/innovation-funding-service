@@ -66,6 +66,28 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void monitoringOfficerOnProjectCanView() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setupUserAsMonitoringOfficer(project, user);
+
+        assertTrue(rules.monitoringOfficerOnProjectCanView(project, user));
+    }
+
+    @Test
+    public void monitoringOfficerOnProjectCanViewWhenNotMonitoringOfficer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setupUserNotAsMonitoringOfficer(project, user);
+
+        assertFalse(rules.monitoringOfficerOnProjectCanView(project, user));
+    }
+
+    @Test
     public void systemRegistrarCanAddPartnersToProject() {
 
         ProjectResource project = newProjectResource().build();

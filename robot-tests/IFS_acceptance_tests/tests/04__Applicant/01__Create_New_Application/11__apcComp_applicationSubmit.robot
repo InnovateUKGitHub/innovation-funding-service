@@ -19,7 +19,7 @@ ${apcApplicationTitle}  Advanced Propulsion Centre Application
 *** Test Cases ***
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
-    [Tags]  HappyPath
+    [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
@@ -30,7 +30,8 @@ Comp Admin creates an APC competition
     And the user fills in the CS Milestones       ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
-    And the user fills in the CS Documents in other projects
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #And #the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  APC
     When the user clicks the button/link           link = Return to setup overview
@@ -40,13 +41,14 @@ Comp Admin creates an APC competition
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
+    And Log in as a different user            &{lead_applicant_credentials}
+    Then logged in user applies to competition                  ${apccompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)

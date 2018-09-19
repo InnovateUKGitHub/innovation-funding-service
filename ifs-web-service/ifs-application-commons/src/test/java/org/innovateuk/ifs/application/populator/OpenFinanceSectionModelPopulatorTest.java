@@ -32,7 +32,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.*;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,9 +84,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private SectionService sectionService;
-
-    @Mock
-    private ProcessRoleService processRoleService;
 
     @Mock
     private OrganisationService organisationService;
@@ -151,15 +151,14 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(competitionId)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(competitionId).withUseNewApplicantMenu(true).build();
-        List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        when(userService.retrieveUserById(user.getId())).thenReturn(user);
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(newOrganisationResource().withId(processRole.getOrganisationId()).build()));
+        when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
         ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
@@ -196,15 +195,15 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(231L)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(321L).withUseNewApplicantMenu(true).build();
+        CompetitionResource competition = newCompetitionResource().withId(321L).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(132L).build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        when(userService.retrieveUserById(user.getId())).thenReturn(user);
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(newOrganisationResource().withId(processRole.getOrganisationId()).build()));
+        when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
         ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
@@ -241,7 +240,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
         ProcessRoleResource leadApplicantProcessRole = newProcessRoleResource().withUser(userResource).build();
 
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(leadApplicantProcessRole);
-        when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
+        when(userRestService.retrieveUserById(leadApplicantProcessRole.getUser())).thenReturn(restSuccess(userResource));
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 

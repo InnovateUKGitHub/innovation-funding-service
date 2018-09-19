@@ -10,7 +10,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
@@ -20,7 +20,7 @@ Resource          ../../Applicant_Commons.robot
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Lead applicant marks the finances as complete
     Given Log in as a different user          ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
@@ -72,18 +72,18 @@ Lead applicant can't upload a JeS file
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user              ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
-    When the academic partner uploads a file           ${valid_pdf}
+    When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the text in the page  No file currently uploaded
-    And the user should see the element                link=testing.pdf (opens in a new window)
+    And the user should see the element                link=${5mb_pdf}
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
-    When the user opens the link in new window  ${valid_pdf}
+    [Tags]
+    When the user opens the link in new window  ${5mb_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
 
@@ -100,7 +100,7 @@ Lead applicant can't view the file on the finances page
     [Setup]    log in as a different user              &{lead_applicant_credentials}
     When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
-    Then the user should not see the text in the page  ${valid_pdf}
+    Then the user should not see the text in the page  ${5mb_pdf}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
@@ -116,9 +116,9 @@ Mark all as complete
     [Documentation]    INFUND-918  IFS-2879
     [Tags]
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    And the user navigates to Your-finances page  Academic robot test application
+    And the user navigates to Your-finances page   Academic robot test application
     And the user clicks the button/link            link=Your project costs
-    And the user should see the element            link=testing.pdf (opens in a new window)
+    And the user should see the element            link=${5mb_pdf}
     When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
     Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     And the user selects the checkbox              termsAgreed

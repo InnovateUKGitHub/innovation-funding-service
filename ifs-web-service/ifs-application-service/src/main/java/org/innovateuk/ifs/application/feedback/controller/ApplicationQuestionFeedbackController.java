@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,12 +38,13 @@ public class ApplicationQuestionFeedbackController {
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants and Assessors and Comp exec users can view question feedback for an application")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "Applicants and Assessors, Comp execs, Innovation leads and Stakeholders can view question feedback for an application")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user,
-                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin
+                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                                      @RequestParam MultiValueMap<String, String> queryParams
                                                       ) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
@@ -55,8 +55,7 @@ public class ApplicationQuestionFeedbackController {
             return "redirect:/application/" + applicationId + "/summary";
         }
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), params);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, originQuery));
         return "application-assessor-feedback";

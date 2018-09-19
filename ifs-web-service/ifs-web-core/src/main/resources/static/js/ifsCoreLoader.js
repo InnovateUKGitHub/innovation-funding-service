@@ -32,7 +32,6 @@ IFS.core.loadOrder = {
       IFS.core.singleSubmit.init()
       IFS.core.submitNotification.init()
       IFS.core.passwordToggle.init()
-      IFS.core.backLink.init()
       IFS.core.preventInputRegex.init()
     },
     finalize: function () {
@@ -43,20 +42,6 @@ IFS.core.loadOrder = {
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
       IFS.core.sortingErrors.init()
-    }
-  },
-  commonStateManaged: {
-    mobile: function () {
-      IFS.core.collapsible.init('tabs')
-    },
-    desktop: function () {
-      IFS.core.tabs.init()
-    },
-    mobileLeave: function () {
-      IFS.core.collapsible.destroy('tabs')
-    },
-    desktopLeave: function () {
-      IFS.core.tabs.destroy()
     }
   },
   'finance': {

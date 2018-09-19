@@ -5,17 +5,17 @@ import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
-import org.innovateuk.ifs.form.Form;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -23,18 +23,19 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class JESProjectFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    ProcessRoleService processRoleService;
-
-    @Autowired
-    OrganisationService organisationService;
+    OrganisationRestService organisationRestService;
 
     @Autowired
     FinanceService financeService;
+
+    @Autowired
+    UserRestService userRestService;
 
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
@@ -42,12 +43,12 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
                 financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                         fileEntry -> {
                             model.addAttribute("filename", fileEntry.getName());
@@ -71,12 +72,12 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
                 financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                         fileEntry -> {
                             financeViewModel.setFilename(fileEntry.getName());
@@ -95,13 +96,13 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId,  long userId, Long questionId, FinanceRowType costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
         //does nothing
     }
 
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        if(applicationFinanceResource == null) {
+        if (applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
@@ -113,19 +114,19 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
         organisationFinanceDetails.values()
                 .stream()
                 .flatMap(cc -> cc.getCosts().stream())
-                .filter(c -> c != null)
+                .filter(Objects::nonNull)
                 .forEach(c -> mapFinanceToField((AcademicCost) c, academicFinance));
         return academicFinance;
     }
 
     private void mapFinanceToField(AcademicCost cost, AcademicFinance academicFinance) {
         String key = cost.getName();
-        if(key==null) {
+        if (key == null) {
             return;
         }
         BigDecimal total = cost.getTotal();
         String totalValue = "";
-        if(total!=null) {
+        if (total != null) {
             totalValue = total.toPlainString();
         }
 
@@ -162,4 +163,4 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
                 break;
         }
     }
- }
+}

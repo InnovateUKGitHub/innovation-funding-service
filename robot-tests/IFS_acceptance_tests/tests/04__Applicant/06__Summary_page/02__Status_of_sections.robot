@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-544: As an applicant I want the ‘Application summary’ page to show me complete and incomplete sections, so that I can easy judge how much of the application is left to do
- Suite Setup       log in and create new application if there is not one already  Robot test application
+Suite Setup       log in and create new application if there is not one already  Robot test application
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -11,7 +11,7 @@ Resource          ../Applicant_Commons.robot
 *** Test Cases ***
 Status is updated after marking as complete
     [Documentation]    INFUND-544
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the summary page of the Robot test application
     And the user navigates to the overview page of the Robot test application
     When the user clicks the button/link    link=4. Economic benefit

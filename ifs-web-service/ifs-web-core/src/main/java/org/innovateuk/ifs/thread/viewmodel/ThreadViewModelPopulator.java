@@ -4,7 +4,7 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +22,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ThreadViewModelPopulator {
 
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
-    public ThreadViewModelPopulator(OrganisationService organisationService) {
-        this.organisationService = organisationService;
+    public ThreadViewModelPopulator(OrganisationRestService organisationRestService) {
+        this.organisationRestService = organisationRestService;
     }
 
     /**
@@ -102,14 +102,14 @@ public class ThreadViewModelPopulator {
      * A strategy for naming authors of posts by either explicitly identifying them as named Project Finance members or
      * otherwise simply as named external users
      */
-    public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser() {
+    public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser(long projectId) {
 
         return user -> {
 
             if (user.isInternalUser()) {
                 return user.getName() + " - Innovate UK (Finance team)";
             } else {
-                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+                return user.getName() + " - " + organisationRestService.getByUserAndProjectId(user.getId(), projectId).getSuccess().getName();
             }
         };
     }
@@ -118,12 +118,12 @@ public class ThreadViewModelPopulator {
      * A strategy for naming authors of posts by either explicitly identifying them as anonymous Project Finance members or
      * otherwise simply as named external users
      */
-    public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser() {
+    public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser(long projectId) {
         return user -> {
             if (user.isInternalUser()) {
                 return "Innovate UK - Finance team";
             } else {
-                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+                return user.getName() + " - " + organisationRestService.getByUserAndProjectId(user.getId(), projectId).getSuccess().getName();
             }
         };
     }

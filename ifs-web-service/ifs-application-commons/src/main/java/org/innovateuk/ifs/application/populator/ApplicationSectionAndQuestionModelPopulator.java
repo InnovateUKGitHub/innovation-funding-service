@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
@@ -19,8 +20,8 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -47,6 +48,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     protected FormInputResponseService formInputResponseService;
     protected FormInputResponseRestService formInputResponseRestService;
     protected QuestionService questionService;
+    protected QuestionRestService questionRestService;
     protected ProcessRoleService processRoleService;
     protected SectionService sectionService;
     private CategoryRestService categoryRestService;
@@ -59,6 +61,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
                                                        FormInputResponseService formInputResponseService,
                                                        FormInputResponseRestService formInputResponseRestService,
                                                        QuestionService questionService,
+                                                       QuestionRestService questionRestService,
                                                        ProcessRoleService processRoleService,
                                                        SectionService sectionService,
                                                        CategoryRestService categoryRestService,
@@ -70,6 +73,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         this.formInputResponseService = formInputResponseService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.questionService = questionService;
+        this.questionRestService = questionRestService;
         this.processRoleService = processRoleService;
         this.sectionService = sectionService;
         this.categoryRestService = categoryRestService;
@@ -98,7 +102,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             model.addAttribute("completedSections", completedSectionsForThisOrganisation);
         });
 
-        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        List<QuestionResource> questions = questionRestService.findByCompetition(competition.getId()).getSuccess();
         markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean ->
             questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean))
         );
@@ -153,7 +157,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
-            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
+            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(),
+                    questionRestService.findByCompetition(currentSection.get().getCompetition()).getSuccess());
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()

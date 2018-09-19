@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -23,15 +22,11 @@ public interface QuestionService {
 
     void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
 
-    List<QuestionResource> findByCompetition(Long competitionId);
-
     List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId);
 
     void removeNotifications(List<QuestionStatusResource> questionStatuses);
 
     Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
-
-    QuestionResource getById(Long questionId);
 
     QuestionResource getByIdAndAssessmentId(Long questionId, Long assessmentId);
 
@@ -52,12 +47,6 @@ public interface QuestionService {
     Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);
 
     List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId);
-
-    List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
-
-    QuestionResource save(QuestionResource questionResource);
-
-    List<QuestionResource> getQuestionsByAssessment(long assessmentId);
 
     void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy);
 

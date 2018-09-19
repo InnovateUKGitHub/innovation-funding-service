@@ -10,25 +10,25 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=${competitionId != null ? '/competition/'+competitionId+'/overview' : '/competition/search'},currentApplication=${currentApplication}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please sign in or create an account',size='govuk-heading-xl'" />
 
         <div class="govuk-grid-row">
 
-            <section class="govuk-grid-column-one-half" th:with="redirectAfterLogin= '/application/create-authenticated/'+${competitionId}">
-                <h2 class="govuk-heading-l govuk-!-margin-0">Used this service before?</h2>
-                <p class="govuk-body">Please sign into your Innovation Funding Service account.</p>
+        <section class="govuk-grid-column-one-half" th:with="redirectAfterLogin='/application/create-authenticated/'+${competitionId}">
+            <h2 class="govuk-heading-l govuk-!-margin-0">Yes</h2>
+            <p class="govuk-body">Please sign into your Innovation Funding Service account.</p>
 
-                <a th:href="${redirectAfterLogin}" class="govuk-button" value="create-account" type="submit">Sign in</a>
-            </section>
+            <a th:href="${redirectAfterLogin}" class="govuk-button">Sign in</a>
+        </section>
 
-            <section class="govuk-grid-column-one-half" th:with="createUrl= '/organisation/create/initialize'">
-                <h2 class="govuk-heading-l govuk-!-margin-0">New to this service?</h2>
-                <p class="govuk-body">If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
+        <section class="govuk-grid-column-one-half" th:with="createUrl='/organisation/create/initialize'">
+            <h2 class="govuk-heading-l govuk-!-margin-0">No</h2>
+            <p class="govuk-body">Please create a new account to start your application.</p>
 
-                <a th:href="${createUrl}" class="govuk-button" value="create-account" type="submit">Create account</a>
+                <a th:href="${createUrl}" class="govuk-button" value="create-account" type="submit">Continue and create an account</a>
             </section>
         </div>
 

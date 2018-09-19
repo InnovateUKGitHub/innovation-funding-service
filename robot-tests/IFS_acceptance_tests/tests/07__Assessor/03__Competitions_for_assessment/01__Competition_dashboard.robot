@@ -18,7 +18,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -33,8 +33,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user should see the element   jQuery=h2:contains("Applications for assessment")
 
@@ -43,7 +42,7 @@ Calculation of the applications for assessment should be correct
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
@@ -71,7 +70,7 @@ Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
-    [Tags]    HappyPath
+    [Tags]
     Given the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the element                       jQuery=h1:contains("Accept application")
@@ -126,6 +125,12 @@ Comp admin can see the application is rejected on manage assessment page
     And the user should see the element      jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
+Custom Suite Setup
+   The user logs-in in new browser  &{assessor2_credentials}
+   ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Sign in successful")
+   Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
+   ...                              AND    the user clicks the button/link   css=.button[type="submit"]   #Continue
+
 the assessor fills all fields with valid inputs
     Select From List By Index                             id=rejectReasonValid    2
     The user should not see the text in the page          Please enter a reason

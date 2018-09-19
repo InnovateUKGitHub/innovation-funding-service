@@ -98,13 +98,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected UserService userService;
     @Mock
+    protected UserRestService userRestService;
+    @Mock
     protected CompetitionRestService competitionRestService;
+    @Mock
+    protected OrganisationRestService organisationRestService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
-
-    @Mock
-    private OrganisationRestService organisationRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -160,7 +161,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         rtoOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology " +
                 "organisations (RTOs)")).build();
 
-        // TODO DW - INFUND-1604 - remove when process roles are converted to DTOs
         businessOrganisationType = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationType = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
         academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology " +
@@ -190,7 +190,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withMinProjectDuraction(1)
                 .withMaxProjectDuraction(36)
-                .withUseNewApplicantMenu(true)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
@@ -300,8 +299,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(Arrays
                 .asList(sectionResource10));
 
-        when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList
-                (q21Resource, q22Resource, q23Resource));
+        when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
+                (q21Resource, q22Resource, q23Resource)));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS))
                 .thenReturn(ServiceResult.serviceSuccess(q01Resource));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(1L, RESEARCH_CATEGORY)).thenReturn
@@ -313,7 +312,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
             if (sectionQuestions != null) {
                 Map<Long, QuestionResource> questionsMap =
                         sectionQuestions.stream().collect(
-                                toMap(identity(), q -> questionService.getById(q)));
+                                toMap(identity(), q -> questionRestService.findById(q).getSuccess()));
                 questionList.addAll(questionsMap.values());
                 questionResources.putAll(questionsMap);
 
@@ -326,7 +325,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         sectionResource7.setQuestionGroup(true);
 
         questionResources.forEach((id, question) -> {
-            when(questionService.getById(id)).thenReturn(question);
+            when(questionRestService.findById(id)).thenReturn(restSuccess(question));
         });
 
         when(questionService.getPreviousQuestionBySection(any())).thenReturn(Optional.empty());
@@ -354,7 +353,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
-        when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
+        when(questionRestService.findByCompetition(competitionResource.getId())).thenReturn(restSuccess(questionList));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
@@ -467,37 +466,37 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
         when(sectionService.getInCompleted(applications.get(0).getId())).thenReturn(asList(3L, 4L));
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
-                (processRole1);
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
-                (processRole2);
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
-                (processRole3);
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
-                (processRole4);
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
-                (processRole5);
-        when(processRoleService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
-                (processRole6);
-        when(processRoleService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
-                (processRole7);
-        when(processRoleService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
-                (processRole8);
-        when(processRoleService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
-                (processRole9);
-        when(processRoleService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
-                (processRole11);
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+                (restSuccess(processRole1));
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
+                (restSuccess(processRole2));
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
+                (restSuccess(processRole3));
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
+                (restSuccess(processRole4));
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+                (restSuccess(processRole5));
+        when(userRestService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
+                (restSuccess(processRole6));
+        when(userRestService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
+                (restSuccess(processRole7));
+        when(userRestService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
+                (restSuccess(processRole8));
+        when(userRestService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
+                (restSuccess(processRole9));
+        when(userRestService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
+                (restSuccess(processRole11));
 
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn
-                (application1ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn
-                (application2ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn
-                (application3ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn
-                (application4ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(4).getId())).thenReturn
-                (application5ProcessRoles);
+        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn
+                (restSuccess(application1ProcessRoles));
+        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn
+                (restSuccess(application2ProcessRoles));
+        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn
+                (restSuccess(application3ProcessRoles));
+        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn
+                (restSuccess(application4ProcessRoles));
+        when(userRestService.findProcessRole(applications.get(4).getId())).thenReturn
+                (restSuccess(application5ProcessRoles));
 
         Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
@@ -514,10 +513,10 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
         when(applicationService.getById(applications.get(4).getId())).thenReturn(applications.get(4));
 
-        when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet
-                .first());
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn
-                (organisationSet.first());
+        when(organisationRestService.getOrganisationById(organisationSet.first().getId())).thenReturn(restSuccess(organisationSet
+                .first()));
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn
+                (restSuccess(organisationSet.first()));
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn
                 (OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn
@@ -529,7 +528,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
 
-        when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable
                 (processRole)));
@@ -603,7 +602,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
-        when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(formInputs));
         return questionResource;
@@ -618,7 +617,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
-        when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(formInputs));
         return questionResource;

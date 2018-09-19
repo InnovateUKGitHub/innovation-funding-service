@@ -31,9 +31,9 @@ public class Organisation {
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_organisation",
-            joinColumns = @JoinColumn(name = "organisation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @JoinTable(name = "process_role",
+            joinColumns = @JoinColumn(name = "organisationId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation",
@@ -46,22 +46,16 @@ public class Organisation {
     public Organisation() {
     }
 
-    public Organisation(Long id, String name) {
-        this.id = id;
+    public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(Long id, String name, String companyHouseNumber) {
-        this.id = id;
+    public Organisation(String name, String companyHouseNumber) {
         this.name = name;
         this.companyHouseNumber = companyHouseNumber;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

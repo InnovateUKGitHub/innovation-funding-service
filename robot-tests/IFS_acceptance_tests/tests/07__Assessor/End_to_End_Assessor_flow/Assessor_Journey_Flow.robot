@@ -3,7 +3,7 @@ Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 ...
 ...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin    Assessor    HappyPath    Email
+Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
 

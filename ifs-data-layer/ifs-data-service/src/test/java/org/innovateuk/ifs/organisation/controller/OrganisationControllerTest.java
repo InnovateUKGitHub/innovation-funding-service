@@ -35,7 +35,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     public void findByIdShouldReturnOrganisation() throws Exception {
         when(organisationServiceMock.findById(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(get("/organisation/findById/1"))
+        mockMvc.perform(get("/organisation/find-by-id/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
     }
@@ -49,7 +49,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
 
         when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(post("/organisation/createOrMatch")
+        mockMvc.perform(post("/organisation/create-or-match")
                 .contentType(MediaType.APPLICATION_JSON).
                         content(json))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
 
         when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(post("/organisation/createAndLinkByInvite")
+        mockMvc.perform(post("/organisation/create-and-link-by-invite")
                 .contentType(MediaType.APPLICATION_JSON).
                         content(json).param("inviteHash", "thisisahash"))
                 .andExpect(status().isCreated())
@@ -81,7 +81,25 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     public void getPrimaryForUserShouldReturnOrganisation() throws Exception {
         when(organisationServiceMock.getPrimaryForUser(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
-        mockMvc.perform(get("/organisation/getPrimaryForUser/1"))
+        mockMvc.perform(get("/organisation/primary-for-user/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
+    }
+
+    @Test
+    public void getByUserAndApplicationId() throws Exception {
+        when(organisationServiceMock.getByUserAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
+
+        mockMvc.perform(get("/organisation/by-user-and-application-id/1/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
+    }
+
+    @Test
+    public void getByUserAndProjectId() throws Exception {
+        when(organisationServiceMock.getByUserAndProjectId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
+
+        mockMvc.perform(get("/organisation/by-user-and-project-id/1/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
     }
