@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.team.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
     private boolean userLeadApplicant;
     private boolean applicationCanBegin;
     private boolean summary;
+    private CollaborationLevel collaborationLevel;
 
     public ApplicationTeamViewModel(Long applicationId,
                                     long questionId,
@@ -26,12 +28,14 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                                     boolean closed,
                                     boolean complete,
                                     boolean canMarkAsComplete,
-                                    boolean allReadonly) {
+                                    boolean allReadonly,
+                                    CollaborationLevel collaborationLevel) {
         super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.applicationName = applicationName;
         this.organisations = organisations;
         this.userLeadApplicant = userLeadApplicant;
         this.applicationCanBegin = applicationCanBegin;
+        this.collaborationLevel = collaborationLevel;
     }
 
     public String getApplicationName() {
@@ -59,6 +63,14 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
         this.summary = summary;
     }
 
+    public CollaborationLevel getCollaborationLevel() {
+        return collaborationLevel;
+    }
+
+    public void setCollaborationLevel(final CollaborationLevel collaborationLevel) {
+        this.collaborationLevel = collaborationLevel;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -77,6 +89,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                 .append(summary, that.summary)
                 .append(applicationName, that.applicationName)
                 .append(organisations, that.organisations)
+                .append(collaborationLevel, that.collaborationLevel)
                 .isEquals();
     }
 
@@ -88,6 +101,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                 .append(userLeadApplicant)
                 .append(applicationCanBegin)
                 .append(summary)
+                .append(collaborationLevel)
                 .toHashCode();
     }
 }
