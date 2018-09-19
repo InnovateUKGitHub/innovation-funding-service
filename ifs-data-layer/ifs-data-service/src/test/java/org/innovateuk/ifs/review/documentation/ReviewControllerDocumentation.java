@@ -128,6 +128,7 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
         when(reviewServiceMock.rejectReview(reviewId, rejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{reviewId}/reject", reviewId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(rejectOutcomeResource)))
                 .andExpect(status().isOk())

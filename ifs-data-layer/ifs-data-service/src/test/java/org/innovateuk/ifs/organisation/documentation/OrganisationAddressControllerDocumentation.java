@@ -49,9 +49,10 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                 .build();
         when(organisationAddressServiceMock.findOne(id)).thenReturn(serviceSuccess(organisationAddressResource));
 
-        mockMvc.perform(get("/organisationaddress/{id}", id)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(organisationAddressResource)))
+        mockMvc.perform(get("/organisationaddress/{id}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(organisationAddressResource)))
                 .andDo(document("organisationaddress/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the Organisation Address for which Organisation Address is being retrieved")
@@ -78,9 +79,10 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
 
         when(organisationAddressServiceMock.findByOrganisationIdAndAddressId(organisationId, addressId)).thenReturn(serviceSuccess(organisationAddressResource));
 
-        mockMvc.perform(get("/organisationaddress/organisation/{organisationId}/address/{addressId}", organisationId, addressId)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(organisationAddressResource)))
+        mockMvc.perform(get("/organisationaddress/organisation/{organisationId}/address/{addressId}", organisationId, addressId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(organisationAddressResource)))
                 .andDo(document("organisationaddress/{method-name}",
                         pathParameters(
                                 parameterWithName("organisationId").description("Id of the Organisation for which Organisation Address is being retrieved"),

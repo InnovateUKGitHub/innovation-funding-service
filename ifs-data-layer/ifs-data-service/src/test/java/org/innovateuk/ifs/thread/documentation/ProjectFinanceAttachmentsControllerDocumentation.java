@@ -76,7 +76,8 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         final Long id = 22L;
         when(projectFinanceAttachmentServiceMock.delete(id)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id))
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document(identifier,
                         pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be deleted")))

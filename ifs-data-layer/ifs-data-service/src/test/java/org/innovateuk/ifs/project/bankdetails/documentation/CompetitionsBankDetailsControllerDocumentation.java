@@ -56,7 +56,8 @@ public class CompetitionsBankDetailsControllerDocumentation extends BaseControll
         Long pendingBankDetailsCount = 8L;
         when(bankDetailsServiceMock.countPendingBankDetailsApprovals()).thenReturn(serviceSuccess(pendingBankDetailsCount));
 
-        mockMvc.perform(get("/competitions/count-pending-bank-details-approvals"))
+        mockMvc.perform(get("/competitions/count-pending-bank-details-approvals")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingBankDetailsCount)))
                 .andDo(document(
