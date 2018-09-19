@@ -54,8 +54,7 @@ Client-side validations and Submit
     ...
     ...
     ...    INFUND-5432
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     Given the user navigates to the page       ${Server}/assessment/profile/agreement
     When the user selects the checkbox         agreesToTerms1
     And the user should not see an error in the page

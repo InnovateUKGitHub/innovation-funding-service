@@ -33,7 +33,7 @@ Resource          CompAdmin_Commons.robot
 *** Test Cases ***
 Initial details: server-side validations
     [Documentation]  INFUND-2982 IFUND-3888
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     And the user clicks the button/link     jQuery = .govuk-button:contains("Create competition")
     And The user clicks the button/link     link = Initial details
@@ -49,7 +49,7 @@ Initial details: server-side validations
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field    id=title    Validations Test
     Then the user should not see the error any more    Please enter a title.
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
@@ -91,7 +91,7 @@ Initial details: should not allow dates in the past
 
 Initial details: mark as done
     [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888
-    [Tags]    HappyPath
+    [Tags]
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
@@ -99,7 +99,7 @@ Initial details: mark as done
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Funding information
     And the user should see the text in the page    Funding information
@@ -110,7 +110,7 @@ Funding information server-side validations
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    id=generate-code
     Then the user should not see the error any more    Please generate a competition code.
     When the user enters text to a text field    id=funders[0].funder    FunderName
@@ -130,7 +130,7 @@ Funding information Autosave
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link  link = Eligibility
     When the user clicks the button/link   jQuery = button:contains("Done")
@@ -141,15 +141,15 @@ Eligibility server-side validations
     And The user should see a field and summary error    Please select an override funding rules option.
 
 Eligibility funding level validation
-    [Documentation]
-    [Tags]  IFS-3622
+    [Documentation]  IFS-3622
+    [Tags]
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
     Then The user should see a field and summary error  Please select a funding level.
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the checkbox    research-categories-33
     And the user selects the checkbox    research-categories-34
     And the user selects the checkbox    research-categories-35
@@ -180,7 +180,7 @@ Eligibility Autosave
 
 Milestones: Server side validations, submission time is default
     [Documentation]  INFUND-2993, INFUND-7632
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link             link=Milestones
     When the user fills the milestones with invalid data
@@ -192,7 +192,7 @@ Milestones: Server side validations, submission time is default
 
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
-    [Tags]  HappyPath
+    [Tags]
     The user fills in the CS Milestones  ${month}  ${nextYear}
 
 Milestones: Autosave

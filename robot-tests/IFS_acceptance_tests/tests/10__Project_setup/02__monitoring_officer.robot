@@ -23,7 +23,7 @@ ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/proj
 *** Test Cases ***
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621, INFUND-6706
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user               &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    We will assign the project a Monitoring Officer.
@@ -37,7 +37,7 @@ Before Monitoring Officer is assigned
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Tags]      HappyPath
+    [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
     Then the user should see the element   css=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
@@ -50,7 +50,7 @@ Status updates correctly for internal user's table
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
@@ -68,7 +68,7 @@ Comp admin can view the Supporting information details on MO page
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666, INFUND-5507
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
@@ -88,7 +88,7 @@ Project finance user can view MO page, and go on to assign MO
 
 MO server-side validation
     [Documentation]    INFUND-2630
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     and the user clicks the button/link    jQuery=[role="dialog"] .govuk-button:contains("Assign Monitoring Officer")
@@ -100,7 +100,7 @@ MO server-side validation
 
 MO client-side validation
     [Documentation]    INFUND-2630
-    [Tags]    HappyPath
+    [Tags]
     When the user enters text to a text field    id=firstName    Abbey
     Then the user should not see the validation error    Please enter a first name.
     When the user enters text to a text field    id=lastName    Abigail
@@ -118,7 +118,7 @@ MO client-side validation
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
-    [Tags]    HappyPath
+    [Tags]
     And the user clicks the button/link    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
     Then the user should not see the text in the page    A Monitoring Officer has been assigned.
@@ -135,14 +135,14 @@ MO details can be added
 
 MO details(email step)
     [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633, IFS-3553
-    [Tags]    Email    HappyPath
+    [Tags]
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    link=Change Monitoring Officer
@@ -162,14 +162,14 @@ MO details can be edited and viewed in the Set up your project page
 
 MO details edit(email step)
     [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
-    [Tags]    Email
+    [Tags]
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
-    [Tags]    HappyPath
+    [Tags]
     Given Log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=ul li.complete:nth-child(3)
@@ -196,7 +196,7 @@ MO details accessible/seen by all partners
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]      HappyPath
+    [Tags]
     [Setup]    Log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    link = Monitoring Officer
@@ -209,13 +209,13 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 Existing Monitoring Officer can sign in
     [Documentation]    IFS-3977
-    [Tags]    HappyPath
+    [Tags]
     When log in as a different user    &{monitoring_officer_one_credentials}
     Then the user should see the text in the element    css=.govuk-heading-l       Dashboard
 
 Monitoring Officer can see projects that they are assigned to
     [Documentation]    IFS-3978
-    [Tags]    HappyPath
+    [Tags]
     When the user should see the text in the element    css=.projects-in-setup    Magic material
     And the user should see the element    link=Magic material
 

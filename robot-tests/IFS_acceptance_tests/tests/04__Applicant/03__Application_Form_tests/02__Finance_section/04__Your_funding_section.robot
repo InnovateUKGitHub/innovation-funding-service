@@ -16,7 +16,7 @@ ${applicationName}  Hydrology the dynamics of Earth's surface water
 *** Test Cases ***
 Other funding validation message
     [Documentation]  IFS-2659
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Your funding
     And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery=button:contains("Mark as complete")
@@ -24,7 +24,7 @@ Other funding validation message
 
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
-    [Tags]    HappyPath
+    [Tags]
     Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
     Then the user should see the element       css=[name^="finance-grantclaimpercentage"]
     And the user should see the element        css=[name*=other_funding-fundingSource]
@@ -34,7 +34,7 @@ Applicant has options to enter funding level and details of any other funding
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
-    [Tags]    HappyPath
+    [Tags]
     The user should see the text in the page    Enter your funding level (maximum 50%)
 
 Funding level validations
@@ -49,7 +49,7 @@ Funding level validations
 
 Other funding validations
     [Documentation]    INFUND-6794
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field          css=[name*=other_funding-securedDate]    20
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
@@ -67,7 +67,7 @@ If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     ...
     ...    INFUND-6823
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link=${applicationName}
     When the user clicks the button/link   link=Research category
@@ -76,7 +76,7 @@ If funding is complete. application details has a warning message
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button twice   css=label[for="researchCategory2"]
     And the user clicks the button/link    id=application-question-complete
     And the user navigates to Your-finances page  ${applicationName}
@@ -84,7 +84,7 @@ Changing application details sets funding level to incomplete
 
 Funding level has been reset
     [Documentation]    INFUND-6895
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your funding
     Then the user should see the element    jQuery=button:contains("Mark as complete")
     And the user should not see the text in the element    css=[name*=other_funding-fundingSource]    Lottery funding
@@ -93,7 +93,7 @@ Funding level has been reset
 
 Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]    43
     When the user enters text to a text field   css=[name*=other_funding-fundingSource]  Lottery funding
     Then the user enters text to a text field       css=[name*=other_funding-securedDate]  12-${nextyear}
@@ -107,7 +107,7 @@ Adding more funding rows
 
 Mark other funding as complete
     [Documentation]  INFUND-6895
-    [Tags]  HappyPath
+    [Tags]
     Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery=button:contains("Mark as complete")
     Then the user should not see an error in the page
