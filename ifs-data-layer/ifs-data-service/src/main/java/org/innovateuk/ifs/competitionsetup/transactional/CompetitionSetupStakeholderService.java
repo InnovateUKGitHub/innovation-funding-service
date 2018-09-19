@@ -18,6 +18,6 @@ public interface CompetitionSetupStakeholderService {
 
     @SecuredBySpring(value = "FIND_STAKEHOLDERS_FOR_COMPETITION", description = "Only comp admin, project finance or IFS admin can search stakeholders for a given competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
-    ServiceResult<List<UserResource>> findStakeholders(Long competitionId);
+    ServiceResult<List<UserResource>> findStakeholders(long competitionId);
 }
 

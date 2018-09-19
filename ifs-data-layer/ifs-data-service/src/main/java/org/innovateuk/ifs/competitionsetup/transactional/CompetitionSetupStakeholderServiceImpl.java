@@ -185,7 +185,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findStakeholders(Long competitionId) {
+    public ServiceResult<List<UserResource>> findStakeholders(long competitionId) {
 
         List<Stakeholder> stakeholders = stakeholderRepository.findStakeholders(competitionId);
         List<UserResource> stakeholderUsers = simpleMap(stakeholders, stakeholder -> userMapper.mapToResource(stakeholder.getUser()));
