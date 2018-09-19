@@ -61,7 +61,7 @@ Guest user can see the opening and closing status of competitions
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     When the user selects the option from the drop-down menu    Space technology    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
@@ -156,7 +156,7 @@ Guest user can see the public Supporting information of the competition
 
 Guest user can apply to a competition
     [Documentation]    INFUND-6923
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application

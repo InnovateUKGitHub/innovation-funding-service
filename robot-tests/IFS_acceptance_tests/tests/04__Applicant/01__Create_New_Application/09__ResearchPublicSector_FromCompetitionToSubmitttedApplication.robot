@@ -28,7 +28,7 @@ ${customQuestion}   How innovative is your project?
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
     [Documentation]  IFS-1012 IFS-182 IFS-2832
-    [Tags]  CompAdmin  HappyPath
+    [Tags]  CompAdmin
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
@@ -36,13 +36,13 @@ Comp Admin Creates Competitions where Research can lead
 Requesting the id of this Competition
     [Documentation]  IFS-182
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     ${reseachCompId} =  get comp id from comp title  ${compResearch}
     Set suite variable  ${reseachCompId}
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
@@ -53,7 +53,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012  IFS-2879  IFS-4046
-    [Tags]  Applicant  HappyPath
+    [Tags]  Applicant
     [Setup]  Log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
     # This application is for competition Photonics for Research, which is Web test data.
     # That is why we have 2 diferent test cases, where Research users apply to a Research leading competition.
@@ -69,7 +69,7 @@ Applicant Applies to Research leading Competition
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012  IFS-4046
-    [Tags]  Applicant  HappyPath  CompAdmin
+    [Tags]  Applicant  CompAdmin
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
     Given logged in user applies to competition public           ${openCompetitionPublicSector_name}  4
@@ -104,7 +104,8 @@ The competition admin creates a competition for
     the internal user can see that the Generic competition has only one Application Question
     The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
     the user clicks the button/link                         link = Return to setup overview

@@ -38,6 +38,7 @@ public class BankDetailsDocs {
             fieldWithPath("competitionId").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition name"),
             fieldWithPath("projectId").description("Project id for bank details status summary"),
+            fieldWithPath("projectName").description("Project name for bank details status summary"),
             fieldWithPath("applicationId").description("Application id for bank details status summary"),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status"),
             fieldWithPath("leadOrganisation").description("The lead organisation of this project")

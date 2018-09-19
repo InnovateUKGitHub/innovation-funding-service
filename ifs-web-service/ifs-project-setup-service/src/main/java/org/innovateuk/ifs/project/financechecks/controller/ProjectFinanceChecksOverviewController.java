@@ -50,8 +50,9 @@ public class ProjectFinanceChecksOverviewController {
     @GetMapping
     public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
-        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId);
         ProjectResource project = projectService.getById(projectId);
+        Long applicationId = project.getApplication();
+        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId, applicationId);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
         model.addAttribute("project", project);
@@ -59,10 +60,10 @@ public class ProjectFinanceChecksOverviewController {
         return "project/finance-checks-overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId, final Long applicationId) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(projectId, partnerOrgs),
-                getProjectFinanceCostBreakdown(projectId, partnerOrgs));
+                getProjectFinanceCostBreakdown(projectId, partnerOrgs), applicationId );
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
