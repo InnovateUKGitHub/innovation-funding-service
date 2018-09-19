@@ -38,7 +38,8 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
         List<AffiliationResource> responses = affiliationResourceBuilder.build(2);
         when(affiliationServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(new AffiliationListResource(responses)));
 
-        mockMvc.perform(get("/affiliation/id/{id}/getUserAffiliations", userId))
+        mockMvc.perform(get("/affiliation/id/{id}/getUserAffiliations", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("affiliation/{method-name}",
                         pathParameters(
