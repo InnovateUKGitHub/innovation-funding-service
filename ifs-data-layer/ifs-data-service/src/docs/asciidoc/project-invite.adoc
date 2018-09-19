@@ -1,0 +1,73 @@
+=== Get Project Invite by hash
+==== Request
+include::{snippets}/project-invite/get-by-hash/http-request.adoc[]
+include::{snippets}/project-invite/get-by-hash/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project-invite/get-by-hash/http-response.adoc[]
+include::{snippets}/project-invite/get-by-hash/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/get-by-hash/curl-request.adoc[]
+
+
+=== Save Project Invite
+==== Request
+include::{snippets}/project-invite/save-project-invite/http-request.adoc[]
+include::{snippets}/project-invite/save-project-invite/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project-invite/save-project-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/save-project-invite/curl-request.adoc[]
+
+
+=== Get Project Invites for a Project
+==== Request
+include::{snippets}/project-invite/get-invites-by-project/http-request.adoc[]
+include::{snippets}/project-invite/get-invites-by-project/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project-invite/get-invites-by-project/http-response.adoc[]
+include::{snippets}/project-invite/get-invites-by-project/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/get-invites-by-project/curl-request.adoc[]
+
+
+=== Accept Project Invite
+==== Request
+include::{snippets}/project-invite/accept-invite/http-request.adoc[]
+include::{snippets}/project-invite/accept-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project-invite/accept-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/accept-invite/curl-request.adoc[]
+
+
+=== Check Project Invite for existing User
+==== Request
+include::{snippets}/project-invite/check-existing-user/http-request.adoc[]
+include::{snippets}/project-invite/check-existing-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project-invite/check-existing-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/check-existing-user/curl-request.adoc[]
+
+
+=== Get User by Project Invite hash
+==== Request
+include::{snippets}/project-invite/get-user-by-invite-hash/http-request.adoc[]
+include::{snippets}/project-invite/get-user-by-invite-hash/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project-invite/get-user-by-invite-hash/http-response.adoc[]
+include::{snippets}/project-invite/get-user-by-invite-hash/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project-invite/get-user-by-invite-hash/curl-request.adoc[]
