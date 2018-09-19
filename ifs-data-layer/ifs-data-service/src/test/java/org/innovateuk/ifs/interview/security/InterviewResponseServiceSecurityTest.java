@@ -26,7 +26,7 @@ public class InterviewResponseServiceSecurityTest extends BaseServiceSecurityTes
     public void downloadResponse() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.downloadResponse(1L),
-                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD
+                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER
         );
     }
 
@@ -42,7 +42,7 @@ public class InterviewResponseServiceSecurityTest extends BaseServiceSecurityTes
     public void findResponse() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.findResponse(1L),
-                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD
+                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER
         );
     }
 

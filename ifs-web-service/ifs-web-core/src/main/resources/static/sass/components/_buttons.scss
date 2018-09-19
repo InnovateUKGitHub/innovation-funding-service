@@ -116,7 +116,9 @@ table {
 .button-secondary + .button-clear {
   padding: 9px 10px 6px 10px;
 }
-
+span + .button-clear {
+  line-height: 1.31579;
+}
 
 .alignright-button {
   @include govuk-clearfix;

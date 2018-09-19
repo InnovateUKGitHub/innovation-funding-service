@@ -10,11 +10,15 @@ public class InviteUserResource {
 
     private UserResource invitedUser;
 
-    private Role adminRoleType;
+    private Role role;
 
-    public InviteUserResource(UserResource invitedUser, Role adminRoleType) {
+    public InviteUserResource(UserResource invitedUser, Role role) {
         this.invitedUser = invitedUser;
-        this.adminRoleType = adminRoleType;
+        this.role = role;
+    }
+
+    public InviteUserResource(UserResource invitedUser) {
+        this.invitedUser = invitedUser;
     }
 
     public InviteUserResource() {
@@ -29,11 +33,11 @@ public class InviteUserResource {
         this.invitedUser = invitedUser;
     }
 
-    public Role getAdminRoleType() {
-        return adminRoleType;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAdminRoleType(Role adminRoleType) {
-        this.adminRoleType = adminRoleType;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

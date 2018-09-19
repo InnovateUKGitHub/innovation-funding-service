@@ -239,6 +239,10 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance (model, internalView)">
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
+            <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
+        </div>
+
         <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
         <p class="govuk-body" ifs:utext="${model.question.description}" />
@@ -730,8 +734,8 @@
                         This will assess the appropriateness of your claim if your grant application is successful.
                     </p>
                     <div class="govuk-form-group download">
-                        <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
-                        <ul>
+                        <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
                             <li>Download as an Open Office document <a href="/files/overheads.ods" class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
                         </ul>

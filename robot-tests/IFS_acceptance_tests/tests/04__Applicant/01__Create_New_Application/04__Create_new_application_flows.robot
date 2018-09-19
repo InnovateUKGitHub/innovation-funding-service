@@ -20,7 +20,7 @@ Resource          ../Applicant_Commons.robot
 *** Test Cases ***
 Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page           ${frontDoor}
     And the user clicks the button/link in the paginated list            link=${createApplicationOpenCompetition}
     And the user clicks the button/link            jQuery=a:contains("Start new application")
@@ -40,7 +40,7 @@ The email address does not stay in the cookie
 
 Non registered users sign-up companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
-    [Tags]    HappyPath    SmokeTest    Email
+    [Tags]
     Given Applicant goes to the registration form
     When the user verifies email                      Phil    Smith    ${test_mailbox_one}+business@gmail.com
     Then the user directed to correct dashboard       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -48,7 +48,7 @@ Non registered users sign-up companies house route
 
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
-    [Tags]    HappyPath    Email    SmokeTest
+    [Tags]
     [Setup]    the user navigates to the page                     ${SERVER}
     When Logging in and Error Checking                            ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the application title
@@ -61,7 +61,7 @@ Verify the name of the new application
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page                     ${edit_profile_url}
     Then the user should see that the checkbox is selected  allowMarketingEmails
 
