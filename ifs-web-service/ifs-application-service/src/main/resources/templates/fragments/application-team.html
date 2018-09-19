@@ -131,13 +131,16 @@
             </th:block>
 
             <!--/* Applicant buttons */-->
-            <div class="govuk-!-margin-top-6">
+            <div th:unless="${model.closed}"
+                 th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block
                   th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
-                <!--/* 'Return and edit' link on the Application summary */-->
-                <th:block th:if="${model.summary}"
-                          th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
+            </div>
+            <!--/* 'Return and edit' link on the Application summary */-->
+            <div th:if="${model.summary and !model.closed}"
+                 class="form-footer">
+                <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
             </div>
 
             <!--/* Hidden fields */-->
