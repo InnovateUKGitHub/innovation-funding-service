@@ -765,12 +765,15 @@ The internal user invites a Stakeholder
     [Tags]
     Then the user enters the correct details of a Stakeholder
     # A check to verify the invite will come in another ticket.
+    And logout as user
+    # Logging out here as it'll return a Page not found as it'll click the invite link in the next test case, and still be logged in as the comp admin.
 
 The invited Stakeholder accepts the invite in his or her email
     [Documentation]  IFS-4253
     [Tags]
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
-    # A check will be added here in the next ticket, when the account creation stage comes in.
+    When the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
+    Then the user should see the element                 id = sign-in-form
+    # This is a temporary check until the account creation stage comes in another ticket.
 
 *** Keywords ***
 the user moves focus and waits for autosave
