@@ -1,0 +1,25 @@
+=== Get Companies House by name
+
+==== Request
+include::{snippets}/companies-house/search-by-companies-house-name/http-request.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-name/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/companies-house/search-by-companies-house-name/http-response.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-name/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/companies-house/search-by-companies-house-name/curl-request.adoc[]
+
+=== Get Companies House by id
+
+==== Request
+include::{snippets}/companies-house/search-by-companies-house-number/http-request.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-number/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/companies-house/search-by-companies-house-number/http-response.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-number/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/companies-house/search-by-companies-house-number/curl-request.adoc[]
