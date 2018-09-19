@@ -13,6 +13,7 @@ public class FinanceChecksNotesAddNoteViewModel {
     private int maxTitleCharacters;
     private Long organisationId;
     private String baseUrl;
+    private Long applicationId;
 
 
     public FinanceChecksNotesAddNoteViewModel(String organisationName,
@@ -24,7 +25,8 @@ public class FinanceChecksNotesAddNoteViewModel {
                                          int maxNoteCharacters,
                                          int maxTitleCharacters,
                                          Long organisationId,
-                                         String baseUrl) {
+                                         String baseUrl,
+                                         Long applicationId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
@@ -35,6 +37,8 @@ public class FinanceChecksNotesAddNoteViewModel {
         this.maxTitleCharacters = maxTitleCharacters;
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
+        this.applicationId = applicationId;
+
 
     }
 
@@ -114,5 +118,13 @@ public class FinanceChecksNotesAddNoteViewModel {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }
