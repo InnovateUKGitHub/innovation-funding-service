@@ -29,10 +29,9 @@
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="application.startDate">
-                            <span class="govuk-fieldset__heading">Estimated timescales</span>
+                            <label class="govuk-label--s">Estimated timescales</label>
                         </legend>
-                        <span class="govuk-hint">When do you wish to start your project?</span>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
+                        <span class="govuk-hint">When do you wish to start your project? For example: 31 12 2015</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                     </fieldset>
@@ -99,6 +98,37 @@
                                     Yes
                                 </label>
                             </div>
+
+                             <div id="resubmission-details" class="govuk-details__text govuk-form-group">
+                                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'govuk-form-group--error'">
+                                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
+                                    <label class="govuk-label" for="application.previousApplicationNumber">
+                                        Previous application number
+                                    </label>
+                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
+                                    <input class="govuk-input"
+                                           type="text"
+                                           id="application.previousApplicationNumber"
+                                           th:field="*{__application.previousApplicationNumber__}"
+                                           required="required"
+                                           th:errorclass="govuk-input--error"
+                                           th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
+                                </div>
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" for="application.previousApplicationTitle">
+                                        Previous application title
+                                    </label>
+                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
+                                    <input class="govuk-input"
+                                           type="text"
+                                           id="application.previousApplicationTitle"
+                                           th:field="*{__application.previousApplicationTitle__}"
+                                           required="required"
+                                           th:errorclass="govuk-input--error"
+                                           th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
+                                </div>
+                            </div>
+
                             <div class="govuk-radios__item">
                                 <input type="radio"
                                        class="govuk-radios__input"
@@ -115,35 +145,6 @@
                             </div>
                         </div>
                     </fieldset>
-                </div>
-                <div id="resubmission-details">
-                    <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'govuk-form-group--error'">
-                        <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
-                        <label class="govuk-label" for="application.previousApplicationNumber">
-                            Previous application number
-                        </label>
-                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
-                        <input class="govuk-input"
-                               type="text"
-                               id="application.previousApplicationNumber"
-                               th:field="*{__application.previousApplicationNumber__}"
-                               required="required"
-                               th:errorclass="govuk-input--error"
-                               th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
-                    </div>
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="application.previousApplicationTitle">
-                            Previous application title
-                        </label>
-                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
-                        <input class="govuk-input"
-                               type="text"
-                               id="application.previousApplicationTitle"
-                               th:field="*{__application.previousApplicationTitle__}"
-                               required="required"
-                               th:errorclass="govuk-input--error"
-                               th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
-                    </div>
                 </div>
             </th:block>
 
