@@ -77,6 +77,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 ...
 ...               IFS-4190 Create new user in stakeholder role
+...
+...               IFS-4253 New Stakeholder invite and create account email
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
