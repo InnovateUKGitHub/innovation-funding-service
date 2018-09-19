@@ -13,6 +13,7 @@ public class ProjectBankDetailsStatusSummary {
     private Long competitionId;
     private String competitionName;
     private Long projectId;
+    private String projectName;
     private Long applicationId;
     private List<BankDetailsStatusResource> bankDetailsStatusResources;
 
@@ -21,10 +22,11 @@ public class ProjectBankDetailsStatusSummary {
     public ProjectBankDetailsStatusSummary() {
     }
 
-    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, Long applicationId,
+    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, String projectName, Long applicationId,
                                            List<BankDetailsStatusResource> bankDetailsStatusResources, String leadOrganisation) {
         this.competitionId = competitionId;
         this.projectId = projectId;
+        this.projectName = projectName;
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
@@ -45,6 +47,14 @@ public class ProjectBankDetailsStatusSummary {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public List<BankDetailsStatusResource> getBankDetailsStatusResources() {

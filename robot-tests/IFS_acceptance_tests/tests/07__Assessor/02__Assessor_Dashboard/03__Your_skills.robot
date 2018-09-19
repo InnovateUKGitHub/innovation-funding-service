@@ -16,7 +16,7 @@ Client-side validations
     [Documentation]    INFUND-5182
     ...
     ...    INFUND-5432
-    [Tags]    HappyPath
+    [Tags]
     Given The user should see the element    jQuery=h2:contains("Complete your assessor account")
     And The user should see the element      jQuery=.message-alert a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link     jQuery=a:contains("your skills")
@@ -42,7 +42,7 @@ Back button from edit page redirects to read only view
 
 Server-side validations
     [Documentation]    INFUND-5182
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    jQuery=label:contains("Business")
     When the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    102
     And the user clicks the button/link      jQuery=button:contains("Save and return to your skills")
@@ -58,7 +58,7 @@ Save Skills should redirect to the read-only view
     ...    INFUND-5432
     ...
     ...    INFUND-7059
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link        jQuery=label:contains("Business")
     When the user enters text to a text field    id=skillAreas    assessor skill areas text
     And the user clicks the button/link          jQuery=button:contains("Save and return to your skills")

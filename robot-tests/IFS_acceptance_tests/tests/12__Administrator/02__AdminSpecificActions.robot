@@ -9,7 +9,7 @@ Resource        ../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/applications/previous
     Then the user should be allowed to only reinstate Unsuccessful applications
     When the user clicks the button/link    jQuery = td:contains("Cleaning Product packaging") ~ td a:contains("Mark as successful")
