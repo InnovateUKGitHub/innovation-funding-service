@@ -23,7 +23,7 @@ Invalid Login
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    [Tags]    HappyPath
+    [Tags]
     Given The guest user inserts user email and password       &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     Then The user should see the text in the page             Please choose the role you are signing in as today
@@ -65,7 +65,7 @@ Reset password
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]
     [Setup]    Clear the login fields
     When the user enters text to a text field              id=password  NewPassw0rd
     And the user clicks the button/link                    css=button[type="submit"]

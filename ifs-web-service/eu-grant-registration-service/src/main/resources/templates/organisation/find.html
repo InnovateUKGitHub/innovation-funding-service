@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <th:block th:with="orgTitle=${model.type.name}">
+        <th:block th:with="orgTitle=${model.type.displayName}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},size='govuk-heading-xl'" />
         </th:block>
 

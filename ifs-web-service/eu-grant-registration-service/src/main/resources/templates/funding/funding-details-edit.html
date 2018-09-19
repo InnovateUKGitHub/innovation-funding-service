@@ -86,7 +86,7 @@
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
                             <option value="">Select...</option>
-                            <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="'(' + ${actionType.name + ')' + ' ' + actionType.description}"></option>
+                            <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}" th:text="${'(' + actionType.name + ') ' + actionType.description}"></option>
                         </select>
                     </div>
 
