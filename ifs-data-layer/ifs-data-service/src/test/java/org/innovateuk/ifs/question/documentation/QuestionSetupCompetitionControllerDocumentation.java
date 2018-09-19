@@ -37,7 +37,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         final Long questionId = 1L;
         when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseUrl + "/getById/{id}", questionId))
+        mockMvc.perform(get(baseUrl + "/get-by-id/{id}", questionId))
                 .andExpect(status().isOk())
                 .andDo(document("question-setup/{method-name}",
                         pathParameters(
@@ -68,7 +68,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
         when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(post(baseUrl + "/addDefaultToCompetition/{id}", competitionId))
+        mockMvc.perform(post(baseUrl + "/add-default-to-competition/{id}", competitionId))
                 .andExpect(status().isCreated())
                 .andDo(document("question-setup/{method-name}",
                         pathParameters(
@@ -83,7 +83,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         final long questionId = 1L;
         when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).
+        mockMvc.perform(delete(baseUrl + "/delete-by-id/{id}", questionId)).
                 andExpect(status().isNoContent())
                 .andDo(document("question-setup/{method-name}",
                         pathParameters(
@@ -98,7 +98,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
         when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(baseUrl + "/addResearchCategoryQuestionToCompetition/{id}", competitionId))
+        mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId))
                 .andExpect(status().isCreated())
                 .andDo(document("question-setup/{method-name}",
                         pathParameters(

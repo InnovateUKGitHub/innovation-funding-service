@@ -16,7 +16,7 @@ public class QuestionSetupCompetitionController {
     @Autowired
     private QuestionSetupCompetitionService questionSetupCompetitionService;
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/get-by-id/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return questionSetupCompetitionService.getByQuestionId(id).toGetResponse();
     }
@@ -26,19 +26,19 @@ public class QuestionSetupCompetitionController {
         return questionSetupCompetitionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
-    @PostMapping("/addDefaultToCompetition/{id}")
+    @PostMapping("/add-default-to-competition/{id}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(
             @PathVariable("id") final Long competitionId) {
         return questionSetupCompetitionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
-    @PostMapping("/addResearchCategoryQuestionToCompetition/{id}")
+    @PostMapping("/add-research-category-question-to-competition/{id}")
     public RestResult<Void> addResearchCategoryQuestionToCompetition(@PathVariable("id") final long competitionId) {
         return questionSetupCompetitionService.addResearchCategoryQuestionToCompetition(competitionId)
                 .toPostCreateResponse();
     }
 
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/delete-by-id/{id}")
     public RestResult<Void> deleteById(@PathVariable("id") final long questionId) {
         return questionSetupCompetitionService.delete(questionId).toDeleteResponse();
     }
