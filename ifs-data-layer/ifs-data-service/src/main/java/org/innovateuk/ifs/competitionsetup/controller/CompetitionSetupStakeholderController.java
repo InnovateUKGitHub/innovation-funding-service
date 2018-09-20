@@ -35,6 +35,18 @@ public class CompetitionSetupStakeholderController {
 
         return competitionSetupStakeholderService.findStakeholders(competitionId).toGetResponse();
     }
+
+    @PostMapping("/{stakeholderUserId}/add")
+    public RestResult<Void> addStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
+
+        return competitionSetupStakeholderService.addStakeholder(competitionId, stakeholderUserId).toPostResponse();
+    }
+
+    @PostMapping("/{stakeholderUserId}/remove")
+    public RestResult<Void> removeStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
+
+        return competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId).toPostResponse();
+    }
 }
 
 

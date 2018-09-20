@@ -111,4 +111,24 @@ public class CompetitionSetupStakeholderController {
 
         return new InviteUserResource(invitedUser);
     }
+
+    @PostMapping(value = "/{competitionId}/manage-stakeholders/add-stakeholder/{stakeholderUserId}")
+    public String addStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                 @PathVariable("stakeholderUserId") long stakeholderUserId,
+                                 Model model) {
+
+        competitionSetupStakeholderRestService.addStakeholder(competitionId, stakeholderUserId);
+        return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm());
+    }
+
+    @PostMapping(value = "/{competitionId}/manage-stakeholders/remove-stakeholder/{stakeholderUserId}")
+    public String removeStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                 @PathVariable("stakeholderUserId") long stakeholderUserId,
+                                 Model model) {
+
+        competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
+        //TODO - On success or failure, remain on the 2nd tab instead of the 1st tab as done below.
+        // Currently we dont know the url for the 2nd tab.
+        return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm());
+    }
 }

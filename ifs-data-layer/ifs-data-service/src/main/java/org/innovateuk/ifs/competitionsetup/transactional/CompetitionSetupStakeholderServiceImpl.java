@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
@@ -41,6 +43,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service implementation providing operations around stakeholders.
@@ -192,4 +195,38 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
         return serviceSuccess(stakeholderUsers);
     }
+
+    @Override
+    public ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
+        return getCompetition(competitionId)
+                .andOnSuccessReturnVoid(competition ->
+                        find(userRepository.findOne(stakeholderUserId),
+                                notFoundError(User.class, stakeholderUserId))
+                        .andOnSuccess(stakeholder -> {
+                            stakeholderRepository.save(new Stakeholder(competition, stakeholder));
+                            return serviceSuccess();
+                        })
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> removeStakeholder(long competitionId, long stakeholderUserId){
+        stakeholderRepository.deleteStakeholder(competitionId, stakeholderUserId);
+        return serviceSuccess();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

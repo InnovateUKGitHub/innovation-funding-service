@@ -19,5 +19,13 @@ public interface CompetitionSetupStakeholderService {
     @SecuredBySpring(value = "FIND_STAKEHOLDERS_FOR_COMPETITION", description = "Only comp admin, project finance or IFS admin can search stakeholders for a given competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<UserResource>> findStakeholders(long competitionId);
+
+    @SecuredBySpring(value = "ADD_STAKEHOLDER_TO_COMPETITION", description = "Only comp admin, project finance or IFS admin can add stakeholders to a given competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId);
+
+    @SecuredBySpring(value = "REMOVE_STAKEHOLDER_FROM_COMPETITION", description = "Only comp admin, project finance or IFS admin can remove stakeholders from a given competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    ServiceResult<Void> removeStakeholder(long competitionId, long stakeholderUserId);
 }
 
