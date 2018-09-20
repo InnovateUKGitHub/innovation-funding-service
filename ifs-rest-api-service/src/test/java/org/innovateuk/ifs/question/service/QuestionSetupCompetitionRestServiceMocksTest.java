@@ -26,7 +26,7 @@ public class QuestionSetupCompetitionRestServiceMocksTest extends
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
-        setupGetWithRestResultExpectations(questionRestURL + "/getById/" + questionId,
+        setupGetWithRestResultExpectations(questionRestURL + "/get-by-id/" + questionId,
                 CompetitionSetupQuestionResource.class, expected);
 
         CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccess();
@@ -53,7 +53,7 @@ public class QuestionSetupCompetitionRestServiceMocksTest extends
         long competitionId = 1L;
 
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
-        setupPostWithRestResultExpectations(questionRestURL + "/addDefaultToCompetition/" + competitionId,
+        setupPostWithRestResultExpectations(questionRestURL + "/add-default-to-competition/" + competitionId,
                 CompetitionSetupQuestionResource.class, null, expected, CREATED);
 
         RestResult<CompetitionSetupQuestionResource> response = service.addDefaultToCompetition(competitionId);
@@ -65,7 +65,7 @@ public class QuestionSetupCompetitionRestServiceMocksTest extends
     public void addResearchCategoryQuestionToCompetition() {
         long competitionId = 1L;
 
-        setupPostWithRestResultExpectations(questionRestURL + "/addResearchCategoryQuestionToCompetition/" +
+        setupPostWithRestResultExpectations(questionRestURL + "/add-research-category-question-to-competition/" +
                 competitionId, CREATED);
 
         RestResult<Void> response = service.addResearchCategoryQuestionToCompetition(competitionId);
@@ -76,7 +76,7 @@ public class QuestionSetupCompetitionRestServiceMocksTest extends
     @Test
     public void deleteById() {
         long questionId = 1L;
-        setupDeleteWithRestResultExpectations(questionRestURL + "/deleteById/" + questionId);
+        setupDeleteWithRestResultExpectations(questionRestURL + "/delete-by-id/" + questionId);
 
         RestResult<Void> response = service.deleteById(questionId);
 

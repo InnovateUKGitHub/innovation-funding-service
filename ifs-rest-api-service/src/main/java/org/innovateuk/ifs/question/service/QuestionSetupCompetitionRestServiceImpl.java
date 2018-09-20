@@ -16,7 +16,7 @@ public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-        return getWithRestResult(QUESTION_SETUP_REST_URL + "/getById/" + questionId,
+        return getWithRestResult(QUESTION_SETUP_REST_URL + "/get-by-id/" + questionId,
                 CompetitionSetupQuestionResource.class);
     }
 
@@ -27,18 +27,18 @@ public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId) {
-        return postWithRestResult(QUESTION_SETUP_REST_URL + "/addDefaultToCompetition/" +
+        return postWithRestResult(QUESTION_SETUP_REST_URL + "/add-default-to-competition/" +
                 competitionId, CompetitionSetupQuestionResource.class);
     }
 
     @Override
     public RestResult<Void> addResearchCategoryQuestionToCompetition(final long competitionId) {
-        return postWithRestResult(QUESTION_SETUP_REST_URL + "/addResearchCategoryQuestionToCompetition/" +
+        return postWithRestResult(QUESTION_SETUP_REST_URL + "/add-research-category-question-to-competition/" +
                 competitionId, Void.class);
     }
 
     @Override
     public RestResult<Void> deleteById(long questionId) {
-        return deleteWithRestResult(QUESTION_SETUP_REST_URL + "/deleteById/" + questionId, Void.class);
+        return deleteWithRestResult(QUESTION_SETUP_REST_URL + "/delete-by-id/" + questionId, Void.class);
     }
 }
