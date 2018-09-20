@@ -130,7 +130,7 @@
                             <th:block th:if="${#fields.hasErrors('startDate*')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
                             </th:block>
-                            <div class="date-group">
+                            <div class="date-group"  th:attr="data-date-invalid-errormessage=#{validation.fundingForm.date.format}">
                                 <div class="day govuk-visually-hidden">
                                     <label class="govuk-label" for="startDateDay">
                                         <span>Day</span>
@@ -192,7 +192,9 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('endDate*')}"
                                   th:text="${err}"></span>
                         </th:block>
-                        <div class="date-group" data-future-date="">
+                        <div class="date-group"
+                             data-future-date=""
+                             th:attr="data-date-invalid-errormessage=#{validation.fundingForm.date.format}">
 
                             <div class="day govuk-visually-hidden">
                                 <label class="govuk-label" for="endDateDay">
