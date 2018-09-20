@@ -79,17 +79,17 @@ the user fills in the CS Eligibility
 
 the user fills in the CS PT Eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}
-    the user clicks the button/link   link = Eligibility
-    the user clicks the button twice  css = label[for="single-or-collaborative-collaborative"]
-    the user selects the radio button    researchCategoriesApplicable    false
+    the user clicks the button/link    link = Eligibility
+    the user clicks the button twice   css = label[for="single-or-collaborative-collaborative"]
+    the user selects the radio button  researchCategoriesApplicable    false
     the user selects the option from the drop-down menu  10%  fundingLevelPercentage
-    the user clicks the button twice  css = label[for="lead-applicant-type-${organisationType}"]
+    the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
-    the user clicks the button/link   css = label[for="comp-resubmissions-yes"]
-    the user clicks the button twice  css = label[for="comp-resubmissions-yes"]
-    the user clicks the button/link   jQuery = button:contains("Done")
-    the user clicks the button/link   link = Competition setup
-    the user should see the element   jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
+    the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
+    the user clicks the button/link    jQuery = button:contains("Done")
+    the user clicks the button/link    link = Competition setup
+    the user should see the element    jQuery = div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
 the user selects Research Participation if required

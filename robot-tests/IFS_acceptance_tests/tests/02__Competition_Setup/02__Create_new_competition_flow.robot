@@ -270,7 +270,7 @@ Eligibility: Contain the correct options
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
     And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
-    And the user selects the radio button    researchCategoriesApplicable    true
+    And the user selects the radio button  researchCategoriesApplicable    true
     When the user should see the element   jQuery = label:contains("Yes")
     When the user should see the element   jQuery = label:contains("No")
     And the user should see the element    jQuery = label:contains("Business")
