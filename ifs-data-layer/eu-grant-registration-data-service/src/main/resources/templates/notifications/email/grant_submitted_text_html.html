@@ -8,15 +8,13 @@
 <dl class="govuk-list" style="margin-top: 2em">
     <dt><strong>Reference code</strong></dt>
     <dd style="margin-left: 0;">${euGrant.shortCode}</dd>
-    <dt style="margin: 1em 0 0 0;"><strong>Grant agreement number</strong></dt>
-    <dd style="margin-left: 0;">${euGrant.funding.grantAgreementNumber}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Organisation type</strong></dt>
     <dd style="margin-left: 0;">${euGrant.organisation.organisationType.displayName}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Registered name</strong></dt>
     <dd style="margin-left: 0;">${euGrant.organisation.name}</dd>
     <#if euGrant.organisation.companiesHouseNumber??>
-        <dt style="margin: 1em 0 0 0;"><strong>Registration number</strong></dt>
-        <dd style="margin-left: 0;">${euGrant.organisation.companiesHouseNumber}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Registration number</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.organisation.companiesHouseNumber}</dd>
     </#if>
     <dt style="margin: 1em 0 0 0;"><strong>Full name</strong></dt>
     <dd style="margin-left: 0;">${euGrant.contact.name}</dd>
@@ -26,9 +24,11 @@
     <dd style="margin-left: 0;">${euGrant.contact.email}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Telephone</strong></dt>
     <dd style="margin-left: 0;">${euGrant.contact.telephone}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Grant agreement number</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.grantAgreementNumber}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Type of action</strong></dt>
     <dd style="margin-left: 0;">(${euGrant.funding.actionType.name}) ${euGrant.funding.actionType.description}</dd>
-    <dt style="margin: 1em 0 0 0;"><strong>Participant ID</strong></dt>
+    <dt style="margin: 1em 0 0 0;"><strong>Participant identification code</strong></dt>
     <dd style="margin-left: 0;">${euGrant.funding.participantId}</dd>
     <dt style="margin: 1em 0 0 0;"><strong>Project name</strong></dt>
     <dd style="margin-left: 0;">${euGrant.funding.projectName}</dd>
@@ -39,8 +39,7 @@
     <dt style="margin: 1em 0 0 0;"><strong>EU funding contribution for above project
         (EUR)</strong></dt>
     <dd style="margin-left: 0;">&euro;${euGrant.funding.fundingContribution}</dd>
-    <dt style="margin: 1em 0 0 0;"><strong>Is your consortium the lead on this
-        project?</strong></dt>
+    <dt style="margin: 1em 0 0 0;"><strong>Is your organisation the project co-ordinator on this project?</strong></dt>
     <dd style="margin-left: 0;">${euGrant.funding.projectCoordinator?string('Yes', 'No')}</dd>
 </dl>
 
