@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVCTest<CompanyHouseController> {
+public class CompanyHouseControllerDocumentation extends BaseControllerMockMVCTest<CompanyHouseController> {
 
     @Mock
     private CompanyHouseApiService companyHouseService;
@@ -65,7 +65,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void searchByCompaniesHouseName() throws Exception {
+    public void searchByCompanyHouseName() throws Exception {
 
         String searchText = "Batman Robin";
 
@@ -77,7 +77,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(organisationSearchResults))))
                 .andExpect(status().isOk())
-                .andDo(document("companies-house/{method-name}",
+                .andDo(document("company-house/{method-name}",
                         pathParameters(
                                 parameterWithName("searchText").description("Name of the Organisation to search.")
                         ),
@@ -89,7 +89,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void searchByCompaniesHouseNumber() throws Exception {
+    public void searchByCompanyHouseNumber() throws Exception {
 
         String id = "08241216";
 
@@ -101,7 +101,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(organisationSearchResults)))
-                .andDo(document("companies-house/{method-name}",
+                .andDo(document("company-house/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the Organisation to search.")
                         ),
