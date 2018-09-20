@@ -29,7 +29,7 @@
 
             <div class="govuk-details__text">
 
-              <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${model.competitionId})}">
+              <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${model.competitionId})}">
 
                   <p class="govuk-body">Enter the new stakeholder's details below.</p>
 
@@ -89,6 +89,7 @@
                              th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(254)},
                                               data-required-errormessage=#{validation.invite.email.required}" />
                   </div>
+                  <input type="hidden" name="tab" th:value="${tab}"/>
                   <div class="govuk-form-group govuk-!-margin-0">
                       <button class="govuk-button govuk-!-margin-0" name="inviteStakeholder">Invite stakeholder</button>
                   </div>
