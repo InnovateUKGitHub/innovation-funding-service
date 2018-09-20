@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -44,6 +44,9 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationTeamMarkAsCompleteValidator applicationTeamMarkAsCompleteValidator;
+
+    @Autowired
+    private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
 
     @Autowired
     private MinRowCountValidator minRowCountValidator;
@@ -120,15 +123,12 @@ public class ApplicationValidationUtil {
     private List<ValidationMessages> isResearchCategoryValid(Application application, Question question) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
 
-        if (application.getResearchCategory() == null) {
-
-            Error error = Error.fieldError("form.researchCategory", application.getResearchCategory(), "validation.application.research.category.required");
-            ValidationMessages msg = new ValidationMessages(error);
-            validationMessages.add(msg);
+        BindingResult bindingResult = addValidation(application, applicationResearchMarkAsCompleteValidator);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;
     }
-
 
     private List<ValidationMessages> isApplicationTeamValid(Application application, Question question) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
