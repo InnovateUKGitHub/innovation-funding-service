@@ -262,7 +262,7 @@ Funding information: should have a green check
 
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
