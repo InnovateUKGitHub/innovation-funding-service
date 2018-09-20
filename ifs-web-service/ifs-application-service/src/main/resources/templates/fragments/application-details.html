@@ -153,15 +153,14 @@
             </th:block>
 
             <!--/* Applicant buttons */-->
-            <div th:if="${!formInputViewModel.closed and formInputViewModel.canMarkAsComplete and !formInputViewModel.summary}"
-                 class="form-footer govuk-!-margin-top-6">
+            <div th:unless="${formInputViewModel.closed}"
+                 th:class="${(formInputViewModel.complete and !formInputViewModel.summary)
+                            or (!formInputViewModel.complete and formInputViewModel.canMarkAsComplete)
+                            or (formInputViewModel.summary and formInputViewModel.readonly and formInputViewModel.assignButtonsViewModel.currentUserIsLead) ? 'form-footer govuk-!-margin-top-6' : ''}">
                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${formInputViewModel})"/>
+                <th:block th:if="${formInputViewModel.summary and formInputViewModel.readonly and formInputViewModel.assignButtonsViewModel.currentUserIsLead}"
+                          th:insert="question-type/form-elements :: form-edit-question-button (${formInputViewModel},${formInputViewModel.question})"/>
             </div>
-            <div th:if="${!formInputViewModel.closed and formInputViewModel.summary and formInputViewModel.readonly and formInputViewModel.assignButtonsViewModel.currentUserIsLead}"
-                 class="form-footer">
-                <th:block th:insert="question-type/form-elements :: form-edit-question-button (${formInputViewModel},${formInputViewModel.question})"/>
-            </div>
-
 
             <!--/* Hidden fields */-->
             <input type="hidden" id="application_id" th:value="${applicationId}"/>

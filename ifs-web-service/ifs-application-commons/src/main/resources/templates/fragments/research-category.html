@@ -110,10 +110,13 @@
                 th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
             </dd>
         </dl>
-        <div th:if="${model.canMarkAsComplete}"
-             class="form-footer govuk-!-margin-top-6">
+        <div th:unless="${model.closed}"
+             th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
+            <!--/* 'Mark as complete' / 'Edit' links */-->
+            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             <!--/* 'Return and edit' link */-->
-            <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+            <th:block th:if="${model.canMarkAsComplete}"
+                      th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
         </div>
     </div>
 </th:block>
