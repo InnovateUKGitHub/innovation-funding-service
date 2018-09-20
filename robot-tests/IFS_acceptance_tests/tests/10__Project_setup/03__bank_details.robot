@@ -45,7 +45,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
     [Documentation]    INFUND-4428
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     Then the user should see the element          link = Monitoring Officer
     And the user should see the element       link = Finance checks
@@ -54,7 +54,7 @@ Links to other sections in Project setup dependent on project details for partne
 
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    ${403_error_message}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
@@ -64,7 +64,7 @@ Project Finance should not be able to access bank details page
 
 Bank details page
     [Documentation]    INFUND-3010, INFUND-6018, INFUND-7173
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_TITLE}
     Then the user should see the element    css=ul li.require-action:nth-child(4)
@@ -102,7 +102,7 @@ The user enters bank details, wants to manually enter their address, leaves the 
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
-    [Tags]    HappyPath
+    [Tags]
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
@@ -131,7 +131,7 @@ Bank details client side validations
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=.govuk-button:contains("Find UK address")
@@ -157,7 +157,7 @@ Bank details experian validations
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
-    [Tags]    Experian    HappyPath
+    [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given the user enters text to a text field        name=accountNumber  ${account_two}
     And the user enters text to a text field          name=sortCode  ${sortCode_two}
@@ -179,7 +179,7 @@ Bank details submission
 
 Submission of bank details for academic user
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
-    [Tags]    Experian    HappyPath
+    [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
@@ -216,7 +216,7 @@ Submission of bank details for academic user
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
-    [Tags]      HappyPath
+    [Tags]
     [Setup]    log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should see the element   css=#table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok       # Project details
@@ -229,7 +229,7 @@ Status updates correctly for internal user's table
 
 User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user clicks the button/link           link=Bank details
@@ -240,7 +240,7 @@ User sees error response for invalid bank details for non-lead partner
 
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018
-    [Tags]    HappyPath
+    [Tags]
     When the user enters text to a text field      name=accountNumber  ${account_one}
     Then the user enters text to a text field      name=sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
@@ -264,7 +264,7 @@ Non lead partner submits bank details
 
 Bank details verified by Experian require no action by the Project Finance
     [Documentation]  IFS-2495
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
     When the user navigates to the page      ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
@@ -275,7 +275,7 @@ Bank details verified by Experian require no action by the Project Finance
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     And the user clicks the button/link             css=#table-project-status tr:nth-child(4) td:nth-child(4) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
@@ -295,7 +295,7 @@ Project Finance can see the progress of partners bank details
 
 IFS Admin can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
