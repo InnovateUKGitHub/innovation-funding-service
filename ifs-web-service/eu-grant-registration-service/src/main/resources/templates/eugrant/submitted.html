@@ -33,8 +33,6 @@
                 <dl class="govuk-list">
                     <dt class="govuk-!-margin-top-6">Reference code</dt>
                     <dd th:text="${model.shortCode}">1234567</dd>
-                    <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
-                    <dd th:text="${model.funding.grantAgreementNumber}">123456</dd>
                     <dt class="govuk-!-margin-top-6">Organisation type</dt>
                     <dd th:text="${model.organisation.organisationType.displayName}">Business</dd>
                     <dt class="govuk-!-margin-top-6">Registered name</dt>
@@ -51,10 +49,12 @@
                     <dd th:text="${model.contact.email}">joebloggs@gmail.com</dd>
                     <dt class="govuk-!-margin-top-6">Telephone</dt>
                     <dd th:text="${model.contact.telephone}">07986543211</dd>
+                    <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
+                    <dd th:text="${model.funding.grantAgreementNumber}">123456</dd>
+                    <dt class="govuk-!-margin-top-6">Participant identification code (PIC)</dt>
+                    <dd th:text="${model.funding.participantId}">Industrialisation of artificial intelligence</dd>
                     <dt class="govuk-!-margin-top-6">Type of action</dt>
                     <dd th:text="${'(' + model.funding.actionType.name + ') ' + model.funding.actionType.description}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
-                    <dt class="govuk-!-margin-top-6">Participant ID</dt>
-                    <dd th:text="${model.funding.participantId}">Industrialisation of artificial intelligence</dd>
                     <dt class="govuk-!-margin-top-6">Project name</dt>
                     <dd th:text="${model.funding.projectName}">My EU project name</dd>
                     <dt class="govuk-!-margin-top-6">Project start date</dt>
