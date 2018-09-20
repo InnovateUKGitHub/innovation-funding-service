@@ -28,8 +28,6 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
 
         LOG.debug(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
-        // TODO DW - 100 is an arbitrary amount - should be based on some average or maximum number of threads that a
-        // Controller can produce concurrently whilst doing some work
         if ((maxPoolSize - activeExecutorThreads) > 100) {
             return Health.up().build();
         } else {

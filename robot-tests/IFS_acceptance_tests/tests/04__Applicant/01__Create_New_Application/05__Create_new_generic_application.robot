@@ -14,7 +14,7 @@ ${competitionName}  Generic competition for TsnCs
 *** Test Cases ***
 User can edit the assesed question
     [Documentation]    IFS-747
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  logged in user applies to competition  ${openGenericCompetition}  1
     Given the user should not see the element  a:contains("7.")  # This comp has only 1 question
     When the user clicks the button/link  link=1. Generic question title

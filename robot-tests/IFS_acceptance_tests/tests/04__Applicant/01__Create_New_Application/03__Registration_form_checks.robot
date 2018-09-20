@@ -21,7 +21,7 @@ Resource          ../../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Your details: Server-side validations
     [Documentation]    -INFUND-885
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Applicant goes to the registration form
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
     Then the user should see an error                               Password is too weak.
@@ -57,7 +57,7 @@ Your details: client-side password hint validation
 
 Your details: client-side validation
     [Documentation]    -INFUND-885
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page                 ${ACCOUNT_CREATION_FORM_URL}
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  Inn0vat3
     Then the user should not see an error in the page

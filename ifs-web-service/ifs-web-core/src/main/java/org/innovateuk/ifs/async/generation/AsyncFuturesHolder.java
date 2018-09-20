@@ -207,7 +207,6 @@ public final class AsyncFuturesHolder {
                         CompletableFuture.allOf(actualFutures.toArray(new CompletableFuture<?>[futuresSpawnedFromTheseProcesses.size()]));
 
                 try {
-                    // TODO DW - add configuration for this
                     futureBatch.get(600, TimeUnit.SECONDS);
                 } catch (Exception e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);

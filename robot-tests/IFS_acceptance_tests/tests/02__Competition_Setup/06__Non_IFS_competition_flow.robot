@@ -16,7 +16,7 @@ Resource          CompAdmin_Commons.robot
 *** Test Cases ***
 Create new non-IFS competition by proj Finance
     [Documentation]    INFUND-7963 INFUND-7964
-    [Tags]  HappyPath
+    [Tags]
     Given The user logs-in in new browser   &{internal_finance_credentials}
     When the user navigates to the Non IFS competitions tab
     And the user clicks the button/link     link=Create non-IFS competition
@@ -75,7 +75,7 @@ Internal user can see the Non-IFS comp and its brief information
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965
-    [Tags]    MySQL
+    [Tags]
     Given the user navigates to the page    ${frontDoor}
     When the user enters text to a text field    id=keywords    search
     And the user clicks the button/link    jQuery=button:contains("Update results")
@@ -85,7 +85,7 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
 
 Guest can see the Dates tab
     [Documentation]  INFUND-8554  IFS-1117
-    [Tags]    MySQL
+    [Tags]
     When the user clicks the button/link  link=Dates
     Then the user should see the element  jQuery=#dates dd:contains("Competition opens")
     And the user should see the element   jQuery=#dates dd:contains("Registration closes")

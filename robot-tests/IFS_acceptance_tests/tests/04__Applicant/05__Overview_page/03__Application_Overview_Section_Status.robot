@@ -14,8 +14,7 @@ Resource          ../Applicant_Commons.robot
 *** Test Cases ***
 Green check shows after marking a question as complete
     [Documentation]    INFUND-539
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     Given the user navigates to the overview page of the Robot test application
     And the user should see the element     jQuery=li:contains("Economic benefit") > .assign-container
     When the user clicks the button/link    link=4. Economic benefit
@@ -25,7 +24,7 @@ Green check shows after marking a question as complete
 
 Blue flag shows after marking a question as incomplete
     [Documentation]    INFUND-539
-    [Tags]    HappyPath
+    [Tags]
     Given The user navigates to the overview page of the Robot test application
     And the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
     And the user clicks the button/link    link=4. Economic benefit
