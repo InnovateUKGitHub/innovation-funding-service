@@ -10,6 +10,7 @@ the user selects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label, [name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
+    Sleep  500ms
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
@@ -18,6 +19,7 @@ the user unselects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label,[name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
+    sleep  500ms
 
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
@@ -44,6 +46,7 @@ the user selects the radio button
     Click Element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
     # Error checking
     the user should not see an error in the page
+    sleep  500ms
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -71,11 +74,11 @@ The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10    800ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
-    Wait for autosave
+    Sleep  500ms
 
 The user enters large text to a text field
     # Note that here we give extra time of execution compared to keyword "The user enters text to a text field"
@@ -90,7 +93,7 @@ The user enters large text to a text field
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    element should contain    ${element}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10    1000ms    element should contain    ${element}    ${text}
 
 the user clears the text from the element
     [Arguments]    ${element}
@@ -101,7 +104,7 @@ the user clears the text from the element
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${textfield}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10    1000ms    textfield should contain    ${textfield}    ${text}
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
@@ -121,6 +124,7 @@ the user selects the option from the drop-down menu
     mouse out    ${drop-down}
     # Error checking
     the user should not see an error in the page
+    Sleep  500ms
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
