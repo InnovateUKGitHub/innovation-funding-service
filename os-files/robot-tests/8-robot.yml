@@ -22,7 +22,7 @@ items:
           imagePullPolicy: Always
           resources:
             limits:
-              memory: 1000M
+              memory: 2000M
             requests:
               cpu: 100m
               memory: 400M
