@@ -65,6 +65,7 @@ the user fills in the CS Eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link   link = Eligibility
     the user clicks the button twice  css = label[for="single-or-collaborative-collaborative"]
+    the user selects the radio button    researchCategoriesApplicable    true
     the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice  css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}

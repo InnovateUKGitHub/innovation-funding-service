@@ -256,17 +256,21 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(2) .task-status-complete
+    Then the user should see the element    css=li:nth-child(3) .task-status-complete
     Then the user should see the element    jQuery=li:contains("Funding information") .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
+    And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
+    And the user selects the radio button    researchCategoriesApplicable    true
+    When the user should see the element   jQuery = label:contains("Yes")
+    When the user should see the element   jQuery = label:contains("No")
     And the user should see the element    jQuery = label:contains("Business")
     And the user should see the element    jQuery = label[for="lead-applicant-type-2"]:contains("Research")
     And the user should see the element    jQuery = label:contains("Research and technology organisation")
@@ -311,7 +315,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(3) .task-status-complete
+    Then the user should see the element    css=li:nth-child(4) .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Milestones: Page should contain the correct fields
@@ -345,14 +349,15 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(4) .task-status-complete
+    Then the user should see the element    css=li:nth-child(5) .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
-    When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
+    #When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
+    When The user clicks the button/link  jQuery=a:contains("Application")
     Then the user should see the element  jQuery=h2:contains("Sector competition questions")
     When the user should see the element  link=Application details
     Then the user should see the element  link=Project summary
