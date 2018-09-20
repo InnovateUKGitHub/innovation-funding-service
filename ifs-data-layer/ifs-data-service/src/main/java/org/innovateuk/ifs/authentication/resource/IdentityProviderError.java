@@ -14,7 +14,7 @@ public class IdentityProviderError {
      * For JSON marshalling
      */
     public IdentityProviderError() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public IdentityProviderError(String key, List<String> arguments) {
@@ -29,7 +29,6 @@ public class IdentityProviderError {
     public List<String> getArguments() {
         return arguments;
     }
-
 
     @Override
     public boolean equals(Object o) {

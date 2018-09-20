@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competitionsetup.mapper.AssessorCountOptionMapper;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.resource.QuestionType;
 
@@ -53,7 +53,7 @@ public class Question {
     private QuestionType type = QuestionType.GENERAL;
 
     @Enumerated(EnumType.STRING)
-    private CompetitionSetupQuestionType questionSetupType;
+    private QuestionSetupType questionSetupType;
 
     private Integer assessorMaximumScore;
 
@@ -202,15 +202,15 @@ public class Question {
     	return queriedType.equals(type);
     }
 
-    public CompetitionSetupQuestionType getQuestionSetupType() {
+    public QuestionSetupType getQuestionSetupType() {
         return questionSetupType;
     }
 
-    public void setQuestionSetupType(CompetitionSetupQuestionType questionSetupType) {
+    public void setQuestionSetupType(QuestionSetupType questionSetupType) {
         this.questionSetupType = questionSetupType;
     }
 
     public boolean isScope() {
-        return this.questionSetupType == CompetitionSetupQuestionType.SCOPE;
+        return this.questionSetupType == QuestionSetupType.SCOPE;
     }
 }

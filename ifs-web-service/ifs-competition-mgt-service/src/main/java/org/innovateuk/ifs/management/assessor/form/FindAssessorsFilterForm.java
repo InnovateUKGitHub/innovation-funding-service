@@ -20,6 +20,6 @@ public class FindAssessorsFilterForm extends BaseBindingResultTarget {
     }
 
     public boolean anyFilterIsActive() {
-        return this.innovationArea.isPresent() && !this.innovationArea.equals(0L);
+        return this.innovationArea.isPresent() && !this.innovationArea.get().equals(0L);
     }
 }

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,13 +29,16 @@ public class ApplicationInviteController {
     @Autowired
     private AcceptApplicationInviteService acceptApplicationInviteService;
 
+    @Autowired
+    private CrmService crmService;
+
     @PostMapping("/createApplicationInvites")
-    public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
+    public RestResult<Void> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
         return applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.empty()).toPostCreateResponse();
     }
 
     @PostMapping("/createApplicationInvites/{applicationId}")
-    public RestResult<InviteResultsResource> createApplicationInvitesForApplication(@RequestBody InviteOrganisationResource inviteOrganisationResource, @PathVariable("applicationId") long applicationId) {
+    public RestResult<Void> createApplicationInvitesForApplication(@RequestBody InviteOrganisationResource inviteOrganisationResource, @PathVariable("applicationId") long applicationId) {
         return applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId)).toPostCreateResponse();
     }
 
@@ -55,13 +58,28 @@ public class ApplicationInviteController {
     }
 
     @PostMapping("/saveInvites")
-    public RestResult<InviteResultsResource> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
+    public RestResult<Void> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return applicationInviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
     @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return acceptApplicationInviteService.acceptInvite(hash, userId).toPutResponse();
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPutResponse();
+    }
+
+    @PutMapping("/acceptInvite/{hash}/{userId}/{organisationId}")
+    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPutResponse();
     }
 
     @DeleteMapping("/removeInvite/{inviteId}")

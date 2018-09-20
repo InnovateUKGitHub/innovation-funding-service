@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -13,11 +15,9 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -53,7 +53,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -140,14 +139,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long innovationAreaId = 54L;
         long assessorId = 20L;
 
-        ProcessRole processRole = newProcessRole()
-                .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
-                .build();
-
-        processRoleRepository.save(processRole);
-
         Application application = newApplication()
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
@@ -155,11 +146,19 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
-                .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(APPLICANT)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
+                .withApplication(application)
+                .build();
+
+        processRoleRepository.save(processRole);
 
         flushAndClearSession();
 
@@ -176,16 +175,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
         long innovationAreaId = 12L;
         long assessorId = 20L;
-        String filter = "54";
-
-
-        ProcessRole processRole = newProcessRole()
-                .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
-                .build();
-
-        processRoleRepository.save(processRole);
 
         Application application = newApplication()
                 .with(id(null))
@@ -194,11 +183,19 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
-                .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(APPLICANT)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
+                .withApplication(application)
+                .build();
+
+        processRoleRepository.save(processRole);
 
         flushAndClearSession();
 

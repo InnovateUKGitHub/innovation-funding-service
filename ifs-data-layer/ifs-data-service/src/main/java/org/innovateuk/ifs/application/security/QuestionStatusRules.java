@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class QuestionStatusRules extends BasePermissionRules {
 
     @Autowired
     private QuestionRepository questionRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;

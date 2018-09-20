@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.transactional;
 
-import org.innovateuk.ifs.domain.Alert;
-import org.innovateuk.ifs.mapper.AlertMapper;
-import org.innovateuk.ifs.repository.AlertRepository;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.domain.Alert;
+import org.innovateuk.ifs.mapper.AlertMapper;
+import org.innovateuk.ifs.repository.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

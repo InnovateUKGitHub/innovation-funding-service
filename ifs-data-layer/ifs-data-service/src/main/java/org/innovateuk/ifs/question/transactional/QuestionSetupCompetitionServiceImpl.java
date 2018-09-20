@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -138,7 +138,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        if (question.getQuestionSetupType() != CompetitionSetupQuestionType.APPLICATION_DETAILS) {
+        if (question.getQuestionSetupType() != QuestionSetupType.APPLICATION_DETAILS) {
             question.setShortName(competitionSetupQuestionResource.getShortTitle());
         }
         question.setName(competitionSetupQuestionResource.getTitle());

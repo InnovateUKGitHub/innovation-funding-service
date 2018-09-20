@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.junit.Assert.assertEquals;
 
 public class RejectionReasonRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<RejectionReasonRepository> {

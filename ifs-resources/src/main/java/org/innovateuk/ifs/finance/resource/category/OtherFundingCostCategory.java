@@ -63,7 +63,7 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
             OtherFunding otherFundingCost = (OtherFunding) costItem;
             if (OTHER_FUNDING.equals(otherFundingCost.getFundingSource())) {
                 otherFunding = (OtherFunding) costItem;
-            } else if (costItem != null) {
+            } else {
                 costs.add(costItem);
             }
         }

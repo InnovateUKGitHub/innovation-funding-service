@@ -5,7 +5,6 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 

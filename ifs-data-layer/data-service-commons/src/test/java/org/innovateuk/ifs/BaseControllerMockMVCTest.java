@@ -3,11 +3,9 @@ package org.innovateuk.ifs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +21,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
@@ -48,8 +45,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
-
-
 
     @Before
     public void setupMockMvc() {
@@ -86,8 +81,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
         assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
-
-
 
     protected static void login(UserResource userResource) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));

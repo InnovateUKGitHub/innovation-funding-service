@@ -15,11 +15,11 @@
 
 
     <!-- HARDCODED PROTOTYPE HTML -->
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='heading-large'" />
-    <p>You can view the status of active and inactive users and add new users.</p>
-    <p><a href="/prototypes/27-add-internal-user.html">Add a new internal user</a></p>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
+    <p class="govuk-body">You can view the status of active and inactive users and add new users.</p>
+    <p class="govuk-body"><a href="/prototypes/27-add-internal-user.html">Add a new internal user</a></p>
 
-    <ul class="inline-nav extra-marigin cf">
+    <ul class="govuk-list inline-nav extra-marigin cf">
       <li class="selected">
         <a href="#">Active (9)</a>
       </li>
@@ -29,41 +29,41 @@
     </ul>
 
 
-    <h2 class="heading-medium">Active users</h2>
-    <p>
-        <span class="heading-xlarge no-margin">4</span>
-        <span class="heading-small">active internal users</span>
+    <h2 class="govuk-heading-m">Active users</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0">4</span>
+        <span class="govuk-heading-s">active internal users</span>
     </p>
 
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role profile</th>
-                <th scope="col">Email address</th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Role profile</th>
+                <th class="govuk-table__header" scope="col">Email address</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td><a href="/prototypes/ifs-606-review-user-profile.html">John Doe</a></td>
-                <td>Competition Administrator</td>
-                <td><a href="#">john.doe@innovateuk.test</a></td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/ifs-606-review-user-profile.html">John Doe</a></td>
+                <td class="govuk-table__cell">Competition Administrator</td>
+                <td class="govuk-table__cell"><a href="#">john.doe@innovateuk.test</a></td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/ifs-606-review-user-profile.html">Robert Johnson</a></td>
-                <td>Competition Administrator</td>
-                <td><a href="#">robert.johnson@innovateuk.test</a></td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/ifs-606-review-user-profile.html">Robert Johnson</a></td>
+                <td class="govuk-table__cell">Competition Administrator</td>
+                <td class="govuk-table__cell"><a href="#">robert.johnson@innovateuk.test</a></td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/ifs-606-review-user-profile.html">Veronica Ledermann</a></td>
-                <td>Competition Administrator</td>
-                <td><a href="#">veronica.ledermann@innovateuk.test</a></td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/ifs-606-review-user-profile.html">Veronica Ledermann</a></td>
+                <td class="govuk-table__cell">Competition Administrator</td>
+                <td class="govuk-table__cell"><a href="#">veronica.ledermann@innovateuk.test</a></td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/ifs-606-review-user-profile.html">Toby Reader</a></td>
-                <td>Competition Administrator</td>
-                <td><a href="#">toby.reader@innovateuk.test</a></td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/ifs-606-review-user-profile.html">Toby Reader</a></td>
+                <td class="govuk-table__cell">Competition Administrator</td>
+                <td class="govuk-table__cell"><a href="#">toby.reader@innovateuk.test</a></td>
             </tr>
         </tbody>
         </table>

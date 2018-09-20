@@ -10,9 +10,7 @@ import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.DAY;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class CostTest {
 

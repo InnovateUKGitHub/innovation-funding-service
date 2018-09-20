@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public interface ApplicationFundingDecisionRestService {
 
-	RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
-	RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource);
+    RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
+
+    RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource);
 }

@@ -6,8 +6,8 @@ import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class MonitoringOfficerBuilder extends BaseBuilder<MonitoringOfficer, MonitoringOfficerBuilder> {
 

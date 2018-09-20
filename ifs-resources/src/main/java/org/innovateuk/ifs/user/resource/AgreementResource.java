@@ -13,9 +13,6 @@ public class AgreementResource {
     private boolean current;
     private String text;
 
-    public AgreementResource() {
-    }
-
     public Long getId() {
         return id;
     }

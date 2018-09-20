@@ -33,14 +33,10 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.CREATED;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewRepository> {
 
@@ -64,6 +60,8 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     private User assessor;
     private User otherAssessor;
+    private User applicant;
+    private User otherApplicant;
     private Organisation organisation;
     private Competition competition;
     private Application application1;
@@ -78,10 +76,18 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Before
     public void setup() {
+        loginCompAdmin();
+
+
         assessor = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
         otherAssessor = userRepository.findByEmail("felix.wilson@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email felix.wilson@gmail.com"));
+
+        applicant = userRepository.findByEmail("steve.smith@empire.com")
+                .orElseThrow(() -> new IllegalStateException("Expected to find test user for emailsteve.smith@empire.com"));
+        otherApplicant = userRepository.findByEmail("pete.tom@egg.com")
+                .orElseThrow(() -> new IllegalStateException("Expected to find test user for email pete.tom@egg.com"));
 
         organisation = newOrganisation()
                 .withName("orgName")
@@ -149,12 +155,14 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withRole(Role.LEADAPPLICANT)
                 .withApplication(application1)
                 .withOrganisationId(organisation.getId())
+                .withUser(applicant)
                 .build();
         ProcessRole lead2 = newProcessRole()
                 .with(id(null))
                 .withRole(Role.LEADAPPLICANT)
                 .withApplication(application2)
                 .withOrganisationId(organisation.getId())
+                .withUser(otherApplicant)
                 .build();
 
         processRoleRepository.save(asList(assessorRole1, assessorRole2, assessorRole3, otherAssessorRole1, otherAssessorRole2, lead1, lead2));

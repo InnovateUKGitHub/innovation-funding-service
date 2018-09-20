@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationsController;
+import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.junit.Test;
 
@@ -42,8 +42,8 @@ public class CompetitionManagementApplicationsControllerSecurityTest extends Bas
     }
 
     @Test
-    public void testUnsuccessfulApplications() {
-        assertAccessDenied(() -> classUnderTest.unsuccessfulApplications(null, competitionId, null, 0, 0, null, null, null),
+    public void testPreviousApplications() {
+        assertAccessDenied(() -> classUnderTest.previousApplications(null, competitionId, null, 0, 0, null, null, null),
                 () -> {
                 });
     }

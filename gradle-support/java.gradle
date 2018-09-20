@@ -1,0 +1,60 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ['**/*Mapper**'])
+        })
+    }
+
+}
+
+test {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+
+    if (!['ifs-data-service', 'ifs-finance-data-service'].contains(project.name)) {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    }
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+
+repositories {
+    jcenter()
+}
+
+jar {
+    manifest.attributes provider: 'gradle'
+}
+
+compileJava {
+    options.compilerArgs += '-parameters'
+}
+
+dependencies {
+    compile "commons-logging:commons-logging:1.2"
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:1.10.19"
+    testCompile 'org.assertj:assertj-core:3.9.0'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+}

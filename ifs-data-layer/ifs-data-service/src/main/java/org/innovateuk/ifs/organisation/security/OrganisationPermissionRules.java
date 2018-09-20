@@ -2,13 +2,14 @@ package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class OrganisationPermissionRules {
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
@@ -57,7 +61,6 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Users linked to Applications can view the basic details of the other Organisations on their own Applications")
     public boolean usersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
 
-        // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
         List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplicationId);
         List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId ->
@@ -65,6 +68,11 @@ public class OrganisationPermissionRules {
         ));
 
         return simpleMap(processRolesForAllApplications, ProcessRole::getOrganisationId).contains(organisation.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "User is invited to join the organisation")
+    public boolean usersCanViewOrganisationsTheyAreInvitedTo(OrganisationResource organisation, UserResource user) {
+        return inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesUserId(organisation.getId(), user.getId()).isPresent();
     }
 
     @PermissionRule(value = "CREATE", description = "The System Registration User can create Organisations on behalf of non-logged in Users " +

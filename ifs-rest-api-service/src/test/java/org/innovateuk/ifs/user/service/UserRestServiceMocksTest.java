@@ -17,8 +17,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder
-        .newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -120,9 +119,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId,
                 userResource.getAllowMarketingEmails()
         ).getSuccess();
@@ -143,9 +139,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withGender(Gender.MALE)
-                .withEthnicity(2L)
-                .withDisability(Disability.YES)
                 .withAllowMarketingEmails(true)
                 .build();
 
@@ -159,9 +152,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId,
                 userResource.getAllowMarketingEmails()
         ).getSuccess();
@@ -195,9 +185,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : "",
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
                 competitionId,
                 userResource.getAllowMarketingEmails()
@@ -218,9 +205,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withDisability(Disability.YES)
-                .withEthnicity(2L)
-                .withGender(Gender.FEMALE)
                 .withAllowMarketingEmails(true)
                 .build();
 
@@ -235,9 +219,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : "",
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
                 competitionId,
                 userResource.getAllowMarketingEmails()
@@ -368,5 +349,14 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupPostWithRestResultExpectations(format("%s/id/%s/agreeNewSiteTermsAndConditions", usersUrl, userId),
                 HttpStatus.OK);
         assertTrue(service.agreeNewSiteTermsAndConditions(userId).isSuccess());
+    }
+
+    @Test
+    public void grantRole() {
+        long userId = 1L;
+        Role role = Role.APPLICANT;
+        setupPostWithRestResultExpectations(format("%s/%s/grant/%s", usersUrl, userId, role.name()),
+                HttpStatus.OK);
+        assertTrue(service.grantRole(userId, role).isSuccess());
     }
 }

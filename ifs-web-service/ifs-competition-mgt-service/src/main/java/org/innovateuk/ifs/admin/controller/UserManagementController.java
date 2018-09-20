@@ -54,6 +54,8 @@ public class UserManagementController extends AsyncAdaptor {
 
     private static final String FORM_ATTR_NAME = "form";
 
+    private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
+
     @Autowired
     private UserRestService userRestService;
 
@@ -189,7 +191,7 @@ public class UserManagementController extends AsyncAdaptor {
         });
     }
 
-    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
+    private static EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
@@ -223,10 +225,10 @@ public class UserManagementController extends AsyncAdaptor {
         return emptyPage(model);
     }
 
-    private String emptyPage(Model model){
+    private static String emptyPage(Model model){
         model.addAttribute("mode", "init");
         model.addAttribute("users", emptyList());
-        return "admin/search-external-users";
+        return SEARCH_PAGE_TEMPLATE;
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
@@ -261,7 +263,7 @@ public class UserManagementController extends AsyncAdaptor {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "users");
                                 model.addAttribute("users", users.getSuccess());
-                                return "admin/search-external-users";
+                                return SEARCH_PAGE_TEMPLATE;
                             }
                     );
         });
@@ -277,7 +279,7 @@ public class UserManagementController extends AsyncAdaptor {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "invites");
                                 model.addAttribute("invites", invites.getSuccess());
-                                return "admin/search-external-users";
+                                return SEARCH_PAGE_TEMPLATE;
                             }
                     );
         });

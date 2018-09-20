@@ -3,18 +3,15 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForInterviewDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -36,16 +33,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -56,10 +47,7 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
     private AssessorCompetitionForInterviewDashboardModelPopulator assessorCompetitionForInterviewDashboardModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private ProcessRoleService processRoleService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -88,20 +76,11 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
                 .withCompetition(competition.getId())
                 .build(4);
 
-        Role role = Role.LEADAPPLICANT;
         List<OrganisationResource> organisations = buildTestOrganisations();
-        List<ProcessRoleResource> participants = newProcessRoleResource()
-                .withRole(role)
-                .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
-                .build(4);
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(interviewAllocationRestService.getAllocatedApplicationsByAssessorId(competition.getId(), userId)).thenReturn(restSuccess(assessmentInterviews));
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
 
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
@@ -111,14 +90,13 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
                 .andExpect(view().name("assessor-interview-applications"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, interviewAllocationRestService, applicationService, processRoleService, organisationRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAllocationRestService, applicationService, organisationRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAllocationRestService).getAllocatedApplicationsByAssessorId(competition.getId(), userId);
 
         assessmentInterviews.forEach(assessmentInterview -> {
             inOrder.verify(applicationService).getById(assessmentInterview.getApplication());
-            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessmentInterview.getApplication());
-            inOrder.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            inOrder.verify(organisationRestService).getOrganisationById(anyLong());
         });
 
         inOrder.verifyNoMoreInteractions();
@@ -143,7 +121,7 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
 
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(interviewAllocationRestService.getAllocatedApplicationsByAssessorId(competition.getId(), userId)).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/interview", competition.getId()))
@@ -152,13 +130,12 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
                 .andExpect(view().name("assessor-interview-applications"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, interviewAllocationRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAllocationRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAllocationRestService).getAllocatedApplicationsByAssessorId(competition.getId(), userId);
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);
-        verifyZeroInteractions(processRoleService);
         verifyZeroInteractions(organisationRestService);
 
         AssessorCompetitionForInterviewDashboardViewModel model = (AssessorCompetitionForInterviewDashboardViewModel) result.getModelAndView().getModel().get("model");
@@ -185,6 +162,7 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
         return newApplicationResource()
                 .withId(11L, 12L, 13L, 14L)
                 .withName("Juggling is fun", "Juggling is very fun", "Juggling is not fun", "Juggling is word that sounds funny to say")
+                .withLeadOrganisationId(1L, 2L, 3L, 4L)
                 .build(4);
     }
 

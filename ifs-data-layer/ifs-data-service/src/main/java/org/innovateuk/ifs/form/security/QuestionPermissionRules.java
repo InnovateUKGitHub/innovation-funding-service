@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.form.security;
 
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 

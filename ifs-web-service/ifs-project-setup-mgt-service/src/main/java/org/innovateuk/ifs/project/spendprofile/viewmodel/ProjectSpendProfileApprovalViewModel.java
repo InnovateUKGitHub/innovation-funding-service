@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.spendprofile.viewmodel;
 
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.util.List;
 
@@ -17,15 +17,21 @@ public class ProjectSpendProfileApprovalViewModel {
     private String leadTechnologist;
     private ApprovalType approvalType;
     private List<OrganisationResource> organisations;
+    private Long applicationId;
+    private String projectName;
 
     public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary,
                                                 String leadTechnologist,
                                                 ApprovalType approvalType,
-                                                List<OrganisationResource> organisations) {
+                                                List<OrganisationResource> organisations,
+                                                Long applicationId,
+                                                String projectName) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
         this.approvalType = approvalType;
         this.organisations = organisations;
+        this.applicationId = applicationId;
+        this.projectName = projectName;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -54,6 +60,14 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public List<OrganisationResource> getOrganisations() {
         return organisations;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public String getProjectName() {
+        return projectName;
     }
 
     @Override

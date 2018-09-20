@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessments", securedType = AssessmentAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
-public class AssessmentAssessorsController extends BaseAssessmentController<AssessorCountSummaryPageResource> {
+public class AssessmentAssessorsController extends BaseAssessmentController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     @Autowired

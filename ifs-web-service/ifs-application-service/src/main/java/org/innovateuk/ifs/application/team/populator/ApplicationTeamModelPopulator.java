@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRow
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -50,23 +50,34 @@ public class ApplicationTeamModelPopulator {
     private UserService userService;
 
     @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
     private ApplicantRestService applicantRestService;
 
     @Autowired
     private QuestionRestService questionRestService;
 
-    public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId, Long questionId) {
+    public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId, long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
-        boolean closed = !isCompetitionOpen(applicationResource);
-        boolean complete = isComplete(applicationId, loggedInUserId, questionId);
-        boolean canMarkAsComplete = userIsLeadApplicant;
-        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
+        boolean isComplete = isComplete(applicationId, loggedInUserId, questionId);
+        boolean allReadonly = isComplete;
+
+        return new ApplicationTeamViewModel(
+                applicationResource.getId(),
+                questionId,
+                applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin, closed, complete, canMarkAsComplete);
+                userIsLeadApplicant,
+                applicationCanBegin,
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
+                isComplete,
+                userIsLeadApplicant,
+                allReadonly);
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
@@ -75,9 +86,9 @@ public class ApplicationTeamModelPopulator {
         return model;
     }
 
-    private Long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private boolean isComplete(long applicationId, long loggedInUserId, Long questionId) {
@@ -163,11 +174,15 @@ public class ApplicationTeamModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {
         return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
+    }
+
+    private boolean isApplicationSubmitted(ApplicationResource applicationResource) {
+        return applicationResource.isSubmitted();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {

@@ -4,11 +4,10 @@ import java.util.List;
 
 /**
  * Represents an unexpected error that occurred in the data layer while processing a request
- *
  */
 public class GeneralUnexpectedErrorException extends IFSRuntimeException {
     public GeneralUnexpectedErrorException() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public GeneralUnexpectedErrorException(List<Object> arguments) {

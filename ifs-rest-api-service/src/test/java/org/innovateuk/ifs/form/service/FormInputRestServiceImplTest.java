@@ -2,7 +2,6 @@ package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.junit.Assert;
@@ -14,8 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
-
-import static java.lang.String.format;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;

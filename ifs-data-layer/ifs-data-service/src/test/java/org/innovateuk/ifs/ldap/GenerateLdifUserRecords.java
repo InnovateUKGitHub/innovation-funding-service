@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Temporary

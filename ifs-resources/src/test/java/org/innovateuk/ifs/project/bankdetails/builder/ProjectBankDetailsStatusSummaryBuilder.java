@@ -7,8 +7,8 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class ProjectBankDetailsStatusSummaryBuilder extends BaseBuilder<ProjectBankDetailsStatusSummary, ProjectBankDetailsStatusSummaryBuilder> {
     public ProjectBankDetailsStatusSummaryBuilder(List<BiConsumer<Integer, ProjectBankDetailsStatusSummary>> newActions) {

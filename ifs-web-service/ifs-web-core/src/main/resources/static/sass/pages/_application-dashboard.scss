@@ -1,29 +1,29 @@
 @mixin with-hourglass {
+  @include govuk-font(14);
   background: url(../images/ifs-images/icons/icon-awaiting-assessment.png) no-repeat;
   width: 105px;
   text-align: center;
   line-height: 1.2em;
-  font-size: 14px;
   float: right;
-  color: $secondary-text-colour;
+  color: $govuk-secondary-text-colour;
   margin: 0;
 }
 
-.column-assessment-details{
-  @include grid-column( 13/16 );
-
-  @include media-down(tablet) {
-    @include grid-column( 12/16 );
-  }
-}
-
-.column-assessment-status{
-  @include grid-column( 3/16 );
-
-  @include media-down(tablet) {
-    @include grid-column( 4/16 );
-  }
-}
+//.column-assessment-details{
+//  @include grid-column( 13/16 );
+//
+//  @include media-down(tablet) {
+//    @include grid-column( 12/16 );
+//  }
+//}
+//
+//.column-assessment-status{
+//  @include grid-column( 3/16 );
+//
+//  @include media-down(tablet) {
+//    @include grid-column( 4/16 );
+//  }
+//}
 
 .app-dashboard,
 .assessor-dashboard,
@@ -32,10 +32,10 @@
     margin:0;
   }
 
-  @include media(tablet) {
+  @include govuk-media-query(tablet) {
     .my-applications {
       .in-progress {
-        .grid-row {
+        .govuk-grid-row {
           margin: 5px 0 0 12px;
         }
       }
@@ -82,14 +82,14 @@
     }
   }
 
-  .button {
+  .govuk-button {
     &[name="submit_assessments"] {
       margin: 15px 0 0 0;
     }
   }
 
   .modal-confirm-submit {
-    .button {
+    .govuk-button {
       &[name="submit_assessments"] {
         margin: 0;
       }
@@ -101,7 +101,7 @@
       margin: 20px 0 55px 0;
     }
 
-    .column-half + .column-half {
+    .govuk-grid-column-one-half + .govuk-grid-column-one-half {
       padding: 0 20px 0 0;
       text-align:right;
     }
@@ -109,44 +109,30 @@
 
   @include media-down(tablet) {
     .boxed-list {
-      .column-half + .column-half {
+      .govuk-grid-column-one-half + .govuk-grid-column-one-half {
         text-align:left;
         padding: 15px 15px;
       }
     }
   }
 
-  .grid-row {
-    .row {
-      @include grid-column(1);
-    }
-  }
-
   .competition-details {
-    .list-bullet {
+    .govuk-list--bullet {
       margin-bottom: 45px;
     }
   }
 
-  .panel-indent {
-    margin-bottom: 0;
-  }
-
-  .form-hint {
-    margin-bottom: 0;
-  }
-
   .collapsible {
-    .column-three-quarters {
+    .govuk-grid-column-three-quarters {
       padding-left: 30px;
     }
 
-    .column-full {
+    .govuk-grid-column-full {
       padding: 0 18px;
     }
 
     .accordion_item {
-      border-top: 1px solid $border-colour;
+      border-top: 1px solid $govuk-border-colour;
       padding-top: 20px;
 
       &:first-child {
@@ -161,7 +147,7 @@
       float: right;
 
       .score {
-        font-size: 48px;
+        @include govuk-font(48);
       }
     }
   }
@@ -169,7 +155,7 @@
   .my-applications {
     .in-progress {
       li {
-        .grid-row {
+        .govuk-grid-row {
           margin: 0 -15px;
         }
       }

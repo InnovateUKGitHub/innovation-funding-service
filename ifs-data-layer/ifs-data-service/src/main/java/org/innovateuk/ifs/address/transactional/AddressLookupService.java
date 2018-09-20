@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.address.transactional;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 

@@ -7,8 +7,11 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -18,7 +21,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
@@ -30,8 +33,8 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
@@ -42,7 +45,6 @@ import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationU
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.EmailService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -65,8 +67,11 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -90,7 +95,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
     @Mock
-    private EmailService projectEmailService;
+    private NotificationService notificationServiceMock;
     @Mock
     private SpendProfileValidationUtil validationUtil;
     @Mock
@@ -106,7 +111,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private ProjectUsersHelper projectUsersHelperMock;
     @Mock
-    private ProjectService projectServiceMock;
+    private PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     private ProjectRepository projectRepositoryMock;
     @Mock
@@ -119,10 +124,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private UserRepository userRepositoryMock;
     @Mock
     private GrantOfferLetterService grantOfferLetterServiceMock;
+    @Mock
+    private SystemNotificationSource systemNotificationSource;
 
 
     @Test
-    public void testGenerateSpendProfile() {
+    public void generateSpendProfile() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -200,8 +207,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
-        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
-        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+        Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+
+        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
@@ -209,12 +219,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
 
-        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
-        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
-    public void testGenerateSpendProfileButNotAllViabilityApproved() {
+    public void generateSpendProfileButNotAllViabilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -238,7 +248,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenNotAllEligibilityApproved() {
+    public void generateSpendProfileWhenNotAllEligibilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -264,7 +274,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenSpendProfileAlreadyGenerated() {
+    public void generateSpendProfileWhenSpendProfileAlreadyGenerated() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -296,7 +306,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileWhenAllViabilityApprovedButAcademicViabilityNotApplicable() {
+    public void generateSpendProfileWhenSendingEmailFails() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
         Project project = generateSpendProfileData.getProject();
@@ -336,9 +346,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
-        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
-        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
+        Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+        Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
+        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -346,12 +358,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
 
-        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
-        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
-    public void testGenerateSpendProfileSendEmailFailsDueToNoFinanceContact() {
+    public void generateSpendProfileSendEmailFailsDueToNoFinanceContact() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -387,7 +399,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileNotReadyToGenerate() {
+    public void generateSpendProfileNotReadyToGenerate() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -417,10 +429,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
         CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
 
-        // setup expectations for getting project users to infer the partner organisations
-        List<ProjectUserResource> projectUsers =
-                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
+        List<PartnerOrganisationResource> partnerOrganisationResources =
+                newPartnerOrganisationResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
@@ -437,7 +448,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileForPartnerOrganisation() {
+    public void generateSpendProfileForPartnerOrganisation() {
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
@@ -519,18 +530,20 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
 
-        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+
+        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
     @Test
-    public void testGenerateSpendProfileCSV() {
+    public void generateSpendProfileCSV() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -551,8 +564,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         testCostCategory.setName("One");
         testCostCategory.setLabel("Group Name");
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -569,7 +581,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testGenerateSpendProfileCSVWithCategoryGroupLabelEmpty() {
+    public void generateSpendProfileCSVWithCategoryGroupLabelEmpty() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -589,8 +601,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         testCostCategory.setId(1L);
         testCostCategory.setName("One");
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -888,8 +899,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         spendProfileInDB.setMarkedAsComplete(true);
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -926,8 +936,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                         3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
         );
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -965,8 +974,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         );
 
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -979,7 +987,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewSuccess() {
+    public void completeSpendProfilesReviewSuccess() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -996,7 +1004,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
+    public void completeSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -1011,7 +1019,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
+    public void completeSpendProfilesReviewFailureWhenAlreadySubmitted() {
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(ZonedDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -1266,7 +1274,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             setLoggedInUser(loggedInUser);
             when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(user);
 
-            organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+            organisation1 = newOrganisation().withOrganisationType(BUSINESS).build();
             organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
 
             PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();

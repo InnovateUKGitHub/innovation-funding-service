@@ -26,7 +26,7 @@ public class SiteTermsAndConditionsRepositoryIntegrationTest extends
     public void findTopByOrderByVersionDesc() {
         loginCompAdmin();
 
-        List<SiteTermsAndConditions> siteTermsAndConditions = IntStream.range(1, 3).mapToObj(i ->
+        List<SiteTermsAndConditions> siteTermsAndConditions = IntStream.range(2, 4).mapToObj(i ->
                 newSiteTermsAndConditions()
                         .with(id(null))
                         .withName("Site terms")

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 

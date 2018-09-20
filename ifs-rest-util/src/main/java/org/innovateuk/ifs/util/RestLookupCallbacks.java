@@ -10,19 +10,22 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_OPTIONAL_ENTRY_EXPECTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static java.util.Optional.ofNullable;
 
 /**
  * TODO rationalise as much as possible with ServiceLookupCallbacks
  * Utility class to provide common use case wrappers that can be used to wrap callbacks that require either an entity or
  * some failure message if that entity cannot be found.
  */
-public class RestLookupCallbacks {
+public final class RestLookupCallbacks {
 
+    private RestLookupCallbacks() {
+        // private no-args constructor
+    }
     public static <SuccessType> RestResult<SuccessType> find(
             SuccessType result,
             Error failureResponse) {

@@ -5,14 +5,14 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementVi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Serves as a service for invite retrieval / manipulation for an {@InviteOrganisation} without an existing {@Organisation}.
@@ -25,12 +25,12 @@ public class InviteOrganisationTeamManagementService extends AbstractTeamManagem
                 applicationId, inviteOrganisationId, loggedInUser.getId());
     }
 
-    public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public ServiceResult<Void> executeStagedInvite(long applicationId,
                                                                     long inviteOrganisationId,
                                                                     ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, inviteOrganisationId);
 
-        return inviteRestService.saveInvites(Arrays.asList(invite)).toServiceResult();
+        return inviteRestService.saveInvites(singletonList(invite)).toServiceResult();
     }
 
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationInviteId) {

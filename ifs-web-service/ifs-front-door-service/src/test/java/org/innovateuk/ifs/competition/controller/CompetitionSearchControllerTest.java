@@ -32,19 +32,37 @@ public class CompetitionSearchControllerTest extends BaseControllerMockMVCTest<C
     public void publicContentSearch() throws Exception {
         CompetitionSearchViewModel competitionSearchViewModel = new CompetitionSearchViewModel();
 
-        Optional<Long> expectedInnovationAreaId = Optional.empty();
-        Optional<String> expectedKeywords = Optional.empty();
-        Optional<Integer> expectedPageNumber = Optional.empty();
-
-
-        when(competitionSearchPopulatorMock.createItemSearchViewModel(any(), any(), any())).thenReturn(competitionSearchViewModel);
+        when(competitionSearchPopulatorMock.createItemSearchViewModel(Optional.empty(), Optional.empty(), Optional.empty())).thenReturn(competitionSearchViewModel);
 
         mockMvc.perform(get("/competition/search"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/search"));
 
-        verify(competitionSearchPopulatorMock, times(1)).createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
+        verify(competitionSearchPopulatorMock, times(1)).createItemSearchViewModel(Optional.empty(), Optional.empty(), Optional.empty());
     }
 
-    //TODO: test conversion from GET parameters to optionals
+    @Test
+    public void publicContentSearchValid() throws Exception {
+        CompetitionSearchViewModel competitionSearchViewModel = new CompetitionSearchViewModel();
+
+        long expectedInnovationAreaId = 5L;
+        String expectedKeywords = "TEST";
+        int expectedPageNumber = 23;
+
+        competitionSearchViewModel.setSelectedInnovationAreaId(expectedInnovationAreaId);
+        competitionSearchViewModel.setSearchKeywords(expectedKeywords);
+        competitionSearchViewModel.setPageNumber(23);
+
+        when(competitionSearchPopulatorMock.createItemSearchViewModel(Optional.of(expectedInnovationAreaId), Optional.of(expectedKeywords), Optional.of(expectedPageNumber))).thenReturn(competitionSearchViewModel);
+
+        mockMvc.perform(get("/competition/search")
+                .param("keywords", expectedKeywords)
+                .param("innovationAreaId", String.valueOf(expectedInnovationAreaId))
+                .param("page", String.valueOf(expectedPageNumber)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/search"));
+
+        verify(competitionSearchPopulatorMock, times(1)).createItemSearchViewModel(Optional.of(expectedInnovationAreaId), Optional.of(expectedKeywords), Optional.of(expectedPageNumber));
+    }
+
 }

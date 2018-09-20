@@ -25,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
-
     public SecurityConfig() {
         super(true);
     }

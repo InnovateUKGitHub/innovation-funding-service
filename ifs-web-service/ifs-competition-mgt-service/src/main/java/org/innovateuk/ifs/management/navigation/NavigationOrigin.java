@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.navigation;
 
-public enum NavigationOrigin {
+import org.innovateuk.ifs.origin.BackLinkOrigin;
+
+public enum NavigationOrigin implements BackLinkOrigin {
 
     ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
     SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
@@ -12,7 +14,7 @@ public enum NavigationOrigin {
     MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
     ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
     PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
-    UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/previous"),
+    PREVIOUS_APPLICATIONS("/competition/{competitionId}/applications/previous"),
     MANAGE_APPLICATIONS_PANEL("/assessment/panel/competition/{competitionId}/manage-applications"),
     INTERVIEW_PANEL_FIND("/assessment/interview/competition/{competitionId}/applications/find"),
     INTERVIEW_PANEL_INVITE("/assessment/interview/competition/{competitionId}/applications/invite"),
@@ -24,13 +26,14 @@ public enum NavigationOrigin {
     INTERVIEW_PANEL_VIEW_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view"),
     INTERVIEW_PANEL_EDIT_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit");
 
-    private String baseOriginUrl;
+    private String originUrl;
 
-    NavigationOrigin(String baseOriginUrl) {
-        this.baseOriginUrl = baseOriginUrl;
+    NavigationOrigin(String originUrl) {
+        this.originUrl = originUrl;
     }
 
-    public String getBaseOriginUrl() {
-        return baseOriginUrl;
+    @Override
+    public String getOriginUrl() {
+        return originUrl;
     }
 }

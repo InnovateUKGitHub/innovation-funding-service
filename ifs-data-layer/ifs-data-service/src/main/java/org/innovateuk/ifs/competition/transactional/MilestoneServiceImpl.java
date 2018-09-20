@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -39,9 +38,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Autowired
     private MilestoneRepository milestoneRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Autowired
     private MilestoneMapper milestoneMapper;
@@ -121,9 +117,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
-        Milestone milestone = new Milestone();
-        milestone.setType(type);
-        milestone.setCompetition(competition);
+        Milestone milestone = new Milestone(type, competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
     }
 

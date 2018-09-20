@@ -75,6 +75,7 @@ public class CookieUtil {
         if (StringUtils.hasText(fieldName)) {
             String content = getCompressedString(fieldValue);
             Cookie cookie = new Cookie(fieldName, content);
+            cookie.setSecure(cookieSecure);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_LIFETIME);

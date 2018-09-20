@@ -6,9 +6,9 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.BuilderAmendFunctions.idBasedDescriptions;
 import static org.innovateuk.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for ApplicationFinanceRow entities.

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
@@ -29,10 +30,10 @@ public class ManageInnovationLeadsModelPopulatorTest {
     private ManageInnovationLeadsModelPopulator populator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
-    private UserService userService;
+    private UserRestService userRestService;
 
     private List<UserResource> availableInnovationLeads;
 
@@ -94,9 +95,9 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withInnovationAreaNames(Collections.EMPTY_SET)
                 .build();
 
-        when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
-        when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
-        when(userService.findById(competitionResource.getLeadTechnologist())).thenReturn(innLead4);
+        when(userRestService.findByUserRole(INNOVATION_LEAD)).thenReturn(restSuccess(availableInnovationLeads));
+        when(competitionRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(innovationLeadsAssignedToCompetition));
+        when(userRestService.retrieveUserById(competitionResource.getLeadTechnologist())).thenReturn(restSuccess(innLead4));
 
         ManageInnovationLeadsViewModel viewModel = populator.populateModel(competitionResource);
 

@@ -11,24 +11,24 @@
 <main tabindex="-1" id="content">
 
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkUrl=@{/}"  />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find internal users',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find internal users',size='govuk-heading-xl'" />
 
-    <p>You can view and search for specific assessors here, if you wish to add new assessors or edit assessors details then use the below link.</p>
-    <p><a href="/">Add a new internal user</a></p>
+    <p class="govuk-body">You can view and search for specific assessors here, if you wish to add new assessors or edit assessors details then use the below link.</p>
+    <p class="govuk-body"><a href="/">Add a new internal user</a></p>
 
     <div class="search-filters extra-margin">
-        <fieldset>
-            <legend class="heading-medium">Search users</legend>
-            <div class="grid-row">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-heading-m">Search users</legend>
+            <div class="govuk-grid-row">
                 <div class="column-two-thirds">
                     <label class="form-label" for="search">Search for a name, job role, permission or email address</label>
-                    <input type="text" class="form-control extra-margin-bottom" id="search" name="search" />
+                    <input type="text" class="govuk-input govuk-!-margin-bottom-6" id="search" name="search" />
                     <a href="/">Clear search</a>
                 </div>
-                <div class="column-third">
-                    <button class="button">Search</button>
+                <div class="govuk-grid-column-one-third">
+                    <button class="govuk-button">Search</button>
                 </div>
             </div>
         </fieldset>
@@ -44,118 +44,118 @@
             </li>
         </ul>
         <section id="active">
-            <h2 class="heading-medium">Active</h2>
+            <h2 class="govuk-heading-m">Active</h2>
             <div>
-                <p>
-                    <span class="heading-xlarge no-margin">38</span>
-                    <span class="heading-small">active internal users</span>
+                <p class="govuk-body">
+                    <span class="govuk-heading-xl govuk-!-margin-0">38</span>
+                    <span class="govuk-heading-s">active internal users</span>
                 </p>
                 <div class="table-overflow">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Role profile</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Name</th>
+                            <th class="govuk-table__header" scope="col">Role profile</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -177,70 +177,70 @@
             </div>
         </section>
         <section id="inactive">
-            <h2 class="heading-medium">Inactive</h2>
+            <h2 class="govuk-heading-m">Inactive</h2>
             <div>
-                <p>
-                    <span class="heading-xlarge no-margin">10</span>
-                    <span class="heading-small">inactive internal users</span>
+                <p class="govuk-body">
+                    <span class="govuk-heading-xl govuk-!-margin-0">10</span>
+                    <span class="govuk-heading-s">inactive internal users</span>
                 </p>
                 <div class="table-overflow">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Role profile</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Name</th>
+                            <th class="govuk-table__header" scope="col">Role profile</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Super admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td><span class="form-hint">Invite pending</span></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Super admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"><span class="govuk-hint">Invite pending</span></td>
                         </tr>
-                        <tr>
-                            <td><a href="/">Mark Smith</a></td>
-                            <td>Admin</td>
-                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-                            <td></td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/">Mark Smith</a></td>
+                            <td class="govuk-table__cell">Admin</td>
+                            <td class="govuk-table__cell"><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td class="govuk-table__cell"></td>
                         </tr>
                         </tbody>
                     </table>

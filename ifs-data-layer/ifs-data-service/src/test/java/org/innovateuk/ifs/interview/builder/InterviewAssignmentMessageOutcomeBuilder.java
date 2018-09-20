@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<InterviewAssignmentMessageOutcome, InterviewAssignmentMessageOutcomeBuilder> {
 

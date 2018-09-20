@@ -3,10 +3,10 @@ package org.innovateuk.ifs.form.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -12,8 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FinanceModelPopulatorTest {
@@ -43,7 +42,7 @@ public class FinanceModelPopulatorTest {
         FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
 
         assertEquals(FinanceViewModel.class, viewModel.getClass());
-        assertEquals(false, viewModel.isSectorCompetition());
-        assertEquals(true, viewModel.isNoneFinanceCompetition());
+        assertFalse(viewModel.isSectorCompetition());
+        assertTrue(viewModel.isNoFinancesCompetition());
     }
 }

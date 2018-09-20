@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -18,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 
 /**
@@ -88,12 +85,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName) {
+    public RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName) {
 
-        // TODO DW - INFUND-1555 - heavy way to send just a single string...
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
-        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
+        String url = format(applicationRestURL + "/createApplicationByName/%d/%d/%d", competitionId, userId, organisationId);
 
         return postWithRestResult(url, application, ApplicationResource.class);
     }
@@ -129,14 +125,14 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
+    public RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         if (filter != null) {
             params.put("filter", singletonList(filter));
         }
 
-        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
+        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
+        return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
     }
 }

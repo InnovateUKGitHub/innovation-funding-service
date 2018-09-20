@@ -31,6 +31,7 @@ public final class ApplicationFormUtil {
     public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
     public static final String ORGANISATION_SIZE_KEY = "organisationSize";
+    public static final String PROJECT_LOCATION_KEY = "projectLocation";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
 

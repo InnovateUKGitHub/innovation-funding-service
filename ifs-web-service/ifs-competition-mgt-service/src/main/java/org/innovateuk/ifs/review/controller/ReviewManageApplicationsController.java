@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Controller for the 'Manage Applications' assessment panel page.

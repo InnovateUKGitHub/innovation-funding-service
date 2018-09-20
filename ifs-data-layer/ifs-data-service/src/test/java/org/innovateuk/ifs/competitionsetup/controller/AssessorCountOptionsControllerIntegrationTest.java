@@ -4,7 +4,6 @@ package org.innovateuk.ifs.competitionsetup.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
-import org.innovateuk.ifs.competitionsetup.controller.AssessorCountOptionsController;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;

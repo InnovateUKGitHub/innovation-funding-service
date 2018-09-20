@@ -14,9 +14,6 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 
-/**
- * TODO: Add description
- */
 public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationInnovationAreaRestServiceImpl> {
     private static final String applicationInnovationAreaRestUrl = "/applicationInnovationArea";
 

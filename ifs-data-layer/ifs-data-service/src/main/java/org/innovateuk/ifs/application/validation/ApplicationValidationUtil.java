@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -104,7 +104,7 @@ public class ApplicationValidationUtil {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
 
-        } else if(question.getQuestionSetupType() == CompetitionSetupQuestionType.APPLICATION_TEAM) {
+        } else if(question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
             validationMessages.addAll(isApplicationTeamValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {

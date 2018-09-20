@@ -3,12 +3,13 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class ApplicationDownloadController {
     private FinanceService financeService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -45,13 +46,17 @@ public class ApplicationDownloadController {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
-    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download")
+    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download/**")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource user) {
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
+                .filter(role -> user.getId().equals(role.getUser()))
+                .findAny()
+                .orElseThrow(ObjectNotFoundException::new);
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());

@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.assessor.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.assessor.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
@@ -22,6 +21,7 @@ import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssesso
 import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionInviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 

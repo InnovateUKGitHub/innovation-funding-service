@@ -18,16 +18,16 @@ public class SpendProfileCostCategorySummary {
 
     public SpendProfileCostCategorySummary(CostCategory category, BigDecimal totalWithScale, long projectDurationInMonths) {
 
-        // Set the scale of the total to zero to ignore the pence figures.
-        BigDecimal total = totalWithScale.setScale(0, BigDecimal.ROUND_HALF_EVEN);
+        // Set the scale of the roundedTotal to zero to ignore the pence figures.
+        BigDecimal roundTotal = totalWithScale.setScale(0, BigDecimal.ROUND_HALF_EVEN);
 
         this.category = category;
-        this.total = total;
+        this.total = roundTotal;
 
         BigDecimal durationInMonths = BigDecimal.valueOf(projectDurationInMonths);
-        BigDecimal remainder = total.remainder(durationInMonths);
+        BigDecimal remainder = roundTotal.remainder(durationInMonths);
 
-        BigDecimal perfectlyDivisibleTotal = total.subtract(remainder);
+        BigDecimal perfectlyDivisibleTotal = roundTotal.subtract(remainder);
         BigDecimal costPerMonth = perfectlyDivisibleTotal.divide(durationInMonths, 0, HALF_EVEN);
 
         this.firstMonthSpend = costPerMonth.add(remainder);

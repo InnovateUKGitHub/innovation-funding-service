@@ -8,8 +8,8 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 

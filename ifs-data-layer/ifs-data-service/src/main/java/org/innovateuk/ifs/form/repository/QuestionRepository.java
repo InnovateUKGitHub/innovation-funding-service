@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.repository;
 
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -24,7 +24,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(Long competitionId, Long sectionId);
     List<Question> findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, String sectionName, Integer priority);
     Question findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
-    Question findFirstByCompetitionIdAndQuestionSetupType(long competitionId, CompetitionSetupQuestionType
-            competitionSetupQuestionType);
+    Question findFirstByCompetitionIdAndQuestionSetupType(long competitionId, QuestionSetupType
+            questionSetupType);
     long countByCompetitionId(Long competitionId);
 }

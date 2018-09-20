@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.creation.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +32,7 @@ public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private CompetitionService competitionService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
@@ -49,8 +41,7 @@ public class ApplicationCreationController {
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
-        PublicContentItemResource publicContentItem = competitionService
-                .getPublicContentOfCompetition(competitionId);
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
         if (!isCompetitionReady(publicContentItem)) {
             return "redirect:/competition/search";
         }

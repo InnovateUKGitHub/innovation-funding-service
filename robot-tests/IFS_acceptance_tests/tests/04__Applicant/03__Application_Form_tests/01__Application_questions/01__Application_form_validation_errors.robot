@@ -17,7 +17,7 @@ ${applicationTitle}  Robot test application
 *** Test Cases ***
 Title field client side
     [Documentation]    INFUND-43, INFUND-2843
-    [Tags]    HappyPath
+    [Tags]
     Given the user should see the element      jQuery=h1:contains("Application details")
     When the user enters text to a text field  id=application.name  ${EMPTY}
     Then the user should see a field error     Please enter the full title of the project
@@ -26,7 +26,7 @@ Title field client side
 
 Day field client side
     [Documentation]  INFUND-43 INFUND-2843
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date.
@@ -56,7 +56,7 @@ Month field client side
 
 Year field client side
     [Documentation]  INFUND-43 INFUND-2843
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field    id=application.durationInMonths  15
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date.
@@ -92,15 +92,11 @@ Application details server side
     And the user enters text to a text field  id=application_details-startdate_month  ${EMPTY}
     And the user enters text to a text field  id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field  id=application.durationInMonths    ${EMPTY}
-    And the user unchecks the resubmission radio button
     And the user clicks the button/link       id=application-question-complete
-#    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
-# TODO IFS-3188
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
     And the user should see a field and summary error   This field cannot be left blank.
     And the user should see a field and summary error   Please enter the full title of the project.
-    And the user should see a field and summary error   Please select a research category.
     [Teardown]  the user enters text to a text field    id=application.name  ${applicationTitle}
 
 
@@ -124,7 +120,7 @@ the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
     Run Keyword And Ignore Error Without Screenshots    Focus  id=application-question-complete
     wait for autosave
-    the user should not see the element    css=.error-message
+    the user should not see the element    css=.govuk-error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day
@@ -160,7 +156,3 @@ the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months
-
-the user unchecks the resubmission radio button
-    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-yes').get(0).removeAttribute('checked');
-    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-no').get(0).removeAttribute('checked');

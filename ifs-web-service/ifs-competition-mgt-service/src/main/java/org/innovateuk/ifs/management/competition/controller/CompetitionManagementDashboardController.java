@@ -7,8 +7,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.dashboard.viewmodel.ApplicationSearchDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.DashboardTabsViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.LiveDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.NonIFSDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.PreviousDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.ProjectSetupDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.UpcomingDashboardViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -46,15 +53,17 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the competition management dashboard")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of live competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of live competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
@@ -62,8 +71,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of competitions in project setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of competitions in project setup")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
@@ -97,8 +107,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of previous competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of previous competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
@@ -115,8 +126,9 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the search page for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
                          @RequestParam(name = "page", defaultValue = "1") int page, Model model,
@@ -146,7 +158,8 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                                                         matchedApplications.getTotalElements(),
                                                         new Pagination(matchedApplications, "search?" + existingQueryString),
-                                                        trimmedSearchString);
+                                                        trimmedSearchString,
+                                                        user.hasRole(SUPPORT));
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

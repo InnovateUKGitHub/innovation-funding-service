@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,9 +17,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendRe
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -44,7 +38,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
 
     @Test
-    public void test_getApplicationById() {
+    public void getApplicationById() {
 
         String expectedUrl = applicationRestURL + "/" + 123;
         ApplicationResource response = new ApplicationResource();//newApplicationResource().build();
@@ -57,7 +51,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getApplicationsByCompetitionIdAndUserId() {
+    public void getApplicationsByCompetitionIdAndUserId() {
 
         String expectedUrl = applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/123/456/APPLICANT";
         List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());// newApplicationResource().build(3);
@@ -70,7 +64,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getApplicationsByUserId() {
+    public void getApplicationsByUserId() {
 
         String expectedUrl = applicationRestURL + "/findByUser/123";
         List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());//newApplicationResource().build(3);
@@ -84,7 +78,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_wildcardSearchById() {
+    public void wildcardSearchById() {
 
         String searchString = "12";
         int pageNumber = 0;
@@ -102,7 +96,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getCompleteQuestionsPercentage() throws Exception {
+    public void getCompleteQuestionsPercentage() throws Exception {
 
         Double returnedResponse = 60.5;
 
@@ -114,7 +108,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_saveApplication() {
+    public void saveApplication() {
 
         String expectedUrl = applicationRestURL + "/saveApplicationDetails/123";
         ApplicationResource applicationToUpdate = new ApplicationResource(); // newApplicationResource().withId(123L).build();
@@ -127,7 +121,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_updateApplicationStatus() {
+    public void updateApplicationStatus() {
 
         String expectedUrl = applicationRestURL + "/updateApplicationState?applicationId=123&state=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
@@ -136,8 +130,8 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_createApplication() {
-        String expectedUrl = applicationRestURL + "/createApplicationByName/123/456";
+    public void createApplication() {
+        String expectedUrl = applicationRestURL + "/createApplicationByName/123/456/789";
 
         ApplicationResource application = new ApplicationResource();
         application.setName("testApplicationName123");
@@ -145,12 +139,12 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultExpectations(expectedUrl, ApplicationResource.class, application, application, CREATED);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccess();
+        ApplicationResource returnedResponse = service.createApplication(123L, 456L, 789L, "testApplicationName123").getSuccess();
         Assert.assertEquals(returnedResponse.getName(), application.getName());
     }
 
     @Test
-    public void test_findByProcessRoleId() {
+    public void findByProcessRoleId() {
         long processRoleId = 1L;
         String expectedUrl = processRoleRestURL + "/" + processRoleId + "/application";
         ApplicationResource application = newApplicationResource().build();
@@ -163,7 +157,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getAssignedQuestionsCount() {
+    public void getAssignedQuestionsCount() {
         long applicationId = 1L;
         long assigneeId = 1L;
         String expectedUrl = questionStatusRestURL + "/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId;
@@ -208,20 +202,20 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
+    public void findPreviousApplications() {
         int pageNumber = 0;
         int pageSize = 20;
         String sortField = "id";
         String filter = "ALL";
 
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", PreviousApplicationPageResource.class, previousApplicationPageResource);
 
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
+        PreviousApplicationPageResource result = service.findPreviousApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
         assertNotNull(result);
-        Assert.assertEquals(applicationPage, result);
-        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", null, ApplicationPageResource.class);
+        Assert.assertEquals(previousApplicationPageResource, result);
+        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", null, PreviousApplicationPageResource.class);
     }
 
     @Test

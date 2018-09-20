@@ -4,7 +4,7 @@
 <!-- =================Tabbed navigation competion dashboard=========================== -->
 
 <div th:fragment="prototype-comp-dashboard-navigation">
-    <ul class="inline-nav">
+    <ul class="govuk-list inline-nav">
         <li id="section-1" th:class="${(param.section == null or param.section[0] == 'live' ? 'selected' : '')}"><a th:href="@{'?section=live'}">Live (18)</a></li>
         <li id="section-1" th:class="${(param.section != null and param.section[0] == 'setup' ? 'selected' : '')}"><a th:href="@{'?section=setup'}">Project setup (2)</a></li>
         <li id="section-2" th:class="${(param.section != null and param.section[0] == 'upcoming' ? 'selected' : '')}"><a th:href="@{'?section=upcoming'}">Upcoming (4)</a></li>
@@ -16,29 +16,29 @@
 
 <div th:fragment="prototype-comp-setup-navigation">
 
-    <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
+    <div th:class="${(param.section != null ? 'govuk-visually-hidden' : '')}">
 
         <ul class="task-list">
-            <li id="section-1"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-2"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-3"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-4"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-6"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-5"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-9"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/6653-public-content?compStatus=ready' : '/prototypes/6653-public-content')}">Public content</a></h3></div><span class="secondary-notification">Last published 08:55am 12 December 2016</span><div class="task-status-complete"><span>Completed</span></div></li>
-            <!--<li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></li>-->
-            <!--<li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></li>-->
-            <!--<li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></li>-->
-            <!--<li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></li>-->
-            <!--<li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>-->
-            <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
-            <!--<li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></li>-->
-            <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
-            <!--<li id="section-9" th:class="${(param.section != null and param.section[0] == 'public' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Public content</a></h3>Last published 08:55am 12 December 2016</li>-->
+            <li id="section-1"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-2"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-3"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-4"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-6"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-5"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-9"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/6653-public-content?compStatus=ready' : '/prototypes/6653-public-content')}">Public content</a></h3></div><span class="secondary-notification">Last published 08:55am 12 December 2016</span><div class="task-status-complete"><span>Completed</span></div></li>
+            <!--<li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></li>-->
+            <!--<li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></li>-->
+            <!--<li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></li>-->
+            <!--<li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></li>-->
+            <!--<li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>-->
+            <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
+            <!--<li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></li>-->
+            <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
+            <!--<li id="section-9" th:class="${(param.section != null and param.section[0] == 'public' ? 'selected' : '')}"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Public content</a></h3>Last published 08:55am 12 December 2016</li>-->
         </ul>
 
         <div class="extra-margin">
-            <a href="#" class="button no-margin-right" id="compCTA">CTA</a>
+            <a href="#" class="govuk-button govuk-!-margin-right-0" id="compCTA">CTA</a>
         </div>
 
     </div>
@@ -52,8 +52,8 @@
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
     <input type="hidden" id="compStatus" name="compStatus" th:value="${(param.compStatus != null and param.compStatus[0] == 'ready' ? 'ready' : '')}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
-    <!--<button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
+    <button formaction="/prototypes/2469-comp-setup" class="govuk-button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
+    <!--<button formaction="/prototypes/2469-comp-setup" class="govuk-button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
 </div>
 
 <!-- =================Section: Dashboard competitions =========================== -->
@@ -62,10 +62,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Open (5)</h2>
+        <h2 class="govuk-heading-m">Open (5)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Technology inspired'},
@@ -121,10 +121,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Closed (1)</h2>
+        <h2 class="govuk-heading-m">Closed (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable renewable energy generation'},
@@ -140,10 +140,10 @@
 
     <section>
 
-        <h2 class="heading-medium">In assessment (1)</h2>
+        <h2 class="govuk-heading-m">In assessment (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable power station'},
@@ -159,10 +159,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Panel (1)</h2>
+        <h2 class="govuk-heading-m">Panel (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable renewable energy generation'},
@@ -178,10 +178,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Inform (1)</h2>
+        <h2 class="govuk-heading-m">Inform (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -201,10 +201,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Project setup (2)</h2>
+        <h2 class="govuk-heading-m">Project setup (2)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -232,10 +232,10 @@
 
     <section>
 
-        <h2 class="heading-medium">In preparation (3)</h2>
+        <h2 class="govuk-heading-m">In preparation (3)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveOpen'}"
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
@@ -268,10 +268,10 @@
 
     <section>
 
-        <h2 class="heading-medium">Ready to open (1)</h2>
+        <h2 class="govuk-heading-m">Ready to open (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveDraft' or param.comp == null}"
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
@@ -295,16 +295,16 @@
     </section>
 
     <div class="extra-margin">
-        <a href="/prototypes/2469-comp-setup" class="button button-large">Create competition</a>
+        <a href="/prototypes/2469-comp-setup" class="govuk-button button-large">Create competition</a>
     </div>
 </div>
 
 <div th:fragment="prototype-dashboard-complete">
 
-    <h2 class="heading-medium">Complete (27)</h2>
+    <h2 class="govuk-heading-m">Complete (27)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -389,13 +389,13 @@
 
 <div th:fragment="prototype-dashboard-search">
 
-    <p><span class="heading-xlarge">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
+    <p class="govuk-body"><span class="govuk-heading-xl">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
 
     <section>
 
-        <h2 class="heading-medium">Open competitions (1)</h2>
+        <h2 class="govuk-heading-m">Open competitions (1)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${param.searchQuery[0] + ' 1'},
@@ -408,9 +408,9 @@
 
     <section>
 
-        <h2 class="heading-medium">In assessment (1)</h2>
+        <h2 class="govuk-heading-m">In assessment (1)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${'Another ' + param.searchQuery[0]},
@@ -423,9 +423,9 @@
 
     <section>
 
-        <h2 class="heading-medium">Archive (2)</h2>
+        <h2 class="govuk-heading-m">Archive (2)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${'Old ' + param.searchQuery[0]},
@@ -452,10 +452,10 @@
 <div th:fragment="prototype-dashboard-row">
 
     <li>
-        <h3 class="heading-small"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
-        <p th:text="${rowType}">TYPE</p>
-        <p th:text="${rowSector}">SECTOR</p>
-        <p th:text="${rowStatus}">STATUS</p>
+        <h3 class="govuk-heading-s"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
+        <p class="govuk-body" th:text="${rowType}">TYPE</p>
+        <p class="govuk-body" th:text="${rowSector}">SECTOR</p>
+        <p class="govuk-body" th:text="${rowStatus}">STATUS</p>
     </li>
 
 </div>
@@ -471,18 +471,18 @@
 
 <div th:fragment="prototype-section-essential">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Initial details</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Initial details</h1>
     </div>
 
-    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel">
+    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="govuk-body panel">
         This will create a new competition. You can add more details as you progress.
     </div>
 
     <form id="form-essential">
 
-        <fieldset id="section-1-done">
+        <fieldset id="section-1-done" class="govuk-fieldset">
 
             <dl class="standard-definition-list">
 
@@ -525,22 +525,22 @@
 
         </fieldset>
 
-        <fieldset id="section-1-edit">
+        <fieldset id="section-1-edit" class="govuk-fieldset">
 
-            <legend class="visuallyhidden">Initial details</legend>
+            <legend class="govuk-visually-hidden">Initial details</legend>
 
-            <div class="form-group">
-                <label class="form-label" for="compTitle">
-                    <span class="form-label-bold">Competition title</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compTitle">
+                    <span class="govuk-label">Competition title</span>
                 </label>
                 <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="compType">
-                    <span class="form-label-bold">Competition type</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compType">
+                    <span class="govuk-label">Competition type</span>
                 </label>
-                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Programme">Programme</option>
                     <option value="Managed services">Managed services</option>
@@ -550,19 +550,19 @@
                 </select>
             </div>
 
-             <div class="form-group" id="stateAid" style="display: none">
-                <h3 class="heading-small">State aid</h3>
-                <p>
+             <div class="govuk-form-group" id="stateAid" style="display: none">
+                <h3 class="govuk-heading-s">State aid</h3>
+                <p class="govuk-body">
                     <span class="yes">Yes</span>
                     <span class="no">No</span>
                 </p>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="compInnovationSector">
-                    <span class="form-label-bold">Innovation sector</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compInnovationSector">
+                    <span class="govuk-label">Innovation sector</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="health">Health and life sciences</option>
                     <option value="materials">Materials and manufacturing</option>
@@ -572,11 +572,11 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="compInnovationArea">
-                    <span class="form-label-bold">Innovation area</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compInnovationArea">
+                    <span class="govuk-label">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -599,11 +599,11 @@
                     <option value="Urban living and built" class="infrastructure">Urban living and built</option>
                 </select>
             </div>
-            <div class="form-group" id="innovation-area2-form-group">
-                <label class="form-label" for="compInnovationArea2">
-                    <span class="form-label-bold visuallyhidden">Innovation area</span>
+            <div class="govuk-form-group" id="innovation-area2-form-group">
+                <label class="govuk-label" for="compInnovationArea2">
+                    <span class="govuk-label govuk-visually-hidden">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -627,43 +627,43 @@
                 </select>
                 <a href="#" id="remove-innovation-area">Remove</a>
             </div>
-            <p th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
+            <p class="govuk-body" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
                 <a href="#">+ add another innovation area</a>
             </p>
 
-            <fieldset class="form-group">
-                <h3 class="heading-small no-margin">Opening date</h3>
-                <legend class="visuallyhidden">Opening date</legend>
-                <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
+            <fieldset class="govuk-fieldset form-group">
+                <h3 class="govuk-heading-s govuk-!-margin-0">Opening date</h3>
+                <legend class="govuk-visually-hidden">Opening date</legend>
+                <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                 <div class="date-group">
                     <div class="day">
-                        <label class="form-label" for="startDay">
+                        <label class="govuk-label" for="startDay">
                                 <div>Day</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
                     </div>
 
                     <div class="month">
-                        <label class="form-label" for="startMonth">
+                        <label class="govuk-label" for="startMonth">
                                 <div>Month</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
                     </div>
 
                     <div class="year">
-                        <label class="form-label" for="startYear">
+                        <label class="govuk-label" for="startYear">
                                 <div>Year</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
                     </div>
                 </div>
             </fieldset>
 
-            <div class="form-group">
-                <label class="form-label" for="compLeadTechnologist">
-                    <span class="form-label-bold">Innovation lead</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compLeadTechnologist">
+                    <span class="govuk-label">Innovation lead</span>
                 </label>
-                <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                <select class="govuk-select width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="">Innovation Lead 1</option>
                     <option value="">Innovation Lead 2</option>
@@ -671,11 +671,11 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="compExecutive">
-                    <span class="form-label-bold">Competition executive</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="compExecutive">
+                    <span class="govuk-label">Competition executive</span>
                 </label>
-                <select class="form-control width-x-large" id="compExecutive" name="compExecutive" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                <select class="govuk-select width-x-large" id="compExecutive" name="compExecutive" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option th:text="${(param.compExecutive != null ? param.compExecutive[0] : 'Please select &hellip;')}">Please select &hellip;</option>
                     <option value="Name 1">Name 1</option>
                     <option value="Name 2">Name 2</option>
@@ -706,30 +706,30 @@
 
 <div th:fragment="prototype-section-funding">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Funding information</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Funding information</h1>
     </div>
 
     <form>
-        <fieldset id="section-2-edit">
-            <legend class="visuallyhidden">Funding information</legend>
+        <fieldset id="section-2-edit" class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Funding information</legend>
 
 
-            <div class="grid-row" id="co-funder-row-1">
-                <div class="column-half">
-                    <div class="form-group">
-                        <label class="form-label" for="comp-co-funder-1">
-                            <span class="form-label-bold">Funder</span>
+            <div class="govuk-grid-row" id="co-funder-row-1">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="comp-co-funder-1">
+                            <span class="govuk-label">Funder</span>
                         </label>
                     <input class="form-control width-x-large" id="comp-co-funder-1" name="comp-co-funder-1" th:value="${(param.action != null and param.action[0] == 'addCofunder' ? 'Innovate UK' : '')}" />
                     </div>
                 </div>
 
-                <div class="column-half">
-                    <div class="form-group">
-                        <label class="form-label" for="comp-co-funders-budget-1">
-                            <span class="form-label-bold">Budget</span>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="comp-co-funders-budget-1">
+                            <span class="govuk-label">Budget</span>
                         </label>
                         <input class="form-control width-large" id="comp-co-funders-budget-1" name="comp-co-funders-budget-1" th:value="${(param.action != null and param.action[0] == 'addCofunder' ? '500,000' : '')}" />
                     </div>
@@ -738,20 +738,20 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'addCofunder'}">
 
-                <div class="grid-row" id="co-funder-row-2">
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label visuallyhidden" for="comp-co-funder-2">
-                                <span class="form-label-bold">Funder</span>
+                <div class="govuk-grid-row" id="co-funder-row-2">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-visually-hidden" for="comp-co-funder-2">
+                                <span class="govuk-label">Funder</span>
                             </label>
                         <input class="form-control width-x-large" id="comp-co-funder-2" name="comp-co-funder-1" value="ATI" />
                         </div>
                     </div>
 
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label visuallyhidden" for="comp-co-funders-budget-2">
-                                <span class="form-label-bold">Budget</span>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-visually-hidden" for="comp-co-funders-budget-2">
+                                <span class="govuk-label">Budget</span>
                             </label>
                             <input class="form-control width-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2" value="800,000" />
                         </div>
@@ -761,12 +761,12 @@
 
             </th:block>
 
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     &nbsp;
                 </div>
-                <div class="column-half">
-                    <p class="heading-small no-margin">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
+                <div class="govuk-grid-column-one-half">
+                    <p class="govuk-heading-s govuk-!-margin-0">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
 
                     <div class="alignright">
                         <a th:href="@{''(section=funding, action=addCofunder)}" id="add-cofunder">+Add co-funder</a>
@@ -774,68 +774,68 @@
                 </div>
             </div>
 
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-            <fieldset>
+            <fieldset class="govuk-fieldset">
 
-                <legend class="heading-medium">Reporting fields</legend>
+                <legend class="govuk-heading-m">Reporting fields</legend>
 
-                <div class="form-group">
-                    <label class="form-label" for="compPaf">
-                        <span class="form-label-bold">PAF number</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="compPaf">
+                        <span class="govuk-label">PAF number</span>
                     </label>
                     <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-               <div class="form-group">
-                    <label class="form-label" for="compBudgetCode">
-                        <span class="form-label-bold">Budget code</span>
+               <div class="govuk-form-group">
+                    <label class="govuk-label" for="compBudgetCode">
+                        <span class="govuk-label">Budget code</span>
                     </label>
                     <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-                <div class="form-group extra-margin">
-                    <label class="form-label" for="comp-activity-code">
-                        <span class="form-label-bold">Activity code</span>
+                <div class="govuk-form-group extra-margin">
+                    <label class="govuk-label" for="comp-activity-code">
+                        <span class="govuk-label">Activity code</span>
                     </label>
                     <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="compCode">
-                        <span class="form-label-bold">Competition code</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="compCode">
+                        <span class="govuk-label">Competition code</span>
                     </label>
                     <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
-                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="button button-secondary">Generate code</a>
+                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="govuk-button button-secondary">Generate code</a>
                 </div>
 
             </fieldset>
 
         </fieldset>
 
-        <fieldset id="section-2-done">
+        <fieldset id="section-2-done" class="govuk-fieldset">
 
             <table class="section-2-done">
-                <thead>
-                    <tr>
-                        <th scope="col">Funder</th>
-                        <th scope="col" class="numeric">Budget</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Funder</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Budget</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Total</th>
-                        <td class="numeric">&pound;1,300,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;1,300,000</td>
                     </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <td>Innovate UK</td>
-                        <td class="numeric">&pound;500,000</td>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Innovate UK</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;500,000</td>
                     </tr>
-                    <tr>
-                        <td>ATI</td>
-                        <td class="numeric">&pound;800,000</td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">ATI</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;800,000</td>
                     </tr>
                 </tbody>
             </table>
@@ -876,18 +876,18 @@
 
 <div th:fragment="prototype-section-eligibility">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Eligibility</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Eligibility</h1>
     </div>
 
     <form>
-        <fieldset id="section-3-edit">
-            <legend class="visuallyhidden">Eligibility</legend>
+        <fieldset id="section-3-edit" class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Eligibility</legend>
 
-            <div class="form-group">
-                <fieldset class="inline">
-                    <legend class="form-label-bold">Does the competition have multiple streams?</legend>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset inline">
+                    <legend class="govuk-label">Does the competition have multiple streams?</legend>
                     <label class="block-label selection-button-radio" for="comp-stream-yes">
                         <input id="comp-stream-yes" name="comp-streams-group" value="Yes" type="radio" />
                     Yes
@@ -906,7 +906,7 @@
         </fieldset>
 
 
-        <fieldset id="section-3-done">
+        <fieldset id="section-3-done" class="govuk-fieldset">
 
             <dl class="standard-definition-list">
                 <dt>Multiple stream</dt>
@@ -925,11 +925,11 @@
         </fieldset>
 
 
-        <div class="grid-row ">
-            <div class="column-half">
+        <div class="govuk-grid-row ">
+            <div class="govuk-grid-column-one-half">
                  <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" />
             </div>
-            <div class="column-half alignright">
+            <div class="govuk-grid-column-one-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
             </div>
         </div>
@@ -960,52 +960,52 @@
 
 <div th:fragment="prototype-section-eligibility-stream">
 
-    <fieldset class="comp-stream-group extra-margin" style="display: none;">
-        <div class="form-group">
-            <label class="form-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
-                <span class="form-label-bold">Stream name or number</span>
+    <fieldset class="govuk-fieldset comp-stream-group extra-margin" style="display: none;">
+        <div class="govuk-form-group">
+            <label class="govuk-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
+                <span class="govuk-label">Stream name or number</span>
             </label>
             <input class="form-control width-x-large" th:id="${'stream-'+streamNo+'-comp-stream'}" th:name="${'stream-'+streamNo+'-comp-stream'}" th:placeholder="${'Stream '+streamNo}" />
         </div>
 
-        <h3 class="heading-small">Project size (&pound;)</h3>
-        <p>This indicates the size of the project based on the budget</p>
+        <h3 class="govuk-heading-s">Project size (&pound;)</h3>
+        <p class="govuk-body">This indicates the size of the project based on the budget</p>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-quarter">
-                <div class="form-group">
-                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-from'}">
-                        <span class="form-label">From (min)</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'stream-'+streamNo+'-project-size-from'}">
+                        <span class="govuk-label">From (min)</span>
                     </label>
                     <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-size-from'}" th:name="${'stream-'+streamNo+'-project-size-from'}" />
                 </div>
             </div>
             <div class="column-quarter">
-                <div class="form-group">
-                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-to'}">
-                        <span class="form-label">To (max)</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'stream-'+streamNo+'-project-size-to'}">
+                        <span class="govuk-label">To (max)</span>
                     </label>
                     <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-size-to'}" th:name="${'stream-'+streamNo+'-project-size-to'}" />
                 </div>
             </div>
         </div>
 
-        <h3 class="heading-small">Project length (months)</h3>
-        <p>This indicates the length of the project in months (max 36)</p>
+        <h3 class="govuk-heading-s">Project length (months)</h3>
+        <p class="govuk-body">This indicates the length of the project in months (max 36)</p>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-quarter">
-                <div class="form-group">
-                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-from'}">
-                        <span class="form-label">From (min)</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'stream-'+streamNo+'-project-length-from'}">
+                        <span class="govuk-label">From (min)</span>
                     </label>
                     <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-length-from'}" th:name="${'stream-'+streamNo+'-project-length-from'}" />
                 </div>
             </div>
             <div class="column-quarter">
-                <div class="form-group">
-                    <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-to'}">
-                        <span class="form-label">To (max)</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'stream-'+streamNo+'-project-length-to'}">
+                        <span class="govuk-label">To (max)</span>
                     </label>
                     <input class="form-control width-small" th:id="${'stream-'+streamNo+'-project-length-to'}" th:name="${'stream-'+streamNo+'-project-length-to'}" />
                 </div>
@@ -1014,9 +1014,9 @@
 
     </fieldset>
 
-    <div class="form-group">
-        <fieldset class="inline">
-            <legend class="form-label-bold">Should applications be from single partner or collaborative projects?</legend>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
+            <legend class="govuk-label">Should applications be from single partner or collaborative projects?</legend>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-type-single'}">
                 <input th:id="${'stream-'+streamNo+'-comp-type-single'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single" type="radio" />
                 Single
@@ -1032,9 +1032,9 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
-        <fieldset class="inline">
-            <legend class="form-label-bold">What research categories are in scope for this competition?</legend>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
+            <legend class="govuk-label">What research categories are in scope for this competition?</legend>
             <label class="block-label selection-button-checkbox" th:for="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}">
                 <input th:id="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}" value="comp-research-tech-feasibilty" type="checkbox" />
                 Feasibility studies
@@ -1050,10 +1050,10 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
-        <fieldset class="inline">
-            <legend class="form-label-bold">Lead applicant</legend>
-            <p>Select the lead applicant type required</p>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
+            <legend class="govuk-label">Lead applicant</legend>
+            <p class="govuk-body">Select the lead applicant type required</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
                 Business
@@ -1069,12 +1069,12 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
-        <label class="form-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
-            <span class="form-label-bold">Research participation</span>
-            <span class="form-hint">This indicates the maximum level of research participation allowed</span>
+    <div class="govuk-form-group">
+        <label class="govuk-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
+            <span class="govuk-label">Research participation</span>
+            <span class="govuk-hint">This indicates the maximum level of research participation allowed</span>
         </label>
-        <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
+        <select class="govuk-select width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
             <option value="">30%</option>
             <option value="">50%</option>
             <option value="">100%</option>
@@ -1082,10 +1082,10 @@
         </select>
     </div>
 
-    <div class="form-group extra-margin">
-        <fieldset class="inline">
-            <legend class="form-label-bold">Are resubmissions allowed?</legend>
-            <p>Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
+    <div class="govuk-form-group extra-margin">
+        <fieldset class="govuk-fieldset inline">
+            <legend class="govuk-label">Are resubmissions allowed?</legend>
+            <p class="govuk-body">Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-yes'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="Yes" type="radio" />
             Yes
@@ -1095,7 +1095,7 @@
             No
             </label>
         </fieldset>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
     </div>
 
 
@@ -1107,22 +1107,22 @@
 
 <div th:fragment="prototype-section-milestones">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Milestones</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Milestones</h1>
     </div>
 
-    <div class="panel">
+    <div class="govuk-body panel">
         Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     </div>
 
     <form>
 
-        <fieldset id="section-4-edit">
+        <fieldset id="section-4-edit" class="govuk-fieldset">
 
-            <table>
-                <thead>
-                    <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
                         <th scope="col" class="width-8-percent" id="hour">Hour</th>
                         <th scope="col" class="width-8-percent" id="min">Minute</th>
@@ -1133,7 +1133,7 @@
                         <th scope="col" class="width-8-percent" id="year">Year</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, time='-', rowNo=1, type=readOnly" />
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, time='-', rowNo=2" />
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, time='1', rowNo=3" />
@@ -1152,11 +1152,11 @@
 
         </fieldset>
 
-        <fieldset id="section-4-done">
+        <fieldset id="section-4-done" class="govuk-fieldset">
 
-            <table>
-                <thead>
-                    <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
                         <th scope="col" class="width-10-percent" id="time">Time</th>
                         <th scope="col" class="width-10-percent" id="weekday">Weekday</th>
@@ -1165,20 +1165,20 @@
                         <th scope="col" class="width-10-percent" id="year">Year</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1. Open date</td><td>-</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
-                    <tr><td>2. Briefing event</td><td>-</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
-                    <tr><td>3. Submission date</td><td>1:00pm</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
-                    <tr><td>4. Allocate assessors</td><td>-</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
-                    <tr><td>5. Assessor briefing</td><td>-</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
-                    <tr><td>6. Assessor accepts</td><td>-</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
-                    <tr><td>7. Assessor deadline</td><td>-</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
-                    <tr><td>8. Line draw</td><td>-</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
-                    <tr><td>9. Assessment panel</td><td>-</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
-                    <tr><td>10. Panel date</td><td>-</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
-                    <tr><td>11. Funders panel</td><td>-</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
-                    <tr><td>12. Notifications</td><td>-</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
-                    <tr><td>13. Release feedback</td><td>-</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">1. Open date</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Weds</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">2. Briefing event</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">15</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">3. Submission date</td><td class="govuk-table__cell">1:00pm</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">02</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">4. Allocate assessors</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">03</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">5. Assessor briefing</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">04</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">6. Assessor accepts</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">05</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">7. Assessor deadline</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">06</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">8. Line draw</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">07</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">9. Assessment panel</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">08</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">10. Panel date</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">09</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">11. Funders panel</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">10</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">12. Notifications</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">11</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">13. Release feedback</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">12</td><td class="govuk-table__cell">2017</td></tr>
                 </tbody>
             </table>
 
@@ -1212,30 +1212,30 @@
 
 <div th:fragment="prototype-section-milestones-row">
 
-    <tr>
+    <tr class="govuk-table__row">
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
 
         <th:block th:unless="${type=='readOnly'}">
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>
             <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
-            <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
-            <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
-            <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
         </th:block>
 
         <th:block th:if="${type=='readOnly'}">
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>Weds</td>
-            <td>01</td>
-            <td>01</td>
-            <td>2017</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">Weds</td>
+            <td class="govuk-table__cell">01</td>
+            <td class="govuk-table__cell">01</td>
+            <td class="govuk-table__cell">2017</td>
         </th:block>
 
     </tr>
@@ -1247,9 +1247,9 @@
 
 <div th:fragment="prototype-section-assessors">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Assessors</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Assessors</h1>
     </div>
 
     <form>
@@ -1282,27 +1282,27 @@
 
 <div th:fragment="prototype-section-application">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Application questions</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Application questions</h1>
     </div>
 
-    <div class="panel">
+    <div class="govuk-body panel">
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
-    <p>Template: Programme 10 questions</p>
+    <p class="govuk-body">Template: Programme 10 questions</p>
 
-    <h2 class="heading-large">Questions</h2>
+    <h2 class="govuk-heading-l">Questions</h2>
 
     <form>
 
         <ul class="list-overview application-questions">
 
-            <li><h2 class="heading-medium">Application details</h2></li>
-            <li><h2 class="heading-medium">Project summary</h2></li>
-            <li><h2 class="heading-medium">Public description</h2></li>
-            <li><h2 class="heading-medium">Scope</h2></li>
+            <li><h2 class="govuk-heading-m">Application details</h2></li>
+            <li><h2 class="govuk-heading-m">Project summary</h2></li>
+            <li><h2 class="govuk-heading-m">Public description</h2></li>
+            <li><h2 class="govuk-heading-m">Scope</h2></li>
 
             <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" />
 
@@ -1353,12 +1353,12 @@
 
 <div th:fragment="prototype-section-finance">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Application finances</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Application finances</h1>
     </div>
 
-    <div class="panel">
+    <div class="govuk-body panel">
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
@@ -1391,9 +1391,9 @@
 
 <div th:fragment="prototype-section-description">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Description &#38; brief</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Description &#38; brief</h1>
     </div>
 
     <form>
@@ -1422,53 +1422,53 @@
 
     <li>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-three-quarters">
-                <h2 class="heading-medium" th:text="${questionNo+'. '+questionTitle}"></h2>
+                <h2 class="govuk-heading-m" th:text="${questionNo+'. '+questionTitle}"></h2>
             </div>
             <div class="column-quarter alignright">
-                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
+                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="govuk-button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
             </div>
         </div>
 
         <th:block th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">
 
-            <div class="extra-margin-bottom">
+            <div class="govuk-!-margin-bottom-6">
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Question title</h3>
+                        <h3 class="govuk-heading-s">Question title</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>What is the business opportunity this project addresses?</p>
+                        <p class="govuk-body">What is the business opportunity this project addresses?</p>
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Question subtitle</h3>
+                        <h3 class="govuk-heading-s">Question subtitle</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>None</p>
+                        <p class="govuk-body">None</p>
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Guidance title</h3>
+                        <h3 class="govuk-heading-s">Guidance title</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>What should I include in the business opportunity section?</p>
+                        <p class="govuk-body">What should I include in the business opportunity section?</p>
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Guidance</h3>
+                        <h3 class="govuk-heading-s">Guidance</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>You should describe:</p>
-                        <ul class="list list-bullet">
+                        <p class="govuk-body">You should describe:</p>
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>the business opportunity you have identified and how you plan to take advantage of it</li>
                             <li>the customer needs you have identified and how your project will meet them</li>
                             <li>the challenges you expect to face and how you will overcome them</li>
@@ -1476,21 +1476,21 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Words</h3>
+                        <h3 class="govuk-heading-s">Words</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>400</p>
+                        <p class="govuk-body">400</p>
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
-                        <h3 class="heading-small">Appendix</h3>
+                        <h3 class="govuk-heading-s">Appendix</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>No</p>
+                        <p class="govuk-body">No</p>
                     </div>
                 </div>
 
@@ -1503,45 +1503,45 @@
 
             <div class="question">
 
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
-                        <span class="form-label-bold">Question title</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'question-'+ questionNo +'-title'}">
+                        <span class="govuk-label">Question title</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
-                        <span class="form-label-bold">Question subtitle</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'question-'+ questionNo +'-subtitle'}">
+                        <span class="govuk-label">Question subtitle</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
-                        <span class="form-label-bold">Question guidance title</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
+                        <span class="govuk-label">Question guidance title</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-label" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
                     <div class="textarea-wrapped ">
                         <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
-                        <span class="form-label-bold">Max word count</span>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" th:for="${'question-'+ questionNo +'-word-count'}">
+                        <span class="govuk-label">Max word count</span>
                     </label>
                     <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
                 </div>
 
-                <div class="grid-row">
-                     <div class="column-half">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Is the answer scored?</legend>
+                <div class="govuk-grid-row">
+                     <div class="govuk-grid-column-one-half">
+                        <fieldset class="govuk-fieldset inline">
+                            <legend class="govuk-label">Is the answer scored?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-scored-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
                             Yes
@@ -1554,9 +1554,9 @@
                     </div>
 
 
-                    <div class="column-half">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Allow appendix?</legend>
+                    <div class="govuk-grid-column-one-half">
+                        <fieldset class="govuk-fieldset inline">
+                            <legend class="govuk-label">Allow appendix?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-appendix-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
                             Yes
@@ -1572,7 +1572,7 @@
             </div>
 
             <div class="alignright">
-                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
+                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="govuk-button button-large">Save and close</a>
             </div>
 
         </th:block>
@@ -1586,20 +1586,20 @@
 
 <div th:fragment="prototype-section-guidance-row">
 
-    <tr>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
+            <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
         </td>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
+        <td class="govuk-table__cell">
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
+            <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
         </td>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
-            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
+        <td class="govuk-table__cell">
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <input class="govuk-input width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <a href="#" title="Remove this group of scoring guidance">Remove</a>
         </td>
     </tr>
@@ -1610,16 +1610,16 @@
 
 <div th:fragment="prototype-section-assessment-guidance-row">
 
-    <tr>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score'}">Score</label>
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score'}">Score</label>
             <input class="form-control width-small" th:id="${'group' + rowNo + '-score'}" th:name="${'group' + rowNo + '-score'}" th:value="${score}" type="text" />
         </td>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+        <td class="govuk-table__cell">
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
             <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <a href="#" title="Remove this group of scoring guidance">Remove</a>
         </td>
     </tr>
@@ -1633,24 +1633,24 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Public content'}, ${null})" />
 
     <ul class="task-list">
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-competition-information&amp;state=edit' : '?section=public-competition-information&amp;state=edit')}">Competition information and search</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-summary&amp;state=edit' : '?section=public-summary&amp;state=edit')}">Summary</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-eligibility&amp;state=edit' : '?section=public-eligibility&amp;state=edit')}">Eligibility</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-scope&amp;state=edit' : '?section=public-scope&amp;state=edit')}">Scope</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-dates&amp;state=edit' : '?section=public-dates&amp;state=edit')}">Dates</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-how-to-apply&amp;state=edit' : '?section=public-how-to-apply&amp;state=edit')}">How to apply</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=edit' : '?section=public-supporting-information&amp;state=edit')}">Supporting information</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-competition-information&amp;state=edit' : '?section=public-competition-information&amp;state=edit')}">Competition information and search</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-summary&amp;state=edit' : '?section=public-summary&amp;state=edit')}">Summary</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-eligibility&amp;state=edit' : '?section=public-eligibility&amp;state=edit')}">Eligibility</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-scope&amp;state=edit' : '?section=public-scope&amp;state=edit')}">Scope</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-dates&amp;state=edit' : '?section=public-dates&amp;state=edit')}">Dates</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-how-to-apply&amp;state=edit' : '?section=public-how-to-apply&amp;state=edit')}">How to apply</a></h2></div></li>
+        <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=edit' : '?section=public-supporting-information&amp;state=edit')}">Supporting information</a></h2></div></li>
     </ul>
-    <p><small>Last published 08:55am 12 December 2016</small></p>
-    <div class="grid-row">
-        <div class="column-half">
-            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button">Return to setup overview</a>
+    <p class="govuk-body"><small>Last published 08:55am 12 December 2016</small></p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="govuk-button">Return to setup overview</a>
         </div>
-        <div class="column-half alignright">
-            <a id="prototype-publish-content" href="#" class="button-secondary disabled no-margin">Publish public content</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a id="prototype-publish-content" href="#" class="button-secondary disabled govuk-!-margin-0">Publish public content</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - competition information =========================== -->
@@ -1658,7 +1658,7 @@
 <th:block th:fragment="prototype-section-public-competition-information">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Competition information and search'}, ${null})" />
-    <p>This information is used for search and the opening section of the competition page.</p>
+    <p class="govuk-body">This information is used for search and the opening section of the competition page.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
             <dt>Short description</dt>
@@ -1673,35 +1673,35 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <div class="form-group">
-                    <label class="form-label-bold" for="short-description">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="short-description">
                         Short description
-                        <span class="form-hint">Appears at the top of the competition page.</span>
+                        <span class="govuk-hint">Appears at the top of the competition page.</span>
                     </label>
                     <input class="form-control width-full prot-section-0-empty" id="short-description" type="text" value="" />
                     <input class="form-control width-full prot-section-0-populated" id="short-description" type="text" value="Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow." />
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="funding-range">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="funding-range">
                         Project funding range
-                        <span class="form-hint">Appears against the competition search result.</span>
+                        <span class="govuk-hint">Appears against the competition search result.</span>
                     </label>
                     <input class="form-control prot-section-0-empty" id="funding-range" type="text" value="" />
                     <input class="form-control prot-section-0-populated" id="funding-range" type="text" value="Up to £35,000" />
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="eligibility-summary">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="eligibility-summary">
                         Eligibility summary
-                        <span class="form-hint">Appears against the competition search result.</span>
+                        <span class="govuk-hint">Appears against the competition search result.</span>
                     </label>
                     <input class="form-control prot-section-0-empty" id="eligibility-summary" type="text" value="" />
                     <input class="form-control prot-section-0-populated" id="eligibility-summary" type="text" value="UK based business of any size. Must involve at least one SME." />
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="keywords">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="keywords">
                         Keywords
-                        <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
+                        <span class="govuk-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
                     </label>
                     <input class="form-control width-full prot-section-0-empty" id="keywords" type="text" value="" />
                     <input class="form-control width-full prot-section-0-populated" id="keywords" type="text" value="innovation, drones, drone" />
@@ -1709,15 +1709,15 @@
             </fieldset>
         </form>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="0">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - summary =========================== -->
@@ -1725,9 +1725,9 @@
 <th:block th:fragment="prototype-section-public-summary">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Summary'}, ${null})" />
-    <p>Text entered into this section will appear within the summary tab.</p>
+    <p class="govuk-body">Text entered into this section will appear within the summary tab.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
-        <h2 class="heading-medium">Mandatory content</h2>
+        <h2 class="govuk-heading-m">Mandatory content</h2>
         <dl class="readonly-data">
             <dt>Competition description</dt>
             <dd>Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.</dd>
@@ -1742,10 +1742,10 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <legend class="heading-medium extra-margin-bottom">Mandatory content</legend>
-                <div class="form-group">
-                    <label class="form-label-bold" for="competition-description">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-bottom-6">Mandatory content</legend>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="competition-description">
                         Competition description
                     </label>
                     <textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full"></textarea>
@@ -1759,9 +1759,9 @@
 <!--There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.-->
                     <!--</textarea>-->
                 </div>
-                <div class="form-group">
-                    <fieldset>
-                        <legend class="form-label-bold">Funding type</legend>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-label">Funding type</legend>
                         <label class="block-label selection-button-radio" for="grant">
                             <input id="grant" name="funding-type-radio-group" value="grant" type="radio" />
                             Grant
@@ -1772,42 +1772,42 @@
                         </label>
                     </fieldset>
                 </div>
-                <!--<div class="form-group">-->
-                    <!--<label class="form-label-bold" for="funding-type">-->
+                <!--<div class="govuk-form-group">-->
+                    <!--<label class="govuk-label" for="funding-type">-->
                         <!--Funding type-->
                     <!--</label>-->
-                    <!--<select class="form-control width-medium" id="funding-type" name="funding-type">-->
+                    <!--<select class="govuk-select width-medium" id="funding-type" name="funding-type">-->
                         <!--<option value="">Sector competition</option>-->
                     <!--</select>-->
                 <!--</div>-->
-                <div class="form-group">
-                    <label class="form-label-bold" for="project-size">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="project-size">
                         Project size
                     </label>
                     <input class="form-control" id="project-size" type="text" value="" />
                     <!--<input class="form-control" id="project-size" type="text" value="£15,000,000" />-->
                 </div>
             </fieldset>
-            <fieldset>
-                <legend class="heading-medium extra-margin-bottom">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-bottom-6">
                     Additional content
                 </legend>
-                <p>There is no additional content associated with this competition.</p>
+                <p class="govuk-body">There is no additional content associated with this competition.</p>
                 <div class="alignright">
                     <a href="#">+ add new section</a>
                 </div>
             </fieldset>
         </form>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="1">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 
@@ -1816,10 +1816,10 @@
 <th:block th:fragment="prototype-section-public-eligibility">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Eligibility'}, ${null})" />
-    <p>Text entered into this section will appear within the eligibility tab</p>
+    <p class="govuk-body">Text entered into this section will appear within the eligibility tab</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
-        <h2 class="heading-small no-margin-bottom">Lead applicant eligibility</h2>
-        <p>To lead a project, you must:</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Lead applicant eligibility</h2>
+        <p class="govuk-body">To lead a project, you must:</p>
         <ul>
             <li>be a UK-based business (of any size)</li>
             <li>have at least one SME involved in your proposal</li>
@@ -1827,52 +1827,52 @@
             <li>work alone or in collaboration with others (businesses, research base and third sector)</li>
         </ul>
 
-        <h2 class="heading-small no-margin-bottom" >Consortium eligibility</h2>
-        <p>All projects must involve at least one SME and a business must lead the project.</p>
-        <p>If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
-        <p>If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
-        <p>Find out if your business fits the EU definition of an SME.</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Consortium eligibility</h2>
+        <p class="govuk-body">All projects must involve at least one SME and a business must lead the project.</p>
+        <p class="govuk-body">If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
+        <p class="govuk-body">If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
+        <p class="govuk-body">Find out if your business fits the EU definition of an SME.</p>
 
-        <h2 class="heading-small no-margin-bottom" >Project types</h2>
-        <p>Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
-        <p>For technical feasibility studies and industrial research, you could get:</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Project types</h2>
+        <p class="govuk-body">Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
+        <p class="govuk-body">For technical feasibility studies and industrial research, you could get:</p>
         <ul>
             <li>up to 70% of your eligible project costs if you are a small business</li>
             <li>up to 60% if you are a medium-sized business</li>
             <li>up to 50% if you are a large business</li>
         </ul>
-        <p>For experimental development projects which are nearer to market, you could get:</p>
+        <p class="govuk-body">For experimental development projects which are nearer to market, you could get:</p>
         <ul>
             <li>up to 45% of your eligible project costs if you are a small business</li>
             <li>up to 35% if you are a medium-sized business</li>
             <li>up to 25% if you are a large business</li>
         </ul>
-        <p>We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
+        <p class="govuk-body">We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
 
-        <h2 class="heading-small no-margin-bottom" >Projects we won't fund</h2>
-        <p>In this competition we will not fund applications in the following areas:</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Projects we won't fund</h2>
+        <p class="govuk-body">In this competition we will not fund applications in the following areas:</p>
         <ul>
             <li>topics defined in the Innovate UK Quantum technologies competition 2016</li>
             <li>topics defined in the Innovate UK Robotics and autonomous systems competition 2016</li>
             <li>topics defined in the Innovate UK Compound semiconductor applications competition 2016</li>
         </ul>
-        <p>Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
+        <p class="govuk-body">Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <legend class="heading-medium no-margin">Content</legend>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-one">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Lead applicant eligibility" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-one">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
@@ -1886,27 +1886,27 @@
                         <!--</textarea>-->
                     </div>
                     <!--<div class="upload-section">-->
-                        <!--<div class="form-group">-->
-                            <!--<label class="form-label-bold" for="attachment-name-one">-->
+                        <!--<div class="govuk-form-group">-->
+                            <!--<label class="govuk-label" for="attachment-name-one">-->
                                 <!--Attachment name-->
                             <!--</label>-->
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         <!--</div>-->
-                        <!--<div class="form-group">-->
-                            <!--<h3 class="heading-small no-margin">Attachment file</h3>-->
+                        <!--<div class="govuk-form-group">-->
+                            <!--<h3 class="govuk-heading-s govuk-!-margin-0">Attachment file</h3>-->
                             <!--<a href="#" class="uploaded-file">additional_documentation.pdf</a>-->
                             <!--<div class="alignright"><a href="#">Remove file</a></div>-->
                         <!--</div>-->
                     <!--</div>-->
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -1918,18 +1918,18 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
-                    <label class="form-label-bold" for="heading-two">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="heading-two">
                         Heading
                     </label>
                     <input class="form-control" id="heading-two" type="text" value="" />
                     <!--<input class="form-control" id="heading-two" type="text" value="Consortium eligibility" />-->
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="content-two">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="content-two">
                         Content
                     </label>
                     <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
@@ -1944,14 +1944,14 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
-                        <label class="form-label-bold" for="attachment-name-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="" />
                         <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -1963,18 +1963,18 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
-                    <label class="form-label-bold" for="heading-three">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="heading-three">
                         Heading
                     </label>
                     <input class="form-control" id="heading-three" type="text" value="" />
                     <!--<input class="form-control" id="heading-three" type="text" value="Project types" />-->
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="content-three">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="content-three">
                         Content
                     </label>
                     <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full"></textarea>
@@ -1996,14 +1996,14 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
-                        <label class="form-label-bold" for="attachment-name-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="" />
                         <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -2014,18 +2014,18 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
-                    <label class="form-label-bold" for="heading-four">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="heading-four">
                         Heading
                     </label>
                     <input class="form-control" id="heading-four" type="text" value="" />
                     <!--<input class="form-control" id="heading-four" type="text" value="Projects we won't fund" />-->
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="content-four">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="content-four">
                         Content
                     </label>
                     <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full"></textarea>
@@ -2043,13 +2043,13 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
-                        <label class="form-label-bold" for="attachment-name-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -2060,7 +2060,7 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
         </form>
         <div class="alignright">
@@ -2068,15 +2068,15 @@
         </div>
 
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="2">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - scope =========================== -->
@@ -2086,25 +2086,25 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Scope'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
-        <h2 class="heading-small no-margin-bottom">Project scope</h2>
-        <p>Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
-        <p>An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
-        <p>Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
-        <p>The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Project scope</h2>
+        <p class="govuk-body">Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
+        <p class="govuk-body">An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
+        <p class="govuk-body">Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
+        <p class="govuk-body">The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
         <ul>
             <li>harness E&amp;E technologies across the economy</li>
             <li>develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release</li>
             <li>use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes</li>
         </ul>
-        <p>We are looking to fund a portfolio of projects that include:</p>
+        <p class="govuk-body">We are looking to fund a portfolio of projects that include:</p>
         <ul>
             <li>technical feasibility</li>
             <li>industrial research</li>
             <li>experimental development</li>
             <li>we will choose a portfolio that achieves a balance across topic areas, timing and costs</li>
         </ul>
-        <p>If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
-        <p>Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
+        <p class="govuk-body">If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
+        <p class="govuk-body">Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
         <ul>
             <li>any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches</li>
             <li>we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms</li>
@@ -2112,11 +2112,11 @@
             <li>sensors; photonics; digital; internet of things; data; cybersecurity</li>
             <li>virtual or augmented reality; and distributed ledger technology</li>
         </ul>
-        <p>The type of innovation project will depend on the challenges and opportunities your business faces.</p>
-        <p>Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
-        <h2 class="heading-small no-margin-bottom">Specific competition themes</h2>
-        <p>We welcome applications in one or more of the following areas:</p>
-        <p>Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
+        <p class="govuk-body">The type of innovation project will depend on the challenges and opportunities your business faces.</p>
+        <p class="govuk-body">Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Specific competition themes</h2>
+        <p class="govuk-body">We welcome applications in one or more of the following areas:</p>
+        <p class="govuk-body">Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
         <ul>
             <li>energy harvesting</li>
             <li>imaging technologies</li>
@@ -2124,14 +2124,14 @@
             <li>biofilms</li>
             <li>other areas of emerging technology</li>
         </ul>
-        <p>Innovation in enabling technologies that:</p>
+        <p class="govuk-body">Innovation in enabling technologies that:</p>
         <ul>
             <li>show benefits across multiple industrial sectors or markets</li>
             <li>provide new products and services</li>
             <li>allow new applications for existing products and services</li>
             <li>enable new capabilities or business models</li>
         </ul>
-        <p>We are particularly encouraging proposals that address:</p>
+        <p class="govuk-body">We are particularly encouraging proposals that address:</p>
         <ul>
             <li>systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance</li>
             <li>smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications</li>
@@ -2139,23 +2139,23 @@
             <li>photonics for manufacturing, healthcare and imaging</li>
             <li>digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality</li>
         </ul>
-        <p>We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
+        <p class="govuk-body">We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <legend class="heading-medium no-margin">Content</legend>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-one">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Project scope" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-one">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
@@ -2198,14 +2198,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2217,17 +2217,17 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-two">
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-two">
                             Heading
                         </label>
                         <input class="form-control" id="heading-two" type="text" value="" />
                         <!--<input class="form-control" id="heading-two" type="text" value="Specific competition themes" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-two">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-two">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
@@ -2262,14 +2262,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2281,22 +2281,22 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
         </form>
         <div class="alignright">
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="3">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - dates =========================== -->
@@ -2320,8 +2320,8 @@
         </dl>
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
-        <hr />
-        <p>Generated automatically from the competition milestones.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <p class="govuk-body">Generated automatically from the competition milestones.</p>
         <dl class="readonly-data">
             <dt>10 October 2016</dt>
             <dd>Competition opens</dd>
@@ -2330,31 +2330,31 @@
             <dt>26 October 2016</dt>
             <dd>Applicants notified</dd>
         </dl>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form>
-            <fieldset>
-                <div class="form-group">
-                    <legend class="form-label form-label-bold">Date</legend>
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <legend class="govuk-label govuk-label">Date</legend>
                     <div class="date-group">
                         <div class="day">
-                            <label class="form-label" for="date-one-day">Day</label>
-                            <input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="" type="number" />
+                            <label class="govuk-label" for="date-one-day">Day</label>
+                            <input class="govuk-input width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="14" type="number" />-->
                         </div>
                         <div class="month">
-                            <label class="form-label" for="date-one-month">Month</label>
-                            <input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="" type="number" />
+                            <label class="govuk-label" for="date-one-month">Month</label>
+                            <input class="govuk-input width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="10" type="number" />-->
                         </div>
                         <div class="year">
-                            <label class="form-label" for="date-one-year">Year</label>
-                            <input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="" type="number" />
+                            <label class="govuk-label" for="date-one-year">Year</label>
+                            <input class="govuk-input width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="2016" type="number" />-->
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="date-content-one">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="date-content-one">
                         Content
                     </label>
                     <textarea name="skills-areas" id="date-content-one" cols="30" rows="5" class="width-full"></textarea>
@@ -2362,56 +2362,56 @@
 <!--Briefing event in Belfast. More information-->
                     <!--</textarea>-->
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <a href="#">Remove event</a>
                 </div>
             </fieldset>
-            <hr />
-            <!--<fieldset>-->
-                <!--<div class="form-group">-->
-                    <!--<legend class="form-label form-label-bold">Date</legend>-->
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <!--<fieldset class="govuk-fieldset">-->
+                <!--<div class="govuk-form-group">-->
+                    <!--<legend class="govuk-label govuk-label">Date</legend>-->
                     <!--<div class="date-group">-->
                         <!--<div class="day">-->
-                            <!--<label class="form-label" for="date-two-day">Day</label>-->
+                            <!--<label class="govuk-label" for="date-two-day">Day</label>-->
                             <!--<input class="form-control width-extra-small" placeholder="DD" id="date-two-day" name="date-two-day" value="20" type="number" />-->
                         <!--</div>-->
                         <!--<div class="month">-->
-                            <!--<label class="form-label" for="date-two-month">Month</label>-->
+                            <!--<label class="govuk-label" for="date-two-month">Month</label>-->
                             <!--<input class="form-control width-extra-small" placeholder="MM" id="date-two-month" name="date-two-year" value="10" type="number" />-->
                         <!--</div>-->
                         <!--<div class="year">-->
-                            <!--<label class="form-label" for="date-two-year">Year</label>-->
+                            <!--<label class="govuk-label" for="date-two-year">Year</label>-->
                             <!--<input class="form-control width-extra-small" placeholder="YYYY" id="date-two-year" name="date-two-year" value="2016" type="number" />-->
                         <!--</div>-->
                     <!--</div>-->
                 <!--</div>-->
-                <!--<div class="form-group">-->
-                    <!--<label class="form-label-bold" for="date-content-two">-->
+                <!--<div class="govuk-form-group">-->
+                    <!--<label class="govuk-label" for="date-content-two">-->
                         <!--Content-->
                     <!--</label>-->
                     <!--<textarea name="skills-areas" id="date-content-two" cols="30" rows="5" class="width-full">-->
 <!--Briefing event in Cardiff. More information-->
                     <!--</textarea>-->
                 <!--</div>-->
-                <!--<div class="form-group">-->
+                <!--<div class="govuk-form-group">-->
                     <!--<a href="#">Remove event</a>-->
                 <!--</div>-->
             <!--</fieldset>-->
-            <!--<hr />-->
+            <!--<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />-->
         </form>
         <div class="alignright">
             <a href="#">+ add new event</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="4">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - how to apply =========================== -->
@@ -2445,19 +2445,19 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <legend class="heading-medium no-margin">Content</legend>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-one">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="How to apply" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-one">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
@@ -2466,14 +2466,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2485,17 +2485,17 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-two">
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-two">
                             Heading
                         </label>
                         <input class="form-control" id="heading-two" type="text" value="" />
                         <!--<input class="form-control" id="heading-two" type="text" value="The application process" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-two">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-two">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
@@ -2510,14 +2510,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2530,17 +2530,17 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-three">
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-three">
                             Heading
                         </label>
                         <input class="form-control" id="heading-three" type="text" value="" />
                         <!--<input class="form-control" id="heading-three" type="text" value="Application questions" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-three">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-three">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full"></textarea>
@@ -2549,14 +2549,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2569,17 +2569,17 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-four">
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-four">
                             Heading
                         </label>
                         <input class="form-control" id="heading-four" type="text" value="" />
                         <!--<input class="form-control" id="heading-four" type="text" value="Competition contact" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-four">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-four">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full"></textarea>
@@ -2588,14 +2588,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2608,17 +2608,17 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-five">
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-five">
                             Heading
                         </label>
                         <input class="form-control" id="heading-five" type="text" value="" />
                         <!--<input class="form-control" id="heading-five" type="text" value="Rules" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-five">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-five">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-five" cols="30" rows="10" class="width-full"></textarea>
@@ -2629,14 +2629,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2649,21 +2649,21 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
             </fieldset>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         </form>
         <div class="alignright">
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="5">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 <!-- =================Section: Public content - supporting information =========================== -->
@@ -2686,19 +2686,19 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <legend class="heading-medium no-margin">Content</legend>
-                <fieldset>
-                    <hr />
-                    <div class="form-group">
-                        <label class="form-label-bold" for="heading-one">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
+                <fieldset class="govuk-fieldset">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Background and further information" />-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="content-one">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="content-one">
                             Content
                         </label>
                         <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
@@ -2721,14 +2721,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
-                            <label class="form-label-bold" for="attachment-name-one">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2741,21 +2741,21 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
             </fieldset>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         </form>
         <div class="alignright">
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="6">[Text]</a>
         </div>
-        <div class="column-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        <div class="govuk-grid-column-one-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
-    <hr />
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </th:block>
 
 </html>

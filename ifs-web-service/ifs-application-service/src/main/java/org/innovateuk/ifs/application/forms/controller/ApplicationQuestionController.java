@@ -2,24 +2,28 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
-import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +43,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -56,10 +61,19 @@ public class ApplicationQuestionController {
     private QuestionModelPopulator questionModelPopulator;
 
     @Autowired
+    private ApplicationResearchCategoryModelPopulator researchCategoryPopulator;
+
+    @Autowired
+    private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
+
+    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private ApplicationService applicationService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -203,17 +217,23 @@ public class ApplicationQuestionController {
             ApplicationForm form
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
 
         if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            ApplicationTeamViewModel applicationTeamViewModel =
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId);
-            questionViewModel.setAllReadOnly(applicationTeamViewModel.isComplete());
-            model.addAttribute("applicationTeamModel",applicationTeamViewModel);
+            model.addAttribute("applicationTeamModel",
+                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
+        } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+            ApplicationResource applicationResource = applicationService.getById(applicationId);
+            model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
+                    applicationResource, user.getId(), questionId));
+            model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
+                    new ResearchCategoryForm()));
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
+
         return model;
     }
 
@@ -224,7 +244,7 @@ public class ApplicationQuestionController {
             Long questionId,
             UserResource user
     ) {
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
@@ -258,19 +278,20 @@ public class ApplicationQuestionController {
                 );
     }
 
-    private CompetitionSetupQuestionType getQuestionType(Model model) {
+    private QuestionSetupType getQuestionType(Model model) {
         QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
         return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
     }
 
     private String getQuestionViewForModel(Model model) {
-        CompetitionSetupQuestionType questionType = getQuestionType(model);
+        QuestionSetupType questionType = getQuestionType(model);
         if (questionType == null) {
             return APPLICATION_FORM;
         }
         switch (questionType) {
             case APPLICATION_DETAILS:
             case APPLICATION_TEAM:
+            case RESEARCH_CATEGORY:
                 return APPLICATION_FORM_LEAD;
             default:
                 return APPLICATION_FORM;

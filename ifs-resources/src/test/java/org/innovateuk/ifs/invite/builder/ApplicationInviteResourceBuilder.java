@@ -7,9 +7,8 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInviteResource, ApplicationInviteResourceBuilder> {
 

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;

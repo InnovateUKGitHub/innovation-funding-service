@@ -7,11 +7,7 @@ import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestSe
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressPreviouslyAssignedRowViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRejectedRowViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAvailableAssessorsRowViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

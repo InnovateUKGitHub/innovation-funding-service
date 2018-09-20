@@ -11,9 +11,9 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Before;
@@ -69,10 +69,6 @@ public class InitialDetailsSectionSaverTest {
 
     @Mock
     private CompetitionSetupService competitionSetupService;
-
-    //TODO INFUND-9493: Create tests for situations surrounding Milestone saving
-    //TODO INFUND-9493: Create test for invalid date handling
-    //TODO INFUND-9493: Create test for situations surrounding retrieval of innovation sector
 
     @Before
     public void setup(){

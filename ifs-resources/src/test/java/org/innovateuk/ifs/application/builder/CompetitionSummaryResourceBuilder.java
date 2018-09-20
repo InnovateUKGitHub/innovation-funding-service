@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.builder;
 
-import static java.util.Collections.emptyList;
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import static java.util.Collections.emptyList;
 
 public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSummaryResource, CompetitionSummaryResourceBuilder> {
 

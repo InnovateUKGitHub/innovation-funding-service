@@ -3,10 +3,9 @@ package org.innovateuk.ifs.project.core.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -18,7 +17,7 @@ import org.mapstruct.Mappings;
         uses = {
                 ProjectMapper.class,
                 OrganisationMapper.class,
-                InviteProjectMapper.class,
+                ProjectInviteMapper.class,
                 UserMapper.class
         }
 )

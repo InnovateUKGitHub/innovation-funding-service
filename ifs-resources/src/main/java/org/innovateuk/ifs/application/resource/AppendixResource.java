@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.apache.commons.io.FileUtils;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 /**
  * This is used for displaying a list of appendix files at the bottom of comp admin read only application view
@@ -38,7 +38,7 @@ public class AppendixResource extends FileEntryResource {
 
     @JsonIgnore
     public String getDownloadURL() {
-        return applicationId + "/forminput/" + formInputId + "/download";
+        return applicationId + "/forminput/" + formInputId + "/download/" + getName();
     }
 
     @JsonIgnore

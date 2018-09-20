@@ -1,6 +1,11 @@
+apply from: rootProject.file("docker/ifs-mysql/mysql-support.gradle")
+
 ext.sqlContainer = "ifs-database"
 ext.testSchema = "ifs_test"
 
+buildscript {
+    repositories { jcenter() }
+}
 
 createContainer.containerName = "ifs-database"
 createContainer.containerId = "ifs-database"

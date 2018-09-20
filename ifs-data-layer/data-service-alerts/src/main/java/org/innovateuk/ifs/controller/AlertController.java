@@ -2,9 +2,9 @@ package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.innovateuk.ifs.transactional.AlertService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.domain.Alert;
+import org.innovateuk.ifs.transactional.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

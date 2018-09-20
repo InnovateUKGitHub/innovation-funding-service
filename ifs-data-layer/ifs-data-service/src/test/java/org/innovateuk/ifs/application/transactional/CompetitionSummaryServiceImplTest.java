@@ -21,9 +21,10 @@ import static org.innovateuk.ifs.application.builder.CompletedPercentageResource
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {

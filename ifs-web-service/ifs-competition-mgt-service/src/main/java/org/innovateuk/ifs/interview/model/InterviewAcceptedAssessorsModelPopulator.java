@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.interview.model;
 
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
+import org.innovateuk.ifs.management.assessment.populator.BaseManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsViewModel;
-import org.innovateuk.ifs.management.assessment.populator.BaseManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the allocate applications to assessors page
  */
 @Component
-public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator<AssessorCountSummaryResource, AssessorCountSummaryPageResource, InterviewAcceptedAssessorsViewModel> {
+public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator {
 
     private InterviewAllocationRestService interviewAllocationRestService;
 

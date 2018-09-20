@@ -25,7 +25,7 @@
         <header>
           <img src="$request.getContextPath()#springMessage("idp.logo")" alt="#springMessageText("idp.logo.alt-text", "logo")">
           <h3>#springMessageText("idp.title", "Web Login Service") - #springMessageText("idp.userprefs.title.suffix", "Login Preferences")</h3>
-          <p>
+          <p class="govuk-body">
           #springMessage("idp.userprefs.info")
           </p>
         </header>

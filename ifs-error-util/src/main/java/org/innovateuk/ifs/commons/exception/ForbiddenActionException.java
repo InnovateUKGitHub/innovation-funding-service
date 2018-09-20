@@ -7,7 +7,7 @@ import static java.util.Collections.emptyList;
 public class ForbiddenActionException extends IFSRuntimeException {
 
     public ForbiddenActionException() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public ForbiddenActionException(String message) {

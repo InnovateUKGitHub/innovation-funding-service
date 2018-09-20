@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.util.List;

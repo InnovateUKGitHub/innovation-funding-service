@@ -10,8 +10,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.controller.CompetitionManagementDashboardController;
-import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -340,6 +340,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(5, model.getApplicationPagination().getTotalPages());
         assertEquals(0, model.getApplicationPagination().getCurrentPage());
         assertEquals(40, model.getApplicationPagination().getPageSize());
+        assertEquals(false, model.isSupport());
 
         verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchString, pageNumber, pageSize);
 

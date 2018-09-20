@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -20,9 +20,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT_MILLIS;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;

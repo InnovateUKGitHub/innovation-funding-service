@@ -3,9 +3,6 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -39,7 +36,7 @@ public interface AssessmentService {
             description = "Comp admins and execs can see assessments in a particular state per competition")
     ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentState state, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(
             value = "COUNT_BY_STATE_AND_COMPETITION",
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")

@@ -2,13 +2,13 @@ package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +21,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
@@ -54,6 +55,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -76,6 +79,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
@@ -101,7 +106,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
-
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -141,7 +147,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
-
+            verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -166,7 +173,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
-
+            verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -191,7 +199,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
-
+            verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -295,6 +304,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.springframework.security.access.method.P;
 
 /**

@@ -18,7 +18,6 @@ ext.ifsFinanceTotalsEnabled=false
 ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 
 ext.silRestBaseURL="http://sil-stub:8080/silstub"
-ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL=""
 

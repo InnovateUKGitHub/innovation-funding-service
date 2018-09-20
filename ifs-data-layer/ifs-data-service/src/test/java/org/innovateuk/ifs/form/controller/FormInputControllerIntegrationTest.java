@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.junit.Assert.*;
 
 public class FormInputControllerIntegrationTest extends BaseControllerIntegrationTest<FormInputController> {

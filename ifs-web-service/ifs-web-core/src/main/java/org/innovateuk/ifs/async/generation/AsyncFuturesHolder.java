@@ -7,7 +7,9 @@ import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.async.exceptions.AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException;
@@ -205,7 +207,6 @@ public final class AsyncFuturesHolder {
                         CompletableFuture.allOf(actualFutures.toArray(new CompletableFuture<?>[futuresSpawnedFromTheseProcesses.size()]));
 
                 try {
-                    // TODO DW - add configuration for this
                     futureBatch.get(600, TimeUnit.SECONDS);
                 } catch (Exception e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);

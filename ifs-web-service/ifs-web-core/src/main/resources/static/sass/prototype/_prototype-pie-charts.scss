@@ -18,11 +18,11 @@
 .pie {
   width: 100px;
   height: 100px;
-  @include inline-block;
+  display: inline-block;
   color:transparent;
 
   svg {
-    background:$grey-3;
+    background:govuk-colour("grey-3");
     border-radius: 50%;
   }
   &[aria-hidden="true"]{
@@ -31,8 +31,8 @@
   }
 
   circle {
-    fill:$red;
-    stroke: $grey-3;
+    fill:$govuk-error-colour;
+    stroke: govuk-colour("grey-3");
     stroke-width: 32;
     transform: rotate(-90deg);
     transform-origin: 50%;
@@ -40,7 +40,7 @@
 }
 .pie-container {
   position: relative;
-  @include inline-block;
+  display: inline-block;
   vertical-align:middle;
 }
 .pie-overlay {
@@ -52,7 +52,7 @@
   position: absolute;
   background:#fff;
   z-index:8;
-  color: $red;
+  color: $govuk-error-colour;
   text-align: center;
   line-height: 1;
   font-size:15px;
@@ -90,19 +90,19 @@
     display: none;
   }
   .pie-overlay {
-    border: 2px solid $grey-3;
+    border: 2px solid govuk-colour("grey-3");
     position: static;
   }
 }
 //same as no-js but @extends don't work within ie-lte :(
-@include ie-lte(8) {
+@include is-ie8() {
   .pie {
     width:auto;
     height: auto;
     display: none;
   }
   .pie-overlay {
-    border: 2px solid $grey-3;
+    border: 2px solid govuk-colour("grey-3");
     position: static;
   }
 }

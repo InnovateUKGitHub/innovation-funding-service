@@ -13,8 +13,8 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
@@ -29,8 +29,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
-import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentMessageOutcomeBuilder.newInterviewAssignmentMessageOutcome;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -47,7 +48,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
     private NotificationTemplateRenderer notificationTemplateRendererMock;
 
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
 
     @Mock
     private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
@@ -102,12 +103,12 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
 
         when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityState(
                 COMPETITION_ID, InterviewAssignmentState.CREATED)).thenReturn(interviewAssignments);
-        when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
+        when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess(null));
 
         ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);
 
         assertTrue(result.isSuccess());
-        verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
+        verify(notificationServiceMock, only()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
         verify(interviewAssignmentWorkflowHandlerMock).notifyInterviewPanel(interviewAssignments.get(0), outcome);
     }
 
@@ -168,12 +169,12 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
                 .build();
 
         when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
-        when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
+        when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess(null));
 
         ServiceResult<Void> result = service.resendInvite(applicationId, sendResource);
 
         assertTrue(result.isSuccess());
-        verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
+        verify(notificationServiceMock, only()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
         verify(interviewAssignmentWorkflowHandlerMock).notifyInterviewPanel(interviewAssignment, message);
     }
 }

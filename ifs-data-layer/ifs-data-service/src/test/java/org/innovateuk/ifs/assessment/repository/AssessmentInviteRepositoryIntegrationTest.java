@@ -2,12 +2,12 @@ package org.innovateuk.ifs.assessment.repository;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -29,10 +29,10 @@ import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -73,8 +73,17 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Before
     public void setup() {
-        competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        loginSteveSmith();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .build());
+
+        innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("innovation area")
+                .build());
     }
 
     @Test
@@ -257,7 +266,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     @Test
-    public void findAssessorsByCompetitionAndInnovationArea() throws Exception {
+    public void findAssessorsByCompetitionAndInnovationArea() {
         long competitionId = 1L;
 
         addTestAssessors();
@@ -279,12 +288,8 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     @Test
-    public void findAssessorsByCompetition_nextPage() throws Exception {
-        long competitionId = 1L;
-
-        Competition competition = newCompetition()
-                .withId(competitionId)
-                .build();
+    public void findAssessorsByCompetition_nextPage() {
+        Competition competition = competitionRepository.findOne(1L);
 
         addTestAssessors();
 
@@ -295,7 +300,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Page<User> pagedUsers = repository.findAssessorsByCompetition(competitionId, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(2, pagedUsers.getTotalPages());
@@ -306,12 +311,8 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     @Test
-    public void findAssessorsByCompetition() throws Exception {
-        long competitionId = 1L;
-
-        Competition competition = newCompetition()
-                .withId(competitionId)
-                .build();
+    public void findAssessorsByCompetition() {
+        Competition competition = competitionRepository.findOne(1L);
 
         addTestAssessors();
 
@@ -322,7 +323,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Page<User> pagedUsers = repository.findAssessorsByCompetition(competitionId, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -335,8 +336,6 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     private void addTestAssessors() {
-        loginSteveSmith();
-
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
         List<Profile> profiles = newProfile()

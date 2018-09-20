@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -21,9 +20,6 @@ public class DetailsModelPopulatorTest {
 
 	@InjectMocks
 	private DetailsModelPopulator populator;
-
-	@Mock
-	private CompetitionService competitionService;
 
 	@Mock
 	private SectionService sectionService;

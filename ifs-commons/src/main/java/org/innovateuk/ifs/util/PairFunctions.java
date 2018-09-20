@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Optional;
 import java.util.function.Function;

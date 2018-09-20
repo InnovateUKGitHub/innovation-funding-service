@@ -2,9 +2,6 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
@@ -14,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.partnerOrganisationResourceList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

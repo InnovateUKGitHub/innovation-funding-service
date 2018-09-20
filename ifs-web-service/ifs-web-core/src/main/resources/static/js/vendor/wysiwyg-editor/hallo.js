@@ -555,7 +555,6 @@
           closeText: 'X',
           autoOpen: false,
           width: 540,
-          height: 150,
           title: null,
           buttonTitle: "Insert link",
           buttonUpdateTitle: "Update link",
@@ -567,13 +566,14 @@
         buttonCssClass: null
       },
       populateToolbar: function(toolbar) {
-        var butTitle, butUpdateTitle, buttonize, buttonset, dialog, dialogId, dialogSubmitCb, isEmptyLink, urlInput, widget,
+        var butTitle, butUpdateTitle, buttonize, buttonset, modal, dialog, dialogId, dialogSubmitCb, isEmptyLink, urlInput, widget,
           _this = this;
         widget = this;
         dialogId = "" + this.options.uuid + "-dialog";
         butTitle = this.options.dialogOpts.buttonTitle;
         butUpdateTitle = this.options.dialogOpts.buttonUpdateTitle;
-        dialog = jQuery("<div id=\"" + dialogId + "\">        <form action=\"#\" method=\"post\" class=\"linkForm\">          <div class=\"form-group\">            <label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label>            <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"" + this.options.defaultUrl + "\" />          </div>          <div class=\"form-group\">            <input type=\"submit\" id=\"addlinkButton\" class=\"button\" value=\"" + butTitle + "\"/>          </div>        </form></div>");
+        dialog = jQuery("<div id=\"" + dialogId + "\" class=\"modal-insert-link\" role=\"dialog\" aria-hidden=\"true\"><button class=\"js-close close\" type=\"button\" aria-label=\"Close Popup\">Close</button><h2 class=\"govuk-heading-m\">Insert link</h2><form action=\"#\" method=\"post\" class=\"linkForm\"><div class=\"govuk-form-group\"><label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label><input class=\"govuk-input\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"" + this.options.defaultUrl + "\" /></div><hr class=\"govuk-section-break govuk-section-break--l govuk-section-break--visible\" /><div class=\"govuk-form-group\"><input type=\"submit\" id=\"addlinkButton\" class=\"govuk-button\" value=\"" + butTitle + "\"/><button class=\"js-close button-clear\" type=\"button\">Cancel</button></div></form></div>")
+        modal = jQuery("<div class=\"modal-overlay js-close\" aria-hidden=\"true\"></div>");
         urlInput = jQuery('input[name=url]', dialog);
         isEmptyLink = function(link) {
           if ((new RegExp(/^\s*$/)).test(link)) {
@@ -588,7 +588,8 @@
           var link, linkNode;
           event.preventDefault();
           link = urlInput.val();
-          dialog.dialog('close');
+          jQuery(".modal-overlay").attr("aria-hidden", "true");
+          jQuery(".modal-insert-link").attr("aria-hidden", "true");
           widget.options.editable.restoreSelection(widget.lastSelection);
           if (isEmptyLink(link)) {
             document.execCommand("unlink", null, "");
@@ -641,8 +642,9 @@
               jQuery(urlInput[0].form).find(button_selector).val(butUpdateTitle);
             }
             widget.options.editable.keepActivated(true);
-            dialog.dialog('open');
-            dialog.on('dialogclose', function() {
+            jQuery(".modal-overlay").attr("aria-hidden", "false");
+            jQuery(".modal-insert-link").attr("aria-hidden", "false");
+            jQuery("body").on('click', '.js-close, input[type=submit]', function() {
               widget.options.editable.restoreSelection(widget.lastSelection);
               jQuery(buttonHolder).find('button').removeClass('ui-state-active');
               widget.options.editable.element.focus();
@@ -671,7 +673,12 @@
         if (this.options.link) {
           toolbar.append(buttonset);
           buttonset.hallobuttonset();
-          return dialog.dialog(this.options.dialogOpts);
+          jQuery('main').append(dialog);
+          jQuery('main').append(modal);
+          setTimeout(function () {
+            var height = dialog.outerHeight()
+            dialog.css({'margin-top': '-' + (height / 2) + 'px'})
+          }, 50);
         }
       }
     });

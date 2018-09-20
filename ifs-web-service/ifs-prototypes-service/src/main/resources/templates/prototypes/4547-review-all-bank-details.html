@@ -22,15 +22,15 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
-	<div class="success-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'accepted'}">
-		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+	<div class="success-alert govuk-!-margin-bottom-6" th:unless="${param.status == null or param.status[0] != 'accepted'}">
+		<h2 class="govuk-heading-s govuk-!-margin-top-0">The bank details provided have been approved.</h2>
 	</div>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
-		<div class="panel">
-			<h2 class="heading-medium no-margin-top">Business not registered on Companies House</h2>
+		<div class="govuk-body panel">
+			<h2 class="govuk-heading-m govuk-!-margin-top-0">Business not registered on Companies House</h2>
 
 			<dl class="standard-definition-list">
 				<dt>Stated business type:</dt>
@@ -39,22 +39,22 @@
 		</div>
 	</th:block>
 
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-	<p>This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
+	<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<p class="govuk-body">This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
 
-	<h2 class="heading-medium">Partner progress</h2>
+	<h2 class="govuk-heading-m">Partner progress</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Partner</th>
 					<th scope="col" style="width: 50%">Progress</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a th:href="${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/2650-review-bank-details?status=accepted' : '/prototypes/2650-review-bank-details?status=error')}">Aptrans Ltd (Lead)</a>
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
@@ -64,16 +64,16 @@
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a href="#">Biotech Corp</a>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						University of Cardiff
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">

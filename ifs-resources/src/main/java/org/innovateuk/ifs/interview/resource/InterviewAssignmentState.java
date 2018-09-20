@@ -12,13 +12,14 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum InterviewAssignmentState implements ProcessState, IdentifiableEnum<InterviewAssignmentState> {
+public enum InterviewAssignmentState implements ProcessState, IdentifiableEnum {
     CREATED(45, State.CREATED),
     AWAITING_FEEDBACK_RESPONSE(46, State.PENDING),
     SUBMITTED_FEEDBACK_RESPONSE(47, State.SUBMITTED);
 
-    public static final InterviewAssignmentState[] ASSIGNED_STATES =
-            { AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE };
+    public static InterviewAssignmentState[] assignedStates() {
+        return new InterviewAssignmentState[] { AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE };
+    }
 
     private final long id;
     private final State backingState;

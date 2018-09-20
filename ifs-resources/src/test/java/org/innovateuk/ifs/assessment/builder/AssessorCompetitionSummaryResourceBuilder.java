@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 

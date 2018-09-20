@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationFormInputUploadService;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +47,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId,
             @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) throws IOException {
+            HttpServletRequest request) {
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
@@ -64,7 +64,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId,
             @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) throws IOException {
+            HttpServletRequest request) {
 
         return fileControllerUtils.handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
@@ -76,7 +76,7 @@ public class FormInputResponseFileUploadController {
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId) throws IOException {
+            @RequestParam("processRoleId") long processRoleId) {
 
         return fileControllerUtils.handleFileDownload(() -> doGetFile(formInputId, applicationId, processRoleId));
     }
@@ -95,7 +95,7 @@ public class FormInputResponseFileUploadController {
     public RestResult<Void> deleteFileEntry(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId) throws IOException {
+            @RequestParam("processRoleId") long processRoleId) {
 
         FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
         ServiceResult<FormInputResponse> deleteResult = applicationFormInputUploadService.deleteFormInputResponseFileUpload(compoundId);

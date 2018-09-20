@@ -20,7 +20,7 @@
 
 	<th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assessor-intro" th:with="site=rc" />
 
-	<ul class="inline-nav">
+	<ul class="govuk-list inline-nav">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>

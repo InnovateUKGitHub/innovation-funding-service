@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class OtherFunding extends AbstractFinanceRowItem {

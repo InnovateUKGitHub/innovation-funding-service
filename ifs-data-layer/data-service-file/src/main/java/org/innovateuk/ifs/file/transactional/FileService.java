@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.commons.security.NotSecured;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.InputStream;
@@ -25,6 +25,9 @@ public interface FileService {
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier);
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<FileEntry> deleteFile(long fileEntryId);

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.security;
 
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

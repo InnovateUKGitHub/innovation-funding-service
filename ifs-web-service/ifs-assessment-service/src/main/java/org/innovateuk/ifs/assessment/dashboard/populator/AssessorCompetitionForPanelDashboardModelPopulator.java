@@ -1,19 +1,15 @@
 package org.innovateuk.ifs.assessment.dashboard.populator;
 
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -29,23 +25,23 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class AssessorCompetitionForPanelDashboardModelPopulator {
 
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
+    private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
-
-    @Autowired
+    private ReviewRestService reviewRestService;
     private OrganisationRestService organisationRestService;
 
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
-    private ReviewRestService reviewRestService;
+    public AssessorCompetitionForPanelDashboardModelPopulator(CompetitionRestService competitionRestService,
+                                                              ApplicationService applicationService,
+                                                              ReviewRestService reviewRestService,
+                                                              OrganisationRestService organisationRestService) {
+        this.competitionRestService = competitionRestService;
+        this.applicationService = applicationService;
+        this.reviewRestService = reviewRestService;
+        this.organisationRestService = organisationRestService;
+    }
 
     public AssessorCompetitionForPanelDashboardViewModel populateModel(Long competitionId, Long userId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
         List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
@@ -66,20 +62,12 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
 
     private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview) {
         ApplicationResource application = applicationService.getById(assessmentReview.getApplication());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
 
         return new AssessorCompetitionForPanelDashboardApplicationViewModel(application.getId(),
                 assessmentReview.getId(),
                 application.getName(),
-                leadOrganisation.map(OrganisationResource::getName).orElse(EMPTY),
+                leadOrganisation.getName(),
                 assessmentReview.getReviewState());
-    }
-
-    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
-                .findFirst();
     }
 }

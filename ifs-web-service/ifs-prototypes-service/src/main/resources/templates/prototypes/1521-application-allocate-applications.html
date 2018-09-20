@@ -41,38 +41,38 @@
 
 		<section class="info-area">
 			<section class="boxed">
-				<h2 class="heading-small no-margin">Challenge area</h2>
-		        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
+				<h2 class="govuk-heading-s govuk-!-margin-0">Challenge area</h2>
+		        <p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
-		        <h2 class="heading-small no-margin">Skills</h2>
-		        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
+		        <h2 class="govuk-heading-s govuk-!-margin-0">Skills</h2>
+		        <p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
-		        <div class="grid-row">
-		            <div class="column-half">
-		            	<h2 class="heading-small no-margin">Area</h2>
-		                <p th:text="${(param.assessorType != null ? param.assessorType[0] : 'Industry')}">AREA</p>
+		        <div class="govuk-grid-row">
+		            <div class="govuk-grid-column-one-half">
+		            	<h2 class="govuk-heading-s govuk-!-margin-0">Area</h2>
+		                <p class="govuk-body" th:text="${(param.assessorType != null ? param.assessorType[0] : 'Industry')}">AREA</p>
 		            </div>
-		            <div class="column-half">
-		                <h2 class="heading-small no-margin">S.M.A.R.T</h2>
-		                <p>Yes</p>
+		            <div class="govuk-grid-column-one-half">
+		                <h2 class="govuk-heading-s govuk-!-margin-0">S.M.A.R.T</h2>
+		                <p class="govuk-body">Yes</p>
 		            </div>
 		        </div>
 
-				<hr />
+				<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-		        <div class="grid-row">
-		        	<div class="column-third">
-		        		<p>Assigned <br /><span class="heading-medium">5</span></p>
+		        <div class="govuk-grid-row">
+		        	<div class="govuk-grid-column-one-third">
+		        		<p class="govuk-body">Assigned <br /><span class="govuk-heading-m">5</span></p>
 
-		        		<p>Accepted <br /><span class="heading-medium">4</span></p>
+		        		<p class="govuk-body">Accepted <br /><span class="govuk-heading-m">4</span></p>
 		        	</div>
-		        	<div class="column-third">
-		        		<p>Started <br /><span class="heading-medium">1</span></p>
+		        	<div class="govuk-grid-column-one-third">
+		        		<p class="govuk-body">Started <br /><span class="govuk-heading-m">1</span></p>
 
-		        		<p>Completed <br /><span class="heading-medium">1</span></p>
+		        		<p class="govuk-body">Completed <br /><span class="govuk-heading-m">1</span></p>
 		        	</div>
-		        	<div class="column-third">
-		        		<p>Rejected <br /><span class="heading-medium">1</span></p>
+		        	<div class="govuk-grid-column-one-third">
+		        		<p class="govuk-body">Rejected <br /><span class="govuk-heading-m">1</span></p>
 		        	</div>
 		        </div>
 
@@ -80,19 +80,19 @@
 		</section>
 
 		<section class="data-area">
-		    <h2 class="heading-large" id="current-assessors">Currently assigned <span class="assigned-count">(3)</span></h2>
+		    <h2 class="govuk-heading-l" id="current-assessors">Currently assigned <span class="assigned-count">(3)</span></h2>
 
 		    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-application-assigned-table" />
 
 		    <div class="alignright-button extra-margin" style="display: none" id="added-assessors">
-				<a href="/prototypes/1373-manage-applications?sendAssignments" class="button button=large">Continue</a>
+				<a href="/prototypes/1373-manage-applications?sendAssignments" class="govuk-button button=large">Continue</a>
 			</div>
 
-		    <hr />
+		    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-			<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+			<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-			<h2 class="heading-large" id="current-assessors">Assign applications</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Assign applications</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" />
 

@@ -12,11 +12,11 @@ import java.util.Optional;
  */
 public interface CompetitionSetupUpdater {
 
-	ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId);
+    ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId);
 
-	boolean supportsForm(Class<? extends CompetitionSetupForm> clazz);
+    boolean supportsForm(Class<? extends CompetitionSetupForm> clazz);
 
-	ServiceResult<Void> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
+    ServiceResult<Void> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
-	CompetitionSetupSection sectionToSave();
+    CompetitionSetupSection sectionToSave();
 }

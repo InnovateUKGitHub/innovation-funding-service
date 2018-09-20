@@ -11,11 +11,10 @@ import java.time.LocalDate;
  */
 public class FutureLocalDateValidator implements ConstraintValidator<FutureLocalDate, LocalDate> {
 
-    private FutureLocalDate constraintAnnotation;
 
     @Override
     public void initialize(FutureLocalDate constraintAnnotation) {
-        this.constraintAnnotation = constraintAnnotation;
+        // does nothing
     }
 
     @Override

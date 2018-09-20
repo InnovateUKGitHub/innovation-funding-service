@@ -2,19 +2,16 @@ package org.innovateuk.ifs.fundingdecision.validator;
 
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationFundingDecisionValidator {
     public boolean isValid(Application application) {
 
-        if(!hasBeenSubmitted(application)) {
-            return false;
-        }
-        else if(decisionIsSuccessful(application)
-                && decisionNotificationWasSent(application)) {
+        if(!hasBeenSubmitted(application) ||
+                (decisionIsSuccessful(application) && decisionNotificationWasSent(application))) {
             return false;
         }
 

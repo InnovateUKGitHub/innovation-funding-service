@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.BaseAssessmentFeedbackViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.Objects;
 

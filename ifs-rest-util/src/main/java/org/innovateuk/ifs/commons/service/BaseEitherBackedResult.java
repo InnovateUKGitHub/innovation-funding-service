@@ -87,6 +87,22 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
+    public BaseEitherBackedResult<T, FailureType> andOnSuccessDo(Consumer<T> successHandler) {
+
+        if (isLeft()) {
+            return this;
+        }
+
+        try {
+            successHandler.accept(getSuccess());
+            return this;
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, FailureType>> successHandler) {
         if (isLeft()) {
             return (BaseEitherBackedResult<R, FailureType>) this;
@@ -108,8 +124,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         }
 
         try {
-            R result = successHandler.get();
-            return createSuccess(result);
+            R successResult = successHandler.get();
+            return createSuccess(successResult);
         } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
@@ -192,8 +208,6 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     public List<Error> getErrors() {
         return isRight() ? emptyList() : getFailure().getErrors();
     }
-
-    // TODO DW - INFUND-1555 - remove "BACKWARDS COMPATIBILITY" method here (for "not found" nulls)
 
     /**
      * @deprecated Should handled either success or failure case explicitly, usually by using handlesuccessorfailure()

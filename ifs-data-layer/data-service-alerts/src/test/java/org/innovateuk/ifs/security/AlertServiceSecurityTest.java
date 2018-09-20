@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.transactional.AlertService;
 import org.innovateuk.ifs.transactional.AlertServiceImpl;
-import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

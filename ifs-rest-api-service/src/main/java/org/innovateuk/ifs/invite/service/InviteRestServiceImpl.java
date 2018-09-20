@@ -4,14 +4,13 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.GET_USER_BY_HASH_MAPPING;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
 /*
 * A typical RestService to use as a client API on the web-service side for the data-service functionality .
@@ -23,7 +22,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     private String inviteRestUrl = "/invite";
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByInviteOrganisation(String organisationName, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByInviteOrganisation(String organisationName, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisationName(organisationName);
@@ -31,11 +30,11 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisation(organisationId);
@@ -43,11 +42,11 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites) {
+    public RestResult<Void> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisation(organisationId);
@@ -56,18 +55,24 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + String.format("/createApplicationInvites/%s", applicationId);
 
-        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+        return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
-    public RestResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
+    public RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         String url = inviteRestUrl + "/saveInvites";
-        return postWithRestResult(url, inviteResources, InviteResultsResource.class);
+        return postWithRestResult(url, inviteResources, Void.class);
     }
 
     @Override
-    public RestResult<Void> acceptInvite(String inviteHash, Long userId) {
+    public RestResult<Void> acceptInvite(String inviteHash, long userId) {
         String url = inviteRestUrl + String.format("/acceptInvite/%s/%s", inviteHash, userId);
+        return putWithRestResultAnonymous(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId) {
+        String url = inviteRestUrl + String.format("/acceptInvite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
 

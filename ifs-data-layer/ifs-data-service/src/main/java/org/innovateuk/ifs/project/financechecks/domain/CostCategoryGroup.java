@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.financechecks.domain;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.SortedMap;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMapWithList;
 import static javax.persistence.CascadeType.ALL;
+import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMapWithList;
 
 /**
  * Entity representing a generic grouping of FinanceRow Categories

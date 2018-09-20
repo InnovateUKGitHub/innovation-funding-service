@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.Builder;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -11,8 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for {@link AssessmentInvite}s.

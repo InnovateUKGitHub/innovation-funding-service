@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
+import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 
 public class AffiliationResourceBuilderTest {

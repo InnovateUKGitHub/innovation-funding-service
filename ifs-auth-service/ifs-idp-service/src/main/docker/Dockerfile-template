@@ -3,9 +3,9 @@ EXPOSE 9443
 
 ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
-  JAVAUPD=171 \
-  JAVABLD=11 \
-  JAVASIG=512cd62ec5174c3487ac17c61aaa89e8 \
+  JAVAUPD=181 \
+  JAVABLD=13 \
+  JAVASIG=96a7b8442fe848ef90c96a2fad6ed6d1 \
   IDPVER="3.3.1"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle

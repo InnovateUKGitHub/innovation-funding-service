@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,16 +39,6 @@ public class InProgressDashboardRowViewModelTest {
                 ZonedDateTime.now().plusDays(12), 12, 0 , false, 1L);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/form/question/1"));
-        assertThat(viewModel.getTitle(), equalTo( "Untitled application (start here)"));
-    }
-
-    @Test
-    public void testConstructCreatedWithOldApplicantMenu() {
-        InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
-                "Competition", true, ApplicationState.CREATED, true,
-                ZonedDateTime.now().plusDays(12), 12, 0 , false, null);
-
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/team"));
         assertThat(viewModel.getTitle(), equalTo( "Untitled application (start here)"));
     }
 

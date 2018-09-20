@@ -1,17 +1,15 @@
 package org.innovateuk.ifs.management.competition.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
  * Holder of model attributes for the Competition Management 'in flight' Dashboard

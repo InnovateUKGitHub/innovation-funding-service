@@ -1,44 +1,62 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dual user choice',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dual user choice',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="app-overview">
+    <body class="govuk-template__body app-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" th:with="hideDashboardLink=true" />
 
-        <main tabindex="-1" id="content">
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to log you in to your account.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='heading-xlarge'" />
-            <p>Thank you for signing into the Innovation Funding Service.</p>
-
-            <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? form-group-error">
-                    <fieldset class="inline">
-                        <legend id="selectedRole">
-                            <span class="heading-small">Please choose the role you are signing in as today</span>
-                            <th:block th:if="${#fields.hasErrors('selectedRole')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
-                            </th:block>
-                        </legend>
-                        <div class="multiple-choice" th:each="role : ${model.ACCEPTED_ROLES}">
-                            <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                            <label th:for="${#ids.prev('selectedRole')}" th:text="${role.displayName}"></label>
-                        </div>
-                    </fieldset>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}"
+                     class="govuk-error-summary"
+                     role="alert"
+                     aria-labelledby="error-summary-title"
+                     tabindex="-1"
+                     data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to log you in to your account.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <button type="submit" class="button" id="continue">Continue</button>
-            </form>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='govuk-heading-xl'" />
+                <p class="govuk-body">Thank you for signing into the Innovation Funding Service.</p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? govuk-form-group--error">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="selectedRole">
+                                <h2 class="govuk-fieldset__heading">Please choose the role you are signing in as today</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('selectedRole')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" th:each="role : ${model.ACCEPTED_ROLES}">
+                                    <input th:field="*{selectedRole}"
+                                           class="govuk-radios__input"
+                                           th:value="${role}"
+                                           type="radio"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                                    <label th:for="${#ids.prev('selectedRole')}"
+                                           th:text="${role.displayName}"
+                                           class="govuk-label govuk-radios__label"></label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button type="submit" class="govuk-button" id="continue">Continue</button>
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

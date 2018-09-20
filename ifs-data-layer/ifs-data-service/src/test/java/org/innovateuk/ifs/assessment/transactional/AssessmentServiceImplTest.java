@@ -14,6 +14,9 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -46,6 +49,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
@@ -58,6 +63,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private AssessmentService assessmentService = new AssessmentServiceImpl();
+
+    @Mock
+    private CompetitionParticipantService competitionParticipantServiceMock;
 
     @Mock
     private AssessmentRepository assessmentRepositoryMock;
@@ -194,7 +202,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Assessment> assessments = newAssessment().withProcessState(CREATED, WITHDRAWN).build(2);
         List<AssessmentResource> expected = sort(newAssessmentResource().withActivityState(WITHDRAWN, CREATED).build(2), comparing(AssessmentResource::getAssessmentState));
+        List<CompetitionParticipantResource> competitionParticipantList = newCompetitionParticipantResource()
+                .withUser(userId)
+                .withCompetition(competitionId)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .build(1);
 
+        when(competitionParticipantServiceMock.getCompetitionParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(serviceSuccess(competitionParticipantList));
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));

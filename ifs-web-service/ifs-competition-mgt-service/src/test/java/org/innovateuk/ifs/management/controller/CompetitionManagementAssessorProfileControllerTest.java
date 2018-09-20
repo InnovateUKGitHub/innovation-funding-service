@@ -2,15 +2,22 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
+import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +30,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
@@ -31,9 +39,13 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
+import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,13 +57,24 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Mock
     private AssessorRestService assessorRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AffiliationRestService affiliationRestService;
 
     private CompetitionResource competition;
 
@@ -72,12 +95,12 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
-        when(competitionService.getById(any())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competition));
     }
 
     @Test
-    public void profile() throws Exception {
-        Long assessorId = 1L;
+    public void assessorProfileSkills() throws Exception {
+        long assessorId = 1L;
 
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
@@ -85,28 +108,47 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andReturn();
-
-        AssessorsProfileViewModel model = (AssessorsProfileViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals("Test Tester", model.getName());
-        assertEquals("012345", model.getPhone());
-        assertEquals("A Skill", model.getSkills());
-        assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
-        assertEquals("test@test.com", model.getEmail());
-        assertEquals(2, model.getInnovationSectors().size());
-        assertEquals(expectedAddress, model.getAddress());
+                .andExpect(view().name("profile/skills"));
 
         verify(assessorRestService, only()).getAssessorProfile(assessorId);
     }
 
     @Test
+    public void assessorProfileDeclaration() throws Exception {
+        long assessorId = 1L;
+
+        AddressResource expectedAddress = getExpectedAddress();
+        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
+        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
+
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(newAffiliationResource()
+                        .withId(null, null)
+                        .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
+                        .withExists(true, true)
+                        .withUser(null, null)
+                        .build(2)
+                )
+                .build();
+
+        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
+        when(affiliationRestService.getUserAffiliations(anyLong())).thenReturn(restSuccess(affiliationListResource));
+
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("profile/declaration-of-interest"));
+
+        verify(assessorRestService).getAssessorProfile(assessorId);
+        verify(affiliationRestService).getUserAffiliations(anyLong());
+    }
+
+    @Test
     public void displayAssessorProfile_backUrlPreservesQueryParams() throws Exception {
         Long assessorId = 1L;
-        Long applicationId = 2L;
 
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
@@ -114,14 +156,14 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        String expectedBackUrl = "/assessment/competition/" + competition.getId() + "/application/" + applicationId + "/assessors?param1=abc&param2=def%26ghi";
+        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find?param1=abc&param2=def%26ghi";
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId)
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("param1", "abc")
                 .param("param2", "def&ghi")
                 .param("applicationId", "2"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
@@ -139,10 +181,10 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find";
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId)
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("origin", "ASSESSOR_FIND"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
@@ -160,10 +202,10 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find";
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId)
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("origin", "ASSESSOR_FIND"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
@@ -204,4 +246,5 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 )
                 .build();
     }
+
 }

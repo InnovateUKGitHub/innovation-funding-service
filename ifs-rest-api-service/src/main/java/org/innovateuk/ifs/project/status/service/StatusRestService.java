@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.status.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 
 import java.util.Optional;
 

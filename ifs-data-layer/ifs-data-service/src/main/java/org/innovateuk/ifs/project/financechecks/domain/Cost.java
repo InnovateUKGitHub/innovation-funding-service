@@ -40,15 +40,12 @@ public class Cost {
     private CostCategory costCategory;
 
     public Cost() {
-        // for ORM use
     }
 
-    // copy constructor
     private Cost(Cost cost) {
         this(cost.id, cost.value, cost.costGroup, cost.costTimePeriod, cost.costCategory);
     }
 
-    // for use with copy constructor
     private Cost(Long id, BigDecimal value, CostGroup costGroup, CostTimePeriod costTimePeriod, CostCategory costCategory) {
         this.id = id;
         this.value = value;

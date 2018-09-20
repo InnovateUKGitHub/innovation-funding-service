@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.innovateuk.ifs.nonifs.formpopulator.NonIfsDetailsFormPopulator;
@@ -37,7 +37,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
     @Mock
     public CompetitionSetupRestService competitionSetupRestService;
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected NonIfsCompetitionController supplyControllerUnderTest() {
@@ -63,7 +63,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         NonIfsDetailsForm nonIfsDetailsForm = new NonIfsDetailsForm();
         NonIfsDetailsViewModel nonIfsDetailsViewModel = new NonIfsDetailsViewModel();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormPopulator.populate(competitionResource)).thenReturn(nonIfsDetailsForm);
         when(nonIfsDetailsViewModelPopulator.populate()).thenReturn(nonIfsDetailsViewModel);
 
@@ -80,7 +80,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(false).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/non-ifs-competition/setup/"+competitionId))
                 .andExpect(status().is3xxRedirection())
@@ -93,7 +93,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
@@ -123,7 +123,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
@@ -165,7 +165,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId))
@@ -193,7 +193,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
@@ -228,7 +228,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.sil.email.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,14 +92,7 @@ public class SimpleEmailEndpointController {
                 MimeMessage mimeMessage = new MimeMessage(session);
                 mimeMessage.setSubject(message.getSubject(), "UTF-8");
 
-                List<InternetAddress> recipientAddresses = simpleMap(message.getTo(), recipient -> {
-                    try {
-                        return new InternetAddress(recipient.getEmail(), recipient.getName());
-                    } catch (UnsupportedEncodingException e) {
-                        LOG.error("Unable to construct recipient email address for recipient " + recipient, e);
-                        throw new IllegalArgumentException("Unable to construct recipient email address for recipient " + recipient, e);
-                    }
-                });
+                List<InternetAddress> recipientAddresses = simpleMap(message.getTo(), this::validateRecipient);
 
                 mimeMessage.setFrom(new InternetAddress(message.getFrom().getEmail(), message.getFrom().getName()));
                 mimeMessage.setReplyTo(new Address[]{new InternetAddress(message.getFrom().getEmail(), message.getFrom().getName())});
@@ -152,5 +145,14 @@ public class SimpleEmailEndpointController {
         }
 
         return restSuccess(ACCEPTED);
+    }
+
+    private InternetAddress validateRecipient(SilEmailAddress recipient) {
+        try {
+            return new InternetAddress(recipient.getEmail(), recipient.getName());
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Unable to construct recipient email address for recipient " + recipient, e);
+            throw new IllegalArgumentException("Unable to construct recipient email address for recipient " + recipient, e);
+        }
     }
 }

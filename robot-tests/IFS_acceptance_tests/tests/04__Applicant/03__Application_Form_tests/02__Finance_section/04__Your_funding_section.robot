@@ -16,7 +16,7 @@ ${applicationName}  Hydrology the dynamics of Earth's surface water
 *** Test Cases ***
 Other funding validation message
     [Documentation]  IFS-2659
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link               link=Your funding
     And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery=button:contains("Mark as complete")
@@ -24,7 +24,7 @@ Other funding validation message
 
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
-    [Tags]    HappyPath
+    [Tags]
     Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
     Then the user should see the element       css=[name^="finance-grantclaimpercentage"]
     And the user should see the element        css=[name*=other_funding-fundingSource]
@@ -34,7 +34,7 @@ Applicant has options to enter funding level and details of any other funding
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
-    [Tags]    HappyPath
+    [Tags]
     The user should see the text in the page    Enter your funding level (maximum 50%)
 
 Funding level validations
@@ -49,7 +49,7 @@ Funding level validations
 
 Other funding validations
     [Documentation]    INFUND-6794
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field          css=[name*=other_funding-securedDate]    20
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
@@ -67,25 +67,24 @@ If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     ...
     ...    INFUND-6823
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link=${applicationName}
-    When the user clicks the button/link   link=Application details
+    When the user clicks the button/link   link=Research category
     And the user clicks the button/link    jQuery=button:contains(Edit)
-    And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
-    [Tags]    HappyPath
-    When the user changes the research category
-    And the user clicks the button/link    name=mark_as_complete
+    [Tags]
+    Given the user clicks the button twice   css=label[for="researchCategory2"]
+    And the user clicks the button/link    id=application-question-complete
     And the user navigates to Your-finances page  ${applicationName}
-    Then the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    Then the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding level has been reset
     [Documentation]    INFUND-6895
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Your funding
     Then the user should see the element    jQuery=button:contains("Mark as complete")
     And the user should not see the text in the element    css=[name*=other_funding-fundingSource]    Lottery funding
@@ -94,7 +93,7 @@ Funding level has been reset
 
 Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]    43
     When the user enters text to a text field   css=[name*=other_funding-fundingSource]  Lottery funding
     Then the user enters text to a text field       css=[name*=other_funding-securedDate]  12-${nextyear}
@@ -108,7 +107,7 @@ Adding more funding rows
 
 Mark other funding as complete
     [Documentation]  INFUND-6895
-    [Tags]  HappyPath
+    [Tags]
     Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery=button:contains("Mark as complete")
     Then the user should not see an error in the page
@@ -130,13 +129,14 @@ Custom Suite Setup
     ${applicationId} =  get application id by name  ${applicationName}
     the user navigates to the page  ${server}/application/${applicationId}
     the user clicks the button/link  link=Application details
-    the user fills in the Application details  ${applicationName}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the Application details  ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects research category  Feasibility studies
     Complete the org size section  ${applicationName}
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
     the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  ${value}
-    the user moves focus to the element   css=button.button[type="submit"]
+    the user moves focus to the element   css=button.govuk-button[type="submit"]
     the user should see a field error     ${error}
 
 Complete the org size section
@@ -148,8 +148,8 @@ Complete the org size section
     ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
     the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    0
     the user moves focus to the element    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
@@ -178,7 +178,5 @@ the user adds more rows in other funding
 
 the user changes the research category
     [Documentation]    INFUND-8260
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
-    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
+    the user clicks the button twice   css=label[for="researchCategory2"]
     the user clicks the button/link    jQuery=button:contains(Save)

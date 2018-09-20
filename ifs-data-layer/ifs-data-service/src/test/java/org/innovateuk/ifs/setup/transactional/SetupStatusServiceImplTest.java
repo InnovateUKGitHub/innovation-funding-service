@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.setup.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.setup.domain.SetupStatus;
 import org.innovateuk.ifs.setup.mapper.SetupStatusMapper;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;

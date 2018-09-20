@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.*;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
@@ -24,7 +25,6 @@ import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValida
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.ReflectionTestUtils.getField;

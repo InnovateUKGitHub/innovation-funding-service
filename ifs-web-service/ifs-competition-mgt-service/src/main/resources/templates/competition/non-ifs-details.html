@@ -1,327 +1,328 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Non IFS Details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management competition-setup">
+<body class="govuk-template__body competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkUrl=@{/dashboard}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem on this page.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='govuk-heading-xl'" />
 
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-          method="POST"
-          th:object="${form}"
-          novalidate="novalidate"
-          data-section="milestones">
-      <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
-          <label class="form-label" for="title">
-              <span class="form-label-bold">Competition title</span>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="POST"
+              th:object="${form}"
+              novalidate="novalidate"
+              data-section="milestones">
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
+              <label class="govuk-label govuk-label--s" for="title">
+                  Competition title
+              </label>
               <th:block th:if="${#fields.hasErrors('title')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
               </th:block>
-          </label>
-          <input id="title"
-                 class="form-control width-xlarge"
-                 th:errorclass="form-control-error"
-                 type="text"
-                 th:field="${form.title}"
-                 required="required"
-                 th:attr="data-required-errormessage=#{validation.standard.title.required}" />
-      </div>
-      <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
-          <label class="form-label" for="innovationSectorCategoryId">
-              <span class="form-label-bold">Innovation sector</span>
+              <input id="title"
+                     class="govuk-input govuk-!-width-one-half"
+                     th:errorclass="govuk-input--error"
+                     type="text"
+                     th:field="${form.title}"
+                     required="required"
+                     th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+          </div>
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
+              <label class="govuk-label govuk-label--s" for="innovationSectorCategoryId">
+                  Innovation sector
+              </label>
               <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
               </th:block>
-          </label>
+              <select class="govuk-select govuk-!-width-one-third"
+                      id="innovationSectorCategoryId"
+                      th:field="${form.innovationSectorCategoryId}"
+                      required="required"
+                      th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}" >
+                  <option value="" disabled="disabled" th:selected="${form.innovationSectorCategoryId == null}">Please select &hellip;</option>
+                  <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
+              </select>
+          </div>
 
-          <select class="form-control width-x-large"
-                  id="innovationSectorCategoryId"
-                  th:field="${form.innovationSectorCategoryId}"
-                  required="required"
-                  th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}" >
-              <option value="" disabled="disabled" th:selected="${form.innovationSectorCategoryId == null}">Please select &hellip;</option>
-              <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
-          </select>
-      </div>
-
-      <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'form-group-error'">
-          <label class="form-label" for="innovationAreaCategoryId">
-              <span class="form-label-bold">Innovation area</span>
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
+              <label class="govuk-label govuk-label--s" for="innovationAreaCategoryId">
+                  Innovation area
+              </label>
               <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
               </th:block>
-          </label>
-          <select class="form-control width-x-large"
-                  th:field="${form.innovationAreaCategoryId}"
-                  id="innovationAreaCategoryId"
-                  required="required"
-                  th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
-              <option value="" disabled="disabled" th:selected="${form.innovationAreaCategoryId == null}">Please select &hellip;</option>
-              <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${form.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
-          </select>
-      </div>
+              <select class="govuk-select govuk-!-width-one-third"
+                      th:field="${form.innovationAreaCategoryId}"
+                      id="innovationAreaCategoryId"
+                      required="required"
+                      th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
+                  <option value="" disabled="disabled" th:selected="${form.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                  <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${form.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+              </select>
+          </div>
 
-        <fieldset>
+            <fieldset class="govuk-fieldset">
 
-            <legend class="visuallyhidden">Milestones</legend>
+                <legend class="govuk-visually-hidden">Milestones</legend>
 
-            <table class="milestones-table extra-margin-bottom">
-                <thead>
-                    <tr>
-                        <th scope="col" id="milestone">Milestone</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Weekday</th>
-                        <th scope="col">Day</th>
-                        <th scope="col">Month</th>
-                        <th scope="col">Year</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="date-group form-group-row">
-                        <th scope="row">
-                            <legend id="openDate">Competition opens</legend>
-                            <input type="hidden"
-                                   th:field="${form.openDate.milestoneType}" />
-                        </th>
-                        <td class="time"></td>
-                        <td class="js-addWeekDay">Wed</td>
-                        <td class="day">
-                            <input id="openDate-day"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required},
-                                       data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
-                                   th:field="${form.openDate.day}" />
-                        </td>
-                        <td class="month">
-                            <input id="openDate-month"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required},
-                                       data-date=${form.openDate.day+'-'+form.openDate.month+'-'+form.openDate.year}"
-                                   th:field="${form.openDate.month}" />
-                        </td>
-                        <td class="year">
-                            <input id="openDate-year"
-                                   class="form-control width-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required},
-                                       data-date=${form.openDate.day+'-'+form.openDate.month+'-'+form.openDate.year}"
-                                   th:field="${form.openDate.year}" />
-                        </td>
-                    </tr>
-                    <tr class="date-group form-group-row">
-                        <th scope="row">
-                            <legend id="registrationCloseDate">Registration closes</legend>
-                            <input type="hidden"
-                                   th:field="${form.registrationCloseDate.milestoneType}" />
-                        </th>
-                        <td class="time">
-                            <select id="registrationCloseDate-time"
-                                    class="form-control"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.time}"
-                                    th:field="${form.registrationCloseDate.time}" >
-                                <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
-                                        th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == form.registrationCloseDate.time}"></option>
-                            </select>
-                        </td>
-                        <td class="js-addWeekDay">-</td>
-                        <td class="day">
-                            <input id="registrationCloseDate-day"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.day},
-                                       data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
-                                   th:field="${form.registrationCloseDate.day}" />
-                        </td>
-                        <td class="month">
-                            <input id="registrationCloseDate-month"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.month},
-                                       data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
-                                   th:field="${form.registrationCloseDate.month}" />
-                        </td>
-                        <td class="year">
-                            <input id="registrationCloseDate-year"
-                                   class="form-control width-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.year},
-                                       data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
-                                   th:field="${form.registrationCloseDate.year}" />
-                        </td>
-                    </tr>
-                    <tr class="date-group form-group-row">
-                        <th scope="row">
-                            <legend id="closeDate">Competition closes</legend>
-                            <input type="hidden"
-                                   th:field="${form.closeDate.milestoneType}" />
-                        </th>
-                        <td class="time">
-                            <select id="closeDate-time"
-                                    class="form-control"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                    th:field="${form.closeDate.time}" >
-                                <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
-                                        th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == form.closeDate.time}"></option>
-                            </select>
-                        </td>
-                        <td class="js-addWeekDay">-</td>
-                        <td class="day">
-                            <input id="closeDate-day"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required},
-                                       data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
-                                   th:field="${form.closeDate.day}" />
-                        </td>
-                        <td class="month">
-                            <input id="closeDate-month"
-                                   class="form-control width-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required},
-                                       data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
-                                   th:field="${form.closeDate.month}" />
-                        </td>
-                        <td class="year">
-                            <input id="closeDate-year"
-                                   class="form-control width-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required},
-                                       data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
-                                   th:field="${form.closeDate.year}" />
-                        </td>
-                    </tr>
-                    <tr class="date-group form-group-row">
-                        <th scope="row">
-                            <legend id="applicantNotifiedDate">Applicants notified (optional)</legend>
-                            <input type="hidden"
-                                   th:field="${form.applicantNotifiedDate.milestoneType}" />
-                        </th>
-                        <td class="time"></td>
-                        <td class="js-addWeekDay">-</td>
-                        <td class="day">
-                            <input id="applicantNotifiedDate-day"
-                                   class="form-control width-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="DD"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
-                                   th:field="${form.applicantNotifiedDate.day}" />
-                        </td>
-                        <td class="month">
-                            <input id="applicantNotifiedDate-month"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="MM"
-                                   min="1"
-                                   max="12"
-                                   th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
-                                   th:field="${form.applicantNotifiedDate.month}" />
-                        </td>
-                        <td class="year">
-                            <input id="applicantNotifiedDate-year"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-small"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
-                                   th:field="${form.applicantNotifiedDate.year}" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </fieldset>
+                <table class="govuk-table milestones-table govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                            <th class="govuk-table__header" scope="col">Time</th>
+                            <th class="govuk-table__header" scope="col">Weekday</th>
+                            <th class="govuk-table__header" scope="col">Day</th>
+                            <th class="govuk-table__header" scope="col">Month</th>
+                            <th class="govuk-table__header" scope="col">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row date-group form-group-row">
+                            <th class="govuk-table__header" scope="row">
+                                <legend id="openDate">Competition opens</legend>
+                                <input type="hidden"
+                                       th:field="${form.openDate.milestoneType}" />
+                            </th>
+                            <td class="govuk-table__cell time"></td>
+                            <td class="govuk-table__cell js-addWeekDay">Wed</td>
+                            <td class="govuk-table__cell day">
+                                <input id="openDate-day"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required},
+                                           data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
+                                       th:field="${form.openDate.day}" />
+                            </td>
+                            <td class="govuk-table__cell month">
+                                <input id="openDate-month"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required},
+                                           data-date=${form.openDate.day+'-'+form.openDate.month+'-'+form.openDate.year}"
+                                       th:field="${form.openDate.month}" />
+                            </td>
+                            <td class="govuk-table__cell year">
+                                <input id="openDate-year"
+                                       class="govuk-input govuk-input--width-4"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required},
+                                           data-date=${form.openDate.day+'-'+form.openDate.month+'-'+form.openDate.year}"
+                                       th:field="${form.openDate.year}" />
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row date-group form-group-row">
+                            <th class="govuk-table__header" scope="row">
+                                <legend id="registrationCloseDate">Registration closes</legend>
+                                <input type="hidden"
+                                       th:field="${form.registrationCloseDate.milestoneType}" />
+                            </th>
+                            <td class="govuk-table__cell time">
+                                <select id="registrationCloseDate-time"
+                                        class="govuk-select"
+                                        required="required"
+                                        th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.time}"
+                                        th:field="${form.registrationCloseDate.time}" >
+                                    <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
+                                            th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == form.registrationCloseDate.time}"></option>
+                                </select>
+                            </td>
+                            <td class="govuk-table__cell js-addWeekDay">-</td>
+                            <td class="govuk-table__cell day">
+                                <input id="registrationCloseDate-day"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.day},
+                                           data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
+                                       th:field="${form.registrationCloseDate.day}" />
+                            </td>
+                            <td class="govuk-table__cell month">
+                                <input id="registrationCloseDate-month"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.month},
+                                           data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
+                                       th:field="${form.registrationCloseDate.month}" />
+                            </td>
+                            <td class="govuk-table__cell year">
+                                <input id="registrationCloseDate-year"
+                                       class="govuk-input govuk-input--width-4"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.year},
+                                           data-date=${form.registrationCloseDate.day+'-'+form.registrationCloseDate.month+'-'+form.registrationCloseDate.year}"
+                                       th:field="${form.registrationCloseDate.year}" />
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row date-group form-group-row">
+                            <th class="govuk-table__header" scope="row">
+                                <legend id="closeDate">Competition closes</legend>
+                                <input type="hidden"
+                                       th:field="${form.closeDate.milestoneType}" />
+                            </th>
+                            <td class="govuk-table__cell time">
+                                <select id="closeDate-time"
+                                        class="govuk-select"
+                                        required="required"
+                                        th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                        th:field="${form.closeDate.time}" >
+                                    <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
+                                            th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == form.closeDate.time}"></option>
+                                </select>
+                            </td>
+                            <td class="govuk-table__cell js-addWeekDay">-</td>
+                            <td class="govuk-table__cell day">
+                                <input id="closeDate-day"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required},
+                                           data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
+                                       th:field="${form.closeDate.day}" />
+                            </td>
+                            <td class="govuk-table__cell month">
+                                <input id="closeDate-month"
+                                       class="govuk-input govuk-input--width-4"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required},
+                                           data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
+                                       th:field="${form.closeDate.month}" />
+                            </td>
+                            <td class="govuk-table__cell year">
+                                <input id="closeDate-year"
+                                       class="govuk-input govuk-input--width-4"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required},
+                                           data-date=${form.closeDate.day+'-'+form.closeDate.month+'-'+form.closeDate.year}"
+                                       th:field="${form.closeDate.year}" />
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row date-group form-group-row">
+                            <th class="govuk-table__header" scope="row">
+                                <legend id="applicantNotifiedDate">Applicants notified (optional)</legend>
+                                <input type="hidden"
+                                       th:field="${form.applicantNotifiedDate.milestoneType}" />
+                            </th>
+                            <td class="govuk-table__cell time"></td>
+                            <td class="govuk-table__cell js-addWeekDay">-</td>
+                            <td class="govuk-table__cell day">
+                                <input id="applicantNotifiedDate-day"
+                                       class="govuk-input govuk-input--width-4"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       placeholder="DD"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
+                                       th:field="${form.applicantNotifiedDate.day}" />
+                            </td>
+                            <td class="govuk-table__cell month">
+                                <input id="applicantNotifiedDate-month"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="MM"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
+                                       th:field="${form.applicantNotifiedDate.month}" />
+                            </td>
+                            <td class="govuk-table__cell year">
+                                <input id="applicantNotifiedDate-year"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input govuk-input--width-4"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-date=${form.applicantNotifiedDate.day+'-'+form.applicantNotifiedDate.month+'-'+form.applicantNotifiedDate.year}"
+                                       th:field="${form.applicantNotifiedDate.year}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('url')} ? 'form-group-error'">
-            <label class="form-label" for="url">
-                <span class="form-label-bold">Competition URL</span>
-                <span class="form-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('url')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" for="url">
+                    Competition URL
+                </label>
+                <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
                 <th:block th:if="${#fields.hasErrors('url')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
                 </th:block>
-            </label>
-            <input id="url"
-                   class="form-control width-x-large"
-                   th:errorclass="form-control-error"
-                   type="text"
-                   th:field="${form.url}"
-                   required="required"
-                   th:attr="data-required-errormessage=#{validation.nonifs.detailsform.url.required}" />
-        </div>
-        <div class="extra-margin">
-            <button class="button">Save and continue</button>
-            <a th:href="@{/dashboard}">Cancel</a>
-        </div>
-    </form>
+                <input id="url"
+                       class="govuk-input govuk-input--width-30"
+                       th:errorclass="govuk-input--error"
+                       type="text"
+                       th:field="${form.url}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.nonifs.detailsform.url.required}" />
+            </div>
+            <div class="govuk-body govuk-!-margin-top-6">
+                <button class="govuk-button govuk-!-margin-right-6">Save and continue</button>
+                <a th:href="@{/dashboard}" class="button-clear">Cancel</a>
+            </div>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

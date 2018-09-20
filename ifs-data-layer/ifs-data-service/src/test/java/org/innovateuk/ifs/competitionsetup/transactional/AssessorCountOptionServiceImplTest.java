@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.fixtures.AssessorCountOptionFixture;
 import org.innovateuk.ifs.competitionsetup.mapper.AssessorCountOptionMapper;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
-import org.innovateuk.ifs.competitionsetup.transactional.AssessorCountOptionService;
-import org.innovateuk.ifs.competitionsetup.transactional.AssessorCountOptionServiceImpl;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

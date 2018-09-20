@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
@@ -96,7 +96,7 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setGuidanceRows(guidanceRows));
     }
 
-    public CompetitionSetupQuestionResourceBuilder withType(CompetitionSetupQuestionType types) {
+    public CompetitionSetupQuestionResourceBuilder withType(QuestionSetupType types) {
         return with(competition -> competition.setType(types));
     }
 

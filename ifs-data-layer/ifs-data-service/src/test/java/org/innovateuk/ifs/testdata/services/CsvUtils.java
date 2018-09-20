@@ -14,10 +14,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
@@ -215,7 +215,7 @@ public class CsvUtils {
 
                 String categoryCell = currentLine.get(1);
 
-                if (asList("Working days per year", "Grant claim", "Organisation size").contains(categoryCell)) {
+                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode").contains(categoryCell)) {
                     organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, singletonList(currentLine.get(2))));
                 } else {
 
@@ -448,7 +448,6 @@ public class CsvUtils {
         public boolean inviteOnly;
         public boolean nonIfs;
         public String nonIfsUrl;
-        public String includeApplicationTeamQuestion;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -488,7 +487,6 @@ public class CsvUtils {
             inviteOnly = nullableBoolean(line.get(i++));
             nonIfs = nullableBoolean(line.get(i++));
             nonIfsUrl = nullable(line.get(i++));
-            includeApplicationTeamQuestion = nullable(line.get(i++));
         }
     }
 
@@ -591,9 +589,6 @@ public class CsvUtils {
 
     public static class AssessorUserLine extends UserLine {
 
-        public Disability disability;
-        public Gender gender;
-        public String ethnicity;
         public String competitionName;
         public String hash;
         public InviteStatus inviteStatus;
@@ -614,10 +609,7 @@ public class CsvUtils {
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 19;
-            disability = Disability.fromDisplayName(line.get(i++));
-            ethnicity = line.get(i++);
-            gender = Gender.fromDisplayName(line.get(i++));
+            int i = line.size() - 16;
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));

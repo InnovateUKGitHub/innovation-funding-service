@@ -18,6 +18,8 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
+...
+...               IFS-3609 Extend internal view of application finances to other internal roles
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -38,7 +40,7 @@ ${allApplicationsForRTOComp}  ${SERVER}/management/competition/${openCompetition
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the section      Finances summary
     Then the finance summary calculations should be correct
@@ -46,7 +48,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the section      Finances summary
@@ -55,10 +57,11 @@ Calculations for the first collaborator
 
 Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
     When the user navigates to Your-finances page             ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user fills in the project costs                   labour costs  n/a
+    And the user enters the project location
     And the user fills in the organisation information        ${OPEN_COMPETITION_APPLICATION_2_NAME}  ${SMALL_ORGANISATION_SIZE}
     And the user checks your funding section for the project  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the contribution to project and funding sought should be 0 and not a negative number
@@ -81,7 +84,7 @@ Your Finance includes Finance summary table for collaborator
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user           &{lead_applicant_credentials}
     When the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link           link=${OPEN_COMPETITION_APPLICATION_2_NAME}
@@ -96,17 +99,36 @@ Green check should show when the finances are complete
     When the user clicks the button/link  link=Finances overview
     Then Green check should be visible
 
+Finance overview shows as incomplete
+    [Documentation]  IFS-3820  IFS-3821
+    Given The user clicks the button/link  link=Application overview
+    And the user should see the element    jQuery=li:contains("Finances overview") .task-status-incomplete
+    When the user clicks the button/link   link=Finances overview
+    Then the user should see the element   css=.table-total-tick[src*="icon-alert"]
+
 Collaborator marks finances as complete
     [Documentation]    INFUND-8397  IFS-2879
-    [Tags]  HappyPath
-    log in as a different user                     &{collaborator1_credentials}
+    [Tags]
+    Given log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
+    Then the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
+
+Finances overview shows as complete once all collaborators have marked as complete
+    [Documentation]  IFS-3820
+    Given the academic user marks finances as complete
+    And log in as a different user        &{lead_applicant_credentials}
+    When the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the user should see the element  jQuery=li:contains("Finances overview") .task-status-complete
+
+Finance summary has total marked as complete
+    [Documentation]  IFS-3821
+    Given the user clicks the button/link  link=Finances overview
+    Then the user should see the element   css=.table-total-tick[src*="icon-tick"]
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    Email  HappyPath
+    [Tags]
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
@@ -124,7 +146,6 @@ Alert shows If the academic research participation is too high
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
-    [Setup]
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
@@ -134,56 +155,51 @@ Alert should not show If research participation is below the maximum level
     And the user clicks the button/link            jquery=button:contains("Finances summary")
     Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
 
-Support User can see the read only summary link for each partner
+Support User can see the read only finance summary
     [Documentation]  IFS-401
     [Tags]  Support
-    Given the support user navigates to the finances of the application
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
-
-Support User can see the read only summary of finances
-    [Documentation]  IFS-401
-    [Tags]  Support
-    [Setup]  The user clicks the button/link       link=View finances
-    The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    [Setup]  log in as a different user       &{support_user_credentials}
+    Given the user navigates to the finances of the application
+    When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
+    And The user clicks the button/link       link = View finances
+    Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
-    [Tags]  Support  HappyPath
-    Given the support user navigates to the finances of the application
-    When the user clicks the button/link  link=View finances
-    And the user clicks the button/link  link=Your project costs
+    [Tags]  Support
+    Given the user clicks the button/link  link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
 
 Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
-    When the user clicks the button/link           jQuery=a:contains("Your finances")
-    Then the user should see the text in the page  Please complete your project finances.
-    When the user clicks the button/link           link=Your organisation
-    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
-    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("0")
+    When the user clicks the button/link           jQuery = a:contains("Your finances")
+    Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
+    When the user clicks the button/link           link = Your organisation
+    Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
+    And the user should see the element            jQuery = dt:contains("Turnover") + dd:contains("0")
 
 Support User can see the read only view of Your funding
     [Documentation]  IFS-401
     [Tags]  Support
     Given the user navigates to the page  ${server}/management/competition/${openCompetitionRTO}/application/${application_ids["Water balance creates a threshold in soil pH at the global scale"]}
     And the user expands the section      Finances summary
-    Then the user clicks the button/link  link=View finances
-    When the user clicks the button/link  jQuery=a:contains("Your funding")
-    Then the user should see the element  jQuery=dt:contains("Funding level") + dd:contains("30%")
-    And the user should see the element   jQuery=th:contains("Lottery") ~ td:contains("£2,468")
+    Then the user clicks the button/link  link = View finances
+    When the user clicks the button/link  jQuery = a:contains("Your funding")
+    Then the user should see the element  jQuery = dt:contains("Funding level") + dd:contains("30%")
+    And the user should see the element   jQuery = th:contains("Lottery") ~ td:contains("£2,468")
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
-    [Tags]  InnovationLead  HappyPath
+    [Tags]  InnovationLead
     [Setup]  log in as a different user     &{innovation_lead_two}
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section        Finances summary
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
+    Then the user should see the element    jQuery=.finance-summary tr:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("EGGS"):contains("View finances")
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
@@ -204,7 +220,7 @@ Innovation lead can see read only summary for collaborator
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
-    [Tags]  InnovationLead  HappyPath
+    [Tags]  InnovationLead
     When the user navigates to the page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link  link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section  Finances summary
@@ -233,6 +249,18 @@ Innovation lead can see read only view of Your funding
     Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("30%")
     And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
+IFS Admin views the finance summary
+    [Documentation]  IFS-3609
+    [Setup]  log in as a different user     &{ifs_admin_user_credentials}
+    Given the user navigates to the finances of the application
+    When the user clicks the button/link    link = View finances
+    Then the finance summary table in Your Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
+
+A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
+    [Documentation]  IFS-3609
+    [Setup]  log in as a different user         &{internal_finance_credentials}
+    Given the user navigates to the finances of the application
+    Then the user should not see the element    jQuery = a:contains("View finances")
 
 *** Keywords ***
 Custom suite setup
@@ -253,33 +281,33 @@ the finance Funding breakdown calculations should be correct
 
 the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the finance summary table in Your Finances has correct values for collaborator
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  0
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  0
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
     Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/ifs-images/icons/icon-tick"]
@@ -290,7 +318,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link                   link=Your project costs
-    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.buttonlink:contains("Edit")
+    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.button-clear:contains("Edit")
     the user clicks the button/link                   jQuery=button:contains("Labour")
     the user should see the element                   name=add_cost
     the user clicks the button/link                   jQuery=button:contains('Add another role')
@@ -307,13 +335,15 @@ Lead enters a valid research participation value
 
 the user checks Your Funding section for the project
     [Arguments]  ${Application}
+    the user clicks the button/link  link=Your funding
     ${Research_category_selected}=  run keyword and return status without screenshots  Element Should Be Visible  link=Your funding
     Run Keyword if  '${Research_category_selected}' == 'False'  the user selects research area via Your Funding section  ${Application}
     Run Keyword if  '${Research_category_selected}' == 'True'  the user fills in the funding information with bigger amount  ${Application}
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${Application}  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category          Feasibility studies
     the user fills in the funding information with bigger amount  ${Application}
 
 the user fills in the funding information with bigger amount
@@ -380,8 +410,15 @@ The user verifies labour, overhead costs and materials
     the user should see the element  jQuery=#material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("£100,200")
     the user collapses the section   Materials
 
-the support user navigates to the finances of the application
-    log in as a different user       &{support_user_credentials}
+the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
     the user clicks the button/link  link=${application_ids["Networking home IOT devices"]}
     the user expands the section     Finances summary
+
+the academic user marks finances as complete
+    log in as a different user                &{collaborator2_credentials}
+    the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    the user clicks the button/link            link=Your project costs
+    the user selects the checkbox              termsAgreed
+    the user clicks the button/link            jQuery=button:contains("Mark as complete")
+    the user enters the project location

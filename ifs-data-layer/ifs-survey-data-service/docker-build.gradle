@@ -8,7 +8,6 @@ ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 ext.ifsFlywayLocations="db/migration"
 
-
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-survey-database:3308/ifs_survey_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"

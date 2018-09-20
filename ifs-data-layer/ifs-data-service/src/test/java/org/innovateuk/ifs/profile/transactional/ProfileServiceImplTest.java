@@ -10,9 +10,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Affiliation;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -24,7 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.time.ZonedDateTime.now;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -34,13 +35,11 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
-import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -69,9 +68,6 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
     @Mock
     private AgreementMapper agreementMapperMock;
-
-    @Mock
-    private EthnicityMapper ethnicityMapperMock;
 
     @Mock
     private AddressMapper addressMapperMock;
@@ -123,7 +119,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileSkills_userDoesNotExist() throws Exception {
+    public void getProfileSkills_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<ProfileSkillsResource> response = service.getProfileSkills(userIdNotExists);
@@ -152,7 +148,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileSkills_userDoesNotHaveProfileYet() throws Exception {
+    public void getProfileSkills_userDoesNotHaveProfileYet() {
         User existingUser = newUser()
                 .build();
 
@@ -223,7 +219,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileSkills_userDoesNotHaveProfileYet() throws Exception {
+    public void updateProfileSkills_userDoesNotHaveProfileYet() {
         long userId = 1L;
 
         Profile profile = newProfile()
@@ -257,13 +253,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
 
     @Test
-    public void getProfileAgreement() throws Exception {
+    public void getProfileAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
         AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        ZonedDateTime agreementSignedDate = ZonedDateTime.now();
+        ZonedDateTime agreementSignedDate = now();
 
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
@@ -296,7 +292,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_userDoesNotExist() throws Exception {
+    public void getProfileAgreement_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<ProfileAgreementResource> response = service.getProfileAgreement(userIdNotExists);
@@ -308,7 +304,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_noAgreement() throws Exception {
+    public void getProfileAgreement_noAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -341,7 +337,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_noCurrentAgreement() throws Exception {
+    public void getProfileAgreement_noCurrentAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -374,7 +370,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+    public void getProfileAgreement_userDoesNotHaveProfileYet() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -405,7 +401,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement() throws Exception {
+    public void updateProfileAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         Profile profile = newProfile()
@@ -441,7 +437,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_userDoesNotExist() throws Exception {
+    public void updateProfileAgreement_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<Void> result = service.updateProfileAgreement(userIdNotExists);
@@ -454,7 +450,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_noAgreement() throws Exception {
+    public void updateProfileAgreement_noAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has no agreement or signed date
@@ -490,13 +486,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_noCurrentAgreement() throws Exception {
+    public void updateProfileAgreement_noCurrentAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has a agreement and a signed date, but not the current one
         Profile initialProfile = newProfile()
                 .withAgreement(newAgreement().withId(1L).build())
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
@@ -529,12 +525,12 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_agreementAlreadySigned() throws Exception {
+    public void updateProfileAgreement_agreementAlreadySigned() {
         Agreement currentAgreement = newAgreement()
                 .build();
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
@@ -554,7 +550,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+    public void updateProfileAgreement_userDoesNotHaveProfileYet() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         User existingUser = newUser()
@@ -593,7 +589,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus() throws Exception {
+    public void getUserProfileStatus() {
         User user = newUser().build();
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
@@ -607,13 +603,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_complete() throws Exception {
+    public void getUserProfileStatus_complete() {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User user = newUser()
-                .withAffiliations(asList(newAffiliation().build()))
+                .withAffiliations( newAffiliation().withModifiedOn(now().minusYears(0)).build(1) )
                 .withProfileId(profile.getId())
                 .build();
 
@@ -638,7 +634,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_skillsComplete() throws Exception {
+    public void getUserProfileStatus_skillsComplete() {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
                 .build();
@@ -667,9 +663,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_affiliationsComplete() throws Exception {
+    public void getUserProfileStatus_affiliationsComplete() {
         User user = newUser()
-                .withAffiliations(asList(newAffiliation().build()))
+                .withAffiliations( newAffiliation().withModifiedOn(now().minusYears(0)).build(1) )
                 .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
@@ -691,10 +687,12 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         verify(userRepositoryMock, only()).findOne(user.getId());
     }
 
+    // TODO test affiliations expired
+
     @Test
-    public void getUserProfileStatus_agreementComplete() throws Exception {
+    public void getUserProfileStatus_agreementComplete() {
         Profile profile = newProfile()
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User user = newUser()
                 .withProfileId(profile.getId())
@@ -730,22 +728,19 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
                 .withCreatedBy(createdByUser)
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(createdByUser)
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(existingProfile.getId())
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         AddressResource addressResource = newAddressResource().withId(1L).build();
-        EthnicityResource ethnicityResource = newEthnicityResource().build();
 
         when(profileRepositoryMock.findOne(existingProfile.getId())).thenReturn(existingProfile);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(addressMapperMock.mapToResource(existingProfile.getAddress())).thenReturn(addressResource);
-        when(ethnicityMapperMock.mapToResource(existingUser.getEthnicity())).thenReturn(ethnicityResource);
 
         UserProfileResource expected = newUserProfileResource()
                 .withUser(existingUser.getId())
@@ -753,19 +748,17 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withLastName(existingUser.getLastName())
                 .withEmail(existingUser.getEmail())
                 .withAddress(addressResource)
-                .withEthnicity(ethnicityResource)
                 .withCreatedBy(createdByUser.getName())
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(createdByUser.getName())
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
                 .build();
 
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccess();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock, addressMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verify(addressMapperMock).mapToResource(existingProfile.getAddress());
         inOrder.verifyNoMoreInteractions();
     }
@@ -773,7 +766,6 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     @Test
     public void getUserProfile_userDoesNotHaveProfileYet() {
         User existingUser = newUser()
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
@@ -788,9 +780,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccess();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(addressMapperMock);
@@ -805,15 +796,10 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .build();
         User existingUser = newUser()
                 .withProfileId(originalProfile.getId())
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         when(profileRepositoryMock.findOne(originalProfile.getId())).thenReturn(originalProfile);
         when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
-
-        EthnicityResource ethnicityResource = newEthnicityResource().build();
-        Ethnicity ethnicity = newEthnicity().build();
-        when(ethnicityMapperMock.mapIdToDomain(ethnicityResource.getId())).thenReturn(ethnicity);
 
         AddressResource addressResource = newAddressResource().build();
         Address address = newAddress().build();
@@ -826,15 +812,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
 
         ServiceResult<Void> result = service.updateUserProfile(userId, newUserProfileResource()
-                .withEthnicity(ethnicityResource)
                 .withAddress(addressResource)
                 .build());
 
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, addressMapperMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(ethnicityMapperMock).mapIdToDomain(ethnicityResource.getId());
         inOrder.verify(profileRepositoryMock).findOne(originalProfile.getId());
         inOrder.verify(addressMapperMock).mapToDomain(addressResource);
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
@@ -845,14 +829,6 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     private User createUserExpectations(Long userId, Profile profile) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
-            assertEquals(profile, user.getProfileId());
-        });
-    }
-
-    private User createUserExpectations(Long userId, Ethnicity ethnicity, Profile profile) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(ethnicity, user.getEthnicity());
             assertEquals(profile, user.getProfileId());
         });
     }

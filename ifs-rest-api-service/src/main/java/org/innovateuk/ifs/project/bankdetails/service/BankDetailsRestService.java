@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.bankdetails.service;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;

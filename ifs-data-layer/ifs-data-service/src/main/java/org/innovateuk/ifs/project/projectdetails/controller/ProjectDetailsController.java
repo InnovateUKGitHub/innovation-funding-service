@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -78,13 +78,13 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/invite-finance-contact")
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
         return projectDetailsService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-project-manager")
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
         return projectDetailsService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 }

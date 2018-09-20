@@ -1,17 +1,11 @@
 def zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
-if(zipkinEnabled) {
-    subprojects {
-        apply plugin: 'io.spring.dependency-management'
-
-        ext {
-            zipkinLogTraceLevel = 'WARN'
-        }
+if (zipkinEnabled) {
+    ext {
+        zipkinLogTraceLevel = 'WARN'
     }
 } else  {
-    subprojects {
-        ext {
-            zipkinLogTraceLevel = 'ERROR'
-        }
+    ext {
+        zipkinLogTraceLevel = 'ERROR'
     }
 }

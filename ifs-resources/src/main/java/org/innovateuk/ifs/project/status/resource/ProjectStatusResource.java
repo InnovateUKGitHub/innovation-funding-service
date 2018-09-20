@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.status.resource;
 
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Map;

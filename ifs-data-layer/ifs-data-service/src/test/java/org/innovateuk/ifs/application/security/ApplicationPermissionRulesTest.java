@@ -5,10 +5,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -20,7 +23,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -58,12 +60,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private ProcessRole processRole2;
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
+    private UserResource stakeholderUserResourceOnCompetition;
     private UserResource user2;
     private UserResource user3;
     private UserResource assessor;
     private UserResource compAdmin;
     private UserResource projectFinance;
     private UserResource panelAssessor;
+    private UserResource interviewAssessor;
 
     private List<Role> applicantRoles = new ArrayList<>();
 
@@ -76,6 +80,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
+    @Mock
+    private StakeholderRepository stakeholderRepository;
+
     @Before
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
@@ -83,13 +90,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
+
+        User stakeholderUserOnCompetition = newUser().build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(Role.STAKEHOLDER).build();
+        Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
         compAdmin = compAdminUser();
         assessor = assessorUser();
         projectFinance = projectFinanceUser();
-        panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.PANEL_ASSESSOR)).build();
+        panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
+        interviewAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
 
         processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).build();
         processRole2 = newProcessRole().withRole(Role.APPLICANT).build();
@@ -124,13 +137,15 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(false);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationResource1.getId(), Role.ASSESSOR)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(interviewAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
 
-        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList
+        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
                 (innovationLead));
+        when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 
     @Test
-    public void testUsersConnectedToTheApplicationCanView() {
+    public void usersConnectedToTheApplicationCanView() {
         assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
         assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource2, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, user2));
@@ -138,7 +153,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testUsersConnectedToTheApplicationCanViewInnovationAreas() {
+    public void usersConnectedToTheApplicationCanViewInnovationAreas() {
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, leadOnApplication1));
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, user2));
@@ -146,21 +161,28 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUsersOtherThanInnovationLeadUserCanViewApplications() {
+    public void internalUsersOtherThanInnovationLeadAndStakeholderCanViewApplications() {
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
         assertFalse(rules.internalUsersCanViewApplications(applicationResource1, innovationLeadUser()));
+        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, stakeholderUser()));
         assertFalse(rules.internalUsersCanViewApplications(applicationResource1, leadOnApplication1));
     }
 
     @Test
-    public void testOnlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
+    public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
         assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
         assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
     }
 
     @Test
-    public void testAssessorCanSeeTheApplicationFinancesTotals() {
+    public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
+        assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUser()));
+    }
+
+    @Test
+    public void assessorCanSeeTheApplicationFinancesTotals() {
         assertTrue(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, assessor));
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, user2));
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, leadOnApplication1));
@@ -168,13 +190,15 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUsersCanSeeApplicationFinanceTotals() {
+    public void internalUsersCanSeeApplicationFinanceTotals() {
         ApplicationResource applicationResource = newApplicationResource().build();
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(COMP_ADMIN) ||
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
-                    user.hasRole(INNOVATION_LEAD)) {
+                    user.hasRole(INNOVATION_LEAD) ||
+                    user.hasRole(STAKEHOLDER) ||
+                    user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
@@ -183,33 +207,35 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
+    public void onlyUsersPartOfTheApplicationCanChangeApplicationResource() {
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));
         assertFalse(rules.applicantCanUpdateApplicationResource(applicationResource1, user3));
     }
 
     @Test
-    public void userIsConnectedToApplicationResourceTest() {
+    public void userIsConnectedToApplicationResource() {
         assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
     }
 
     @Test
-    public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssessTest() {
+    public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
+        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, interviewAssessor));
         assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
     @Test
-    public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssessTest() {
+    public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, panelAssessor));
+        assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, interviewAssessor));
         assertFalse(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
     @Test
-    public void consortiumCanSeeTheResearchParticipantPercentageTest() {
+    public void consortiumCanSeeTheResearchParticipantPercentage() {
         assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
         assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
@@ -221,7 +247,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void leadApplicantCanSeeTheApplicationFinanceDetailsTest() {
+    public void leadApplicantCanSeeTheApplicationFinanceDetails() {
         assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
     }
@@ -246,7 +272,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+    public void internalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -273,7 +299,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+    public void compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -303,7 +329,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+    public void internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -329,7 +355,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testApplicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
+    public void applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
 
         long competitionId = 123L;
 
@@ -393,21 +419,21 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testLeadApplicantCanUpdateApplicationState() throws Exception {
+    public void leadApplicantCanUpdateApplicationState() throws Exception {
         assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
     }
 
     @Test
-    public void testCompAdminCanUpdateApplicationState() throws Exception {
+    public void compAdminCanUpdateApplicationState() throws Exception {
         assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
     }
 
     @Test
-    public void testProjectFinanceCanUpdateApplicationState() throws Exception {
+    public void projectFinanceCanUpdateApplicationState() throws Exception {
         assertTrue(rules.projectFinanceCanUpdateApplicationState(applicationResource1, projectFinance));
         assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, leadOnApplication1));
@@ -415,7 +441,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testUserCanCreateNewApplication() {
+    public void userCanCreateNewApplication() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -434,7 +460,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testMarkAsIneligibleAllowedBeforeAssessment() {
+    public void markAsIneligibleAllowedBeforeAssessment() {
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
             allGlobalRoleUsers.forEach(user -> {
                 Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();

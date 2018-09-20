@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -41,16 +41,20 @@ public class ApplicationTeamManagementModelPopulator {
 
     private QuestionRestService questionRestService;
 
+    private UserRestService userRestService;
+
     private UserService userService;
     
     @Autowired
     public ApplicationTeamManagementModelPopulator(InviteOrganisationRestService inviteOrganisationRestService,
-                                         ApplicationService applicationService,
-                                         QuestionRestService questionRestService,
-                                         UserService userService) {
+                                                   ApplicationService applicationService,
+                                                   QuestionRestService questionRestService,
+                                                   UserRestService userRestService,
+                                                   UserService userService) {
         this.inviteOrganisationRestService = inviteOrganisationRestService;
         this.applicationService = applicationService;
         this.questionRestService = questionRestService;
+        this.userRestService = userRestService;
         this.userService = userService;
     }
 
@@ -150,7 +154,7 @@ public class ApplicationTeamManagementModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {
@@ -167,9 +171,9 @@ public class ApplicationTeamManagementModelPopulator {
                 .getSuccess();
     }
 
-    private Long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

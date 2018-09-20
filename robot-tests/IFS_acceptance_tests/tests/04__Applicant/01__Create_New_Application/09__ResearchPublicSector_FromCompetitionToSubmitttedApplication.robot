@@ -6,6 +6,8 @@ Documentation   IFS-1012 As a comp exec I am able to set Research and Public sec
 ...             IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 ...
 ...             IFS-2832 As a Portfolio manager I am able to remove the Project details questions
+...
+...             IFS-4046 Person to organisation acceptance test updates
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -17,7 +19,6 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${compResearch}     Research can lead    # Of Generic competition Type
-${compPublic}       Public Sector can lead    # Of Generic competition Type
 ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
 ${collaborator}     ${test_mailbox_one}+amy@gmail.com
@@ -25,56 +26,56 @@ ${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSect
 ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
-Comp Admin Creates Competitions where Research or Public sector can lead
+Comp Admin Creates Competitions where Research can lead
     [Documentation]  IFS-1012 IFS-182 IFS-2832
-    [Tags]  CompAdmin  HappyPath
+    [Tags]  CompAdmin
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
-    And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
 
 Requesting the id of this Competition
     [Documentation]  IFS-182
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  HappyPath  MySQL
+    [Tags]  MySQL
     ${reseachCompId} =  get comp id from comp title  ${compResearch}
     Set suite variable  ${reseachCompId}
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
-    [Documentation]  IFS-182 IFS-2832
-    [Tags]  HappyPath  MySQL
+    [Documentation]  IFS-182 IFS-2832  IFS-4046
+    [Tags]  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
-    And logged in user applies to competition     ${compResearch}
+    And logged in user applies to competition research     ${compResearch}  2
     Then the user should see the element          jQuery=li:contains("${customQuestion}")
     When the user should see the element          jQuery=li:contains("Scope")
     Then the user should not see the element      jQuery=li:contains("Public description")
     And the user should not see the element       jQuery=li:contains("Project summary")
 
 Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012  IFS-2879
-    [Tags]  Applicant  HappyPath
+    [Documentation]  IFS-1012  IFS-2879  IFS-4046
+    [Tags]  Applicant
     [Setup]  Log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
     # This application is for competition Photonics for Research, which is Web test data.
     # That is why we have 2 diferent test cases, where Research users apply to a Research leading competition.
-    Given logged in user applies to competition           ${openCompetitionResearch_name}
+    Given logged in user applies to competition research  ${openCompetitionResearch_name}  2
     When the user clicks the button/link                  link=Application details
-    Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete  ${researchLeadApp}
+    Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete  ${researchLeadApp}  Experimental development
     When the academic user fills in his finances          ${researchLeadApp}
+    And the user enters the project location
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
 
 Applicant Applies to Public content leading Competition
-    [Documentation]  IFS-1012
-    [Tags]  Applicant  HappyPath  CompAdmin
+    [Documentation]  IFS-1012  IFS-4046
+    [Tags]  Applicant  CompAdmin
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
-    Given logged in user applies to competition           ${openCompetitionPublicSector_name}
+    Given logged in user applies to competition public           ${openCompetitionPublicSector_name}  4
     When the user clicks the button/link                  link=Application details
-    Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete  ${publicLeadApp}
+    Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
@@ -93,23 +94,25 @@ Custom Suite Setup
 
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user clicks the button/link  jQuery=.button:contains("Create competition")
-    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_Generic}
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
-    the user fills in the CS Milestones   ${month}  ${nextyear}
+    the user fills in the CS Eligibility                    ${orgType}  1  # 1 means 30%
+    the user fills in the CS Milestones                     ${month}  ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
-    the user clicks the button/link  link=Public content
-    the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link   link=Return to setup overview
-    the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  css=button[type="submit"]
-    the user navigates to the page   ${CA_UpcomingComp}
-    the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #the user fills in the CS Documents in other projects
+    the user clicks the button/link                         link = Public content
+    the user fills in the Public content and publishes      ${extraKeyword}
+    the user clicks the button/link                         link = Return to setup overview
+    the user clicks the button/link                         jQuery = a:contains("Complete")
+    the user clicks the button/link                         css = button[type = "submit"]
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user removes some of the Project details questions
     [Documentation]  IFS-2832

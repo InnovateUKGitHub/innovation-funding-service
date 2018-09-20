@@ -24,7 +24,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Navigation using previous button
     [Documentation]    INFUND-4264
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link              link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link                link=Intelligent water system
     When the user clicks the button/link               link=4. Economic benefit
@@ -103,12 +103,11 @@ Application questions should be scorable
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
+    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 8 KB
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
+    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 8 KB
     When the user clicks the button/link         jQuery=a:contains("6. Innovation")
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
-    And the user goes back to the previous tab
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
 
 Scope: Validations
     [Documentation]  IFS-508
@@ -121,7 +120,7 @@ Scope: Validations
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link                    link=Back to your assessment overview
     And the user clicks the button/link                      link=Scope
     When the user selects the index from the drop-down menu  1    css=.research-category
@@ -135,7 +134,7 @@ Scope: Autosave
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3780
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link          link=Scope
     And the user should see the text in the page  Feasibility studies
     And the user should see the text in the page  Testing feedback field when "Yes" is selected.
@@ -144,7 +143,7 @@ Scope: Word count
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3400
-    [Tags]    HappyPath
+    [Tags]
     When the user enters multiple strings into a text field  css=.editor  a${SPACE}  100
     Then the user should see the text in the page            Words remaining: 0
 
@@ -152,13 +151,13 @@ Scope: Guidance
     [Documentation]    INFUND-4142
     ...
     ...    INFUND-6281
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link          css=details summary
-    Then the user should see the element          css=#details-content-0
+    Then the user should see the element          css=div[id^="details-content-"]
     And The user should see the text in the page  One or more of the above requirements have not been satisfied.
     And The user should see the text in the page  Does it meet the scope of the competition as defined in the competition brief?
     And the user clicks the button/link           css=details summary
-    And The user should not see the element       css=#details-content-0
+    And The user should not see the element       css=div[id^="details-content-"]
 
 Economic Benefit: validations
     [Documentation]  IFS-508
@@ -193,7 +192,7 @@ Economic Benefit: Autosave
 
 Economic Benefit: Guidance
     [Documentation]    INFUND-6281
-    When The user clicks the button/link           css=.summary
+    When The user clicks the button/link           css=.govuk-details__summary-text
     Then the user should see the text in the page  The project is damaging to other stakeholders with no realistic mitigation or balance described.
     And The user should see the text in the page   The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
     And The user should see the text in the page   Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
@@ -256,15 +255,15 @@ the user clicks previous and goes to the page
     the user should see the text in the page  ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class BankDetailsDocs {
@@ -38,6 +38,7 @@ public class BankDetailsDocs {
             fieldWithPath("competitionId").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition name"),
             fieldWithPath("projectId").description("Project id for bank details status summary"),
+            fieldWithPath("projectName").description("Project name for bank details status summary"),
             fieldWithPath("applicationId").description("Application id for bank details status summary"),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status"),
             fieldWithPath("leadOrganisation").description("The lead organisation of this project")

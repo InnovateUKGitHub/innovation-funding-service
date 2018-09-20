@@ -99,7 +99,7 @@
                     </p>
                 #end
                 <div style="float:left;">
-                    <p>
+                    <p class="govuk-body">
                         #springMessageText("idp.attribute-release.confirmationQuestion", "The information above would be shared with the service if you proceed. Do you agree to release this information to the service every time you access it?")
                     </p>
                     #if ($attributeReleaseFlowDescriptor.doNotRememberConsentAllowed || $attributeReleaseFlowDescriptor.globalConsentAllowed)
@@ -107,7 +107,7 @@
                         #springMessageText("idp.attribute-release.consentMethod", "Select an information release consent duration:")
                     #end
                     #if ($attributeReleaseFlowDescriptor.doNotRememberConsentAllowed)
-                        <p>
+                        <p class="govuk-body">
                             <input id="_shib_idp_doNotRememberConsent" type="radio" name="_shib_idp_consentOptions" value="_shib_idp_doNotRememberConsent">
                             #springMessageText("idp.attribute-release.doNotRememberConsent", "Ask me again at next login")
                             <ul>
@@ -116,7 +116,7 @@
                         </p>
                     #end
                     #if ($attributeReleaseFlowDescriptor.doNotRememberConsentAllowed || $attributeReleaseFlowDescriptor.globalConsentAllowed)
-                        <p>
+                        <p class="govuk-body">
                             <input id="_shib_idp_rememberConsent" type="radio" name="_shib_idp_consentOptions" value="_shib_idp_rememberConsent" checked>
                             #springMessageText("idp.attribute-release.rememberConsent", "Ask me again if information changes")
                             <ul>
@@ -125,7 +125,7 @@
                         </p>
                     #end
                     #if ($attributeReleaseFlowDescriptor.globalConsentAllowed)
-                        <p>
+                        <p class="govuk-body">
                             <input id="_shib_idp_globalConsent" type="radio" name="_shib_idp_consentOptions" value="_shib_idp_globalConsent">
                             #springMessageText("idp.attribute-release.globalConsent", "Do not ask me again")
                             <ul>

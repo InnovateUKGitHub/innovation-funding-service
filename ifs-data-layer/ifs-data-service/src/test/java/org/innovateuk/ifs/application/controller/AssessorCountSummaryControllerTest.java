@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.application.transactional.ApplicationCountSummaryService;
 import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.junit.Test;
 import org.mockito.Mock;

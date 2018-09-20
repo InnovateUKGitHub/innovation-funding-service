@@ -2,6 +2,7 @@ package org.innovateuk.ifs.commons.security;
 
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.core.Authentication;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**

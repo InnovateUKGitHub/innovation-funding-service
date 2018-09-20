@@ -15,14 +15,11 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.alert;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.alert.AlertController;
 import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.service.AlertRestService;
@@ -17,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

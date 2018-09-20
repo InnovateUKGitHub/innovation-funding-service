@@ -6,7 +6,6 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
-import org.innovateuk.ifs.userorganisation.domain.UserOrganisationPK;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -19,11 +18,12 @@ import org.mapstruct.Mappings;
     }
 )
 
-public abstract class UserOrganisationMapper extends BaseMapper<UserOrganisation, UserOrganisationResource, UserOrganisationPK> {
+public abstract class UserOrganisationMapper extends BaseMapper<UserOrganisation, UserOrganisationResource, Long> {
 
     @Mappings({
             @Mapping(source = "user.name", target = "name"),
             @Mapping(source = "organisation.name.", target = "organisationName"),
+            @Mapping(source = "organisation.organisationType.name", target = "organisationType"),
             @Mapping(source = "organisation.id", target = "organisationId"),
             @Mapping(source = "user.email", target = "email"),
             @Mapping(source = "user.status", target = "status")
@@ -38,11 +38,4 @@ public abstract class UserOrganisationMapper extends BaseMapper<UserOrganisation
     })
     @Override
     public abstract UserOrganisation mapToDomain(UserOrganisationResource resource);
-
-    public UserOrganisationPK mapUserOrganisationToId(UserOrganisation object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

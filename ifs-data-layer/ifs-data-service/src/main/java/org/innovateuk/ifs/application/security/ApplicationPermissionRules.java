@@ -73,7 +73,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             description = "The assessor can see the application finance totals in the applications they assess",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean assessorCanSeeTheApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isAssessor(applicationResource.getId(), user);
+        return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -93,14 +93,19 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsConnectedToApplicationResource(application, user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users other than innovation lead can see all application resources")
+    @PermissionRule(value = "READ", description = "Internal users (other than innovation lead or stakeholder) can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
-        return !isInnovationLead(user) && isInternal(user);
+        return !isInnovationLead(user) && !isStakeholder(user) && isInternal(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
     public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can see application resources for competitions assigned to them.")
+    public boolean stakeholderAssignedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
+        return application != null && application.getCompetition() != null && userIsStakeholderInCompetition(application.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")

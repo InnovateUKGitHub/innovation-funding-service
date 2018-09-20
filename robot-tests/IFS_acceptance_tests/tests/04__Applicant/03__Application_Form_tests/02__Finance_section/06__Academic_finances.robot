@@ -10,7 +10,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
@@ -20,7 +20,7 @@ Resource          ../../Applicant_Commons.robot
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Lead applicant marks the finances as complete
     Given Log in as a different user          ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
@@ -37,7 +37,7 @@ Academic finance validations
     And the applicant enters invalid inputs
     And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
-    And the user should see the element  css=.error-summary-list
+    And the user should see the element  css=.govuk-error-summary__list
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
@@ -49,7 +49,7 @@ Academic finance calculations
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
-    Given the user clicks the button/link         jQuery=.buttonlink:contains("Edit your project costs")
+    Given the user clicks the button/link         jQuery=.button-clear:contains("Edit your project costs")
     Then the user clicks the button/link          css=button[name="remove_finance_document"]
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
@@ -72,19 +72,20 @@ Lead applicant can't upload a JeS file
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user              ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
-    When the academic partner uploads a file           ${valid_pdf}
+    When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the text in the page  No file currently uploaded
-    And the user should see the element                link=testing.pdf (opens in a new window)
+    And the user should see the element                link=${5mb_pdf}
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
-    When the user opens the link in new window  ${valid_pdf}
+    [Tags]
+    When the user opens the link in new window  ${5mb_pdf}
     Then the user should not see an error in the page
+    And the user closes the last opened tab
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -99,7 +100,7 @@ Lead applicant can't view the file on the finances page
     [Setup]    log in as a different user              &{lead_applicant_credentials}
     When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
-    Then the user should not see the text in the page  ${valid_pdf}
+    Then the user should not see the text in the page  ${5mb_pdf}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
@@ -115,13 +116,14 @@ Mark all as complete
     [Documentation]    INFUND-918  IFS-2879
     [Tags]
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    And the user navigates to Your-finances page  Academic robot test application
+    And the user navigates to Your-finances page   Academic robot test application
     And the user clicks the button/link            link=Your project costs
-    And the user should see the element            link=testing.pdf (opens in a new window)
+    And the user should see the element            link=${5mb_pdf}
     When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
     Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
+    And the user enters the project location
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
     And the user should see the element            css=.finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
@@ -176,7 +178,8 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
-    the applicant completes the application details  Academic robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category  Feasibility studies
     the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 
@@ -210,8 +213,8 @@ Mark academic finances as complete
     the user clicks the button/link  id=mark-all-as-complete
 
 the user should see correct grant percentage
-    the user should see the text in the element   css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user should see the text in the element   css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user should see the text in the element   css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user should see the text in the element   css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
 
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application

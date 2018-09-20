@@ -1,22 +1,22 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
 import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -34,9 +34,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  * @param <F> the form class
  */
 public abstract class AbstractContentGroupController<M extends AbstractPublicContentViewModel, F extends AbstractContentGroupForm> extends AbstractPublicContentSectionController<M, F> {
-
-    @Autowired
-    private CompetitionSetupService competitionSetupService;
 
     @PostMapping(value = "/{competitionId}/edit", params = "uploadFile")
     public String saveAndUpload(Model model,
@@ -74,7 +71,8 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    protected String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
+    private String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler,
+                               Supplier<ServiceResult<Void>> action) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccess();
 
@@ -82,13 +80,10 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
+        Supplier<String> successView = () -> getPage(competitionId, model, Optional.empty(), false);
 
-        Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
-        //Pass in the public content resource after saving for success view.
-        Supplier<String> successView = () -> getPage(publicContentService.getCompetitionById(competitionId), model, Optional.empty(), false);
-
-        ServiceResult<Void> result = formSaver().save(form, publicContent);
+        ServiceResult<Void> result = formSaver().save(form, publicContentService.getCompetitionById(competitionId));
 
         validationHandler.addAnyErrors(error(removeDuplicates(result.getErrors())));
 

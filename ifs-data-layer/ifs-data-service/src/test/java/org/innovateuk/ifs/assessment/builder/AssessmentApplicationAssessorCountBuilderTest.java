@@ -10,7 +10,7 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentApplicationAssessorCountBuilder.newAssessmentApplicationAssessorCount;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AssessmentApplicationAssessorCountBuilderTest {
 

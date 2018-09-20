@@ -4,7 +4,7 @@ package org.innovateuk.ifs.category.resource;
 public enum CategoryType {
     INNOVATION_SECTOR("innovation_sector"),
     INNOVATION_AREA("innovation_area"),
-	RESEARCH_CATEGORY("research_category");
+    RESEARCH_CATEGORY("research_category");
 
     private final String name;
 
@@ -17,9 +17,9 @@ public enum CategoryType {
     }
 
     public static CategoryType fromString(String type) {
-        if(type!=null) {
-            for(CategoryType categoryType : CategoryType.values()) {
-                if(type.equalsIgnoreCase(categoryType.name)) {
+        if (type != null) {
+            for (CategoryType categoryType : CategoryType.values()) {
+                if (type.equalsIgnoreCase(categoryType.name)) {
                     return categoryType;
                 }
             }

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.competition.builder.*;
+import org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.*;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
+import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionSetupQuestionResourceDocs {

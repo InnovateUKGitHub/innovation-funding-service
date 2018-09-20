@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -21,8 +22,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
 
-    public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
-    public static final int CLOSING_SOON_AMOUNT = 3;
+    private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
+    private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
@@ -34,6 +35,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
+    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -84,7 +86,6 @@ public class CompetitionResource {
 
     private String activityCode;
 
-    private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
     private Boolean useResubmissionQuestion;
@@ -100,8 +101,14 @@ public class CompetitionResource {
     private boolean locationPerPartner = true;
     private Boolean stateAid;
 
-    // IFS-3088: This is temporary until all competitions with the old menu view are complete
-    private boolean useNewApplicantMenu;
+    private Set<Long> grantClaimMaximums;
+
+    private ApplicationFinanceType applicationFinanceType;
+
+    private String createdBy;
+    private ZonedDateTime createdOn;
+    private String modifiedBy;
+    private ZonedDateTime modifiedOn;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -227,7 +234,9 @@ public class CompetitionResource {
         this.releaseFeedbackDate = releaseFeedbackDate;
     }
 
-    public ZonedDateTime getFeedbackReleasedDate() { return feedbackReleasedDate; }
+    public ZonedDateTime getFeedbackReleasedDate() {
+        return feedbackReleasedDate;
+    }
 
     public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
         this.feedbackReleasedDate = feedbackReleasedDate;
@@ -502,6 +511,14 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
+    public List<ProjectDocumentResource> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
+
     public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -526,12 +543,10 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
+    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
+            " value dependent on applicationFinanceType")
+    public boolean isFullApplicationFinance() {
+        return ApplicationFinanceType.STANDARD == applicationFinanceType;
     }
 
     public boolean getSetupComplete() {
@@ -632,29 +647,74 @@ public class CompetitionResource {
         this.stateAid = stateAid;
     }
 
-    public boolean getUseNewApplicantMenu() {
-        return useNewApplicantMenu;
+    public Set<Long> getGrantClaimMaximums() {
+        return grantClaimMaximums;
     }
 
-    public void setUseNewApplicantMenu(boolean useNewApplicantMenu) {
-        this.useNewApplicantMenu = useNewApplicantMenu;
+    public void setGrantClaimMaximums(final Set<Long> grantClaimMaximums) {
+        this.grantClaimMaximums = grantClaimMaximums;
+    }
+
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
+    }
+
+    public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(final ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(final ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        CompetitionResource that = (CompetitionResource) o;
+        final CompetitionResource that = (CompetitionResource) o;
 
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
-                .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfs, that.nonIfs)
+                .append(locationPerPartner, that.locationPerPartner)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
+                .append(projectDocuments, that.projectDocuments)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -689,17 +749,24 @@ public class CompetitionResource {
                 .append(collaborationLevel, that.collaborationLevel)
                 .append(leadApplicantTypes, that.leadApplicantTypes)
                 .append(researchCategories, that.researchCategories)
+                .append(minProjectDuration, that.minProjectDuration)
+                .append(maxProjectDuration, that.maxProjectDuration)
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
-                .append(fullApplicationFinance, that.fullApplicationFinance)
+                .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
                 .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(stateAid, that.stateAid)
+                .append(grantClaimMaximums, that.grantClaimMaximums)
+                .append(applicationFinanceType, that.applicationFinanceType)
+                .append(createdBy, that.createdBy)
+                .append(createdOn, that.createdOn)
+                .append(modifiedBy, that.modifiedBy)
+                .append(modifiedOn, that.modifiedOn)
                 .isEquals();
     }
 
@@ -709,6 +776,7 @@ public class CompetitionResource {
                 .append(id)
                 .append(milestones)
                 .append(funders)
+                .append(projectDocuments)
                 .append(name)
                 .append(startDate)
                 .append(endDate)
@@ -743,10 +811,11 @@ public class CompetitionResource {
                 .append(collaborationLevel)
                 .append(leadApplicantTypes)
                 .append(researchCategories)
+                .append(minProjectDuration)
+                .append(maxProjectDuration)
                 .append(assessorCount)
                 .append(assessorPay)
                 .append(activityCode)
-                .append(fullApplicationFinance)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
                 .append(hasAssessmentPanel)
@@ -757,6 +826,12 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
+                .append(grantClaimMaximums)
+                .append(applicationFinanceType)
+                .append(createdBy)
+                .append(createdOn)
+                .append(modifiedBy)
+                .append(modifiedOn)
                 .toHashCode();
     }
 }

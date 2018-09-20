@@ -8,7 +8,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the Finances section of my application
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser    # this keyword no longer needs to mark the application details as incomplete, due to the recent addition of research category this section is already incomplete
-Force Tags        HappyPath    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
@@ -110,7 +110,7 @@ Other costs
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link            jQuery=button:contains("Labour")

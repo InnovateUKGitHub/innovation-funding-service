@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 public interface CompetitionSetupFormPopulator {
 
-	CompetitionSetupSection sectionToFill();
-	
-	CompetitionSetupForm populateForm(CompetitionResource competitionResource);
+    CompetitionSetupSection sectionToFill();
+
+    CompetitionSetupForm populateForm(CompetitionResource competitionResource);
 }
