@@ -77,6 +77,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 ...
 ...               IFS-4190 Create new user in stakeholder role
+...
+...               IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -261,7 +263,7 @@ Funding information: should have a green check
     And the user should see the element     css=#compCTA[disabled]
 
 Eligibility: Contain the correct options
-    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
+    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
     [Tags]
     Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
