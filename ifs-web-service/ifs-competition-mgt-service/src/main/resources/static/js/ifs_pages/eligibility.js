@@ -3,6 +3,7 @@ IFS.competitionManagement.eligibility = (function () {
   return {
     init: function () {
       IFS.competitionManagement.eligibility.setOverrideFundingRulesVisibility()
+      IFS.competitionManagement.eligibility.setFundingLevelRCVisibility()
       jQuery(document).on('change', 'input[name="researchCategoriesApplicable"]', function () {
         IFS.competitionManagement.eligibility.handleResearchCategoriesApplicableChange(this)
       })
@@ -15,6 +16,7 @@ IFS.competitionManagement.eligibility = (function () {
       var status = researchCategoriesApplicable.val() === 'true'
 
       IFS.competitionManagement.eligibility.setOverrideFundingRulesVisibility()
+      IFS.competitionManagement.eligibility.setFundingLevelRCVisibility()
 
       if (status) {
         jQuery('#funding-level').find('select').val('')
@@ -48,6 +50,16 @@ IFS.competitionManagement.eligibility = (function () {
       }
 
       if (researchCategoriesFalseIsChecked || overrideFundingRulesTrueIsChecked) {
+        fundingLevelContainer.attr('aria-hidden', 'false')
+      } else {
+        fundingLevelContainer.attr('aria-hidden', 'true')
+      }
+    },
+    setFundingLevelRCVisibility: function () {
+      var researchCategoriesFalseIsChecked = jQuery('input[name="researchCategoriesApplicable"][value="false"]').is(':checked')
+      var fundingLevelContainer = jQuery('#funding-level-rc')
+
+      if (researchCategoriesFalseIsChecked) {
         fundingLevelContainer.attr('aria-hidden', 'false')
       } else {
         fundingLevelContainer.attr('aria-hidden', 'true')
