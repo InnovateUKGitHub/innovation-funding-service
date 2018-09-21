@@ -7,31 +7,42 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -53,10 +64,13 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     private ApplicationRepository applicationRepository;
 
     @Mock
+    private FinanceRowCostsService financeRowCostsService;
+
+    @Mock
     private FinanceService financeService;
 
     @Mock
-    private FinanceRowCostsService financeRowCostsService;
+    private ProcessRoleRepository processRoleRepository;
 
     @Test
     public void validateFormInputResponse() {
@@ -88,7 +102,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         long applicationId = 1L;
         long formInputId = 2L;
 
-        List<FormInputResponse> formInputResponses = Collections.emptyList();
+        List<FormInputResponse> formInputResponses = emptyList();
 
         FormInputResponse emptyResponse = new FormInputResponse();
 
@@ -137,38 +151,98 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void validateFormInputResponseWithMarkedAsComplete() {
-/*        Application application = new Application();
-        Long formInputId = 1L;
-        Long markedAsCompleteById = 2L;
 
-        FormInputResponse formInputResponse = newFormInputResponse().withValue("response").build();
-
-        when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
-        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn();
-
-        BindingResult bindingResult = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
-
-        assertEquals(formInputResponse, bindingResult);*/
     }
 
 
     @Test
     public void validateCostItem() {
         Long applicationId = 1L;
-        Long markedAsCompleteId = 2L;
-        Question question = new Question();
+        Long organisationId = 999L;
+        Question question = newQuestion().build();
+        Long questionId = question.getId();
 
-        //List<ValidationMessages> validationMessages = newValidationMessages().build();
+        Long markedAsCompleteById = 5L;
 
-        when(financeService.financeDetails(applicationId));
+        List<ValidationMessages> validationMessages = emptyList();
 
-        List<ValidationMessages> validationMessages = service.validateCostItem(applicationId, question, markedAsCompleteId);
+        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(), new TravelCost());
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withId(1L)
+                .build();
+
+        ApplicationFinanceResource expectedFinances = newApplicationFinanceResource()
+                .withId(1L)
+                .withApplication(1L)
+                .withFinanceFileEntry(1L)
+                .build();
+
+        List<ValidationMessages> expected = emptyList();
+
+
+        when(processRoleRepository.findOne(markedAsCompleteById)).thenReturn(processRole);
+        when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
+        when(financeRowCostsService.getCostItems(1L, questionId)).thenReturn(serviceSuccess(costItems));
+        when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
+
+        // call the service
+        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById);
+
+
+        //asserts and verifies
+        assertEquals(expected, result);
+
+        // stick in verifies for expectations here
+        verify(processRoleRepository).findOne(markedAsCompleteById);
+
     }
 
 
+    @Test
+    public void validateCostItem_markedAsCompleteIsNull() {
+        Long applicationId = 1L;
+        Long organisationId = 999L;
+        Question question = newQuestion().build();
+        Long questionId = question.getId();
+
+        Long markedAsCompleteById = null;
+
+        List<ValidationMessages> validationMessages = emptyList();
+
+        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(), new TravelCost());
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withId(1L)
+                .build();
+
+        ApplicationFinanceResource expectedFinances = newApplicationFinanceResource()
+                .withId(1L)
+                .withApplication(1L)
+                .withFinanceFileEntry(1L)
+                .build();
+
+        List<ValidationMessages> expected = emptyList();
 
 
+        when(processRoleRepository.findOne(markedAsCompleteById)).thenReturn(processRole);
+        when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
+        when(financeRowCostsService.getCostItems(1L, questionId)).thenReturn(serviceSuccess(costItems));
+        when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
 
+        // call the service
+        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById);
+
+
+        //asserts and verifies
+        assertEquals(expected, result);
+
+        // stick in verifies for expectations here
+        verify(processRoleRepository).findOne(markedAsCompleteById);
+
+    }
 
 
     @Test
@@ -187,16 +261,17 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void getProjectCostHandler() {
+        GrantClaim grantClaim = new GrantClaim(1L, 20);
+        FinanceRowHandler expected = new GrantClaimHandler();
+
+        when(financeRowCostsService.getCostHandler(1L)).thenReturn(expected);
+
+        FinanceRowHandler result = service.getProjectCostHandler(grantClaim);
+
+        assertEquals(expected, result);
+
+        verify(financeRowCostsService, only()).getCostHandler(1L);
     }
-
-    @Test
-    public void validateFileUploads() {
-
-    }
-
-
-
-
 
 
     @Override
