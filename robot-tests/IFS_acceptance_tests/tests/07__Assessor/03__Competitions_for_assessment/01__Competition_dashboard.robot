@@ -33,8 +33,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user should see the element   jQuery=h2:contains("Applications for assessment")
 
@@ -43,7 +42,7 @@ Calculation of the applications for assessment should be correct
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
@@ -71,7 +70,7 @@ Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
-    [Tags]    HappyPath
+    [Tags]
     Given the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the element                       jQuery=h1:contains("Accept application")
