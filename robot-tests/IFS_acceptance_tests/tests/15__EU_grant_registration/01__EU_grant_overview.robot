@@ -55,7 +55,7 @@ Companies House: Empty company name field
     [Tags]
     When the user enters text to a text field      id = organisationSearchName    ${EMPTY}
     Then the user clicks the button/link           id = org-search
-    And the user should see an error               Please enter an organisation name to search
+    And the user should see an error               Enter an organisation name to search.
 
 Companies House: Valid registration number
     [Documentation]  IFS-4072
@@ -71,12 +71,11 @@ Contact details validation
     When the user clicks the button/link                  link = Contact details
     Then the user clicks the button/link                  jQuery = button:contains("Continue")
     And the user should see a field and summary error     Enter a full name
-    And the user should see a field and summary error     The full name should have at least 2 characters.
+    And the user should see a field and summary error     Enter a full name with at least 2 characters.
     And the user should see a field and summary error     Enter a job title.
-    And the user should see a field and summary error     Please enter a valid email.
+    And the user should see a field and summary error     Enter a valid email.
     And the user should see a field and summary error     Enter a telephone number.
-    And the user should see a field and summary error     Please enter a valid phone number between 8 and 20 digits.
-#ToDo Validation messages will be updated
+    And the user should see a field and summary error     Enter a valid telephone number between 8 and 20 digits.
 
 Contact details Enter details and save
     [Documentation]  IFS-4231
@@ -139,12 +138,12 @@ Register another project
 *** Keywords ***
 the user should see the validation messages for the funding details
     And the user should see a field and summary error    Enter a grant agreement number.
-    And the user should see a field and summary error    Invalid grant agreement format.
-    And the user should see a field and summary error    Invalid participant identification code (PIC) format.
+    And the user should see a field and summary error    Enter a valid grant agreement number.
+    And the user should see a field and summary error    Enter a valid PIC.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
-    And the user should see a field and summary error    Please enter a valid date.
-    And the user should see a field and summary error    Please enter a future date.
-    And the user should see a field and summary error    Please enter a valid date.
+    And the user should see a field and summary error    Enter a valid date.
+    And the user should see a field and summary error    Enter a future date.
+    And the user should see a field and summary error    Enter a valid date.
     And the user should see a field and summary error    Enter the EU funding contribution.
-    And the user should see a field and summary error    Select an option.
+    And the user should see a field and summary error    Select a project co-ordinator option
