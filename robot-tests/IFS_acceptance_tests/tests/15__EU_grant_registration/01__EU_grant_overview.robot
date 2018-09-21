@@ -6,6 +6,7 @@ Documentation    IFS-4231 EU2020 - Create webservice & Landing page
 ...              IFS-4072 EU2020 - Organisation selection
 ...
 ...              IFS-4077 EU2020 - Grant information form
+Force Tags       EU2020
 Resource         ../../resources/defaultResources.robot
 Resource         ../10__Project_setup/PS_Common.robot
 
@@ -15,6 +16,7 @@ ${EU_grant}    ${server}/eu-grant/overview
 *** Test Cases ***
 User navigate to EU grant registration page
     [Documentation]  IFS-4231
+    [Tags]
     Given the guest user opens the browser
     When the user navigates to the page     ${EU_grant}
     Then the user should see the element    jQuery = h1:contains("Horizon 2020: UK government underwrite guarantee")
