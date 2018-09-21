@@ -1,4 +1,4 @@
-=== Get organisation by Company House by name
+=== Get organisation by Company House name
 
 ==== Request
 include::{snippets}/company-house/search-by-company-house-name/http-request.adoc[]
@@ -11,7 +11,7 @@ include::{snippets}/company-house/search-by-company-house-name/response-fields.a
 ==== Curl Example
 include::{snippets}/company-house/search-by-company-house-name/curl-request.adoc[]
 
-=== Get organisation by Company House by id
+=== Get organisation by Company House id
 
 ==== Request
 include::{snippets}/company-house/search-by-company-house-name/http-request.adoc[]
