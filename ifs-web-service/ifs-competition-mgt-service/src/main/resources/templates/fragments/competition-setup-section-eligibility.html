@@ -63,6 +63,34 @@
                                 Yes
                             </label>
                         </div>
+
+                        <div id="research-categories" class="panel">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryId">
+                                        <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
+                                    </legend>
+                                    <span th:if="${#fields.hasErrors('researchCategoryId')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"/>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
+                                            <input th:value="${researchCategory.id}"
+                                                   type="checkbox"
+                                                   class="govuk-checkboxes__input"
+                                                   name="researchCategoryId"
+                                                   th:id="${'research-categories-' + researchCategory.id}"
+                                                   th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
+                                                   required="required"
+                                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
+                                            <label th:for="${'research-categories-' + researchCategory.id}"
+                                                   th:text="${researchCategory.name}"
+                                                   class="govuk-label govuk-checkboxes__label"></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
@@ -78,33 +106,6 @@
                         </div>
                     </div>
                 </fieldset>
-            </div>
-
-            <div id="research-categories" class="panel">
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'govuk-form-group--error'">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryId">
-                            <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
-                        </legend>
-                        <span th:if="${#fields.hasErrors('researchCategoryId')}" class="govuk-error-message"
-                              th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"/>
-                        <div class="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
-                                <input th:value="${researchCategory.id}"
-                                       type="checkbox"
-                                       class="govuk-checkboxes__input"
-                                       name="researchCategoryId"
-                                       th:id="${'research-categories-' + researchCategory.id}"
-                                       th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
-                                <label th:for="${'research-categories-' + researchCategory.id}"
-                                       th:text="${researchCategory.name}"
-                                       class="govuk-label govuk-checkboxes__label"></label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
             </div>
 
             <div id="override-funding-rules" class="govuk-form-group"
