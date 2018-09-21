@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
+
 /**
  * Holder of model attributes for the Application Team view.
  */
@@ -69,6 +71,10 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
 
     public void setCollaborationLevel(final CollaborationLevel collaborationLevel) {
         this.collaborationLevel = collaborationLevel;
+    }
+
+    public boolean isCollaborationLevelSingle() {
+        return collaborationLevel == SINGLE;
     }
 
     @Override
