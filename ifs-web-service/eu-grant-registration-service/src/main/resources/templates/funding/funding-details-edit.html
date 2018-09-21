@@ -194,7 +194,9 @@
                         </th:block>
                         <div class="date-group"
                              data-future-date=""
-                             th:attr="data-date-invalid-errormessage=#{validation.fundingForm.date.format}">
+                             th:attr=
+                                 "data-date-invalid-errormessage=#{validation.fundingForm.date.format},
+                                  data-date-future-errormessage=#{validation.standard.date.future}">
 
                             <div class="day govuk-visually-hidden">
                                 <label class="govuk-label" for="endDateDay">
