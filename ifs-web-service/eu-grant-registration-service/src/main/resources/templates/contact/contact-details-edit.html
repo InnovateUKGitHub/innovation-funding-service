@@ -90,7 +90,9 @@
                            type="tel"
                            th:field="*{telephone}"
                            required="required"
-                           th:attr="data-required-errormessage=#{validation.eugrant.telephone.required}" />
+                           th:attr=
+                               "data-required-errormessage=#{validation.eugrant.telephone.required},
+                                data-tel-errormessage=#{validation.eugrant.telephone.format}" />
                 </div>
 
                 <button class="govuk-button" type="submit">Continue</button>
