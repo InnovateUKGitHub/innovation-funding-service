@@ -3,8 +3,10 @@ package org.innovateuk.ifs.eugrant.funding.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eugrant.*;
-import org.innovateuk.ifs.eugrant.funding.controller.EuFundingController;
+import org.innovateuk.ifs.eugrant.EuActionTypeResource;
+import org.innovateuk.ifs.eugrant.EuActionTypeRestService;
+import org.innovateuk.ifs.eugrant.EuFundingResource;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;
 import org.innovateuk.ifs.eugrant.funding.populator.EuFundingFormPopulator;
 import org.innovateuk.ifs.eugrant.funding.saver.EuFundingSaver;
@@ -26,9 +28,7 @@ import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGra
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFundingController> {
 
@@ -80,7 +80,7 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
                 .withProjectStartDate(LocalDate.now())
                 .withProjectEndDate(LocalDate.now().plusYears(1L))
                 .withProjectName("Project Name")
-                .withParticipantId("123456")
+                .withParticipantId("123456789")
                 .build();
 
         EuGrantResource euGrantResource = newEuGrantResource()
@@ -129,7 +129,7 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
         fundingForm.setStartDateYear(2000);
         fundingForm.setEndDateMonth(10);
         fundingForm.setEndDateYear(2020);
-        fundingForm.setParticipantId("123456");
+        fundingForm.setParticipantId("123456789");
         fundingForm.setProjectName("Project Name");
 
         when(euGrantCookieService.get()).thenReturn(euGrantResource);
