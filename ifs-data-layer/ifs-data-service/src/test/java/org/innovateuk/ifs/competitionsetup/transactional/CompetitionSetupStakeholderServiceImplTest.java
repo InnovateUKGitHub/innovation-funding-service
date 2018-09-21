@@ -159,14 +159,16 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertTrue(result.isSuccess());
         verify(stakeholderInviteRepositoryMock, times(2)).save(any(StakeholderInvite.class));
 
-
         // Create a captor and verify that the correct and expected StakeholderInvite was saved
         ArgumentCaptor<StakeholderInvite> captor = ArgumentCaptor.forClass(StakeholderInvite.class);
         verify(stakeholderInviteRepositoryMock, times(2)).save(captor.capture());
+        String expectedName = "Rayon Kevin";
+        String expectedEmail = "Rayon.Kevin@gmail.com";
+
         StakeholderInvite savedStakeholderInvite1 = captor.getAllValues().get(0);
         assertEquals(competition, savedStakeholderInvite1.getTarget());
-        assertEquals("Rayon Kevin", savedStakeholderInvite1.getName());
-        assertEquals("Rayon.Kevin@gmail.com", savedStakeholderInvite1.getEmail());
+        assertEquals(expectedName, savedStakeholderInvite1.getName());
+        assertEquals(expectedEmail, savedStakeholderInvite1.getEmail());
         assertNotNull(savedStakeholderInvite1.getHash());
         assertEquals(CREATED, savedStakeholderInvite1.getStatus());
         assertNull(savedStakeholderInvite1.getSentBy());
@@ -180,15 +182,15 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertEquals("competition1", sentNotification.getGlobalArguments().get("competitionName"));
         assertEquals("null/management/competition/setup/stakeholder/" + savedStakeholderInvite.getHash() + "/register",
                 sentNotification.getGlobalArguments().get("inviteUrl"));
-        assertEquals("Rayon Kevin", sentNotification.getTo().get(0).getName());
-        assertEquals("Rayon.Kevin@gmail.com", sentNotification.getTo().get(0).getEmailAddress());
+        assertEquals(expectedName, sentNotification.getTo().get(0).getName());
+        assertEquals(expectedEmail, sentNotification.getTo().get(0).getEmailAddress());
         assertEquals(CompetitionSetupStakeholderServiceImpl.Notifications.STAKEHOLDER_INVITE, sentNotification.getMessageKey());
 
         //Assert that correct StakeholderInvite was saved after the notification was sent
         StakeholderInvite savedStakeholderInvite2 = captor.getAllValues().get(1);
         assertEquals(competition, savedStakeholderInvite2.getTarget());
-        assertEquals("Rayon Kevin", savedStakeholderInvite2.getName());
-        assertEquals("Rayon.Kevin@gmail.com", savedStakeholderInvite2.getEmail());
+        assertEquals(expectedName, savedStakeholderInvite2.getName());
+        assertEquals(expectedEmail, savedStakeholderInvite2.getEmail());
         assertNotNull(savedStakeholderInvite2.getHash());
         assertEquals(SENT, savedStakeholderInvite2.getStatus());
         assertEquals(loggedInUser, savedStakeholderInvite2.getSentBy());
