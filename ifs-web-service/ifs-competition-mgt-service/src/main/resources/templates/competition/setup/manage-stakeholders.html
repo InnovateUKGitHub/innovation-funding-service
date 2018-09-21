@@ -176,6 +176,12 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="stakeholder : ${model.pendingStakeholderInvitesForCompetition}">
+                            <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
+                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell">Pending</td>
+                            <td class="govuk-table__cell alignright"></td>
+                        </tr>
                         <tr class="govuk-table__row" th:each="stakeholder : ${model.stakeholdersAssignedToCompetition}">
                             <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
                             <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
