@@ -125,7 +125,7 @@ public class CompetitionSetupStakeholderController {
                                  Model model) {
 
         competitionSetupStakeholderRestService.addStakeholder(competitionId, stakeholderUserId);
-        return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm(), DEFAULT_TAB);
+        return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + DEFAULT_TAB;
     }
 
     @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"removeStakeholder"})
@@ -134,6 +134,6 @@ public class CompetitionSetupStakeholderController {
                                     Model model) {
 
         competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
-        return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm(), ADDED_TAB);
+        return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
     }
 }

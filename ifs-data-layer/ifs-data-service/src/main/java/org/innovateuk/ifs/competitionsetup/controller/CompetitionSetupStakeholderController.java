@@ -47,6 +47,12 @@ public class CompetitionSetupStakeholderController {
 
         return competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId).toPostResponse();
     }
+
+    @GetMapping("/pending-invites")
+    public RestResult<List<UserResource>> findPendingStakeholderInvites(@PathVariable("competitionId") final long competitionId) {
+
+        return competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId).toGetResponse();
+    }
 }
 
 

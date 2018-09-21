@@ -28,9 +28,12 @@ public class ManageStakeholderModelPopulator {
         List<UserResource> stakeholdersAssignedToCompetition = competitionSetupStakeholderRestService.findStakeholders(competition.getId()).getSuccess();
         availableStakeholders.removeAll(stakeholdersAssignedToCompetition);
 
+        List<UserResource> pendingStakeholderInvitesForCompetition = competitionSetupStakeholderRestService.findPendingStakeholderInvites(competition.getId()).getSuccess();
+
         return new ManageStakeholderViewModel(competition.getId(), competition.getName(),
                 sortByName(availableStakeholders),
                 sortByName(stakeholdersAssignedToCompetition),
+                sortByName(pendingStakeholderInvitesForCompetition),
                 tab);
     }
 

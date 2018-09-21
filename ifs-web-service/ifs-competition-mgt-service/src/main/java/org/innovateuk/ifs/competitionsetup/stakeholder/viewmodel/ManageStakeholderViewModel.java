@@ -13,17 +13,20 @@ public class ManageStakeholderViewModel extends CompetitionSetupViewModel {
     private String competitionName;
     private List<UserResource> availableStakeholders;
     private List<UserResource> stakeholdersAssignedToCompetition;
+    private List<UserResource> pendingStakeholderInvitesForCompetition;
     private String tab;
 
     public ManageStakeholderViewModel(Long competitionId, String competitionName,
                                       List<UserResource> availableStakeholders,
                                       List<UserResource> stakeholdersAssignedToCompetition,
+                                      List<UserResource> pendingStakeholderInvitesForCompetition,
                                       String tab
                                       ) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.availableStakeholders = availableStakeholders;
         this.stakeholdersAssignedToCompetition = stakeholdersAssignedToCompetition;
+        this.pendingStakeholderInvitesForCompetition = pendingStakeholderInvitesForCompetition;
         this.tab = tab;
     }
 
@@ -43,6 +46,10 @@ public class ManageStakeholderViewModel extends CompetitionSetupViewModel {
         return stakeholdersAssignedToCompetition;
     }
 
+    public List<UserResource> getPendingStakeholderInvitesForCompetition() {
+        return pendingStakeholderInvitesForCompetition;
+    }
+
     public String getTab() {
         return tab;
     }
@@ -60,6 +67,7 @@ public class ManageStakeholderViewModel extends CompetitionSetupViewModel {
                 .append(competitionName, viewModel.competitionName)
                 .append(availableStakeholders, viewModel.availableStakeholders)
                 .append(stakeholdersAssignedToCompetition, viewModel.stakeholdersAssignedToCompetition)
+                .append(pendingStakeholderInvitesForCompetition, viewModel.pendingStakeholderInvitesForCompetition)
                 .append(tab, viewModel.tab)
                 .isEquals();
     }
@@ -71,6 +79,7 @@ public class ManageStakeholderViewModel extends CompetitionSetupViewModel {
                 .append(competitionName)
                 .append(availableStakeholders)
                 .append(stakeholdersAssignedToCompetition)
+                .append(pendingStakeholderInvitesForCompetition)
                 .append(tab)
                 .toHashCode();
     }

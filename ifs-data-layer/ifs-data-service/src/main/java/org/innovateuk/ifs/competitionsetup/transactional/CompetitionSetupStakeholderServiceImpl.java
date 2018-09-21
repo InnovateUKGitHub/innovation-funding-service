@@ -40,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INV
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -197,6 +198,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturnVoid(competition ->
@@ -210,9 +212,28 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     @Override
-    public ServiceResult<Void> removeStakeholder(long competitionId, long stakeholderUserId){
+    @Transactional
+    public ServiceResult<Void> removeStakeholder(long competitionId, long stakeholderUserId) {
         stakeholderRepository.deleteStakeholder(competitionId, stakeholderUserId);
         return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
+        List<StakeholderInvite> pendingStakeholderInvites = stakeholderInviteRepository.findByCompetitionIdAndStatus(competitionId, SENT);
+
+        List<UserResource> pendingStakeholderInviteUsers = simpleMap(pendingStakeholderInvites,
+                pendingStakeholderInvite -> convert(pendingStakeholderInvite));
+
+        return serviceSuccess(pendingStakeholderInviteUsers);
+    }
+
+    private UserResource convert(StakeholderInvite stakeholderInvite) {
+        UserResource userResource = new UserResource();
+        userResource.setFirstName(stakeholderInvite.getName());
+        userResource.setEmail(stakeholderInvite.getEmail());
+        return userResource;
     }
 }
 

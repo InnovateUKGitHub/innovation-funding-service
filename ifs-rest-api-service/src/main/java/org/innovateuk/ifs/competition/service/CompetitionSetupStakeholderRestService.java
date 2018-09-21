@@ -18,5 +18,7 @@ public interface CompetitionSetupStakeholderRestService {
     RestResult<Void> addStakeholder(long competitionId, long stakeholderUserId);
 
     RestResult<Void> removeStakeholder(long competitionId, long stakeholderUserId);
+
+    RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId);
 }
 

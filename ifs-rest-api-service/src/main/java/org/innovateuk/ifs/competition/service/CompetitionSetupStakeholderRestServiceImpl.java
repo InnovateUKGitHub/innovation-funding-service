@@ -37,6 +37,11 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
     public RestResult<Void> removeStakeholder(long competitionId, long stakeholderUserId) {
         return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/remove", Void.class);
     }
+
+    @Override
+    public RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
+        return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites", userListType());
+    }
 }
 
 
