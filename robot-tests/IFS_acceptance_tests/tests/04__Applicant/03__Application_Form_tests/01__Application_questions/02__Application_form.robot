@@ -56,8 +56,7 @@ Application details: Innovation area section is visible
 
 Autosave in the form questions
     [Documentation]    INFUND-189
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=${aeroApplication}
     When the user clicks the button/link  link=Application details
@@ -70,20 +69,20 @@ Autosave in the form questions
 
 Word count works
     [Documentation]    INFUND-198
-    [Tags]    HappyPath
+    [Tags]
     When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
 
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
-    When the user clicks the button/link    css=.summary
-    Then the user should see the element    css=#details-content-0 p
+    When the user clicks the button/link    css=.govuk-details__summary
+    Then the user should see the element    css=.govuk-details__text p
 
 Marking a question as complete
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
     And the word count should be correct for the Project summary
@@ -92,7 +91,7 @@ Marking a question as complete
 
 Mark a question as incomplete
     [Documentation]  INFUND-210, INFUND-202
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    link=Project summary
     When the user clicks the button/link     jQuery=button:contains("Edit")
     Then the text box should be editable
@@ -104,13 +103,13 @@ Review and submit button
     [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=${aeroApplication}
-    When the user clicks the button/link  jQuery=.button:contains("Review and submit")
+    When the user clicks the button/link  jQuery=.govuk-button:contains("Review and submit")
     Then the user should see the element  jQuery=h1:contains("Application summary")
     And the user should see the text in the page  Please review your application before final submission
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
-    [Tags]  MySQL
+    [Tags]
     Given the user should see the element  jQuery=button:contains("Application details") .section-incomplete
     When the user expands the section      Application details
     Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
@@ -127,7 +126,7 @@ Research section incomplete
 Research category validation
     [Documentation]  IFS-2123
     Given The user clicks the button/link  link=Research category
-    When The user clicks the button/link   id=application-question-save
+    When The user clicks the button/link   id = application-question-complete
     Then The user should see a field and summary error  This field cannot be left blank.
     [Teardown]  the user clicks the button/link  link=Application overview
 
@@ -201,7 +200,10 @@ Log in and create a new application for the Aerospace competition
     #The following two lines are failing if we don't have any other application for the same competition
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
+            ...    AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain   org2
+            Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
+    the user clicks the button/link    css=.govuk-button[type="submit"]   #Save and continue
 
     The user clicks the button/link    jQuery=button:contains("Save and return to application overview")
     The user clicks the button/link    link=Application details

@@ -14,7 +14,7 @@ Resource        ../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Innovation Lead should see Submitted and Ineligible Applications
     [Documentation]  IFS-984
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page      ${CA_Live}
     Then the user should see all live competitions
     When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
@@ -25,9 +25,9 @@ Innovation Lead should see Submitted and Ineligible Applications
     When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
     Then the user should see the element      css=#application-list
     When the user clicks the button/link       jQuery=a:contains(${application_ids["Ineligible Virtualisation"]})
-    Then the user should not see the element   jQuery=.button:contains("Reinstate application")
+    Then the user should not see the element   jQuery=.govuk-button:contains("Reinstate application")
     When the user clicks the button/link      jQuery=a:contains("Back")
-    Then the user should not see the element  jQuery=.button:contains("Inform applicant")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Inform applicant")
 
 Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
     [Documentation]  IFS-984, IFS-1414
@@ -40,7 +40,7 @@ Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, F
 
 Innnovation lead can see competitions assigned to him only
     [Documentation]  IFS-191  IFS-1308
-    [Tags]  HappyPath  CompAdmin
+    [Tags]  CompAdmin
     [Setup]  log in as a different user   &{Comp_admin1_credentials}
     Given The Competition Admin assigns the Innovation Lead to a competition  ${COMP_MANAGEMENT_UPDATE_COMP}/manage-innovation-leads/find
     And The Competition Admin assigns the Innovation Lead to a competition    ${server}/management/competition/setup/${PROJECT_SETUP_COMPETITION}/manage-innovation-leads/find

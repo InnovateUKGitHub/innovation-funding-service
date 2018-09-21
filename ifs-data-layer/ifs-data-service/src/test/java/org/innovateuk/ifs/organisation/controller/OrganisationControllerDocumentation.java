@@ -39,7 +39,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder.buildSet(1);
         when(organisationServiceMock.findByApplicationId(applicationId)).thenReturn(serviceSuccess(organisationResourceSet));
 
-        mockMvc.perform(get("/organisation/findByApplicationId/{applicationId}", applicationId))
+        mockMvc.perform(get("/organisation/find-by-application-id/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -57,7 +57,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         OrganisationResource organisationResource = organisationResourceBuilder.build();
         when(organisationServiceMock.findById(organisationId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/findById/{organisationId}", organisationId))
+        mockMvc.perform(get("/organisation/find-by-id/{organisationId}", organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -74,11 +74,49 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationServiceMock.getPrimaryForUser(userId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/getPrimaryForUser/{userId}", userId))
+        mockMvc.perform(get("/organisation/primary-for-user/{userId}", userId))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Identifier of the user to find the primary organisation for")
+                        ),
+                        responseFields(organisationResourceFields)
+                ));
+    }
+
+    @Test
+    public void getByUserAndApplicationId() throws Exception {
+        long userId = 1L;
+        long applicationId = 2L;
+        OrganisationResource organisationResource = organisationResourceBuilder.build();
+
+        when(organisationServiceMock.getByUserAndApplicationId(userId, applicationId)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(get("/organisation/by-user-and-application-id/{userId}/{applicationId}", userId, applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("organisation/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user to find the application organisation for"),
+                                parameterWithName("applicationId").description("Identifier of the application to find the application organisation for")
+                        ),
+                        responseFields(organisationResourceFields)
+                ));
+    }
+
+    @Test
+    public void getByUserAndProjectId() throws Exception {
+        long userId = 1L;
+        long projectId = 2L;
+        OrganisationResource organisationResource = organisationResourceBuilder.build();
+
+        when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(get("/organisation/by-user-and-project-id/{userId}/{projectId}", userId, projectId))
+                .andExpect(status().isOk())
+                .andDo(document("organisation/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user to find the project organisation for"),
+                                parameterWithName("projectId").description("Identifier of the project to find the project organisation for")
                         ),
                         responseFields(organisationResourceFields)
                 ));
@@ -90,7 +128,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(post("/organisation/createOrMatch")
+        mockMvc.perform(post("/organisation/create-or-match")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isCreated())
@@ -123,7 +161,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(post("/organisation/createAndLinkByInvite")
+        mockMvc.perform(post("/organisation/create-and-link-by-invite")
                 .param("inviteHash", inviteHash)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
@@ -146,7 +184,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationServiceMock.updateOrganisationNameAndRegistration(organisationId, name, registration)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(post("/organisation/updateNameAndRegistration/{organisationId}", organisationId)
+        mockMvc.perform(post("/organisation/update-name-and-registration/{organisationId}", organisationId)
                 .param("name", name)
                 .param("registration", registration))
                 .andExpect(status().isCreated())

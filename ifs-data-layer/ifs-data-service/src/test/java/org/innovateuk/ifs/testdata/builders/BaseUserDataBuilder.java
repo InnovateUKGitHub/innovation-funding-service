@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -67,7 +66,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
 
     private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, List<Role> roles, Long organisationId) {
 
-        UserResource created = registrationService.createOrganisationUser(organisationId, newUserResource().
+        UserResource created = registrationService.createUser(newUserResource().
                 withFirstName(firstName).
                 withLastName(lastName).
                 withEmail(emailAddress).
@@ -76,8 +75,6 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withPassword("Passw0rd").
                 build()).
                 getSuccess();
-
-        registrationService.sendUserVerificationEmail(created, empty());
 
         return created;
     }

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -25,7 +24,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
@@ -135,11 +133,12 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -164,11 +163,12 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -176,7 +176,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "{searchOrganisationId}/search-postcode")
-    public String amendOrganisationAddressPostcode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressSearchPostCode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    @RequestParam(value = "searchTerm", required = false) String searchTerm,
@@ -191,12 +191,13 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -267,7 +268,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             registrationCookieService.saveToOrganisationCreationCookie(organisationCreationForm, response);
             return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
-
         } else {
             organisationForm.setTriedToSave(true);
             organisationForm.getAddressForm().setTriedToSave(true);
@@ -343,12 +343,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     private boolean checkOrganisationIsLead(HttpServletRequest request) {
-        Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
-        if(organisationTypeForm.isPresent()){
-            return organisationTypeForm.get().isLeadApplicant();
-
-        }
-
-        return false;
+        return registrationCookieService.isLeadJourney(request);
     }
 }

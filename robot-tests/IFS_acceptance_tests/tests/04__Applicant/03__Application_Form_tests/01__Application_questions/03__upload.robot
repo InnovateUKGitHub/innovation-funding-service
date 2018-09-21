@@ -8,7 +8,7 @@ Documentation     INFUND-832
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Upload    Applicant    Email
+Force Tags        Upload    Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
@@ -33,7 +33,7 @@ Appendices available only for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link=Academic robot test application
@@ -52,18 +52,18 @@ Non pdf uploads not allowed
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
-    [Tags]    HappyPath    SmokeTest
+    [Tags]
     [Setup]
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
-    Then the user uploads the file                css=.inputfile    ${valid_pdf}
-    And the user should see the element    jQuery=a:contains(${valid_pdf})
+    Then the user uploads the file                css=.inputfile    ${5mb_pdf}
+    And the user should see the element    jQuery=a:contains(${5mb_pdf})
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]    HappyPath    SmokeTest
-    Given The user opens the link in new window  ${valid_pdf}
+    [Tags]
+    Given The user opens the link in new window  ${5mb_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
     And the user closes the last opened tab
@@ -85,13 +85,13 @@ Internal users can view uploaded files
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]    HappyPath    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
-    And the user should see the text in the page  ${valid_pdf}
-    When The user opens the link in new window    ${valid_pdf}
+    And the user should see the text in the page  ${5mb_pdf}
+    When The user opens the link in new window    ${5mb_pdf}
     And the user should not see an error in the page
     Then the user closes the last opened tab
 
@@ -103,18 +103,18 @@ Collaborators cannot upload a file if not assigned
 
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
-    [Tags]    HappyPath
-    When the user should see the text in the page      ${valid_pdf}
+    [Tags]
+    When the user should see the text in the page      ${5mb_pdf}
     Then the user should not see the text in the page  Remove
 
 Questions can be assigned with appendices
     [Documentation]    INFUND-832  INFUND-409
-    [Tags]    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user                   &{lead_applicant_credentials}
     Given the user navigates to the page                    ${DASHBOARD_URL}
     And the user clicks the button/link                     link=Academic robot test application
     And the user clicks the button/link                     link=5. Technical approach
-    And the user should see the text in the page            ${valid_pdf}
+    And the user should see the text in the page            ${5mb_pdf}
     When the user assigns the question to the collaborator  Arsene Wenger
     Then the user should not see the text in the page       Remove
     And the user clicks the button/link                     link=Application overview
@@ -123,13 +123,13 @@ Questions can be assigned with appendices
 
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
-    [Tags]    SmokeTest
+    [Tags]
     [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${DASHBOARD_URL}
     And the user clicks the button/link         link=Academic robot test application
     And the user clicks the button/link         link=5. Technical approach
-    And the user should see the element         link=${valid_pdf} (opens in a new window)
-    When The user opens the link in new window  ${valid_pdf}
+    And the user should see the element         link=${5mb_pdf}
+    When The user opens the link in new window  ${5mb_pdf}
     And the user should not see an error in the page
     Then the user closes the last opened tab
 
@@ -139,18 +139,18 @@ Collaborator can remove a file when the question is assigned
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
-    And the user should see the text in the page  ${valid_pdf}
-    When the user can remove the uploaded file    remove_uploaded_file  ${valid_pdf}
+    And the user should see the text in the page  ${5mb_pdf}
+    When the user can remove the uploaded file    remove_uploaded_file  ${5mb_pdf}
     Then the user can re-assign the question back to the lead applicant
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]    SmokeTest
+    [Tags]
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Academic robot test application
     And the user clicks the button/link            link=6. Innovation
     When the user should see the text in the page  Upload
-    Then the user uploads the file                 css=.inputfile     ${valid_pdf}
+    Then the user uploads the file                 css=.inputfile     ${5mb_pdf}
     And the user can re-assign the question back to the lead applicant
 
 Quarantined files are not returned to the user and the user is informed
@@ -195,15 +195,15 @@ the user checks the Appendix guidance
     the user clicks the button/link           jQuery=span:contains("What should I include in the appendix?")
     the user should see the element           jQuery=h4:contains("Accepted appendix file types")
     the user should see the element           jQuery=li:contains("PDF")
-    the user should see the element           jQuery=p:contains("It must be less than 1MB in size.")
+    the user should see the element           jQuery=p:contains("It must be less than 10MB in size.")
 
 The applicant opens the uploaded file
-    The user opens the link in new window        ${valid_pdf}
+    The user opens the link in new window        ${5mb_pdf}
 
 User verifies if uploaded document can be viewed
      ${academic_applicaton_id} =  get application id by name  Academic robot test application
      the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
-     The user opens the link in new window     ${valid_pdf}
+     The user opens the link in new window     ${5mb_pdf}
      the user should not see an error in the page
      the user closes the last opened tab

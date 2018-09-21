@@ -36,6 +36,7 @@ import java.util.Optional;
 public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
+    public static final String COMPETITION_ID = "competitionId";
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
 
@@ -50,6 +51,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
+        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
+        model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
@@ -115,10 +118,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
-        if(organisationTypeId != null) {
-            return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
-        }
-        return true;
+        return organisationTypeId != null && OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
     private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {

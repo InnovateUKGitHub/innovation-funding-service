@@ -50,8 +50,7 @@ ${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_
 *** Test Cases ***
 Assessor dashboard contains the correct competitions
     [Documentation]    INFUND-3716  INFUND-4950  INFUND-6899
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]
     Given the user should see the element     jQuery=h1:contains("Assessor dashboard")
     Then The user should not see the element  jQuery=h2:contains("Competitions for assessment")
     And The user should see the element       jQuery=h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
@@ -67,19 +66,19 @@ User can view the competition brief
     And the user should see the element         jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And the user should see the element         jQuery=li:contains("Competition opens")
     And the user should see the element         jQuery=li:contains("Competition closes")
-    And the user should see the element         jQuery=.button:contains("Start new application")
+    And the user should see the element         jQuery=.govuk-button:contains("Start new application")
     And The user closes the competition brief
     And the user clicks the button/link         link=Assessor dashboard
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107  INFUND-6455
-    [Tags]    HappyPath
+    [Tags]
     Then the total calculation in dashboard should be correct  Upcoming competitions to assess    //*[@class="upcoming-to-assess"]/div/ul/li
     And the total calculation in dashboard should be correct   Invitations to assess    //*[@class="invite-to-assess"]/div/ul/li
 
 Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631  INFUND-5157  INFUND-6455
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link                   link=${READY_TO_OPEN_COMPETITION_NAME}
     And the user should see the element                     jQuery=h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
     And the user should not see the element                 id=rejectComment
@@ -104,7 +103,7 @@ Existing Assessor tries to accept expired invitation in closed assessment
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Logout as user
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the element     jQuery=h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
@@ -126,7 +125,7 @@ Upcoming competition should be visible
     [Documentation]    INFUND-3718
     ...
     ...    INFUND-5001
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD}
     And the assessor should see the correct date
     When The user clicks the button/link           link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
@@ -136,7 +135,7 @@ Upcoming competition should be visible
 
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
-    [Tags]    MySQL    HappyPath
+    [Tags]    MySQL
     [Setup]  Retrieve original milestones
     Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should not see the element   jQuery=h2:contains("Upcoming competitions to assess")
@@ -156,7 +155,7 @@ Number of days remaining until assessment submission
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
-    [Tags]    MySQL    HappyPath
+    [Tags]    MySQL
     Then the total calculation in dashboard should be correct  Competitions for assessment   //*[@class="my-applications"]/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
@@ -228,7 +227,7 @@ the assessor should see the correct date
 Close the competition in assessment
     Log in as a different user       &{Comp_admin1_credentials}
     The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    The user clicks the button/link  jQuery=.button:contains("Close assessment")
+    The user clicks the button/link  jQuery=.govuk-button:contains("Close assessment")
 
 The user should get a competition brief window
     Select Window    title=Competition Overview - Innovation Funding Service

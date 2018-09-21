@@ -40,7 +40,7 @@ ${allApplicationsForRTOComp}  ${SERVER}/management/competition/${openCompetition
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the section      Finances summary
     Then the finance summary calculations should be correct
@@ -48,7 +48,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the section      Finances summary
@@ -57,7 +57,7 @@ Calculations for the first collaborator
 
 Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
     When the user navigates to Your-finances page             ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user fills in the project costs                   labour costs  n/a
@@ -84,7 +84,7 @@ Your Finance includes Finance summary table for collaborator
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user           &{lead_applicant_credentials}
     When the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link           link=${OPEN_COMPETITION_APPLICATION_2_NAME}
@@ -108,7 +108,7 @@ Finance overview shows as incomplete
 
 Collaborator marks finances as complete
     [Documentation]    INFUND-8397  IFS-2879
-    [Tags]  HappyPath
+    [Tags]
     Given log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
@@ -128,7 +128,7 @@ Finance summary has total marked as complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    Email  HappyPath
+    [Tags]
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
@@ -146,7 +146,6 @@ Alert shows If the academic research participation is too high
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
-    [Setup]
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
@@ -167,7 +166,7 @@ Support User can see the read only finance summary
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
-    [Tags]  Support  HappyPath
+    [Tags]  Support
     Given the user clicks the button/link  link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
@@ -193,7 +192,7 @@ Support User can see the read only view of Your funding
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
-    [Tags]  InnovationLead  HappyPath
+    [Tags]  InnovationLead
     [Setup]  log in as a different user     &{innovation_lead_two}
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
@@ -221,7 +220,7 @@ Innovation lead can see read only summary for collaborator
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
-    [Tags]  InnovationLead  HappyPath
+    [Tags]  InnovationLead
     When the user navigates to the page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link  link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section  Finances summary
@@ -282,33 +281,33 @@ the finance Funding breakdown calculations should be correct
 
 the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the finance summary table in Your Finances has correct values for collaborator
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  990
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  0
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  990
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  0
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
+    the user sees the text in the element  css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  0
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  0
+    the user sees the text in the element     css=.govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
     Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/ifs-images/icons/icon-tick"]
@@ -319,7 +318,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link                   link=Your project costs
-    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.buttonlink:contains("Edit")
+    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.button-clear:contains("Edit")
     the user clicks the button/link                   jQuery=button:contains("Labour")
     the user should see the element                   name=add_cost
     the user clicks the button/link                   jQuery=button:contains('Add another role')

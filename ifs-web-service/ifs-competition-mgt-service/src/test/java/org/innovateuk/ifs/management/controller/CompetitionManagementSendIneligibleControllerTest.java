@@ -11,7 +11,7 @@ import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -30,8 +30,8 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.COLLABORATOR;
-import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.LEAD_APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +49,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
@@ -75,7 +75,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 .withCompetition(competitionId)
                 .build();
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withRoleName(COLLABORATOR.getRoleName(), LEAD_APPLICANT.getRoleName(), COLLABORATOR.getRoleName())
+                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName())
                 .withUserName("other", leadApplicant, "an other")
                 .withUserId(1L, 2L, 3L)
                 .build(3);
@@ -87,7 +87,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         expectedForm.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
-        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoles);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
                 .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
 
@@ -96,7 +96,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm));
         verify(applicationRestService, only()).getApplicationById(applicationId);
-        verify(processRoleService, only()).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService, only()).findProcessRole(applicationId);
     }
 
     @Test

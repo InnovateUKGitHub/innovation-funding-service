@@ -34,7 +34,7 @@ public class InviteUserController {
     @PostMapping("/saveInvite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
 
-        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType()).toPostResponse();
+        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole()).toPostResponse();
     }
 
     @GetMapping("/getInvite/{inviteHash}")

@@ -26,29 +26,6 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
     protected ProcessRoleService supplyServiceUnderTest() { return new ProcessRoleServiceImpl(); }
 
     @Test
-    public void testFindProcessRole() throws Exception {
-        Long userId = 1L;
-        Long applicationId = 2L;
-        ProcessRoleResource response = new ProcessRoleResource();
-        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(response));
-
-        ProcessRoleResource returnedResponse = service.findProcessRole(userId, applicationId);
-
-        assertEquals(response, returnedResponse);
-    }
-
-    @Test
-    public void testFindProcessRolesByApplicationId() throws Exception {
-        Long applicationId = 1L;
-        List<ProcessRoleResource> response = Lists.newArrayList(new ProcessRoleResource());
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(response));
-
-        List<ProcessRoleResource> returnedResponse = service.findProcessRolesByApplicationId(applicationId);
-
-        assertEquals(response, returnedResponse);
-    }
-
-    @Test
     public void testFindAssignableProcessRoles() throws Exception {
         Long applicationId = 1L;
         List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
@@ -77,26 +54,4 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         ProcessRoleResource actualResources = returnedResponse.get();
         assertEquals(resource, actualResources);
     }
-
-    @Test
-    public void testGetByIds() throws Exception {
-
-        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
-        when(userRestService.findProcessRole(123L)).thenReturn(restSuccess(resources));
-
-        List<ProcessRoleResource> returnedResources = service.getByApplicationId(123L);
-
-        assertEquals(resources, returnedResources);
-    }
-
-    @Test
-    public void testGetByUserId() throws Exception {
-        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
-        when(userRestService.findProcessRoleByUserId(123L)).thenReturn(restSuccess(resources));
-
-        List<ProcessRoleResource> returnedResources = service.getByUserId(123L);
-
-        assertEquals(resources, returnedResources);
-    }
-
 }

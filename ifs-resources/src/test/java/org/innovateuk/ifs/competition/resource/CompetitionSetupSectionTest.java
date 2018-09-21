@@ -64,6 +64,15 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
+	public void fromPathProjectDocument() {
+		String path = "project-document";
+
+		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
+
+		assertEquals(CompetitionSetupSection.PROJECT_DOCUMENT, result);
+	}
+
+	@Test
 	public void testAllSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
 		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
@@ -72,6 +81,7 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
+		CompetitionSetupSection projectDocumentSection = CompetitionSetupSection.PROJECT_DOCUMENT;
 
 		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
@@ -88,6 +98,7 @@ public class CompetitionSetupSectionTest {
 		assertFalse(assessorSection.preventEdit(competitionResource));
 		assertFalse(initialDetailsSection.preventEdit(competitionResource));
 		assertFalse(additionalInfoSection.preventEdit(competitionResource));
+		assertFalse(projectDocumentSection.preventEdit(competitionResource));
 	}
 
 	@Test
@@ -117,6 +128,7 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
+		CompetitionSetupSection projectDocumentSection = CompetitionSetupSection.PROJECT_DOCUMENT;
 
 		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
@@ -133,5 +145,6 @@ public class CompetitionSetupSectionTest {
 		assertTrue(assessorSection.preventEdit(competitionResource));
 		assertTrue(initialDetailsSection.preventEdit(competitionResource));
 		assertTrue(additionalInfoSection.preventEdit(competitionResource));
+		assertTrue(projectDocumentSection.preventEdit(competitionResource));
 	}
 }

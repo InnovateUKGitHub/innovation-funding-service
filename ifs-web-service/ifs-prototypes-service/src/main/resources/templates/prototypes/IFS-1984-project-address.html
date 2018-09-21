@@ -19,23 +19,23 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Project address'}, ${null})" />
 
-    <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
+    <p class="govuk-body">We will assign a Monitoring Officer who will visit your project at this address.</p>
 
 	<form action="#">
 
-        <div class="form-group">
-            <fieldset>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
 
-                <legend class="heading-medium no-margin">Project address</legend>
+                <legend class="govuk-heading-m govuk-!-margin-0">Project address</legend>
 
-                <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
+                <p class="govuk-hint">Please select the address where the majority of work will be carried out.</p>
 
                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-select-address"/>
 
             </fieldset>
         </div>
 
-		<button class="button button-large extra-margin" formaction="/prototypes/IFS-1984-project-details">Save project address</button>
+		<button class="govuk-button button-large extra-margin" formaction="/prototypes/IFS-1984-project-details">Save project address</button>
 
 	</form>
 

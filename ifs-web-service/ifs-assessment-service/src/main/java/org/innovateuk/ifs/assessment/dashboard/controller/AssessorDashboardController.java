@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorDashboardController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can view their dashboard", securedType = AssessorDashboardController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorDashboardController {
 

@@ -42,9 +42,8 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
         }
 
         if(required || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
-            ZonedDateTime localDate;
             try {
-                localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
+                TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
             }
             catch(Exception e) {
                 LOG.info("Cannot create ZonedDateTime from aggregated date properties", e);

@@ -10,6 +10,8 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...               INFUND-1147: Further acceptance tests for the create account page
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
+...
+...               IFS-4298 Registration redirect doesn't check results of verification
 Suite Setup       the guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -19,7 +21,7 @@ Resource          ../../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Your details: Server-side validations
     [Documentation]    -INFUND-885
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Applicant goes to the registration form
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
     Then the user should see an error                               Password is too weak.
@@ -46,16 +48,16 @@ Your details: client-side password hint validation
     Given the user navigates to the page       ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field  id=password    ${lower_case_password}
     And the user moves focus to the element    css=[name="create-account"]
-    Then the user should see the element       css=.list.status [data-minlength-validationstatus][data-valid="true"]
-    And the user should see the element        css=.list.status [data-containsuppercase-validationstatus][data-valid="false"]
-    And the user should see the element        css=.list.status [data-containsnumber-validationstatus][data-valid="true"]
+    Then the user should see the element       css=.govuk-list.status [data-minlength-validationstatus][data-valid="true"]
+    And the user should see the element        css=.govuk-list.status [data-containsuppercase-validationstatus][data-valid="false"]
+    And the user should see the element        css=.govuk-list.status [data-containsnumber-validationstatus][data-valid="true"]
     When the user enters text to a text field  id=password    ${EMPTY}
-    Then the user should see the element       css=.list.status [data-minlength-validationstatus][data-valid="false"]
-    And the user should see the element        css=.list.status [data-containsnumber-validationstatus][data-valid="false"]
+    Then the user should see the element       css=.govuk-list.status [data-minlength-validationstatus][data-valid="false"]
+    And the user should see the element        css=.govuk-list.status [data-containsnumber-validationstatus][data-valid="false"]
 
 Your details: client-side validation
     [Documentation]    -INFUND-885
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page                 ${ACCOUNT_CREATION_FORM_URL}
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  Inn0vat3
     Then the user should not see an error in the page
@@ -71,6 +73,12 @@ Email duplication check
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account
+
+User can not verify email with invalid hash
+    [Documentation]  IFS-4298
+    [Tags]
+    When the user navigates to the page        ${SERVER}/registration/verify-email/200b9a1534649f4ba1dc581c9da2a77
+    Then the user should see the element       jQuery = h1:contains("Invalid URL")
 
 *** Keywords ***
 the user cannot login with the invalid email

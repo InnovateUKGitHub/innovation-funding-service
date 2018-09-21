@@ -20,7 +20,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Navigation to the Overview page
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the overview page of the Robot test application
     Then the user should see the text in the page  Please provide information about your project.
     And the user should see the element            jQuery=h1:contains("Application overview")
@@ -34,7 +34,7 @@ Review and submit button
     And the user should see the element            jQuery=h1:contains("Application summary")
 
 List with the sections
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the overview page of the Robot test application
     Then the applicant can see the overview page divided in three sections
 
@@ -47,19 +47,19 @@ File uploads not visible
 
 Days left to submit are visible
     [Documentation]    -INFUND-37
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see the element  jQuery=.deadline:contains("days left to submit")
 
 The Progress bar is visible
     [Documentation]    INFUND-32
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see the element    css=.progress-indicator
 
 User can print the application
     [Documentation]    INFUND-1162
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
-    Then the user should see the element    jQuery=.button:contains("Print your application")
+    Then the user should see the element    jQuery=.govuk-button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application
     And the user should see the element     link=Print your application
 

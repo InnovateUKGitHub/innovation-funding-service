@@ -25,11 +25,11 @@
 
   <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assign to application'}, ${'competition closed'})" />
 
-	<h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the management of type two diabetetes</h2>
+	<h2 class="govuk-heading-m">94565678: The potential for glucose based contact lens monitoring in the management of type two diabetetes</h2>
 
-	<div class="grid-row extra-margin">
+	<div class="govuk-grid-row extra-margin">
 		<div class="column-quarter">
-			<h3 class="heading-small">Partners</h3>
+			<h3 class="govuk-heading-s">Partners</h3>
 			<ul>
 				<li>Aptrans Ltd (Lead)</li>
 				<li>Biotech Corp</li>
@@ -37,19 +37,19 @@
 			</ul>
 		</div>
 		<div class="column-quarter">
-			<h3 class="heading-small">Innovation area</h3>
-			<p>Advanced materials</p>
+			<h3 class="govuk-heading-s">Innovation area</h3>
+			<p class="govuk-body">Advanced materials</p>
 		</div>
 	</div>
 	<div class="extra-margin">
 		<a href="#">Review application</a>
 	</div>
 
-	<h2 class="heading-medium">Assign Assessors</h2>
+	<h2 class="govuk-heading-m">Assign Assessors</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='assigned'" />
 
-	<h2 class="heading-medium">Available Assessors</h2>
+	<h2 class="govuk-heading-m">Available Assessors</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=2" />
 

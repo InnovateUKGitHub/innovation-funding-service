@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -17,8 +18,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.UserDocs.*;
@@ -63,7 +62,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
                 .andDo(document("user/{method-name}",
@@ -75,11 +73,10 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void createUser() throws Exception {
-        final Long organisationId = 9999L;
+        final long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -112,12 +109,11 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void createUserWithCompetitionId() throws Exception {
-        final Long organisationId = 9999L;
-        final Long competitionId = 8888L;
+        final long organisationId = 9999L;
+        final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -222,7 +218,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void deactivateUser() throws Exception {
-        final Long userId = 9999L;
+        final long userId = 9999L;
 
         when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
 
@@ -236,7 +232,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void reactivateUser() throws Exception {
-        final Long userId = 9999L;
+        final long userId = 9999L;
 
         when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
 
@@ -273,5 +269,25 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 ));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+    }
+
+    @Test
+    public void grantRole() throws Exception {
+        long userId = 1L;
+        Role grantRole = Role.APPLICANT;
+
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("The user to grant the role for"),
+                                parameterWithName("role").description("The role to grant")
+                        )
+                ));
+
+        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 }

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
@@ -44,7 +43,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> classUnderTest.createOrganisationUser(123L, userToCreate), () -> {
+        assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -92,22 +91,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         });
     }
 
-
     @Test
-    public void testSendUserVerificationEmail() throws Exception {
-        final UserResource userToSendVerificationEmail = newUserResource().build();
-
-        assertAccessDenied(
-                () -> classUnderTest.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
-                () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
-                            getLoggedInUser());
-                    verifyNoMoreInteractions(rules);
-                });
-    }
-
-    @Test
-    public void testResendUserVerificationEmail() throws Exception {
+    public void testResendUserVerificationEmail() {
         final UserResource userToSendVerificationEmail = newUserResource().build();
 
         assertAccessDenied(
@@ -120,7 +105,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testEditInternalUser() throws Exception {
+    public void testEditInternalUser() {
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(

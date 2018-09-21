@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.registration.populator;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Populator for Organisation creation lead applicant - choosing organisation type
@@ -20,11 +18,11 @@ public class OrganisationCreationSelectTypePopulator {
     private OrganisationTypeRestService organisationTypeRestService;
     
     public OrganisationCreationSelectTypeViewModel populate() {
-        List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccess()
-                .stream()
-                .filter(organisationTypeResource -> OrganisationTypeEnum.getFromId(organisationTypeResource.getId()) != null)
-                .collect(Collectors.toList());
-
-        return new OrganisationCreationSelectTypeViewModel(orgTypes);
+        return
+                new OrganisationCreationSelectTypeViewModel(
+                        simpleFilter(
+                                organisationTypeRestService.getAll().getSuccess(),
+                                o -> OrganisationTypeEnum.getFromId(o.getId()) != null)
+                );
     }
 }

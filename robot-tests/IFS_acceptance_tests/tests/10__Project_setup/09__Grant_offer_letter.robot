@@ -72,7 +72,7 @@ Support user cannot access spend profile until it is approved
 
 GOL not generated before spend profiles have been approved
     [Documentation]    INFUND-6741
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user                                 &{Comp_admin1_credentials}
     When the user navigates to the page                                   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should not see the element                              css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action
@@ -94,7 +94,7 @@ Status updates correctly for internal user's table
 
 IFS Admin user selects the grant offer letter
     [Documentation]  INFUND-6377, INFUND-6048, IFS-603
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user          &{ifs_admin_user_credentials}
     Given the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     When the user clicks the button/link         css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
@@ -106,7 +106,7 @@ IFS Admin user selects the grant offer letter
 
 Project Finance can download GOL
     [Documentation]  INFUND-6377
-    [Tags]  HappyPath    Download
+    [Tags]    Download
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
@@ -146,7 +146,7 @@ Non lead should not be able to see GOL until it is sent by IUK
 
 Project finance user removes the grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user           &{internal_finance_credentials}
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user can remove the uploaded file    removeGrantOfferLetterClicked  grant_offer_letter.pdf
@@ -166,14 +166,14 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page        ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user uploads a file                grantOfferLetter  ${valid_pdf}
     And the user should see the element         jQuery=button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
     And the user clicks the button/link         id=send-gol
-    And the user clicks the button/link         jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    And the user clicks the button/link         jQuery=.modal-accept-send-gol .govuk-button:contains("Publish to project team")
     Then the user should not see the element    css=[name="removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element        css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.waiting   # GOL
@@ -181,7 +181,7 @@ Comp Admin user uploads new grant offer letter
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user clicks the button/link            link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element             css=li.require-action:last-of-type
@@ -200,11 +200,11 @@ Partners should not be able to send the Grant Offer
     Given the user clicks the button/link       link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link         link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element     css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user should not see the element     css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user           ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user clicks the button/link           link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element            link = Monitoring Officer
@@ -225,14 +225,14 @@ PM should not be able to upload big Grant Offer files
 
 PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972, INFUND-6829
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user clicks the button/link            link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link              link=Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    Then the user should see the element    css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     And the user clicks the button/link    link=Set up your project
     And the user should see the element    css=li.require-action:nth-child(7)
     When the user clicks the button/link    link=View the status of partners
@@ -241,14 +241,14 @@ PM should be able upload a file and then access the Send button
 
 Project finance cannot access the GOL before it is sent by PM
     [Documentation]    INFUND-7361
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user              &{internal_finance_credentials}
     Given the user navigates to the page             ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user should see the text in the page    Awaiting upload by the Project Manager
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element     css=ul li.require-action:nth-child(7)
@@ -257,7 +257,7 @@ PM can view the generated Grant Offer Letter
 
 PM can download the grant offer letter
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
@@ -265,7 +265,7 @@ PM can download the grant offer letter
 
 Other external users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-6059
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     And the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element  css=ul li.waiting:nth-child(7)
@@ -274,21 +274,21 @@ Other external users can see the uploaded Grant Offer letter
 
 Non lead partner can download the grant offer letter
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file                           ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Non lead partner can download the annex
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file                           ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
     [Teardown]    remove the file from the operating system    annex.pdf
 
 Academic users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-5998
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     And the user navigates to the page      ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element    css=ul li.waiting:nth-child(7)
@@ -297,21 +297,21 @@ Academic users can see the uploaded Grant Offer letter
 
 Academic partner can download the grant offer letter
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file                           ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Academic partner can download the annex
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file                           ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
     [Teardown]    remove the file from the operating system    annex.pdf
 
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user        ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     When the user opens the link in new window   ${valid_pdf}
@@ -320,7 +320,7 @@ PM can view the uploaded Annex file
 
 PM can download the annex
     [Documentation]    INFUND-5998
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file                           ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
     [Teardown]    remove the file from the operating system    annex.pdf
@@ -337,13 +337,13 @@ PM can upload new signed grant offer letter
     [Tags]
     When the user uploads a file               signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
-    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
+    Then the user should see the element    css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user should not see the element    jQuery=[disabled='disabled'].govuk-button:contains(Send signed offer letter)
 
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
-    [Tags]    HappyPath
-    When the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    [Tags]
+    When the user clicks the button/link  css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     Then the user clicks the button/link  id=submit-gol-for-review
     And the user should not see an error in the page
     When the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
@@ -351,7 +351,7 @@ PM Sends the Grant Offer letter
 
 PM can download the signed grant offer letter
     [Documentation]    INFUND-7170
-    [Tags]  HappyPath    Download
+    [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user should see the text in the page              Signed grant offer letter
     And the user downloads the file                            ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
@@ -364,7 +364,7 @@ PM cannot remove the signed grant offer letter after submission
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user clicks the button/link              link=View the status of partners
     Then the user should see the text in the page    Project team status
@@ -372,7 +372,7 @@ PM's status should be updated
 
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element     css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action
@@ -387,7 +387,7 @@ Internal user can download the signed GOL
 
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377 IFS-2174
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     When the user clicks the button/link  css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
@@ -398,7 +398,7 @@ Comp Admin can accept the signed grant offer letter
 
 Comp Admin is able to Reject the Grant Offer letter
     [Documentation]  IFS-2174  IFS-2533
-    [Tags]  HappyPath
+    [Tags]
     Given the user tries to reject without a reason he should get a validation message
     Then the user rejects the GOL and sees the successful status
 
@@ -414,7 +414,7 @@ PM can see that the GOL section requires completion
 
 PM is uploading the GOL one more time
     [Documentation]  IFS-2174  IFS-2511
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user     ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     When the user should see the element    jQuery=.fail-alert:contains("grant offer letter has been rejected")
@@ -422,7 +422,7 @@ PM is uploading the GOL one more time
 
 Internal user accepts signed grant offer letter
     [Documentation]  INFUND-5998, INFUND-6377
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     When the user clicks the button/link   jQuery=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a:contains("Review")
@@ -435,7 +435,7 @@ Internal user accepts signed grant offer letter
 
 Project manager's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the element     jQuery=.success-alert:contains("The project is live, you can review progress at")
@@ -472,23 +472,23 @@ Non lead cannot see the signed GOL
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Lead finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath
+    [Tags]
     Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Verify support users permissions in project setup tab
@@ -526,7 +526,7 @@ all the other sections of the project are completed (except spend profile approv
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css=button[name="removeSignedGrantOfferLetterClicked"]
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
-    the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    the user clicks the button/link  css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id=submit-gol-for-review
     the user should see the element  jQuery=li:contains("Grant offer letter") .status-waiting
 

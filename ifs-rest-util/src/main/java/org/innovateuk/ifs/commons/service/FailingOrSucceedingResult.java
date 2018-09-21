@@ -3,6 +3,7 @@ package org.innovateuk.ifs.commons.service;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -23,6 +24,8 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> extends Err
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super SuccessType, FailingOrSucceedingResult<R, FailureType>> successHandler);
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Runnable successHandler);
+
+    FailingOrSucceedingResult<SuccessType, FailureType> andOnSuccessDo(Consumer<SuccessType> successHandler);
 
     FailingOrSucceedingResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler);
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.repository;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -20,7 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -183,6 +187,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application application = repository.save(newApplication().build());
 
         Assessment assessment = assessmentRepository.save(newAssessment()
+                .with(id(null))
                 .withApplication(application)
                 .withProcessState(AssessmentState.SUBMITTED)
                 .build()
@@ -191,6 +196,33 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application retrieved = repository.findByAssessmentId(assessment.getId());
 
         assertEquals(application, retrieved);
+    }
+
+    @Test
+    public void findTopByCompetitionIdOrderByManageFundingEmailDateDesc() {
+        List<Competition> competitions = newCompetition().with(id(null)).build(2);
+
+        ZonedDateTime[] zonedDateTimes = IntStream.rangeClosed(1, 6).mapToObj(i ->
+                ZonedDateTime.of(2018, 8, 1, i, 0, 0, 0, ZoneId.systemDefault()))
+                .toArray(ZonedDateTime[]::new);
+
+        competitionRepository.save(competitions);
+
+        Competition competition1 = competitions.get(0);
+        Competition competition2 = competitions.get(1);
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition1, competition1, competition1, competition2, competition2, competition2)
+                .withManageFundingEmailDate(zonedDateTimes)
+                .build(6);
+
+        List<Application> saved = IteratorUtils.toList(repository.save(applications).iterator());
+
+        Application expectedApplicationComp2WithMaxDate = saved.get(5);
+
+        assertEquals(expectedApplicationComp2WithMaxDate, repository
+                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()));
     }
 
     private Application createApplicationByState(ApplicationState applicationState) {

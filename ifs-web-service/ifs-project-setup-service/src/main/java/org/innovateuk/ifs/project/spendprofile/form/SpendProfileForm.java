@@ -12,9 +12,8 @@ public class SpendProfileForm  extends BaseBindingResultTarget {
 
     private SpendProfileTableResource table;
 
-    // for spring form binding
     public SpendProfileForm() {
-
+        // for spring form binding
     }
 
     public SpendProfileTableResource getTable() {

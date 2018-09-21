@@ -23,66 +23,66 @@
 
     <div class="no-constrain-width justify-left">
 
-      <h2 class="heading-medium">Key statistics</h2>
+      <h2 class="govuk-heading-m">Key statistics</h2>
 
-      <ul class="grid-row">
+      <ul class="govuk-list govuk-grid-row">
 
         <li class="column-fifth">
           <div class="highlight-panel">
-            <span class="heading-large">50</span><br /><small>Total assignments</small>
+            <span class="govuk-heading-l">50</span><br /><small>Total assignments</small>
           </div>
         </li>
 
         <li class="column-fifth">
           <div class="highlight-panel">
-            <span class="heading-large">25</span><br /><small>Assignments awaiting response</small>
+            <span class="govuk-heading-l">25</span><br /><small>Assignments awaiting response</small>
           </div>
         </li>
 
         <li class="column-fifth">
           <div class="highlight-panel">
-            <span class="heading-large">10</span><br /><small>Assignments accepted</small>
+            <span class="govuk-heading-l">10</span><br /><small>Assignments accepted</small>
           </div>
         </li>
 
         <li class="column-fifth">
           <div class="highlight-panel">
-            <span class="heading-large">4</span><br /><small>Assessments started</small>
+            <span class="govuk-heading-l">4</span><br /><small>Assessments started</small>
           </div>
         </li>
 
         <li class="column-fifth">
           <div class="highlight-panel">
-            <span class="heading-large">5</span><br /><small>Assessments completed</small>
+            <span class="govuk-heading-l">5</span><br /><small>Assessments completed</small>
           </div>
         </li>
 
       </ul>
 
-      <h2 class="heading-medium">Actions</h2>
+      <h2 class="govuk-heading-m">Actions</h2>
 
       <th:block th:if="${param.comp != null and param.comp[0] == 'Closed'}">
-        <ul class="grid-row">
+        <ul class="govuk-list govuk-grid-row">
 
           <li class="column-fifth dashboard-actions">
-            <a class="button" th:href="${(param.comp != null ? '/prototypes/5472-assign-assessors?comp=' + param.comp[0] : '/prototypes/5472-assign-assessors?comp=Open')}">Allocate assessors</a>
+            <a class="govuk-button" th:href="${(param.comp != null ? '/prototypes/5472-assign-assessors?comp=' + param.comp[0] : '/prototypes/5472-assign-assessors?comp=Open')}">Allocate assessors</a>
           </li>
 
           <li class="column-fifth dashboard-actions">
-            <a class="button" th:href="${(param.comp != null ? '/prototypes/5385-application-allocation?comp=' + param.comp[0] : '/prototypes/5385-application-allocation?comp=Open')}">Allocate applications</a>
+            <a class="govuk-button" th:href="${(param.comp != null ? '/prototypes/5385-application-allocation?comp=' + param.comp[0] : '/prototypes/5385-application-allocation?comp=Open')}">Allocate applications</a>
           </li>
 
         </ul>
       </th:block>
 
-      <ul class="grid-row" th:unless="${param.comp != null and param.comp[0] == 'Closed'}">
+      <ul class="govuk-grid-row" th:unless="${param.comp != null and param.comp[0] == 'Closed'}">
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Manage assessors</a>
+          <a class="govuk-button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Manage assessors</a>
         </li>
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" th:href="${(param.comp != null ? '/prototypes/5470-manage-applications?comp=' + param.comp[0] : '/prototypes/5470-manage-applications?comp=Open')}">Manage applications</a>
+          <a class="govuk-button" th:href="${(param.comp != null ? '/prototypes/5470-manage-applications?comp=' + param.comp[0] : '/prototypes/5470-manage-applications?comp=Open')}">Manage applications</a>
         </li>
 
       </ul>

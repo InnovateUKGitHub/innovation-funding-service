@@ -2,13 +2,15 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -41,7 +42,10 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
+    private OrganisationJourneyEnd organisationJourneyEnd;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -51,6 +55,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
@@ -59,6 +64,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @PostMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                    Model model,
+                                   UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -76,7 +82,6 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
 
-
         if (address != null && !organisationForm.isUseSearchResultAddress()) {
             organisationAddressResources.add(
                     new OrganisationAddressResource(address,
@@ -93,21 +98,21 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
         organisationResource.setAddresses(organisationAddressResources);
 
-        if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
-        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-        return "redirect:" + RegistrationController.BASE_URL;
+
+        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
     }
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
-        if(cookieHash.isPresent()) {
-            return organisationService.createAndLinkByInvite(organisationResource, cookieHash.get());
+        if (registrationCookieService.isCollaboratorJourney(request)) {
+            return organisationRestService.createAndLinkByInvite(organisationResource,
+                    registrationCookieService.getInviteHashCookieValue(request).get()).getSuccess();
+        } else {
+            return organisationRestService.createOrMatch(organisationResource).getSuccess();
         }
-
-        return organisationService.createOrMatch(organisationResource);
     }
 }

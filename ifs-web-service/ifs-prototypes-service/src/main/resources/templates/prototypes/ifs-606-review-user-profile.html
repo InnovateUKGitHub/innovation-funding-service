@@ -18,21 +18,21 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
 	  View internal user's details
 	</h1>
 
-  <h2 class="heading-medium">Personal details</h2>
+  <h2 class="govuk-heading-m">Personal details</h2>
 
-  <dl>
+  <dl class="govuk-list">
     <dt>Full name</dt>
-    <dd class="extra-margin-bottom" th:text="${(param.firstName == null) and (param.lastName == null)} ? 'Mark Smith' : |${param.firstName} ${param.lastName}|">Mark Smith</dd>
+    <dd class="govuk-!-margin-bottom-6" th:text="${(param.firstName == null) and (param.lastName == null)} ? 'Mark Smith' : |${param.firstName} ${param.lastName}|">Mark Smith</dd>
 
     <dt>Email address</dt>
-    <dd class="extra-margin-bottom">mark.smith@innovate.gov.uk</dd>
+    <dd class="govuk-!-margin-bottom-6">mark.smith@innovate.gov.uk</dd>
 
     <dt>Job role</dt>
-    <dd class="extra-margin-bottom" th:text="${param.role == null} ? 'IFS Administrator' : ${param.role}">IFS Administrator</dd>
+    <dd class="govuk-!-margin-bottom-6" th:text="${param.role == null} ? 'IFS Administrator' : ${param.role}">IFS Administrator</dd>
   </dl>
 
   <div class="form-footer">

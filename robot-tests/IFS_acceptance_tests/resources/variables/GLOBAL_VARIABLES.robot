@@ -169,8 +169,8 @@ ${WITHDRAWN_ASSESSMENT}     ${assessment_ids["Plastic reprocessing with zero was
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
-${assessment_declaration_url}    ${server}/assessment/profile/declaration
-${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_declaration_url}    ${assessment_details_url}/declaration
+${assessment_skills_url}     ${assessment_details_url}/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
@@ -182,7 +182,7 @@ ${403_error_message}    You do not have the necessary permissions for your reque
 ${404_error_message}    Please check the web address or search term you entered for any errors
 ${500_error_message}    something went wrong
 ${wrong_filetype_validation_error}    Your upload must be a PDF.
-${too_large_pdf_validation_error}    the size of file or request being submitted is too large
+${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
 

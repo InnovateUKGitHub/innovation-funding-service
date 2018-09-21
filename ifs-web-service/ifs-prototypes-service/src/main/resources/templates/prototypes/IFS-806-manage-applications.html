@@ -21,23 +21,23 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Assign applications to panel'}, ${'competition closed'})" />
 
-    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
+    <h2 class="govuk-heading-m">Assigned applications (<span id="application-count">0</span>)</h2>
 
     <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='assigned'"/>
 
-    <!-- <h2 class="heading-medium">Available applications</h2> -->
+    <!-- <h2 class="govuk-heading-m">Available applications</h2> -->
 
     <div class="search-filters extra-margin">
-        <fieldset>
-            <legend class="visuallyhidden">Filter applications</legend>
-            <div class="grid-row">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Filter applications</legend>
+            <div class="govuk-grid-row">
                 <div class="column-two-thirds">
                     <label class="form-label" for="filterSearch">Application number</label>
-                    <input class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" value="" type="text">
+                    <input class="form-control govuk-!-margin-bottom-6" id="filterSearch" name="filterSearch" value="" type="text">
                     <a href="?sort=">Clear all filters</a>
                 </div>
-                <div class="column-third">
-                    <button class="button">Filter</button>
+                <div class="govuk-grid-column-one-third">
+                    <button class="govuk-button">Filter</button>
                 </div>
             </div>
         </fieldset>

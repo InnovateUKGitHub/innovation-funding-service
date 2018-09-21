@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -20,13 +18,15 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class ApplicationSectionController {
     private QuestionService questionService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -84,7 +84,7 @@ public class ApplicationSectionController {
     private ApplicationSectionSaver applicationSaver;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -118,7 +118,7 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                                              BindingResult bindingResult,
@@ -129,8 +129,13 @@ public class ApplicationSectionController {
                                                              UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
-        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+        ProcessRoleResource applicantUser = processRoles.stream()
+                .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(),
+                        Role.COLLABORATOR.getName()).contains(pr.getRoleName()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
@@ -158,6 +163,7 @@ public class ApplicationSectionController {
         Map<String, String[]> params = request.getParameterMap();
 
         boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
+                applicationId,
                 form, bindingResult,
                 applicantSection.getSection(),
                 params,
@@ -207,6 +213,7 @@ public class ApplicationSectionController {
     }
 
     private boolean validFinanceTermsForMarkAsComplete(
+            long applicationId,
             ApplicationForm form,
             BindingResult bindingResult,
             SectionResource section,
@@ -225,12 +232,12 @@ public class ApplicationSectionController {
                         && validateTermsAndConditionsAgreement(form, bindingResult);
 
             case PROJECT_COST_FINANCES:
-                return userIsResearch(userId) ?
+                return userIsResearch(userId, applicationId) ?
                         validateTermsAndConditionsAgreement(form, bindingResult) :
                         validateStateAidAgreement(form, bindingResult);
 
             case ORGANISATION_FINANCES:
-                return validateOrganisationSizeSelected(params, userId, bindingResult);
+                return validateOrganisationSizeSelected(applicationId, params, userId, bindingResult);
 
             case PROJECT_LOCATION:
                 return validateProjectLocation(params, bindingResult);
@@ -240,8 +247,8 @@ public class ApplicationSectionController {
         }
     }
 
-    private boolean userIsResearch(Long userId) {
-        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+    private boolean userIsResearch(long userId, long applicationId) {
+        return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
@@ -272,12 +279,13 @@ public class ApplicationSectionController {
     }
 
     private boolean validateOrganisationSizeSelected(
+            long applicationId,
             Map<String, String[]> params,
             Long userId,
             BindingResult bindingResult
     ) {
         List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
-        if (!financePositionKeys.isEmpty() || userIsResearch(userId)) {
+        if (!financePositionKeys.isEmpty() || userIsResearch(userId, applicationId)) {
             return true;
         }
         bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");

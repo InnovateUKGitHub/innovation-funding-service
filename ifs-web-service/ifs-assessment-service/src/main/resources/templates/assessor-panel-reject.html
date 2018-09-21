@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you'" />
     </head>
 
-    <body class="app-dashboard">
+    <body class="govuk-template__body app-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thank you',size='heading-large'" />
-            <p>Thank you for letting us know you are unable to assess applications within this panel.</p>
-            <p>We hope that you will be able to assess for us in the future.</p>
-            <p>If you have any questions, please contact the Innovate UK team at <a href="mailto:competitions@innovateuk.ukri.org">competitions@innovateuk.ukri.org</a></p>
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thank you',size='govuk-heading-l'" />
+                <p class="govuk-body">Thank you for letting us know you are unable to assess applications within this panel.</p>
+                <p class="govuk-body">We hope that you will be able to assess for us in the future.</p>
+                <p class="govuk-body">If you have any questions, please contact the Innovate UK team at <a href="mailto:competitions@innovateuk.ukri.org" class="govuk-link">competitions@innovateuk.ukri.org</a></p>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

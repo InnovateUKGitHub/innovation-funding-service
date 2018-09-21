@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -22,9 +23,8 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.invite.service.InviteService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -161,7 +161,8 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(assessmentRestService.getByUserAndApplication(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(emptyList()));
-
+        when(applicationRestService.isApplicationReadyForSubmit(app.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(app.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, app.getId()   ))
                 .andExpect(status().isOk())
@@ -234,12 +235,14 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
                 .withValue(expectedQuestionScore, expectedQuestionFeedback)
                 .build(2);
 
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(processRoles);
-        when(organisationService.getOrganisationById(otherOrganisation.getId())).thenReturn(otherOrganisation);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(organisationRestService.getOrganisationById(otherOrganisation.getId())).thenReturn(restSuccess(otherOrganisation));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getApplicationId())).thenReturn(restSuccess(responses));
         when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(assessment));
         when(formInputRestService.getById(responses.get(0).getFormInput())).thenReturn(restSuccess(formInputs.get(0)));
         when(formInputRestService.getById(responses.get(1).getFormInput())).thenReturn(restSuccess(formInputs.get(1)));
+        when(applicationRestService.isApplicationReadyForSubmit(application.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(application.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, application.getId()   ))
                 .andExpect(status().isOk())

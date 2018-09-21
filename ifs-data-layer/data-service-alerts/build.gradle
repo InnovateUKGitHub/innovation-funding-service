@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
@@ -97,6 +97,7 @@ dependencies {
     compile project(":ifs-data-layer:data-service-commons")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "mysql:mysql-connector-java"
 

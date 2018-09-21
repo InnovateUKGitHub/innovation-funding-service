@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Horizon 2020: UK government underwrite guarantee'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit registration',size='govuk-heading-xl'" />
+
+        <p class="govuk-body">Your details will be checked and verified in due course. UK Research and
+            Innovation may contact you for more information. You will receive an email confirmation of
+            your registration.</p>
+
+        <form method="POST" th:action="@{/overview}">
+            <input type="hidden" name="agreeTerms" value="true" />
+            <div>
+                <button type="submit" class="govuk-button govuk-!-margin-bottom-0">Submit</button>
+                <a th:href=@{/overview} class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

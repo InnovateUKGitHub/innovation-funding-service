@@ -46,8 +46,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
 
-
-
     @Before
     public void setupMockMvc() {
         mockMvc = new MockMvcConfigurer()
@@ -83,8 +81,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
         assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
-
-
 
     protected static void login(UserResource userResource) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));

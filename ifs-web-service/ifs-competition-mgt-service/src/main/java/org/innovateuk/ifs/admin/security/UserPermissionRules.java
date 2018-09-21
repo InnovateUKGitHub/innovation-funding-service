@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.resource.UserCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,17 +21,17 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 public class UserPermissionRules {
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @PermissionRule(value = "ACCESS_INTERNAL_USER", description = "Only internal users can be accessed")
     public boolean internalUser(UserCompositeId userCompositeId, UserResource user) {
-        UserResource editUser = userService.findById(userCompositeId.id());
+        UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
         return isInternal(editUser) && isIFSAdmin(user);
     }
 
     @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only active, internal users can be edited")
     public boolean canEditInternalUser(UserCompositeId userCompositeId, UserResource user) {
-        UserResource editUser = userService.findById(userCompositeId.id());
+        UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
         return editUser != null && UserStatus.ACTIVE.equals(editUser.getStatus()) && internalUser(userCompositeId, user);
     }
 }

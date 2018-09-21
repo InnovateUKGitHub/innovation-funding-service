@@ -23,38 +23,38 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ext
  */
 @Service
 public class InviteUserRestServiceImpl extends BaseRestService implements InviteUserRestService {
-    private static final String inviteRestUrl = "/inviteUser";
+    private static final String INVITE_REST_URL = "/inviteUser";
 
     @Override
     public RestResult<Void> saveUserInvite(InviteUserResource inviteUserResource) {
-        String url = inviteRestUrl + "/saveInvite";
+        String url = INVITE_REST_URL + "/saveInvite";
         return postWithRestResult(url, inviteUserResource, Void.class);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", inviteRestUrl, "checkExistingUser", inviteHash), Boolean.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "checkExistingUser", inviteHash), Boolean.class);
     }
 
     @Override
     public RestResult<RoleInviteResource> getInvite(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", inviteRestUrl, "getInvite", inviteHash), RoleInviteResource.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "getInvite", inviteHash), RoleInviteResource.class);
     }
 
     @Override
     public RestResult<RoleInvitePageResource> getPendingInternalUserInvites(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(inviteRestUrl + "/internal/pending", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(INVITE_REST_URL + "/internal/pending", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
     }
 
     @Override
     public RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
-        return getWithRestResult(inviteRestUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
+        return getWithRestResult(INVITE_REST_URL + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
     }
 
     @Override
     public RestResult<Void> resendInternalUserInvite(long inviteId) {
-        return putWithRestResult(inviteRestUrl + "/internal/pending/" + inviteId + "/resend", Void.class);
+        return putWithRestResult(INVITE_REST_URL + "/internal/pending/" + inviteId + "/resend", Void.class);
     }
 }

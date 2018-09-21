@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUser
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Component;
 public class ApplicationOverviewUserModelPopulator {
 
     private final UserService userService;
+    private UserRestService userRestService;
 
-    public ApplicationOverviewUserModelPopulator(UserService userService) {
+    public ApplicationOverviewUserModelPopulator(UserService userService,
+                                                 UserRestService userRestService) {
         this.userService = userService;
+        this.userRestService = userRestService;
     }
 
     public ApplicationOverviewUserViewModel populate(ApplicationResource application, long userId) {
@@ -24,7 +28,7 @@ public class ApplicationOverviewUserModelPopulator {
 
         final UserResource leadApplicant;
         if (leadApplicantProcessRole != null) {
-            leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+            leadApplicant = userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
         } else {
             leadApplicant = null;
         }

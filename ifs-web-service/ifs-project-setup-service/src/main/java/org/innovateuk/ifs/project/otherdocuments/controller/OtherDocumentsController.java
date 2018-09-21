@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
@@ -80,6 +80,7 @@ public class OtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/readonly")
     public String viewDocumentsPageAsReadOnly(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
+                                              @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
                                               UserResource loggedInUser) {
 
         if (isProjectManager(projectId, loggedInUser)) {

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.view.controller;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.application.view.service.CompetitionManagem
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,8 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ProcessRoleService processRoleService;
     @Autowired
+    private UserRestService userRestService;
+    @Autowired
     private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -68,12 +71,11 @@ public class CompetitionManagementApplicationController {
     private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
     private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
-
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
@@ -154,18 +156,19 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
-    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @GetMapping("/{applicationId}/forminput/{formInputId}/download/**")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (isInternalUser(user)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
-            processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         }
 
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
@@ -177,7 +180,7 @@ public class CompetitionManagementApplicationController {
      * Printable version of the application
      */
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
@@ -188,7 +191,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/team")
     public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("competitionId") final Long competitionId,

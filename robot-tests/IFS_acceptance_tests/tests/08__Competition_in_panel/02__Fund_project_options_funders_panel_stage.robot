@@ -48,12 +48,12 @@ An application is selected and the buttons become enabled
 
 Internal user puts the application on hold
     [Documentation]  INFUND-7376
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user marks the application as  On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
 
 Proj Finance user can send Fund Decision notification
     [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page     ${funders_panel_competition_url}
     When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
@@ -90,12 +90,12 @@ Internal user can filter notified applications
 
 External lead applicant reads his email
     [Documentation]  INFUND-7376
-    [Tags]  HappyPath
+    [Tags]
     verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
 
 External collaborators read their email
     [Documentation]  IFS-360
-    [Tags]  HappyPath
+    [Tags]
     verify the user has received the on hold email    ${lead_applicant}
     verify the user has received the on hold email    ${collaborator1_credentials["email"]}
     verify the user has received the on hold email    ${collaborator2_credentials["email"]}
@@ -112,7 +112,7 @@ Unsuccessful Funding Decision
 
 Successful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377  IFS-2903
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user marks the application as                         Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
     And the user checks that the statuses are changing correctly
     When the internal user sends an email notification                       Successful  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
@@ -130,7 +130,7 @@ Once Successful and Sent you cannot change your mind
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
-    [Tags]  HappyPath
+    [Tags]
     Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
     Then the user should see the element  jQuery=.projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
 
@@ -139,7 +139,7 @@ Internal user can see the comp in Project Setup once applicant is notified
     [Tags]
     Given log in as a different user                       &{Comp_admin1_credentials}
     When the user clicks the button/link                   jQuery=a:contains("Project setup")
-    And the user should see the element                    jQuery=h2:contains("Project setup")
+    And the user should see the element                    jQuery=h2:not(".govuk-tabs__title"):contains("Project setup")
     Then the user clicks the button/link                   link=${FUNDERS_PANEL_COMPETITION_NAME}
     And the user should be redirected to the correct page  ${notified_application_competition_status}
 

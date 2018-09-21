@@ -28,7 +28,7 @@ ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see all the Your-Finances Sections
 
 Not requesting funding guidance
@@ -63,8 +63,8 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link             link=Your project costs
-    Then the user should see the text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
-    And the user should see the text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
+    Then the user should see the element        jQuery=h2:contains("Provide the project costs for 'org2'")          #text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
+    And the user should see the element         jQuery=label:contains("'org2' Total project costs")          #text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
@@ -72,8 +72,8 @@ Guidance in the your project costs
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
     When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link     css=#collapsible-0 summary
-    Then the user should see the element    css=#details-content-0 p
+    And the user clicks the button/link     css=.govuk-details summary
+    Then the user should see the element    css=.govuk-details__text p
     And the user should see the element     css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
@@ -94,18 +94,18 @@ User pressing back button should get the correct version of the page
 
 Non-academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    And The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    And The user should see the element      JQuery=.govuk-details__summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     When the user clicks the button/link    link=Your funding
-    Then the user should see the element    jQuery=.list li:contains("the lead applicant must select a research category")
+    Then the user should see the element    jQuery=.govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
     Then The user should not see the element      link=Not requesting funding
@@ -116,15 +116,15 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your project costs
     # Note the Jes form is already uploaded
-    Then the user should see the element     css=a.uploaded-file
+    Then the user should see the element     css=p.uploaded-file a
     When The user clicks the button/link       jQuery=button:contains("Remove")
-    then the user should see the element       css=label[class="button-secondary extra-margin"]
-    and the user uploads the file  css=.upload-section input  ${valid_pdf}
-    and the user should see the text in the page    ${valid_pdf}
+    then the user should see the element       jQuery=label.button-secondary
+    and the user uploads the file  css=.upload-section input  ${5mb_pdf}
+    and the user should see the text in the page    ${5mb_pdf}
 
 Compadmin can open the jes-file in applications
     [Documentation]     IFS-102
@@ -140,7 +140,7 @@ Compadmin can open the jes-file in applications
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469  IFS-2879
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
@@ -176,7 +176,7 @@ the user adds three material rows
     the user expands the section          Materials
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
     ${pagination}=  Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css=#material-costs-table tr:nth-of-type(2)
-    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .buttonlink:contains("Remove")
+    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .button-clear:contains("Remove")
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery=button:contains("Add another materials cost")
@@ -206,8 +206,8 @@ the user navigates to another page
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093
-    the user should see the element           css=#details-content-0 p
+    the user should see the element           css=.govuk-details__text p
 
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
-    the user should not see the element           css=#details-content-0 p
+    the user should not see the element           css=.govuk-details__text p

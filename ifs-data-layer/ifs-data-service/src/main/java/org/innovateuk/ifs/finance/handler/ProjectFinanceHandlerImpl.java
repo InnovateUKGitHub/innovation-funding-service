@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -107,7 +106,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId(), competition);
         projectFinanceResource.setFinanceOrganisationDetails(costs);
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges =
+        Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges =
                 organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setCostChanges(costChanges);
     }

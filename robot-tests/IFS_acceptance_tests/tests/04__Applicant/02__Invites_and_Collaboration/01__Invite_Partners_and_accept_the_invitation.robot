@@ -39,25 +39,26 @@ Resource          ../Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}  kevin@worth.systems
 ${newCollaborator}   jerry@worth.systems
+${organisation}   org2
 
 *** Test Cases ***
 Application team page
     [Documentation]    INFUND-928
     ...
     ...    INFUND-7973
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The user navigates to the page      ${DASHBOARD_URL}
     Given the user clicks the button/link          link=Invite robot test application
     When the user clicks the button/link           link=Application team
     Then the user should see the text in the page  Application team
     And the user should see the text in the page   View and manage your contributors or collaborators in the application.
-    And the lead applicant should have the correct status
+    And the lead applicant should have the correct org status
     And the user should see the element            link=Application overview
 
 Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
-    [Tags]    HappyPath
-    When The user clicks the button/link      jquery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    [Tags]
+    When The user clicks the button/link      jquery=a:contains("Update and add contributors from ${organisation}")
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user should not see the element   jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element      css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -71,7 +72,7 @@ Lead cannot be removed
 
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
-    [Tags]    HappyPath
+    [Tags]
     When The user clicks the button/link      jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
@@ -81,7 +82,7 @@ Lead organisation server-side validations
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
-    [Tags]    HappyPath
+    [Tags]
     When The user enters text to a text field      css=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field       css=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
     And the user moves focus to the element        css=button[name="executeStagedInvite"]
@@ -102,7 +103,7 @@ Lead Adds/Removes partner organisation
     ...    INFUND-7979
     ...
     ...    INFUND-8590
-    [Tags]    HappyPath
+    [Tags]
     When The user clicks the button/link               jQuery=a:contains('Add a collaborator organisation')
     And The user enters text to a text field           name=organisationName    Fannie May
     And The user enters text to a text field           name=applicants[0].name    Collaborator 2
@@ -118,20 +119,20 @@ Partner organisation Server-side validations
     [Documentation]    INFUND-896
     ...
     ...    INFUND-7979
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link      jQuery=a:contains('Add a collaborator organisation')
     When The user enters text to a text field  name=organisationName    ${EMPTY}
     And The user enters text to a text field   name=applicants[0].name    ${EMPTY}
     And The user enters text to a text field   name=applicants[0].email    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        jQuery=.button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link        jQuery=.govuk-button:contains("Add organisation and invite applicants")
     Then the user should see an error          An organisation name is required.
     And the user should see an error           Please enter a name.
     And the user should see an error           Please enter an email address.
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979
-    [Tags]    HappyPath
+    [Tags]
     When The user enters text to a text field  name=organisationName    Fannie May
     And The user enters text to a text field   name=applicants[0].name    Adrian Booth
     And The user enters text to a text field   name=applicants[0].email    ${invite_email}
@@ -139,7 +140,7 @@ Partner organisation Client-side validations
 
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]  HappyPath  SmokeTest
+    [Tags]
     When The user clicks the button/link  jQuery=button:contains("Add organisation and invite applicants")
     Then the user should see the element  jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
     And the user should see the element   jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
@@ -156,7 +157,7 @@ The Lead's inputs should not be visible in other application invites
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928  INFUND-1962
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Invite robot test application
     And the user clicks the button/link           link=Project summary
@@ -166,27 +167,27 @@ Pending users visible in the assign list but not clickable
 
 Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
-    [Tags]  HappyPath  Email  SmokeTest
+    [Tags]
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button               organisationType    1
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
     And the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
 Partner requests new verification email via password reset
     [Documentation]  IFS-52
-    [Tags]  HappyPath  Email
+    [Tags]
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field       id=email    ${invite_email}
-    And the user clicks the button/link            css=button
+    And the user clicks the button/link            jQuery=#forgotten-password-cta
     Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
 
 Complete account verification
     [Documentation]    INFUND-1005  INFUND-2286  INFUND-1779  INFUND-2336
-    [Tags]  HappyPath  Email  SmokeTest
+    [Tags]
     When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account  1
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
@@ -194,8 +195,8 @@ Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083  IFS-951
     ...
     ...    INFUND-7976
-    [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link                   jQuery=.button:contains("Sign in")
+    [Tags]
+    Given the user clicks the button/link                   link = Sign in
     When the user logs-in in new browser                    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page  ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
@@ -214,7 +215,7 @@ Parner can see the Application team
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
-    [Tags]    Email
+    [Tags]
     When the user clicks the button/link      jQuery=a:contains("Update and add contributors from NOMENSA LTD")
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
@@ -224,7 +225,7 @@ Partner can invite others to his own organisation
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath  Email
+    [Tags]
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
@@ -234,12 +235,12 @@ Lead should see the accepted partner in the assign list
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928  INFUND-1463  INFUND-7979
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Invite robot test application
     When the user clicks the button/link           link=Application team
-    When the user clicks the button/link           jQuery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    Then the user should see the text in the page  Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    When the user clicks the button/link           jQuery=a:contains("Update and add contributors from ${organisation}")
+    Then the user should see the text in the page  Update ${organisation}
     And the user clicks the button/link            jQuery=button:contains("Add another contributor")
     When The user enters text to a text field      name=stagedInvite.name    Roger Axe
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
@@ -249,39 +250,39 @@ Lead applicant invites a non registered user in the same organisation
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
-    [Tags]    Email
+    [Tags]
     When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
-    And the user clicks the button/link                    jQuery=.button:contains("Yes, accept invitation")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation
     And the user should see the element                    link=email the lead applicant
-    And the user clicks the button/link                    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link                    jQuery=.govuk-button:contains("Confirm and continue")
     And the invited user fills the create account form     Roger  Axe
     And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Lead should not see pending status for accepted invite
     [Documentation]    IFS-68
-    [Tags]  Email
-    [Setup]
+    [Tags]
     Given the user clicks the button/link       jQuery=a:contains("Sign in")
-    Logging in and Error Checking               &{lead_applicant_credentials}
+    And Logging in and Error Checking               &{lead_applicant_credentials}
     When the user clicks the button/link        link=Invite robot test application
     And the user clicks the button/link         link=Application team
-    And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
-    Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And the user clicks the button/link         link=Update and add contributors from ${organisation}
+    Then the user should see the element        jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
-    [Tags]  HappyPath  Email
+    [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
     Then the user creates an account and signs in
+
 
 New Lead Applicant invites new user as collaborator on his application
     [Documentation]  IFS-2440
-    [Tags]  HappyPath  Email
+    [Tags]
     # Business organisation type for the collaborator as well.
     Given the lead applicant invites the collaborator
     Then the collaborator accepts the invite and is able to see the application without any errors
@@ -291,6 +292,12 @@ New Lead Applicant invites new user as collaborator on his application
 *** Keywords ***
 The lead applicant should have the correct status
     the user should see the element  jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+
+The lead applicant should have the correct org status
+    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -331,11 +338,10 @@ the applicant's inputs should be visible
     Should Be Equal As Strings     ${input_value}    Collaborator 3
 
 the user creates an account and signs in
-    The user selects his organisation in Companies House       worth it  WORTH IT LTD
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
@@ -348,7 +354,7 @@ the lead applicant invites the collaborator
 the collaborator accepts the invite and is able to see the application without any errors
     The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
     The user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
-    The user should see the element               jQuery=h1:contains("Choose your organisation type")
+    The user should see the element               jQuery=h1:contains("Choose organisation type")
     The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
     The user clicks the button/link               jQuery=.progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page

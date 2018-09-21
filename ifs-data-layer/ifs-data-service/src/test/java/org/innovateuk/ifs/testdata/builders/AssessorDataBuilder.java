@@ -5,7 +5,6 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
-import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -19,10 +18,8 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -35,30 +32,14 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                                             String lastName,
                                             String emailAddress,
                                             String phoneNumber,
-                                            String ethnicity,
-                                            Gender gender,
-                                            Disability disability,
                                             String hash
     ) {
         return with(data -> doAs(systemRegistrar(), () -> {
-
-            EthnicityResource ethnicityResource;
-
-            if (!isBlank(ethnicity)) {
-                Ethnicity ethnicitySelected = ethnicityRepository.findOneByDescription(ethnicity);
-                ethnicityResource = newEthnicityResource().withId(ethnicitySelected.getId()).build();
-            } else {
-                ethnicityResource = newEthnicityResource().withId().build();
-            }
-
             UserRegistrationResource registration = newUserRegistrationResource().
                     withFirstName(firstName).
                     withLastName(lastName).
                     withEmail(emailAddress).
                     withPhoneNumber(phoneNumber).
-                    withEthnicity(ethnicityResource).
-                    withDisability(disability).
-                    withGender(gender).
                     withPassword("Passw0rd").
                     withRoles(singletonList(Role.ASSESSOR)).
                     build();
