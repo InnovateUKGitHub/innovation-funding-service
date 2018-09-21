@@ -119,19 +119,19 @@ public class CompetitionSetupStakeholderController {
         return new InviteUserResource(invitedUser);
     }
 
-    @PostMapping(value = "/{competitionId}/manage-stakeholders/add-stakeholder/{stakeholderUserId}")
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"addStakeholder"})
     public String addStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                 @PathVariable("stakeholderUserId") long stakeholderUserId,
+                                 @RequestParam("stakeholderUserId") long stakeholderUserId,
                                  Model model) {
 
         competitionSetupStakeholderRestService.addStakeholder(competitionId, stakeholderUserId);
         return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm(), DEFAULT_TAB);
     }
 
-    @PostMapping(value = "/{competitionId}/manage-stakeholders/remove-stakeholder/{stakeholderUserId}")
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"removeStakeholder"})
     public String removeStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                 @PathVariable("stakeholderUserId") long stakeholderUserId,
-                                 Model model) {
+                                    @RequestParam("stakeholderUserId") long stakeholderUserId,
+                                    Model model) {
 
         competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
         return doViewManageStakeholders(competitionId, model, new InviteStakeholderForm(), ADDED_TAB);
