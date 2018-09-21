@@ -9,6 +9,7 @@ public enum ApplicationSummaryOrigin implements BackLinkOrigin {
     PREVIOUS_APPLICATIONS("/competition/{competitionId}/applications/previous", "Back"),
     ALL_APPLICATIONS("/competition/{competitionId}/applications/all", "All Applications"),
     APPLICATION_SUMMARY("/application/{applicationId}/summary", "Application Overview"),
+    SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted", "Application Overview"),
     APPLICATION("/application/{applicationId}", "Application Overview");
 
     private String originUrl;

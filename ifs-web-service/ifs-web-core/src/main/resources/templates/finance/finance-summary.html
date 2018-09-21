@@ -136,7 +136,7 @@
                                 <small>Partner</small>
                             </div>
                             <a th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}+(${queryParams}?:"")' th:style="'font-weight: normal;'"
+                               th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'}+(${queryParams}?:'')" th:style="'font-weight: normal;'"
                                class="govuk-link">
                                 View finances
                             </a>
