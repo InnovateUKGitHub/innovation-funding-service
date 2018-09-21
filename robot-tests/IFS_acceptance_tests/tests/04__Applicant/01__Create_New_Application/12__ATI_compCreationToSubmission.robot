@@ -26,7 +26,7 @@ Comp Admin creates an ATI competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  # 1 means 30%
+    And the user fills in the CS Eligibility       ${business_type_id}  1  true    # 1 means 30%
     And user fills in funding overide
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
