@@ -15,6 +15,7 @@ public class MonitoringOfficerViewModel {
 
     private Long projectId;
     private String projectTitle;
+    private Long applicationId;
     private String area;
     private LocalDate targetProjectStartDate;
     private String projectManagerName;
@@ -26,13 +27,14 @@ public class MonitoringOfficerViewModel {
     private boolean editable;
     private List<String> primaryAddressLines;
 
-    public MonitoringOfficerViewModel(Long projectId, String projectTitle, String area, AddressResource primaryAddress,
+    public MonitoringOfficerViewModel(Long projectId, String projectTitle, Long applicationId, String area, AddressResource primaryAddress,
                                              LocalDate targetProjectStartDate, String projectManagerName,
                                              List<String> partnerOrganisationNames, String leadOrganisationName,
                                              CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
                                              boolean editMode, boolean editable) {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
+        this.applicationId = applicationId;
         this.area = area;
         this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLines() : emptyList();
         this.targetProjectStartDate = targetProjectStartDate;
@@ -51,6 +53,10 @@ public class MonitoringOfficerViewModel {
 
     public String getProjectTitle() {
         return projectTitle;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
     }
 
     public String getArea() {

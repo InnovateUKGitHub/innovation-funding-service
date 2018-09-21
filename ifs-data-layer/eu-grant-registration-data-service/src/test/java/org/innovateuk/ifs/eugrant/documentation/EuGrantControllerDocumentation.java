@@ -7,7 +7,6 @@ import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
@@ -20,14 +19,10 @@ import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuC
 import static org.innovateuk.ifs.eugrant.builder.EuFundingResourceBuilder.newEuFundingResource;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.innovateuk.ifs.eugrant.builder.EuOrganisationResourceBuilder.newEuOrganisationResource;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -80,13 +75,14 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withProjectStartDate(LocalDate.now())
                 .withProjectEndDate(LocalDate.now().plusYears(1L))
                 .withProjectName("Project Name")
-                .withParticipantId("123456")
+                .withParticipantId("123456789")
                 .build();
 
         euGrantResource = newEuGrantResource()
                 .withContact(euContactResource)
                 .withOrganisation(euOrganisationResource)
                 .withFunding(euFundingResource)
+                .withShortCode("1234")
                 .build();
 
         uuid = UUID.randomUUID();
@@ -95,7 +91,6 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void create() throws Exception {
-
         when(euGrantService.create()).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
@@ -114,7 +109,6 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void findById() throws Exception {
-
         when(euGrantService.findById(uuid)).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
@@ -132,21 +126,36 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void update() throws Exception {
-
-        when(euGrantService.save(isA(EuGrantResource.class))).thenReturn(serviceSuccess());
+        when(euGrantService.update(uuid, euGrantResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 put("/eu-grant/{uuid}", uuid.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(euGrantResource)))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "eu-grant/{method-name}",
+                        requestFields(fields()),
                         pathParameters(
-                                parameterWithName("uuid").description("Id the grant registration")
-                        )
-                        )
+                                parameterWithName("uuid").description("Id the grant registration to save")
+                        ))
                 );
+    }
+
+    @Test
+    public void submit() throws Exception {
+        when(euGrantService.submit(uuid)).thenReturn(serviceSuccess(euGrantResource));
+
+        mockMvc.perform(
+                post("/eu-grant/{uuid}/submit", uuid.toString()))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "eu-grant/{method-name}",
+                        pathParameters(
+                                parameterWithName("uuid").description("Id the grant registration to save")
+                        ),
+                        responseFields(fields())
+                ));
     }
 
     private FieldDescriptor[] fields() {
@@ -163,7 +172,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("contact.telephone").description("Telephone number of the contact."),
                 fieldWithPath("funding").description("Contact details for the eu grant."),
                 fieldWithPath("funding.grantAgreementNumber").description("This might also be referred to as your project ID."),
-                fieldWithPath("funding.participantId").description("The 6-digit number unique to your organisation."),
+                fieldWithPath("funding.participantId").description("The 9-digit number unique to your organisation."),
                 fieldWithPath("funding.projectName").description("The name of your project."),
                 fieldWithPath("funding.projectStartDate").description("The date the project will start."),
                 fieldWithPath("funding.projectEndDate").description("The date the project will end."),
@@ -172,7 +181,8 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("funding.actionType").description("The funding scheme you applied for."),
                 fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
                 fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
-                fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding.")
+                fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding."),
+                fieldWithPath("shortCode").description("Short reference number for the grant registration.")
         };
     }
 }

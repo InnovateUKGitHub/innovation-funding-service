@@ -32,7 +32,7 @@ public class WebUserOnlyFilter extends OncePerRequestFilter {
     @Value("${ifs.web.system.user.uid}")
     private String webUserId;
 
-    private static UserResource webUser;
+    public static UserResource webUser;
 
     static {
         webUser = new UserResource();

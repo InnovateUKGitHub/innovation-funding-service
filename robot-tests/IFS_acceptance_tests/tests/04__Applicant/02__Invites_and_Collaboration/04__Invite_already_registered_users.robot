@@ -6,7 +6,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
@@ -14,7 +14,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
-    [Tags]    HappyPath
+    [Tags]
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com  ${RTO_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
@@ -23,7 +23,7 @@ The invited user should not follow the registration flow again
 
 The user clicks the login link
     [Documentation]    INFUND-1458
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link                link=Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
@@ -32,13 +32,13 @@ The user clicks the login link
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link           css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the text in the page  Application overview
 
 The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     When the user clicks the button/link  link=Profile
     And the user clicks the button/link   link=Edit your details

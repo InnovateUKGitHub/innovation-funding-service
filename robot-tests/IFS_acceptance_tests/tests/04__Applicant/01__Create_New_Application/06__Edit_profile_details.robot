@@ -16,21 +16,20 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user should see the element  link=Profile
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042  IFS-951
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link  link=Profile
     And the user should see the element   jQuery = .govuk-table td:contains("Business")
     Then the user should see the element  link=Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245, IFS-41
-    [Tags]    HappyPath    SmokeTest
-
+    [Tags]
     Given the user navigates to the page                   ${DASHBOARD_URL}
     When the user clicks the button/link                   link=Profile
     And the user clicks the button/link                    link=Edit your details

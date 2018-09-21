@@ -28,7 +28,7 @@ ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
-    [Tags]    HappyPath
+    [Tags]
     Then the user should see all the Your-Finances Sections
 
 Not requesting funding guidance
@@ -94,7 +94,7 @@ User pressing back button should get the correct version of the page
 
 Non-academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
     And The user should see the element      JQuery=.govuk-details__summary:contains("Not requesting funding")
@@ -105,7 +105,7 @@ Non-academic partner finance section
 
 Academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
     Then The user should not see the element      link=Not requesting funding
@@ -116,7 +116,7 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your project costs
     # Note the Jes form is already uploaded
@@ -140,7 +140,7 @@ Compadmin can open the jes-file in applications
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469  IFS-2879
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}

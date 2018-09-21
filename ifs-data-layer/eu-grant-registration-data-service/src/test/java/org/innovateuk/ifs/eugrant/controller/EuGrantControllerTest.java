@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.mockito.Mockito.verify;
