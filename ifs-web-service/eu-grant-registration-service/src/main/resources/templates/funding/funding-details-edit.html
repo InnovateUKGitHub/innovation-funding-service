@@ -291,7 +291,8 @@
                                        th:field="*{projectCoordinator}"
                                        value="yes"
                                        required="required"
-                                       data-required-errormessage="Select an option">
+                                       th:attr=
+                                           "data-required-errormessage=#{validation.fundingForm.projectCoordinator}">
                                 <label class="govuk-label govuk-radios__label" for="consortium-lead-yes">
                                     Yes
                                 </label>
@@ -304,7 +305,8 @@
                                        th:field="*{projectCoordinator}"
                                        value="no"
                                        required="required"
-                                       data-required-errormessage="Select an option">
+                                       th:attr=
+                                           "data-required-errormessage=#{validation.fundingForm.projectCoordinator}">
                                 <label class="govuk-label govuk-radios__label" for="consortium-lead-no">
                                     No
                                 </label>
