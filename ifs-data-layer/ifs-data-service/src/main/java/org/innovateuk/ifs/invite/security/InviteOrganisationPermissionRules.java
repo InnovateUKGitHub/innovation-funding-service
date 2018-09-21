@@ -7,25 +7,26 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 /**
  * Permission rules for {@link InviteOrganisationResource} permissioning
  */
 @PermissionRules
-public class InviteOrganisationPermissionRules {
+public class InviteOrganisationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -49,16 +50,19 @@ public class InviteOrganisationPermissionRules {
             throw new ForbiddenActionException("Not all invite application ids match");
         }
 
-        boolean isLeadOrContributor = isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
+        if (isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user)) {
+            // Get the application id from the first invite, as application id is same for all invites.
+            Long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
 
-        // Get the application id from the first invite, as application id is same for all invites.
-        Long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
-        boolean isApplicationEditable = applicationIsEditableById(applicationId);
-        return  isLeadOrContributor && isApplicationEditable;
+            Application application = getApplication(applicationId);
+            return isCollaborationAllowed(application) && applicationIsEditable(application);
+        }
+        return false;
     }
 
-    private boolean applicationIsEditableById(final Long applicationId) {
-        return applicationIsEditable(applicationRepository.findOne(applicationId));
+    private boolean isCollaborationAllowed(Application application) {
+        CollaborationLevel collaborationLevel = application.getCompetition().getCollaborationLevel();
+        return SINGLE != collaborationLevel;
     }
 
     private boolean applicationIsEditable(final Application application) {
@@ -139,5 +143,9 @@ public class InviteOrganisationPermissionRules {
 
     private boolean allInviteApplicationIdsMatch(InviteOrganisationResource inviteOrganisation) {
         return inviteOrganisation.getInviteResources().stream().allMatch(invite -> invite.getApplication().equals(inviteOrganisation.getInviteResources().get(0).getApplication()));
+    }
+
+    private Application getApplication(long applicationId){
+        return applicationRepository.findOne(applicationId);
     }
 }
