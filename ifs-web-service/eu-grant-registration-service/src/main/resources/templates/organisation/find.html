@@ -9,7 +9,7 @@
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header" />
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/eu-grant/organisation/type'" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/eu-grant/organisation/type'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -30,14 +30,14 @@
         </th:block>
 
         <th:block th:unless="${model.type.research}">
-            <div class="message-alert">
-                <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your organisation must be identified as a UK partner in the grant agreement to receive funding.</p>
             </div>
             <p class="govuk-body">You can identify your organisation through Companies House or enter your details manually.</p>
             <h2 class="govuk-heading-m">Search on Companies House</h2>
         </th:block>
         <th:block th:if="${model.type.research}">
-            <div class="message-alert">
+            <div class="message-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
             </div>
         </th:block>
@@ -118,7 +118,6 @@
                 </th:block>
             </th:block>
         </form>
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 
