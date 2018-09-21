@@ -14,12 +14,12 @@ include::{snippets}/company-house/search-by-company-house-name/curl-request.adoc
 === Get organisation by Company House id
 
 ==== Request
-include::{snippets}/company-house/search-by-company-house-name/http-request.adoc[]
-include::{snippets}/company-house/search-by-company-house-name/path-parameters.adoc[]
+include::{snippets}/company-house/search-by-company-house-id/http-request.adoc[]
+include::{snippets}/company-house/search-by-company-house-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/company-house/search-by-company-house-name/http-response.adoc[]
-include::{snippets}/company-house/search-by-company-house-name/response-fields.adoc[]
+include::{snippets}/company-house/search-by-company-house-id/http-response.adoc[]
+include::{snippets}/company-house/search-by-company-house-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/company-house/search-by-company-house-name/curl-request.adoc[]
+include::{snippets}/company-house/search-by-company-house-id/curl-request.adoc[]

@@ -89,7 +89,7 @@ public class CompanyHouseControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void searchByCompanyHouseNumber() throws Exception {
+    public void searchByCompanyHouseId() throws Exception {
 
         String id = "08241216";
 
