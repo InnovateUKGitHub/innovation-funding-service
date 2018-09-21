@@ -48,7 +48,7 @@
                     </legend>
                     <span th:if="${#fields.hasErrors('researchCategoriesApplicable')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('researchCategoriesApplicable')}" th:text="${err}"/>
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios">
                         <div class="govuk-radios__item" data-target="research-categories"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
@@ -63,6 +63,34 @@
                                 Yes
                             </label>
                         </div>
+
+                        <div id="research-categories" class="panel">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryId">
+                                        <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
+                                    </legend>
+                                    <span th:if="${#fields.hasErrors('researchCategoryId')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"/>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
+                                            <input th:value="${researchCategory.id}"
+                                                   type="checkbox"
+                                                   class="govuk-checkboxes__input"
+                                                   name="researchCategoryId"
+                                                   th:id="${'research-categories-' + researchCategory.id}"
+                                                   th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
+                                                   required="required"
+                                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
+                                            <label th:for="${'research-categories-' + researchCategory.id}"
+                                                   th:text="${researchCategory.name}"
+                                                   class="govuk-label govuk-checkboxes__label"></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
@@ -80,33 +108,6 @@
                 </fieldset>
             </div>
 
-            <div id="research-categories" class="panel">
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'govuk-form-group--error'">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryId">
-                            <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
-                        </legend>
-                        <span th:if="${#fields.hasErrors('researchCategoryId')}" class="govuk-error-message"
-                              th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"/>
-                        <div class="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
-                                <input th:value="${researchCategory.id}"
-                                       type="checkbox"
-                                       class="govuk-checkboxes__input"
-                                       name="researchCategoryId"
-                                       th:id="${'research-categories-' + researchCategory.id}"
-                                       th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
-                                <label th:for="${'research-categories-' + researchCategory.id}"
-                                       th:text="${researchCategory.name}"
-                                       class="govuk-label govuk-checkboxes__label"></label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </div>
-
             <div id="override-funding-rules" class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('overrideFundingRules')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
@@ -116,7 +117,7 @@
                     <span class="govuk-hint">Do you want to override the standard <a class="govuk-link" href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules" target="_blank">funding rules</a> and manually set the percentage that business can apply for?</span>
                     <span th:if="${#fields.hasErrors('overrideFundingRules')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"/>
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
@@ -236,7 +237,7 @@
                     <span class="govuk-hint">Are applicants able to resubmit an application?</span>
                     <span th:if="${#fields.hasErrors('resubmission')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('resubmission')}" th:text="${err}"/>
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="comp-resubmissions-yes"
                                    class="govuk-radios__input"
