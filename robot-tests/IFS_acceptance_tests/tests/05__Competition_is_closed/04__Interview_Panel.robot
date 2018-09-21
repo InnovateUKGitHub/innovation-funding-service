@@ -341,7 +341,7 @@ the user checks for the key statistics for invite assessors
 
 the compAdmin uploads additional feedback for an application
     the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload
-    the user should see the element    jQuery = h1:contains("Attempt to upload a large file")
+    the user should get an error page  ${too_large_pdf_validation_error}
     the user goes back to the previous page
     the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
