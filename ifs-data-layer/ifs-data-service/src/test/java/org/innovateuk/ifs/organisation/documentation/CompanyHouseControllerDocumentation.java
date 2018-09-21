@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.documentation.CompaniesHouseDocs.organisationSearchResultFields;
+import static org.innovateuk.ifs.documentation.CompanyHouseDocs.organisationSearchResultFields;
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
