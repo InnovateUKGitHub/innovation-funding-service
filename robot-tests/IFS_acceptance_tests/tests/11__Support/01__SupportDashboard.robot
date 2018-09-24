@@ -47,8 +47,8 @@ Support user is able to search active external users
     [Documentation]  IFS-1986 IFS-1841
     [Tags]
     Given the user navigates to the page           ${manageExternalUsers}
-    When the user is searching for external users  becky  Email
-    Then the user should see the element           jQuery=td:contains("Dreambit") ~ td:contains("becky.mason@gmail.com") + td:contains("Verified")
+    When the user is searching for external users  dustin  Email
+    Then the user should see the element           jQuery=td:contains("Kazio") ~ td:contains("worth.email.test+dustin@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link=Clear
     When the user is searching for external users  Empire  ORGANISATION_NAME
     Then the user should see the element           jQuery=td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
