@@ -106,10 +106,27 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
     Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
+    [Teardown]    Logout as user
+
+Non-registered assessor: Reject invitation
+    [Documentation]    INFUND-4631  INFUND-4636  INFUND-5165
+    [Tags]
+    When the user navigates to the page            ${Invitation_nonregistered_assessor2}
+    Then the user should see the text in the page  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user selects the radio button          acceptInvitation  false
+    And The user clicks the button/link            jQuery=button:contains("Confirm")
+    Then the user should see an error              The reason cannot be blank.
+    And the assessor fills in all fields
+    And The user clicks the button/link            jQuery=button:contains("Confirm")
+    Then the user should see the element           jQuery=p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
+    And the assessor shouldn't be able to reject the rejected competition
+    And the assessor shouldn't be able to accept the rejected competition
 
 The internal user invites an applicant as an assessor
     [Tags]
-    Given the user clicks the button/link      link = Back
+    Given the user logs-in in new browser      &{Comp_admin1_credentials}
+    And the user clicks the button/link        link = ${openCompetitionRTO_name}
+    And the user clicks the button/link        jQuery = a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link        jQuery = a:contains("Invite")
     When the user invites an applicant as an assessor
     And the user cannot see a validation error in the page
@@ -133,20 +150,6 @@ The internal user invites the applicant to assess another competition
     When the user invites an applicant as an assessor
     Then the user should see a field and summary error    ${email_already_in_use}
     [Teardown]    Logout as user
-
-Non-registered assessor: Reject invitation
-    [Documentation]    INFUND-4631  INFUND-4636  INFUND-5165
-    [Tags]
-    When the user navigates to the page            ${Invitation_nonregistered_assessor2}
-    Then the user should see the text in the page  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user selects the radio button          acceptInvitation  false
-    And The user clicks the button/link            jQuery=button:contains("Confirm")
-    Then the user should see an error              The reason cannot be blank.
-    And the assessor fills in all fields
-    And The user clicks the button/link            jQuery=button:contains("Confirm")
-    Then the user should see the element           jQuery=p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
-    And the assessor shouldn't be able to reject the rejected competition
-    And the assessor shouldn't be able to accept the rejected competition
 
 *** Keywords ***
 the assessor fills in all fields
