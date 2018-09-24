@@ -150,6 +150,7 @@ public class ApplicationNavigationPopulator {
                 if (isSupport) {
                     model.addAttribute(BACK_TITLE, "Application summary");
                     backURL = (backURL + "/summary");
+                    model.addAttribute("queryParams", queryParam.get());
                 } else {
                     model.addAttribute(BACK_TITLE, "Application overview");
                     if (queryParam.isPresent()) {
