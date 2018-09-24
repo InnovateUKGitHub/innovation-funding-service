@@ -59,7 +59,6 @@ import static org.mockito.Mockito.*;
 
 public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<ApplicationValidatorServiceImpl> {
 
-
     @Mock
     private FormInputResponseRepository formInputResponseRepository;
 
@@ -292,6 +291,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         Long organisationId = 999L;
         Question question = newQuestion().build();
         Long questionId = question.getId();
+        Long applicationFinanceId = 1L;
 
         Long markedAsCompleteById = null;
 
@@ -312,17 +312,17 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(processRoleRepository.findOne(markedAsCompleteById)).thenReturn(processRole);
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeRowCostsService.getCostItems(1L, questionId)).thenReturn(serviceSuccess(costItems));
+        when(financeRowCostsService.getCostItems(applicationFinanceId, questionId)).thenReturn(serviceSuccess(costItems));
         when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
 
-        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById).add(0, );
+        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById);
 
         assertEquals(validationMessages, result);
 
-//        verify(processRoleRepository).findOne(markedAsCompleteById);
-//        verify(financeService).financeDetails(applicationId, question, markedAsCompleteById);
-//        verify(financeRowCostsService).getCostItem(1L, questionId);
-//        verify(applicationValidationUtil).validateCostItem(costItems, question);
+        verify(processRoleRepository).findOne(markedAsCompleteById);
+        verify(financeService).financeDetails(applicationId, organisationId);
+        verify(financeRowCostsService).getCostItems(applicationFinanceId, questionId);
+        verify(applicationValidationUtil).validateCostItem(costItems, question);
     }
 
     @Test
