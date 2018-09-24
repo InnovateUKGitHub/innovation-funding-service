@@ -23,7 +23,10 @@ import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -47,7 +50,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -385,23 +387,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
-                        getByEmailAndCompetitionWithValidation(invite.getEmail(), competitionId).handleSuccessOrFailure(
-                                failure -> getInnovationArea(invite.getInnovationAreaId())
-                                        .andOnSuccess(innovationArea ->
-                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
-                                        )
-                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
-                                                "invites[" + index + "].innovationArea",
-                                                invite.getInnovationAreaId(),
-                                                "validation.competitionAssessmentInvite.create.innovationArea.required"
-                                                ))
-                                        ),
-                                success -> serviceFailure(Error.fieldError(
-                                        "invites[" + index + "].email",
-                                        invite.getEmail(),
-                                        "validation.competitionAssessmentInvite.create.email.exists"
-                                ))
-                        )
+                                     validateUserDoesntAlreadyExistWithIncompatibleRole(index, invite.getEmail())
+                                     .andOnSuccess(() -> validateUserIsNotAlreadyInvitedToThisCompetition(index, invite.getEmail(), competitionId))
+                                     .andOnSuccess(() -> validateInnovationArea(index, invite.getInnovationAreaId()))
+                                     .andOnSuccess(innovationArea -> inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea))
                 ))
                 .andOnSuccess(list -> aggregate(list))
                 .andOnSuccessReturnVoid();
@@ -583,29 +572,51 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return find(assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
     }
 
-    private ServiceResult<Void> getByEmailAndCompetitionWithValidation(String email, long competitionId) {
+    private ServiceResult<Void> validateUserDoesntAlreadyExistWithIncompatibleRole(int index, String email) {
 
+        // only new users and applicants can become assessors
+        Optional<User> existingUser = userRepository.findByEmailAndRolesNot(email, Role.APPLICANT);
+        if (existingUser.isPresent()) {
+            return ServiceResult.serviceFailure(Error.fieldError(
+                    "invites[" + index + "].email",
+                    email,
+                    "validation.competitionAssessmentInvite.create.user.exists"
+            ));
+        }
+
+        return ServiceResult.serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserIsNotAlreadyInvitedToThisCompetition(int index, String email, long competitionId) {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
+        AssessorCreatedInvitePageResource resource = getInvitePageResource(competitionId, pageable).getSuccess();
 
-        List<String> existingEmails = resource.getSuccess().getContent().stream()
+        boolean userIsAlreadyInvitedOnThisPage = resource.getContent()
+                .stream()
                 .map(AssessorCreatedInviteResource::getEmail)
-                .collect(Collectors.toList());
+                .anyMatch(e -> e.equals(email));
 
-        List<String> userIsAlreadyInvitedList = existingEmails.stream()
-                .filter(e -> e.equals(email))
-                .collect(Collectors.toList());
+        boolean userInviteAlreadyExists = assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null;
 
-        Optional<User> userExists = userRepository.findByEmail(email);
-
-        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
-
-        if (assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
-            return ServiceResult.serviceSuccess();
-        } else {
-            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        if (userInviteAlreadyExists || userIsAlreadyInvitedOnThisPage) {
+            return serviceFailure(Error.fieldError(
+                    "invites[" + index + "].email",
+                    email,
+                    "validation.competitionAssessmentInvite.create.email.exists"
+            ));
         }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<InnovationArea> validateInnovationArea(int index, long innovationAreaId) {
+        return getInnovationArea(innovationAreaId)
+                .andOnFailure(() -> serviceFailure(Error.fieldError(
+                        "invites[" + index + "].innovationArea",
+                        innovationAreaId,
+                        "validation.competitionAssessmentInvite.create.innovationArea.required"
+                )));
     }
 
     private ServiceResult<Void> deleteInvite(AssessmentInvite invite) {
