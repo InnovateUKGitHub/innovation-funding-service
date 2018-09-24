@@ -14,17 +14,17 @@ Status is updated after marking as complete
     [Tags]
     Given the user navigates to the summary page of the Robot test application
     And the user navigates to the overview page of the Robot test application
-    When the user clicks the button/link    link=4. Economic benefit
+    When the user clicks the button/link    link = 4. Economic benefit
     And the applicant adds some content and marks this section as complete
     And the user navigates to the summary page of the Robot test application
-    Then the user should see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
+    Then the user should see the element    jQuery = button:contains("Economic benefit") *:contains("Complete")
 
 Status is updated after editing a section
     [Documentation]    INFUND-544
     [Tags]
     Given the user navigates to the summary page of the Robot test application
     And the user navigates to the overview page of the Robot test application
-    When the user clicks the button/link    link=4. Economic benefit
+    When the user clicks the button/link        link = 4. Economic benefit
     And the applicant edits the "economic benefit" question
     And the user navigates to the summary page of the Robot test application
-    Then the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
+    Then the user should not see the element    jQuery = button:contains("Economic benefit") *:contains("Complete")
