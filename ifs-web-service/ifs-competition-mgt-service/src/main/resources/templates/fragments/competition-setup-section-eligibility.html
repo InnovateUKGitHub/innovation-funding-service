@@ -115,7 +115,7 @@
                                     <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
                                           th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"/>
                                     <select class="govuk-select govuk-!-width-one-quarter"
-                                            name="fundingLevelPercentage-rc"
+                                            name="fundingLevelPercentage"
                                             id="fundingLevelPercentage-rc"
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
