@@ -4,6 +4,7 @@ Documentation     INFUND-703: As a user and I have provided the wrong login deta
 ...               INFUND-6260 As product owner I need to have an overview of the cookies stored, so we satisfy the cookie law and GDS guidelines
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
+Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***

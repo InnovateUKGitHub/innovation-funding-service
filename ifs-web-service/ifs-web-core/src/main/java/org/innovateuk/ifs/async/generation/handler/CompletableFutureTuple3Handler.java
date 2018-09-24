@@ -28,8 +28,8 @@ import java.util.concurrent.Executor;
  */
 public class CompletableFutureTuple3Handler<T1, T2, T3> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple3Handler(String futureName, Executor threadPool, CompletableFuture<T1> future1, CompletableFuture<T2> future2, CompletableFuture<T3> future3) {
-        super(futureName, threadPool, future1, future2, future3);
+    public CompletableFutureTuple3Handler(String futureName, Executor threadPool, long timeoutValue, CompletableFuture<T1> future1, CompletableFuture<T2> future2, CompletableFuture<T3> future3) {
+        super(futureName, threadPool, timeoutValue, future1, future2, future3);
     }
 
     public <R> CompletableFuture<R> thenApply(TriFunction<T1, T2, T3, R> handler) {
