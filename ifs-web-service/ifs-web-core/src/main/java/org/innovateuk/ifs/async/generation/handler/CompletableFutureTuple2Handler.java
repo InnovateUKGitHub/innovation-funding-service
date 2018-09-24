@@ -28,8 +28,8 @@ import java.util.function.BiFunction;
  */
 public class CompletableFutureTuple2Handler<T1, T2> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple2Handler(String futureName, Executor threadPool, CompletableFuture<T1> future1, CompletableFuture<T2> future2) {
-        super(futureName, threadPool, future1, future2);
+    public CompletableFutureTuple2Handler(String futureName, Executor threadPool, long timeoutValue, CompletableFuture<T1> future1, CompletableFuture<T2> future2) {
+        super(futureName, threadPool, timeoutValue, future1, future2);
     }
 
     public <R> CompletableFuture<R> thenApply(BiFunction<T1, T2, R> handler) {
