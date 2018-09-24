@@ -52,12 +52,25 @@ public class InviteOrganisationPermissionRules extends BasePermissionRules {
 
         if (isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user)) {
             // Get the application id from the first invite, as application id is same for all invites.
-            Long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
+            long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
 
             Application application = getApplication(applicationId);
-            return isCollaborationAllowed(application) && applicationIsEditable(application);
+
+            return checkCollaborationLevel(inviteOrganisation, applicationId) && applicationIsEditable(application);
         }
         return false;
+    }
+
+    private boolean checkCollaborationLevel(InviteOrganisationResource inviteOrganisationResource, long applicationId) {
+        Application application = getApplication(applicationId);
+
+        boolean newCollaborationInvite = isNewCollaborationInvite(inviteOrganisationResource);
+        boolean collaborationAllowed = isCollaborationAllowed(application);
+        return !newCollaborationInvite || collaborationAllowed;
+    }
+
+    private boolean isNewCollaborationInvite(InviteOrganisationResource inviteOrganisationResource) {
+        return inviteOrganisationResource.getOrganisation() == null;
     }
 
     private boolean isCollaborationAllowed(Application application) {
