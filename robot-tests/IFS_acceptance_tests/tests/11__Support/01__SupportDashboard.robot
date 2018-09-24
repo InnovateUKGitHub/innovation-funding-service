@@ -39,16 +39,16 @@ Back navigation is to dashboard
 
 Support user is able to search for an Application
     [Documentation]  IFS-2904
-    [Tags]  HappyPath
+    [Tags]
     When the user navigates to the page       ${server}/management/dashboard/live
     Then the user enters the application id into the search field
 
 Support user is able to search active external users
     [Documentation]  IFS-1986 IFS-1841
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page           ${manageExternalUsers}
-    When the user is searching for external users  becky  Email
-    Then the user should see the element           jQuery=td:contains("Dreambit") ~ td:contains("becky.mason@gmail.com") + td:contains("Verified")
+    When the user is searching for external users  dustin  Email
+    Then the user should see the element           jQuery=td:contains("Kazio") ~ td:contains("worth.email.test+dustin@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link=Clear
     When the user is searching for external users  Empire  ORGANISATION_NAME
     Then the user should see the element           jQuery=td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
@@ -56,7 +56,7 @@ Support user is able to search active external users
 
 Support user is able to search pending external users
     [Documentation]  IFS-1986 IFS-1841
-    [Tags]  HappyPath
+    [Tags]
     When a collaborator has been invited but he has not yet approved the invitation
     Then the support user should be able to see him as  Sent  Pending accounts
     When the invitee has accepted the invitation but has not yet verified his account

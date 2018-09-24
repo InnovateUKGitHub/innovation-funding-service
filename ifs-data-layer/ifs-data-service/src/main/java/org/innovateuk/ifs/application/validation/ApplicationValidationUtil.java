@@ -4,10 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,9 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationTeamMarkAsCompleteValidator applicationTeamMarkAsCompleteValidator;
+
+    @Autowired
+    private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
 
     @Autowired
     private MinRowCountValidator minRowCountValidator;
@@ -106,10 +110,22 @@ public class ApplicationValidationUtil {
 
         } else if(question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
             validationMessages.addAll(isApplicationTeamValid(application, question));
+        } else if(question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
+            validationMessages.addAll(isResearchCategoryValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
             }
+        }
+        return validationMessages;
+    }
+
+    private List<ValidationMessages> isResearchCategoryValid(Application application, Question question) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+
+        BindingResult bindingResult = addValidation(application, applicationResearchMarkAsCompleteValidator);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;
     }

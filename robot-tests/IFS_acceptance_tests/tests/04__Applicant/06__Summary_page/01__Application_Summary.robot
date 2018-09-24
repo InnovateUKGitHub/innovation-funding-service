@@ -12,7 +12,7 @@ All sections present
     [Documentation]    INFUND-193
     ...
     ...    INFUND-1075
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the summary page of the Robot test application
     Then all the sections should be visible
 
@@ -30,7 +30,7 @@ Clicking the Scope button expands the section
 
 Edit link navigates to the application form
     [Documentation]    INFUND-193
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
     When the user clicks the button/link    jQuery=.textarea-wrapped button:contains("Return and edit")
     Then the user should see the text in the page    Project summary

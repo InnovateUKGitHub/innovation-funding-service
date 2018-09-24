@@ -80,7 +80,7 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
                 .withProjectStartDate(LocalDate.now())
                 .withProjectEndDate(LocalDate.now().plusYears(1L))
                 .withProjectName("Project Name")
-                .withParticipantId("123456")
+                .withParticipantId("123456789")
                 .build();
 
         EuGrantResource euGrantResource = newEuGrantResource()
@@ -129,7 +129,7 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
         fundingForm.setStartDateYear(2000);
         fundingForm.setEndDateMonth(10);
         fundingForm.setEndDateYear(2020);
-        fundingForm.setParticipantId("123456");
+        fundingForm.setParticipantId("123456789");
         fundingForm.setProjectName("Project Name");
 
         when(euGrantCookieService.get()).thenReturn(euGrantResource);
