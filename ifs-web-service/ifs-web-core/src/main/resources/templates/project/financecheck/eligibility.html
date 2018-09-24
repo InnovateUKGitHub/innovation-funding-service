@@ -16,7 +16,7 @@
     <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=${summaryModel.projectName},size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <div class="success-alert">
@@ -143,8 +143,13 @@
             <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do this by raising queries through IFS. Saved changes will be visible to the applicant.</p>
             <div class="upload-section">
                 <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form:</h3>
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
-                   class="govuk-link uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
+                <p class="uploaded-file govuk-body">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
+                       class="govuk-link"
+                       th:text="${summaryModel.jesFileDetails?.filename}"
+                       target="_blank">The-uploaded-file-example.pdf</a>
+                    (opens in a new window).
+                </p>
             </div>
         </th:block>
 

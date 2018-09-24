@@ -92,7 +92,7 @@ ${ELBOW_GREASE_PROJECT}    ${getProjectId("Elbow grease")}
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
-    [Tags]  HappyPath
+    [Tags]
     [Setup]    Log in as a different user        &{internal_finance_credentials}
     Given the user navigates to the page         ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element         css=table.table-progress
@@ -136,7 +136,7 @@ Status of the Eligibility column (workaround for private beta competition)
 # Leaving this query test here as it has to be done before finance contacts and bank details are filled in
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/eligibility
     And the user clicks the button/link    jQuery=.button-secondary:contains("Queries")
     Then the user should see the element    jQuery=.govuk-button:contains("Post a new query")[disabled]
@@ -147,7 +147,7 @@ Query section is disabled before finance contacts have been selected
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
-    [Tags]    HappyPath
+    [Tags]
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
@@ -333,8 +333,8 @@ Viability checks are populated in the table
 
 IFS Admin user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
-    [Setup]  log in as a different user    &{internal_finance_credentials}
     [Tags]
+    [Setup]  log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -816,7 +816,7 @@ Project finance can see updated finance breakdown for different categories
 
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
-    [Tags]      HappyPath
+    [Tags]
     When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
@@ -1017,13 +1017,13 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Setup]    log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     css=ul li.complete:nth-child(1)
-    And the user should see the element     css=ul li.complete:nth-child(3)
     And the user should see the element     css=ul li.complete:nth-child(4)
-    And the user should see the element     css=ul li.read-only:nth-child(5)
+    And the user should see the element     css=ul li.complete:nth-child(5)
+    And the user should see the element     css=ul li.read-only:nth-child(6)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
-     [Tags]      HappyPath
+     [Tags]
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
      Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
@@ -1036,7 +1036,7 @@ Status updates correctly for internal user's table
 
 Other internal users do not have access to Finance checks
     [Documentation]    INFUND-4821
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
@@ -1046,8 +1046,8 @@ Finance contact can access the external view of the finance checks page
     [Tags]
     [Setup]    Log in as a different user   &{successful_applicant_credentials}
     Given the user clicks the button/link   jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     Then the user should not see an error in the page
     And the user should see the element     jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
@@ -1080,8 +1080,8 @@ Academic user can view Finance checks page
     [Tags]
     Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
@@ -1092,8 +1092,8 @@ Non Lead Partner can view finance checks page
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     And the user should see the element     jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
 
@@ -1435,5 +1435,5 @@ check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
     the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_TITLE}
     the user should see the element    link=Finance checks
-    the user should see the element     jQuery=ul li.${selector}:nth-of-type(4):contains("We will review your financial information.")
-    the user should see the element     jQuery=ul li.${selector}:nth-of-type(4):contains(${status})
+    the user should see the element     jQuery=ul li.${selector}:nth-of-type(5):contains("We will review your financial information.")
+    the user should see the element     jQuery=ul li.${selector}:nth-of-type(5):contains(${status})

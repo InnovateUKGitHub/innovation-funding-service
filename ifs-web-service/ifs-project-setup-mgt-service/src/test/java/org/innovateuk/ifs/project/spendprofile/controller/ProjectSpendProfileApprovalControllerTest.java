@@ -71,7 +71,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
 
         ProjectSpendProfileApprovalViewModel expectedProjectSpendProfileApprovalViewModel =
-                new ProjectSpendProfileApprovalViewModel(competitionSummary, user.getName(), ApprovalType.APPROVED, Collections.emptyList());
+                new ProjectSpendProfileApprovalViewModel(competitionSummary, user.getName(), ApprovalType.APPROVED, Collections.emptyList(), applicationId, "name");
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", project.getId()))
                 .andExpect(status().isOk())

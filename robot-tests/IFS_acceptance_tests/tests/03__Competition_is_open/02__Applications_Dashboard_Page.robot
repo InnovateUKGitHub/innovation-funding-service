@@ -19,13 +19,12 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
-${valid_pdf}      testing.pdf
 ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Application Dashboard
     [Documentation]    INFUND-7369
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    link=${openCompetitionRTO_name}
     When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
@@ -35,7 +34,7 @@ List of all Applications
     [Documentation]    INFUND-7367
     ...
     ...    INFUND-3063
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=All applications
     Then the user should see the text in the page    All applications
     And the user should see the text in the page    Application number
@@ -47,12 +46,12 @@ List of all Applications
 
 All Applications page: calculation in the table header
     [Documentation]    INFUND-7369
-    [Tags]    HappyPath
+    [Tags]
     Then the table header matches correctly
 
 The applications can be sorted by application number
     [Documentation]    INFUND-8010
-    [Tags]    HappyPath    Failing    INFUND-8582
+    [Tags]    Failing    INFUND-8582
     When the application list is sorted by    Application no.
     Then the applications should be sorted by column    1
 
@@ -64,7 +63,7 @@ The applications can be sorted by lead applicant
 
 Filter on application number
     [Documentation]    INFUND-8010
-    [Tags]    HappyPath
+    [Tags]
     Given the user enters text to a text field    id=filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
@@ -79,7 +78,7 @@ All Applications page: Key Statistics
 
 Application has team link and team details
     [Documentation]  IFS-43
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element  link=view contributors and collaborators
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
@@ -112,10 +111,10 @@ Application has team link and team details
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
     When the user can see the option to upload a file on the page        ${APPLICATION_OVERVIEW_URL}
-    Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
+    Then the user uploads the file to the 'technical approach' question  ${5mb_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
     And the user navigates to the page                      ${applicationsForRTOComp}
     #Then the user should see the element  id=sort-by
@@ -125,7 +124,7 @@ Comp admin can open the view mode of the application
     Then the user should be redirected to the correct page  ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element                     link=Print application
     And the user should see the text in the page            Climate science the history of Greenland's ice
-    And the user should see the text in the page            ${valid_pdf}
+    And the user should see the text in the page            ${5mb_pdf}
     And the user can view this file without any errors
     And the user closes the last opened tab
     #    And the user should see the text in the page    ${quarantine_pdf}
@@ -162,7 +161,7 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    The user opens the link in new window  ${valid_pdf}, 10 KB
+    The user opens the link in new window    ${5mb_pdf}, 4 MB
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message

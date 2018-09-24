@@ -6,8 +6,9 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
@@ -18,11 +19,19 @@ import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.validation.BindingResult;
@@ -39,8 +48,11 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -71,6 +83,15 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private ProjectFinanceRowService projectFinanceRowService;
+
+    @Mock
+    private AcademicJesValidator academicJesValidator;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Test
     public void validateFormInputResponse() {
@@ -167,6 +188,55 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void validateFormInputResponseWithMarkedAsComplete() {
+        Application application = newApplication().build();
+        Long markedAsCompleteById = 4L;
+        FormInputResponse formInputResponse = newFormInputResponse().build();
+        BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
+        FormInput formInput = newFormInput().build();
+        Long formInputId = formInput.getId();
+
+        when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
+        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
+        when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
+
+        BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
+
+        assertEquals(bindingResultExpected, actual);
+
+        verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
+        verify(applicationValidationUtil).validateResponse(formInputResponse, false);
+        verify(formInputRepository, only()).findOne(formInputId);
+    }
+
+    @Test
+    public void validateFormInputResponse_isResearchUser() {
+        Application application = newApplication().build();
+        Long markedAsCompleteById = 4L;
+        FormInputResponse formInputResponse = newFormInputResponse().build();
+        BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
+        FormInput formInput = newFormInput().withType(FormInputType.FINANCE_UPLOAD).build();
+        Long formInputId = formInput.getId();
+        OrganisationResource organisationResult = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+        User user = newUser().build();
+
+        when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
+        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
+        when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
+        when(applicationValidationUtil.addValidation(application, academicJesValidator)).thenReturn(bindingResultExpected);
+        when(organisationService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(ServiceResult.serviceSuccess(organisationResult));
+        when(userRepository.findOne(loggedInUser.getId())).thenReturn(user);
+        BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
+
+        assertEquals(bindingResultExpected, actual);
+
+        verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
+        verify(applicationValidationUtil).validateResponse(formInputResponse, false);
+        verify(formInputRepository, only()).findOne(formInputId);
+        verify(applicationValidationUtil).addValidation(application, academicJesValidator);
+        verify(organisationService, only()).getByUserAndApplicationId(user.getId(), application.getId());
+        verify(userRepository, only()).findOne(loggedInUser.getId());
 
     }
 

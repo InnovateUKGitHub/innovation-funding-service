@@ -27,7 +27,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
@@ -75,7 +75,7 @@ Project Finance has the options to edit the details and to approve the bank deta
 
 Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     Then the user clicks the button/link  link=Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
@@ -111,7 +111,7 @@ Bank account number and sort code validations server side
 
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     When the user clicks the button/link          link=Change bank account details
@@ -127,7 +127,7 @@ Project Finance cancels bank details changes
 
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
-    [Tags]    HappyPath
+    [Tags]
     When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
     And the user clicks the button/link            id=modal-change-bank-details
     And the user clicks the button/link            id=submit-change-bank-details
@@ -139,7 +139,7 @@ Project Finance updates bank account details
 
 Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
@@ -170,10 +170,10 @@ Project Finance cannot approve the bank details again
 
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_EF_APPLICATION_TITLE}
-    Then the user should see the element           css=ul li.complete:nth-child(3)
+    Then the user should see the element           css=ul li.complete:nth-child(4)
     When the user clicks the button/link           link=View the status of partners
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)

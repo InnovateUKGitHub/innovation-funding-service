@@ -48,7 +48,7 @@ Validations for invalid inputs
 
 Valid Profile Update
     [Documentation]    INFUND-1480
-    [Tags]    HappyPath
+    [Tags]
     When the assessor updates profile details
     And the user clicks the button/link    jQuery=a:contains("your details")
     Then the saved changes are visible
