@@ -16,9 +16,7 @@ IFS.competitionManagement.eligibility = (function () {
 
       IFS.competitionManagement.eligibility.setOverrideFundingRulesVisibility()
 
-      if (status) {
-        jQuery('#funding-level').find('select').val('')
-      } else {
+      if (!status) {
         jQuery('#override-funding-rules').find('input[name="overrideFundingRules"]').prop('checked', false)
       }
     },
@@ -26,31 +24,24 @@ IFS.competitionManagement.eligibility = (function () {
       var handleOverrideFundingRules = jQuery(el)
       var status = handleOverrideFundingRules.val() === 'true'
 
-      var fundingLevelContainer = jQuery('#funding-level')
-
-      if (status) {
-        fundingLevelContainer.attr('aria-hidden', 'false')
-      } else {
-        fundingLevelContainer.attr('aria-hidden', 'true')
-        fundingLevelContainer.find('select').val('')
-      }
+      IFS.competitionManagement.eligibility.setContainerVisibility('#funding-level', status)
     },
     setOverrideFundingRulesVisibility: function () {
       var researchCategoriesFalseIsChecked = jQuery('input[name="researchCategoriesApplicable"][value="false"]').is(':checked')
       var overrideFundingRulesTrueIsChecked = jQuery('input[name="overrideFundingRules"][value="true"]').is(':checked')
-      var overrideFundingRulesContainer = jQuery('#override-funding-rules')
-      var fundingLevelContainer = jQuery('#funding-level')
 
-      if (researchCategoriesFalseIsChecked) {
-        overrideFundingRulesContainer.attr('aria-hidden', 'true')
+      IFS.competitionManagement.eligibility.setContainerVisibility('#override-funding-rules', !researchCategoriesFalseIsChecked)
+      IFS.competitionManagement.eligibility.setContainerVisibility('#funding-level', overrideFundingRulesTrueIsChecked)
+      IFS.competitionManagement.eligibility.setContainerVisibility('#funding-level-rc', researchCategoriesFalseIsChecked)
+    },
+    setContainerVisibility: function (id, visible) {
+      var container = jQuery(id)
+      if (visible) {
+        container.attr('aria-hidden', 'false')
+        container.find('select').prop('disabled', false)
       } else {
-        overrideFundingRulesContainer.attr('aria-hidden', 'false')
-      }
-
-      if (researchCategoriesFalseIsChecked || overrideFundingRulesTrueIsChecked) {
-        fundingLevelContainer.attr('aria-hidden', 'false')
-      } else {
-        fundingLevelContainer.attr('aria-hidden', 'true')
+        container.attr('aria-hidden', 'true')
+        container.find('select').val('').prop('disabled', true)
       }
     }
   }
