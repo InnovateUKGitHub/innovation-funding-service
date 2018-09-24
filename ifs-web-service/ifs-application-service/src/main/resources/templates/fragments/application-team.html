@@ -34,7 +34,8 @@
                         <p class="govuk-body" th:if="${!model.collaborationLevelSingle}">Read the guidance on <a
                             href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" class="govuk-link" target="_blank">how collaboration in the Innovation Funding Service works</a> (opens in a new window).</p>
 
-                        <div th:if="${model.applicationCanBegin}" class="message-alert">
+                        <div th:if="${model.applicationCanBegin && !model.collaborationLevelSingle}"
+                             class="message-alert">
                             <h2 class="govuk-heading-s">As the lead applicant you can:</h2>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>add collaborating and contributing organisations and individuals</li>
