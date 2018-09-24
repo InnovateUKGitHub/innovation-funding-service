@@ -67,7 +67,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
         {
             // Set up users on an organisation and application
             final Long applicationId = 1L;
-            final Long submittedApplicationId = 1L;
+            final Long submittedApplicationId = 2L;
             final Long organisationId = 2L;
 
             final Application application = newApplication()
@@ -103,7 +103,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
                     .build();
 
             ApplicationResource submittedApplicationResource = newApplicationResource()
-                    .withId(applicationId)
+                    .withId(submittedApplicationId)
                     .withApplicationState(ApplicationState.SUBMITTED)
                     .build();
 
@@ -191,22 +191,21 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
     @Test
     public void supportAndIfsAdminUsersCanReadContentsOfAnOverheadsFileForAnApplication() {
-        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, supportUser));
-        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, ifsAdmin));
+        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(overheads, supportUser));
+        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(overheads, ifsAdmin));
 
-        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, otherLeadApplicant));
-        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, projectFinance));
-        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, innovationLead));
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(overheads, projectFinance));
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(overheads, innovationLead));
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(overheads, compAdmin));
     }
 
     @Test
     public void compAdminAndInnovationLeadAndProjectFinanceUsersCanReadDetailsOfAnOverheadsFileForASubmittedApplication() {
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, projectFinance));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, compAdmin));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, innovationLead));
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, projectFinance));
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, compAdmin));
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, innovationLead));
 
-        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, otherLeadApplicant));
-        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, supportUser));
-        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, ifsAdmin));
+        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, supportUser));
+        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, ifsAdmin));
     }
 }

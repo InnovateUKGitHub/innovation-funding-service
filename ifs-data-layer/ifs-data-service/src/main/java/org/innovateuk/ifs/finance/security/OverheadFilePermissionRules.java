@@ -78,12 +78,12 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
 
     private boolean isDownloadableBeforeSubmission(final FinanceRow overheads, final UserResource user) {
         boolean isSupportOrAdmin = user.hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
-        return !isApplicationSubmitted(overheads) || isSupportOrAdmin;
+        return !isApplicationSubmitted(overheads) && isSupportOrAdmin;
     }
 
     private boolean isDownloadableAfterSubmission(final FinanceRow overheads, final UserResource user) {
-        boolean isSupportOrAdmin = user.hasAnyRoles(COMP_ADMIN, INNOVATION_LEAD, PROJECT_FINANCE);
-        return isApplicationSubmitted(overheads) || isSupportOrAdmin;
+        boolean isAdminOrProjectFinanceUser= user.hasAnyRoles(COMP_ADMIN, INNOVATION_LEAD, PROJECT_FINANCE);
+        return isApplicationSubmitted(overheads) && isAdminOrProjectFinanceUser;
     }
 
     private boolean isApplicationSubmitted(final FinanceRow overheads) {
