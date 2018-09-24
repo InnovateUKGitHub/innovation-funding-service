@@ -161,7 +161,7 @@ Inviting the same user for the same role again should give an error
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link            jQuery=.govuk-button:contains("Send invite")
-    Then the user should see the element           jQuery=.govuk-error-summary:contains("This email address is already in use.")
+    Then the user should see the element           jQuery=.govuk-error-summary:contains("${email_already_in_use}")
 
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
@@ -172,7 +172,7 @@ Inviting the same user for the different role again should also give an error
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  Project Finance  id=role
     And the user clicks the button/link        jQuery=.govuk-button:contains("Send invite")
-    Then The user should see a summary error   This email address is already in use.
+    Then The user should see a summary error   ${email_already_in_use}
 
 Administrator can navigate to edit page to edit the internal user details
     [Documentation]  IFS-18

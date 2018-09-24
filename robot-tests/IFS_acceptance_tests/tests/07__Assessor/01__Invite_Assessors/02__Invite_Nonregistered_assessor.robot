@@ -22,6 +22,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${Invitation_nonregistered_assessor2}  ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 ${Invitation_nonregistered_assessor3}  ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:${test_mailbox_one}+thomas.fister@gmail.com
+${openCompetitionAPC}                  Low-cost propulsion mechanisms for subsonic travel
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -106,12 +107,31 @@ Innovation area on assessor profile for invited user
     When the user clicks the button/link   link=Thomas Fister
     Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
 
-Inviting an applicant as an assessor
+The internal user invites an applicant as an assessor
     [Tags]
     Given the user clicks the button/link      link = Back
     And the user clicks the button/link        jQuery = a:contains("Invite")
     When the user invites an applicant as an assessor
-    Then the user cannot see a validation error in the page
+    And the user cannot see a validation error in the page
+    And the user clicks the button/link        jQuery = a:contains("Review and send invites")
+    And the user clicks the button/link        jQuery = button:contains("Send invite")
+    [Teardown]    Logout as user
+
+The invited applicant accepts the invitation
+    [Tags]
+    Given the user reads his email and clicks the link    ${rto_applicant}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
+    When the user selects the radio button                acceptInvitation  true
+    And the user clicks the button/link                   css = button[type = "Submit"]
+    Then the user should see the element                  jQuery = p:contains("Your email address is linked to an existing account.")
+
+The internal user invites the applicant to assess another competition
+    [Tags]
+    Given the user logs-in in new browser                 &{Comp_admin1_credentials}
+    And the user clicks the button/link                   link = ${openCompetitionAPC}
+    And the user clicks the button/link                   jQuery = a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link                   jQuery = a:contains("Invite")
+    When the user invites an applicant as an assessor
+    Then the user should see a field and summary error    ${email_already_in_use}
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
