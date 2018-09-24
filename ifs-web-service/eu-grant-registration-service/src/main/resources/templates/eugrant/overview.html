@@ -84,8 +84,8 @@
         <div class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">You can only register one project at a time. If you or your organisation is
                 participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
-                on 000 000 0000 or email
-                <a href="mailto:xxx@xxx" class="govuk-link">xxx@xxx</a>.</p>
+                on 0300 321 4357 or email
+                <a href="mailto:EUGrantsFunding@ukri.org" class="govuk-link">EUGrantsFunding@ukri.org</a>.</p>
         </div>
 
         <form th:action="@{/overview}" th:object="${form}" method="POST" novalidate="novalidate"
@@ -95,12 +95,13 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
                     <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
                 </legend>
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="termsAndConditions" class="govuk-checkboxes__input" type="checkbox" required="required" th:field="*{agreeTerms}" data-switches-button-status="#submit-grant" />
-                        <label for="termsAndConditions" class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link">terms and conditions</a>.</label>
-                    </div>
-                </div>
+
+                <p class="govuk-body">
+                    Your information will be used to keep you updated on developments which may affect you. All data
+                    is managed in line with the General Data Protection Regulation and the UK Research and Innovation
+                    <a href="https://www.ukri.org/privacy-notice/" class="govuk-link" target="_blank">privacy notice</a>
+                    (opens in a new window).
+                </p>
             </div>
 
             <button id="submit-grant" name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
@@ -123,8 +124,6 @@
             <div class="modal-overlay" aria-hidden="true"></div>
 
         </form>
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
