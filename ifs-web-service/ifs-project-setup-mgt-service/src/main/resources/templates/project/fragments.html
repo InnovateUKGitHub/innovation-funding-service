@@ -72,7 +72,7 @@
             id="section-2"
             class="govuk-tabs__list-item">
             <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
-               th:text="'Query responses (' + ${openQueryCount} + ')'"
+               th:text="'Queries (' + ${openQueryCount} + ')'"
                class="govuk-tabs__tab"
                th:attr="aria-selected=${selectedTab == 'queries'} ? 'true' : 'false'"></a>
         </li>

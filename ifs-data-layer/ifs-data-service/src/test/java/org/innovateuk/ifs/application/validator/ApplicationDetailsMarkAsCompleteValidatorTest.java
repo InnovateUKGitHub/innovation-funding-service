@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Mark as complete validator test class for application details section
  */
-public class ApplicationMarkAsCompleteValidatorTest {
+public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     private Validator validator;
 
@@ -28,7 +28,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
     @Before
     public void setUp() {
-        validator = new ApplicationMarkAsCompleteValidator();
+        validator = new ApplicationDetailsMarkAsCompleteValidator();
         currentDate = LocalDate.now();
     }
 
