@@ -206,7 +206,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertNotNull(savedStakeholderInvite2.getHash());
         assertEquals(SENT, savedStakeholderInvite2.getStatus());
         assertEquals(loggedInUser, savedStakeholderInvite2.getSentBy());
-        assertTrue(now().isAfter(savedStakeholderInvite2.getSentOn()));
+        assertTrue(now().isEqual(savedStakeholderInvite2.getSentOn()) || now().isAfter(savedStakeholderInvite2.getSentOn()));
     }
 
     @Test
