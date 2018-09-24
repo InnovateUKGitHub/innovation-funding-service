@@ -105,6 +105,13 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
     Then the user should see the element   jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
+
+Inviting an applicant as an assessor
+    [Tags]
+    Given the user clicks the button/link      link = Back
+    And the user clicks the button/link        jQuery = a:contains("Invite")
+    When the user invites an applicant as an assessor
+    Then the user cannot see a validation error in the page
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
@@ -146,3 +153,11 @@ the assessor shouldn't be able to accept the rejected competition
 The assessor is unable to see the invitation
     the user should see the element   jQuery=h1:contains("This invitation is now closed")
     The user should see the element   jQuery=p:contains("You have already accepted or rejected this invitation.")
+
+The user invites an applicant as an assessor
+    the user clicks the button/link                      jQuery = span:contains("Add a non-registered assessor to your list")
+    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(1) input  Dave Adams
+    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${rto_applicant}
+    the user selects the option from the drop-down menu  Emerging and enabling  css = .js-progressive-group-select
+    the user selects the option from the drop-down menu  Emerging technology    id = grouped-innovation-area
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")
