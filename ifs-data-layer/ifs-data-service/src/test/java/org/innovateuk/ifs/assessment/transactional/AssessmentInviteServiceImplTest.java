@@ -1799,7 +1799,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(0))).thenReturn(createdInviteResources.get(0));
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(1))).thenReturn(createdInviteResources.get(1));
-        when(userRepositoryMock.findByEmailAndRolesNot(testEmail1, Role.APPLICANT)).thenReturn(empty());
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 

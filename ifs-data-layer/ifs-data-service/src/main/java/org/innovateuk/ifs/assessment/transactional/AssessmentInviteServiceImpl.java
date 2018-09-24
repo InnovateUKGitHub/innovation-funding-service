@@ -574,9 +574,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private ServiceResult<Void> validateUserDoesntAlreadyExistWithIncompatibleRole(int index, String email) {
 
-        // only new users and applicants can become assessors
-        Optional<User> existingUser = userRepository.findByEmailAndRolesNot(email, Role.APPLICANT);
-        if (existingUser.isPresent()) {
+        // currently only new users or applicants can become assessors
+        boolean userExistsWithIncompatibleRole = userRepository.findByEmailAndRolesNot(email, Role.APPLICANT).isPresent();
+        if (userExistsWithIncompatibleRole) {
             return ServiceResult.serviceFailure(Error.fieldError(
                     "invites[" + index + "].email",
                     email,
