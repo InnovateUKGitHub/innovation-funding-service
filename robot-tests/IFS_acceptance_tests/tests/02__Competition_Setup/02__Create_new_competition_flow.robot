@@ -75,6 +75,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3916 Configurable Project Setup documents: Configuration
 ...
 ...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
+...
+...               IFS-4190 Create new user in stakeholder role
+...
+...               IFS-4253 New Stakeholder invite and create account email
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -350,7 +354,7 @@ Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
-    When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
+    When The user clicks the button/link  link=Application
     Then the user should see the element  jQuery=h2:contains("Sector competition questions")
     When the user should see the element  link=Application details
     Then the user should see the element  link=Project summary
@@ -737,6 +741,40 @@ The Applicant see the correct Questions
     And the user should not see the element          jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
+The internal user cannot invite a Stakeholder when they have triggered the name validation
+    [Documentation]  IFS-4190
+    [Tags]
+    Given log in as a different user                     &{Comp_admin1_credentials}
+    And the user navigates to the page                   ${SERVER}/management/competition/setup/${competitionId}/manage-stakeholders
+    When the user triggers the name validation
+    Then the user should see the name validation messages
+
+The internal user cannot invite a Stakeholder when they have triggered the email validation
+    [Documentation]  IFS-4190
+    [Tags]
+    Then the user triggers the email validation
+
+The internal user cannot invite a user with an Innovate UK email as a Stakeholder
+    [Documentation]  IFS-4190
+    [Tags]
+    When the user enters an Innovate UK email
+    Then the user should see a field and summary error    Stakeholders cannot be registered with an Innovate UK email address.
+
+The internal user invites a Stakeholder
+    [Documentation]  IFS-4190
+    [Tags]
+    Then the user enters the correct details of a Stakeholder
+    # A check to verify the invite will come in another ticket.
+    And logout as user
+    # Logging out here as it'll return a Page not found as it'll click the invite link in the next test case, and still be logged in as the comp admin.
+
+The invited Stakeholder accepts the invite in his or her email
+    [Documentation]  IFS-4253
+    [Tags]
+    When the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
+    Then the user should see the element                 id = sign-in-form
+    # This is a temporary check until the account creation stage comes in another ticket.
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
@@ -907,3 +945,33 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+the user triggers the name validation
+    the user clicks the button/link         jQuery = span:contains("Invite a new stakeholder")
+    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]
+
+the user should see the name validation messages
+    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error    Your first name should have at least 2 characters.
+    the user should see a field and summary error    Please enter a last name.
+    the user should see a field and summary error    Your last name should have at least 2 characters.
+
+the user triggers the email validation
+    the user enters text to a text field             id = firstName     Stake
+    the user enters text to a text field             id = lastName      Holder
+    the user enters text to a text field             id = emailAddress  stakeHoldertest.com
+    the user clicks the button/link                  css = button[name = "inviteStakeholder"]
+    the user should see a field and summary error    Please enter a valid email address.
+
+the user enters an Innovate UK email
+    the user enters text to a text field    id = firstName     Stake
+    the user enters text to a text field    id = lastName      Holder
+    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.test
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]
+
+the user enters the correct details of a Stakeholder
+    the user enters text to a text field    id = firstName     Stake
+    the user enters text to a text field    id = lastName      Holder
+    the user enters text to a text field    id = emailAddress  ${test_mailbox_one}+stakeHolder@test.com
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]

@@ -770,7 +770,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         when(formInputResponseRestService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
                 .thenReturn(restSuccess(formInputResponseFileEntry));
 
-        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
+        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download/filename.pdf",
                 assessmentId,
                 applicationId,
                 formInputId))

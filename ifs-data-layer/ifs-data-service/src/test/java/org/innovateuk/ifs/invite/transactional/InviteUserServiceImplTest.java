@@ -154,10 +154,10 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
-        Role adminRoleType = Role.SUPPORT;
+        Role role = Role.SUPPORT;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID_EMAIL));
     }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.async.controller.endtoend;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -15,6 +16,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Service
 public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
+
+    @Value("${ifs.web.async.max.timeout}")
+    private long timeoutValue;
 
     /**
      * This method performs some hidden async activities.  That is, there is no evidence externally that this method
@@ -48,7 +52,7 @@ public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
             return model.addAttribute("doSomeHiddenButSafeBlockingAsyncActivitiesUser" + userId, userId);
         }));
 
-        waitForFuturesAndChildFuturesToCompleteFrom(futuresList);
+        waitForFuturesAndChildFuturesToCompleteFrom(futuresList, timeoutValue);
     }
 
     /**

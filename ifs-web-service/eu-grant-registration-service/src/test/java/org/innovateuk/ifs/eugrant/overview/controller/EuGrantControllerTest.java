@@ -75,17 +75,6 @@ public class EuGrantControllerTest extends BaseControllerMockMVCTest<EuGrantCont
     }
 
     @Test
-    public void submit_withMissingTerms() throws Exception {
-        EuGrantResource euGrantResource = newEuGrantResource().build();
-
-        when(euGrantCookieService.get()).thenReturn(euGrantResource);
-        mockMvc.perform(post("/overview"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("eugrant/overview"))
-                .andExpect(model().hasErrors());
-    }
-
-    @Test
     public void submitted() throws Exception {
         EuGrantResource euGrantResource = newEuGrantResource().build();
         when(euGrantCookieService.getPreviouslySubmitted()).thenReturn(Optional.of(euGrantResource));

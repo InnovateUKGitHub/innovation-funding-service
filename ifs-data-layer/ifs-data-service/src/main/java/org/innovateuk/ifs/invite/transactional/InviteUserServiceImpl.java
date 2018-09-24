@@ -95,21 +95,21 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
-        return validateInvite(invitedUser, adminRoleType)
-                .andOnSuccess(() -> validateInternalUserRole(adminRoleType))
+        return validateInvite(invitedUser, role)
+                .andOnSuccess(() -> validateInternalUserRole(role))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(role -> saveInvite(invitedUser, adminRoleType))
+                .andOnSuccess(() -> saveInvite(invitedUser, role))
                 .andOnSuccess(this::inviteInternalUser);
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role adminRoleType) {
+    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
-                || StringUtils.isEmpty(invitedUser.getLastName()) || adminRoleType == null){
+                || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
         return serviceSuccess();

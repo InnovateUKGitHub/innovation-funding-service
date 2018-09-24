@@ -134,7 +134,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                         .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
                         .withFundingContribution(new BigDecimal(100))
                         .withGrantAgreementNumber("12345")
-                        .withParticipantId("123456")
+                        .withParticipantId("123456789")
                         .withProjectCoordinator(true)
                         .withProjectStartDate(LocalDate.now().minusYears(1))
                         .withProjectEndDate(LocalDate.now().plusYears(1))

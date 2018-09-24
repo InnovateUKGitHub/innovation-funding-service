@@ -23,7 +23,7 @@ public class EuFunding {
     private String grantAgreementNumber;
 
     @NotNull
-    @Pattern(regexp="[\\d]{6}")
+    @Pattern(regexp="[\\d]{9}")
     private String participantId;
 
     @NotBlank
