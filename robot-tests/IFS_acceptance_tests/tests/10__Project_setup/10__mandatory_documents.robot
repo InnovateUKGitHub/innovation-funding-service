@@ -95,7 +95,7 @@ Non pdf files not allowed for either document
 
 PM can upload both documents
     [Documentation]    INFUND-3011  IFS-2371-2258
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user uploads to the exploitation plan question    ${valid_pdf}
@@ -138,8 +138,7 @@ Non-lead partner can view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -171,7 +170,7 @@ PM can view both documents
 
 PM can remove the second document
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
@@ -185,7 +184,7 @@ Non-lead partner can still view the first document
 
 PM can remove the first document
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -200,7 +199,7 @@ Non-lead partner cannot view either document once removed
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
@@ -210,7 +209,7 @@ PM can upload both documents after they have been removed
 
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should not see the element    css=ul li.complete:nth-child(6)
     When the user clicks the button/link    link=View the status of partners
@@ -218,7 +217,7 @@ Status in the dashboard remains action required after uploads
 
 Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
@@ -237,7 +236,7 @@ Mandatory document submission
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
@@ -295,7 +294,7 @@ Non-lead partner can still view both documents after submitting
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
@@ -308,7 +307,7 @@ CompAdmin can see uploaded files
 
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
@@ -350,7 +349,7 @@ After rejection, lead partner cannot remove either document
 
 After rejection, lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-7342
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
@@ -383,11 +382,11 @@ After rejection, lead partner does not have the option to submit the mandatory d
 
 After rejection, non-lead partner cannot view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428, INFUND-7342
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(2)
+    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -402,15 +401,15 @@ After rejection, non-lead partner cannot view both documents
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    link=Set up your project
-    Then the user should not see the element    css=ul li.complete:nth-child(6)
+    Then the user should not see the element    css=ul li.complete:nth-child(2)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user clicks the button/link    name=removeCollaborationAgreementClicked
@@ -466,7 +465,7 @@ After rejection, PM cannot submit when both documents are removed
 
 After rejection PM can upload both documents when both documents are removed
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -477,7 +476,7 @@ After rejection PM can upload both documents when both documents are removed
 
 After rejection, mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-7342
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
@@ -535,7 +534,7 @@ Project finance can see zero funding for partner in bank details
 
 CompAdmin approves other documents
     [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
@@ -554,7 +553,7 @@ CompAdmin approves other documents
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
-    [Tags]    HappyPath
+    [Tags]
     Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
@@ -570,7 +569,7 @@ Partners can see the documents approved
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
@@ -579,7 +578,7 @@ CompAdmin can see Project status updated
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
-    [Tags]    Experian    HappyPath
+    [Tags]    Experian
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
@@ -592,7 +591,7 @@ Status updates correctly for internal user's table
 # has lead org type of Public sector, charity or non Je-S registered research organisation
 Sole applicant uploads only exploitation plan and submits
     [Documentation]  IFS-1864
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user  ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
     And the user clicks the button/link  link=Other documents
@@ -607,7 +606,7 @@ Sole applicant uploads only exploitation plan and submits
 
 CompAdmin sees uploaded file and approves it
     [Documentation]    IFS-1864
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
     Then the user should not see the text in the page  Collaboration
@@ -623,7 +622,7 @@ Sole applicant can see documents approval
     [Tags]
     [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
-    Then the user should see the element  css=ul li.complete:nth-child(6)
+    Then the user should see the element  css=ul li.complete:nth-child(2)
     When the user clicks the button/link  link=Other documents
     Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
 

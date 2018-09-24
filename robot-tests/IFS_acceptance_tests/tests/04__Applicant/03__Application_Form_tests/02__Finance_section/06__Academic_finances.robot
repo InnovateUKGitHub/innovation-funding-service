@@ -10,7 +10,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
@@ -20,7 +20,7 @@ Resource          ../../Applicant_Commons.robot
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Lead applicant marks the finances as complete
     Given Log in as a different user          ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
@@ -53,7 +53,6 @@ Large pdf upload not allowed
     Then the user clicks the button/link          css=button[name="remove_finance_document"]
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
-    And the user should see the text in the page  Attempt to upload a large file
     [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed
@@ -72,7 +71,7 @@ Lead applicant can't upload a JeS file
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user              ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
@@ -82,7 +81,7 @@ Academics upload
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]
     When the user opens the link in new window  ${5mb_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab

@@ -33,8 +33,8 @@ import java.util.concurrent.Executor;
  */
 public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTupleNHandler(String futureName, Executor threadPool, List<? extends CompletableFuture<?>> futures) {
-        super(futureName, threadPool, futures.toArray(new CompletableFuture<?>[] {}));
+    public CompletableFutureTupleNHandler(String futureName, Executor threadPool, long timeoutValue, List<? extends CompletableFuture<?>> futures) {
+        super(futureName, threadPool, timeoutValue, futures.toArray(new CompletableFuture<?>[] {}));
     }
 
     public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<?>, R> handler) {

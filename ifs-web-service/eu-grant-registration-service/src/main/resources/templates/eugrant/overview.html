@@ -48,7 +48,7 @@
         <ul class="govuk-body task-list">
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.organisationComplete ? '/eu-grant/organisation/view' : '/eu-grant/organisation/type'}">Your organisation</a>
+                    <a class="govuk-heading-s" th:href="@{model.organisationComplete ? '/organisation/view' : '/organisation/type'}">Your organisation</a>
                 </div>
                 <div th:unless="${model.organisationComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -59,7 +59,7 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" th:href="${model.contactComplete ? '/eu-grant/contact-details' : '/eu-grant/contact-details/edit'}">Contact details</a>
+                    <a class="govuk-heading-s" th:href="@{model.contactComplete ? '/contact-details' : '/contact-details/edit'}">Contact details</a>
                 </div>
                 <div th:unless="${model.contactComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
@@ -70,24 +70,47 @@
             </li>
             <li class="govuk-!-padding-left-0">
                 <div class="task">
-                    <a class="govuk-heading-s" disabled="disabled">Funding details</a>
+                    <a class="govuk-heading-s" th:href="@{model.fundingComplete ? '/funding-details' : '/funding-details/edit'}">Funding details</a>
                 </div>
-                <div class="task-status-incomplete">
+                <div th:unless="${model.fundingComplete}" class="task-status-incomplete">
                     <span>Incomplete</span>
+                </div>
+                <div th:if="${model.fundingComplete}" class="task-status-complete">
+                    <span>Complete</span>
                 </div>
             </li>
         </ul>
 
         <div class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">You can only register one project at a time. If you or your organisation is
-                participating in multiple Horizon 2020 projects, please contact the UK Research and Innovation helpdesk
-                on 000 000 0000 or email
-                <a href="mailto:xxx@xxx" class="govuk-link">xxx@xxx</a>.</p>
+            <p class="govuk-body govuk-!-margin-bottom-3">You can register one Horizon 2020 project at a time. For help registering
+                multiple projects, email <a href="mailto:EUGrantsFunding@ukri.org" class="govuk-link">EUGrantsFunding@ukri.org</a>.
+            </p>
+
+            <p class="govuk-body govuk-!-margin-bottom-3">If you would prefer to telephone:</p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>Je-S registered academic institutions, call 01793 444164</li>
+                <li>all other organisations, call 0300 321 4357</li>
+            </ul>
         </div>
 
-        <form action="#">
+        <form th:action="@{/overview}" th:object="${form}" method="POST" novalidate="novalidate"
+              enctype="multipart/form-data">
 
-            <button type="button" class="govuk-button" data-js-modal="registration-modal" disabled="disabled">
+            <div th:if="${model.allComplete()}" class="govuk-form-group">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                    <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                </legend>
+
+                <p class="govuk-body">
+                    Your information will be used to keep you updated on developments which may affect you. All data
+                    is managed in line with the General Data Protection Regulation and the UK Research and Innovation
+                    <a href="https://www.ukri.org/privacy-notice/" class="govuk-link" target="_blank">privacy notice</a>
+                    (opens in a new window).
+                </p>
+            </div>
+
+            <button id="submit-grant" name="without-dialog" type="submit" class="govuk-button" data-js-modal="registration-modal" th:disabled="${!model.allComplete()}">
                 Submit
             </button>
 
@@ -99,16 +122,14 @@
                     your registration.</p>
                 <hr>
                 <div>
-                    <button type="submit" class="govuk-button">Submit</button>
-                    <a class="button-clear js-close" href="#" aria-label="Close Popup">Cancel</a>
+                    <button type="submit" class="govuk-button govuk-!-margin-bottom-0">Submit</button>
+                    <button class="js-close button-clear" type="button">Cancel</button>
                 </div>
             </div>
 
             <div class="modal-overlay" aria-hidden="true"></div>
 
         </form>
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 <th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />

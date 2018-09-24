@@ -2,7 +2,7 @@
 Documentation     IFS-1324 IFS-1325
 Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
-Force Tags        Applicant  Email
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
-import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.GET_USER_BY_HASH_MAPPING;
+import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
 /*
 * A typical RestService to use as a client API on the web-service side for the data-service functionality .

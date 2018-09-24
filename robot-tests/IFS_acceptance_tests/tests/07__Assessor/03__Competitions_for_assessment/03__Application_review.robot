@@ -24,7 +24,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Navigation using previous button
     [Documentation]    INFUND-4264
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link              link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link                link=Intelligent water system
     When the user clicks the button/link               link=4. Economic benefit
@@ -120,7 +120,7 @@ Scope: Validations
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link                    link=Back to your assessment overview
     And the user clicks the button/link                      link=Scope
     When the user selects the index from the drop-down menu  1    css=.research-category
@@ -134,7 +134,7 @@ Scope: Autosave
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3780
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link          link=Scope
     And the user should see the text in the page  Feasibility studies
     And the user should see the text in the page  Testing feedback field when "Yes" is selected.
@@ -143,7 +143,7 @@ Scope: Word count
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3400
-    [Tags]    HappyPath
+    [Tags]
     When the user enters multiple strings into a text field  css=.editor  a${SPACE}  100
     Then the user should see the text in the page            Words remaining: 0
 
@@ -151,7 +151,7 @@ Scope: Guidance
     [Documentation]    INFUND-4142
     ...
     ...    INFUND-6281
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link          css=details summary
     Then the user should see the element          css=div[id^="details-content-"]
     And The user should see the text in the page  One or more of the above requirements have not been satisfied.

@@ -14,7 +14,7 @@ ${competitionName}  Generic competition for TsnCs
 *** Test Cases ***
 User can edit the assesed question
     [Documentation]    IFS-747
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  logged in user applies to competition  ${openGenericCompetition}  1
     Given the user should not see the element  a:contains("7.")  # This comp has only 1 question
     When the user clicks the button/link  link=1. Generic question title
@@ -60,7 +60,8 @@ The competition admin creates a competition for
     the user fills in the CS Milestones         ${month}  ${nextyear}
     the user fills in the CS Application section with custom questions  no  Generic
     the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
+    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    #the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link             link = Return to setup overview
