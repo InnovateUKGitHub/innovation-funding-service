@@ -10,20 +10,15 @@ Resource          ../Assessor_Commons.robot
 *** Test Cases ***
 Invite a new Assessor to assess a competition
     [Documentation]    INFUND-8092
-    [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
-    Given the user clicks the button/link     link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link       link=Invite
-    And the user clicks the button/link       jQuery=span:contains("Add a non-registered assessor to your list")
-    And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input  EtoE
-    And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${Assessor_e2e["email"]}
-    And the user selects the option from the drop-down menu  Emerging and enabling  css=.js-progressive-group-select
-    And the user selects the option from the drop-down menu  Emerging technology  id=grouped-innovation-area
-    And the user clicks the button/link       jQuery=.govuk-button:contains("Add assessors to list")
-    When the user clicks the button/link      jQuery=a:contains("Review and send invites")
-    And the user enters text to a text field  id=message    This is custom text
-    And the user clicks the button/link       jQuery=.govuk-button:contains("Send invite")
-    And The user should see the element       jQuery=h2:contains("View assessors who have not yet responded or have declined the invite.")
+    [Setup]  The user logs-in in new browser      &{Comp_admin1_credentials}
+    Given the user clicks the button/link         link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link           jQuery = a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link           link = Invite
+    And The internal user invites a user as an assessor    EtoE  ${Assessor_e2e["email"]}
+    When the user clicks the button/link          jQuery = a:contains("Review and send invites")
+    And the user enters text to a text field      id = message    This is custom text
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Send invite")
+    And The user should see the element           jQuery = h2:contains("View assessors who have not yet responded or have declined the invite.")
 
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
@@ -155,7 +150,6 @@ click the link assessor
     go to    ${LINK}
     delete email    ${email_to_test}
     close mailbox
-
 
 The user fills and submits the registration form
     When The user enters text to a text field  id=firstName    Tom

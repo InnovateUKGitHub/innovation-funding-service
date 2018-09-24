@@ -18,6 +18,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}  ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
@@ -124,31 +125,31 @@ Non-registered assessor: Reject invitation
 
 The internal user invites an applicant as an assessor
     [Tags]
-    Given the user logs-in in new browser      &{Comp_admin1_credentials}
-    And the user clicks the button/link        link = ${openCompetitionRTO_name}
-    And the user clicks the button/link        jQuery = a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link        jQuery = a:contains("Invite")
-    When the user invites an applicant as an assessor
+    Given the user logs-in in new browser          &{Comp_admin1_credentials}
+    And the user clicks the button/link            link = ${openCompetitionRTO_name}
+    And the user clicks the button/link            jQuery = a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link            jQuery = a:contains("Invite")
+    When The internal user invites a user as an assessor    Dave Adams  ${RTO_lead_applicant_credentials["email"]}
     And the user cannot see a validation error in the page
-    And the user clicks the button/link        jQuery = a:contains("Review and send invites")
-    And the user clicks the button/link        jQuery = button:contains("Send invite")
+    And the user clicks the button/link            jQuery = a:contains("Review and send invites")
+    And the user clicks the button/link            jQuery = button:contains("Send invite")
     [Teardown]    Logout as user
 
 The invited applicant accepts the invitation
     [Tags]
-    Given the user reads his email and clicks the link    ${rto_applicant}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
+    Given the user reads his email and clicks the link    ${RTO_lead_applicant_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
     When the user selects the radio button                acceptInvitation  true
     And the user clicks the button/link                   css = button[type = "Submit"]
     Then the user should see the element                  jQuery = p:contains("Your email address is linked to an existing account.")
 
 The internal user invites the applicant to assess another competition
     [Tags]
-    Given the user logs-in in new browser                 &{Comp_admin1_credentials}
-    And the user clicks the button/link                   link = ${openCompetitionAPC}
-    And the user clicks the button/link                   jQuery = a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link                   jQuery = a:contains("Invite")
-    When the user invites an applicant as an assessor
-    Then the user should see a field and summary error    ${email_already_in_use}
+    Given the user logs-in in new browser                   &{Comp_admin1_credentials}
+    And the user clicks the button/link                     link = ${openCompetitionAPC}
+    And the user clicks the button/link                     jQuery = a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link                     jQuery = a:contains("Invite")
+    When The internal user invites a user as an assessor    Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    Then the user should see a field and summary error      ${email_already_in_use}
     [Teardown]    Logout as user
 
 *** Keywords ***
@@ -176,11 +177,3 @@ the assessor shouldn't be able to accept the rejected competition
 The assessor is unable to see the invitation
     the user should see the element   jQuery=h1:contains("This invitation is now closed")
     The user should see the element   jQuery=p:contains("You have already accepted or rejected this invitation.")
-
-The user invites an applicant as an assessor
-    the user clicks the button/link                      jQuery = span:contains("Add a non-registered assessor to your list")
-    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(1) input  Dave Adams
-    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${rto_applicant}
-    the user selects the option from the drop-down menu  Emerging and enabling  css = .js-progressive-group-select
-    the user selects the option from the drop-down menu  Emerging technology    id = grouped-innovation-area
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")

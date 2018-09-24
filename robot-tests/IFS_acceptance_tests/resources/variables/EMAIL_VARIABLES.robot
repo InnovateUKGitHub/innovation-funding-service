@@ -17,4 +17,3 @@ ${local_imap}                   mail
 ${local_imap_port}              8143
 ${invite_email}                 ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
 ${lead_applicant}               steve.smith@empire.com
-${rto_applicant}                dave.adams@gmail.com
