@@ -50,7 +50,6 @@ Large pdf upload not allowed
     Then the user clicks the button/link          css = button[name="remove_finance_document"]
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
-    And the user should see the text in the page  Attempt to upload a large file
     [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed

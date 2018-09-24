@@ -494,7 +494,7 @@ the user can add and remove multiple content groups
     When the user uploads the file             name = contentGroups[2].attachment  ${text_file}
     Then the user should see the element       jQuery = .govuk-error-summary__list:contains("${wrong_filetype_validation_error}")
     And the user uploads the file              name = contentGroups[2].attachment  ${too_large_pdf}
-    Then the user should see the element       jQuery = h1:contains("Attempt to upload a large file")
+    Then the user should get an error page     ${too_large_pdf_validation_error}
     And the user goes back to the previous page
     And the user reloads the page
     # TODO this reload is required for now due to IFS-559

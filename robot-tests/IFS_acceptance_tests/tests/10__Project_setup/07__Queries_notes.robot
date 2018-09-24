@@ -268,7 +268,7 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     [Tags]
     # Query responses tab
     Given the user navigates to the page  ${server}/project-setup-management/competition/${Queries_Competition_Id}/status/queries
-    When the user clicks the button/link  link = Query responses (1)
+    When the user clicks the button/link  link = Queries (1)
     Then the user should see the element  jQuery = td:contains("${Queries_Application_Title}") + td:contains("${Dreambit_Name}")
     When the user clicks the button/link  link = ${Dreambit_Name}
     Then the user should see the element  jQuery = h1:contains("${Dreambit_Name}")
