@@ -2,6 +2,10 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -17,7 +21,9 @@ import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
@@ -32,14 +38,21 @@ import static org.mockito.Mockito.when;
 public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<OverheadFilePermissionRules> {
 
     private FinanceRow overheads;
+    private FinanceRow submittedOverheads;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
     private UserResource otherLeadApplicant;
-    private UserResource internalUser;
+    private UserResource supportUser;
+    private UserResource ifsAdmin;
+    private UserResource projectFinance;
+    private UserResource innovationLead;
 
     @Mock
     private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
+
+    @Mock
+    private ApplicationService applicationService;
 
     @Override
     protected OverheadFilePermissionRules supplyPermissionRulesUnderTest() {
@@ -54,19 +67,48 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
         {
             // Set up users on an organisation and application
             final Long applicationId = 1L;
+            final Long submittedApplicationId = 1L;
             final Long organisationId = 2L;
-            final Application application = newApplication().with(id(applicationId)).build();
+
+            final Application application = newApplication()
+                .with(id(applicationId))
+                .build();
+
+            final Application submittedApplication = newApplication()
+                    .with(id(submittedApplicationId))
+                    .build();
+
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
+
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
+            final ApplicationFinance submittedApplicationFinance = newApplicationFinance().withApplication(submittedApplication).withOrganisation(organisation).build();
+
             overheads = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
+
+            submittedOverheads = newApplicationFinanceRow().withOwningFinance(submittedApplicationFinance).build();
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
+
             when(applicationFinanceRowRepositoryMock.findOne(overheads.getId())).thenReturn((ApplicationFinanceRow) overheads);
+            when(applicationFinanceRowRepositoryMock.findOne(submittedOverheads.getId())).thenReturn((ApplicationFinanceRow) submittedOverheads);
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
+
+            ApplicationResource applicationResource = newApplicationResource()
+                    .withId(applicationId)
+                    .withApplicationState(ApplicationState.OPEN)
+                    .build();
+
+            ApplicationResource submittedApplicationResource = newApplicationResource()
+                    .withId(applicationId)
+                    .withApplicationState(ApplicationState.SUBMITTED)
+                    .build();
+
+            when(applicationService.getApplicationById(applicationId)).thenReturn(serviceSuccess(applicationResource));
+            when(applicationService.getApplicationById(submittedApplicationId)).thenReturn(serviceSuccess(submittedApplicationResource));
         }
 
         {
@@ -93,14 +135,17 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER)).
                     thenReturn(Collections.singletonList(newProjectUser().withId(otherProjectUserId).build()));
         }
-        //Setting internal user attributes
+        //Create users with roles
         {
-            internalUser = newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build();
+            ifsAdmin = newUserResource().withRolesGlobal(asList(Role.IFS_ADMINISTRATOR)).build();
+            supportUser = newUserResource().withRolesGlobal(asList(Role.SUPPORT)).build();
+            innovationLead = newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
+            projectFinance = newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build();
         }
     }
 
     @Test
-    public void testConsortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation() {
+    public void consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation(overheads, leadApplicant));
         assertTrue(rules.consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation(overheads, collaborator));
 
@@ -109,7 +154,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Test
-    public void testConsortiumCanDeleteAnOverheadsFileForTheirApplicationAndOrganisation() {
+    public void consortiumCanDeleteAnOverheadsFileForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanDeleteAnOverheadsFileForTheirApplicationAndOrganisation(overheads, leadApplicant));
         assertTrue(rules.consortiumCanDeleteAnOverheadsFileForTheirApplicationAndOrganisation(overheads, collaborator));
 
@@ -118,7 +163,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Test
-    public void testConsortiumCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation() {
+    public void consortiumCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, leadApplicant));
         assertTrue(rules.consortiumCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, collaborator));
 
@@ -127,7 +172,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Test
-    public void testConsortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation() {
+    public void consortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation(overheads, leadApplicant));
         assertTrue(rules.consortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation(overheads, collaborator));
 
@@ -136,7 +181,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Test
-    public void testConsortiumCanUpdateAnOverheadsFileForTheirApplicationAndOrganisation() {
+    public void consortiumCanUpdateAnOverheadsFileForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanUpdateAnOverheadsFileForTheirApplicationAndOrganisation(overheads, leadApplicant));
         assertTrue(rules.consortiumCanUpdateAnOverheadsFileForTheirApplicationAndOrganisation(overheads, collaborator));
 
@@ -145,14 +190,23 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Test
-    public void testInternalUserCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation() {
-        assertTrue(rules.internalUserCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, internalUser));
-        assertFalse(rules.internalUserCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, otherLeadApplicant));
+    public void supportAndIfsAdminUsersCanReadContentsOfAnOverheadsFileForAnApplication() {
+        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, supportUser));
+        assertTrue(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, ifsAdmin));
+
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, otherLeadApplicant));
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, projectFinance));
+        assertFalse(rules.supportAndIfsAdminCanReadContentsOfAnOverheadsFileForANotSubmittedApplication(submittedOverheads, innovationLead));
     }
 
     @Test
-    public void testInternalUserCanReadDetailsOfAnOverheadsFileForTheirApplicationAndOrganisation() {
-        assertTrue(rules.internalUserCanReadDetailsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, internalUser));
-        assertFalse(rules.internalUserCanReadDetailsOfAnOverheadsFileForTheirApplicationAndOrganisation(overheads, otherLeadApplicant));
+    public void compAdminAndInnovationLeadAndProjectFinanceUsersCanReadDetailsOfAnOverheadsFileForASubmittedApplication() {
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, projectFinance));
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, compAdmin));
+        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, innovationLead));
+
+        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, otherLeadApplicant));
+        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, supportUser));
+        assertFalse(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(overheads, ifsAdmin));
     }
 }

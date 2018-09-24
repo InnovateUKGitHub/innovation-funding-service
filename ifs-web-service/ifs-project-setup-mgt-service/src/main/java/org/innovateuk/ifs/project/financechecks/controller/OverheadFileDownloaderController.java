@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.ExecutionException;
 
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+
 @RestController
 @RequestMapping("/application/download/overheadfile")
 @SecuredBySpring(value = "Controller", description = "IFS Admin and Project Finance can download uploaded overhead spreadsheet", securedType = OverheadFileDownloaderController.class)
@@ -32,15 +34,5 @@ public class OverheadFileDownloaderController {
         final ByteArrayResource resource = overheadFileRestService.getOverheadFileUsingProjectFinanceRowId(overheadId).getSuccess();
         final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetailsUsingProjectFinanceRowId(overheadId).getSuccess();
         return getFileResponseEntity(resource, fileEntryResource);
-    }
-
-    private static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentLength(resource.contentLength());
-        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
-        if (StringUtils.hasText(fileEntry.getName())) {
-            httpHeaders.add("Content-Disposition", "inline; filename=\"" + fileEntry.getName() + "\"");
-        }
-        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
 }
