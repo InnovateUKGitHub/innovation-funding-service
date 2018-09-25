@@ -2,6 +2,7 @@
 Documentation
 ...             IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
 ...
+...             IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -29,11 +30,12 @@ Applicant applies to newly created The Prince's Trust competition
         Then logged in user applies to competition                  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688
+    [Documentation]  IFS-2688 IFS-3287
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
+    Then the applicant completes application team
+    And the lead applicant answers the four sections as complete
     And the user should not see the element             jQuery=h2:contains("Finances")
     Then the applicant submits the application
 
@@ -49,7 +51,7 @@ The competition admin creates The Prince's Trust Comp
     the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility        ${orgType}  1  # 1 means 30%
+    the user fills in the CS Eligibility   ${orgType}  1  false  # 1 means 30%
     the user fills in the CS Milestones         ${month}  ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
     the user fills in the CS Assessors
@@ -78,3 +80,8 @@ the user marks the Application as done(Prince's Trust comp)
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the lead applicant answers the four sections as complete
+    the lead applicant marks every question as complete  1. Business opportunity and potential market
+    the lead applicant marks every question as complete  2. Innovation
+    the lead applicant marks every question as complete  3. Project team
+    the lead applicant marks every question as complete  4. Funding and adding value

@@ -26,7 +26,7 @@ Comp Admin creates an ATI competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  # 1 means 30%
+    And the user fills in the CS Eligibility       ${business_type_id}  1  true    # 1 means 30%
     And user fills in funding overide
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
@@ -106,7 +106,7 @@ User fills in funding overide
     the user clicks the button twice  css = label[for="comp-overrideFundingRules-yes"]
     the user selects the option from the drop-down menu  100%  id = fundingLevelPercentage
     the user clicks the button/link   jQuery = button:contains("Done")
-    the user should see the element   jQuery = dt:contains("Set funding level") ~ dd:contains("100%")
+    the user should see the element   jQuery = dt:contains("Funding level") ~ dd:contains("100%")
     the user clicks the button/link   link = Competition setup
 
 the user checks the override value is applied
