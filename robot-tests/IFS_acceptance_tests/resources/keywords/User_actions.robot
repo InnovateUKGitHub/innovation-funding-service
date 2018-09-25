@@ -8,7 +8,6 @@ The user clicks the button/link
     Focus    ${BUTTON}
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    500ms    click element    ${BUTTON}
-    Sleep  5000ms
 
 The user clicks the button/link in the paginated list
     [Arguments]    ${BUTTON}
