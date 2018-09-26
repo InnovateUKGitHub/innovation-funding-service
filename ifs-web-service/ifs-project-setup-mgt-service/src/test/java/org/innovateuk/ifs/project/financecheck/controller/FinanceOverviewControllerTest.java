@@ -4,10 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 
 public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<FinanceOverviewController> {
 
@@ -41,6 +44,9 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
 
     @Mock
     private ProjectFinanceService projectFinanceService;
+
+    @Mock
+    private ProjectService projectService;
 
     @Test
     public void testView() throws Exception {
@@ -54,6 +60,8 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(financeCheckEligibilityResource);
         when(projectFinanceService.getProjectFinances(projectId)).thenReturn(Collections.emptyList());
+        ProjectResource projectResource = newProjectResource().build();
+        when(projectService.getById(projectId)).thenReturn(projectResource);
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check-overview")).
                 andExpect(view().name("project/financecheck/overview")).

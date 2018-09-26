@@ -82,8 +82,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
 
-
-
     protected static void login(UserResource userResource) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));
     }

@@ -96,7 +96,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
                 questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
             } else {
-                errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors));
+                errors.addAll(handleLeadOnlyMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors));
             }
         }
 
@@ -104,10 +104,10 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         return sortValidationMessages(errors);
     }
 
-    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(long applicationId,
-                                                                            long questionId,
-                                                                            long processRoleId,
-                                                                            ValidationMessages errorsSoFar) {
+    private ValidationMessages handleLeadOnlyMarkCompletedRequest(long applicationId,
+                                                                  long questionId,
+                                                                  long processRoleId,
+                                                                  ValidationMessages errorsSoFar) {
         List<ValidationMessages> applicationMessages = questionService.markAsComplete(questionId, applicationId,
                 processRoleId);
 

@@ -23,34 +23,34 @@ Invalid Login
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    [Tags]    HappyPath
+    [Tags]
     Given The guest user inserts user email and password       &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     Then The user should see the text in the page             Please choose the role you are signing in as today
-    And The user clicks the button/link                       jquery=button:contains("Continue")
+    And The user clicks the button/link                       jquery = button:contains("Continue")
     Then The user should see an error                         Please select a role.
     And the user selects the radio button                     selectedRole    APPLICANT
-    And The user clicks the button/link                       jquery=button:contains("Continue")
+    And The user clicks the button/link                       jquery = button:contains("Continue")
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
 
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
-    Given The guest user inserts user email and password       &{Multiple_user_credentials}
+    Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     And the user selects the radio button                     selectedRole    ASSESSOR
-    And The user clicks the button/link                       jQuery=button:contains("Continue")
+    And The user clicks the button/link                       jQuery = button:contains("Continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    Logout as user
 
 Should not see the Sign in link when on the login page
     Given the user navigates to the page        ${LOGIN_URL}
-    Then the user should not see the element    link=Sign in
+    Then the user should not see the element    link = Sign in
 
 Should see the Sign in link when not logged in
     Given the user is not logged-in
     And the user navigates to the page      ${frontDoor}
-    Then the user should see the element    link=Sign in
+    Then the user should see the element    link = Sign in
 
 Reset password
     [Documentation]    INFUND-1889
@@ -65,7 +65,7 @@ Reset password
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]
     [Setup]    Clear the login fields
     When the user enters text to a text field              id=password  NewPassw0rd
     And the user clicks the button/link                    css=button[type="submit"]

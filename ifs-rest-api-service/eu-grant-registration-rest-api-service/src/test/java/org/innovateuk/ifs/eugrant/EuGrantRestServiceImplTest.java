@@ -29,13 +29,13 @@ public class EuGrantRestServiceImplTest {
     private String baseUrl;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         baseUrl = "base";
         euGrantRestService.setServiceUrl(baseUrl);
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         EuGrantResource euGrantResource = newEuGrantResource().build();
         RestResult<EuGrantResource> expected = mock(RestResult.class);
 
@@ -47,7 +47,7 @@ public class EuGrantRestServiceImplTest {
     }
 
     @Test
-    public void save() throws Exception {
+    public void save() {
 
         final UUID uuid = randomUUID();
 
@@ -64,7 +64,7 @@ public class EuGrantRestServiceImplTest {
     }
 
     @Test
-    public void findById() throws Exception {
+    public void findById() {
 
         final UUID uuid = randomUUID();
 
@@ -76,6 +76,18 @@ public class EuGrantRestServiceImplTest {
         when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + "/eu-grant/" + uuid.toString(), EuGrantResource.class)).thenReturn(expected);
 
         RestResult<EuGrantResource> result = euGrantRestService.findById(uuid);
+
+        assertEquals(result, expected);
+    }
+
+    @Test
+    public void submit() {
+        final UUID uuid = randomUUID();
+        RestResult<EuGrantResource> expected = mock(RestResult.class);
+
+        when(anonymousRestTemplateAdaptor.postWithRestResult(baseUrl + "/eu-grant/" + uuid.toString() + "/submit", EuGrantResource.class)).thenReturn(expected);
+
+        RestResult<EuGrantResource> result = euGrantRestService.submit(uuid);
 
         assertEquals(result, expected);
     }

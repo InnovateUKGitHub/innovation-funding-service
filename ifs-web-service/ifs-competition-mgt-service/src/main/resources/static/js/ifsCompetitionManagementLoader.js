@@ -36,6 +36,7 @@ IFS.competitionManagement.loadOrder = {
       IFS.competitionManagement.initialDetails.init()
       IFS.competitionManagement.milestones.init()
       IFS.competitionManagement.fundingInformation.init()
+      IFS.competitionManagement.eligibility.init()
       IFS.competitionManagement.repeater.init()
       IFS.core.finance.init()
     }
