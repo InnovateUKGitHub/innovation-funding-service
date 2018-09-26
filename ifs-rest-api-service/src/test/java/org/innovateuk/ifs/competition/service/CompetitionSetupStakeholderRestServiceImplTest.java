@@ -49,5 +49,42 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
         assertNotNull(response);
         assertEquals(responseBody, response);
     }
+
+    @Test
+    public void addStakeholder() {
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/add";
+        setupPostWithRestResultExpectations(url, HttpStatus.OK);
+
+        RestResult<Void> result = service.addStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void removeStakeholder() {
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/remove";
+        setupPostWithRestResultExpectations(url, HttpStatus.OK);
+
+        RestResult<Void> result = service.removeStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void findPendingStakeholderInvites() {
+
+        long competitionId = 1L;
+        List<UserResource> responseBody = UserResourceBuilder.newUserResource().build(2);
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites";
+        setupGetWithRestResultExpectations(url, userListType(), responseBody);
+
+        List<UserResource> response = service.findPendingStakeholderInvites(competitionId).getSuccess();
+        assertEquals(responseBody, response);
+    }
 }
 
