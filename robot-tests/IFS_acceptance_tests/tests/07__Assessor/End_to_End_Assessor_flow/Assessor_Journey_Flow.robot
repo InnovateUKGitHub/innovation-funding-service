@@ -38,10 +38,11 @@ Resend the invite to the assessor again
     Given the user clicks the button/link     link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link       link=Pending and declined
-    And the user clicks the button/link       jQuery=tr:contains("EtoE") label
-    When the user clicks the button/link      jQuery=button:contains("Resend invites")
     Capture large screenshot
-    sleep  20000ms
+    And the user clicks the button/link       jQuery=tr:contains("EtoE") label
+    Capture large screenshot
+    sleep 2000ms
+    When the user clicks the button/link      jQuery=button:contains("Resend invites")
     Capture large screenshot
     And the user clicks the button/link       jQuery=.govuk-button:contains("Send invite")
     [Teardown]  The user closes the browser
