@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/application/download/overheadfile")
-@SecuredBySpring(value="Controller", description = "Applicant can download their uploaded overheads spreadsheet", securedType = OverheadFileDownloadController.class)
+@SecuredBySpring(value="Controller", description = "Applicants and internal users can download uploaded overheads spreadsheet", securedType = OverheadFileDownloadController.class)
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead')")
 public class OverheadFileDownloadController {
 
