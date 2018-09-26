@@ -217,6 +217,7 @@ include::profile.adoc[]
 [[organisation]]
 == Organisation
 include::organisation.adoc[]
+include::company-house.adoc[]
 
 [[forminputresponsefileupload]]
 == FormInputResponse File Upload
