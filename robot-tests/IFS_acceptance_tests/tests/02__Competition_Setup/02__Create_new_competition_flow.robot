@@ -77,6 +77,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2941 As an applicant I am only offered the Research category eligible for the competition
 ...
 ...               IFS-4190 Create new user in stakeholder role
+...
+...               IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
+...
+...               IFS-4253 New Stakeholder invite and create account email
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -255,28 +259,32 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(2) .task-status-complete
+    Then the user should see the element    css = li:nth-child(3) .task-status-complete
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Eligibility: Contain the correct options
-    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
+    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
     [Tags]
     Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
-    Then the user should see the element     jQuery = label:contains("Single or Collaborative")
-    When the user should see the element     jQuery = label:contains("Collaborative")
-    And the user should see the element      jQuery = label:contains("Business")
-    And the user should see the element      jQuery = label[for="lead-applicant-type-2"]:contains("Research")
-    And the user should see the element      jQuery = label:contains("Research and technology organisation")
-    And the user should see the element      jQuery = label:contains("Public sector")
-    And the user should see the element      css = label[for="comp-resubmissions-yes"]
-    And the user should see the element      css = label[for="comp-resubmissions-no"]
-    And the user should see the element      jQuery = label:contains("Feasibility studies")
-    And the user should see the element      jQuery = label:contains("Industrial research")
-    And the user should see the element      jQuery = label:contains("Experimental development")
-    And the user should see the element      css = label[for="comp-overrideFundingRules-yes"]
-    And the user should see the element      css = label[for="comp-overrideFundingRules-no"]
+    Then the user should see the element   jQuery = label:contains("Single or Collaborative")
+    When the user should see the element   jQuery = label:contains("Collaborative")
+    And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
+    And the user selects the radio button  researchCategoriesApplicable    true
+    When the user should see the element   jQuery = label:contains("Yes")
+    When the user should see the element   jQuery = label:contains("No")
+    And the user should see the element    jQuery = label:contains("Business")
+    And the user should see the element    jQuery = label[for="lead-applicant-type-2"]:contains("Research")
+    And the user should see the element    jQuery = label:contains("Research and technology organisation")
+    And the user should see the element    jQuery = label:contains("Public sector")
+    And the user should see the element    css = label[for="comp-resubmissions-yes"]
+    And the user should see the element    css = label[for="comp-resubmissions-no"]
+    And the user should see the element    jQuery = label:contains("Feasibility studies")
+    And the user should see the element    jQuery = label:contains("Industrial research")
+    And the user should see the element    jQuery = label:contains("Experimental development")
+    And the user should see the element    css = label[for="comp-overrideFundingRules-yes"]
+    And the user should see the element    css = label[for="comp-overrideFundingRules-no"]
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
@@ -310,7 +318,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(3) .task-status-complete
+    Then the user should see the element    css = li:nth-child(4) .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Milestones: Page should contain the correct fields
@@ -344,7 +352,7 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(4) .task-status-complete
+    Then the user should see the element    css = li:nth-child(5) .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Application - Application process Page
@@ -751,7 +759,7 @@ The internal user cannot invite a Stakeholder when they have triggered the email
     [Tags]
     Then the user triggers the email validation
 
-The internal user cannot invite users with an Innovate UK email as Stakeholders
+The internal user cannot invite a user with an Innovate UK email as a Stakeholder
     [Documentation]  IFS-4190
     [Tags]
     When the user enters an Innovate UK email
@@ -761,7 +769,16 @@ The internal user invites a Stakeholder
     [Documentation]  IFS-4190
     [Tags]
     Then the user enters the correct details of a Stakeholder
-    # There's no way of verifying if this has been successful yet, which is why there is no check.
+    # A check to verify the invite will come in another ticket.
+    And logout as user
+    # Logging out here as it'll return a Page not found as it'll click the invite link in the next test case, and still be logged in as the comp admin.
+
+The invited Stakeholder accepts the invite in his or her email
+    [Documentation]  IFS-4253
+    [Tags]
+    When the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
+    Then the user should see the element                 id = sign-in-form
+    # This is a temporary check until the account creation stage comes in another ticket.
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -961,5 +978,5 @@ the user enters an Innovate UK email
 the user enters the correct details of a Stakeholder
     the user enters text to a text field    id = firstName     Stake
     the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user enters text to a text field    id = emailAddress  ${test_mailbox_one}+stakeHolder@test.com
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
