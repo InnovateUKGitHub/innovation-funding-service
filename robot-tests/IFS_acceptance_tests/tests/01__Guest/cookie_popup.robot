@@ -11,14 +11,14 @@ Resource          ../../resources/defaultResources.robot
 The cookie warning appears for a new user
     [Documentation]  INFUND-1943, INFUND-6260
     [Tags]
-    Then the user should see the element    id=global-cookie-message
+    Then the user should see the element            id = global-cookie-message
     And the user should see the text in the page    GOV.UK uses cookies to make the site simpler
-    And the user should see the element    link=Find out more about cookies
-    And the user should see the element    css=a[href*='info/cookies']
+    And the user should see the element             link = Find out more about cookies
+    And the user should see the element             css=a[href*='info/cookies']
 
 The warning disappears on refresh
     [Documentation]    INFUND-1943 INFUND-6260
     [Tags]
     When the user reloads the page
-    Then the user should not see the element    id=global-cookie-message
-    And the user should not see the element    jquery=#global-cookie-message a:contains("Find out more about cookies")
+    Then the user should not see the element    id = global-cookie-message
+    And the user should not see the element     jquery = #global-cookie-message a:contains("Find out more about cookies")
