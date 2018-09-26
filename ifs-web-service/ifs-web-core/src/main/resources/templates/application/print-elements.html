@@ -53,24 +53,11 @@
         </div>
     </div>
 
-    <h2 class="govuk-heading-s">Estimated timescales</h2>
+    <h2 class="govuk-heading-s">Project start date</h2>
+    <p class="govuk-body" th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"></p>
 
-    <dl class="govuk-list">
-        <dt>Project start date:</dt>
-        <dd th:classappend="${currentApplication.startDate == null} ? 'govuk-hint'">
-            <span
-                th:classappend="${currentApplication.startDate == null} ? 'govuk-!-font-size-16'"
-                th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"
-            />
-        </dd>
-        <dt>Duration in months:</dt>
-        <dd th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-hint'">
-            <span
-                th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-!-font-size-16'"
-                th:text="${currentApplication.durationInMonths} ?: 'This field has not been completed.'"
-            />
-        </dd>
-    </dl>
+    <h2 class="govuk-heading-s">Duration in months</h2>
+    <p class="govuk-body" th:text="${currentApplication.durationInMonths} ?: 'This field has not been completed.'"></p>
 
     <h2 class="govuk-heading-s">Lead organisation</h2>
     <p class="govuk-body" th:text="${leadOrganisation.getName()}"></p>
