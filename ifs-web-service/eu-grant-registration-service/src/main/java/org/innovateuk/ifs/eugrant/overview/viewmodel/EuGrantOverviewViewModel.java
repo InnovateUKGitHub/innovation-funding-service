@@ -23,4 +23,7 @@ public class EuGrantOverviewViewModel {
     public boolean isFundingComplete() {
         return fundingComplete;
     }
+
+    /* View logic. */
+    public boolean allComplete() { return organisationComplete && contactComplete && fundingComplete; }
 }

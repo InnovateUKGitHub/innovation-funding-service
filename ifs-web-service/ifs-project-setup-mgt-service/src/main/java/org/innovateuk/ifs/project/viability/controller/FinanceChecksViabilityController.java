@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -131,6 +132,8 @@ public class FinanceChecksViabilityController {
 
     private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
 
+        ProjectResource project = projectService.getById(projectId);
+        Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
@@ -157,12 +160,12 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
+        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(applicationId, organisationId);
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccess();
         }
         Long turnover = null;
-        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
+        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(applicationId, organisationId);
         if (turnOverResult.isSuccess()) {
             turnover = turnOverResult.getSuccess();
         }
@@ -175,7 +178,7 @@ public class FinanceChecksViabilityController {
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
                 companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
                 viabilityConfirmed, approver, approvalDate, organisationId,
-                organisationSizeDescription);
+                organisationSizeDescription, applicationId, project.getName());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

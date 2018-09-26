@@ -27,8 +27,8 @@ import java.util.function.Function;
  */
 public class CompletableFutureTuple1Handler<T1> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple1Handler(String futureName, Executor threadPool, CompletableFuture<T1> future1) {
-        super(futureName, threadPool, future1);
+    public CompletableFutureTuple1Handler(String futureName, Executor threadPool, long timeoutValue, CompletableFuture<T1> future1) {
+        super(futureName, threadPool, timeoutValue, future1);
     }
 
     public <R> CompletableFuture<R> thenApply(Function<T1, R> handler) {
