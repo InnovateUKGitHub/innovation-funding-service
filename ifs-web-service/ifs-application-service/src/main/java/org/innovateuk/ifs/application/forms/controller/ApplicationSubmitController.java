@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -33,6 +35,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QU
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * This controller will handle all submit requests that are related to the application overview.
@@ -43,6 +46,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidat
 public class ApplicationSubmitController {
 
     private QuestionService questionService;
+    private QuestionRestService questionRestService;
     private UserRestService userRestService;
     private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
@@ -55,6 +59,7 @@ public class ApplicationSubmitController {
 
     @Autowired
     public ApplicationSubmitController(QuestionService questionService,
+                                       QuestionRestService questionRestService,
                                        UserRestService userRestService,
                                        ApplicationService applicationService,
                                        ApplicationRestService applicationRestService,
@@ -62,6 +67,7 @@ public class ApplicationSubmitController {
                                        ApplicationModelPopulator applicationModelPopulator,
                                        CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.questionService = questionService;
+        this.questionRestService = questionRestService;
         this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
@@ -94,6 +100,11 @@ public class ApplicationSubmitController {
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
                     questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
+
+                    if (isResearchCategoryQuestion(markQuestionCompleteId)) {
+                        return "redirect:/application/" + applicationId + "/form/question/" + markQuestionCompleteId + "/research-category?mark_as_complete=true";
+                    }
+
                     return "redirect:/application/" + applicationId + "/form/question/edit/" + markQuestionCompleteId + "?mark_as_complete=true";
                 }
             }
@@ -148,6 +159,11 @@ public class ApplicationSubmitController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
         return "application-track";
+    }
+
+    private boolean isResearchCategoryQuestion(Long questionId) {
+        QuestionResource question = questionRestService.findById(questionId).getSuccess();
+        return question.getQuestionSetupType() == RESEARCH_CATEGORY;
     }
 }
 

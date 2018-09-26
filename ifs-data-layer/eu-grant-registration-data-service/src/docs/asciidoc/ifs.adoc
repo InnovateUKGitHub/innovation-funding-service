@@ -93,3 +93,4 @@ The errorMessage on the other hand is an optional "human-readable" field that ca
 [[address]]
 == Eu Grant Registration
 include::eu-grant.adoc[]
+include::eu-action-type.adoc[]

@@ -4,21 +4,20 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.EuGrantRestService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 
 @Service
 public class EuGrantCookieService {
 
     private static final String EU_GRANT_ID = "EU_GRANT_ID";
+    private static final String PREVIOUS_EU_GRANT = "PREVIOUS_EU_GRANT";
 
     @Autowired
     private EuGrantRestService euGrantRestService;
@@ -49,8 +48,12 @@ public class EuGrantCookieService {
                 .andOnSuccessReturn(() -> euGrant);
     }
 
-    public void clear() {
-        cookieUtil.removeCookie(EuGrantHttpServlet.response(), EU_GRANT_ID);
+    public void setPreviouslySubmitted(EuGrantResource euGrantResource) {
+        cookieUtil.saveToCookie(EuGrantHttpServlet.response(), PREVIOUS_EU_GRANT, JsonUtil.getSerializedObject(euGrantResource));
+    }
+
+    public Optional<EuGrantResource> getPreviouslySubmitted() {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(EuGrantHttpServlet.request(), PREVIOUS_EU_GRANT), EuGrantResource.class));
     }
 
     private void saveToEuGrantCookie(UUID uuid) {
@@ -65,5 +68,9 @@ public class EuGrantCookieService {
         }
 
         return Optional.empty();
+    }
+
+    public void clear() {
+        cookieUtil.removeCookie(EuGrantHttpServlet.response(), EU_GRANT_ID);
     }
 }

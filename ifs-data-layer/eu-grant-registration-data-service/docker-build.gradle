@@ -4,7 +4,7 @@ ext.ifsDatasourceHost = "ifs-database"
 ext.ifsDatasourceUrl="jdbc:mysql://eu-grant-registration-database:3306/eu_grant_registration"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
-ext.ifsFlywayLocations="db/migration"
+ext.ifsFlywayLocations="db/migration,db/reference"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3309/eu_grant_registration_test"
 ext.testIfsDatasourceUsername="root"
@@ -16,4 +16,7 @@ project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
-project.ext['flyway.locations']=flywayPatchesPath + "/migration"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration," + flywayPatchesPath + "/reference"
+
+ext.silRestBaseURL="http://sil-stub:8080/silstub"
+

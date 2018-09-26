@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -192,7 +192,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void inviteProjectManager() throws Exception {
         Long projectId = 123L;
-        InviteProjectResource invite = newInviteProjectResource().build();
+        ProjectInviteResource invite = newProjectInviteResource().build();
         when(projectDetailsServiceMock.inviteProjectManager(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/invite-project-manager", projectId)
                 .contentType(APPLICATION_JSON)
@@ -208,7 +208,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void inviteFinanceContact() throws Exception {
         Long projectId = 123L;
-        InviteProjectResource invite = newInviteProjectResource().build();
+        ProjectInviteResource invite = newProjectInviteResource().build();
         when(projectDetailsServiceMock.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/invite-finance-contact", projectId)
                 .contentType(APPLICATION_JSON)

@@ -51,7 +51,7 @@
                                    th:value="${type.name()}" />
                             <label th:for="'radio-'+ ${type.name()}"
                                    class="govuk-label govuk-radios__label">
-                                <span th:text="${type.name}"></span>
+                                <span th:text="${type.displayName}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
                         </div>
@@ -60,13 +60,12 @@
             </div>
 
             <p class="govuk-body">
-                If your organisation type is not listed, please ring 000 000 0000 or email xxx@xxx
+                If your organisation type is not listed, please ring 0300 321 4357 or email
+                <a href="mailto:EUGrantsFunding@ukri.org" class="govuk-link">EUGrantsFunding@ukri.org</a>.
             </p>
 
             <button class="govuk-button govuk-!-margin-top-6" name="select-company-type" type="submit">Save and continue</button>
         </form>
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 
