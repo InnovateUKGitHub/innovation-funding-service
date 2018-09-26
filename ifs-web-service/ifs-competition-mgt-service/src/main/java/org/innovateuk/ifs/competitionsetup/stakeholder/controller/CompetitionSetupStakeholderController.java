@@ -100,7 +100,7 @@ public class CompetitionSetupStakeholderController {
             RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource, competitionId);
 
             return handleInviteStakeholderErrors(saveResult, validationHandler).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders/?tab=" + tab);
+                    failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + tab);
 
         });
     }
