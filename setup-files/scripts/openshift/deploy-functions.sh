@@ -300,11 +300,17 @@ function blockUntilServiceIsUp() {
                 echo "$ERRORRED_PODS pods stuck in error state.."
                 exit 1
             fi
+        else
+            if [ ${ERRORRED_DEPLOY_PODS} -ne "0" ]; then
+                echo "$ERRORRED_DEPLOY_PODS deploy pods stuck in error state.."
+                exit 1
+            fi
         fi
 
         UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
         ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
+        ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
 
         oc get pods ${SVC_ACCOUNT_CLAUSE}
         echo "$UNREADY_PODS pods still not ready.."
