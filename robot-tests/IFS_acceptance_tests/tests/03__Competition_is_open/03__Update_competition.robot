@@ -80,7 +80,7 @@ Assessed Questions are editable (Ready to Open)
 
 Finances are editable (Ready to Open)
     [Documentation]  INFUND-6941
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     When The user clicks the button/link         link=Finances
     And the user should see the element          jQuery=h1:contains("Application finances")
@@ -91,7 +91,7 @@ Finances are editable (Ready to Open)
 
 Eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link    link=Eligibility
     Then the user should see the element   jquery=h1:contains("Eligibility")
     And The user clicks the button/link    jQuery=button:contains(Edit)
@@ -100,7 +100,7 @@ Eligibility is editable (Ready to Open)
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The user clicks the button/link  jQuery=a:contains(Dashboard)
     Given the user clicks the button/link       link=${openCompetitionBusinessRTO_name}
     And the user clicks the button/link         jQuery=a:contains(and update competition setup)
@@ -220,7 +220,7 @@ Initial details editable before notify date (Open)
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
-    [Tags]    MySQL    HappyPath
+    [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
     Given the user clicks the button/link    link=Assessors
     Then the user should see the element    jQuery=.govuk-button:contains("Edit")

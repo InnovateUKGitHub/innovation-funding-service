@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Horizon 2020: UK government underwrite guarantee'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
+                    <h1 class="govuk-panel__title">
+                        Registration complete
+                    </h1>
+                    <div class="govuk-panel__body">
+                        Your reference code
+                        <br><strong th:text="${model.shortCode}">123456</strong>
+                    </div>
+                </div>
+
+                <p class="govuk-body">Thank you for registering your project details.</p>
+                <p class="govuk-body">You will receive an email confirming your registration.</p>
+                <p class="govuk-body">If your details are correct UK Research and Innovation will be able to provide funding for
+                    participation in EU Framework Programmes. We will keep you informed of next steps in due course.</p>
+
+                <dl class="govuk-list">
+                    <dt class="govuk-!-margin-top-6">Reference code</dt>
+                    <dd th:text="${model.shortCode}">1234567</dd>
+                    <dt class="govuk-!-margin-top-6">Organisation type</dt>
+                    <dd th:text="${model.organisation.organisationType.displayName}">Business</dd>
+                    <dt class="govuk-!-margin-top-6">Registered name</dt>
+                    <dd th:text="${model.organisation.name}">Nomensa Ltd</dd>
+                    <th:block th:if="${model.organisation.companiesHouseNumber != null}">
+                        <dt class="govuk-!-margin-top-6">Registration number</dt>
+                        <dd th:text="${model.organisation.companiesHouseNumber}">04214477</dd>
+                    </th:block>
+                    <dt class="govuk-!-margin-top-6">Full name</dt>
+                    <dd th:text="${model.contact.name}">Joe Bloggs</dd>
+                    <dt class="govuk-!-margin-top-6">Job title</dt>
+                    <dd th:text="${model.contact.jobTitle}">Executive</dd>
+                    <dt class="govuk-!-margin-top-6">Email</dt>
+                    <dd th:text="${model.contact.email}">joebloggs@gmail.com</dd>
+                    <dt class="govuk-!-margin-top-6">Telephone</dt>
+                    <dd th:text="${model.contact.telephone}">07986543211</dd>
+                    <dt class="govuk-!-margin-top-6">Grant agreement number</dt>
+                    <dd th:text="${model.funding.grantAgreementNumber}">123456</dd>
+                    <dt class="govuk-!-margin-top-6">Participant identification code (PIC)</dt>
+                    <dd th:text="${model.funding.participantId}">Industrialisation of artificial intelligence</dd>
+                    <dt class="govuk-!-margin-top-6">Type of action</dt>
+                    <dd th:text="${'(' + model.funding.actionType.name + ') ' + model.funding.actionType.description}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
+                    <dt class="govuk-!-margin-top-6">Project name</dt>
+                    <dd th:text="${model.funding.projectName}">My EU project name</dd>
+                    <dt class="govuk-!-margin-top-6">Project start date</dt>
+                    <dd th:text="${#temporals.format(model.funding.projectStartDate, 'MMMM yyyy')}">August 2017</dd>
+                    <dt class="govuk-!-margin-top-6">Project end date</dt>
+                    <dd th:text="${#temporals.format(model.funding.projectEndDate, 'MMMM yyyy')}">March 2019</dd>
+                    <dt class="govuk-!-margin-top-6">EU funding contribution for above project (EUR)</dt>
+                    <dd th:text="${'&euro;' + model.funding.fundingContribution}">100,000</dd>
+                    <dt class="govuk-!-margin-top-6">Is your organisation the project co-ordinator on this project?</dt>
+                    <dd th:text="${model.funding.projectCoordinator ? 'Yes' : 'No'}">Yes</dd>
+                </dl>
+
+                <p class="govuk-body govuk-!-margin-top-6">
+                    <a class="govuk-link" th:href="@{/overview}">Register another project</a>
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

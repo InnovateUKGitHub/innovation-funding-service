@@ -6,4 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.UUID;
 
 public interface EuGrantRepository extends CrudRepository<EuGrant, UUID> {
+
+    boolean existsByShortCode(String shortCode);
 }

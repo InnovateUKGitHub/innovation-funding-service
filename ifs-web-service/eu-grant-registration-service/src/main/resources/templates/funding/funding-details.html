@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/overview}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding details',size='govuk-heading-xl'" />
+
+        <th:block>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-three-quarters">
+
+                    <dl class="govuk-list">
+                        <dt>Grant agreement number</dt>
+                        <dd th:text="${form.grantAgreementNumber}">123456</dd>
+                        <dt>Participant identification code (PIC)</dt>
+                        <dd th:text="${form.participantId}">12345689</dd>
+                        <dt>Type of action</dt>
+                        <dd th:text="${'(' + actionType.name + ') ' + actionType.description}">(COFUND-EJP) COFUND (European Joint Programme)</dd>
+                        <dt>Project name</dt>
+                        <dd th:text="${form.projectName}">My EU project name</dd>
+                        <dt>Project start date</dt>
+                        <dd th:text="${form.startDateMonth + ' ' + form.startDateYear}">March 2017</dd>
+                        <dt>Project end date</dt>
+                        <dd th:text="${form.endDateMonth + ' ' + form.endDateYear}">March 2019</dd>
+                        <dt>EU funding contribution for above project (EUR)</dt>
+                        <dd th:text="${form.fundingContribution}">€100</dd>
+                        <dt>Is your organisation the project co-ordinator on this project?</dt>
+                        <dd th:if="${form.projectCoordinator}">Yes</dd>
+                        <dd th:unless="${form.projectCoordinator}">No</dd>
+                    </dl>
+
+                    <p class="govuk-body govuk-!-margin-bottom-6">
+                        <a class="govuk-link" th:href="@{/funding-details/edit}">Edit funding details</a>
+                    </p>
+
+                    <a class="govuk-button" th:href="@{/overview}">Save and return</a>
+
+                </div>
+            </div>
+        </th:block>
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

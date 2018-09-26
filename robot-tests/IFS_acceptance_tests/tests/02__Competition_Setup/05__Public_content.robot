@@ -28,7 +28,7 @@ ${public_content_competition_name}      Public content competition
 *** Test Cases ***
 User can view the public content
     [Documentation]    INFUND-6914
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user should not see the text in the page   This information will be publicly viewable by prospective applicants.
     And the user should not see the text in the page    Competition URL
@@ -58,7 +58,7 @@ External users do not have access to the Public content sections
 
 Competition information and search: server side validation
     [Documentation]    INFUND-6915  IFS-179
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user                  &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user clicks the button/link                 link=Competition information and search
@@ -71,7 +71,7 @@ Competition information and search: server side validation
 
 Competition information and search: Valid values
     [Documentation]    INFUND-6915  INFUND-8363  IFS-179
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field       id=shortDescription  Short public description
     And the user enters text to a text field        id=projectFundingRange  Up to £1million
     And the user selects the radio button           publishSetting  invite
@@ -116,7 +116,7 @@ Summary: server side validation and autosave
 
 Summary: User enters valid values and saves
     [Documentation]    INFUND-6916  INFUND-7486
-    [Tags]  HappyPath
+    [Tags]
     # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the internal user navigates to public content  ${public_content_competition_name}
     And the user clicks the button/link        link=Summary
@@ -161,7 +161,7 @@ Eligibility: server side validation and autosave
 
 Eligibility: User enters valid values and saves
     [Documentation]    INFUND-6916, INFUND-7487
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=Eligibility
     And the user enters valid data in the eligibility details
@@ -180,7 +180,7 @@ Eligibility: User enters valid values and saves
 
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link      link=Eligibility
     Then the user should see the element      jQuery=h2:contains("Nationality Eligibility Heading")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
@@ -204,7 +204,7 @@ Eligibility: Contains the correct values when viewed, Edit sections
 
 Scope: Server side validation
     [Documentation]  INFUND-7488
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link      link=Scope
     And the user clicks the button/link       jQuery=button:contains("Save and review")
     Then the user should see a summary error  Please enter content.
@@ -212,7 +212,7 @@ Scope: Server side validation
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
-    [Tags]  HappyPath
+    [Tags]
     Given the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery=button:contains("Save and review")
     And the user clicks the button/link   jQuery=.govuk-button:contains("Return to public content")
@@ -220,7 +220,7 @@ Scope: Add, remove sections and submit
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link           link=Dates
     Then the user should see the text in the page  ${tomorrowMonthWord} ${nextyear}
     And the user should see the text in the page   Competition opens
@@ -243,7 +243,7 @@ How to apply: server side validation and autosave
 
 How to apply: User enters valid values and saves
     [Documentation]    INFUND-7490
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=How to apply
     And the user enters valid data in How-to-apply details
@@ -262,7 +262,7 @@ How to apply: User enters valid values and saves
 
 How to apply: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6920  INFUND-7602  INFUND-7490
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link      link=How to apply
     Then the user should see the element      jQuery=h2:contains("The application process")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
@@ -295,7 +295,7 @@ How to apply: Contains the correct values when viewed, Edit sections
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link  link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery=button:contains("Save and review")
@@ -304,7 +304,7 @@ Supporting information: Add, remove sections and submit
 
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
-    [Tags]  HappyPath
+    [Tags]
     Given the user should not see the text in the page  Last published
     When the user clicks the button/link                jQuery=button:contains("Publish content")
     Then the user should see the element                jQuery=small:contains("Last published")
@@ -349,7 +349,7 @@ The user is able to edit and publish again
 
 Guest user not find the invite only competition by Keywords
     [Documentation]  IFS-261
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  the user logs out if they are logged in
     Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
@@ -358,7 +358,7 @@ Guest user not find the invite only competition by Keywords
 
 The user is able to make the competition public
     [Documentation]  IFS-261, IFS-179
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  The user logs-in in new browser             &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user should see the element                 link=Competition information and search
@@ -372,7 +372,7 @@ The user is able to make the competition public
 
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
@@ -494,7 +494,7 @@ the user can add and remove multiple content groups
     When the user uploads the file             name=contentGroups[2].attachment  ${text_file}
     Then the user should see the element       jQuery=.govuk-error-summary__list:contains("${wrong_filetype_validation_error}")
     And the user uploads the file              name=contentGroups[2].attachment  ${too_large_pdf}
-    Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
+    Then the user should get an error page     ${too_large_pdf_validation_error}
     And the user goes back to the previous page
     And the user reloads the page
     # TODO this reload is required for now due to IFS-559

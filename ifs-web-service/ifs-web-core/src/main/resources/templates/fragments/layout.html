@@ -202,10 +202,7 @@
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
     <div class="sub-header">
-        <span th:if="${javascriptBackLink}"
-              class="govuk-back-link"
-              th:attr="data-javascript-back-link=${linkTitle}"></span>
-        <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
+        <a th:if="${linkTitle != null and linkUrl != null}"
            class="govuk-back-link"
            th:href="${linkUrl}"
            th:text="${linkTitle}" />
