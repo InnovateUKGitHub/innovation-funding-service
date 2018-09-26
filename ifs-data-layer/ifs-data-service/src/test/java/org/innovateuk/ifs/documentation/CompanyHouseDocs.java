@@ -18,7 +18,7 @@ public class CompanyHouseDocs {
                 fieldWithPath("organisationAddress.town").description("The town of the Organisation's Address"),
                 fieldWithPath("organisationAddress.county").description("The county of Organisation's Address"),
                 fieldWithPath("organisationAddress.postcode").description("The postcode of the Organisation's Address"),
-                fieldWithPath("extraAttributes") .description("Extra attributes of the Organisation")
+                fieldWithPath("extraAttributes").description("Extra attributes of the Organisation")
         };
     }
 }
