@@ -29,7 +29,7 @@ public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMV
 
         when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
 
-        mockMvc.perform(get("/question-setup/getById/{questionId}", questionId))
+        mockMvc.perform(get("/question-setup/get-by-id/{questionId}", questionId))
                 .andExpect(status().isOk());
 
         verify(questionSetupCompetitionServiceMock, only()).getByQuestionId(questionId);
@@ -55,19 +55,33 @@ public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMV
 
         when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
 
-        mockMvc.perform(post("/question-setup/addDefaultToCompetition/{competitionId}", competitionId))
+        mockMvc.perform(post("/question-setup/add-default-to-competition/{competitionId}", competitionId))
                 .andExpect(status().isCreated());
 
         verify(questionSetupCompetitionServiceMock, only()).createByCompetitionId(competitionId);
     }
 
     @Test
+    public void addResearchCategoryQuestionToCompetition() throws Exception {
+        final long competitionId = 1L;
+
+        when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/question-setup/add-research-category-question-to-competition/{competitionId}",
+                competitionId))
+                .andExpect(status().isCreated());
+
+        verify(questionSetupCompetitionServiceMock, only()).addResearchCategoryQuestionToCompetition(competitionId);
+    }
+
+    @Test
     public void deleteById() throws Exception {
-        final Long questionId = 1L;
+        final long questionId = 1L;
 
         when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/question-setup/deleteById/{questionId}", questionId))
+        mockMvc.perform(delete("/question-setup/delete-by-id/{questionId}", questionId))
                 .andExpect(status().isNoContent());
 
         verify(questionSetupCompetitionServiceMock, only()).delete(questionId);
