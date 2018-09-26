@@ -75,5 +75,52 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
     }
+
+    @Test
+    public void addStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        when(competitionSetupStakeholderService.addStakeholder(competitionId, stakeholderUserId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/add", competitionId, stakeholderUserId)
+                )
+                .andExpect(status().isOk());
+
+        verify(competitionSetupStakeholderService).addStakeholder(competitionId, stakeholderUserId);
+    }
+
+    @Test
+    public void removeStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        when(competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/remove", competitionId, stakeholderUserId)
+        )
+                .andExpect(status().isOk());
+
+        verify(competitionSetupStakeholderService).removeStakeholder(competitionId, stakeholderUserId);
+    }
+
+    @Test
+    public void findPendingStakeholderInvites() throws Exception {
+
+        long competitionId = 1L;
+
+        List<UserResource> pendingStakeholderInvites = UserResourceBuilder.newUserResource().build(2);
+
+        when(competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId)).thenReturn(serviceSuccess(pendingStakeholderInvites));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition/setup/{competitionId}/stakeholder/pending-invites", competitionId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingStakeholderInvites)));
+
+        verify(competitionSetupStakeholderService).findPendingStakeholderInvites(competitionId);
+    }
 }
 
