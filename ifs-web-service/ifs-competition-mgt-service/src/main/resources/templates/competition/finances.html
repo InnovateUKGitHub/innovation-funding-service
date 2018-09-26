@@ -19,9 +19,6 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='govuk-heading-xl'" />
-        <div class="govuk-body panel">
-            The competition template will select the following finance sections for each partner.
-        </div>
         <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
               th:action="@{${model.subsection.noFinancesCompetition ? 'none/edit' : #ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${competitionSetupForm}"
@@ -33,7 +30,7 @@
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="applicationFinanceType">
-                        <h2 class="govuk-fieldset__heading">Finances form</h2>
+                        <h2 class="govuk-fieldset__heading">Select the required finance form</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
@@ -49,8 +46,7 @@
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
-                        <!-- TODO IFS-4143 Enable the Standard with VAT option -->
-                        <!--<div class="govuk-radios__item">
+                        <div class="govuk-radios__item">
                             <input id="application-finance-standard-with-vat"
                                    class="govuk-radios__input"
                                    th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT}"
@@ -59,7 +55,6 @@
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
-                        -->
                         <div class="govuk-radios__item">
                             <input id="application-finance-no-finances"
                                    class="govuk-radios__input"

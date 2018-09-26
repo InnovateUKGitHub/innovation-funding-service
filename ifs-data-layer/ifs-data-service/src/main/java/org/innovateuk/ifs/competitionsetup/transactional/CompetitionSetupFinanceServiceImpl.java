@@ -36,7 +36,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     @Override
     public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
-            boolean includeGrowthTable = isNoFinances(competition) ? false : competitionSetupTransactionalService
+            Boolean includeGrowthTable = isNoFinances(competition) ? false : competitionSetupTransactionalService
                     .isIncludeGrowthTable(competitionId).getSuccess();
 
             return buildCompetitionSetupFinanceResource(competition, includeGrowthTable);
@@ -50,7 +50,8 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         return find(competitionSetupTransactionalService.countInput(compId), competitionSetupTransactionalService
                 .turnoverInput(compId))
                 .andOnSuccess((count, turnover) -> {
-                    boolean isActive = !compSetupFinanceRes.isIncludeGrowthTable();
+                    boolean isActive = compSetupFinanceRes.getIncludeGrowthTable() == null
+                            || !compSetupFinanceRes.getIncludeGrowthTable();
                     count.setActive(isActive);
                     turnover.setActive(isActive);
                     return serviceSuccess();
@@ -62,7 +63,8 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         return find(competitionSetupTransactionalService.financeCount(compId), competitionSetupTransactionalService
                 .financeOverviewRow(compId), competitionSetupTransactionalService.financeYearEnd(compId))
                 .andOnSuccess((count, overviewRows, yearEnd) -> {
-                    boolean isActive = compSetupFinanceRes.isIncludeGrowthTable();
+                    boolean isActive = compSetupFinanceRes.getIncludeGrowthTable() != null
+                            && compSetupFinanceRes.getIncludeGrowthTable();
                     count.setActive(isActive);
                     yearEnd.setActive(isActive);
                     overviewRows.forEach(row -> row.setActive(isActive));
@@ -75,11 +77,11 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     }
 
     private CompetitionSetupFinanceResource buildCompetitionSetupFinanceResource(Competition competition,
-                                                                                 boolean isIncludeGrowthTable) {
+                                                                                 Boolean includeGrowthTable) {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
         competitionSetupFinanceResource.setCompetitionId(competition.getId());
         competitionSetupFinanceResource.setApplicationFinanceType(competition.getApplicationFinanceType());
-        competitionSetupFinanceResource.setIncludeGrowthTable(isIncludeGrowthTable);
+        competitionSetupFinanceResource.setIncludeGrowthTable(includeGrowthTable);
         return competitionSetupFinanceResource;
     }
 }

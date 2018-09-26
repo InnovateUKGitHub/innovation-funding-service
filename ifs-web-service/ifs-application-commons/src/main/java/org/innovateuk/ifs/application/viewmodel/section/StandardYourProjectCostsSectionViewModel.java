@@ -10,11 +10,11 @@ import java.util.Optional;
 /**
  * Default your project costs view model.
  */
-public class DefaultYourProjectCostsSectionViewModel extends AbstractYourProjectCostsSectionViewModel {
+public class StandardYourProjectCostsSectionViewModel extends AbstractYourProjectCostsSectionViewModel {
 
     private List<DefaultProjectCostSection> defaultProjectCostSections;
 
-    public DefaultYourProjectCostsSectionViewModel(
+    public StandardYourProjectCostsSectionViewModel(
             ApplicantSectionResource applicantResource,
             List<AbstractFormInputViewModel> formInputViewModels,
             NavigationViewModel navigationViewModel,
