@@ -21,3 +21,39 @@ include::{snippets}/competition/setup/stakeholder/find-stakeholders/response-fie
 
 ==== Curl Example
 include::{snippets}/competition/setup/stakeholder/find-stakeholders/curl-request.adoc[]
+
+=== Add stakeholder to a competition
+==== Request
+include::{snippets}/competition/setup/stakeholder/add-stakeholder/http-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/add-stakeholder/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/setup/stakeholder/add-stakeholder/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/setup/stakeholder/add-stakeholder/curl-request.adoc[]
+
+=== Remove stakeholder from a competition
+==== Request
+include::{snippets}/competition/setup/stakeholder/remove-stakeholder/http-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/remove-stakeholder/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/setup/stakeholder/remove-stakeholder/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/setup/stakeholder/remove-stakeholder/curl-request.adoc[]
+
+
+
+=== Find pending stakeholder invites for a given competition - findPendingStakeholderInvites
+==== Request
+include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/http-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/http-response.adoc[]
+include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/curl-request.adoc[]
