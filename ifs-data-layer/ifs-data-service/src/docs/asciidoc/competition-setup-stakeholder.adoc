@@ -46,7 +46,7 @@ include::{snippets}/competition/setup/stakeholder/remove-stakeholder/curl-reques
 
 
 
-=== Find pending stakeholder invites for a given competition - findPendingStakeholderInvites
+=== Find pending stakeholder invites for a given competition
 ==== Request
 include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/http-request.adoc[]
 include::{snippets}/competition/setup/stakeholder/find-pending-stakeholder-invites/path-parameters.adoc[]
