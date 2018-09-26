@@ -45,42 +45,42 @@ def wait_until_keyword_succeeds_without_screenshots(retry, retry_interval, keywo
 
 
 @no_intermediate_screenshots
-def wait_until_element_is_visible_without_screenshots(locator, timeout=5, error=None):
+def wait_until_element_is_visible_without_screenshots(locator, timeout=10, error=None):
     return s2l.wait_until_element_is_visible(locator, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_element_is_not_visible_without_screenshots(locator, timeout=5, error=None):
+def wait_until_element_is_not_visible_without_screenshots(locator, timeout=10, error=None):
     return s2l.wait_until_element_is_not_visible(locator, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_page_contains_without_screenshots(text, timeout=5, error=None):
+def wait_until_page_contains_without_screenshots(text, timeout=10, error=None):
     return s2l.wait_until_page_contains(text, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_page_contains_element_without_screenshots(locator, timeout=5, error=None):
+def wait_until_page_contains_element_without_screenshots(locator, timeout=10, error=None):
     return s2l.wait_until_page_contains_element(locator, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_page_does_not_contain_without_screenshots(text, timeout=5, error=None):
+def wait_until_page_does_not_contain_without_screenshots(text, timeout=10, error=None):
     return s2l.wait_until_page_does_not_contain(text, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_element_contains_without_screenshots(locator, text, timeout=5, error=None):
+def wait_until_element_contains_without_screenshots(locator, text, timeout=10, error=None):
     return s2l.wait_until_element_contains(locator, text, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_element_does_not_contain_without_screenshots(locator, text, timeout=5, error=None):
+def wait_until_element_does_not_contain_without_screenshots(locator, text, timeout=10, error=None):
     return s2l.wait_until_element_does_not_contain(locator, text, timeout, error)
 
 
 @no_intermediate_screenshots
-def wait_until_element_is_enabled_without_screenshots(locator, timeout=5, error=None):
+def wait_until_element_is_enabled_without_screenshots(locator, timeout=10, error=None):
     return s2l.wait_until_element_is_enabled(locator, timeout, error)
 
 
