@@ -32,7 +32,7 @@ The IFS Admin clears all filters after searching for a project
 
 The IFS Admin withdraws a project from Project Setup
     [Documentation]  IFS-2945
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link                  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
     When the user cancels then withdraws the project
     Then the user can see the previous application         ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
@@ -45,7 +45,7 @@ The IFS Admin can no longer see the withdrawn project in the project setup table
 
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
     Given the user selects a filter for the applications    ${withdrawnState}  filter
     Then the user can see the previous application          ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
@@ -56,9 +56,8 @@ The IFS Admin filters the applications
 
 The IFS Admin clears any filters applied and can see all of the applications
     [Documentation]  IFS-3473
-    [Tags]  HappyPath
-    [Setup]
-    When the user clicks the button/link                         link=Clear all filters
+    [Tags]
+    When the user clicks the button/link                         link = Clear all filters
     Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***

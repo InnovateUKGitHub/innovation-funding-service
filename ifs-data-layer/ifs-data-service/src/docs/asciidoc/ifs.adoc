@@ -158,9 +158,9 @@ include::competitionInvite.adoc[]
 == Competition Participant
 include::competitionParticipant.adoc[]
 
-[[questionCompetitionSetup]]
-== Question Competition Setup
-include::questionCompetitionSetup.adoc[]
+[[questionSetupCompetition]]
+== Question Setup Competition
+include::questionSetupCompetition.adoc[]
 
 [[competitionSetupFinance]]
 == Competition Setup Finance
@@ -242,7 +242,7 @@ include::bank-details.adoc[]
 include::project-finance.adoc[]
 include::project-finance-queries.adoc[]
 include::project-finance-attachments.adoc[]
-include::invite-project.adoc[]
+include::project-invite.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary

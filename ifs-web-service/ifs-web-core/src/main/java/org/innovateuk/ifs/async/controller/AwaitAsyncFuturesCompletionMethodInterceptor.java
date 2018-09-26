@@ -5,6 +5,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.async.exceptions.AsyncException.unwrapOriginalExceptionFromAsyncException;
@@ -18,6 +19,9 @@ import static org.innovateuk.ifs.async.exceptions.AsyncException.unwrapOriginalE
  */
 @Component
 public class AwaitAsyncFuturesCompletionMethodInterceptor implements MethodInterceptor {
+
+    @Value("${ifs.web.async.max.timeout}")
+    private long timeoutValue;
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -37,7 +41,7 @@ public class AwaitAsyncFuturesCompletionMethodInterceptor implements MethodInter
             // Wait for all CompletableFutures generated via {@link AsyncFuturesGenerator} or manually registered with
             // {@link AsyncFuturesHolder} in some other way to complete before allowing the Controller to return
             //
-            AsyncFuturesHolder.waitForAllFuturesToComplete();
+            AsyncFuturesHolder.waitForAllFuturesToComplete(timeoutValue);
 
             return returnValue;
 

@@ -23,7 +23,7 @@ public class EuFunding {
     private String grantAgreementNumber;
 
     @NotNull
-    @Pattern(regexp="[\\d]{6}")
+    @Pattern(regexp="[\\d]{9}")
     private String participantId;
 
     @NotBlank
@@ -44,9 +44,6 @@ public class EuFunding {
     @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
 
-    public EuFunding() {
-    }
-
     public Long getId() {
         return id;
     }
@@ -63,8 +60,8 @@ public class EuFunding {
         return participantId;
     }
 
-    public void setParticipantId(String particpantId) {
-        this.participantId = particpantId;
+    public void setParticipantId(String participantId) {
+        this.participantId = participantId;
     }
 
     public String getProjectName() {
