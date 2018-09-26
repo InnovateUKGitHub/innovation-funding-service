@@ -41,6 +41,8 @@ Resend the invite to the assessor again
     And the user clicks the button/link       jQuery=tr:contains("EtoE") label
     When the user clicks the button/link      jQuery=button:contains("Resend invites")
     Capture large screenshot
+    sleep  20000ms
+    Capture large screenshot
     And the user clicks the button/link       jQuery=.govuk-button:contains("Send invite")
     [Teardown]  The user closes the browser
 
