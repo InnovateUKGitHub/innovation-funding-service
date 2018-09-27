@@ -117,8 +117,10 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Override
     protected InviteUserServiceImpl supplyServiceUnderTest() {
+
         InviteUserServiceImpl inviteService = new InviteUserServiceImpl();
         ReflectionTestUtils.setField(inviteService, "webBaseUrl", webBaseUrl);
+
         return inviteService;
     }
 
@@ -147,7 +149,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
-
     }
 
     @Test
@@ -163,6 +164,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
+
         RoleInvite roleInvite = new RoleInvite();
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
@@ -176,7 +178,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailSucceeds() throws Exception {
+
         Role role = Role.IFS_ADMINISTRATOR;
+
         RoleInvite expectedRoleInvite = newRoleInvite().
                 withEmail("Astle.Pimenta@innovateuk.ukri.org").
                 withName("Astle Pimenta").
@@ -193,6 +197,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 "role", role.getDisplayName(),
                 "inviteUrl", webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
         );
+
         Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_INTERNAL_USER, expectedNotificationArgs);
 
         when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
@@ -227,8 +232,16 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailFails() throws Exception {
+
         Role role = SUPPORT;
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.ukri.org").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
+
+        RoleInvite expectedRoleInvite = newRoleInvite()
+                .withEmail("Astle.Pimenta@innovateuk.ukri.org")
+                .withName("Astle Pimenta")
+                .withRole(role)
+                .withStatus(CREATED).withHash("")
+                .build();
+
         // hash is random, so capture RoleInvite value to verify other fields
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
@@ -261,8 +274,17 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void saveUserInviteWhenEmailAlreadyTaken() throws Exception {
+
         Role role = Role.IFS_ADMINISTRATOR;
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.ukri.org").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
+
+        RoleInvite expectedRoleInvite = newRoleInvite()
+                .withEmail("Astle.Pimenta@innovateuk.ukri.org")
+                .withName("Astle Pimenta")
+                .withRole(role)
+                .withStatus(CREATED)
+                .withHash("")
+                .build();
+
         // hash is random, so capture RoleInvite value to verify other fields
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
@@ -273,6 +295,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR);
+
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
         verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
@@ -281,7 +304,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void testGetInvite(){
+
         RoleInvite roleInvite = newRoleInvite().build();
+
         when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(roleInviteMapperMock.mapToResource(roleInvite)).thenReturn(newRoleInviteResource().build());
         ServiceResult<RoleInviteResource> result = service.getInvite("SomeInviteHash");
@@ -290,6 +315,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void testCheckExistingUser(){
+
         RoleInvite roleInvite = newRoleInvite().build();
         when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(userRepositoryMock.findByEmail(roleInvite.getEmail())).thenReturn(Optional.of(newUser().build()));
@@ -300,6 +326,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void findPendingInternalUsers() {
+
         Pageable pageable = new PageRequest(0, 5);
 
         Role role = Role.IFS_ADMINISTRATOR;
@@ -329,7 +356,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals(roleInviteResource, resultObject.getContent().get(0));
 
     }
-
 
     @Test
     public void findExternalInvitesWhenSearchStringIsNull(){
@@ -580,6 +606,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     private void assertFindExternalInvites(ServiceResult<List<ExternalInviteResource>> result) {
+
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().size());
         assertEquals("b@email.com", result.getSuccess().get(0).getEmail());
