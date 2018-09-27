@@ -26,7 +26,7 @@ Resource          ../../resources/defaultResources.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
-${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
+${localEmailInvtedUser}   ifs.innovationLead@innovateuk.ukri.org
 ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
 ${invalidEmail}           test@test.com
 

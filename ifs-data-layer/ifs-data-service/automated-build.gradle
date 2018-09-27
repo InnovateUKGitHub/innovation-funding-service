@@ -35,4 +35,4 @@ ext.ifsWebBaseURL="http://localhost:8080"
 
 ext.activeProfile="environment"
 
-ext.internalUserEmailDomain="innovateuk.test"
+ext.internalUserEmailDomain="innovateuk.ukri.org"
