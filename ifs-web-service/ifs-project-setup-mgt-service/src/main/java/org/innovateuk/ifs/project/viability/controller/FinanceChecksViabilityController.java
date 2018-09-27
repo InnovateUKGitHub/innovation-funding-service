@@ -157,7 +157,7 @@ public class FinanceChecksViabilityController {
         Integer otherPublicSectorFunding = toZeroScaleInt(financesForOrganisation.getTotalOtherFunding());
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
-        String companyRegistrationNumber = organisation.getCompanyHouseNumber();
+        String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
         Long headCount = null;
         RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(applicationId, organisationId);
