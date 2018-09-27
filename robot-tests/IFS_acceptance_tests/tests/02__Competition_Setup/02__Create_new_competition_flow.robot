@@ -763,7 +763,7 @@ The internal user invites a Stakeholder
     [Tags]
     Given the user enters the correct details of a Stakeholder
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
-    Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Pending")
+    Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Invite pending")
 
 The internal user adds a Stakeholder to the competition
     [Documentation]
