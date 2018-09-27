@@ -7,8 +7,10 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -16,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +40,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Transactional and secured service implementation providing operations around stakeholders.
@@ -57,6 +61,12 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
@@ -172,5 +182,14 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private ServiceResult<Void> handleInviteSuccess(StakeholderInvite stakeholderInvite) {
         stakeholderInviteRepository.save(stakeholderInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<List<UserResource>> findStakeholders(long competitionId) {
+
+        List<Stakeholder> stakeholders = stakeholderRepository.findStakeholders(competitionId);
+        List<UserResource> stakeholderUsers = simpleMap(stakeholders, stakeholder -> userMapper.mapToResource(stakeholder.getUser()));
+
+        return serviceSuccess(stakeholderUsers);
     }
 }
