@@ -18,36 +18,36 @@ View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042
     [Tags]
     When the user navigates to the page   ${DASHBOARD_URL}
-    Then the user should see the element  link=Profile
+    Then the user should see the element  link = Profile
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042  IFS-951
     [Tags]
-    When the user clicks the button/link  link=Profile
+    When the user clicks the button/link  link = Profile
     And the user should see the element   jQuery = .govuk-table td:contains("Business")
-    Then the user should see the element  link=Edit your details
+    Then the user should see the element  link = Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245, IFS-41
     [Tags]
     Given the user navigates to the page                   ${DASHBOARD_URL}
-    When the user clicks the button/link                   link=Profile
-    And the user clicks the button/link                    link=Edit your details
+    When the user clicks the button/link                   link = Profile
+    And the user clicks the button/link                    link = Edit your details
     And the user enters profile details
     Then the user should see the text in the page          Chris
     And the user should see the text in the page           Brown
     And the user should see the text in the page           0123456789
-    When the user clicks the button/link                   link=Edit your details
+    When the user clicks the button/link                   link = Edit your details
     And the user should see that the checkbox is selected  allowMarketingEmails
     When the user can change their details back again
-    Then the user should see the element  jQuery=h3:contains("Email preferences") + p:contains("You have asked for updates on Innovate UK competitions by email.")
+    Then the user should see the element  jQuery = h3:contains("Email preferences") + p:contains("You have asked for updates on Innovate UK competitions by email.")
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]
     Given the user navigates to the page           ${DASHBOARD_URL}
-    And the user clicks the button/link            link=Profile
-    And the user clicks the button/link            link=Edit your details
+    And the user clicks the button/link            link = Profile
+    And the user clicks the button/link            link = Edit your details
     When the user enters profile details
     And The user clicks the button/link            link = Dashboard
     And The user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_NAME}
@@ -67,7 +67,7 @@ Display errors for invalid inputs of the First name
     And browser validations have been disabled
     And browser validations have been disabled
     And the user fills in the first name   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link    css=[name="create-account"]
+    And the user clicks the button/link    css = [name="create-account"]
     And the user should see an error       Your first name cannot have more than 70 characters.
     And browser validations have been disabled
     And the user fills in the first name   A
@@ -83,7 +83,7 @@ Display errors for invalid inputs of the Last name
     And browser validations have been disabled
     And browser validations have been disabled
     And the user fills in the last name   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link   css=[name="create-account"]
+    And the user clicks the button/link   css = [name="create-account"]
     And the user should see an error      Your last name cannot have more than 70 characters.
     And browser validations have been disabled
     And the user fills in the last name   B
@@ -98,7 +98,7 @@ Display errors for invalid inputs of the Phone field
     Then the user should see an error       Please enter a phone number.
     And browser validations have been disabled
     And the user fills in the Phone field   121212121212121212121
-    And the user clicks the button/link     css=[name="create-account"]
+    And the user clicks the button/link     css = [name="create-account"]
     And the user should see an error        Please enter a valid phone number between 8 and 20 digits.
     And browser validations have been disabled
     And the user fills in the Phone field   12
@@ -106,38 +106,38 @@ Display errors for invalid inputs of the Phone field
 
 *** Keywords ***
 the user enters profile details
-    The user enters text to a text field  id=firstName    Chris
-    The user enters text to a text field  id=lastName    Brown
-    The user enters text to a text field  id=phoneNumber    +-0123456789
+    The user enters text to a text field  id = firstName    Chris
+    The user enters text to a text field  id = lastName    Brown
+    The user enters text to a text field  id = phoneNumber    +-0123456789
     the user selects the checkbox         allowMarketingEmails
-    the user clicks the button/link       css=[name="create-account"]
+    the user clicks the button/link       css = [name="create-account"]
 
 the user fills in the first name
     [Arguments]    ${first name}
-    The user enters text to a text field  id=firstName    ${first_name}
-    The user enters text to a text field  id=lastName    Brown
-    The user enters text to a text field  id=phoneNumber    0123456789
-    the user clicks the button/link       css=[name="create-account"]
+    The user enters text to a text field  id = firstName    ${first_name}
+    The user enters text to a text field  id = lastName    Brown
+    The user enters text to a text field  id = phoneNumber    0123456789
+    the user clicks the button/link       css = [name="create-account"]
 
 the user fills in the last name
     [Arguments]    ${Last_name}
-    The user enters text to a text field  id=firstName    Chris
-    The user enters text to a text field  id=lastName    ${Last_name}
-    The user enters text to a text field  id=phoneNumber    0123456789
-    the user clicks the button/link       css=[name="create-account"]
+    The user enters text to a text field  id = firstName    Chris
+    The user enters text to a text field  id = lastName    ${Last_name}
+    The user enters text to a text field  id = phoneNumber    0123456789
+    the user clicks the button/link       css = [name="create-account"]
 
 the user fills in the phone field
     [Arguments]    ${phone_field}
-    The user enters text to a text field  id=firstName    Chris
-    The user enters text to a text field  id=lastName    Brown
-    The user enters text to a text field  id=phoneNumber    ${phone_field}
-    the user clicks the button/link       css=[name="create-account"]
+    The user enters text to a text field  id = firstName    Chris
+    The user enters text to a text field  id = lastName    Brown
+    The user enters text to a text field  id = phoneNumber    ${phone_field}
+    the user clicks the button/link       css = [name="create-account"]
 
 the user can change their details back again
-    The user enters text to a text field  id=firstName    Steve
-    The user enters text to a text field  id=lastName    Smith
-    The user enters text to a text field  id=phoneNumber    +-0123456789
-    the user clicks the button/link       css=[name="create-account"]
+    The user enters text to a text field  id = firstName    Steve
+    The user enters text to a text field  id = lastName    Smith
+    The user enters text to a text field  id = phoneNumber    +-0123456789
+    the user clicks the button/link       css = [name="create-account"]
 
 other contributors should see the applicant's updated name for the assignation options
     Log in as a different user                &{collaborator1_credentials}
