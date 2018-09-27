@@ -94,7 +94,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     @Test
     public void inviteStakeholderWhenEmailDomainIsIncorrect() throws Exception {
 
-        invitedUser.setEmail("Rayon.Kevin@innovateuk.gov.uk");
+        invitedUser.setEmail("Rayon.Kevin@innovateuk.ukri.org");
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
         assertTrue(result.isFailure());
