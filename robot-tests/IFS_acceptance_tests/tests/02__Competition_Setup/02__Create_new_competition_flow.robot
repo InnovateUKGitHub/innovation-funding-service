@@ -765,6 +765,21 @@ The internal user invites a Stakeholder
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
     Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Pending")
 
+The internal user adds a Stakeholder to the competition
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link    css = a[href="?tab=add"]
+    When the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link      jQuery = a:contains("Added to competition")
+    Then the user should see the element     jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+
+The internal user removes a Stakeholder from the competition
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link     jQuery = button[type="submit"]
+    When the user clicks the button/link      css = a[href="?tab=add"]
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
