@@ -50,6 +50,7 @@ the competition admin selects assessors and add them to invite list
     the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
     the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
     the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
+    sleep  2s
     the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
     the user should see the element      jQuery=td:contains("${assessor_ben}") + td:contains("${assessor_ben_email}")
     the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${assessor_joel_email}")

@@ -4,7 +4,7 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 The user clicks the button/link
     [Arguments]    ${BUTTON}
-    Wait Until Element Is Visible Without Screenshots    ${BUTTON}    10
+    Wait Until Element Is Visible Without Screenshots    ${BUTTON}    5
     Set Focus To Element    ${BUTTON}
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    500ms    click element    ${BUTTON}
