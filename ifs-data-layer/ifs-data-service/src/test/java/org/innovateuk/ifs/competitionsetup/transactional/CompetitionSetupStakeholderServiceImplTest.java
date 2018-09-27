@@ -41,10 +41,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -206,7 +203,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertNotNull(savedStakeholderInvite2.getHash());
         assertEquals(SENT, savedStakeholderInvite2.getStatus());
         assertEquals(loggedInUser, savedStakeholderInvite2.getSentBy());
-        assertTrue(now().isEqual(savedStakeholderInvite2.getSentOn()) || now().isAfter(savedStakeholderInvite2.getSentOn()));
+        assertFalse(now().isBefore(savedStakeholderInvite2.getSentOn()));
     }
 
     @Test

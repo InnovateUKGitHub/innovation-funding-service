@@ -11,13 +11,16 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -27,6 +30,7 @@ import java.util.List;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -38,6 +42,10 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -45,9 +53,6 @@ import static org.mockito.Mockito.*;
  * Tests the QuestionCompetitionServiceImpl with mocked repositories/mappers.
  */
 public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest<QuestionSetupCompetitionServiceImpl> {
-
-    @Mock
-    private CompetitionRepository competitionRepositoryMock;
 
     @Override
     protected QuestionSetupCompetitionServiceImpl supplyServiceUnderTest() {
@@ -70,10 +75,16 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private static QuestionSetupType questionSetupType = QuestionSetupType.SCOPE;
 
     @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
     private QuestionRepository questionRepository;
 
     @Mock
     private FormInputRepository formInputRepository;
+
+    @Mock
+    private SectionRepository sectionRepository;
 
     @Mock
     private GuidanceRowMapper guidanceRowMapper;
@@ -84,8 +95,11 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Mock
     private QuestionSetupTemplateService questionSetupTemplateService;
 
+    @Mock
+    private QuestionPriorityOrderService questionPriorityOrderService;
+
     @Test
-    public void test_getByQuestionId() {
+    public void getByQuestionId() {
         Long questionId = 1L;
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(1);
         Question question = newQuestion().
@@ -169,7 +183,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_update() {
+    public void update() {
         long questionId = 1L;
 
         List<GuidanceRowResource> guidanceRows = newFormInputGuidanceRowResourceBuilder().build(1);
@@ -242,7 +256,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldNotChangeAppendixFormInputWhenOptionIsNull() {
+    public void update_shouldNotChangeAppendixFormInputWhenOptionIsNull() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -276,7 +290,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldResetAppendixOptionsFormInputWhenItsNotSelected() {
+    public void update_shouldResetAppendixOptionsFormInputWhenItsNotSelected() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -308,7 +322,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldSetAppendixOptionsFormInputWhenSelected() {
+    public void update_shouldSetAppendixOptionsFormInputWhenSelected() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
@@ -333,7 +347,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldAppendFileTypeSeparatedByComma() {
+    public void update_shouldAppendFileTypeSeparatedByComma() {
         Long questionId = 1L;
 
         setMocksForSuccessfulUpdate();
@@ -354,7 +368,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldNotUpdateApplicationDetailsHeading() {
+    public void update_shouldNotUpdateApplicationDetailsHeading() {
         long questionId = 1L;
         String oldShortTitle = "Application details";
 
@@ -413,7 +427,6 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     private void setMocksForSuccessfulUpdate() {
-        long questionId = 1L;
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
 
         Question question = newQuestion().
@@ -428,46 +441,44 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withGuidanceRows(newFormInputGuidanceRow().build(2))
                 .build();
 
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(questionId)).thenReturn(question);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType
+                .TEXTAREA)).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(questionRepository.findOne(question.getId())).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
 
         doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
         when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
     }
 
     @Test
-    public void test_delete() {
-        final Long questionId = 1L;
+    public void delete() {
+        long questionId = 1L;
 
         when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
-        ServiceResult<Void> resultAssessedQuestion = service.delete(questionId);
-        assertTrue(resultAssessedQuestion.isSuccess());
+        assertTrue(service.delete(questionId).isSuccess());
     }
 
     @Test
-    public void test_createByCompetitionId() {
-        Long competitionId = 22L;
-        Long questionId = 33L;
+    public void createByCompetitionId() {
         Competition competition = newCompetition().build();
-        Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        Question newlyCreatedQuestion = newQuestion().build();
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
-        when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
+        when(questionRepository.findOne(newlyCreatedQuestion.getId())).thenReturn(newlyCreatedQuestion);
 
-        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isSuccess());
 
         CompetitionSetupQuestionResource resource = result.getSuccess();
-        assertEquals(questionId, resource.getQuestionId());
+        assertEquals(newlyCreatedQuestion.getId(), resource.getQuestionId());
     }
 
     @Test
-    public void test_createByCompetitionIdWithNonExistentCompId() {
+    public void createByCompetitionId_withNonExistentCompId() {
         Long competitionId = 22L;
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
 
@@ -477,19 +488,40 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_createByCompetitionIdWhenDefaultCreationFails() {
-        Long competitionId = 22L;
+    public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
-        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
     }
 
+    @Test
+    public void addResearchCategoryQuestionToCompetition() {
+        Competition competition = newCompetition().build();
+        Section section = newSection().build();
+        Question createdQuestion = newQuestion().build();
+
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName()))
+                .thenReturn(section);
+        when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))
+                .thenReturn(createdQuestion);
+
+        ServiceResult<Void> result = service.addResearchCategoryQuestionToCompetition(competition.getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepositoryMock).findById(competition.getId());
+        verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName());
+        verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
+        verify(questionPriorityOrderService).prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
+    }
+
     private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
-        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+        return newCompetitionSetupQuestionResource()
                 .withAppendix(false)
                 .withGuidance(guidance)
                 .withGuidanceTitle(guidanceTitle)
@@ -507,7 +539,20 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)
                 .build();
+    }
 
-        return resource;
+    private Question createResearchCategoryQuestionExpectations(Competition competition, Section section) {
+        return createLambdaMatcher(question -> {
+            assertNull(question.getId());
+            assertFalse(question.getAssignEnabled());
+            assertEquals("Description not used", question.getDescription());
+            assertTrue(question.getMarkAsCompletedEnabled());
+            assertEquals("Research category", question.getName());
+            assertEquals("Research category", question.getShortName());
+            assertEquals(competition, question.getCompetition());
+            assertEquals(section, question.getSection());
+            assertEquals(LEAD_ONLY, question.getType());
+            assertEquals(RESEARCH_CATEGORY, question.getQuestionSetupType());
+        });
     }
 }
