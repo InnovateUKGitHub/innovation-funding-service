@@ -352,7 +352,7 @@ Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
-    When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
+    When The user clicks the button/link  link = Application
     Then the user should see the element  jQuery=h2:contains("Sector competition questions")
     When the user should see the element  link=Application details
     Then the user should see the element  link=Project summary
@@ -761,8 +761,9 @@ The internal user cannot invite users with an Innovate UK email as Stakeholders
 The internal user invites a Stakeholder
     [Documentation]  IFS-4190
     [Tags]
-    Then the user enters the correct details of a Stakeholder
-    # There's no way of verifying if this has been successful yet, which is why there is no check.
+    Given the user enters the correct details of a Stakeholder
+    When the user clicks the button/link    jQuery = a:contains("Added to competition")
+    Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Pending")
 
 *** Keywords ***
 the user moves focus and waits for autosave
