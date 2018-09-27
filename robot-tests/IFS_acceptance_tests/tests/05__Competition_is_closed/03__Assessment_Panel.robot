@@ -129,6 +129,7 @@ CompAdmin resend invites to multiple assessors
     [Setup]  the user clicks the button/link    link=Pending and declined
     Given the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     When the user clicks the button/link        jQuery=tr:contains("${assessor_joel}") label
+    sleep  2s
     Then the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_joel}
     And the user should see the element         jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user should see the element         jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
