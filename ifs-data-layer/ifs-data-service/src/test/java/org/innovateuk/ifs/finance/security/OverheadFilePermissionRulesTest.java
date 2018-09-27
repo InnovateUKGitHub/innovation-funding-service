@@ -2,10 +2,8 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -21,9 +19,7 @@ import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
@@ -52,7 +48,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
     @Mock
-    private ApplicationService applicationService;
+    private ApplicationRepository applicationRepositoryMock;
 
     @Override
     protected OverheadFilePermissionRules supplyPermissionRulesUnderTest() {
@@ -71,11 +67,13 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             final Long organisationId = 2L;
 
             final Application application = newApplication()
-                .with(id(applicationId))
-                .build();
+                    .with(id(applicationId))
+                    .withApplicationState(ApplicationState.OPEN)
+                    .build();
 
             final Application submittedApplication = newApplication()
                     .with(id(submittedApplicationId))
+                    .withApplicationState(ApplicationState.SUBMITTED)
                     .build();
 
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
@@ -97,18 +95,8 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
 
-            ApplicationResource applicationResource = newApplicationResource()
-                    .withId(applicationId)
-                    .withApplicationState(ApplicationState.OPEN)
-                    .build();
-
-            ApplicationResource submittedApplicationResource = newApplicationResource()
-                    .withId(submittedApplicationId)
-                    .withApplicationState(ApplicationState.SUBMITTED)
-                    .build();
-
-            when(applicationService.getApplicationById(applicationId)).thenReturn(serviceSuccess(applicationResource));
-            when(applicationService.getApplicationById(submittedApplicationId)).thenReturn(serviceSuccess(submittedApplicationResource));
+            when(applicationRepositoryMock.findById(applicationId)).thenReturn(application);
+            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(submittedApplication);
         }
 
         {

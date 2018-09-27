@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 public class OverheadFilePermissionRules extends BasePermissionRules {
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "CREATE_OVERHEAD_FILE", description = "The consortium can create the overhead file for their application and organisation")
     public boolean consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
@@ -89,9 +89,9 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
     private boolean isApplicationSubmitted(final FinanceRow overheads) {
         final ApplicationFinance applicationFinance = (ApplicationFinance) overheads.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
-        ApplicationResource applicationResource = applicationService.getApplicationById(applicationId).getSuccess();
+        Application application = applicationRepository.findById(applicationId);
 
-        return applicationResource.isSubmitted();
+        return application.isSubmitted();
     }
 
 }
