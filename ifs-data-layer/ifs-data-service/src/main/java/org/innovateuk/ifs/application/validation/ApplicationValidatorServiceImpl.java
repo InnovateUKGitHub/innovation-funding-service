@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -44,6 +44,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -80,7 +81,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInput formInput = formInputRepository.findOne(formInputId);
         if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
-            results.add(applicationValidationUtil.addValidation(application, new ApplicationMarkAsCompleteValidator()));
+            results.add(applicationValidationUtil.addValidation(application, new ApplicationDetailsMarkAsCompleteValidator()));
         }
 
         return results;

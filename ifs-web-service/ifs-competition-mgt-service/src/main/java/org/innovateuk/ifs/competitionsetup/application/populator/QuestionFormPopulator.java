@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competitionsetup.application.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.application.form.QuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionFormPopulator;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,45 +22,45 @@ import java.util.Optional;
 @Service
 public class QuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
-	@Autowired
-	private CompetitionSetupQuestionService competitionSetupQuestionService;
+    @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
-	@Autowired
-	private SectionService sectionService;
+    @Autowired
+    private SectionService sectionService;
 
-	@Override
-	public CompetitionSetupSubsection sectionToFill() {
-		return CompetitionSetupSubsection.QUESTIONS;
-	}
+    @Override
+    public CompetitionSetupSubsection sectionToFill() {
+        return CompetitionSetupSubsection.QUESTIONS;
+    }
 
-	@Override
-	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
+    @Override
+    public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 
-		QuestionForm competitionSetupForm = new QuestionForm();
+        QuestionForm competitionSetupForm = new QuestionForm();
 
-		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
-			competitionSetupForm.setQuestion(questionResource);
+        if (objectId.isPresent()) {
+            CompetitionSetupQuestionResource questionResource = questionSetupCompetitionRestService.getByQuestionId(
+                    (objectId.get())).getSuccess();
+            competitionSetupForm.setQuestion(questionResource);
 
-			if(sectionContainsMoreThanOneQuestion(objectId.get())) {
-				competitionSetupForm.setRemovable(true);
-			}
+            if (sectionContainsMoreThanOneQuestion(objectId.get())) {
+                competitionSetupForm.setRemovable(true);
+            }
 
-			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
-				GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
-				competitionSetupForm.getGuidanceRows().add(grvm);
-			});
+            competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
+                GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
+                competitionSetupForm.getGuidanceRows().add(grvm);
+            });
 
         } else {
             throw new ObjectNotFoundException();
         }
 
-		return competitionSetupForm;
-	}
+        return competitionSetupForm;
+    }
 
-	private boolean sectionContainsMoreThanOneQuestion(Long questionId) {
-		SectionResource sectionServiceResult = sectionService.getSectionByQuestionId(questionId);
-		return sectionServiceResult.getQuestions().size() > 1;
-	}
-
+    private boolean sectionContainsMoreThanOneQuestion(Long questionId) {
+        SectionResource sectionServiceResult = sectionService.getSectionByQuestionId(questionId);
+        return sectionServiceResult.getQuestions().size() > 1;
+    }
 }
