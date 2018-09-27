@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 
 @Component
 public class ApplicationNavigationPopulator {
@@ -147,10 +148,14 @@ public class ApplicationNavigationPopulator {
             String backURL = APPLICATION_BASE_URL + applicationId;
 
             if (applicantOrganisationId.isPresent() && section != null) {
-                if (isSupport) {
+                if (isSupport && !application.getCompetitionStatus().equals(PROJECT_SETUP)) {
                     model.addAttribute(BACK_TITLE, "Application summary");
-                    backURL = (backURL + "/summary");
-                    model.addAttribute("queryParams", queryParam.get());
+                    if (queryParam.isPresent()) {
+                        backURL = (backURL + "/summary" + queryParam.get());
+                        model.addAttribute("queryParams", queryParam.get());
+                    } else {
+                        backURL = (backURL + "/summary");
+                    }
                 } else {
                     model.addAttribute(BACK_TITLE, "Application overview");
                     if (queryParam.isPresent()) {
