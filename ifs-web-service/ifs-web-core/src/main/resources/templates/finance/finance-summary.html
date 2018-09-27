@@ -199,16 +199,19 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                 </tr>
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row"
+                    th:with="collaborationLevelIsCollaboratorOnly=${true}"> <!-- TODO: get collaboration level -->
                     <th class="govuk-table__header"  scope="row">Total
-                        <div th:if="${currentApplication.isOpen()}">
-                            <th:block th:if="${yourFinancesCompleteForAllOrganisations}">
+                        <div th:if="${currentApplication.isOpen()}"
+                             th:with="enoughFundingSought=${collaborationLevelIsCollaboratorOnly ? multipleSeekingFunding : true},
+                                      totalFinancesComplete=${yourFinancesCompleteForAllOrganisations && enoughFundingSought}">
+                            <th:block th:if="${totalFinancesComplete}">
                                 <img class="table-total-tick" width="20" height="17"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
                                      alt="has marked the Finances as complete"/>
                                 <span class="govuk-visually-hidden">Complete</span>
                             </th:block>
-                            <th:block th:unless="${yourFinancesCompleteForAllOrganisations}">
+                            <th:block th:unless="${totalFinancesComplete}">
                                 <img class="table-total-tick" width="20" height="20"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
                                      alt="has not yet marked the Finances as complete" />
