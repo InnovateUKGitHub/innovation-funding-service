@@ -4,27 +4,33 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.sort;
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -45,6 +51,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private QuestionSetupTemplateService questionSetupTemplateService;
+
+    @Autowired
+    private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -112,7 +121,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     private List<GuidanceRowResource> sortByPriority(Iterable<GuidanceRowResource> guidanceRowResources) {
         List<GuidanceRowResource> resources = Lists.newArrayList(guidanceRowResources);
-        Collections.sort(resources, (o1, o2) -> o1.getPriority().compareTo(o2.getPriority()));
+        sort(resources, comparing(GuidanceRowResource::getPriority));
         return resources;
     }
 
@@ -121,15 +130,21 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
-                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+                .andOnSuccess(this::mapQuestionToSuperQuestionResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> delete(Long questionId) {
-        questionSetupTemplateService.deleteQuestionInCompetition(questionId);
+    public ServiceResult<Void> addResearchCategoryQuestionToCompetition(long competitionId) {
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccess(this::saveNewResearchCategoryQuestionForCompetition)
+                .andOnSuccessReturnVoid();
+    }
 
-        return serviceSuccess();
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(long questionId) {
+        return questionSetupTemplateService.deleteQuestionInCompetition(questionId);
     }
 
     @Override
@@ -236,5 +251,24 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             writtenFeedbackFormInput.getGuidanceRows().addAll(newRows);
             formInputRepository.save(writtenFeedbackFormInput);
         }
+    }
+
+    private ServiceResult<Question> saveNewResearchCategoryQuestionForCompetition(Competition competition) {
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS
+                .getName()), notFoundError(Section.class)).andOnSuccessReturn(section -> {
+            Question question = new Question();
+            question.setAssignEnabled(false);
+            question.setDescription("Description not used");
+            question.setMarkAsCompletedEnabled(true);
+            question.setName(RESEARCH_CATEGORY.getShortName());
+            question.setShortName(RESEARCH_CATEGORY.getShortName());
+            question.setCompetition(competition);
+            question.setSection(section);
+            question.setType(LEAD_ONLY);
+            question.setQuestionSetupType(RESEARCH_CATEGORY);
+
+            Question createdQuestion = questionRepository.save(question);
+            return questionPriorityOrderService.prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
+        });
     }
 }

@@ -37,9 +37,9 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         final Long questionId = 1L;
         when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseUrl + "/getById/{id}", questionId))
+        mockMvc.perform(get(baseUrl + "/get-by-id/{id}", questionId))
                 .andExpect(status().isOk())
-                .andDo(document("question-setup/{method-name}",
+                .andDo(document("question-setup-competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be retrieved")
                         ),
@@ -57,7 +57,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
-                .andDo(document("question-setup/{method-name}",
+                .andDo(document("question-setup-competition/{method-name}",
                         requestFields(competitionSetupQuestionResourceFields)
                 ));
     }
@@ -68,9 +68,9 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
         when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(post(baseUrl + "/addDefaultToCompetition/{id}", competitionId))
+        mockMvc.perform(post(baseUrl + "/add-default-to-competition/{id}", competitionId))
                 .andExpect(status().isCreated())
-                .andDo(document("question-setup/{method-name}",
+                .andDo(document("question-setup-competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to which the question will be added")
                         ),
@@ -80,14 +80,30 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
     @Test
     public void deleteById() throws Exception {
-        final Long questionId = 1L;
+        final long questionId = 1L;
         when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).
+        mockMvc.perform(delete(baseUrl + "/delete-by-id/{id}", questionId)).
                 andExpect(status().isNoContent())
-                .andDo(document("question-setup/{method-name}",
+                .andDo(document("question-setup-competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be removed")
+                        )
+                ));
+    }
+
+    @Test
+    public void addResearchCategoryQuestionToCompetition() throws Exception {
+        final long competitionId = 1L;
+
+        when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId))
+                .andExpect(status().isCreated())
+                .andDo(document("question-setup-competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to which the " +
+                                        "research category question will be added")
                         )
                 ));
     }

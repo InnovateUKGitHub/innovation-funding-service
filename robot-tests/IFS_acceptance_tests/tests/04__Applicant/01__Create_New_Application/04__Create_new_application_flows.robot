@@ -22,15 +22,15 @@ Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
     [Tags]
     Given the user navigates to the page           ${frontDoor}
-    And the user clicks the button/link in the paginated list            link=${createApplicationOpenCompetition}
-    And the user clicks the button/link            jQuery=a:contains("Start new application")
+    And the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
+    And the user clicks the button/link            jQuery = a:contains("Start new application")
     And the user clicks the button/link            link = Continue and create an account
     And the user selects the radio button          organisationTypeId    radio-1
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
+    And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     When the user clicks the Not on companies house link
     Then the user fills in the non CH address
-    And the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
-    Then The user should see the element           jQuery=h1:contains("Your details")
+    And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
+    Then The user should see the element           jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -54,7 +54,7 @@ Verify the name of the new application
     And the user edits the application title
     Then the user should see the text in the page                 ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link                           link=Application team
+    And the user clicks the button/link                           link = Application team
     And the user should see the text in the page                  Application team
     And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
     And the user can see this new application on their dashboard  ${test_title}
@@ -67,25 +67,25 @@ Marketing emails information should have updated on the profile
 
 *** Keywords ***
 the new application should be visible in the dashboard page
-    the user clicks the button/link           link=Dashboard
+    the user clicks the button/link           link = Dashboard
     the user should see the text in the page  ${test_title}
     the user should see the text in the page  Application number:
 
 the user edits the application title
-    the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user should see the element         link=Application details
-    the user clicks the button/link         link=Application details
+    the user clicks the button/link         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user should see the element         link = Application details
+    the user clicks the button/link         link = Application details
     The project start date is blank
-    The user enters text to a text field    css=[id="application.name"]    ${test_title}
-    the user clicks the button/link         jQuery=.govuk-button:contains("Save and return")
+    The user enters text to a text field    css = [id = "application.name"]    ${test_title}
+    the user clicks the button/link         jQuery = .govuk-button:contains("Save and return")
 
 the progress indicator should show 0
-    Element Should Contain  css=.progress-indicator    0
+    Element Should Contain  css = .progress-indicator    0
 
 The project start date is blank
-    the user should see the element  xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
-    the user should see the element  xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
-    the user should see the element  xpath=//*[@id="application_details-startdate_year" and @placeholder="YYYY"]
+    the user should see the element  xpath = //*[@id="application_details-startdate_day" and @placeholder="DD"]
+    the user should see the element  xpath = //*[@id="application_details-startdate_month" and @placeholder="MM"]
+    the user should see the element  xpath = //*[@id="application_details-startdate_year" and @placeholder="YYYY"]
 
 The user can see this new application on their dashboard
     [Arguments]     ${application_name}
@@ -94,27 +94,27 @@ The user can see this new application on their dashboard
 
 Applicant goes to the registration form
     the user navigates to the page   ${frontDoor}
-    the user clicks the button/link in the paginated list   link=${createApplicationOpenCompetition}
+    the user clicks the button/link in the paginated list   link = ${createApplicationOpenCompetition}
     And the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
     the user should see the text in the page  Dashboard
-    the user clicks the button/link           link=${Application_name}
-    the user should see the element           jQuery=button:contains("Save and return to application overview")
-    the user clicks the button/link           link=Application overview
+    the user clicks the button/link           link = ${Application_name}
+    the user should see the element           jQuery = button:contains("Save and return to application overview")
+    the user clicks the button/link           link = Application overview
     the user is redirected to overview page if he has been there already
 
 the user is redirected to overview page if he has been there already
     log in as a different user           ${test_mailbox_one}+business@gmail.com    ${correct_password}
-    the user clicks the button/link      link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user should see the element      jQuery=h1:contains("Application overview")
-    the user clicks the button/link      link=Application team
+    the user clicks the button/link      link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user should see the element      jQuery = h1:contains("Application overview")
+    the user clicks the button/link      link = Application team
     logout as user
 
 the user fills in the non CH address
     And the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
     And the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element           css=#select-address-block
-    And the user clicks the button/link            css=#select-address-block > button
+    Then the user should see the element           css = #select-address-block
+    And the user clicks the button/link            css = #select-address-block > button
     And the user clicks the button/link            jQuery = .govuk-button:contains("Continue")

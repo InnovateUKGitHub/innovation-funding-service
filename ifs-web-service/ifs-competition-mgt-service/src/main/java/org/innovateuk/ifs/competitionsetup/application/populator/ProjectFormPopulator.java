@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.application.form.ProjectForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionFormPopulator;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,29 +19,28 @@ import java.util.Optional;
 @Service
 public class ProjectFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
-	@Autowired
-	private CompetitionSetupQuestionService competitionSetupQuestionService;
+    @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
-	@Override
-	public CompetitionSetupSubsection sectionToFill() {
-		return CompetitionSetupSubsection.PROJECT_DETAILS;
-	}
+    @Override
+    public CompetitionSetupSubsection sectionToFill() {
+        return CompetitionSetupSubsection.PROJECT_DETAILS;
+    }
 
-	@Override
-	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
+    @Override
+    public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 
-		ProjectForm competitionSetupForm = new ProjectForm();
+        ProjectForm competitionSetupForm = new ProjectForm();
 
-		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
-			competitionSetupForm.setQuestion(questionResource);
-			competitionSetupForm.setRemovable(true);
-
-
-		} else {
+        if (objectId.isPresent()) {
+            CompetitionSetupQuestionResource questionResource = questionSetupCompetitionRestService
+                    .getByQuestionId(objectId.get()).getSuccess();
+            competitionSetupForm.setQuestion(questionResource);
+            competitionSetupForm.setRemovable(true);
+        } else {
             throw new ObjectNotFoundException();
         }
 
-		return competitionSetupForm;
-	}
+        return competitionSetupForm;
+    }
 }
