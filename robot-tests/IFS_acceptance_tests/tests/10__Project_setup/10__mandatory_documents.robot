@@ -44,80 +44,80 @@ ${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-5490
     [Tags]
-    Given Log in as a different user   &{collaborator1_credentials}
-    When the user navigates to the page    ${project_in_setup_page}
-    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
-    When the user clicks the button/link    link=Other documents
+    Given Log in as a different user        &{collaborator1_credentials}
+    When the user navigates to the page     ${project_in_setup_page}
+    And The user should see the element     jQuery = p:contains("Your Project Manager needs to upload the following")
+    When the user clicks the button/link    link = Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
+    And the user should see the element     jQuery = p:contains("Only the Project Manager can upload and submit additional documents")
 
 Lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-5490
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    When The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
-    And the user clicks the button/link    link=Other documents
+    When The user should see the element    jQuery = p:contains("Your Project Manager needs to upload the following")
+    And the user clicks the button/link     link = Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
+    And the user should see the element     jQuery = p:contains("Only the Project Manager can upload and submit additional documents")
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012, INFUND-5490
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    When the user navigates to the page    ${project_in_setup_page}/partner/documents
-    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
+    Given log in as a different user            ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    When the user navigates to the page         ${project_in_setup_page}/partner/documents
+    And the user should see the element         jQuery = p:contains("Only the Project Manager can upload and submit additional documents")
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    css=label[for="collaborationAgreement"]
-    And the user should see the element    css=label[for="exploitationPlan"]
-    Then the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should see the element         css = label[for = "collaborationAgreement"]
+    And the user should see the element         css = label[for = "exploitationPlan"]
+    Then the user should not see the element    jQuery = .govuk-button.enabled:contains("Submit documents")
 
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given the user navigates to the page                             ${project_in_setup_page}/partner/documents
     When the user uploads to the collaboration agreement question    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    Then the user should see the text in the page                    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
-    When the user uploads to the exploitation plan question    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    And the user should not see the text in the page    ${too_large_pdf}
+    When the user uploads to the exploitation plan question          ${too_large_pdf}
+    Then the user should see the text in the page                    ${too_large_pdf_validation_error}
+    And the user should not see the text in the page                 ${too_large_pdf}
     And the user goes back to the previous page
 
 Non pdf files not allowed for either document
     [Documentation]    INFUND-3011
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error    ${wrong_filetype_validation_error}
-    When the user uploads to the exploitation plan question    ${text_file}
-    Then the user should see an error    ${wrong_filetype_validation_error}
-    And the user should not see the text in the page    ${text_file}
+    Then the user should see an error                                ${wrong_filetype_validation_error}
+    When the user uploads to the exploitation plan question          ${text_file}
+    Then the user should see an error                                ${wrong_filetype_validation_error}
+    And the user should not see the text in the page                 ${text_file}
 
 
 PM can upload both documents
     [Documentation]    INFUND-3011  IFS-2371-2258
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    [Setup]    log in as a different user                      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page                       ${project_in_setup_page}/partner/documents
     When the user uploads to the exploitation plan question    ${valid_pdf}
-    And the user should see the element    jQuery=button:disabled:contains("Submit documents")
-    And the user should see the element    jQuery=.upload-section:contains("Exploitation plan") a:contains("testing")
+    And the user should see the element                        jQuery = button:disabled:contains("Submit documents")
+    And the user should see the element                        jQuery = .upload-section:contains("Exploitation plan") a:contains("testing")
     And the user uploads to the collaboration agreement question    ${valid_pdf}
-    And the user should see the element    jQuery=.upload-section:contains("Collaboration agreement") a:contains("testing")
+    And the user should see the element                        jQuery = .upload-section:contains("Collaboration agreement") a:contains("testing")
     Then the user should not see an error in the page
 
 Lead partner can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
-    Given log in as a different user       &{lead_applicant_credentials}
-    When the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user opens the link in new window   ${valid_pdf}
+    Given log in as a different user                &{lead_applicant_credentials}
+    When the user navigates to the page             ${project_in_setup_page}/partner/documents
+    Then the user opens the link in new window      ${valid_pdf}
     And the user should not see an error in the page
     And the user closes the last opened tab
-    When the user opens the link in new window   ${valid_pdf}
+    When the user opens the link in new window      ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user navigates to the page    ${project_in_setup_page}/team-status
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    When the user navigates to the page             ${project_in_setup_page}/team-status
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -125,70 +125,70 @@ Lead partner does not have the option to submit the mandatory documents
     [Tags]
     [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should not see an error in the page
-    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should not see the element      jQuery = .govuk-button.enabled:contains("Submit documents")
 
 Lead partner cannot remove either document
     [Documentation]    INFUND-3011
     When the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    And the user should not see the element              name = removeCollaborationAgreementClicked
+    And the user should not see the element              name = removeExploitationPlanClicked
 
 Non-lead partner can view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
     [Tags]
-    Given log in as a different user       &{collaborator1_credentials}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
-    And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf}
+    Given log in as a different user        &{collaborator1_credentials}
+    When the user navigates to the page     ${project_in_setup_page}
+    And the user should see the element     css = #main-content ul > li:nth-child(2) .msg-progress
+    And the user clicks the button/link     link = Other documents
+    And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page     ${project_in_setup_page}/team-status
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
     [Documentation]    INFUND-3013
     [Tags]
     When the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should not see the element    name = removeCollaborationAgreementClicked
+    And the user should not see the element    name = removeExploitationPlanClicked
+    And the user should not see the element    jQuery = .govuk-button.enabled:contains("Submit documents")
 
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
     Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user should see the element  link=${valid_pdf}
-    Then the user should see the element  link=${valid_pdf}
+    When the user should see the element  link = ${valid_pdf}
+    Then the user should see the element  link = ${valid_pdf}
     When the user navigates to the page   ${project_in_setup_page}/team-status
-    Then the user should see the element  css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element  css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 PM can remove the second document
     [Documentation]    INFUND-3011
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user clicks the button/link    name=removeExploitationPlanClicked
+    When the user clicks the button/link    name = removeExploitationPlanClicked
     Then the user should not see an error in the page
 
 Non-lead partner can still view the first document
     [Documentation]    INFUND-4252
     [Setup]    log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    And the user clicks the button/link    link = Other documents
     Then the user should see the text in the page    ${valid_pdf}
 
 PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    name=removeCollaborationAgreementClicked
+    Given the user navigates to the page     ${project_in_setup_page}
+    And the user clicks the button/link      link = Other documents
+    When the user clicks the button/link     name = removeCollaborationAgreementClicked
     Then the user should not see the text in the page    ${valid_pdf}
 
 Non-lead partner cannot view either document once removed
@@ -201,7 +201,7 @@ PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given the user navigates to the page     ${project_in_setup_page}/partner/documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
@@ -210,10 +210,10 @@ PM can upload both documents after they have been removed
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should not see the element    css=ul li.complete:nth-child(6)
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Given the user navigates to the page        ${project_in_setup_page}
+    Then the user should not see the element    css = ul li.complete:nth-child(6)
+    When the user clicks the button/link        link = View the status of partners
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
@@ -222,16 +222,16 @@ Mandatory document submission
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     And the user reloads the page
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=button:contains("Cancel")
-    Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Submit")
-    When the user clicks the button/link    link=Set up your project
+    When the user clicks the button/link    jQuery = .govuk-button:contains("Submit documents")
+    And the user clicks the button/link     jQuery = button:contains("Cancel")
+    Then the user should see the element    name = removeExploitationPlanClicked    # testing here that the section has not become read-only
+    When the user clicks the button/link    jQuery = .govuk-button:contains("Submit documents")
+    And the user clicks the button/link     jQuery = .govuk-button:contains("Submit")
+    When the user clicks the button/link    link = Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=View the status of partners
-    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    When the user navigates to the page     ${project_in_setup_page}
+    And the user clicks the button/link     link = View the status of partners
+    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -239,18 +239,18 @@ PM can still view both documents after submitting
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf}
+    And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    And the user clicks the button/link    link=${valid_pdf}
+    And the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
     Then the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    And the user should not see the element    name = removeCollaborationAgreementClicked
+    And the user should not see the element    name = removeExploitationPlanClicked
     [Teardown]  The user closes the browser
 
 Lead partner cannot remove the documents after submission by PM
@@ -258,16 +258,16 @@ Lead partner cannot remove the documents after submission by PM
     [Tags]
     [Setup]  The user logs-in in new browser       &{lead_applicant_credentials}
     Given the user navigates to the page      ${project_in_setup_page}/partner/documents
-    When the user should not see the element  name=removeCollaborationAgreementClicked
-    Then the user should not see the element  name=removeExploitationPlanClicked
+    When the user should not see the element  name = removeCollaborationAgreementClicked
+    Then the user should not see the element  name = removeExploitationPlanClicked
 
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf}
+    And the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf}
+    Then the user clicks the button/link    link = ${valid_pdf}
     When the user should not see an error in the page
     Then the user closes the last opened tab
 
@@ -276,31 +276,31 @@ Non-lead partner cannot remove the documents after submission by PM
     [Tags]
     [Setup]  log in as a different user       &{collaborator1_credentials}
     Given the user navigates to the page      ${project_in_setup_page}/partner/documents
-    When the user should not see the element  name=removeCollaborationAgreementClicked
-    Then the user should not see the element  name=removeExploitationPlanClicked
+    When the user should not see the element  name = removeCollaborationAgreementClicked
+    Then the user should not see the element  name = removeExploitationPlanClicked
 
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
-    And the user clicks the button/link    link=${valid_pdf}
+    And the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    Then the user clicks the button/link    link=${valid_pdf}
+    Then the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=View the status of partners
-    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user clicks the button/link    link = View the status of partners
+    And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
     [Tags]
-    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element   link=All projects
-    When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
-    And the user clicks the button/link    jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
+    [Setup]    Log in as a different user   &{Comp_admin1_credentials}
+    When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element    link = All projects
+    When the user clicks the button/link    css = #table-project-status tr:nth-child(2) td:nth-child(7) a
+    And the user clicks the button/link     jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
     Then the user should see the file without error
     When the user clicks the button/link    jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
@@ -311,66 +311,66 @@ CompAdmin rejects other documents
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
-    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
+    When the user clicks the button/link    jQuery = button:contains("Reject documents")
+    And the user clicks the button/link    jQuery = .modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .govuk-button:contains("Reject documents")
+    When the user clicks the button/link    jQuery = button:contains("Reject documents")
+    And the user clicks the button/link    jQuery = .modal-reject-docs .govuk-button:contains("Reject documents")
     Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the Project Manager.
 
 
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    And the user should see the element  jQuery=.govuk-button:contains("Submit documents")
-    Given log in as a different user    &{lead_applicant_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    And the user should not see the element  jQuery=.govuk-button:contains("Submit documents")
-    Given log in as a different user   &{collaborator2_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    Given log in as a different user    &{collaborator1_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    Given log in as a different user         ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+    And the user navigates to the page       ${project_in_setup_page}/partner/documents
+    Then the user should see the element     jQuery = .warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    And the user should see the element      jQuery = .govuk-button:contains("Submit documents")
+    Given log in as a different user         &{lead_applicant_credentials}
+    And the user navigates to the page       ${project_in_setup_page}/partner/documents
+    Then the user should see the element     jQuery = .warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    And the user should not see the element  jQuery = .govuk-button:contains("Submit documents")
+    Given log in as a different user         &{collaborator2_credentials}
+    And the user navigates to the page       ${project_in_setup_page}/partner/documents
+    Then the user should see the element     jQuery = .warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    Given log in as a different user         &{collaborator1_credentials}
+    And the user navigates to the page       ${project_in_setup_page}/partner/documents
+    Then the user should see the element     jQuery = .warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
 
 After rejection, lead partner cannot remove either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
-    [Setup]    log in as a different user   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    [Setup]    log in as a different user     &{lead_applicant_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}
+    And the user clicks the button/link       link = Other documents
     When the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    And the user should not see the element    name = removeCollaborationAgreementClicked
+    And the user should not see the element    name = removeExploitationPlanClicked
 
 After rejection, lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
-    When the user clicks the button/link    link=Other documents
+    And The user should see the element     jQuery = p:contains("Your Project Manager needs to upload the following")
+    When the user clicks the button/link    link = Other documents
     Then the user should not see the text in the page    Upload
 
 After rejection, lead partner can view both documents
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-7342
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    link=${valid_pdf}
+    And the user clicks the button/link     link = Other documents
+    When the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=View the status of partners
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user navigates to the page      ${project_in_setup_page}
+    And the user should see the element     link = View the status of partners
+    When the user clicks the button/link    link = View the status of partners
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
 After rejection, lead partner does not have the option to submit the mandatory documents
@@ -378,71 +378,71 @@ After rejection, lead partner does not have the option to submit the mandatory d
     [Tags]
     [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should not see an error in the page
-    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery = .govuk-button.enabled:contains("Submit documents")
 
 After rejection, non-lead partner cannot view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428, INFUND-7342
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(2)
-    And the user should see the element   css=#main-content ul > li:nth-child(2) .msg-progress
-    And the user clicks the button/link    link=Other documents
-    And the user clicks the button/link    link=${valid_pdf}
+    Then the user moves focus to the element  css = ul li:nth-child(2)
+    And the user should see the element    css = #main-content ul > li:nth-child(2) .msg-progress
+    And the user clicks the button/link    link = Other documents
+    And the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user navigates to the page      ${project_in_setup_page}
+    When the user clicks the button/link    link = View the status of partners
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
-    When the user clicks the button/link    link=Set up your project
-    Then the user should not see the element    css=ul li.complete:nth-child(2)
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    When the user clicks the button/link    link = Set up your project
+    Then the user should not see the element    css = ul li.complete:nth-child(2)
+    When the user clicks the button/link    link = View the status of partners
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user clicks the button/link    name=removeCollaborationAgreementClicked
-    And the user clicks the button/link    name=removeExploitationPlanClicked
+    Given the user navigates to the page     ${project_in_setup_page}/partner/documents
+    When the user clicks the button/link     name = removeCollaborationAgreementClicked
+    And the user clicks the button/link      name = removeExploitationPlanClicked
     Then the user should not see the text in the page    ${valid_pdf}
-    And the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should not see the element    jQuery = .govuk-button.enabled:contains("Submit documents")
 
 After rejection, non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    And The user should see the element     jQuery=p:contains("Your Project Manager needs to upload the following")
-    When the user clicks the button/link    link=Other documents
+    And The user should see the element     jQuery = p:contains("Your Project Manager needs to upload the following")
+    When the user clicks the button/link    link = Other documents
     Then the user should not see the text in the page    Upload
 
 After rejection, non pdf files not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page     ${project_in_setup_page}
+    And the user clicks the button/link      link = Other documents
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error    ${wrong_filetype_validation_error}
+    Then the user should see an error        ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question    ${text_file}
-    Then the user should see an error    ${wrong_filetype_validation_error}
+    Then the user should see an error        ${wrong_filetype_validation_error}
     And the user should not see the text in the page    ${text_file}
 
 After rejection, large pdfs not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    And the user clicks the button/link     link = Other documents
     When the user uploads to the collaboration agreement question    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
@@ -454,21 +454,21 @@ After rejection, large pdfs not allowed for either document
 After rejection, PM cannot submit when both documents are removed
     [Documentation]    INFUND-3012, INFUND-7342
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    Given log in as a different user       ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    And the user clicks the button/link    link = Other documents
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    css=label[for="collaborationAgreement"]
-    And the user should see the element    css=label[for="exploitationPlan"]
-    Then the user should not see the element    jQuery=.govuk-button.enabled:contains("Submit documents")
+    And the user should see the element    css = label[for = "collaborationAgreement"]
+    And the user should see the element    css = label[for = "exploitationPlan"]
+    Then the user should not see the element    jQuery = .govuk-button.enabled:contains("Submit documents")
 
 
 After rejection PM can upload both documents when both documents are removed
     [Documentation]    INFUND-3011
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page     ${project_in_setup_page}
+    And the user clicks the button/link      link = Other documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
@@ -479,18 +479,18 @@ After rejection, mandatory document submission
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page     ${project_in_setup_page}
+    And the user clicks the button/link      link = Other documents
     And the user reloads the page
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=button:contains("Cancel")
-    Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Submit")
-    When the user clicks the button/link    link=Set up your project
+    When the user clicks the button/link     jQuery = .govuk-button:contains("Submit documents")
+    And the user clicks the button/link      jQuery = button:contains("Cancel")
+    Then the user should see the element     name = removeExploitationPlanClicked    # testing here that the section has not become read-only
+    When the user clicks the button/link     jQuery = .govuk-button:contains("Submit documents")
+    And the user clicks the button/link      jQuery = .govuk-button:contains("Submit")
+    When the user clicks the button/link     link = Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=View the status of partners
+    When the user navigates to the page      ${project_in_setup_page}
+    And the user clicks the button/link      link = View the status of partners
 
 
 Project Finance is able to Approve and Reject
@@ -499,22 +499,22 @@ Project Finance is able to Approve and Reject
     [Setup]    Log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     Then the user should see the text in the page    Other documents
-    And the user should see the element    jQuery=button:contains("Accept documents")
-    And the user should see the element    jQuery=button:contains("Reject documents")
-    When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs button:contains("Cancel")
+    And the user should see the element     jQuery = button:contains("Accept documents")
+    And the user should see the element     jQuery = button:contains("Reject documents")
+    When the user clicks the button/link    jQuery = button:contains("Accept documents")
+    And the user clicks the button/link     jQuery = .modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
+    When the user clicks the button/link    jQuery = button:contains("Reject documents")
+    And the user clicks the button/link     jQuery = .modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
 
 
 Project Finance user can click the link and go back to the Competition Dashboard page
     [Documentation]    INFUND-5516, INFUND-7345, IFS-1881
     [Tags]
-    When the user clicks the button/link           link=Projects in setup
+    When the user clicks the button/link           link = Projects in setup
     Then the user should not see an error in the page
-    And the user should see the element            link=All projects
+    And the user should see the element            link = All projects
     [Teardown]    the user goes back to the previous page
 
 # This is bank details and finance test but has been placed here as the required project is used here
@@ -522,14 +522,14 @@ Project finance can see zero funding for partner in bank details
     [Documentation]    INFUND-9269
     [Tags]
     When partners submit bank details
-    And log in as a different user                     &{collaborator1_credentials}
-    And the user navigates to the page                 ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
-    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
-    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
+    And log in as a different user                      &{collaborator1_credentials}
+    And the user navigates to the page                  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
+    Then the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
+    And the user should see the text in the element     css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element     css = .table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
     When log in as a different user                     &{internal_finance_credentials}
-    And the user navigates to the page                 ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
-    Then the user should see the element                jQuery=.read-only span:contains("No action required")
+    And the user navigates to the page                  ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
+    Then the user should see the element                jQuery = .read-only span:contains("No action required")
 
 
 CompAdmin approves other documents
@@ -542,89 +542,89 @@ CompAdmin approves other documents
     And the user should see the text in the page    ${organisationLudlowName}
     And the user should see the text in the page    ${organisationEggsName}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}
-    Then the user should see the element    jQuery=button:contains("Accept documents")
-    And the user should see the element    jQuery=button:contains("Reject documents")
-    When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs button:contains("Cancel")
+    Then the user should see the element    jQuery = button:contains("Accept documents")
+    And the user should see the element     jQuery = button:contains("Reject documents")
+    When the user clicks the button/link    jQuery = button:contains("Accept documents")
+    And the user clicks the button/link     jQuery = .modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs .govuk-button:contains("Accept documents")
+    When the user clicks the button/link    jQuery = button:contains("Accept documents")
+    And the user clicks the button/link     jQuery = .modal-accept-docs .govuk-button:contains("Accept documents")
     Then the user should see the text in the page    The documents provided have been approved.
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]
-    Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user      &{lead_applicant_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user   &{collaborator2_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    &{collaborator1_credentials}
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
+    Given log in as a different user        ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+    And the user navigates to the page      ${project_in_setup_page}/partner/documents
+    Then the user should see the element    jQuery = .success-alert h2:contains("These documents have been approved by Innovate UK")
+    Given log in as a different user        &{lead_applicant_credentials}
+    And the user navigates to the page      ${project_in_setup_page}/partner/documents
+    Then the user should see the element    jQuery = .success-alert h2:contains("These documents have been approved by Innovate UK")
+    Given log in as a different user        &{collaborator2_credentials}
+    And the user navigates to the page      ${project_in_setup_page}/partner/documents
+    Then the user should see the element    jQuery = .success-alert h2:contains("These documents have been approved by Innovate UK")
+    Given log in as a different user        &{collaborator1_credentials}
+    And the user navigates to the page      ${project_in_setup_page}/partner/documents
+    Then the user should see the element    jQuery = .success-alert h2:contains("These documents have been approved by Innovate UK")
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
     [Tags]
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
+    And the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element    jQuery = tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
     [Tags]    Experian
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
-    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
-    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
-    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
-    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
+    When the user navigates to the page      ${internal_competition_status}
+    Then the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
+    And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
+    And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
+    And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
+    And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
 
 # Project used for sole applicant tests - High-speed rail and its effects on soil compaction -
 # has lead org type of Public sector, charity or non Je-S registered research organisation
 Sole applicant uploads only exploitation plan and submits
     [Documentation]  IFS-1864
     [Tags]
-    [Setup]  log in as a different user  ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
-    Given the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
-    And the user clicks the button/link  link=Other documents
+    [Setup]  log in as a different user      ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
+    Given the user navigates to the page     ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    And the user clicks the button/link      link = Other documents
     Then the user should not see the text in the page  Collaboration
-    And the user should see the element  jQuery=h2:contains("Exploitation plan")
-    And the user should not see the element  jQuery=.govuk-button.enabled:contains("Submit document")
-    When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
-    And the user clicks the button/link  jQuery=.govuk-button:contains("Submit document")
-    And the user clicks the button/link  jQuery=.govuk-button:contains("Submit")
-    And the user clicks the button/link  link=Set up your project
-    Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
+    And the user should see the element      jQuery = h2:contains("Exploitation plan")
+    And the user should not see the element  jQuery = .govuk-button.enabled:contains("Submit document")
+    When choose file  name = exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
+    And the user clicks the button/link     jQuery = .govuk-button:contains("Submit document")
+    And the user clicks the button/link     jQuery = .govuk-button:contains("Submit")
+    And the user clicks the button/link     link = Set up your project
+    Then the user should see the element    jQuery = ul li.waiting h2:contains("Other documents")
 
 CompAdmin sees uploaded file and approves it
     [Documentation]    IFS-1864
     [Tags]
-    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
     Then the user should not see the text in the page  Collaboration
-    And the user should see the element   jQuery=h2:contains("Exploitation plan")
-    When the user clicks the button/link  jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
+    And the user should see the element     jQuery = h2:contains("Exploitation plan")
+    When the user clicks the button/link    jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
     Then the user should see the file without error
-    When the user clicks the button/link  jQuery=button:contains("Accept document")
-    And the user clicks the button/link  jQuery=.modal-accept-doc .govuk-button:contains("Accept document")
-    Then the user should see the element  jQuery=p:contains("The document provided has been approved.")
+    When the user clicks the button/link    jQuery = button:contains("Accept document")
+    And the user clicks the button/link     jQuery = .modal-accept-doc .govuk-button:contains("Accept document")
+    Then the user should see the element    jQuery = p:contains("The document provided has been approved.")
 
 Sole applicant can see documents approval
     [Documentation]    IFS-1864
     [Tags]
     [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
-    Then the user should see the element  css=ul li.complete:nth-child(2)
-    When the user clicks the button/link  link=Other documents
-    Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
+    Then the user should see the element  css = ul li.complete:nth-child(2)
+    When the user clicks the button/link  link = Other documents
+    Then the user should see the element  jQuery = .success-alert h2:contains("This document has been approved by Innovate UK.")
 
 
 *** Keywords ***
@@ -632,7 +632,7 @@ Sole applicant can see documents approval
 the project is completed if it is not already complete
     The user logs-in in new browser  &{lead_applicant_credentials}
     the user navigates to the page   ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-    ${project_manager_not_set}  ${value} =  run keyword and ignore error without screenshots  The user should not see the element  jQuery=#project-manager-status.yes
+    ${project_manager_not_set}  ${value} =  run keyword and ignore error without screenshots  The user should not see the element  jQuery = #project-manager-status.yes
     run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
 
 all previous sections of the project are completed
@@ -647,11 +647,11 @@ all partners submit their finance contacts
 
 the user uploads to the collaboration agreement question
     [Arguments]  ${file_name}
-    choose file  name=collaborationAgreement  ${upload_folder}/${file_name}
+    choose file  name = collaborationAgreement  ${upload_folder}/${file_name}
 
 the user uploads to the exploitation plan question
     [Arguments]  ${file_name}
-    choose file  name=exploitationPlan  ${upload_folder}/${file_name}
+    choose file  name = exploitationPlan  ${upload_folder}/${file_name}
 
 the user should see the file without error
     the user should not see an error in the page

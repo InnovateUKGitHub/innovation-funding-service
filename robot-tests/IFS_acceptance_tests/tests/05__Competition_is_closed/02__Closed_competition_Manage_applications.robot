@@ -25,75 +25,75 @@ ${availableApp}  Machine learning for driverless cars
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062
     [Tags]
-    Given The user clicks the button/link                     link=${CLOSED_COMPETITION_NAME}
-    And the user clicks the button/Link                       link=Manage assessments
-    And the user clicks the button/link                       link=Allocate applications
-    When the user clicks the button/Link                      jQuery=td:contains("Neural Industries") ~ td a
-    And the user should see the element                       jQuery=h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
-    Then the user should see the element                      jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
-    When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id=filterInnovationArea
-    And the user clicks the button/link                       jQuery=button:contains(Filter)
-    Then the user should see the element                      jQuery=td:contains("Benjamin Nixon")
-    And the user should see the element                       jQuery=td:contains("Paige Godfrey")
-    And the user should not see the element                   jQuery=td:contains("Riley Butler")
-    And the user clicks the button/link                       jQuery=a:contains("Clear all filters")
-    And the user should see the element                       jQuery=td:contains("Riley Butler")
+    Given The user clicks the button/link                     link = ${CLOSED_COMPETITION_NAME}
+    And the user clicks the button/Link                       link = Manage assessments
+    And the user clicks the button/link                       link = Allocate applications
+    When the user clicks the button/Link                      jQuery = td:contains("Neural Industries") ~ td a
+    And the user should see the element                       jQuery = h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
+    Then the user should see the element                      jQuery = tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
+    When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id = filterInnovationArea
+    And the user clicks the button/link                       jQuery = button:contains(Filter)
+    Then the user should see the element                      jQuery = td:contains("Benjamin Nixon")
+    And the user should see the element                       jQuery = td:contains("Paige Godfrey")
+    And the user should not see the element                   jQuery = td:contains("Riley Butler")
+    And the user clicks the button/link                       jQuery = a:contains("Clear all filters")
+    And the user should see the element                       jQuery = td:contains("Riley Butler")
 
 Filtering Assessors in the Assign assessors page
     [Documentation]    INFUND-8062
     [Tags]
-    Given the user clicks the button/Link                     jQuery=tr:contains("Ben") button
-    When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id=filterInnovationArea
-    And the user clicks the button/link                       jQuery=button:contains(Filter)
-    Then the user should see the element                      jQuery=td:contains("Paige Godfrey")
-    And the user clicks the button/link                       jQuery=a:contains("Clear all filters")
-    Then the user should see the element                      jQuery=td:contains("Riley Butler")
-    [Teardown]  the user clicks the button/link               link=Allocate applications
+    Given the user clicks the button/Link                     jQuery = tr:contains("Ben") button
+    When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id = filterInnovationArea
+    And the user clicks the button/link                       jQuery = button:contains(Filter)
+    Then the user should see the element                      jQuery = td:contains("Paige Godfrey")
+    And the user clicks the button/link                       jQuery = a:contains("Clear all filters")
+    Then the user should see the element                      jQuery = td:contains("Riley Butler")
+    [Teardown]  the user clicks the button/link               link = Allocate applications
 
 Manage assessor list is correct
     [Documentation]    IFS-17
     [Tags]
-    [Setup]  the user clicks the button/link  link=Manage assessments
-    Given the user clicks the button/link     link=Allocate assessors
+    [Setup]  the user clicks the button/link  link = Manage assessments
+    Given the user clicks the button/link     link = Allocate assessors
     Then the assessor list is correct before changes
 
 Filter assessors
     [Documentation]    IFS-399
     [Tags]
-    Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
-    And the user clicks the button/link                        jQuery=.govuk-button:contains("Filter")
+    Given the user selects the option from the drop-down menu  Materials and manufacturing  id = innovationSector
+    And the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
     Then the assessor list is correct before changes
-    [Teardown]    the user clicks the button/link  link=Clear all filters
+    [Teardown]    the user clicks the button/link              link = Clear all filters
 
 Assessor link goes to the assessor profile
     [Documentation]  IFS-17
     [Tags]
-    Given the user clicks the button/link        link=Madeleine Martin
+    Given the user clicks the button/link        link = Madeleine Martin
     Then the user should see the element         jQuery = dt:contains("Name") ~ dd:contains("Madeleine Martin")
-    [Teardown]  the user clicks the button/link  link=Back
+    [Teardown]  the user clicks the button/link  link = Back
 
 Assessor Progress page
     [Documentation]  IFS-156
     [Tags]
-    Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
-    Then the user should see the element   jQuery=h2:contains("Assigned (2)") + .table-overflow tr:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + tr:contains("Machine learning applied to the traveler experience")
+    Given the user clicks the button/link  jQuery = td:contains("Madeleine Martin") ~ td a:contains("Assign")
+    Then the user should see the element   jQuery = h2:contains("Assigned (2)") + .table-overflow tr:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + tr:contains("Machine learning applied to the traveler experience")
 
 Filtering applications on the assessor progress page
     [Documentation]    IFS-400
     [Tags]
-    When the user enters text to a text field  css=#filterSearch  ${application_ids["${availableApp}"]}
-    And the user clicks the button/link        jQuery=.govuk-button:contains("Filter")
-    Then the user should see the element       jQuery=.applications-available tr:contains("${availableApp}") td:contains("Enterprise Engineering") ~ td:contains("Assign")
+    When the user enters text to a text field  css = #filterSearch  ${application_ids["${availableApp}"]}
+    And the user clicks the button/link        jQuery = .govuk-button:contains("Filter")
+    Then the user should see the element       jQuery = .applications-available tr:contains("${availableApp}") td:contains("Enterprise Engineering") ~ td:contains("Assign")
 
 Assessor removal
     [Documentation]  IFS-1079
     [Tags]
-    Given the user clicks the button/link     link=Allocate assessors
-    Then the user clicks the button/link      jQuery=td:contains("Benjamin Nixon") ~ td a:contains("Assign")
-    When the user clicks the button/link      jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
-    Then the user should not see the element  jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
-    And the user should see the element       jQuery=.applications-available td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
+    Given the user clicks the button/link     link = Allocate assessors
+    Then the user clicks the button/link      jQuery = td:contains("Benjamin Nixon") ~ td a:contains("Assign")
+    When the user clicks the button/link      jQuery = td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
+    Then the user should not see the element  jQuery = td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
+    And the user should see the element       jQuery = .applications-available td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
 
 *** Keywords ***
 the assessor list is correct before changes
-    the user should see the element  jQuery=td:contains("Madeleine Martin") ~ td:contains("2") ~ td:contains("2")
+    the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("2") ~ td:contains("2")
