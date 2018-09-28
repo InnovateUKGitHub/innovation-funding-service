@@ -1,5 +1,5 @@
 #!/bin/bash
 
-bzt taurus.yml -cloud
+bzt taurus.yml -report
 
 

@@ -1,3 +1,5 @@
+provisioning: "${provisioning}"
+
 modules:
   jmeter:
     gui: false
@@ -21,26 +23,26 @@ modules:
       summariser.out : true
 
 execution:
-#- iterations: 1
-#  concurrency: "${invite_users}"
-#  scenario:
-#    script: taurus/invite.jmx
-#- iterations: 1
-#  concurrency: "${applicant_users}"
-#  scenario:
-#    script: taurus/applicant.jmx
-#- iterations: 1
-#  concurrency: "${registration_users}"
-#  scenario:
-#    script: taurus/registration.jmx
-#- iterations: 1
-#  concurrency: "${front_door_users}"
-#  scenario:
-#    script: taurus/front_door.jmx
-#- iterations: 1
-#  concurrency: "${comp_management_users}"
-#  scenario:
-#    script: taurus/competition_management.jmx
+- iterations: 1
+  concurrency: "${invite_users}"
+  scenario:
+    script: taurus/invite.jmx
+- iterations: 1
+  concurrency: "${applicant_users}"
+  scenario:
+    script: taurus/applicant.jmx
+- iterations: 1
+  concurrency: "${registration_users}"
+  scenario:
+    script: taurus/registration.jmx
+- iterations: 1
+  concurrency: "${front_door_users}"
+  scenario:
+    script: taurus/front_door.jmx
+- iterations: 1
+  concurrency: "${comp_management_users}"
+  scenario:
+    script: taurus/competition_management.jmx
 - iterations: 1
   concurrency: "${assessor_users}"
   scenario:
