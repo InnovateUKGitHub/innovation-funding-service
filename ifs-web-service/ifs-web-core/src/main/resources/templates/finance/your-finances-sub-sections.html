@@ -99,8 +99,7 @@
         </div>
     </th:block>
 
-    <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid"
-         th:with="fieldName='form.stateAidConfirmed'" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+    <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
 
     <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
 </th:block>
