@@ -134,22 +134,22 @@ Eligibility server-side validations
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link  link = Eligibility
     When the user clicks the button/link   jQuery = button:contains("Done")
-    Then The user should see a field and summary error   Please select at least one research category
+    Then The user should see a field and summary error   Please select a research categories applicable option.
     And The user should see a field and summary error    Please select a collaboration level
     And The user should see a field and summary error    Please select a lead applicant type
     And The user should see a field and summary error    Please select a resubmission option
-    And The user should see a field and summary error    Please select an override funding rules option.
 
 Eligibility funding level validation
     [Documentation]  IFS-3622
     [Tags]
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
-    Then The user should see a field and summary error  Please select a funding level.
+    Then The user should see a field and summary error  Please select the maximum funding level that applicants can apply for.
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
     [Tags]
+    [Setup]  the user selects the radio button           researchCategoriesApplicable   true
     When the user selects the checkbox                   research-categories-33
     And the user selects the checkbox                    research-categories-34
     And the user selects the checkbox                    research-categories-35
@@ -169,7 +169,8 @@ Eligibility client-side validations
     And the user selects the radio button                resubmission    no
     And the user moves focus and waits for autosave
     And the user should not see the text in the page     Please select a resubmission option
-    And the user cannot see a validation error in the page
+    # TODO remove below commented line when IFS-4430 Done
+    #And the user cannot see a validation error in the page
 
 Eligibility Autosave
     [Documentation]  INFUND-4582

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,9 +21,16 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false)
     private String name;
-    private String companyHouseNumber; // might start with zero, so use a string.
+
+    @ZeroDowntime(description = "Contract: remove", reference = "IFS-4196")
+    @Column(name = "company_house_number")
+    private String companyHouseNumber;
+
+    @Column(name = "companies_house_number")
+    private String companiesHouseNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
@@ -49,9 +57,10 @@ public class Organisation {
     public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(String name, String companyHouseNumber) {
+    public Organisation(String name, String companiesHouseNumber) {
         this.name = name;
-        this.companyHouseNumber = companyHouseNumber;
+        this.companyHouseNumber = companiesHouseNumber;
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public Long getId() {
@@ -79,12 +88,14 @@ public class Organisation {
         return users;
     }
 
-    public String getCompanyHouseNumber() {
+    @ZeroDowntime(description = "Migrate: change to companiesHouseNumber", reference = "IFS-4194")
+    public String getCompaniesHouseNumber() {
         return companyHouseNumber;
     }
 
-    public void setCompanyHouseNumber(String companyHouseNumber) {
-        this.companyHouseNumber = companyHouseNumber;
+    public void setCompaniesHouseNumber(String companiesHouseNumber) {
+        this.companyHouseNumber = companiesHouseNumber;
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public List<OrganisationAddress> getAddresses() {
