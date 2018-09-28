@@ -27,156 +27,156 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
-    When the user clicks the button/link  link=${PS_EF_Competition_Name}
-    Then the user should see the element  css=#table-project-status tr:nth-child(3) td:nth-child(2).status.ok
-    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(3).status.action
-    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action
-    Then the user clicks the button/link  css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action a
+    When the user clicks the button/link  link = ${PS_EF_Competition_Name}
+    Then the user should see the element  css = #table-project-status tr:nth-child(3) td:nth-child(2).status.ok
+    And the user should see the element   css = #table-project-status tr:nth-child(3) td:nth-child(3).status.action
+    And the user should see the element   css = #table-project-status tr:nth-child(3) td:nth-child(4).status.action
+    Then the user clicks the button/link  css = #table-project-status tr:nth-child(3) td:nth-child(4).status.action a
     And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
     [Tags]
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
-    And the user clicks the button/link           link=${Ntag_Name}
+    And the user clicks the button/link           link = ${Ntag_Name}
     Then the user should be redirected to the correct page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name}
-    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(3):contains("3 / 9")
+    And the user should see the element           jQuery = tr:nth-child(1) td:nth-child(3):contains("3 / 9")
 
 Project Finance can see the company number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Company Number
     And the user should see the text in the page     ${Ntag_No}
-    And the user should see the element              jQuery=tr:nth-child(2) td:nth-child(3):contains("No Match")
+    And the user should see the element              jQuery = tr:nth-child(2) td:nth-child(3):contains("No Match")
 
 Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
     And the user should see the text in the page    ${account_one} / ${sortCode_one}
-    And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(3):contains("No Match")
+    And the user should see the element             jQuery = tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
     And the user should see the text in the page     ${Ntag_Street}, London, E17 5LR
-    And the user should see the element              jQuery=tr:nth-child(4) td:nth-child(3):contains("7 / 9")
+    And the user should see the element              jQuery = tr:nth-child(4) td:nth-child(3):contains("7 / 9")
 
 Project Finance has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763
     [Tags]
-    Then the user should see the element    link=Change bank account details
-    And the user should see the element    jQuery=.govuk-button:contains("Approve bank account details")
+    Then the user should see the element    link = Change bank account details
+    And the user should see the element     jQuery = .govuk-button:contains("Approve bank account details")
 
 Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
-    [Tags]    HappyPath
-    Given the user navigates to the page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
-    Then the user clicks the button/link  link=Change bank account details
+    [Tags]
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    Then the user clicks the button/link                     link = Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
-    And the text box should be editable          id=organisationName
-    When the user enters text to a text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
-    And the user enters text to a text field     id=organisationName  ${Ntag_Name}
-    And the user enters text to a text field     id=registrationNumber  ${Ntag_No}
+    And the text box should be editable                      id = organisationName
+    When the user enters text to a text field                css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
+    And the user enters text to a text field                 id = organisationName  ${Ntag_Name}
+    And the user enters text to a text field                 id = registrationNumber  ${Ntag_No}
 
 Bank account number and sort code validations client side
     [Documentation]    INFUND-4054
     [Tags]
-    When the user enters text to a text field    id=accountNumber    1234567
-    And the user enters text to a text field    id=sortCode    12345
-    And the user moves focus to the element    link=Cancel bank account changes
+    When the user enters text to a text field        id = accountNumber    1234567
+    And the user enters text to a text field         id = sortCode    12345
+    And the user moves focus to the element          link = Cancel bank account changes
     Then the user should see the text in the page    Please enter a valid account number
-    And the user should see the text in the page    Please enter a valid sort code
-    When the user enters text to a text field    id=accountNumber    123456789
-    And the user enters text to a text field    id=sortCode    1234567
-    And the user moves focus to the element    link=Cancel bank account changes
-    Then the user sees the text in the element    id=accountNumber    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
-    And the user sees the text in the element    id=sortCode    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
+    And the user should see the text in the page     Please enter a valid sort code
+    When the user enters text to a text field        id = accountNumber    123456789
+    And the user enters text to a text field         id = sortCode    1234567
+    And the user moves focus to the element          link = Cancel bank account changes
+    Then the user sees the text in the element       id = accountNumber    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
+    And the user sees the text in the element        id = sortCode    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
     And the user should not see an error in the page
 
 Bank account number and sort code validations server side
     [Documentation]    INFUND-4054
     [Tags]
-     When the user enters text to a text field      id=accountNumber  123
-     And the user enters text to a text field       id=sortCode  123
-     And the user clicks the button/link            id=modal-change-bank-details
-     And the user clicks the button/link            id=submit-change-bank-details
+     When the user enters text to a text field      id = accountNumber  123
+     And the user enters text to a text field       id = sortCode  123
+     And the user clicks the button/link            id = modal-change-bank-details
+     And the user clicks the button/link            id = submit-change-bank-details
      Then the user should see the text in the page  Please enter a valid account number
      And the user should see the text in the page   Please enter a valid sort code
 
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
-    [Tags]    HappyPath
-    When the user clicks the button/link          link=Cancel bank account changes
-    Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
-    When the user clicks the button/link          link=Change bank account details
-    Then the text box should be editable          id=organisationName
-    And the user moves focus to the element       css=[id="addressForm.selectedPostcode.addressLine1"]
-    Then the user sees the text in the text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
-    When the user clicks the button/link    id=modal-change-bank-details
-    And the user clicks the button/link     jQuery=.button-clear:contains("Cancel")
-    Then the text box should be editable    id=organisationName
-    When the user clicks the button/link    link=Review bank details
-    Then the user should see the text in the page    These details are now undergoing an internal review.
+    [Tags]
+    When the user clicks the button/link                      link = Cancel bank account changes
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    When the user clicks the button/link                      link = Change bank account details
+    Then the text box should be editable                      id = organisationName
+    And the user moves focus to the element                   css = [id = "addressForm.selectedPostcode.addressLine1"]
+    Then the user sees the text in the text field             css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
+    When the user clicks the button/link                      id = modal-change-bank-details
+    And the user clicks the button/link                       jQuery = .button-clear:contains("Cancel")
+    Then the text box should be editable                      id = organisationName
+    When the user clicks the button/link                      link = Review bank details
+    Then the user should see the text in the page             These details are now undergoing an internal review.
     [Teardown]    the user goes back to the previous page
 
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
-    [Tags]    HappyPath
-    When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
-    And the user clicks the button/link            id=modal-change-bank-details
-    And the user clicks the button/link            id=submit-change-bank-details
+    [Tags]
+    When the user enters text to a text field      css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 2
+    And the user clicks the button/link            id = modal-change-bank-details
+    And the user clicks the button/link            id = submit-change-bank-details
     Then the user should see the text in the page  ${Ntag_Name} - Account details
-    When the user clicks the button/link           link=Change bank account details
-    Then the user sees the text in the text field  css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
-    When the user clicks the button/link           id=modal-change-bank-details
-    Then the user clicks the button/link           id=submit-change-bank-details
+    When the user clicks the button/link           link = Change bank account details
+    Then the user sees the text in the text field  css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 2
+    When the user clicks the button/link           id = modal-change-bank-details
+    Then the user clicks the button/link           id = submit-change-bank-details
 
 Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
-    [Tags]    HappyPath
-    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
-    And the user should see the text in the page  ${Ntag_Name} - Account details
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
-    And the user clicks the button/link     jQuery=.button-clear:contains("Cancel")
-    Then the user should see the element    jQuery=.govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Approve account")
-    Then the user should not see the element    jQuery=.govuk-button:contains("Approve bank account details")
+    [Tags]
+    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    And the user should see the text in the page    ${Ntag_Name} - Account details
+    When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link             jQuery = .button-clear:contains("Cancel")
+    Then the user should see the element            jQuery = .govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
+    When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
+    Then the user should not see the element        jQuery = .govuk-button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
-    And the user should not see the text in the page  We are unable to save your bank account details
+    And the user should not see the text in the page    We are unable to save your bank account details
     When the user goes back to the previous page
     And the user goes back to the previous page
-    When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 3
-    And the user clicks the button/link            id=modal-change-bank-details
-    And the user clicks the button/link            id=submit-change-bank-details
-    Then the user should see the text in the page  Bank details have already been approved and cannot be changed
+    When the user enters text to a text field       css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 3
+    And the user clicks the button/link             id = modal-change-bank-details
+    And the user clicks the button/link             id = submit-change-bank-details
+    Then the user should see the text in the page   Bank details have already been approved and cannot be changed
 
 Project Finance cannot approve the bank details again
     [Documentation]    INFUND-9061
     [Tags]
-    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
-    And the user should see the text in the page  ${Jetpulse_Name} - Account details
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Approve bank account details")
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Approve account")
+    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
+    And the user should see the text in the page    ${Jetpulse_Name} - Account details
+    When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
+    And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
     And the user goes back to the previous page
-    Then the user should not see the element   jQuery=.govuk-button:contains("Approve account")
+    Then the user should not see the element        jQuery = .govuk-button:contains("Approve account")
     And the user should see the text in the page    The bank details provided have been approved.
 
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_EF_APPLICATION_TITLE}
-    Then the user should see the element           css=ul li.complete:nth-child(4)
-    When the user clicks the button/link           link=View the status of partners
+    When the user clicks the button/link           link = ${PS_EF_APPLICATION_TITLE}
+    Then the user should see the element           css = ul li.complete:nth-child(4)
+    When the user clicks the button/link           link = View the status of partners
     And the user should see the text in the page   Project team status
-    And the user should see the element            css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
