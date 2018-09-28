@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.eligibility.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -10,12 +12,14 @@ import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -25,8 +29,12 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    public EligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService) {
+    private QuestionRestService questionRestService;
+
+    public EligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                    QuestionRestService questionRestService) {
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+        this.questionRestService = questionRestService;
     }
 
     @Override
@@ -52,6 +60,9 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
             competitionSetupForm.setSingleOrCollaborative(level.getCode());
         }
 
+        competitionSetupForm.setResearchCategoriesApplicable(getResearchCategoriesApplicable(competitionResource,
+                competitionSetupForm));
+
         List<Long> organisationTypes = competitionResource.getLeadApplicantTypes();
         if (organisationTypes != null) {
             competitionSetupForm.setLeadApplicantTypes(organisationTypes);
@@ -69,6 +80,16 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
         return competitionSetupForm;
     }
 
+    private Boolean getResearchCategoriesApplicable(CompetitionResource competitionResource,
+                                                    EligibilityForm eligibilityForm) {
+        if (!isFirstTimeInForm(eligibilityForm)) {
+            RestResult<QuestionResource> researchCategoryQuestionResult = questionRestService
+                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionResource.getId(), RESEARCH_CATEGORY);
+            return researchCategoryQuestionResult.isSuccess();
+        }
+        return null;
+    }
+
     private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
         if (!isFirstTimeInForm(eligibilityForm)) {
@@ -82,7 +103,8 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
         return  "no".equals(eligibilityForm.getMultipleStream())
                 && eligibilityForm.getResearchCategoryId().isEmpty()
                 && (eligibilityForm.getSingleOrCollaborative() == null)
-                && eligibilityForm.getLeadApplicantTypes().isEmpty()
+                && (eligibilityForm.getLeadApplicantTypes() == null
+                || eligibilityForm.getLeadApplicantTypes().isEmpty())
                 && isBlank(eligibilityForm.getResubmission());
     }
 

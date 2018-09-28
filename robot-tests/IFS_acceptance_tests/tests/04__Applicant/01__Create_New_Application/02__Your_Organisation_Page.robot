@@ -12,47 +12,47 @@ Resource          ../../10__Project_setup/PS_Common.robot
 Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888
     [Tags]
-    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
+    When the user clicks the button/link    jQuery = summary:contains("Enter details manually")
     Then the user should see the element    jQuery = .govuk-label:contains("Organisation name")
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
     [Tags]
-    When the user enters text to a text field    id=organisationSearchName    Hive IT
-    And the user clicks the button/link    id=org-search
-    Then the user should see the element    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    When the user enters text to a text field    id = organisationSearchName    Hive IT
+    And the user clicks the button/link          id = org-search
+    Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     [Teardown]    The user goes back to the previous page
 
 Companies House: User can choose the organisation and same operating address
     [Documentation]    INFUND-887
     [Tags]
-    When the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    And the user should see the element     jQuery=h3:contains("Registered name")
-    And the user should see the element     jQuery=h3:contains("Registered Address")
-    And the user should see the element     jQuery=h3:contains("Registration number")
+    When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    And the user should see the element     jQuery = h3:contains("Registered name")
+    And the user should see the element     jQuery = h3:contains("Registered Address")
+    And the user should see the element     jQuery = h3:contains("Registration number")
     [Teardown]    the user goes back to the previous page
 
 Companies House: Invalid company name
     [Documentation]    INFUND-887
     [Tags]
-    When the user enters text to a text field    id=organisationSearchName    innoavte
-    And the user clicks the button/link    id=org-search
+    When the user enters text to a text field        id = organisationSearchName    innoavte
+    And the user clicks the button/link              id = org-search
     Then the user should see the text in the page    No results found.
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887
     [Tags]
-    When the user enters text to a text field    id=organisationSearchName    05493105
-    And the user clicks the button/link    id=org-search
-    Then the user should see the element    Link=INNOVATE LTD
+    When the user enters text to a text field    id = organisationSearchName    05493105
+    And the user clicks the button/link          id = org-search
+    Then the user should see the element         Link = INNOVATE LTD
     [Teardown]    The user goes back to the previous page
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887
     [Tags]
-    Given the user should see the element        jQuery=h1 span:contains("Start new application")
-    When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
-    And the user clicks the button/link          id=org-search
+    Given the user should see the element        jQuery = h1 span:contains("Start new application")
+    When the user enters text to a text field    id = organisationSearchName    ${EMPTY}
+    And the user clicks the button/link          id = org-search
     Then the user should see an error            Please enter an organisation name to search
 
 Manually add the details and pass to the confirmation page
@@ -64,8 +64,8 @@ Manually add the details and pass to the confirmation page
     And the user enters text to a text field      id = addressForm.postcodeInput    BS14NT
     And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
     And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element          css=#select-address-block
-    And the user clicks the button/link           css=#select-address-block > button
+    Then the user should see the element          css = #select-address-block
+    And the user clicks the button/link           css = #select-address-block > button
     And the user clicks the button/link           jQuery = button:contains("Continue")
     Then the user should see the element          jQuery = h3:contains("Organisation type")~ p:contains("Business")
     And the user should see the element           jQuery = h3:contains("Registered name")~ p:contains("Top of the Popps")
@@ -74,14 +74,14 @@ Manually add the details and pass to the confirmation page
 Applicant goes to the organisation search page
     Given the guest user opens the browser
     the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
-    When the user clicks the button/link    link=Start new application
+    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
+    When the user clicks the button/link    link = Start new application
     And the user clicks the button/link     link = Continue and create an account
-    And the user clicks the button/link     jQuery=span:contains("Business")
-    And the user clicks the button/link     jQuery=button:contains("Save and continue")
+    And the user clicks the button/link     jQuery = span:contains("Business")
+    And the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 the backslash doesnt give errors
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id=addressForm.selectedPostcodeIndex
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex
     Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
 
 the user expands enter details manually

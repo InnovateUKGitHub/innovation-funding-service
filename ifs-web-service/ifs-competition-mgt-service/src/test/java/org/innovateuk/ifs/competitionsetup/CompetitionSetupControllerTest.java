@@ -5,10 +5,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -720,6 +717,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
+                .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
                 .param("researchParticipationAmountId", "1")
@@ -796,7 +794,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withApplicationFinanceType(null)
+                .withApplicationFinanceType((ApplicationFinanceType) null)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
@@ -811,6 +809,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
+                .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
                 .param("resubmission", "no")
