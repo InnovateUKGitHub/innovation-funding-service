@@ -8,8 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.competitionsetup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 public abstract class AbstractApplicationSectionUpdater extends AbstractSectionUpdater {
 
     @Autowired
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     @Override
     public CompetitionSetupSection sectionToSave() {
@@ -36,7 +36,7 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
         mapGuidanceRows(form);
-        return competitionSetupQuestionService.updateQuestion(form.getQuestion());
+        return questionSetupCompetitionRestService.save(form.getQuestion()).toServiceResult();
     }
 
     protected abstract void mapGuidanceRows(AbstractQuestionForm form);
@@ -58,18 +58,20 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
     }
 
     private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
-        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return questionSetupCompetitionRestService.getByQuestionId(questionId.get()).toServiceResult()
+                .andOnSuccess(question -> {
             String[] strings = StringUtils.commaDelimitedListToStringArray(value);
             Set<FileTypeCategory> fileTypeCategories = simpleToLinkedHashSet(strings, FileTypeCategory::valueOf);
 
             question.setAllowedFileTypes(fileTypeCategories);
 
-            return competitionSetupQuestionService.updateQuestion(question);
+            return questionSetupCompetitionRestService.save(question).toServiceResult();
         });
     }
 
     private ServiceResult<Void> removeGuidanceRow(Optional<Long> questionId, String value) {
-        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return questionSetupCompetitionRestService.getByQuestionId(questionId.get()).toServiceResult()
+                .andOnSuccess(question -> {
             int index = Integer.valueOf(value);
             //If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
             if (question.getGuidanceRows().size() <= index) {
@@ -77,12 +79,13 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
             }
 
             question.getGuidanceRows().remove(index);
-            return competitionSetupQuestionService.updateQuestion(question);
+            return questionSetupCompetitionRestService.save(question).toServiceResult();
         });
     }
 
     private ServiceResult<Void> tryUpdateGuidanceRow(Optional<Long> questionId, String fieldName, String value) {
-        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return questionSetupCompetitionRestService.getByQuestionId(questionId.get()).toServiceResult()
+                .andOnSuccess(question -> {
             Integer index = getGuidanceRowsIndex(fieldName);
             GuidanceRowResource guidanceRow;
             if (index >= question.getGuidanceRows().size()) {
@@ -99,7 +102,7 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
             }
 
             return serviceSuccess(question);
-        }).andOnSuccess(question -> competitionSetupQuestionService.updateQuestion(question));
+        }).andOnSuccess(question -> questionSetupCompetitionRestService.save(question).toServiceResult());
     }
 
     protected abstract ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value);

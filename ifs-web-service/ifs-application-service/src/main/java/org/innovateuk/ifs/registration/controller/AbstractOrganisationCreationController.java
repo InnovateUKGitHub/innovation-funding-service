@@ -105,7 +105,7 @@ public abstract class AbstractOrganisationCreationController {
             if (addressForm.getSelectedPostcode() != null) {
                 validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
             }  else if (!addressForm.isManualAddress()) {
-                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "{validation.standard.organisation.address.required}");
+                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "validation.standard.organisation.address.required");
             }
         }
     }
