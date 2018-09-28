@@ -189,10 +189,10 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
     @Test
     public void compAdminAndInnovationLeadAndProjectFinanceUsersCanReadDetailsOfAnOverheadsFileForASubmittedApplication() {
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, projectFinance));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, compAdmin));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, innovationLead));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, supportUser));
-        assertTrue(rules.compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, ifsAdmin));
+        assertTrue(rules.internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, projectFinance));
+        assertTrue(rules.internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, compAdmin));
+        assertTrue(rules.internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, innovationLead));
+        assertTrue(rules.internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, supportUser));
+        assertTrue(rules.internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(submittedOverheads, ifsAdmin));
     }
 }

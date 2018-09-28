@@ -57,8 +57,8 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
         return isDownloadableBeforeSubmission(overheads, user);
     }
 
-    @PermissionRule(value = "READ_OVERHEAD_CONTENTS", description = "Comp Admin, Innovation Lead and Project Finance users can read the overhead file contents for any submitted application and organisation")
-    public boolean compAdminAndInnovationLeadAndProjectFinanceUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(final FinanceRow overheads, final UserResource user) {
+    @PermissionRule(value = "READ_OVERHEAD_CONTENTS", description = "Internal users can read the overhead file contents for any submitted application and organisation")
+    public boolean internalUsersCanReadContentsOfAnOverheadsFileForASubmittedApplication(final FinanceRow overheads, final UserResource user) {
         return isDownloadableAfterSubmission(overheads, user);
     }
 
