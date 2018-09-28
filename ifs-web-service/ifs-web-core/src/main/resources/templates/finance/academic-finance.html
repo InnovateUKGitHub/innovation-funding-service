@@ -56,7 +56,7 @@
 </th:block>
 
 <th:block th:fragment="finance_fields (model, isApplicant)">
-    <fieldset class="govuk-fieldset academic">
+    <fieldset class="govuk-fieldset academic govuk-!-margin-bottom-6">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"
                 th:classappend="${isApplicant == 'true' ? 'govuk-!-margin-0' : ''}">
             <h2 class="govuk-fieldset__heading">Financial resources</h2>
@@ -64,7 +64,7 @@
         <p class="govuk-body" th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-third"><strong class="govuk-body">Directly incurred</strong></div>
+            <div class="govuk-grid-column-one-third"><strong class="govuk-body govuk-fieldset__legend--s">Directly incurred</strong></div>
             <div class="govuk-grid-column-two-thirds"><strong class="govuk-body">TSB Contribution (please refer to the TSB contribution column)</strong></div>
         </div>
         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
@@ -151,7 +151,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="govuk-fieldset">
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             <h2 class="govuk-fieldset__heading">Directly allocated</h2>
@@ -234,7 +234,7 @@
     </fieldset>
     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
-    <fieldset class="govuk-fieldset">
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
         <legend class="govuk-visually-hidden">Indirect costs</legend>
         <div class="govuk-grid-row">
             <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
@@ -258,7 +258,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="govuk-fieldset">
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             <h2 class="govuk-fieldset__heading">Exceptions</h2>
         </legend>
