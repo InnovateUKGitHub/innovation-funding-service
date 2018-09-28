@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.repository;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,6 +19,7 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     List<Organisation> findDistinctByUsers(User user);
     List<Organisation> findDistinctByUsersId(long userId);
     List<Organisation> findByNameOrderById(String name);
+    @ZeroDowntime(description = "Migrate: rename to findByCompaniesHouseNumberOrderById", reference = "IFS-4194")
     List<Organisation> findByCompanyHouseNumberOrderById(String companiesHouseNumber);
     Organisation findByProcessRolesUserIdAndProcessRolesApplicationId(long userId, long applicationId);
 

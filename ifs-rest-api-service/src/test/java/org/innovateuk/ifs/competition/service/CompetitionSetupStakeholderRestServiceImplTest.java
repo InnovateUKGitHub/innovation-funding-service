@@ -12,7 +12,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionSetupStakeholderRestServiceImpl> {
@@ -46,7 +45,6 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
         setupGetWithRestResultExpectations(url, userListType(), responseBody);
 
         List<UserResource> response = service.findStakeholders(competitionId).getSuccess();
-        assertNotNull(response);
         assertEquals(responseBody, response);
     }
 

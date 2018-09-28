@@ -125,12 +125,34 @@
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
+                <p class="govuk-body govuk-!-font-weight-bold">
+                    <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableStakeholders)}"></span>
+                    stakeholders available to add
+                </p>
                 <th:block th:unless="${param.tab != null and param.tab[0] == 'added'}">
                     <p class="govuk-body govuk-!-font-weight-bold">
                         <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableStakeholders)}"></span>
                         stakeholders available to add
                     </p>
 
+                <table class="govuk-table stakeholder-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Name</th>
+                        <th class="govuk-table__header" scope="col">Email address</th>
+                        <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="stakeholders : ${model.availableStakeholders}">
+                        <td class="govuk-table__cell" th:text="${stakeholders.name}">Alexis Kinney</td>
+                        <td class="govuk-table__cell" th:text="${stakeholders.email}">alexis@kinney.com</td>
+                        <td class="govuk-table__cell alignright">
+                            <button class="button-secondary govuk-!-margin-0">Add <span class="govuk-visually-hidden"><th:block th:text="${stakeholders.name}" /> as stakeholder</span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
                     <table class="govuk-table stakeholder-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
