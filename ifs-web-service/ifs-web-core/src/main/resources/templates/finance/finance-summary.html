@@ -203,8 +203,8 @@
                     th:with="collaborationLevelIsCollaboratorOnly=${true}"> <!-- TODO: get collaboration level -->
                     <th class="govuk-table__header"  scope="row">Total
                         <div th:if="${currentApplication.isOpen()}"
-                             th:with="enoughFundingSought=${collaborationLevelIsCollaboratorOnly ? multipleSeekingFunding : true},
-                                      totalFinancesComplete=${yourFinancesCompleteForAllOrganisations && enoughFundingSought}">
+                             th:with="enoughCollaboratorsSeekingFunding=${collaborationLevelIsCollaboratorOnly ? multipleSeekingFunding : true},
+                                      totalFinancesComplete=${yourFinancesCompleteForAllOrganisations && enoughCollaboratorsSeekingFunding}">
                             <th:block th:if="${totalFinancesComplete}">
                                 <img class="table-total-tick" width="20" height="17"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
@@ -233,9 +233,12 @@
     </th:block>
     <!-- ===========================Form: finances incomplete =========================== -->
 
-    <th:block th:fragment="application_finances_incomplete_warning">
-        <div th:if="${isApplicant and hasFinanceSection and currentApplication.isOpen()
-        and !sectionsMarkedAsComplete.contains(financeSectionId)}" class="warning-alert">
+    <th:block th:fragment="application_finances_incomplete_warning"
+              th:if="${isApplicant and hasFinanceSection and currentApplication.isOpen()}"
+              th:with="financeSectionMarkedAsComplete=${sectionsMarkedAsComplete.contains(financeSectionId)},
+                       enoughCollaboratorsSeekingFunding=${false}"> <!-- TODO -->
+
+        <div th:unless="${financeSectionMarkedAsComplete}" class="warning-alert">
             <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
             <ul class="govuk-list govuk-list--bullet">
                 <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
@@ -250,6 +253,11 @@
             </th:block>
 
             <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
+        </div>
+
+        <div
+            th:if="${!enoughCollaboratorsSeekingFunding and financeSectionMarkedAsComplete}" class="warning-alert">
+            <p class="govuk-body">This application cannot be submitted unless two or more partners are requesting funding.</p>
         </div>
     </th:block>
 
