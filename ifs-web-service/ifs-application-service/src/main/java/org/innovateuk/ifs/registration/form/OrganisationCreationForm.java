@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Object to store the data that is used for the company house form, while creating a new application.
+ * Object to store the data that is used for the companies house form, while creating a new application.
  */
 public class OrganisationCreationForm implements Serializable {
     @Valid
@@ -40,8 +40,8 @@ public class OrganisationCreationForm implements Serializable {
         this.organisationSearchResults = new ArrayList<>();
     }
 
-    public OrganisationCreationForm(List<OrganisationSearchResult> companyHouseList) {
-        this.organisationSearchResults = companyHouseList;
+    public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
+        this.organisationSearchResults = companiesHouseList;
     }
 
     public boolean isManualEntry() {
