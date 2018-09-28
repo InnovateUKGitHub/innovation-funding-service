@@ -1791,13 +1791,14 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(userRepositoryMock.findByEmailAndRolesNot(testEmail1, Role.APPLICANT)).thenReturn(empty());
+        when(userRepositoryMock.findByEmailAndRolesNot(testEmail2, Role.APPLICANT)).thenReturn(empty());
         when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(isA(String.class), isA(Long.class))).thenReturn(null);
         when(innovationAreaRepositoryMock.findOne(innovationArea.getId())).thenReturn(innovationArea);
         when(assessmentInviteRepositoryMock.save(isA(AssessmentInvite.class))).thenReturn(new AssessmentInvite());
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(0))).thenReturn(createdInviteResources.get(0));
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(1))).thenReturn(createdInviteResources.get(1));
-        when(userRepositoryMock.findByEmail(testEmail1)).thenReturn(null);
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1805,18 +1806,18 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         InOrder inOrder = inOrder(
                 competitionRepositoryMock,
-                assessmentInviteRepositoryMock,
                 userRepositoryMock,
+                assessmentInviteRepositoryMock,
                 innovationAreaMapperMock,
                 assessorCreatedInviteMapperMock
         );
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail1, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail2, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
         inOrder.verify(assessorCreatedInviteMapperMock, times(2)).mapToResource(isA(AssessmentInvite.class));
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
@@ -1865,7 +1866,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(testEmail2, competition.getId())).thenReturn(null);
         when(innovationAreaRepositoryMock.findOne(innovationArea.getId())).thenReturn(innovationArea);
         when(assessmentInviteRepositoryMock.save(isA(AssessmentInvite.class))).thenReturn(new AssessmentInvite());
-        when(userRepositoryMock.findByEmail(testEmail1)).thenReturn(null);
+        when(userRepositoryMock.findByEmailAndRolesNot(testEmail1, Role.APPLICANT)).thenReturn(empty());
+        when(userRepositoryMock.findByEmailAndRolesNot(testEmail2, Role.APPLICANT)).thenReturn(empty());
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(0))).thenReturn(createdInviteResources.get(0));
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(1))).thenReturn(createdInviteResources.get(1));
@@ -1884,12 +1886,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 assessorCreatedInviteMapperMock
         );
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail1, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail2, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
         inOrder.verify(assessorCreatedInviteMapperMock, times(2)).mapToResource(isA(AssessmentInvite.class));
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
@@ -1973,7 +1975,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(0))).thenReturn(createdInviteResources.get(0));
         when(assessorCreatedInviteMapperMock.mapToResource(pagedResult.get(1))).thenReturn(createdInviteResources.get(1));
-        when(userRepositoryMock.findByEmail(isA(String.class))).thenReturn(null);
+        when(userRepositoryMock.findByEmailAndRolesNot(isA(String.class), isA(Role.class))).thenReturn(empty());
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1987,12 +1989,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 assessorCreatedInviteMapperMock
         );
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail1, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
+        inOrder.verify(userRepositoryMock).findByEmailAndRolesNot(testEmail2, Role.APPLICANT);
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
         inOrder.verify(assessorCreatedInviteMapperMock, times(2)).mapToResource(isA(AssessmentInvite.class));
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
