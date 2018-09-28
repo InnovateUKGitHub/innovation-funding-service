@@ -57,7 +57,7 @@ The IFS Admin filters the applications
 The IFS Admin clears any filters applied and can see all of the applications
     [Documentation]  IFS-3473
     [Tags]
-    When the user clicks the button/link                         link=Clear all filters
+    When the user clicks the button/link                         link = Clear all filters
     Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***

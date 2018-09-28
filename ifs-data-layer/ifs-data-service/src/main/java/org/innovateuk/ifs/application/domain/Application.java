@@ -234,6 +234,10 @@ public class Application implements ProcessActivity {
         return applicationProcess.isInState(ApplicationState.OPEN);
     }
 
+    public boolean isSubmitted() {
+        return applicationProcess.isInState(ApplicationState.SUBMITTED);
+    }
+
     public ZonedDateTime getSubmittedDate() {
         return submittedDate;
     }

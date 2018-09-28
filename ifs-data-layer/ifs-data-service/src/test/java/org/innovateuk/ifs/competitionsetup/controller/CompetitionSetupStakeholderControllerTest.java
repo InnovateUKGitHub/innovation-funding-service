@@ -10,11 +10,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupStakeholderControllerTest extends BaseControllerMockMVCTest<CompetitionSetupStakeholderController> {
@@ -54,6 +57,23 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .andExpect(status().isOk());
 
         verify(competitionSetupStakeholderService).inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId);
+    }
+
+    @Test
+    public void findStakeholders() throws Exception {
+
+        long competitionId = 1L;
+
+        List<UserResource> stakeholderUsers = UserResourceBuilder.newUserResource().build(2);
+
+        when(competitionSetupStakeholderService.findStakeholders(competitionId)).thenReturn(serviceSuccess(stakeholderUsers));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition/setup/{competitionId}/stakeholder/find-all", competitionId)
+                       )
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(stakeholderUsers)));
+
+        verify(competitionSetupStakeholderService).findStakeholders(competitionId);
     }
 }
 
