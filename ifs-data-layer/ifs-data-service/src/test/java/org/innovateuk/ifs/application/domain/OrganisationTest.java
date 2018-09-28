@@ -13,8 +13,6 @@ import java.util.List;
 public class OrganisationTest {
     private Organisation organisation;
 
-    private Long id;
-
     private String name;
 
     private List<ProcessRole> processRoles;
@@ -31,7 +29,7 @@ public class OrganisationTest {
     }
 
     @Test
-    public void organisationShouldReturnCorrectAttributeValues() throws Exception {
+    public void organisationShouldReturnCorrectAttributeValues() {
         Assert.assertEquals(organisation.getName(), name);
         Assert.assertEquals(organisation.getProcessRoles(), processRoles);
         Assert.assertEquals(organisation.getOrganisationType(), organisationType);
