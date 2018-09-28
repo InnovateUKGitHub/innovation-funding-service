@@ -15,11 +15,22 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Stakeholders', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
-
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to invite this user.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Stakeholders', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
+
+        <h2 class="govuk-heading-m">Key statistics</h2>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-bottom-6">
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}">0</span>
+                    <small>Stakeholders added</small>
+                </div>
+            </div>
         </div>
 
         <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
