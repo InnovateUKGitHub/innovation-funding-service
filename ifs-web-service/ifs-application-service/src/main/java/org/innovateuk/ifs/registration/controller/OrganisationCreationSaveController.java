@@ -99,7 +99,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         organisationResource.setAddresses(organisationAddressResources);
 
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
-            organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
+            organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);

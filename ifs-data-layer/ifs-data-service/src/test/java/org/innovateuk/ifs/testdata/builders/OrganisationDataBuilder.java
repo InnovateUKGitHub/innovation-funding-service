@@ -33,7 +33,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                 OrganisationResource created = organisationService.create(newOrganisationResource().
                         withId().
                         withName(organisationName).
-                        withCompanyHouseNumber(companyRegistrationNumber).
+                        withCompaniesHouseNumber(companyRegistrationNumber).
                         withOrganisationType(organisationType.getId()).
                         build()).getSuccess();
 

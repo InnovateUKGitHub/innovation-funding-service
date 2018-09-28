@@ -343,7 +343,7 @@ logged in user applies to competition
     the user clicks the button/link     link = Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on company house link
+    the user clicks the Not on companies house link
     the user fills in the address details
     the user clicks the button/link            id = application-question-save
 
@@ -359,7 +359,7 @@ the user select the competition and starts application
     the user clicks the button/link     link = ${competition}
     the user clicks the button/link     jQuery = a:contains("Start new application")
 
-the user search for organisation name on Company house
+the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
     the user enters text to a text field       id = organisationSearchName    ${org}
     the user clicks the button/link            id = org-search
@@ -372,7 +372,7 @@ logged in user applies to competition research
     the user clicks the button/link     link = Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Company house    Bath  Bath Spa University
+    the user search for organisation name on Companies house    Bath  Bath Spa University
     the user fills in the research address details
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
@@ -383,7 +383,7 @@ logged in user applies to competition public
     the user clicks the button/link     link = Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Company house    Innovate  INNOVATE LTD
+    the user search for organisation name on Companies house    Innovate  INNOVATE LTD
     the user fills in the public address details
     the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
 
@@ -411,7 +411,7 @@ the user applies to competition and enters organisation type link
     The user clicks the button/link     link = Continue and create an account
     the user selects the radio button   organisationTypeId  ${organisationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on company house link
+    the user clicks the Not on companies house link
     the user fills in the address details
 
 the user selects his organisation in Companies House
@@ -429,7 +429,7 @@ the applicant completes Application Team
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
-the user clicks the Not on company house link
+the user clicks the Not on companies house link
     the user clicks the button/link       jQuery = summary:contains("Enter details manually")
     The user enters text to a text field  name = organisationName    org2
     the user clicks the button/link       jQuery = button:contains("Continue")
