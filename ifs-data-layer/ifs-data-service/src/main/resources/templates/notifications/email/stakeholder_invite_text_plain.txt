@@ -1,0 +1,17 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+You have been invited to view the following competition on the Innovation Funding Service:
+${competitionName}
+
+Please create an account to view this competition.
+
+Name: ${notificationTarget.name}
+
+Please confirm your account and create your password here: ${inviteUrl}
+
+Yours sincerely
+
+IFS Team
+</@layout.defaultPlainText>

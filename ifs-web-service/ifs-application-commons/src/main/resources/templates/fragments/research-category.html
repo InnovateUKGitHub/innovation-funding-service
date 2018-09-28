@@ -20,9 +20,9 @@
                 <th:block th:if="${model.allReadOnly}">
                     <div class="assign-container assigned-alert"
                          th:unless="${model.userLeadApplicant || model.complete}">
-                        <span class="assignee" th:text="|This question is assigned to ${model.leadApplicantName}.|">
+                        <p class="assignee govuk-body" th:text="|This question is assigned to ${model.leadApplicantName}.|">
                             This question is assigned to Steve Smith.
-                        </span>
+                        </p>
                     </div>
                     <div th:if="${model.complete}" class="success-alert assignee extra-margin-bottom">
                         <p class="govuk-body">Research category is marked as complete</p>
@@ -80,7 +80,7 @@
                 </th:block>
             </div>
 
-            <div class="govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
+            <div class="form-footer govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             </div>
@@ -110,7 +110,8 @@
                 th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
             </dd>
         </dl>
-        <div class="govuk-!-margin-top-6">
+        <div th:unless="${model.closed}"
+             th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
             <!--/* 'Mark as complete' / 'Edit' links */-->
             <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             <!--/* 'Return and edit' link */-->
