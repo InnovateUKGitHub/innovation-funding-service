@@ -13,6 +13,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -55,25 +56,28 @@ public abstract class AbstractApplicationModelPopulator {
 
     protected ApplicationCompletedViewModel getCompletedDetails(ApplicationResource application,
                                                                 Optional<OrganisationResource> userOrganisation) {
+        long userOrganisationId = userOrganisation.get().getId();
+        long financeSectionId = getFinanceSectionId(application.getCompetition());
+
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of
         // question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation
                 (application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(),
-                completedSectionsByOrganisation);
+        Set<Long> combinedMarkedAsCompleteSections =
+                getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
+        Set<Long> completedSectionsByUserOrganisation = completedSectionsByOrganisation.get(userOrganisationId);
 
-        ApplicationCompletedViewModel viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete,
-                markedAsComplete, userFinanceSectionCompleted);
-        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org
-                .getId())));
-        return viewModel;
+        boolean financeSectionCompleted = completedSectionsByUserOrganisation.contains(financeSectionId);
+        boolean financeOverviewSectionCompleted = combinedMarkedAsCompleteSections.contains(financeSectionId);
+
+        return new ApplicationCompletedViewModel(combinedMarkedAsCompleteSections,
+                markedAsComplete, completedSectionsByUserOrganisation, financeSectionCompleted,
+                financeOverviewSectionCompleted);
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application,
                                                          Optional<OrganisationResource> userOrganisation) {
-
-        Long organisationId = userOrganisation
+        long organisationId = userOrganisation
                 .map(OrganisationResource::getId)
                 .orElse(0L);
 
@@ -81,23 +85,23 @@ public abstract class AbstractApplicationModelPopulator {
     }
 
     private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        Set<Long> combinedMarkedAsComplete = new HashSet<>();
+        Set<Long> combinedMarkedAsComplete = completedSectionsByOrganisation.values()
+                .stream()
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
 
-        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete
-                .addAll(completedSections));
-        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
+        completedSectionsByOrganisation.forEach((organisationId, completedSections) ->
+                combinedMarkedAsComplete.retainAll(completedSections));
 
         return combinedMarkedAsComplete;
     }
 
-    protected boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource
-            userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        return sectionService.getAllByCompetitionId(application.getCompetition())
+    private long getFinanceSectionId(long competitionId) {
+        return sectionService.getSectionsForCompetitionByType(competitionId, FINANCE)
                 .stream()
-                .filter(section -> section.getType().equals(FINANCE))
+                .findFirst()
                 .map(SectionResource::getId)
-                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
+                .get();
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource>
