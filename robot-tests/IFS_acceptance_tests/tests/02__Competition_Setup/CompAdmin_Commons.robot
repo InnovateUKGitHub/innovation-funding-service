@@ -365,7 +365,6 @@ moving competition to Closed
 making the application a successful project
     [Arguments]  ${compID}  ${appTitle}
     the user navigates to the page      ${server}/management/competition/${compID}
-    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
     Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
