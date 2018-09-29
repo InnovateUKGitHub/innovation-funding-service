@@ -27,17 +27,9 @@ public class EuFundingForm {
     @NotBlank(message = "{validation.fundingForm.project.name}")
     private String projectName;
 
-    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
-    private Integer startDateMonth;
+    private LocalDate projectStartDate;
 
-    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
-    private Integer startDateYear;
-
-    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
-    private Integer endDateMonth;
-
-    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
-    private Integer endDateYear;
+    private LocalDate projectEndDate;
 
     @Digits(integer = 10, fraction = 0, message = "{validation.fundingForm.funding.format.invalid}")
     @Range(min = 0, message = "{validation.fundingForm.funding.positive}")
@@ -74,36 +66,20 @@ public class EuFundingForm {
         this.projectName = projectName;
     }
 
-    public Integer getStartDateMonth() {
-        return startDateMonth;
+    public LocalDate getProjectStartDate() {
+        return projectStartDate;
     }
 
-    public void setStartDateMonth(Integer startDateMonth) {
-        this.startDateMonth = startDateMonth;
+    public void setProjectStartDate(LocalDate projectStartDate) {
+        this.projectStartDate = projectStartDate;
     }
 
-    public Integer getStartDateYear() {
-        return startDateYear;
+    public LocalDate getProjectEndDate() {
+        return projectEndDate;
     }
 
-    public void setStartDateYear(Integer startDateYear) {
-        this.startDateYear = startDateYear;
-    }
-
-    public Integer getEndDateMonth() {
-        return endDateMonth;
-    }
-
-    public void setEndDateMonth(Integer endDateMonth) {
-        this.endDateMonth = endDateMonth;
-    }
-
-    public Integer getEndDateYear() {
-        return endDateYear;
-    }
-
-    public void setEndDateYear(Integer endDateYear) {
-        this.endDateYear = endDateYear;
+    public void setProjectEndDate(LocalDate projectEndDate) {
+        this.projectEndDate = projectEndDate;
     }
 
     public Boolean getProjectCoordinator() {
@@ -132,12 +108,12 @@ public class EuFundingForm {
 
     @NotNull(message = "{validation.standard.date.format}")
     public LocalDate getStartDate() {
-        if (startDateYear == null || startDateMonth == null) {
+        if (projectStartDate == null) {
             return null;
         }
 
         try {
-            return getLocalDate(startDateMonth, startDateYear);
+            return getLocalDate(projectStartDate.getMonthValue(), projectStartDate.getYear());
         } catch (DateTimeException e) {
             return null;
         }
@@ -146,20 +122,20 @@ public class EuFundingForm {
     @NotNull(message = "{validation.standard.date.format}")
     @FutureLocalDate(message = "{validation.standard.date.future}")
     public LocalDate getEndDate() {
-        if (endDateYear == null || endDateMonth == null) {
+        if (projectEndDate == null) {
             return null;
         }
 
         try {
-            return getLocalDate(endDateMonth, endDateYear);
+            return getLocalDate(projectEndDate.getMonthValue(), projectEndDate.getYear());
         } catch (DateTimeException e) {
             return null;
         }
     }
 
-    private LocalDate getLocalDate(int month, int year) {
+    private LocalDate getLocalDate(int projectMonth, int projectYear) {
 
-        String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
+        String date = String.valueOf(projectYear) + "-" + String.format("%02d",projectMonth)+ "-01";
 
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
@@ -177,10 +153,8 @@ public class EuFundingForm {
                 .append(grantAgreementNumber, that.grantAgreementNumber)
                 .append(participantId, that.participantId)
                 .append(projectName, that.projectName)
-                .append(startDateMonth, that.startDateMonth)
-                .append(startDateYear, that.startDateYear)
-                .append(endDateMonth, that.endDateMonth)
-                .append(endDateYear, that.endDateYear)
+                .append(projectStartDate, that.projectStartDate)
+                .append(projectEndDate, that.projectEndDate)
                 .append(fundingContribution, that.fundingContribution)
                 .append(projectCoordinator, that.projectCoordinator)
                 .append(actionType, that.actionType)
@@ -193,10 +167,8 @@ public class EuFundingForm {
                 .append(grantAgreementNumber)
                 .append(participantId)
                 .append(projectName)
-                .append(startDateMonth)
-                .append(startDateYear)
-                .append(endDateMonth)
-                .append(endDateYear)
+                .append(projectStartDate)
+                .append(projectEndDate)
                 .append(fundingContribution)
                 .append(projectCoordinator)
                 .append(actionType)

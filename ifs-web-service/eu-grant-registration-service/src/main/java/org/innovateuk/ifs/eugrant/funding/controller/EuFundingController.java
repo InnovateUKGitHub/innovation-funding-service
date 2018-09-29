@@ -99,7 +99,7 @@ public class EuFundingController {
 
         // custom validation for start date being before end date
         if(!validateDateOrdering(form)) {
-            bindingResult.addError(new FieldError("form", "endDateMonth", "End date must be after start date."));
+            bindingResult.addError(new FieldError("form", "projectEndDate", "End date must be after start date."));
         }
 
         if (bindingResult.hasErrors()) {

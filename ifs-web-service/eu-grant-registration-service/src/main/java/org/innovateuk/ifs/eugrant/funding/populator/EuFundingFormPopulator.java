@@ -31,10 +31,8 @@ public class EuFundingFormPopulator {
             fundingForm.setParticipantId(euFundingResource.getParticipantId());
             fundingForm.setProjectCoordinator(euFundingResource.isProjectCoordinator());
             fundingForm.setProjectName(euFundingResource.getProjectName());
-            fundingForm.setStartDateMonth(euFundingResource.getProjectStartDate().getMonthValue());
-            fundingForm.setStartDateYear(euFundingResource.getProjectStartDate().getYear());
-            fundingForm.setEndDateMonth(euFundingResource.getProjectEndDate().getMonthValue());
-            fundingForm.setEndDateYear(euFundingResource.getProjectEndDate().getYear());
+            fundingForm.setProjectStartDate(euFundingResource.getProjectStartDate());
+            fundingForm.setProjectEndDate(euFundingResource.getProjectEndDate());
             fundingForm.setActionType(euFundingResource.getActionType().getId());
         }
 
