@@ -13,10 +13,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -69,7 +69,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
         when(competitionRestService.getCompetitionById(COMPETITION_ID))
                 .thenReturn(restSuccess(competitionResource));
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName);
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList());
         when(manageStakeholderModelPopulator.populateModel(competitionResource))
                 .thenReturn(viewModel);
 
@@ -95,7 +95,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
         when(competitionRestService.getCompetitionById(COMPETITION_ID))
                 .thenReturn(restSuccess(competitionResource));
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName);
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList());
         when(manageStakeholderModelPopulator.populateModel(competitionResource))
                 .thenReturn(viewModel);
 

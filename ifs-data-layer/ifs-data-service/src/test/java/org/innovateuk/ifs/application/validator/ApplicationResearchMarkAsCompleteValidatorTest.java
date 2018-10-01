@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
@@ -45,7 +46,7 @@ public class ApplicationResearchMarkAsCompleteValidatorTest {
 
         Application application = ApplicationBuilder
                 .newApplication()
-                .withResearchCategory(null)
+                .withResearchCategory((ResearchCategory) null)
                 .build();
 
         DataBinder binder = new DataBinder(application);

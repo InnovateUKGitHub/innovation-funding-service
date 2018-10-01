@@ -140,11 +140,11 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="width-80">Application number</th>
-                        <th scope="col" class="width-200">Title</th>
-                        <th scope="col" class="width-150'">Lead organisation</th>
+                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                        <th scope="col" class="govuk-table__header width-200">Title</th>
+                        <th scope="col" class="govuk-table__header width-150'">Lead organisation</th>
                         <th class="govuk-table__header" scope="col">Reason</th>
-                        <th scope="col" class="width-80 numeric">Assessors</th>
+                        <th scope="col" class="govuk-table__header width-80 numeric">Assessors</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -155,11 +155,11 @@
                                th:text="${app.applicationId}"
                                class="govuk-link">1</a>
                         </td>
-                        <td th:text="${app.applicationName}">Application name</td>
-                        <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                        <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
                         <td class="govuk-table__cell"><th:block th:text="${app.rejectReason.displayLabel}">Too many assignments</th:block> <br/>
                             <th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
-                        <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                        <td th:text="${app.totalAssessors}" class="govuk-table__cell numeric">3</td>
                     </tr>
                     </tbody>
                 </table>

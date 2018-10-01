@@ -9,3 +9,15 @@ include::{snippets}/competition/setup/stakeholder/invite-stakeholder/http-respon
 
 ==== Curl Example
 include::{snippets}/competition/setup/stakeholder/invite-stakeholder/curl-request.adoc[]
+
+=== Find Stakeholders for a given competition
+==== Request
+include::{snippets}/competition/setup/stakeholder/find-stakeholders/http-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/find-stakeholders/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/setup/stakeholder/find-stakeholders/http-response.adoc[]
+include::{snippets}/competition/setup/stakeholder/find-stakeholders/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/setup/stakeholder/find-stakeholders/curl-request.adoc[]
