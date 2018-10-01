@@ -628,7 +628,6 @@ Application: Edit again should mark as incomplete
     And the user navigates to the page          ${server}/management/competition/setup/${competitionId}
     Then the user should see the element        css = #compCTA[disabled="disabled"]
     When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    Then the user clicks the button/link        jQuery = button:contains("Done")
     When the user clicks the button/link        link = Application details
     And the user clicks the button/link         css = button[type="submit"]
     Then the user should see the element        jQuery = li:contains("Application details") .task-status-complete
