@@ -19,4 +19,4 @@ The Stakeholder can search for a competition
     And the user clicks the button/link           link = ${openGenericCompetition}
     Then the user should see the element          jQuery = h1:contains("${openGenericCompetitionId}: ${openGenericCompetition}")
 
-*** Variables ***
+*** Keywords ***
