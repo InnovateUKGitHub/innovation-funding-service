@@ -12,8 +12,11 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
+        <form role="search" method="get" id="searchform"
+              th:with="supportUser=${model.getTabs().support()}"
+              th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
+            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
+                      th:with="supportUser=${model.getTabs().support()}"/>
         </form>
 
         <div class="govuk-tabs" data-module="tabs">

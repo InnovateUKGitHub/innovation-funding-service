@@ -126,20 +126,19 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
+    //Searches for competition by competition name
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                         @RequestParam(name = "page", defaultValue = "1") int page, Model model,
+                         @RequestParam(name = "page", defaultValue = "1") int page,
+                         Model model,
                          UserResource user) {
-        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
-        model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("tabs", new DashboardTabsViewModel(user));
-        return TEMPLATE_PATH + "search";
+        return searchCompetition(searchQuery,page,model,user);
     }
 
+    //Searches for applications by application ID
     @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping("/dashboard/application/search")
@@ -149,20 +148,28 @@ public class CompetitionManagementDashboardController {
                                     Model model,
                                     HttpServletRequest request,
                                     UserResource user) {
+        return searchApplication(searchString,pageNumber,pageSize,model,request,user);
+    }
+
+    @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
+    @PreAuthorize("hasAnyAuthority('support')")
+    @GetMapping("/dashboard/support/search")
+    public String supportSearch(@RequestParam(name = "searchString", defaultValue = "") String searchString,
+                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                    @RequestParam(name = "page", defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                    Model model,
+                                    HttpServletRequest request,
+                                    UserResource user) {
         String trimmedSearchString = StringUtils.normalizeSpace(searchString);
         String existingQueryString = Objects.toString(request.getQueryString(), "");
 
-        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchString, pageNumber, pageSize);
-
-        ApplicationSearchDashboardViewModel viewModel =
-                new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
-                                                        matchedApplications.getTotalElements(),
-                                                        new Pagination(matchedApplications, "search?" + existingQueryString),
-                                                        trimmedSearchString,
-                                                        user.hasRole(SUPPORT));
-        model.addAttribute("model", viewModel);
-
-        return TEMPLATE_PATH + "application-search";
+        boolean allNumbers = trimmedSearchString.chars().allMatch(Character::isDigit);
+        if(allNumbers){
+            return searchApplication(searchString,pageNumber,pageSize,model,request,user);
+        } else {
+            return searchCompetition(searchString,page,model,user);
+        }
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin and project finance roles are allowed to view the page for setting up new competitions")
@@ -183,5 +190,30 @@ public class CompetitionManagementDashboardController {
             }
         }
         return formattedList;
+    }
+
+    private String searchCompetition(String searchQuery,int page, Model model, UserResource user){
+        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
+        model.addAttribute("searchQuery", searchQuery);
+        model.addAttribute("tabs", new DashboardTabsViewModel(user));
+        return TEMPLATE_PATH + "search";
+    }
+
+    private String searchApplication(String searchString, int pageNumber, int pageSize, Model model, HttpServletRequest request, UserResource user){
+        String trimmedSearchString = StringUtils.normalizeSpace(searchString);
+        String existingQueryString = Objects.toString(request.getQueryString(), "");
+
+        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchString, pageNumber, pageSize);
+
+        ApplicationSearchDashboardViewModel viewModel =
+                new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
+                        matchedApplications.getTotalElements(),
+                        new Pagination(matchedApplications, "search?" + existingQueryString),
+                        trimmedSearchString,
+                        user.hasRole(SUPPORT));
+        model.addAttribute("model", viewModel);
+
+        return TEMPLATE_PATH + "application-search";
     }
 }
