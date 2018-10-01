@@ -50,10 +50,10 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void setUp() {
         companiesHouseNumber = "1234";
         matchingBusinessOrganisation = newOrganisation()
-                .withCompanyHouseNumber(companiesHouseNumber)
+                .withCompaniesHouseNumber(companiesHouseNumber)
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         submittedBusinessOrganisation = newOrganisationResource()
-                .withCompanyHouseNumber(companiesHouseNumber)
+                .withCompaniesHouseNumber(companiesHouseNumber)
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
         academicName = "academic";

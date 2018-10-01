@@ -39,7 +39,7 @@ public class UserDetailsForm {
     private String phoneNumber;
 
     private String actionUrl;
-    
+
     public String getEmail() {
         return email;
     }
