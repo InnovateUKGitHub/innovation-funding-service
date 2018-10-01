@@ -43,7 +43,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final Log LOG = LogFactory.getLog(OrganisationCreationSearchController.class);
 
     private static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
-    private static final String ADD_ADDRESS_DETAILS = "add-address-details";
     private static final String MANUAL_ADDRESS = "manual-address";
 
     private static final String SELECTED_ORGANISATION = "selected-organisation";
@@ -138,11 +137,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
-            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
-        } else {
-            return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
-        }
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{selectedPostcodeIndex}")
@@ -168,11 +163,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
-            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
-        } else {
-            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
-        }
+        return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "{searchOrganisationId}/search-postcode")
@@ -196,12 +187,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
-
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
-            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
-        } else {
-            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
-        }
+        return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
     }
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SEARCH_ADDRESS)

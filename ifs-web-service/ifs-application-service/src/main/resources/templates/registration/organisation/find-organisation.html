@@ -92,7 +92,6 @@
                         <div class="govuk-details__text" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
-                            <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
                             <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
                         </div>
                     </details>
