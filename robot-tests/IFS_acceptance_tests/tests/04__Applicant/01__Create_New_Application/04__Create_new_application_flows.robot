@@ -27,7 +27,7 @@ Non registered users non companies house route
     And the user clicks the button/link            link = Continue and create an account
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    When the user clicks the Not on company house link
+    When the user clicks the Not on companies house link
     Then the user fills in the non CH address
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     Then The user should see the element           jQuery = h1:contains("Your details")
