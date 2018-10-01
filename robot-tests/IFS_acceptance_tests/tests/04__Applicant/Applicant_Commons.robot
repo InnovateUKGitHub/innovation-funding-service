@@ -122,7 +122,7 @@ the user fills in Labour
     wait for autosave
     the user enters text to a text field       jQuery = input.govuk-input[name^=labour-labour][value = ""]:first    100
     wait for autosave
-    #the user clicks the button/link            jQuery = button:contains("Labour")
+    the user clicks the button/link            jQuery = button:contains("Labour")
 
 the user fills in Overhead costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
@@ -151,7 +151,7 @@ the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
     the user clicks the button/link    css = [data-target="overhead-default-percentage"] label
-    #the user clicks the button/link    jQuery = button:contains("Overhead costs")
+    the user clicks the button/link    jQuery = button:contains("Overhead costs")
 
 the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
@@ -162,7 +162,7 @@ the user fills in Material
     wait for autosave
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     wait for autosave
-    #the user clicks the button/link       jQuery = button:contains("Materials")
+    the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery = button:contains("Capital usage")
@@ -179,7 +179,7 @@ the user fills in Capital usage
     wait for autosave
     focus                                 css = .section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
-    #the user clicks the button/link       jQuery = button:contains("Capital usage")
+    the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
@@ -191,7 +191,7 @@ the user fills in Subcontracting costs
     wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting-subcontractingCost]  1000
     wait for autosave
-    #the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
@@ -201,7 +201,7 @@ the user fills in Travel and subsistence
     wait for autosave
     the user enters text to a text field  css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     wait for autosave
-    #the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
+    the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
 
 the user fills in Other costs
     the user clicks the button/link       jQuery = button:contains("Other costs")
@@ -210,7 +210,7 @@ the user fills in Other costs
     wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=other_costs-otherCost]  50
     wait for autosave
-    #the user clicks the button/link       jQuery = button:contains("Other costs")
+    the user clicks the button/link       jQuery = button:contains("Other costs")
 
 the user removes prev costs if there are any
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = table[id = "other-costs-table"] tr:contains("Remove")
