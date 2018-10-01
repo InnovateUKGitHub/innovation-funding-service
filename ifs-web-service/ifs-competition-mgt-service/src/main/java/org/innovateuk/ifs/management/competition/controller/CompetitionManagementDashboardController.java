@@ -67,7 +67,10 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(
+                liveCompetitions,
+                competitionDashboardSearchService.getCompetitionCounts(),
+                new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "live";
     }
 
@@ -85,7 +88,12 @@ public class CompetitionManagementDashboardController {
         }
 
         model.addAttribute(MODEL_ATTR,
-                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), countBankDetails, new DashboardTabsViewModel(user), projectFinanceUser));
+                new ProjectSetupDashboardViewModel(
+                        projectSetupCompetitions,
+                        competitionDashboardSearchService.getCompetitionCounts(),
+                        countBankDetails,
+                        new DashboardTabsViewModel(user),
+                        projectFinanceUser));
 
         return TEMPLATE_PATH + "projectSetup";
     }
@@ -112,8 +120,10 @@ public class CompetitionManagementDashboardController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
-        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(
+                competitionDashboardSearchService.getPreviousCompetitions(),
+                competitionDashboardSearchService.getCompetitionCounts(),
+                new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "previous";
     }
