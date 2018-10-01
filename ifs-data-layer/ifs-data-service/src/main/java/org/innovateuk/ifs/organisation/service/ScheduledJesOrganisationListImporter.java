@@ -46,6 +46,7 @@ public class ScheduledJesOrganisationListImporter {
 
     private boolean importEnabled;
     private String jesSourceFileUrl;
+    private String archiveLocation;
     private int connectionTimeoutMillis = 10000;
     private int readTimeoutMillis = 10000;
     private boolean deleteJesSourceFile;
@@ -59,7 +60,8 @@ public class ScheduledJesOrganisationListImporter {
                                          @Value("${ifs.data.service.jes.organisation.importer.read.timeout.millis}") int readTimeoutMillis,
                                          @Value("${ifs.data.service.jes.organisation.importer.enabled}") boolean importEnabled,
                                          @Value("${ifs.data.service.jes.organisation.importer.download.url}") String jesSourceFileUrl,
-                                         @Value("${ifs.data.service.jes.organisation.importer.delete.source.file}") boolean deleteJesSourceFile) {
+                                         @Value("${ifs.data.service.jes.organisation.importer.archive.location}") String archiveLocation,
+                                         @Value("${ifs.data.service.jes.organisation.importer.archive.source.file}") boolean deleteJesSourceFile) {
 
         this.academicRepository = academicRepository;
         this.organisationExtractor = organisationExtractor;
@@ -70,6 +72,7 @@ public class ScheduledJesOrganisationListImporter {
         this.importEnabled = importEnabled;
         this.fileDownloader = fileDownloader;
         this.deleteJesSourceFile = deleteJesSourceFile;
+        this.archiveLocation = archiveLocation;
     }
 
     @Transactional
@@ -81,14 +84,22 @@ public class ScheduledJesOrganisationListImporter {
             return serviceSuccess(emptyList());
         }
 
-        ServiceResult<URL> jesSourceFileUrlResult = getJesSourceFileUrl();
+        ServiceResult<URL> jesSourceFileUrlResult = getUrlFromString(jesSourceFileUrl);
+        ServiceResult<URL> archiveLocationUrlResult = getUrlFromString(archiveLocation);
+
 
         if (jesSourceFileUrlResult.isFailure()) {
             LOG.warn("Could not determine Je-S organisation list file URI.  Got " + jesSourceFileUrlResult.getFailure());
             return serviceFailure(jesSourceFileUrlResult.getFailure());
         }
 
+        if (archiveLocationUrlResult.isFailure()) {
+            LOG.warn("Could not determine archive file URI.  Got " + archiveLocationUrlResult.getFailure());
+            return serviceFailure(archiveLocationUrlResult.getFailure());
+        }
+
         URL jesFileToDownload = jesSourceFileUrlResult.getSuccess();
+        URL archiveFile = archiveLocationUrlResult.getSuccess();
 
         if (!fileDownloader.jesSourceFileExists(jesFileToDownload)) {
             LOG.debug("No Je-S organisation list file to import");
@@ -98,7 +109,7 @@ public class ScheduledJesOrganisationListImporter {
         LOG.info("Importing Je-S organisation list...");
 
         ServiceResult<List<String>> downloadResult = downloadFile(jesFileToDownload).
-                andOnSuccess(downloadedFile -> deleteJesSourceFileIfNecessary(jesFileToDownload).
+                andOnSuccess(downloadedFile -> archiveJesSourceFileIfExists(jesFileToDownload, archiveFile).
                 andOnSuccess(() -> readDownloadedFile(downloadedFile)).
                 andOnSuccessDo(organisationNames -> logDownloadedOrganisations(organisationNames)).
                 andOnSuccessDo(organisationNames -> deleteExistingAcademicEntries()).
@@ -109,13 +120,13 @@ public class ScheduledJesOrganisationListImporter {
                 this::logSuccess);
     }
 
-    private ServiceResult<Void> deleteJesSourceFileIfNecessary(URL jesSourceFile) {
+    private ServiceResult<Void> archiveJesSourceFileIfExists(URL jesSourceFile, URL archiveLocation) {
 
-        if (!deleteJesSourceFile) {
+        if (!fileDownloader.jesSourceFileExists(jesSourceFile)) {
             return serviceSuccess();
         }
 
-        return fileDownloader.deleteSourceFile(jesSourceFile);
+        return fileDownloader.archiveSourceFile(jesSourceFile, archiveLocation);
     }
 
     private void logDownloadedOrganisations(List<String> organisationNames) {
@@ -148,9 +159,9 @@ public class ScheduledJesOrganisationListImporter {
         return fileDownloader.copyJesSourceFile(jesFileToDownload, connectionTimeoutMillis, readTimeoutMillis);
     }
 
-    private ServiceResult<URL> getJesSourceFileUrl() {
+    private ServiceResult<URL> getUrlFromString(String s) {
         try {
-            return serviceSuccess(new URL(jesSourceFileUrl));
+            return serviceSuccess(new URL(s));
         } catch (MalformedURLException e) {
             return serviceFailure(new Error(e.getMessage(), INTERNAL_SERVER_ERROR));
         }

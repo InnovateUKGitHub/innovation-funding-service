@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.organisation.service;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  */
 @Component
 class ScheduledJesOrganisationListImporterFileDownloader {
+
+    private static final Log LOG = LogFactory.getLog(ScheduledJesOrganisationListImporterFileDownloader.class);
 
     boolean jesSourceFileExists(URL jesSourceFile) {
         try {
@@ -42,17 +46,41 @@ class ScheduledJesOrganisationListImporterFileDownloader {
         });
     }
 
-    ServiceResult<Void> deleteSourceFile(URL jesSourceFile) {
+    ServiceResult<Void> archiveSourceFile(URL jesSourceFile, URL archiveFile) {
+        return deleteSourceFileIfExists(archiveFile).andOnSuccess(() -> moveFile(jesSourceFile, archiveFile));
+    }
+
+
+    private ServiceResult<Void> deleteSourceFileIfExists(URL archiveFile) {
         try {
-            if (new File(jesSourceFile.toURI()).delete()) {
+            if (!new File(archiveFile.toURI()).exists()) {
+                return serviceSuccess();
+            }
+
+            if (new File(archiveFile.toURI()).delete()) {
                 return serviceSuccess();
             } else {
                 return serviceFailure(new Error("jes.file.unable.to.delete", INTERNAL_SERVER_ERROR));
             }
+
         } catch (URISyntaxException e) {
-            return serviceFailure(new Error("jes.file.unable.to.delete", INTERNAL_SERVER_ERROR));
+            return serviceFailure(new Error("jes.filename.unable.to.parse", INTERNAL_SERVER_ERROR));
         }
     }
+
+    private ServiceResult<Void> moveFile(URL sourceFile, URL newLocation) {
+        try {
+            if (new File(sourceFile.toURI()).renameTo(new File(newLocation.toURI()))) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(new Error("jes.file.unable.to.archive", INTERNAL_SERVER_ERROR));
+            }
+        } catch (URISyntaxException e) {
+            return serviceFailure(new Error("jes.filename.unable.to.parse", INTERNAL_SERVER_ERROR));
+        }
+
+    }
+
 
     private ServiceResult<File> createTemporaryDownloadFile() {
         try {
