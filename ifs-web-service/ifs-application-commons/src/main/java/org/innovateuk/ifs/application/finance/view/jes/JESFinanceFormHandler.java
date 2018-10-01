@@ -105,20 +105,19 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
-            if(!inputIsLong(financeFormField.getValue()))
+            if(!inputIsLong(value))
             {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_DECIMAL_MESSAGE));
             }
-            else if(Long.parseLong(value) < 0)
+            else if(!StringUtils.isEmpty(value) && Long.parseLong(value) < 0)
             {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_NEGATIVE_MESSAGE));
             }
 
         }
-
-        if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && inputIsLong(financeFormField.getValue())) {
+        else if(inputIsLong(value)) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }

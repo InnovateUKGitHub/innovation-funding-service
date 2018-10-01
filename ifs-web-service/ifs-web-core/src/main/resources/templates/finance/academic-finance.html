@@ -75,13 +75,13 @@
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredStaff?.id+'-cost'})" />
             </label>
             <div>
-                <input type="text"
+                <input type="number"
                        class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                        ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'govuk-input--error'" />
@@ -97,10 +97,10 @@
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
-                       type="text"
+                       type="number"
                        ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'govuk-input--error'"/>
@@ -115,10 +115,10 @@
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
-                       type="text"
+                       type="number"
                        ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
@@ -135,7 +135,7 @@
                        [id='formInput[cost-${academicFinance.incurredTravelAndSubsistence?.id}-cost]'],
                        [id='formInput[cost-${academicFinance.incurredStaff?.id}-cost]']|"
                        data-calculation-operations="+"
-                       type="text"
+                       type="number"
                        readonly="readonly"
                        th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
             </div>
@@ -157,10 +157,10 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
+                       th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number"
                        ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'govuk-input--error'"/>
@@ -174,10 +174,10 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
+                       th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number"
                        ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
@@ -191,10 +191,10 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
+                       th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number"
                        ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
@@ -228,10 +228,10 @@
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
-                       type="text"
+                       type="number"
                        ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'govuk-input--error'" />
@@ -252,10 +252,10 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
+                       th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number"
                        ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'govuk-input--error'" />
@@ -270,10 +270,10 @@
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
-                       type="text"
+                       type="number"
                        ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
-                       pattern="^[0-9]*$"
-                       th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
                        th:readonly="${readonly}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
