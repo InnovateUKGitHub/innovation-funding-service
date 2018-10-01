@@ -148,7 +148,7 @@ public class ApplicationNavigationPopulator {
             String backURL = APPLICATION_BASE_URL + applicationId;
 
             if (applicantOrganisationId.isPresent() && section != null) {
-                if (isSupport && !application.getCompetitionStatus().equals(PROJECT_SETUP)) {
+                if (isSupport && application.getCompetitionStatus().equals(OPEN)) {
                     model.addAttribute(BACK_TITLE, "Application summary");
                     if (queryParam.isPresent()) {
                         backURL = (backURL + "/summary" + queryParam.get());
