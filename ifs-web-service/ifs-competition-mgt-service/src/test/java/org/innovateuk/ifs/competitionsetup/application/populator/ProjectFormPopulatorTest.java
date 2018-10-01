@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.application.form.ProjectForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,10 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,7 +28,7 @@ public class ProjectFormPopulatorTest {
     private ProjectFormPopulator populator;
 
     @Mock
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     @Mock
     private QuestionRestService questionRestService;
@@ -46,7 +43,7 @@ public class ProjectFormPopulatorTest {
     public void testPopulateFormWithoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(resource));
 
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionId));
 
@@ -57,15 +54,15 @@ public class ProjectFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(questionSetupCompetitionRestService.getByQuestionId(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithNoObjectIdErrors() {
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.empty());
-        assertEquals(null, result);
+        assertNull(result);
     }
 
 }

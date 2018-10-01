@@ -21,6 +21,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByEmail(@Param("email") String email);
 
+    Optional<User> findByEmailAndRolesNot(String email, Role role);
+
     Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
 
     Optional<User> findByIdAndRoles(Long id, Role role);
