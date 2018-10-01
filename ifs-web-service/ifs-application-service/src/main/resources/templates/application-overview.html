@@ -70,13 +70,15 @@
                                 </div>
                                 <div
                                     th:if="${childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).FINANCE}"
-                                     th:class="${model.completed.financeSectionComplete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${model.completed.financeSectionComplete} ? 'Complete' : 'Incomplete'"/>
+                                    th:with="complete=${model.completed.financeSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
                                 </div>
                                 <div
                                     th:if="${model.user.userIsLeadApplicant && childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}"
-                                     th:class="${model.completed.financeOverviewSectionComplete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${model.completed.financeOverviewSectionComplete} ? 'Complete' : 'Incomplete'"/>
+                                    th:with="complete=${model.completed.financeOverviewSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
                                 </div>
                             </li>
                         </th:block>

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 
 public abstract class AbstractApplicationModelPopulator {
 
@@ -57,7 +59,8 @@ public abstract class AbstractApplicationModelPopulator {
     protected ApplicationCompletedViewModel getCompletedDetails(ApplicationResource application,
                                                                 Optional<OrganisationResource> userOrganisation) {
         long userOrganisationId = userOrganisation.get().getId();
-        long financeSectionId = getFinanceSectionId(application.getCompetition());
+        long financeSectionId = getSectionIdByType(application.getCompetition(), FINANCE);
+        long financeOverviewSectionId = getSectionIdByType(application.getCompetition(), OVERVIEW_FINANCES);
 
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of
         // question ids
@@ -68,7 +71,7 @@ public abstract class AbstractApplicationModelPopulator {
         Set<Long> completedSectionsByUserOrganisation = completedSectionsByOrganisation.get(userOrganisationId);
 
         boolean financeSectionCompleted = completedSectionsByUserOrganisation.contains(financeSectionId);
-        boolean financeOverviewSectionCompleted = combinedMarkedAsCompleteSections.contains(financeSectionId);
+        boolean financeOverviewSectionCompleted = completedSectionsByUserOrganisation.contains(financeOverviewSectionId);
 
         return new ApplicationCompletedViewModel(combinedMarkedAsCompleteSections,
                 markedAsComplete, completedSectionsByUserOrganisation, financeSectionCompleted,
@@ -96,8 +99,8 @@ public abstract class AbstractApplicationModelPopulator {
         return combinedMarkedAsComplete;
     }
 
-    private long getFinanceSectionId(long competitionId) {
-        return sectionService.getSectionsForCompetitionByType(competitionId, FINANCE)
+    private long getSectionIdByType(long competitionId, SectionType sectionType) {
+        return sectionService.getSectionsForCompetitionByType(competitionId, sectionType)
                 .stream()
                 .findFirst()
                 .map(SectionResource::getId)

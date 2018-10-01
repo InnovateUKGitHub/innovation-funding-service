@@ -144,7 +144,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
     public void allSectionsMarkedAsComplete() throws Exception {
         final long id = 1L;
 
-        when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, id, null)).thenReturn(serviceSuccess(true));
+        when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(id)).thenReturn(serviceSuccess(true));
         mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",

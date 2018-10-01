@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +34,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     private SectionRepository sectionRepository;
     @Autowired
     private QuestionService questionService;
-    @Autowired
-    private SectionService sectionService;
     @Autowired
     private SectionStatusService sectionStatusService;
     @Autowired
@@ -81,18 +78,14 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         this.controller = controller;
     }
 
-    /**
-     * Check if all sections under Your-Finances is marked-as-complete.
-     */
     @Test
-    public void testChildSectionsAreCompleteForAllOrganisations() throws Exception {
+    public void getCompletedSections() {
         excludedSections = null;
 
         section = sectionRepository.findOne(sectionIdYourProjectCostsFinances);
         assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
-        assertTrue(sectionStatusService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
         assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccess().size());
 
         // Mark one question as incomplete.
@@ -100,7 +93,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
 	    Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccess());
 
-        assertFalse(sectionStatusService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
         assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
 
         UserResource collaborator = newUserResource().withId(collaboratorIdOne).build();
