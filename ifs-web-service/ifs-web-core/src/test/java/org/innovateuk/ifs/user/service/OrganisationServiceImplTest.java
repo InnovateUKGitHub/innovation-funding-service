@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,7 +20,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
     private UserRestService userRestService;
@@ -31,7 +31,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testGetOrganisationType() throws Exception {
+    public void testGetOrganisationType() {
         Long userId = 2L;
         Long applicationId = 3L;
         Long organisationId = 4L;
@@ -49,7 +49,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testGetOrganisationForUser() throws Exception {
+    public void testGetOrganisationForUser() {
         Long userId = 2L;
         Long organisationId = 4L;
         ProcessRoleResource roleWithUser = new ProcessRoleResource();

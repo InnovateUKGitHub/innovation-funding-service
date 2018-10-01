@@ -93,6 +93,9 @@ IFS.core.formValidation = (function () {
         fields: '[data-higherthan]',
         messageInvalid: 'The maximum must be larger than the minimum.'
       },
+      anyChange: {
+        fields: '[data-anychange-errormessage]:not([readonly])'
+      },
       typeTimeout: 300,
       // data-{{type}}-showmessage will define how the errors will be shown,
       // none = nothing happens and we are just running the check
@@ -135,6 +138,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.lowerthan.fields, function () { IFS.core.formValidation.checkLowerThan(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.higherthan.fields, function () { IFS.core.formValidation.checkHigherThan(jQuery(this)) })
+      jQuery('body').on('change', s.anyChange.fields, function () { IFS.core.formValidation.anyChange(jQuery(this)) })
 
       jQuery('body').on('change', '[data-set-section-valid]', function () {
         var section = jQuery(this).attr('data-set-section-valid')
@@ -251,20 +255,19 @@ IFS.core.formValidation = (function () {
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'email')
       var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
 
+      // If server response finds email already invited then cancel error msg on change of email details
+      // Get value of error msg
+      // If email is changed then remove error msg
+      // var currentServerError = field.closest('tr').find('.govuk-error-message').text()
+      // var currentServerMsgCheck = 'An invite has already been created for this email address.'
+
+      // if (currentServerError === currentServerMsgCheck) {
+      //   IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
+      // }
+
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
         var validEmail = emailRegex.test(email)
-
-        // If server response finds email already invited then cancel error msg on change of email details
-        // Get value of error msg
-        // If email is changed then remove error msg
-
-        var currentServerError = field.closest('tr').find('.govuk-error-message').text()
-        var currentServerMsgCheck = 'An invite has already been created for this email address.'
-
-        if (currentServerError === currentServerMsgCheck) {
-          IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
-        }
 
         // check if email address is invalid
         if (!validEmail) {
@@ -389,6 +392,13 @@ IFS.core.formValidation = (function () {
           return true
         }
       }
+    },
+    anyChange: function (field) {
+      jQuery.each(field[0].attributes, function (index, attribute) {
+        if (attribute.name.indexOf('data-anychange-errormessage') === 0) {
+          IFS.core.formValidation.setValid(field, attribute.value, 'show')
+        }
+      })
     },
     checkRequired: function (field) {
       var requiredAttribute = 'required'
