@@ -82,7 +82,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
 
-        if (address != null && !organisationForm.isUseSearchResultAddress()) {
+        if (address != null) {
             organisationAddressResources.add(
                     new OrganisationAddressResource(address,
                                                     new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));

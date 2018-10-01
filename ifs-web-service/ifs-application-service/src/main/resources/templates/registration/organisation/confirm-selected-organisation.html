@@ -27,34 +27,6 @@
         <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="govuk-!-margin-top-6">
             <input type="hidden" th:field="*{searchOrganisationId}" />
 
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useSearchResultAddress">
-                    <h2 class="govuk-fieldset__heading">Operating address</h2>
-                </legend>
-                <span class="govuk-hint">This is the address your organisation works from</span>
-
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'govuk-form-group--error'">
-                    <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
-                    </th:block>
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item" data-target="manual-company-input" data-target-inverted="true">
-                            <input id="address-same"
-                                   class="govuk-checkboxes__input"
-                                   th:field="*{useSearchResultAddress}"
-                                   type="checkbox"
-                                   value="yes"
-                                   th:attr="data-anychange-errormessage=#{validation.standard.organisation.address.required}"
-                            />
-                            <label for="address-same"
-                                   class="govuk-label govuk-checkboxes__label">
-                                The operating address is the same as the registered organisation address
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
             <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />
             <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
         </form>
