@@ -273,6 +273,7 @@ Eligibility: Contain the correct options
     And the user should see the element    jQuery = label:contains("Public sector")
     And the user should see the element    css = label[for="comp-resubmissions-yes"]
     And the user should see the element    css = label[for="comp-resubmissions-no"]
+    And the user selects the radio button  researchCategoriesApplicable  comp-researchCategoriesApplicable-yes
     And the user should see the element    jQuery = label:contains("Feasibility studies")
     And the user should see the element    jQuery = label:contains("Industrial research")
     And the user should see the element    jQuery = label:contains("Experimental development")
