@@ -321,7 +321,7 @@ function createProject() {
 
 function getClusterAddress() {
 #    echo "prod.ifs-test-clusters.com"
-     echo "dev-nige-1.dev.ifs-test-clusters.com"
+     echo "dev-nige-0.dev.ifs-test-clusters.com"
 }
 
 function getRemoteRegistryUrl() {
