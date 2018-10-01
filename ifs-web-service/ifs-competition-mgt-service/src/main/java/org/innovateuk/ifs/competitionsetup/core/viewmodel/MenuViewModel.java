@@ -42,7 +42,7 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean sectionIsNotHome(CompetitionSetupSection setupSection) {
-        return CompetitionSetupSection.HOME.equals(setupSection);
+        return !CompetitionSetupSection.HOME.equals(setupSection);
     }
 
     public boolean sectionIsDocuments(CompetitionSetupSection setupSection) {
