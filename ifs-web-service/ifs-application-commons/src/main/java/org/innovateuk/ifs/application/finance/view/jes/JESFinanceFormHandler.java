@@ -56,6 +56,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
     public static final String NON_DECIMAL_MESSAGE = "validation.standard.integer.non.decimal.format";
+    public static final String NON_NEGATIVE_MESSAGE = "validation.standard.non.negative.integer.format";
     public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
 
     public static final String NON_DECIMAL_FIELD = "tsb_reference";
@@ -103,10 +104,21 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
 
-        if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
-            return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
-                    financeFormField, NON_DECIMAL_MESSAGE));
-        } else if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && inputIsLong(financeFormField.getValue())) {
+        if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+            if(!inputIsLong(financeFormField.getValue()))
+            {
+                return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
+                        financeFormField, NON_DECIMAL_MESSAGE));
+            }
+            else if(Long.parseLong(value) < 0)
+            {
+                return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
+                        financeFormField, NON_NEGATIVE_MESSAGE));
+            }
+
+        }
+
+        if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && inputIsLong(financeFormField.getValue())) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
