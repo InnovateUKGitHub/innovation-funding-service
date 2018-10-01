@@ -145,15 +145,15 @@
 
         <th:block th:with="dateFieldPresent=*{__${field}__ != null}">
 
-            <!--<div class="day">-->
-                <!--<th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day')" />-->
-                <!--<th:block th:if="${dateFieldPresent}">-->
-                    <!--<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />-->
-                 <!--</th:block>-->
-                 <!--<th:block th:unless="${dateFieldPresent}">-->
-                    <!--<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />-->
-                 <!--</th:block>-->
-            <!--</div>-->
+            <div class="day">
+                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day')" />
+                <th:block th:if="${dateFieldPresent}">
+                    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
+                 </th:block>
+                 <th:block th:unless="${dateFieldPresent}">
+                    <th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
+                 </th:block>
+            </div>
             <div class="month">
                 <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month')" />
                 <th:block th:if="${dateFieldPresent}">

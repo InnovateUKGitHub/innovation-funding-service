@@ -30,9 +30,9 @@
                         <dt>Project name</dt>
                         <dd th:text="${form.projectName}">My EU project name</dd>
                         <dt>Project start date</dt>
-                        <dd th:unless="${form.projectStartDate == null}" th:text="${#temporals.format(form.getProjectStartDate(), 'MMM yyyy')}">March 2017</dd>
+                        <dd th:text="${form.startDateMonth + ' ' + form.startDateYear}">March 2017</dd>
                         <dt>Project end date</dt>
-                        <dd th:unless="${form.projectEndDate == null}" th:text="${#temporals.format(form.getProjectEndDate(), 'MMM yyyy')}">March 2019</dd>
+                        <dd th:text="${form.endDateMonth + ' ' + form.endDateYear}">March 2019</dd>
                         <dt>EU funding contribution for above project (EUR)</dt>
                         <dd th:text="${form.fundingContribution}">€100</dd>
                         <dt>Is your organisation the project co-ordinator on this project?</dt>

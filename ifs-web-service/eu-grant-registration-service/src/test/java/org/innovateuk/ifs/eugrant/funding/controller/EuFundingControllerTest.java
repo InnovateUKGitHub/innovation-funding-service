@@ -125,10 +125,10 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
         fundingForm.setFundingContribution(BigDecimal.valueOf(100000L));
         fundingForm.setGrantAgreementNumber("123456");
         fundingForm.setProjectCoordinator(true);
-//        fundingForm.setStartDateMonth(10);
-//        fundingForm.setStartDateYear(2000);
-//        fundingForm.setEndDateMonth(10);
-//        fundingForm.setEndDateYear(2020);
+        fundingForm.setStartDateMonth(10);
+        fundingForm.setStartDateYear(2000);
+        fundingForm.setEndDateMonth(10);
+        fundingForm.setEndDateYear(2020);
         fundingForm.setParticipantId("123456789");
         fundingForm.setProjectName("Project Name");
 
@@ -140,10 +140,10 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
                 .param("grantAgreementNumber", fundingForm.getGrantAgreementNumber())
                 .param("participantId", fundingForm.getParticipantId())
                 .param("projectName", fundingForm.getProjectName())
-//                .param("startDateMonth", String.valueOf(fundingForm.getStartDateMonth()))
-//                .param("startDateYear", String.valueOf(fundingForm.getStartDateYear()))
-//                .param("endDateMonth", String.valueOf(fundingForm.getEndDateMonth()))
-//                .param("endDateYear", String.valueOf(fundingForm.getEndDateYear()))
+                .param("startDateMonth", String.valueOf(fundingForm.getStartDateMonth()))
+                .param("startDateYear", String.valueOf(fundingForm.getStartDateYear()))
+                .param("endDateMonth", String.valueOf(fundingForm.getEndDateMonth()))
+                .param("endDateYear", String.valueOf(fundingForm.getEndDateYear()))
                 .param("fundingContribution", String.valueOf(fundingForm.getFundingContribution()))
                 .param("projectCoordinator", String.valueOf(fundingForm.getProjectCoordinator()))
                 .param("actionType", String.valueOf(fundingForm.getActionType())))

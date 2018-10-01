@@ -122,29 +122,130 @@
                            th:attr="data-required-errormessage=#{validation.fundingForm.project.name}">
                 </div>
 
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('startDate*')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Project start date
                             </legend>
-                            <th:block th:if="${#fields.hasErrors('projectStartDate')}">
-                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}"></span>
+                            <th:block th:if="${#fields.hasErrors('startDate*')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('startDate*')}" th:text="${err}"></span>
                             </th:block>
-                            <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)" />
+                            <div class="date-group"  th:attr="data-date-invalid-errormessage=#{validation.fundingForm.date.format}">
+                                <div class="day govuk-visually-hidden">
+                                    <label class="govuk-label" for="startDateDay">
+                                        <span>Day</span>
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-3 null "
+                                           type="number"
+                                           required="required"
+                                           value="1"
+                                           data-date=""
+                                           data-autosave-disabled=""
+                                           name="startDateDay"
+                                           id="startDateDay">
+                                </div>
+
+                            <div class="month">
+                                <label class="govuk-label" for="startDateMonth">
+                                    <span>Month</span>
+                                </label>
+                                <input class="govuk-input govuk-input--width-3 null "
+                                       type="number"
+                                       id="startDateMonth"
+                                       min="1"
+                                       max="12"
+                                       placeholder="MM"
+                                       required="required"
+                                       data-date=""
+                                       data-autosave-disabled=""
+                                       th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
+                                       th:field="*{startDateMonth}"
+                                       th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
+                            </div>
+
+                            <div class="year">
+                                <label class="govuk-label" for="startDateYear">
+                                    <span>Year</span>
+                                </label>
+                                <input class="govuk-input govuk-input--width-3 null "
+                                       type="number"
+                                       id="startDateYear"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       data-date=""
+                                       data-autosave-disabled=""
+                                       th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
+                                       th:field="*{startDateYear}"
+                                       th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
 
                 <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('projectEndDate')} ? 'govuk-form-group--error'">
+                     th:classappend="${#fields.hasErrors('endDate*')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend id="endDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                             Project end date
                         </legend>
-                        <th:block th:if="${#fields.hasErrors('projectEndDate')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('projectEndDate')}"
+                        <th:block th:if="${#fields.hasErrors('endDate*')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('endDate*')}"
                                   th:text="${err}"></span>
                         </th:block>
-                        <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectEndDate', field='projectEndDate', dayReadonly=true)" />
+                        <div class="date-group"
+                             data-future-date=""
+                             th:attr=
+                                 "data-date-invalid-errormessage=#{validation.fundingForm.date.format},
+                                  data-date-future-errormessage=#{validation.standard.date.future}">
+
+                            <div class="day govuk-visually-hidden">
+                                <label class="govuk-label" for="endDateDay">
+                                    <span>Day</span>
+                                </label>
+                                <input class="govuk-input govuk-input--width-3 null "
+                                       type="number"
+                                       required="required"
+                                       value="1"
+                                       data-date=""
+                                       data-autosave-disabled=""
+                                       name="endDateDay"
+                                       id="endDateDay">
+                            </div>
+
+                            <div class="month">
+                                <label class="govuk-label" for="endDateMonth">
+                                    <span>Month</span>
+                                </label>
+                                <input class="govuk-input govuk-input--width-3 null "
+                                       type="number"
+                                       id="endDateMonth"
+                                       min="1"
+                                       max="12"
+                                       placeholder="MM"
+                                       required="required"
+                                       data-date=""
+                                       data-autosave-disabled=""
+                                       th:classappend="${#fields.hasErrors('endDateMonth')} ? 'govuk-input--error'"
+                                       th:field="*{endDateMonth}"
+                                       th:attr="data-required-errormessage=#{validation.fundingForm.date.month}">
+                            </div>
+
+                            <div class="year">
+                                <label class="govuk-label" for="endDateYear">
+                                    <span>Year</span>
+                                </label>
+                                <input class="govuk-input govuk-input--width-3 null "
+                                       type="number"
+                                       id="endDateYear"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       data-date=""
+                                       data-autosave-disabled=""
+                                       th:classappend="${#fields.hasErrors('endDateYear')} ? 'govuk-input--error'"
+                                       th:field="*{endDateYear}"
+                                       th:attr="data-required-errormessage=#{validation.fundingForm.date.year}">
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
 
