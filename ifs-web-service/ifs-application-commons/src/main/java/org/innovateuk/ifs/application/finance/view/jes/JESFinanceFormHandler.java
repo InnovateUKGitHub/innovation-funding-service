@@ -105,6 +105,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+            // if this is a project cost we test for 1) fractional values, 2) negative values - empty values are okay.
             if(!inputIsLong(value))
             {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
@@ -117,7 +118,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             }
 
         }
-        else if(inputIsLong(value)) {
+        else if(StringUtils.isEmpty(value)) {
+            // if this is a non cost ref we just ensure its not empty
+
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
