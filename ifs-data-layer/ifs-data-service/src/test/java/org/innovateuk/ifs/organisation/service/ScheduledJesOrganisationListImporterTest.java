@@ -29,13 +29,16 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksTest {
 
     private static final String JES_FILE_STRING = "file:///tmp/jes-download-file.csv";
+    private static final String ARCHIVE_FILE_STRING = "file:///archived-jes-list.csv";
     private static final URL JES_FILE_URL;
+    private static final URL ARCHIVE_FILE_URL;
     private static final int CONNECTION_TIMEOUT = 5000;
     private static final int READ_TIMEOUT = 4000;
 
     static {
         try {
             JES_FILE_URL = new URL(JES_FILE_STRING);
+            ARCHIVE_FILE_URL = new URL(ARCHIVE_FILE_STRING);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -65,6 +68,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
                 READ_TIMEOUT,
                 true,
                 JES_FILE_STRING,
+                ARCHIVE_FILE_STRING,
                 true);
 
         List<String> expectedDownloadedOrganisations = asList("Org 1", "Org 2", "Org 3");
@@ -73,7 +77,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
 
         when(fileDownloaderMock.jesSourceFileExists(JES_FILE_URL)).thenReturn(true);
         when(fileDownloaderMock.copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT)).thenReturn(serviceSuccess(downloadedFile));
-        when(fileDownloaderMock.deleteSourceFile(JES_FILE_URL)).thenReturn(serviceSuccess());
+        when(fileDownloaderMock.archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL)).thenReturn(serviceSuccess());
         when(organisationExtractorMock.extractOrganisationsFromFile(downloadedFile)).thenReturn(serviceSuccess(expectedDownloadedOrganisations));
 
         ServiceResult<List<String>> result = job.importJesList();
@@ -81,9 +85,9 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getSuccess()).isEqualTo(expectedDownloadedOrganisations);
 
-        verify(fileDownloaderMock, times(1)).jesSourceFileExists(JES_FILE_URL);
+        verify(fileDownloaderMock, times(2)).jesSourceFileExists(JES_FILE_URL);
         verify(fileDownloaderMock, times(1)).copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT);
-        verify(fileDownloaderMock, times(1)).deleteSourceFile(JES_FILE_URL);
+        verify(fileDownloaderMock, times(1)).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
         verify(organisationExtractorMock, times(1)).extractOrganisationsFromFile(downloadedFile);
         verify(academicRepositoryMock, times(1)).deleteAll();
         verify(academicRepositoryMock, times(1)).save(expectedAcademicsToSave);
@@ -101,6 +105,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
                 READ_TIMEOUT,
                 false,
                 JES_FILE_STRING,
+                ARCHIVE_FILE_STRING,
                 true);
 
         ServiceResult<List<String>> result = job.importJesList();
@@ -123,6 +128,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
                 READ_TIMEOUT,
                 true,
                 JES_FILE_STRING,
+                ARCHIVE_FILE_STRING,
                 true);
 
         ServiceResult<File> downloadFileFailure = serviceFailure(new Error("Service was unavailable", SERVICE_UNAVAILABLE));
@@ -135,7 +141,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
 
         verify(fileDownloaderMock, times(1)).jesSourceFileExists(JES_FILE_URL);
         verify(fileDownloaderMock, times(1)).copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT);
-        verify(fileDownloaderMock, never()).deleteSourceFile(JES_FILE_URL);
+        verify(fileDownloaderMock, never()).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
         verifyZeroInteractions(organisationExtractorMock, academicRepositoryMock);
     }
 
@@ -151,22 +157,23 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
                 READ_TIMEOUT,
                 true,
                 JES_FILE_STRING,
+                ARCHIVE_FILE_STRING,
                 true);
 
         File downloadedFile = File.createTempFile("jestest", "jestest");
 
         when(fileDownloaderMock.jesSourceFileExists(JES_FILE_URL)).thenReturn(true);
         when(fileDownloaderMock.copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT)).thenReturn(serviceSuccess(downloadedFile));
-        when(fileDownloaderMock.deleteSourceFile(JES_FILE_URL)).thenReturn(serviceSuccess());
+        when(fileDownloaderMock.archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL)).thenReturn(serviceSuccess());
         when(organisationExtractorMock.extractOrganisationsFromFile(downloadedFile)).thenReturn(serviceFailure(new Error("Extract fails ", BAD_REQUEST)));
 
         ServiceResult<List<String>> result = job.importJesList();
 
         assertThatServiceFailureIs(result, new Error("Extract fails ", BAD_REQUEST));
 
-        verify(fileDownloaderMock, times(1)).jesSourceFileExists(JES_FILE_URL);
+        verify(fileDownloaderMock, times(2)).jesSourceFileExists(JES_FILE_URL);
         verify(fileDownloaderMock, times(1)).copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT);
-        verify(fileDownloaderMock, times(1)).deleteSourceFile(JES_FILE_URL);
+        verify(fileDownloaderMock, times(1)).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
         verify(organisationExtractorMock, times(1)).extractOrganisationsFromFile(downloadedFile);
 
         verifyZeroInteractions(academicRepositoryMock);
