@@ -9,5 +9,5 @@ Please sign in here: ${dashboardUrl}
 
 Yours sincerely
 
-IFS Team
+Innovation Funding Service Team
 </@layout.defaultPlainText>
