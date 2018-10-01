@@ -1070,8 +1070,8 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:id="|formInput[cost-${costIdentifier}-existing]|">
-                            <h3 class="govuk-heading-s">New or existing item</h3>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="|formInput[cost-${costIdentifier}-existing]|">
+                            New or existing item
                         </legend>
 
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" />
