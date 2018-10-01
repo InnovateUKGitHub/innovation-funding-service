@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
@@ -24,11 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -77,26 +68,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
             return "redirect:/";
         }
 
-        OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
-        AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
-
-        List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
-
-        if (address != null) {
-            organisationAddressResources.add(
-                    new OrganisationAddressResource(address,
-                                                    new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));
-        }
-        if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
-            organisationAddressResources.add(
-                    new OrganisationAddressResource(selectedOrganisation.getOrganisationAddress(),
-                                                    new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name())));
-        }
-
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
-        organisationResource.setAddresses(organisationAddressResources);
 
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());

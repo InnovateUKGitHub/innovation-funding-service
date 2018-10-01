@@ -2,8 +2,6 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -36,8 +33,6 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
 
     protected static final String ORGANISATION_FORM = "organisationForm";
-
-    protected static final String SELECTED_POSTCODE = "selectedPostcode";
 
     protected static final String TEMPLATE_PATH = "registration/organisation";
 
@@ -82,9 +77,6 @@ public abstract class AbstractOrganisationCreationController {
             BindingResult bindingResult = new BeanPropertyBindingResult(organisationCreationForm, ORGANISATION_FORM);
             organisationFormValidate(organisationCreationForm, bindingResult);
             model.addAttribute(BINDING_RESULT_ORGANISATION_FORM, bindingResult);
-
-            BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationCreationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
-            organisationFormAddressFormValidate(organisationCreationForm, bindingResult, addressBindingResult);
         });
         return organisationCreationFormFromCookie;
     }
@@ -98,15 +90,6 @@ public abstract class AbstractOrganisationCreationController {
         organisationTypeId.ifPresent(organisationForm::setOrganisationTypeId);
     }
 
-    protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
-        if (organisationForm.isTriedToSave()) {
-            AddressForm addressForm = organisationForm.getAddressForm();
-            if (addressForm.getSelectedPostcode() != null) {
-                validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
-            }
-        }
-    }
-
     protected Optional<Long> organisationTypeIdFromCookie(HttpServletRequest request) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
 
@@ -118,9 +101,6 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     private void organisationFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult) {
-        if (organisationForm.getAddressForm().isTriedToSearch() && isBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-            ValidationMessages.rejectValue(bindingResult, "addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
-        }
         validator.validate(organisationForm, bindingResult);
     }
 
