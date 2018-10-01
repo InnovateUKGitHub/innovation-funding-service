@@ -4,7 +4,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class CompanyHouseDocs {
+public class CompaniesHouseDocs {
 
     public static FieldDescriptor[] organisationSearchResultFields () {
         return new FieldDescriptor[] {

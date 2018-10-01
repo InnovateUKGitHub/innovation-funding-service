@@ -59,7 +59,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private MessageSource messageSource;
 
     private static final String SEARCH_ORGANISATION = "search-organisation";
-    private static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
+    private static final String NOT_IN_COMPANIES_HOUSE = "not-in-companies-house";
 
     @GetMapping(value = {"/" + FIND_ORGANISATION,"/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -98,7 +98,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     }
 
-    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE)
+    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANIES_HOUSE)
     public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                           HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
@@ -110,8 +110,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS)
-    public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                HttpServletRequest request, HttpServletResponse response) {
+    public String manualAddressWithCompaniesHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                  HttpServletRequest request, HttpServletResponse response) {
         OrganisationCreationForm organisationFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationFromCookie.setAddressForm(new AddressForm());
         organisationFromCookie.getAddressForm().setManualAddress(true);

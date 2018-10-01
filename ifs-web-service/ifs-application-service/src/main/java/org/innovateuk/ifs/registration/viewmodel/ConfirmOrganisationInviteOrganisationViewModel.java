@@ -23,7 +23,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
         this.organisationType = organisation.getOrganisationTypeName();
         this.organisationTypeId = organisation.getOrganisationType();
         this.registrationName = organisation.getName();
-        this.registrationNumber = organisation.getCompanyHouseNumber();
+        this.registrationNumber = organisation.getCompaniesHouseNumber();
         this.emailLeadApplicant = inviteResource.getLeadApplicantEmail();
         this.organisationAddress = organisationAddress;
         this.registerUrl = registerUrl;
