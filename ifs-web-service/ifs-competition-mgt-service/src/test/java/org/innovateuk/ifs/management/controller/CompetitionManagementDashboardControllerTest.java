@@ -14,6 +14,7 @@ import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearc
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,7 +127,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
-        assertEquals(false, viewModel.isProjectFinanceUser());
+        assertFalse(viewModel.isProjectFinanceUser());
 
         verify(bankDetailsRestService, never()).countPendingBankDetailsApprovals();
     }
@@ -152,7 +153,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
-        assertEquals(true, viewModel.isProjectFinanceUser());
+        assertTrue(viewModel.isProjectFinanceUser());
 
         verify(bankDetailsRestService, only()).countPendingBankDetailsApprovals();
     }
@@ -340,10 +341,66 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(5, model.getApplicationPagination().getTotalPages());
         assertEquals(0, model.getApplicationPagination().getCurrentPage());
         assertEquals(40, model.getApplicationPagination().getPageSize());
-        assertEquals(false, model.isSupport());
+        assertFalse(model.isSupport());
 
         verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchString, pageNumber, pageSize);
 
+    }
+
+    @Test
+    public void supportUserNumericInputSearchApplication() throws Exception {
+
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        setLoggedInUser(userResource);
+
+        String searchString = "12";
+        int pageNumber = 0;
+        int pageSize = 40;
+
+        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
+
+        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
+        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchString, pageNumber, pageSize)).thenReturn(expectedApplicationPageResource);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/support/search?searchString=" + searchString))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/application-search"))
+                .andReturn();
+
+        ApplicationSearchDashboardViewModel model = (ApplicationSearchDashboardViewModel) result.getModelAndView().getModelMap().get("model");
+
+        assertEquals(applicationResources, model.getApplications());
+        assertEquals(4L, model.getApplicationCount());
+        assertEquals(searchString, model.getSearchString());
+        assertEquals(5, model.getApplicationPagination().getTotalPages());
+        assertEquals(0, model.getApplicationPagination().getCurrentPage());
+        assertEquals(40, model.getApplicationPagination().getPageSize());
+        assertTrue(model.isSupport());
+
+        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchString, pageNumber, pageSize);
+    }
+
+    @Test
+    public void supportAlphabeticalInputSearchReturnsCompetition() throws Exception {
+
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        setLoggedInUser(userResource);
+
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        String searchString = "search";
+        int defaultPage = 0;
+
+        when(competitionDashboardSearchService.searchCompetitions(searchString, defaultPage)).thenReturn(searchResult);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/support/search?searchString=" + searchString))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/search"))
+                .andExpect(model().attribute("results", is(searchResult)))
+                .andReturn();
+
+        DashboardTabsViewModel tabs = (DashboardTabsViewModel) result.getModelAndView().getModel().get("tabs");
+
+        assertTrue(tabs.support());
     }
 
     @Test
@@ -400,11 +457,11 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(true, viewModel.getTabs().live());
-        assertEquals(false, viewModel.getTabs().nonIFS());
-        assertEquals(false, viewModel.getTabs().upcoming());
-        assertEquals(true, viewModel.getTabs().projectSetup());
-        assertEquals(true, viewModel.getTabs().previous());
+        assertTrue(viewModel.getTabs().live());
+        assertFalse(viewModel.getTabs().nonIFS());
+        assertFalse(viewModel.getTabs().upcoming());
+        assertTrue(viewModel.getTabs().projectSetup());
+        assertTrue(viewModel.getTabs().previous());
     }
 
     @Override
