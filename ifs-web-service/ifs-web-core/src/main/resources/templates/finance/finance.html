@@ -40,9 +40,15 @@
             <label class="govuk-label" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
                 th:text="${'Select a funding level'}">
             </label>
-            <span class="govuk-hint">
-                <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the finances overview' " />
-                <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+            <span class="govuk-hint" th:with="isBusiness=${model.currentApplicant.organisation.organisationTypeName=='Business'}">
+                <th:block th:if="${isBusiness}">
+                    <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the' " />
+                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+                </th:block>
+                <th:block th:unless="${isBusiness}">
+                    The amount you apply for must reflect other funding received and be within the participation levels listed on the
+                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+                </th:block>
             </span>
 
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
