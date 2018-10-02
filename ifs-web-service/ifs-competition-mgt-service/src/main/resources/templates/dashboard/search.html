@@ -12,9 +12,13 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
+        <form role="search" method="get" id="searchform"
+              th:with="supportUser=${tabs.support()}"
+              th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
+            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
+                      th:with="searchType='competitions',
+                      supportUser=${tabs.support()}"/>
 
-            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})" />
 
             <p class="govuk-body"><span th:text="${results.totalElements}" class="govuk-!-font-size-48 govuk-!-font-weight-bold"></span> <strong>competitions</strong> with the term <strong th:if="${param.searchQuery}" th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="@{'/dashboard/live'}" class="govuk-link">Clear filters</a></p>
 
