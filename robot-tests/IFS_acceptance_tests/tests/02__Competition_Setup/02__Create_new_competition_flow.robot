@@ -746,6 +746,13 @@ The Applicant see the correct Questions
     And the user should not see the element          jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
+The user can see the VAT text in Your project costs
+    [Documentation]  IFS-4345
+    [Tags]
+    Given the user clicks the button/link   link = Your finances
+    When the user clicks the button/link    link = Your project costs
+    Then the user should see the element    jQuery = p:contains("You must include VAT in all figures where appropriate.")
+
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
     [Tags]
