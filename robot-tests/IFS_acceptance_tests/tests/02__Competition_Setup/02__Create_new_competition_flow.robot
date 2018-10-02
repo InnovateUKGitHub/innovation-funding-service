@@ -734,24 +734,24 @@ The Applicant is able to apply to the competition once is Open
 
 The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
-    When the user clicks the button/link     link = Research category
-    Then the user should see the element     css = label[for="researchCategory1"]
-    And the user should see the element      css = label[for="researchCategory2"]
-    When the user clicks the button twice    jQuery = label:contains("Feasibility studies")
-    And the user clicks the button/link      id = application-question-save
+    When the user clicks the button/link       link = Research category
+    Then the user should see the element       css = label[for="researchCategory1"]
+    And the user should see the element        css = label[for="researchCategory2"]
+    When the user clicks the button twice      jQuery = label:contains("Feasibility studies")
+    And the user clicks the button/link        id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
-    Given the user should see the element            jQuery = li:contains("${customQuestion}")
-    And the user should not see the element          jQuery = li:contains("Costs and value for money")
+    Given the user should see the element      jQuery = li:contains("${customQuestion}")
+    And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 The user can see the VAT text in Your project costs
     [Documentation]  IFS-4345
     [Tags]
-    Given the user clicks the button/link   link = Your finances
-    When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = p:contains("You must include VAT in all figures where appropriate.")
+    Given the user clicks the button/link      link = Your finances
+    When the user clicks the button/link       link = Your project costs
+    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
