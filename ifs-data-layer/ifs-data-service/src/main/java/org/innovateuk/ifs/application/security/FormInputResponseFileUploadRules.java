@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -35,9 +34,6 @@ public class FormInputResponseFileUploadRules {
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private AssessmentRepository assessmentRepository;
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
