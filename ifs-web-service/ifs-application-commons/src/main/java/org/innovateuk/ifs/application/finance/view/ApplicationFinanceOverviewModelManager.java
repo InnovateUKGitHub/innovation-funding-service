@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -60,22 +59,11 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("multipleSeekingFunding", hasMultipleCollaboratorFinanceRequests(organisationFinances));
         model.addAttribute(
                 "researchParticipationPercentage",
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
-    }
-
-    private boolean hasMultipleCollaboratorFinanceRequests(Map<Long, BaseFinanceResource> organisationFinances) {
-
-        long numberSeekingFunding = organisationFinances.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().getTotalFundingSought().compareTo(BigDecimal.ZERO) > 0)
-                .count();
-
-        return numberSeekingFunding > 1;
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
