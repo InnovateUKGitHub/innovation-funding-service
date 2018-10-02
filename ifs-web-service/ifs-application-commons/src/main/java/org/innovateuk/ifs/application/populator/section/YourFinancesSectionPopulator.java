@@ -47,18 +47,18 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
                                  BindingResult bindingResult,
                                  Boolean readOnly,
                                  Optional<Long> applicantOrganisationId) {
-        ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
-        ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
+//        ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
+//        ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
 
-        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
-        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
+//        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
+//        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
         BaseFinanceResource organisationFinances = organisationFinanceOverview.getFinancesByOrganisation().get(section.getCurrentApplicant().getOrganisation().getId());
 
-        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
+//        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
         viewModel.setCompletedSectionIds(completedSectionIds);
         viewModel.setOrganisationFinance(organisationFinances);
     }

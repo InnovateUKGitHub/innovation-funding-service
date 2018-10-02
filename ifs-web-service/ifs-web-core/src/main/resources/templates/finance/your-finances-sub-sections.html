@@ -10,6 +10,7 @@
         </div>
         <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
 
+        <!-- /*
         <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="govuk-details govuk-!-margin-bottom-6"
             th:attr="open=${model.notRequestingFunding ? 'open' : null}">
             <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Not requesting funding</span></summary>
@@ -23,6 +24,7 @@
                     funding</button>
             </div>
         </details>
+        */ -->
         <ul class="task-list">
             <th:block th:each="childSection : ${model.applicantResource.applicantChildrenSections}">
                 <th:block th:if="${model.isSectionDisplayed(childSection)}" th:insert="finance/your-finances-sub-sections :: finance_sub_section_row(${model}, ${childSection})" />
@@ -124,32 +126,22 @@
 </th:block>
 
 <th:block th:fragment="finance_sub_section_row (model, childSection)">
-    <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
-        <li class="read-only">
-            <div class="task">
-                <h3 class="govuk-heading-s" th:text="${childSection.section.name}"></h3>
-            </div>
-            <div class="task-status"><span>No action required</span></div>
-        </li>
-    </th:block>
-    <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
-        <li>
-            <div class="task">
-                <h3 class="govuk-heading-s">
-                    <th:block th:unless="${model.allReadOnly}">
-                        <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
-                            th:text="${childSection.section.name}" class="govuk-link"></a>
-                    </th:block>
-                    <th:block th:if="${model.allReadOnly}">
-                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
-                            th:text="${childSection.section.name}" class="govuk-link"></a>
-                    </th:block>
-                </h3>
-            </div>
-            <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
-            <div th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-incomplete"><span>Incomplete</span></div>
-        </li>
-    </th:block>
+    <li>
+        <div class="task">
+            <h3 class="govuk-heading-s">
+                <th:block th:unless="${model.allReadOnly}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
+                        th:text="${childSection.section.name}" class="govuk-link"></a>
+                </th:block>
+                <th:block th:if="${model.allReadOnly}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
+                        th:text="${childSection.section.name}" class="govuk-link"></a>
+                </th:block>
+            </h3>
+        </div>
+        <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
+        <div th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-incomplete"><span>Incomplete</span></div>
+    </li>
 </th:block>
 
 <th:block th:fragment="your_finance_summary (model)">
