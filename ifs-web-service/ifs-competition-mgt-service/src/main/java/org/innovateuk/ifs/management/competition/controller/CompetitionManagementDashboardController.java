@@ -145,7 +145,7 @@ public class CompetitionManagementDashboardController {
                          Model model,
                          UserResource user) {
 
-        return searchCompetition(searchQuery,page,model,user);
+        return searchCompetition(searchQuery, page, model, user);
     }
 
     @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
@@ -158,7 +158,7 @@ public class CompetitionManagementDashboardController {
                                     HttpServletRequest request,
                                     UserResource user) {
 
-        return searchApplication(searchString,pageNumber,pageSize,model,request,user);
+        return searchApplication(searchString, pageNumber, pageSize, model, request, user);
     }
 
     @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
@@ -177,11 +177,11 @@ public class CompetitionManagementDashboardController {
 
         if(isSearchNumeric){
 
-            return searchApplication(searchString,pageNumber,pageSize,model,request,user);
+            return searchApplication(searchString, pageNumber, pageSize, model, request, user);
 
         } else {
 
-            return searchCompetition(searchString,page,model,user);
+            return searchCompetition(searchString, page, model, user);
 
         }
     }
@@ -211,6 +211,7 @@ public class CompetitionManagementDashboardController {
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
+
         return TEMPLATE_PATH + "search";
     }
 
