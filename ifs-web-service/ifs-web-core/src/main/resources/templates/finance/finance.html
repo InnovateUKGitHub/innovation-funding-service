@@ -49,8 +49,8 @@
             <!--/* edit */-->
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
-                    <label class="govuk-label--s" id="organisationSize" th:text="${formInput.description}">
-                    </label>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize" th:text="${formInput.description}">
+                    </legend>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:if="${#fields.hasErrors('organisationSize')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
