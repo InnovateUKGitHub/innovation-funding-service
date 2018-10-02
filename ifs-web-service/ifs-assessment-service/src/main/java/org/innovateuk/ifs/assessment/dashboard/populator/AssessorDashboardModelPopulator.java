@@ -170,6 +170,6 @@ public class AssessorDashboardModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
-        return ZonedDateTime.now().plusDays(1L).isAfter(panelDate);
+        return ZonedDateTime.now().isAfter(panelDate);
     }
 }
