@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
@@ -67,7 +66,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                     List<Section> sections = application.getCompetition().getSections();
 
                     final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = simpleMap(sections, section ->
-                            isSectionComplete(section, application, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
+                            isSectionComplete(section, application, organisationId).andOnSuccessReturn(isComplete -> Pair.of(section.getId(), isComplete)));
 
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedSectionsAndStatus = aggregate(unaggregatedSectionsAndStatus);
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedCompleteSectionsAndStatus = aggregatedSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> simpleFilter(sectionsWithStatus, Pair::getValue));
