@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+<th:block th:fragment="dashboard-search-bar">
+    <form role="search"
+          method="get"
+          id="searchform"
+          th:with="supportUser=${model.getTabs().support()}"
+          th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
+                  th:with="showSearch=${model.counts.liveCount > 0},
+                      supportUser=${model.getTabs().support()}"/>
+    </form>
+</th:block>
+
 <div th:fragment="comp-dashboard-header(searchQuery)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
