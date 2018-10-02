@@ -151,6 +151,7 @@ Organisation server side validation when no
     [Setup]    log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to Your-finances page        ${applicationWithoutGrowth}
     Then the user clicks the button/link                  link = Your organisation
+    And the user selects the checkbox                     agree-state-aid
     When the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error    Enter your organisation size.
     And the user should see a field and summary error     This field cannot be left blank.
@@ -179,6 +180,7 @@ Mark Organisation as complete when no
     Given the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
     And the user enters text to a text field      jQuery = .govuk-hint:contains("turnover") + input    17506
     And the user selects medium organisation size
+    And the user selects the checkbox             agree-state-aid
     When the user clicks the button/link          jQuery = button:contains("Mark as complete")
     Then the user should see the element          jQuery = li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link          link = Your organisation
@@ -206,6 +208,7 @@ Organisation server side validation when yes
     [Tags]
     [Setup]  the user navigates to the growth table finances
     Given the user clicks the button/link  link = Your organisation
+    And the user selects the checkbox       agree-state-aid
     When the user clicks the button/link   jQuery = button:contains("Mark as complete")
     And the user should see the element    jQuery = .govuk-error-summary__list li:contains("This field cannot be left blank.")
     And the user should see the element    jQuery = .govuk-error-message:contains("This field cannot be left blank.")
@@ -252,6 +255,7 @@ Mark Organisation as complete when yes
     And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = td:contains("Research and development spend") + td input[value = "15000"]
+    And the user selects the checkbox            agree-state-aid
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -286,6 +290,7 @@ Applicant can view and edit project growth table
     Then the user should view the project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
+    And the user selects the checkbox                   agree-state-aid
     and the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 The Lead Applicant fills in the Application Details for App with Growth
@@ -305,6 +310,7 @@ Newly created collaborator can view and edit project Growth table
     Then the user enters text to a text field       css = input[name$="month"]    12
     And the user enters text to a text field        css = input[name$="year"]    2016
     And the user populates the project growth table
+    And the user selects the checkbox                agree-state-aid
     And the user clicks the button/link             jQuery = button:contains("Mark as complete")
     And the user should not see an error in the page
 
@@ -328,6 +334,7 @@ Non-lead can mark Organisation as complete
     And the user enters text to a text field        css = input[name$="year"]    2016
     Then the user populates the project growth table
     And the user enters text to a text field        jQuery = .govuk-hint:contains("employees") + input    42
+    And the user selects the checkbox               agree-state-aid
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -425,6 +432,7 @@ the user can edit resubmit and read only of the organisation
     the user clicks the button/link         link = Your organisation
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    2
+    the user selects the checkbox           agree-state-aid
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user should not see an error in the page
     the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
