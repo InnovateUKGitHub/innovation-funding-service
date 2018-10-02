@@ -10,13 +10,13 @@
         <div class="govuk-grid-column-one-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
-                <input th:if="${supportUser == false}" th:type="${searchType == 'applications' ? 'number' : 'text'}"
+                <input th:if="${supportUser == false || supportUser == null}" type="text"
                        th:value="${searchQuery}"
-                       th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"
+                       th:name="${'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
-                       th:placeholder="${searchType == 'applications' ? 'Search applications' : 'Search competitions'}"/>
-                <input th:unless="${supportUser==false}" type="text"
+                       placeholder='Search competitions'/>
+                <input th:unless="${supportUser==false || supportUser == null}" type="text"
                        th:value="${searchString}"
                        th:name="${'searchString'}"
                        id="searchQuery"

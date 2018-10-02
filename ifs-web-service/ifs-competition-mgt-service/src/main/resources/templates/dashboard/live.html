@@ -16,10 +16,9 @@
               method="get"
               id="searchform"
               th:with="supportUser=${model.getTabs().support()}"
-              th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/application/search'}}">
+              th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
                       th:with="showSearch=${model.counts.liveCount > 0},
-                      searchType='applications',
                       supportUser=${model.getTabs().support()}"/>
         </form>
 

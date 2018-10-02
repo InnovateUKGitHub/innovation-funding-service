@@ -136,7 +136,6 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    //Searches for competition by competition name
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
@@ -145,10 +144,10 @@ public class CompetitionManagementDashboardController {
                          @RequestParam(name = "page", defaultValue = "1") int page,
                          Model model,
                          UserResource user) {
+
         return searchCompetition(searchQuery,page,model,user);
     }
 
-    //Searches for applications by application ID
     @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping("/dashboard/application/search")
@@ -158,11 +157,12 @@ public class CompetitionManagementDashboardController {
                                     Model model,
                                     HttpServletRequest request,
                                     UserResource user) {
+
         return searchApplication(searchString,pageNumber,pageSize,model,request,user);
     }
 
     @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
-    @PreAuthorize("hasAnyAuthority('support')")
+    @PreAuthorize("hasAuthority('support')")
     @GetMapping("/dashboard/support/search")
     public String supportSearch(@RequestParam(name = "searchString", defaultValue = "") String searchString,
                                     @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
@@ -172,13 +172,17 @@ public class CompetitionManagementDashboardController {
                                     HttpServletRequest request,
                                     UserResource user) {
         String trimmedSearchString = StringUtils.normalizeSpace(searchString);
-        String existingQueryString = Objects.toString(request.getQueryString(), "");
 
-        boolean allNumbers = trimmedSearchString.chars().allMatch(Character::isDigit);
-        if(allNumbers){
+        boolean isSearchNumeric = trimmedSearchString.chars().allMatch(Character::isDigit);
+
+        if(isSearchNumeric){
+
             return searchApplication(searchString,pageNumber,pageSize,model,request,user);
+
         } else {
+
             return searchCompetition(searchString,page,model,user);
+
         }
     }
 

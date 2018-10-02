@@ -16,8 +16,7 @@
               th:with="supportUser=${model.getTabs().support()}"
               th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
-                      th:with="searchType='competitions',
-                      supportUser=${model.getTabs().support()}"/>
+                      th:with="supportUser=${model.getTabs().support()}"/>
         </form>
 
         <div class="govuk-tabs">
