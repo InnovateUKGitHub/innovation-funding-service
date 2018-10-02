@@ -134,7 +134,7 @@
                 <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
                 <p class="govuk-body" th:if="${(currentApplication.open and isApplicant)}">
                     To make changes to your organisations' finances, go back to the
-                    <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${currentApplication.id},financeSectionId=${financeSectionId})"
+                    <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${currentApplication.id},financeSectionId=${financeSectionId})}"
                        class="govuk-link">your finances</a> section.
                 </p>
 
