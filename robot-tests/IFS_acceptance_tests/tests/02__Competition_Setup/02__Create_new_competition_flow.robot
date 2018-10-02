@@ -81,6 +81,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
 ...
 ...               IFS-4253 New Stakeholder invite and create account email
+...
+...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
