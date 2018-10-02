@@ -164,6 +164,11 @@ public class EuFundingForm {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    // this method is used only to display the month in words
+    public LocalDate getProjectLocalDate(int month, int year){
+
+        return LocalDate.of(year, month, 1);
+    }
 
     @Override
     public boolean equals(Object o) {
