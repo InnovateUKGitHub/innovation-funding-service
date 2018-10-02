@@ -35,7 +35,7 @@ public class UserProfilePopulatorTest extends BaseUnitTest {
         List<OrganisationResource> organisations = newOrganisationResource()
                 .withName("organisation")
                 .withOrganisationTypeName("Type")
-                .withCompanyHouseNumber("123")
+                .withCompaniesHouseNumber("123")
                 .build(1);
 
         when(organisationRestService.getAllByUserId(user.getId())).thenReturn(restSuccess(organisations));

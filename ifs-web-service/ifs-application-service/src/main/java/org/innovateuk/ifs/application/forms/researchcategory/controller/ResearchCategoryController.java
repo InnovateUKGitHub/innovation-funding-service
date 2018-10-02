@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -78,8 +79,10 @@ public class ResearchCategoryController {
     public String getResearchCategories(Model model,
                                         UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
+                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                         @PathVariable long applicationId,
-                                        @PathVariable long questionId) {
+                                        @PathVariable long questionId,
+                                        @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         checkIfAllowed(questionId, applicationResource);
@@ -87,6 +90,12 @@ public class ResearchCategoryController {
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
                 applicationResource, loggedInUser.getId(), questionId));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
+
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if (markAsCompleteSet) {
+                ValidationUtil.isValid(bindingResult, researchCategoryForm, Default.class);
+            }
+        });
 
         return "application/research-categories";
     }
@@ -99,7 +108,7 @@ public class ResearchCategoryController {
                                    @PathVariable long questionId) {
         questionService.markAsIncomplete(questionId, applicationId, getProcessRoleId(loggedInUser.getId(),
                 applicationId));
-        return getResearchCategories(model, loggedInUser, researchCategoryForm, applicationId, questionId);
+        return getResearchCategories(model, loggedInUser, researchCategoryForm, null, applicationId, questionId, Optional.empty());
     }
 
     @PostMapping
@@ -113,8 +122,8 @@ public class ResearchCategoryController {
                                                UserResource loggedInUser,
                                                @PathVariable long applicationId,
                                                @PathVariable long questionId) {
-        Supplier<String> failureView = () -> getResearchCategories(model, loggedInUser, researchCategoryForm,
-                applicationId, questionId);
+        Supplier<String> failureView = () -> getResearchCategories(model, loggedInUser, researchCategoryForm, null,
+                applicationId, questionId, Optional.empty());
 
         boolean markQuestionAsCompleteRequest = isMarkQuestionAsCompleteRequest(request.getParameterMap());
 

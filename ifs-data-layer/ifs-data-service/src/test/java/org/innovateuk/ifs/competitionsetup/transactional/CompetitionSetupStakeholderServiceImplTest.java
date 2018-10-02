@@ -3,15 +3,20 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
+import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -20,6 +25,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
@@ -35,10 +41,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -67,6 +70,12 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private StakeholderRepository stakeholderRepositoryMock;
+
+    @Mock
+    private UserMapper userMapperMock;
 
     @Override
     protected CompetitionSetupStakeholderServiceImpl supplyServiceUnderTest() {
@@ -194,7 +203,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertNotNull(savedStakeholderInvite2.getHash());
         assertEquals(SENT, savedStakeholderInvite2.getStatus());
         assertEquals(loggedInUser, savedStakeholderInvite2.getSentBy());
-        assertTrue(now().isAfter(savedStakeholderInvite2.getSentOn()));
+        assertFalse(now().isBefore(savedStakeholderInvite2.getSentOn()));
     }
 
     @Test
@@ -228,6 +237,35 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         verify(stakeholderInviteRepositoryMock).save(any(StakeholderInvite.class));
         verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
+    }
+
+    @Test
+    public void findStakeholders() throws Exception {
+
+        long competitionId = 1L;
+
+        long stakeholderUser1 = 12L;
+        long stakeholderUser2 = 14L;
+
+        List<User> stakeholderUsers = UserBuilder.newUser()
+                .withId(stakeholderUser1, stakeholderUser2)
+                .build(2);
+        List<UserResource> stakeholderUserResources = UserResourceBuilder.newUserResource()
+                .withId(stakeholderUser1, stakeholderUser2)
+                .build(2);
+        List<Stakeholder> stakeholders = StakeholderBuilder.newStakeholder()
+                .withUser(stakeholderUsers.get(0), stakeholderUsers.get(1))
+                .build(2);
+
+        when(stakeholderRepositoryMock.findStakeholders(competitionId)).thenReturn(stakeholders);
+        when(userMapperMock.mapToResource(stakeholderUsers.get(0))).thenReturn(stakeholderUserResources.get(0));
+        when(userMapperMock.mapToResource(stakeholderUsers.get(1))).thenReturn(stakeholderUserResources.get(1));
+
+        ServiceResult<List<UserResource>> result = service.findStakeholders(competitionId);
+        assertTrue(result.isSuccess());
+        assertEquals(stakeholderUserResources, result.getSuccess());
+
+        verify(stakeholderRepositoryMock).findStakeholders(competitionId);
     }
 }
 
