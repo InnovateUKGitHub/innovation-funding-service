@@ -528,7 +528,6 @@ Application: Finances
     [Tags]
     Given the user clicks the button/link          link = Finances
     When the user should see the element           jQuery = h1:contains("Application finances")
-    And the user should not see the element        jQuery = .panel:contains("The competition template will select the following finance sections for each partner.")
     And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
