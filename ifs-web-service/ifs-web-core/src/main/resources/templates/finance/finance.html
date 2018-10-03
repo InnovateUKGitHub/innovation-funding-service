@@ -40,10 +40,15 @@
             <label class="govuk-label" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
                 th:text="${'Select a funding level'}">
             </label>
-            <span class="govuk-hint">
-                <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the finances overview' " />
-                <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
-                    th:text="${'finances overview'}" />.
+            <span class="govuk-hint" th:with="isBusiness=${model.currentApplicant.organisation.organisationTypeName=='Business'}">
+                <th:block th:if="${isBusiness}">
+                    <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the' " />
+                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+                </th:block>
+                <th:block th:unless="${isBusiness}">
+                    The amount you apply for must reflect other funding received and be within the participation levels listed on the
+                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+                </th:block>
             </span>
 
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
@@ -1447,7 +1452,7 @@
 
 <th:block th:fragment="other_funding_table">
     <div class="govuk-checkboxes__conditional" id="other-funding-table">
-        <div class="govuk-form-group form-in-table" th:attr="data-repeatable-container=${question.id}">
+        <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -1456,7 +1461,7 @@
                                 Source of funding</th>
                             <th scope="col" id="other-funding-date" class="govuk-table__header width-150">
                                 Date secured</th>
-                            <th scope="col" id="other-funding-amount" class="govuk-table__header govuk-table__header--numeric width-200">
+                            <th scope="col" id="other-funding-amount" class="govuk-table__header govuk-table__header--numeric">
                                 Funding amount (&pound;)</th>
                             <th class="govuk-table__header" scope="col">
                                 <span class="govuk-visually-hidden">Actions</span></th>
@@ -1485,7 +1490,7 @@
 <th:block th:fragment="other_funding_row">
     <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="govuk-table__row">
-            <td class="govuk-form-group govuk-table__cell" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|" class="govuk-visually-hidden">
                     Source of funding
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
@@ -1495,7 +1500,7 @@
                     th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
                     required="required" maxlength="255" th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
             </td>
-            <td class="govuk-form-group govuk-table__cell" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-securedDate]|" class="govuk-visually-hidden">
                     Date secured
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
@@ -1507,7 +1512,7 @@
                     required="required" />
             </td>
 
-            <td class="govuk-form-group govuk-table__cell govuk-table__cell--numeric" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|" class="govuk-visually-hidden">
                     Funding amount (&pound;)
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
