@@ -51,6 +51,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .thenReturn(serviceSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post(baseUrl + "/researchCategory/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
                 .andExpect(status().isOk())
@@ -79,6 +80,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
 
 
         mockMvc.perform(post(baseUrl + "/mark-research-category-complete/{applicationId}/{markedAsCompleteById}", application.getId(), markedAsCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
                 .andExpect(status().isOk())
