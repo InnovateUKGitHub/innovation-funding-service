@@ -42,7 +42,8 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
-        mockMvc.perform(get("/project/finance/queries/{queryId}", queryId))
+        mockMvc.perform(get("/project/finance/queries/{queryId}", queryId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(query)))
                 .andDo(document("project/finance/queries/{method-name}",
@@ -57,7 +58,8 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
-        mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId))
+        mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(asList(query))))
                 .andDo(document("project/finance/queries/{method-name}",
@@ -73,6 +75,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         when(financeCheckQueriesService.addPost(post, queryId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/finance/queries/{queryId}/post", queryId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(post)))
                 .andExpect(status().isCreated())
@@ -88,6 +91,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(55L));
 
         mockMvc.perform(post("/project/finance/queries")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
@@ -103,6 +107,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("project/finance/queries/{method-name}",

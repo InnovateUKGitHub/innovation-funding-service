@@ -47,7 +47,8 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
         when(interviewResponseService.findResponse(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
 
-        mockMvc.perform(get("/interview-response/details/{applicationId}", applicationId))
+        mockMvc.perform(get("/interview-response/details/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntryResource)))
                 .andDo(document("interview-response/{method-name}",
@@ -74,7 +75,8 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
         final long applicationId = 22L;
         when(interviewResponseService.deleteResponse(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-response/{applicationId}", applicationId))
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-response/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document("interview-response/{method-name}",
                         pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
