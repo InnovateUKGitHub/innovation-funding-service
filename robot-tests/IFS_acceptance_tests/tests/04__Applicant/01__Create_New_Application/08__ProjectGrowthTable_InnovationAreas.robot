@@ -208,7 +208,7 @@ Organisation server side validation when yes
     [Tags]
     [Setup]  the user navigates to the growth table finances
     Given the user clicks the button/link  link = Your organisation
-    And the user selects the checkbox       agree-state-aid
+    And the user selects the checkbox      agree-state-aid
     When the user clicks the button/link   jQuery = button:contains("Mark as complete")
     And the user should see the element    jQuery = .govuk-error-summary__list li:contains("This field cannot be left blank.")
     And the user should see the element    jQuery = .govuk-error-message:contains("This field cannot be left blank.")
