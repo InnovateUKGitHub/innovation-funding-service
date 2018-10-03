@@ -37,19 +37,22 @@
 <th:block th:fragment="requesting_funding">
     <div class="govuk-radios__conditional" id="request-funding">
         <div th:class="govuk-form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-form-group--error'">
-            <label class="govuk-label" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
-                th:text="${'Select a funding level'}">
+            <label class="govuk-label" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
+                <th:block th:text="${'Select a funding level'}" />
+                <span class="govuk-hint" th:with="isBusiness=${model.currentApplicant.organisation.organisationTypeName=='Business'}">
+                    <th:block th:if="${isBusiness}">
+                        <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the' " />
+                        <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
+                            th:text="${'finances overview'}" />.
+                    </th:block>
+                    <th:block th:unless="${isBusiness}">
+                        The amount you apply for must reflect other funding received and be within the participation
+                        levels listed on the
+                        <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
+                            th:text="${'finances overview'}" />.
+                    </th:block>
+                </span>
             </label>
-            <span class="govuk-hint" th:with="isBusiness=${model.currentApplicant.organisation.organisationTypeName=='Business'}">
-                <th:block th:if="${isBusiness}">
-                    <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the' " />
-                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
-                </th:block>
-                <th:block th:unless="${isBusiness}">
-                    The amount you apply for must reflect other funding received and be within the participation levels listed on the
-                    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
-                </th:block>
-            </span>
 
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
@@ -1452,7 +1455,7 @@
 
 <th:block th:fragment="other_funding_table">
     <div class="govuk-checkboxes__conditional" id="other-funding-table">
-        <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
+        <div class="govuk-form-group form-in-table" th:attr="data-repeatable-container=${question.id}">
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -1461,7 +1464,7 @@
                                 Source of funding</th>
                             <th scope="col" id="other-funding-date" class="govuk-table__header width-150">
                                 Date secured</th>
-                            <th scope="col" id="other-funding-amount" class="govuk-table__header govuk-table__header--numeric">
+                            <th scope="col" id="other-funding-amount" class="govuk-table__header govuk-table__header--numeric width-200">
                                 Funding amount (&pound;)</th>
                             <th class="govuk-table__header" scope="col">
                                 <span class="govuk-visually-hidden">Actions</span></th>
