@@ -10,6 +10,9 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     Are you requesting funding?
                 </legend>
+
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id='request-funding')" />
+
                 <div class="govuk-radios">
                     <div class="govuk-radios__item" data-target="request-funding">
                         <input type="radio" class="govuk-radios__input" id="request-funding-yes" name="request-funding"

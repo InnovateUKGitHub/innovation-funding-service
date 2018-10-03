@@ -13,7 +13,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,8 +88,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
-
-
             List<QuestionResource> questions = selectedSection.getQuestions()
                     .stream()
                     .map(questionId -> questionRestService.findById(questionId).getSuccess())

@@ -226,10 +226,10 @@ public class ApplicationSectionController {
         }
 
         switch (section.getType()) {
-
             case FUNDING_FINANCES:
-                return validateOtherFundingSelectionMade(params, bindingResult)
-                        && validateTermsAndConditionsAgreement(form, bindingResult);
+                return  validateRequestingFunding(params, bindingResult) &&
+                        validateOtherFundingSelectionMade(params, bindingResult) &&
+                        validateTermsAndConditionsAgreement(form, bindingResult);
 
             case PROJECT_COST_FINANCES:
                 return userIsResearch(userId, applicationId) ?
@@ -256,6 +256,14 @@ public class ApplicationSectionController {
             return true;
         }
         bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+        return false;
+    }
+
+    private boolean validateRequestingFunding(Map<String, String[]> params, BindingResult bindingResult) {
+        if (isRequestingFundingRequest(params)) {
+            return true;
+        }
+        bindingResult.rejectValue("formInput[request-funding]", "validation.finance.funding.requesting.blank");
         return false;
     }
 
