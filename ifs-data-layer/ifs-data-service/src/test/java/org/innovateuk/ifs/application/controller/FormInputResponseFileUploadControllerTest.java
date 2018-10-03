@@ -622,7 +622,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/fileentry").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
@@ -699,7 +700,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
@@ -801,7 +803,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
                 andReturn();
@@ -817,7 +820,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/fileentry").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
                 andDo(document("forminputresponsefileupload/file_fileEntry_" + documentationSuffix)).
                 andReturn();
