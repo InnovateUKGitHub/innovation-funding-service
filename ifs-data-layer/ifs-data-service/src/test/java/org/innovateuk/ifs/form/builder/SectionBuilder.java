@@ -104,6 +104,10 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
         return with(section -> setField("assessorGuidanceDescription", assessorGuidanceDescription, section));
     }
 
+    public SectionBuilder withPriority(int priority) {
+        return with(section -> setField("priority", priority, section));
+    }
+
     public SectionBuilder withCompetitionAndPriority(Competition competition, Integer priority) {
         return with(section -> {
             section.setCompetition(competition);
