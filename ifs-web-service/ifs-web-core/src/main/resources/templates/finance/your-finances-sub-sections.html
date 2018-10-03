@@ -149,7 +149,7 @@
                            class="govuk-link"></a>
                     </th:block>
                     <th:block th:if="${model.allReadOnly}">
-                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})} + ${queryParams}"
+                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})} + ${originQuery}"
                            th:text="${childSection.section.name}"
                            class="govuk-link"></a>
                     </th:block>

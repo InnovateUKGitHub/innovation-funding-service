@@ -71,6 +71,9 @@ public class ApplicationSummaryController {
                                      @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
@@ -89,6 +92,7 @@ public class ApplicationSummaryController {
             userForModel = user;
         }
 
+        model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, userForModel, form, isSupport));
         return "application-summary";
     }

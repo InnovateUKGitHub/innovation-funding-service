@@ -135,7 +135,7 @@ public class ApplicationSectionController {
                                                              @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                                                              @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String queryParam = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         boolean isSupport = user.hasRole(SUPPORT);
 
@@ -149,7 +149,7 @@ public class ApplicationSectionController {
                 .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(queryParam), isSupport);
+        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
         return APPLICATION_FORM;
     }
 
@@ -213,10 +213,10 @@ public class ApplicationSectionController {
                                  boolean readOnly,
                                  Optional<Long> applicantOrganisationId,
                                  boolean readOnlyAllApplicantApplicationFinances,
-                                 Optional<String> queryParam,
+                                 Optional<String> originQuery,
                                  boolean isSupport) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, queryParam, isSupport);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, originQuery, isSupport);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }
