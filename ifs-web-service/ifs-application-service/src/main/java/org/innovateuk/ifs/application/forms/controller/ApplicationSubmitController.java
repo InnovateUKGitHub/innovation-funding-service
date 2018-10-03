@@ -7,9 +7,11 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -20,21 +22,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
@@ -53,6 +56,8 @@ public class ApplicationSubmitController {
     private CompetitionRestService competitionRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    private static final String FORM_ATTR_NAME = "form";
 
     public ApplicationSubmitController() {
     }
@@ -128,9 +133,14 @@ public class ApplicationSubmitController {
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/submit")
-    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+    public String applicationSubmit(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    @PathVariable("applicationId") long applicationId,
                                     UserResource user,
                                     HttpServletResponse response) {
+
         ApplicationResource application = applicationService.getById(applicationId);
 
         if (!ableToSubmitApplication(user, application)) {
@@ -138,11 +148,15 @@ public class ApplicationSubmitController {
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+        RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
 
-        return "application-submitted";
+        Supplier<String> failureView = () -> applicationConfirmSubmit(form, model, applicationId, user);
+
+        return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
+            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+            applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+            return "application-submitted";
+        });
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
