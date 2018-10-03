@@ -42,7 +42,8 @@
             </label>
             <span class="govuk-hint">
                 <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the finances overview' " />
-                <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}" th:text="${'finances overview'}" />.
+                <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
+                    th:text="${'finances overview'}" />.
             </span>
 
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
@@ -1484,7 +1485,7 @@
 <th:block th:fragment="other_funding_row">
     <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="govuk-table__row">
-            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-form-group govuk-table__cell" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|" class="govuk-visually-hidden">
                     Source of funding
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
@@ -1494,7 +1495,7 @@
                     th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
                     required="required" maxlength="255" th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
             </td>
-            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-form-group govuk-table__cell" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-securedDate]|" class="govuk-visually-hidden">
                     Date secured
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
@@ -1506,7 +1507,7 @@
                     required="required" />
             </td>
 
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
+            <td class="govuk-form-group govuk-table__cell govuk-table__cell--numeric" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|" class="govuk-visually-hidden">
                     Funding amount (&pound;)
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
