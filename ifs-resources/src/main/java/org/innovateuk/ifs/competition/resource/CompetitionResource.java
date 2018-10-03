@@ -548,12 +548,6 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
-            " value dependent on applicationFinanceType")
-    public boolean isFullApplicationFinance() {
-        return ApplicationFinanceType.STANDARD == applicationFinanceType;
-    }
-
     public boolean getSetupComplete() {
         return setupComplete;
     }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 
 /**
  * Resource representing the finance part of competition setup
@@ -18,12 +17,6 @@ public class CompetitionSetupFinanceResource {
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
-    }
-
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
-            " value dependent on applicationFinanceType")
-    public boolean isFullApplicationFinance() {
-        return ApplicationFinanceType.STANDARD == applicationFinanceType;
     }
 
     public ApplicationFinanceType getApplicationFinanceType() {
