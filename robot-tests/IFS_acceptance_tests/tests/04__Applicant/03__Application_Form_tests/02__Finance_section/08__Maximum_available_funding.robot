@@ -216,7 +216,7 @@ the user accepts the invite to collaborate
 
 the correct funding is displayed to academic user
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain    Bath Spa University
-    Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      css = label:contains("Bath Spa")
+    Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
     the user clicks the button/link   link = Your finances
     the user should see the element   jQuery = td:contains("100%")
