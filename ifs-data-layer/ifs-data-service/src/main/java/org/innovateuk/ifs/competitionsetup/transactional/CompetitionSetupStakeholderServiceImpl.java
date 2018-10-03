@@ -236,18 +236,3 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return userResource;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

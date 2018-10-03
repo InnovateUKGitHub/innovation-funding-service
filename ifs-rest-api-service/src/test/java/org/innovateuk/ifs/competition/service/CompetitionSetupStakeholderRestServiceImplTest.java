@@ -33,6 +33,8 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
 
         RestResult<Void> result = service.inviteStakeholder(inviteUserResource, competitionId);
         assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class, inviteUserResource);
     }
 
     @Test
@@ -58,6 +60,8 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
 
         RestResult<Void> result = service.addStakeholder(competitionId, stakeholderUserId);
         assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class);
     }
 
     @Test
@@ -70,6 +74,8 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
 
         RestResult<Void> result = service.removeStakeholder(competitionId, stakeholderUserId);
         assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class);
     }
 
     @Test
