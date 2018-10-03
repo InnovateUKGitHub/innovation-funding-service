@@ -46,7 +46,8 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
         mockMvc.perform(
                 put(baseUrl + "/{competitionId}", competitionId).
                         contentType(APPLICATION_JSON).
-                        content(toJson(resource))).
+                        content(toJson(resource))
+                        .header("IFS_AUTH_TOKEN", "123abc")).
                 andDo(document("competition-setup-finance/{method-name}", pathParameters(parameterWithName("competitionId").description("The competition id")), requestFields(
                         COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS
                 )));
@@ -64,7 +65,8 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
         mockMvc.perform(
                 get(baseUrl + "/{competitionId}", competitionId).
                         contentType(APPLICATION_JSON).
-                        content(toJson(resource))).
+                        content(toJson(resource))
+                        .header("IFS_AUTH_TOKEN", "123abc")).
                 andDo(document("competition-setup-finance/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         responseFields(COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS)));

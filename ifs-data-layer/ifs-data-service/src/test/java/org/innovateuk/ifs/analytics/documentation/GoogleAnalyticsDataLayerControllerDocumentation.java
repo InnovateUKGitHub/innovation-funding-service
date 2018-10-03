@@ -39,7 +39,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getCompetitionNameForApplication() throws Exception {
         when(googleAnalyticsDataLayerService.getCompetitionNameByApplicationId(APPLICATION_ID)).thenReturn(serviceSuccess(competitionName()));
 
-        mockMvc.perform(get("/analytics/application/{application}/competition-name", APPLICATION_ID))
+        mockMvc.perform(get("/analytics/application/{application}/competition-name", APPLICATION_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                         pathParameters(
@@ -52,7 +53,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getCompetitionName() throws Exception {
         when(googleAnalyticsDataLayerService.getCompetitionName(COMPETITION_ID)).thenReturn(serviceSuccess(competitionName()));
 
-        mockMvc.perform(get("/analytics/competition/{competition}/competition-name", COMPETITION_ID))
+        mockMvc.perform(get("/analytics/competition/{competition}/competition-name", COMPETITION_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                         pathParameters(
@@ -65,7 +67,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getCompetitionNameForProject() throws Exception {
         when(googleAnalyticsDataLayerService.getCompetitionNameByProjectId(PROJECT_ID)).thenReturn(serviceSuccess(competitionName()));
 
-        mockMvc.perform(get("/analytics/project/{project}/competition-name", PROJECT_ID))
+        mockMvc.perform(get("/analytics/project/{project}/competition-name", PROJECT_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                         pathParameters(
@@ -78,7 +81,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getCompetitionNameForAssessment() throws Exception {
         when(googleAnalyticsDataLayerService.getCompetitionNameByAssessmentId(ASSESSMENT_ID)).thenReturn(serviceSuccess(competitionName()));
 
-        mockMvc.perform(get("/analytics/assessment/{assessment}/competition-name", ASSESSMENT_ID))
+        mockMvc.perform(get("/analytics/assessment/{assessment}/competition-name", ASSESSMENT_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                         pathParameters(
@@ -91,7 +95,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getRolesByApplicationIdForCurrentUser() throws Exception {
         when(googleAnalyticsDataLayerService.getRolesByApplicationIdForCurrentUser(APPLICATION_ID)).thenReturn(serviceSuccess(APPLICATION_ROLES));
 
-        mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", APPLICATION_ID))
+        mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", APPLICATION_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                                 pathParameters(
@@ -104,7 +109,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getRolesByProjectIdForCurrentUser() throws Exception {
         when(googleAnalyticsDataLayerService.getRolesByProjectIdForCurrentUser(PROJECT_ID)).thenReturn(serviceSuccess(PROJECT_ROLES));
 
-        mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID))
+        mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                                 pathParameters(
@@ -117,7 +123,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     public void getApplicationIdForProject() throws Exception {
         when(googleAnalyticsDataLayerService.getApplicationIdForProject(PROJECT_ID)).thenReturn(serviceSuccess(APPLICATION_ID));
 
-        mockMvc.perform(get("/analytics/project/{projectId}/application-id", PROJECT_ID))
+        mockMvc.perform(get("/analytics/project/{projectId}/application-id", PROJECT_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("analytics/{method-name}",
                                 pathParameters(
