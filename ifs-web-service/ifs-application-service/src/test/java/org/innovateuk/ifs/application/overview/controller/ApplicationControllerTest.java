@@ -238,15 +238,17 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(LEADAPPLICANT).build();
 
-        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
-        verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
+        verify(applicationRestService).getApplicationById(app.getId());
+        verify(userRestService).findProcessRole(this.loggedInUser.getId(), app.getId());
+        verify(applicationRestService).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test
@@ -257,15 +259,17 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(COLLABORATOR).build();
 
-        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
-        verify(applicationRestService).updateApplicationState(app.getId(), ApplicationState.OPEN);
+        verify(applicationRestService).getApplicationById(app.getId());
+        verify(userRestService).findProcessRole(this.loggedInUser.getId(), app.getId());
+        verify(applicationRestService, never()).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test
