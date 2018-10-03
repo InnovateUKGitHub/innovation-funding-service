@@ -20,12 +20,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Necessary to remove this dependency from developer and tester machines
  * since that API is unreliable and therefore should not be regularly used for automated regression testing.
  *
- * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
+ * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
 
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "false")
-public class CompanyHouseApiServiceStub implements CompanyHouseApiService {
+public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {

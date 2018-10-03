@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.question.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
@@ -17,8 +16,7 @@ public class QuestionSetupCompetitionController {
     @Autowired
     private QuestionSetupCompetitionService questionSetupCompetitionService;
 
-    @ZeroDowntime(reference = "IFS-4392", description = "Leave kebab case request mapping and remove array")
-    @GetMapping({"/getById/{id}", "/get-by-id/{id}"})
+    @GetMapping("/get-by-id/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return questionSetupCompetitionService.getByQuestionId(id).toGetResponse();
     }
@@ -28,8 +26,7 @@ public class QuestionSetupCompetitionController {
         return questionSetupCompetitionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-4392", description = "Leave kebab case request mapping and remove array")
-    @PostMapping({"/addDefaultToCompetition/{id}", "/add-default-to-competition/{id}"})
+    @PostMapping("/add-default-to-competition/{id}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(
             @PathVariable("id") final Long competitionId) {
         return questionSetupCompetitionService.createByCompetitionId(competitionId).toPostCreateResponse();
@@ -41,8 +38,7 @@ public class QuestionSetupCompetitionController {
                 .toPostCreateResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-4392", description = "Leave kebab case request mapping and remove array")
-    @DeleteMapping({"/deleteById/{id}", "/delete-by-id/{id}"})
+    @DeleteMapping("/delete-by-id/{id}")
     public RestResult<Void> deleteById(@PathVariable("id") final long questionId) {
         return questionSetupCompetitionService.delete(questionId).toDeleteResponse();
     }

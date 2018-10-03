@@ -66,7 +66,7 @@ public class ProfileController {
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
-    
+
     private UserDetailsForm buildUserDetailsForm(final UserResource user) {
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());

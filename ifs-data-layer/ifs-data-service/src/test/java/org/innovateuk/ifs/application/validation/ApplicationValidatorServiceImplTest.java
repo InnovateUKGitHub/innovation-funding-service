@@ -102,8 +102,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         FormInputResponse formInputResponse1 = formInputResponses.get(0);
         FormInputResponse formInputResponse2 = formInputResponses.get(1);
 
-        BindingResult bindingResult1 = new DataBinder(formInputResponse1).getBindingResult();
-        BindingResult bindingResult2 = new DataBinder(formInputResponse2).getBindingResult();
+        BindingResult bindingResult1 =  ValidatorTestUtil.getBindingResult(formInputResponse1);
+        BindingResult bindingResult2 =  ValidatorTestUtil.getBindingResult(formInputResponse2);
 
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(applicationValidationUtil.validateResponse(formInputResponse1, false)).thenReturn(bindingResult1);
@@ -131,7 +131,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         FormInputResponse emptyResponse = new FormInputResponse();
 
-        BindingResult bindingResultForEmptyResponse = new DataBinder(emptyResponse).getBindingResult();
+        BindingResult bindingResultForEmptyResponse =  ValidatorTestUtil.getBindingResult(emptyResponse);
 
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(formInputRepository.findOne(formInputId)).thenReturn(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build());
@@ -186,13 +186,13 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     }
 
     @Test
-    public void validateFormInputResponseWithMarkedAsComplete() {
+    public void validateFormInputResponse_markedAsComplete() {
         Application application = newApplication().build();
-        Long markedAsCompleteById = 4L;
+        long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
         BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
         FormInput formInput = newFormInput().build();
-        Long formInputId = formInput.getId();
+        long formInputId = formInput.getId();
 
         when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
         when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
@@ -210,11 +210,11 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     @Test
     public void validateFormInputResponse_isResearchUser() {
         Application application = newApplication().build();
-        Long markedAsCompleteById = 4L;
+        long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
         BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
         FormInput formInput = newFormInput().withType(FormInputType.FINANCE_UPLOAD).build();
-        Long formInputId = formInput.getId();
+        long formInputId = formInput.getId();
         OrganisationResource organisationResult = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
@@ -241,12 +241,12 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void validateCostItem() {
-        Long applicationId = 1L;
-        Long organisationId = 999L;
+        long applicationId = 1L;
+        long organisationId = 999L;
         Question question = newQuestion().build();
-        Long questionId = question.getId();
+        long questionId = question.getId();
 
-        Long markedAsCompleteById = 5L;
+        long markedAsCompleteById = 5L;
 
         List<ValidationMessages> validationMessages = emptyList();
 
@@ -287,11 +287,11 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void validateCostItem_markedAsCompleteByIdIsNull() {
-        Long applicationId = 1L;
-        Long organisationId = 999L;
+        long applicationId = 1L;
+        long organisationId = 999L;
         Question question = newQuestion().build();
-        Long questionId = question.getId();
-        Long applicationFinanceId = 1L;
+        long questionId = question.getId();
+        long applicationFinanceId = 1L;
 
         Long markedAsCompleteById = null;
 
