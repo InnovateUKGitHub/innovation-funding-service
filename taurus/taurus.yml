@@ -24,14 +24,14 @@ modules:
 
   cloud:
     test: High load test
-    files:
-      - user_data.csv
-      - competition_data.csv
-      - invite_data.csv
-      - assessor_data.csv
-      - front-door-competitions.csv
 
 execution:
+  files:
+  - jmeter/Representative/user_data.csv
+  - jmeter/Representative/competition_data.csv
+  - jmeter/Representative/invite_data.csv
+  - jmeter/Representative/assessor_data.csv
+  - jmeter/Representative/front-door-competitions.csv
 - iterations: 1
   concurrency: "${invite_users}"
   scenario:
