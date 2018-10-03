@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -36,6 +35,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -169,7 +169,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(applicationValidationUtil.validateResponse(formInputResponse2, false)).thenReturn(bindingResult2);
         when(formInputRepository.findOne(formInputId)).thenReturn(newFormInput().withType(FormInputType.APPLICATION_DETAILS).build());
         when(applicationRepository.findOne(applicationId)).thenReturn(application);
-        when(applicationValidationUtil.addValidation(eq(application), isA(ApplicationMarkAsCompleteValidator.class))).thenReturn(applicationBindingResult);
+        when(applicationValidationUtil.addValidation(eq(application), isA(Validator.class))).thenReturn(applicationBindingResult);
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
 
@@ -181,7 +181,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(applicationValidationUtil).validateResponse(formInputResponse2, false);
         verify(formInputRepository).findOne(formInputId);
         verify(applicationRepository).findOne(applicationId);
-        verify(applicationValidationUtil).addValidation(eq(application), isA(ApplicationMarkAsCompleteValidator.class));
+        verify(applicationValidationUtil).addValidation(eq(application), isA(Validator.class));
 
     }
 
