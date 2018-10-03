@@ -8,6 +8,7 @@ import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 public class AsyncFuturesGenerator {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);
+
+    @Value("${ifs.web.async.max.timeout}")
+    private long timeoutValue;
 
     @Autowired
     private AsyncExecutorFactory executorFactory;
@@ -173,28 +177,28 @@ public class AsyncFuturesGenerator {
     }
 
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(String futureName, CompletableFuture<R1> future1) {
-        return new CompletableFutureTuple1Handler<>(futureName, getExecutorForChainedFutures(), future1);
+        return new CompletableFutureTuple1Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1);
     }
 
     public <R1, R2> CompletableFutureTuple2Handler<R1, R2> awaitAll(String futureName, CompletableFuture<R1> future1, CompletableFuture<R2> future2) {
-        return new CompletableFutureTuple2Handler<>(futureName, getExecutorForChainedFutures(), future1, future2);
+        return new CompletableFutureTuple2Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1, future2);
     }
 
     public <R1, R2, R3> CompletableFutureTuple3Handler<R1, R2, R3> awaitAll(String futureName, CompletableFuture<R1> future1, CompletableFuture<R2> future2, CompletableFuture<R3> future3) {
-        return new CompletableFutureTuple3Handler<>(futureName, getExecutorForChainedFutures(), future1, future2, future3);
+        return new CompletableFutureTuple3Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1, future2, future3);
     }
 
     public <R1, R2, R3, R4> CompletableFutureTuple4Handler<R1, R2, R3, R4> awaitAll(String futureName, CompletableFuture<R1> future1, CompletableFuture<R2> future2, CompletableFuture<R3> future3, CompletableFuture<R4> future4) {
-        return new CompletableFutureTuple4Handler<>(futureName, getExecutorForChainedFutures(), future1, future2, future3, future4);
+        return new CompletableFutureTuple4Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1, future2, future3, future4);
     }
 
     public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         List<CompletableFuture<?>> allFutures = combineLists(asList(future1, future2, future3, future4), moreFutures);
-        return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), allFutures);
+        return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), timeoutValue, allFutures);
     }
 
     public CompletableFutureTupleNHandler awaitAll(String futureName, List<? extends CompletableFuture<?>> futures) {
-        return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), futures);
+        return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), timeoutValue, futures);
     }
 
     private String randomName() {

@@ -182,9 +182,10 @@ ${403_error_message}    You do not have the necessary permissions for your reque
 ${404_error_message}    Please check the web address or search term you entered for any errors
 ${500_error_message}    something went wrong
 ${wrong_filetype_validation_error}    Your upload must be a PDF.
-${too_large_pdf_validation_error}    the size of file or request being submitted is too large
+${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
+${email_already_in_use}           This email address is already in use.
 
 # Database variables
 ${database_name}    ifs

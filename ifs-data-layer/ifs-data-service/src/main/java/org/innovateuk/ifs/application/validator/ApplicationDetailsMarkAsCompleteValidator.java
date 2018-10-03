@@ -16,8 +16,8 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  * Validates the inputs in the application details, if valid on the markAsComplete action
  *
  */
-public class ApplicationMarkAsCompleteValidator implements Validator {
-    private static final Log LOG = LogFactory.getLog(ApplicationMarkAsCompleteValidator.class);
+public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
+    private static final Log LOG = LogFactory.getLog(ApplicationDetailsMarkAsCompleteValidator.class);
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -29,7 +29,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
     public void validate(Object target, Errors errors) {
         LocalDate currentDate = LocalDate.now();
 
-        LOG.debug("do ApplicationMarkAsComplete Validation");
+        LOG.debug("do ApplicationDetailsMarkAsComplete Validation");
 
         Application application = (Application) target;
 

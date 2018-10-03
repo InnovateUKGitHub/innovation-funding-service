@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Resource object to store the company details, from the company house api.
+ * Resource object to store the company details, from the companies house api.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class OrganisationSearchResult implements Serializable{
