@@ -155,17 +155,22 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         openSectionViewModel.setFinanceSectionId(optionalFinanceSectionId.orElse(null));
         openSectionViewModel.setEachCollaboratorFinanceSectionId(optionalFinanceSectionId.orElse(null));
         if (optionalFinanceSection.isPresent() && optionalFinanceSectionId.isPresent()) {
-            boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
-                    completedSectionsByOrganisation, optionalFinanceSectionId.get());
+            boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
+                    completedSectionsByOrganisation, applicantSection.getCompetition().getId());
             openSectionViewModel.setYourFinancesCompleteForAllOrganisations(yourFinancesCompleteForAllOrganisations);
         }
     }
 
-    private boolean getYourFinancesCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                               Long financeSectionId) {
+    private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                                   Long competitionId) {
+        // Get finances overview section id
+        List<SectionResource> financeOverviewSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES);
+        Optional<SectionResource> optionalFinanceOverviewSection = financeOverviewSections.stream().findAny();
+        Optional<Long> optionalFinanceOverviewSectionId = optionalFinanceOverviewSection.map(SectionResource::getId);
+
         return completedSectionsByOrganisation.keySet()
                 .stream()
-                .noneMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
+                .allMatch(id -> completedSectionsByOrganisation.get(id).contains(optionalFinanceOverviewSectionId.get()));
     }
 
     private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
