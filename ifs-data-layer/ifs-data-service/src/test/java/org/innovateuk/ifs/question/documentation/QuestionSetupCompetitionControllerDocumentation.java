@@ -37,7 +37,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         final Long questionId = 1L;
         when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseUrl + "/getById/{id}", questionId)
+        mockMvc.perform(get(baseUrl + "/get-by-id/{id}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("question-setup-competition/{method-name}",
@@ -69,7 +69,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
         when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(post(baseUrl + "/addDefaultToCompetition/{id}", competitionId)
+        mockMvc.perform(post(baseUrl + "/add-default-to-competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isCreated())
                 .andDo(document("question-setup-competition/{method-name}",
@@ -101,7 +101,8 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
         when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId))
+        mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isCreated())
                 .andDo(document("question-setup-competition/{method-name}",
                         pathParameters(
