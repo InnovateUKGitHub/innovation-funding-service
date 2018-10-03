@@ -12,11 +12,11 @@ modules:
       longer_pause_deviation : 15000
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
-      users_csv : jmeter/Representative/user_data.csv
-      competitions_csv : jmeter/Representative/competition_data.csv
-      invites_csv : jmeter/Representative/invite_data.csv
-      assessor_csv : jmeter/Representative/assessor_data.csv
-      front_door_competitions_csv : jmeter/Representative/front-door-competitions.csv
+      users_csv : user_data.csv
+      competitions_csv : competition_data.csv
+      invites_csv : invite_data.csv
+      assessor_csv : assessor_data.csv
+      front_door_competitions_csv : front-door-competitions.csv
       summariser.name : summary
       summariser.interval : 5
       summariser.log : true
