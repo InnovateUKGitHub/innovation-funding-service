@@ -65,7 +65,7 @@ public class CompetitionManagementDashboardController {
             " support, innovation lead and stakeholder roles are allowed to view the list of live competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/live")
-    public String live(Model model, UserResource user){
+    public String live(Model model, UserResource user) {
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
         model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(
                 liveCompetitions,
@@ -175,21 +175,17 @@ public class CompetitionManagementDashboardController {
 
         boolean isSearchNumeric = trimmedSearchString.chars().allMatch(Character::isDigit);
 
-        if(isSearchNumeric){
-
+        if(isSearchNumeric) {
             return searchApplication(searchString, pageNumber, pageSize, model, request, user);
-
         } else {
-
             return searchCompetition(searchString, page, model, user);
-
         }
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin and project finance roles are allowed to view the page for setting up new competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
-    public String create(){
+    public String create() {
         CompetitionResource competition = competitionSetupRestService.create().getSuccess();
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
@@ -206,7 +202,7 @@ public class CompetitionManagementDashboardController {
         return formattedList;
     }
 
-    private String searchCompetition(String searchQuery,int page, Model model, UserResource user){
+    private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
@@ -215,7 +211,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-    private String searchApplication(String searchString, int pageNumber, int pageSize, Model model, HttpServletRequest request, UserResource user){
+    private String searchApplication(String searchString, int pageNumber, int pageSize, Model model, HttpServletRequest request, UserResource user) {
         String trimmedSearchString = StringUtils.normalizeSpace(searchString);
         String existingQueryString = Objects.toString(request.getQueryString(), "");
 
