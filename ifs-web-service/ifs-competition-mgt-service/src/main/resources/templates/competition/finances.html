@@ -50,7 +50,8 @@
                             <input id="application-finance-standard-with-vat"
                                    class="govuk-radios__input"
                                    th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT}"
-                                   type="radio" th:field="*{applicationFinanceType}" required="required"/>
+                                   th:disabled="${model.subsection.noFinancesCompetition}" type="radio"
+                                   th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-standard-with-vat"
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>

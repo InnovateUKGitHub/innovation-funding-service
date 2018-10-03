@@ -235,6 +235,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
     }
 
+    public CompetitionResourceBuilder withNonFinanceType(boolean nonFinanceType) {
+        return with(competition -> competition.setNonFinanceType(nonFinanceType));
+    }
+
     public CompetitionResourceBuilder withCreatedBy(String... users) {
         return withArraySetFieldByReflection("createdBy", users);
     }

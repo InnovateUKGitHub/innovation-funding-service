@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -653,6 +654,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                     CompetitionStatus.CLOSED);
         }
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
+    }
+
+    public boolean isNonFinanceType() {
+        return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
     public void releaseFeedback(ZonedDateTime date) {
