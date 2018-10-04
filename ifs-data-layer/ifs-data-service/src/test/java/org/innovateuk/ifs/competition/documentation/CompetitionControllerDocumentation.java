@@ -43,7 +43,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/{id}", competitionId))
+        mockMvc.perform(get("/competition/{id}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -59,7 +60,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.findAll()).thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
 
-        mockMvc.perform(get("/competition/findAll"))
+        mockMvc.perform(get("/competition/findAll")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -73,7 +75,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void live() throws Exception {
         when(competitionService.findLiveCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/live"))
+        mockMvc.perform(get("/competition/live")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -87,7 +90,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void projectSetup() throws Exception {
         when(competitionService.findProjectSetupCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/project-setup"))
+        mockMvc.perform(get("/competition/project-setup")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -101,7 +105,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void upcoming() throws Exception {
         when(competitionService.findUpcomingCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/upcoming"))
+        mockMvc.perform(get("/competition/upcoming")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -115,7 +120,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void nonIfs() throws Exception {
         when(competitionService.findNonIfsCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/non-ifs"))
+        mockMvc.perform(get("/competition/non-ifs")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -130,7 +136,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionService.countCompetitions()).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/competition/count"))
+        mockMvc.perform(get("/competition/count")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -146,7 +153,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         int size = 20;
         when(competitionService.searchCompetitions(searchQuery, page, size)).thenReturn(serviceSuccess(results));
 
-        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size))
+        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -166,7 +174,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         List<UserResource> innovationLeads = new ArrayList<>();
         when(competitionService.findInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
 
-        mockMvc.perform(get("/competition/{id}/innovation-leads", competitionId))
+        mockMvc.perform(get("/competition/{id}/innovation-leads", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(innovationLeads)))
                 .andDo(document(
@@ -184,7 +193,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+        mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -205,7 +215,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+        mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -226,7 +237,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/{id}/updateTermsAndConditions/{tcId}", competitionId, termsAndConditionsId))
+        mockMvc.perform(put("/competition/{id}/updateTermsAndConditions/{tcId}", competitionId, termsAndConditionsId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",

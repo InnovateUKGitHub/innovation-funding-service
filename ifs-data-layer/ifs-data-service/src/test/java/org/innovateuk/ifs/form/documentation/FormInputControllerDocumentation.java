@@ -38,15 +38,16 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         FormInputResource testResource = formInputResourceBuilder.build();
         when(formInputServiceMock.findFormInput(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/{id}", 1L))
-            .andDo(document("forminput/{method-name}",
-                pathParameters(
-                    parameterWithName("id").description("id of the forminput to be fetched")
-                ),
-                responseFields(
-                    formInputResourceFields
-                )
-            ));
+        mockMvc.perform(get(baseURI + "/{id}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("forminput/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the forminput to be fetched")
+                        ),
+                        responseFields(
+                                formInputResourceFields
+                        )
+                ));
     }
 
     @Test
@@ -54,15 +55,16 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L))
-            .andDo(document("forminput/{method-name}",
-                pathParameters(
-                    parameterWithName("id").description("id of the question")
-                ),
-                responseFields(
-                    fieldWithPath("[]").description("List of formInputs the user is allowed to see")
-                )
-            ));
+        mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("forminput/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the question")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of formInputs the user is allowed to see")
+                        )
+                ));
     }
 
     @Test
@@ -70,15 +72,16 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L))
-            .andDo(document("forminput/{method-name}",
-                pathParameters(
-                    parameterWithName("id").description("id of the competition")
-                ),
-                responseFields(
-                    fieldWithPath("[]").description("List of formInputs the user is allowed to see")
-                )
-            ));
+        mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("forminput/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of formInputs the user is allowed to see")
+                        )
+                ));
     }
 
     @Test
@@ -87,8 +90,9 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         when(formInputServiceMock.save(any())).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(put(baseURI + "/")
-                    .contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(testResource)))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminput/{method-name}",
                         responseFields(formInputResourceFields)
                 ));
@@ -98,7 +102,8 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
     public void documentDelete() throws Exception {
         when(formInputServiceMock.delete(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete(baseURI + "/{id}", 1L))
+        mockMvc.perform(delete(baseURI + "/{id}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminput/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the forminput")

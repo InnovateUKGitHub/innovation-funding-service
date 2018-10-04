@@ -88,6 +88,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isCreated())

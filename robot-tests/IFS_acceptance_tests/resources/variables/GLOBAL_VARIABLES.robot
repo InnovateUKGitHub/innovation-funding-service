@@ -185,6 +185,7 @@ ${wrong_filetype_validation_error}    Your upload must be a PDF.
 ${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
+${email_already_in_use}           This email address is already in use.
 
 # Database variables
 ${database_name}    ifs
