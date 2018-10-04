@@ -1498,8 +1498,8 @@
             <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|" class="govuk-visually-hidden">
                     Source of funding
-                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                 </label>
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                 <input type="text" th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
                     class="govuk-input" th:id="|formInput[cost-${costIdentifier}-fundingSource]|" th:value="${cost.fundingSource}"
                     th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
@@ -1508,8 +1508,8 @@
             <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-securedDate]|" class="govuk-visually-hidden">
                     Date secured
-                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                 </label>
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                 <input type="text" th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}" class="govuk-input"
                     th:id="|formInput[cost-${costIdentifier}-securedDate]|" placeholder="MM-YYYY" pattern="(0[1-9]|1[012])-[0-9]{4}"
                     th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}" maxlength="7"
@@ -1520,8 +1520,8 @@
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
                 <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|" class="govuk-visually-hidden">
                     Funding amount (&pound;)
-                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                 </label>
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                 <input class="govuk-input govuk-input--width-10" type="number" th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                     th:id="|formInput[cost-${costIdentifier}-fundingAmount]|" ifs:nonZeroValue="${cost.fundingAmount}"
                     th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-input--error'"
