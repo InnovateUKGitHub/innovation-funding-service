@@ -44,7 +44,7 @@ Support user is able to search for competition
     [Documentation]  IFS-3072
     [Tags]
     When the user navigates to the page       ${server}/management/dashboard/project-setup
-    Then the user enter the competition name into the search field
+    Then the user enters the competition name into the search field
 
 Support user is able to search for an Application
     [Documentation]  IFS-2904
@@ -116,7 +116,7 @@ the user enters the application id into the search field
     the user clicks the button/link                   id = searchsubmit
     the user should see the element                   jQuery = td:contains("${applicationID}")
 
-the user enter the competition name into the search field
+the user enters the competition name into the search field
     the user enters text to a text field              id = searchQuery  ${competitionName}
     the user clicks the button/link                   id = searchsubmit
     the user should see the element                   jQuery = a div:contains("${competitionName}")
