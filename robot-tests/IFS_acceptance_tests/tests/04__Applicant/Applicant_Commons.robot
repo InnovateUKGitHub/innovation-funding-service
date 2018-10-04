@@ -122,6 +122,7 @@ the user fills in Labour
     wait for autosave
     the user enters text to a text field       jQuery = input.govuk-input[name^=labour-labour][value = ""]:first    100
     wait for autosave
+    capture page screenshot
     the user clicks the button/link            jQuery = button:contains("Labour")
 
 the user fills in Overhead costs
@@ -130,6 +131,7 @@ the user fills in Overhead costs
     run keyword if  '${overheadsCost}' == 'labour costs'  the user chooses 20% overheads option
 #    run keyword if  '${overheadsCost}' == 'No overhead'  the user chooses No overhead costs
 # The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
+    capture page screenshot
 
 the user chooses Calculate overheads option
     [Arguments]  ${totalCosts}
@@ -141,6 +143,7 @@ the user chooses Calculate overheads option
     the user enters text to a text field                    css = input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
     the total overhead costs should reflect rate entered    css = #total-cost  £${totalCosts}
+
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -162,6 +165,7 @@ the user fills in Material
     wait for autosave
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     wait for autosave
+    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
@@ -179,6 +183,7 @@ the user fills in Capital usage
     wait for autosave
     focus                                 css = .section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
+    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs
@@ -191,6 +196,7 @@ the user fills in Subcontracting costs
     wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting-subcontractingCost]  1000
     wait for autosave
+    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -201,6 +207,7 @@ the user fills in Travel and subsistence
     wait for autosave
     the user enters text to a text field  css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     wait for autosave
+    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
 
 the user fills in Other costs
@@ -210,6 +217,7 @@ the user fills in Other costs
     wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=other_costs-otherCost]  50
     wait for autosave
+    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Other costs")
 
 the user removes prev costs if there are any
