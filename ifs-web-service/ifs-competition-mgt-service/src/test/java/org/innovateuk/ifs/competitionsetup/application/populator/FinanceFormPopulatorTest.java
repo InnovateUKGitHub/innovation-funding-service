@@ -84,7 +84,7 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(STANDARD, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.isIncludeGrowthTable());
+        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
         assertEquals(fundingRules, form.getFundingRules());
     }
 
@@ -111,7 +111,7 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(NO_FINANCES, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.isIncludeGrowthTable());
+        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
         assertNull(form.getFundingRules());
     }
 }
