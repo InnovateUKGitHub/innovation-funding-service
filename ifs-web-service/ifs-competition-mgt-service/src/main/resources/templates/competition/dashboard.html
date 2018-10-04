@@ -29,8 +29,8 @@
                        class="search-query"
                        placeholder='Search competitions'/>
                 <input th:unless="${supportUser==false || supportUser == null}" type="text"
-                       th:value="${searchString}"
-                       th:name="${'searchString'}"
+                       th:value="${searchQuery}"
+                       th:name="${'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
                        placeholder="Search for a competition or application"/>
