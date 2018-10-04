@@ -81,8 +81,9 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         when(grantOfferLetterServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
-                andExpect(status().isNoContent())
+        mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which Grant Offer Letter needs to be removed")
@@ -97,8 +98,9 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         when(grantOfferLetterServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
-                andExpect(status().isNoContent())
+        mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which Signed Grant Offer Letter needs to be removed")
@@ -217,7 +219,8 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         when(grantOfferLetterServiceMock.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/grant-offer/submit", projectId))
+        mockMvc.perform(post("/project/{id}/grant-offer/submit", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project whos offer letter is being submitted")
@@ -228,7 +231,8 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
     @Test
     public void sendGrantOfferLetter() throws Exception {
         when(grantOfferLetterServiceMock.sendGrantOfferLetter(123L)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L))
+        mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -244,7 +248,8 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval", 123L)
                         .contentType(APPLICATION_JSON)
-                        .content(toJson(grantOfferLetterApprovalResource)))
+                        .content(toJson(grantOfferLetterApprovalResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -264,7 +269,8 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(stateInformation));
 
-        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/current-state", 123L))
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/current-state", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(stateInformation)))
                 .andDo(document("project/grant-offer-letter/current-state/{method-name}",
