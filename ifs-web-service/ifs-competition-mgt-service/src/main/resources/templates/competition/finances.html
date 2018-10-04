@@ -20,13 +20,13 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='govuk-heading-xl'" />
         <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
-              th:action="@{${model.subsection.noFinancesCompetition ? 'none/edit' : #ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${competitionSetupForm}"
               novalidate="novalidate"
               data-th-attr="data-competition=${model.general.competition.id}"
               data-section="application"
               data-subsection="finance">
-
+            <input type="hidden" th:field="*{financesRequired}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="applicationFinanceType">
