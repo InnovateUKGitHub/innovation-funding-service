@@ -157,7 +157,7 @@ public class ApplicationNavigationPopulator {
                         backURL = (backURL + "/summary");
                     }
                 } else {
-                    model.addAttribute(BACK_TITLE, "Application overview");
+                    model.addAttribute(BACK_TITLE, "Application summary");
                     if (originQuery.isPresent()) {
                         backURL = ("/management/competition/" + section.getCompetition() + backURL + originQuery.get());
                         model.addAttribute("originQuery", originQuery.get());
