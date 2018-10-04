@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class CompetitionSetupFinanceResource {
     private Long competitionId;
     private ApplicationFinanceType applicationFinanceType;
-    private boolean includeGrowthTable;
+    private Boolean includeGrowthTable;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -27,11 +27,11 @@ public class CompetitionSetupFinanceResource {
         this.applicationFinanceType = applicationFinanceType;
     }
 
-    public boolean isIncludeGrowthTable() {
+    public Boolean getIncludeGrowthTable() {
         return includeGrowthTable;
     }
 
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+    public void setIncludeGrowthTable(Boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
     }
 
