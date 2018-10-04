@@ -6,9 +6,9 @@ subsets:
 # These addresses must be changed for individual environments
 # Addresses for the current cluster
 - addresses:
-  - ip: 10.0.0.105
-  - ip: 10.0.1.167
-  - ip: 10.0.2.65
+  - ip: 10.100.5.10
+  - ip: 10.100.6.11
+  - ip: 10.100.7.12
   ports:
   - port: 1
     protocol: TCP
