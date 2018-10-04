@@ -2,11 +2,9 @@ package org.innovateuk.ifs.competition.resource;
 
 public enum ApplicationFinanceType {
 
-    // TODO IFS-4223 Change label to "Standard"
-    STANDARD("Full application finances"),
+    STANDARD("Standard"),
     STANDARD_WITH_VAT("Standard with VAT"),
-    // TODO IFS-4223 Change label to "No finance required"
-    NO_FINANCES("No finances");
+    NO_FINANCES("No finances required");
 
     private String displayLabel;
 

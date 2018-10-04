@@ -45,7 +45,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getCompletedSections(id)).thenReturn(serviceSuccess(result));
 
-        mockMvc.perform(get(baseURI + "/get-completed-sections-by-organisation/{applicationId}", id))
+        mockMvc.perform(get(baseURI + "/get-completed-sections-by-organisation/{applicationId}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -67,7 +68,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getCompletedSections(applicationId, organisationId)).thenReturn(serviceSuccess(result));
 
-        mockMvc.perform(get(baseURI + "/get-completed-sections/{applicationId}/{organisationId}", applicationId, organisationId))
+        mockMvc.perform(get(baseURI + "/get-completed-sections/{applicationId}/{organisationId}", applicationId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -89,7 +91,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         when(sectionStatusServiceMock.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(emptyList()));
 
         mockMvc.perform(post(baseURI + "/mark-as-complete/{sectionId}/{applicationId}/{markedAsCompleteById}",
-                sectionId, applicationId, markedAsCompleteById))
+                sectionId, applicationId, markedAsCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -109,7 +112,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         when(sectionStatusServiceMock.markSectionAsNotRequired(sectionId, applicationId, markedAsNotRequiredById)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseURI + "/mark-as-not-required/{sectionId}/{applicationId}/{markedAsNotRequiredById}",
-                sectionId, applicationId, markedAsNotRequiredById))
+                sectionId, applicationId, markedAsNotRequiredById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -129,7 +133,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         when(sectionStatusServiceMock.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseURI + "/mark-as-in-complete/{sectionId}/{applicationId}/{markedAsInCompleteById}",
-                sectionId, applicationId, markedAsInCompleteById))
+                sectionId, applicationId, markedAsInCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -145,7 +150,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         final long id = 1L;
 
         when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, id, null)).thenReturn(serviceSuccess(true));
-        mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id))
+        mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -160,7 +166,8 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getIncompleteSections(applicationId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get(baseURI + "/get-incomplete-sections/{applicationId}", applicationId))
+        mockMvc.perform(get(baseURI + "/get-incomplete-sections/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
