@@ -85,7 +85,6 @@ User pressing back button should get the correct version of the page
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
-    capture page screenshot
     When the user navigates to another page
     And the user should be redirected to the correct page without the usual headers    ${project_guidance}
     And the user goes back to the previous page
@@ -204,7 +203,7 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user clicks the button/link    link = Please refer to our guide to project costs for further information.
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
+    Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093
