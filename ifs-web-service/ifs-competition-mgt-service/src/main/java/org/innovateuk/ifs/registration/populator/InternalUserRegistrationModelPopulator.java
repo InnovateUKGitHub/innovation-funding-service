@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.populator;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.viewmodel.InternalUserRegistrationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
