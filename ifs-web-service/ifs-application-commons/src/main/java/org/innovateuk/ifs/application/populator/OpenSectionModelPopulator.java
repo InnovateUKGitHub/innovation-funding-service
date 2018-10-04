@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
 
 /**
@@ -51,7 +52,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
         addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, form, applicantSection);
-        if (applicantSection.getSection().getType().equals(SectionType.OVERVIEW_FINANCES)) {
+        if (applicantSection.getSection().getType().equals(OVERVIEW_FINANCES)) {
             financeOverviewPopulator.addOverviewDetails(openSectionViewModel, model, form, applicantSection);
         }
 
@@ -148,7 +149,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         Optional<SectionResource> optionalFinanceSection = financeSections.stream().findAny();
         Optional<Long> optionalFinanceSectionId = optionalFinanceSection.map(SectionResource::getId);
 
-        addSectionsMarkedAsComplete(openSectionViewModel, applicantSection);
+        addSectionsMarkedAsComplete(openSectionViewModel, applicantSection, completedSectionsByOrganisation);
         openSectionViewModel.setCompletedSectionsByOrganisation(completedSectionsByOrganisation);
         openSectionViewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
         openSectionViewModel.setHasFinanceSection(optionalFinanceSection.isPresent());
@@ -156,21 +157,20 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         openSectionViewModel.setEachCollaboratorFinanceSectionId(optionalFinanceSectionId.orElse(null));
         if (optionalFinanceSection.isPresent() && optionalFinanceSectionId.isPresent()) {
             boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
-                    completedSectionsByOrganisation, applicantSection.getCompetition().getId());
+                    sectionsMarkedAsComplete, applicantSection.getCompetition().getId());
             openSectionViewModel.setYourFinancesCompleteForAllOrganisations(yourFinancesCompleteForAllOrganisations);
         }
     }
 
-    private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+    private boolean getFinancesOverviewCompleteForAllOrganisations(Set<Long> completedSections,
                                                                    Long competitionId) {
         // Get finances overview section id
-        List<SectionResource> financeOverviewSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES);
-        Optional<SectionResource> optionalFinanceOverviewSection = financeOverviewSections.stream().findAny();
-        Optional<Long> optionalFinanceOverviewSectionId = optionalFinanceOverviewSection.map(SectionResource::getId);
-
-        return completedSectionsByOrganisation.keySet()
+        Optional<Long> optionalFinanceOverviewSectionId = sectionService.getSectionsForCompetitionByType(competitionId, OVERVIEW_FINANCES)
                 .stream()
-                .allMatch(id -> completedSectionsByOrganisation.get(id).contains(optionalFinanceOverviewSectionId.get()));
+                .findFirst()
+                .map(SectionResource::getId);
+
+        return completedSections.contains(optionalFinanceOverviewSectionId.get());
     }
 
     private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
