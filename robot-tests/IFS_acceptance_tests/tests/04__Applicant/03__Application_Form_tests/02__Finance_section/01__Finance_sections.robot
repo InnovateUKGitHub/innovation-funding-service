@@ -203,6 +203,7 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user clicks the button/link    link = Please refer to our guide to project costs for further information.
+    capture page screenshot
     Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance
