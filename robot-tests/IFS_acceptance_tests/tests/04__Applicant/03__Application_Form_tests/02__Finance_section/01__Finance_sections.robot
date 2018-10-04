@@ -85,9 +85,8 @@ User pressing back button should get the correct version of the page
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
-    When the user navigates to another page
-    And the user should be redirected to the correct page without the usual headers    ${project_guidance}
-    And the user goes back to the previous page
+    And The user clicks the button/link     link = Your finances
+    And the user clicks the button/link     link = Your project costs
     Then the user should see the element    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
@@ -182,7 +181,6 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     the user moves focus to the element   link = Please refer to our guide to project costs for further information.
     Wait for autosave
-    sleep  5000ms
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
@@ -202,7 +200,7 @@ the working days per year should be 232 by default
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page
-    the user clicks the button/link    link = Please refer to our guide to project costs for further information.
+    the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
     capture page screenshot
     Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
