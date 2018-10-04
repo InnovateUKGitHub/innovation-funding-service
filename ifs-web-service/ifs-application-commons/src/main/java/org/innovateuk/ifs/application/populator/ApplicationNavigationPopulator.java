@@ -157,13 +157,24 @@ public class ApplicationNavigationPopulator {
                         backURL = (backURL + "/summary");
                     }
                 } else {
-                    model.addAttribute(BACK_TITLE, "Application summary");
-                    if (originQuery.isPresent()) {
-                        backURL = ("/management/competition/" + section.getCompetition() + backURL + originQuery.get());
-                        model.addAttribute("originQuery", originQuery.get());
+                    if (application.isSubmitted()) {
+                        model.addAttribute(BACK_TITLE, "Application overview");
+                        if (originQuery.isPresent()) {
+                            backURL = ("/management/competition/" + section.getCompetition() + backURL + originQuery.get());
+                            model.addAttribute("originQuery", originQuery.get());
+                        } else {
+                            backURL = ("/management/competition/" + section.getCompetition() + backURL);
+                        }
                     } else {
-                        backURL = ("/management/competition/" + section.getCompetition() + backURL);
+                        model.addAttribute(BACK_TITLE, "Application summary");
+                        if (originQuery.isPresent()) {
+                            backURL = (backURL + "/summary" + originQuery.get());
+                            model.addAttribute("originQuery", originQuery.get());
+                        } else {
+                            backURL = (backURL + "/summary");
+                        }
                     }
+
                 }
             } else {
                 if (eitherApplicationOrCompetitionAreNotOpen(application)) {

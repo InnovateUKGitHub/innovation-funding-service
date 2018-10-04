@@ -208,8 +208,8 @@ public class ApplicationNavigationPopulatorTest {
         setupApplicationOpen(applicationId);
 
         target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
-        verify(model).addAttribute(eq("backURL"), contains("management/competition/11/application/1"));
-        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
+        verify(model).addAttribute(eq("backURL"), contains("application/" + applicationId + "/summary"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application summary"));
     }
 
     @Test
