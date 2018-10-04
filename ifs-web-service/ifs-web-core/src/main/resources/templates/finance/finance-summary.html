@@ -136,7 +136,11 @@
                                 <small>Partner</small>
                             </div>
                             <th:block th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}">
-                                <a th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'+applicationOrganisation.id}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
+                                <a th:if="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'+applicationOrganisation.id}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
+                                   class="govuk-link">
+                                    View finances
+                                </a>
+                                <a th:unless="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
                                    class="govuk-link">
                                     View finances
                                 </a>
