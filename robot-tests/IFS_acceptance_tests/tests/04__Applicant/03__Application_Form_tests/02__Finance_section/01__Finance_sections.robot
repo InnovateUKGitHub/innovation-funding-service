@@ -182,6 +182,7 @@ the user adds three material rows
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     the user moves focus to the element   link = Please refer to our guide to project costs for further information.
+    Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
