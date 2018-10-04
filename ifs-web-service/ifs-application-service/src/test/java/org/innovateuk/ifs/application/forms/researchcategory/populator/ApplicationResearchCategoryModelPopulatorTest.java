@@ -119,7 +119,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId());
 
-        assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
+        assertEquals(competitionResource.getName(), researchCategoryViewModel.getApplicationName());
         assertEquals(asList(researchCategoryOne, researchCategoryTwo), researchCategoryViewModel.getAvailableResearchCategories());
         assertTrue(researchCategoryViewModel.getHasApplicationFinances());
         assertEquals(researchCategoryOne.getName(), researchCategoryViewModel.getResearchCategory());
@@ -181,7 +181,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId());
 
-        assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
+        assertEquals(competitionResource.getName(), researchCategoryViewModel.getApplicationName());
         assertEquals(asList(researchCategory), researchCategoryViewModel.getAvailableResearchCategories());
         assertFalse(researchCategoryViewModel.getHasApplicationFinances());
         assertEquals(researchCategory.getName(), researchCategoryViewModel.getResearchCategory());

@@ -40,7 +40,7 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
 
         assertEquals(questionId, innovationAreaViewModel.getQuestionId());
         assertEquals(applicationId, innovationAreaViewModel.getApplicationId());
-        assertEquals(competitionName, innovationAreaViewModel.getCurrentCompetitionName());
+        assertEquals(competitionName, innovationAreaViewModel.getApplicationName());
         assertEquals(5L, innovationAreaViewModel.getAvailableInnovationAreas().size());
     }
 

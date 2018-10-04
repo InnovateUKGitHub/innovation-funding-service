@@ -10,7 +10,7 @@ import java.util.List;
 public class InnovationAreaViewModel {
     Long selectedInnovationAreaId;
     boolean noInnovationAreaApplicable;
-    String currentCompetitionName;
+    String applicationName;
 
     Long applicationId;
     Long questionId;
@@ -56,11 +56,11 @@ public class InnovationAreaViewModel {
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
-    public String getCurrentCompetitionName() {
-        return currentCompetitionName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setCurrentCompetitionName(String currentCompetitionName) {
-        this.currentCompetitionName = currentCompetitionName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 }
