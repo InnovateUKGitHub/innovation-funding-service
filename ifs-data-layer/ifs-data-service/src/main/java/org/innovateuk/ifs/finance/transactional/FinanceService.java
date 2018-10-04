@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.security.access.method.P;
@@ -41,6 +40,6 @@ public interface FinanceService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
     ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource','CHECK_COLLABORATIVE_FUNDING_CRITERIA_MET')")
     ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId);
 }

@@ -121,6 +121,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(applicationRepositoryMock.exists(null)).thenReturn(false);
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadOnApplication1.getId(), applicationResource1.getId(), Role.LEADAPPLICANT)).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource1.getId(), Role.COLLABORATOR)).thenReturn(true);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantProcessRoles(), applicationResource2.getId())).thenReturn(null);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(user2.getId(), applicantProcessRoles(), applicationResource1.getId())).thenReturn(null);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource2.getId(), Role.LEADAPPLICANT)).thenReturn(true);
@@ -473,5 +474,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 }
             });
         });
+    }
+
+
+    @Test
+    public void consortiumCanCheckCollaborativeFundingCriteriaIsMet() {
+        assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, leadOnApplication1));
+        assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user2));
+        assertFalse(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user3));
     }
 }
