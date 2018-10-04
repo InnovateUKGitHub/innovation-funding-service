@@ -81,6 +81,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
 ...
 ...               IFS-4253 New Stakeholder invite and create account email
+...
+...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -527,9 +529,8 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]
     Given the user clicks the button/link          link = Finances
-    When the user should see the element           jQuery=h1:contains("Application finances")
-    And the user should see the element            jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    And the user selects the radio button          applicationFinanceType  STANDARD
+    When the user should see the element           jQuery = h1:contains("Application finances")
+    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
@@ -734,17 +735,24 @@ The Applicant is able to apply to the competition once is Open
 
 The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
-    When the user clicks the button/link     link = Research category
-    Then the user should see the element     css = label[for="researchCategory1"]
-    And the user should see the element      css = label[for="researchCategory2"]
-    When the user clicks the button twice    jQuery = label:contains("Feasibility studies")
-    And the user clicks the button/link      id = application-question-save
+    When the user clicks the button/link       link = Research category
+    Then the user should see the element       css = label[for="researchCategory1"]
+    And the user should see the element        css = label[for="researchCategory2"]
+    When the user clicks the button twice      jQuery = label:contains("Feasibility studies")
+    And the user clicks the button/link        id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
-    Given the user should see the element            jQuery = li:contains("${customQuestion}")
-    And the user should not see the element          jQuery = li:contains("Costs and value for money")
+    Given the user should see the element      jQuery = li:contains("${customQuestion}")
+    And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
+
+The user can see the VAT text in Your project costs
+    [Documentation]  IFS-4345
+    [Tags]
+    Given the user clicks the button/link      link = Your finances
+    When the user clicks the button/link       link = Your project costs
+    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
