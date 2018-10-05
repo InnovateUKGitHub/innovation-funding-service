@@ -82,7 +82,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-2313 Project Setup: Ability to edit project duration
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup  Pending
+Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 

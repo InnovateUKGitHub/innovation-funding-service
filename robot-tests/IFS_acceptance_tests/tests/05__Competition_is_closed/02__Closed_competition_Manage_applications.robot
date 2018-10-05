@@ -14,7 +14,7 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin  Pending
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***

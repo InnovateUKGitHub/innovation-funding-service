@@ -6,7 +6,7 @@ Documentation     INFUND-6459 As a member of the competitions team I can select 
 ...               IFS-1654 Reinstate application button should not be shown for ineligible applications which have reached 'previous' tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Custom Suite Teardown
-Force Tags        CompAdmin  Assessor  MySQL  Pending
+Force Tags        CompAdmin  Assessor  MySQL
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***

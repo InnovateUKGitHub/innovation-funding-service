@@ -10,7 +10,7 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               IFS-3942 Assessor profile view - Assessor
 Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***

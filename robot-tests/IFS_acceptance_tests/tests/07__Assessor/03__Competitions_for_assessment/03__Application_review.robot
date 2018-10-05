@@ -18,7 +18,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               IFS-2854 Allow assessors to see full application finances
 Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

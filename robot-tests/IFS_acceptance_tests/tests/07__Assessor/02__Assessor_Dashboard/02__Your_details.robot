@@ -2,7 +2,7 @@
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

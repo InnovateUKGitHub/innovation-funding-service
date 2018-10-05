@@ -52,7 +52,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               IFS-2920 Project details: Project location per partner
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup  Applicant  Pending
+Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***

@@ -20,7 +20,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

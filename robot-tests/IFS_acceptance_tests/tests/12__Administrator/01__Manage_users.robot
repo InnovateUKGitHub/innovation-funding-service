@@ -20,7 +20,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-1944: Internal - Invite internal user - error field is missing
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
-Force Tags        Administrator  CompAdmin  Pending
+Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!

@@ -22,7 +22,7 @@ Documentation     INFUND-4840 As a project finance team member I want to be able
 ...               IFS-3559 Email subject for new finance queries to include competition name and application ID
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup  Pending
+Force Tags        Project Setup
 Resource          PS_Common.robot
 
 # This suite is using Competition: Internet of Things

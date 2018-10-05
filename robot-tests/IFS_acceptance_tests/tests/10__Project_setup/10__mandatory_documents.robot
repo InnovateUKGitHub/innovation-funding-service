@@ -32,7 +32,7 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-2371-2258 Prevent submission without both doc
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup  Pending
+Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***

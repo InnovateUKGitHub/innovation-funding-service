@@ -8,7 +8,7 @@ Documentation     INFUND-5182 As an assessor creating an account I need to suppl
 ...               IFS-3942 Assessor profile view - Assessor
 Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

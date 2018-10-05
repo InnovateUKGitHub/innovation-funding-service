@@ -6,7 +6,7 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-3654 Filter out withdrawn projects from internal Project Setup dashboard
 ...
 ...             IFS-3565 Filter on Project Setup view of Competiton
-Force Tags      Administrator  Pending
+Force Tags      Administrator
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
 
