@@ -46,7 +46,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
-        mockMvc.perform(get("/assessment/{id}", assessmentId))
+        mockMvc.perform(get("/assessment/{id}", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -63,7 +64,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
-        mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
+        mockMvc.perform(get("/assessment/{id}/assign", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -80,7 +82,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
-        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -98,7 +101,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
 
-        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
+        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -119,7 +123,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(assessmentResources));
 
-        mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId))
+        mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -139,7 +144,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.getTotalScore(assessmentId)).thenReturn(serviceSuccess(assessmentTotalScoreResource));
 
-        mockMvc.perform(get("/assessment/{id}/score", assessmentId))
+        mockMvc.perform(get("/assessment/{id}/score", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -158,6 +164,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentFundingDecisionOutcomeResource)))
                 .andExpect(status().isOk())
@@ -179,7 +186,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.getApplicationFeedback(applicationId)).thenReturn(serviceSuccess(expectedResource));
 
-        mockMvc.perform(get("/assessment/application/{id}/feedback", applicationId))
+        mockMvc.perform(get("/assessment/application/{id}/feedback", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -199,6 +207,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         when(assessmentServiceMock.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentRejectOutcomeResource)))
                 .andExpect(status().isOk())
@@ -216,7 +225,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
+        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -231,7 +241,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId))
+        mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -247,6 +258,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/submitAssessments")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentSubmissions)))
                 .andExpect(status().isOk())

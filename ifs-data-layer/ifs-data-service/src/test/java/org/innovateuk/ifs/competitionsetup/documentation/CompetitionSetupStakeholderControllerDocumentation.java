@@ -62,6 +62,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
 
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/invite", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk())
@@ -134,8 +135,8 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 .andExpect(status().isOk())
                 .andDo(document("competition/setup/stakeholder/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("Id of the Competition to which the Stakeholder is being added"),
-                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being added")
+                                parameterWithName("competitionId").description("Id of the Competition from which the Stakeholder is being removed"),
+                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being removed")
                         )
                 ));
 

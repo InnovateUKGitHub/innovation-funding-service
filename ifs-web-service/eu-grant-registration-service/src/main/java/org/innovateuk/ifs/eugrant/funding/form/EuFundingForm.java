@@ -6,8 +6,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class EuFundingForm {
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
+    @Pattern(regexp="[\\d]{9}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
@@ -156,13 +157,12 @@ public class EuFundingForm {
         }
     }
 
-    private LocalDate getLocalDate(int month, int year) {
+    public LocalDate getLocalDate(int month, int year) {
 
         String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
 
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
-
 
     @Override
     public boolean equals(Object o) {

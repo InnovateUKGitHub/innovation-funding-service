@@ -178,15 +178,15 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return new UserNotificationTarget(stakeholderInvite.getName(), stakeholderInvite.getEmail());
     }
 
-    private ServiceResult<Boolean> handleInviteError(StakeholderInvite i, ServiceFailure failure) {
+    private ServiceResult<Void> handleInviteError(StakeholderInvite i, ServiceFailure failure) {
         LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }
 
-    private boolean handleInviteSuccess(StakeholderInvite stakeholderInvite) {
+    private ServiceResult<Void> handleInviteSuccess(StakeholderInvite stakeholderInvite) {
         stakeholderInviteRepository.save(stakeholderInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
-        return true;
+        return serviceSuccess();
     }
 
     @Override
@@ -259,18 +259,3 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return userResource;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

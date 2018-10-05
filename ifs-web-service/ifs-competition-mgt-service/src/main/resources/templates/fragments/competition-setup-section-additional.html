@@ -96,7 +96,7 @@
                 </legend>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="pafNumber">
+                    <label class="govuk-label govuk-label--s" for="pafNumber">
                         PAF number
                     </label>
                     <th:block th:if="${#fields.hasErrors('pafNumber')}">
@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="budgetCode">
+                    <label class="govuk-label govuk-label--s" for="budgetCode">
                         Budget code
                     </label>
                     <th:block th:if="${#fields.hasErrors('budgetCode')}">
@@ -125,7 +125,7 @@
 
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="activityCode">
+                    <label class="govuk-label govuk-label--s" for="activityCode">
                         Activity code
                     </label>
                     <th:block th:if="${#fields.hasErrors('activityCode')}">
@@ -142,7 +142,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="competitionCode">
+                    <label class="govuk-label govuk-label--s" for="competitionCode">
                         Competition code
                     </label>
                     <th:block th:if="${#fields.hasErrors('competitionCode')}">

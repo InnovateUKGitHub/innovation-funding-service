@@ -130,7 +130,6 @@
                         <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableStakeholders)}"></span>
                         stakeholders available to add
                     </p>
-
                     <table class="govuk-table stakeholder-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
@@ -179,7 +178,7 @@
                         <tr class="govuk-table__row" th:each="stakeholder : ${model.pendingStakeholderInvitesForCompetition}">
                             <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
                             <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
-                            <td class="govuk-table__cell">Pending</td>
+                            <td class="govuk-table__cell">Invite pending</td>
                             <td class="govuk-table__cell alignright"></td>
                         </tr>
                         <tr class="govuk-table__row" th:each="stakeholder : ${model.stakeholdersAssignedToCompetition}">

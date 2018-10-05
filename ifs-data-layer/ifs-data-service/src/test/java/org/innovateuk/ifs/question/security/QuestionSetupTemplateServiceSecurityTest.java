@@ -33,14 +33,14 @@ public class QuestionSetupTemplateServiceSecurityTest extends BaseServiceSecurit
     public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(1L);
     }
 
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForProjectFinance() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(1L);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -52,6 +52,6 @@ public class QuestionSetupTemplateServiceSecurityTest extends BaseServiceSecurit
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
-        classUnderTest.deleteQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(1L);
     }
 }

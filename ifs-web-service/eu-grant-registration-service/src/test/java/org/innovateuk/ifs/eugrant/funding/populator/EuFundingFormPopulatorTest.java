@@ -46,7 +46,7 @@ public class EuFundingFormPopulatorTest extends BaseServiceUnitTest<EuFundingFor
                 .withProjectStartDate(LocalDate.now())
                 .withProjectEndDate(LocalDate.now().plusYears(1L))
                 .withProjectName("Project Name")
-                .withParticipantId("123456")
+                .withParticipantId("123456789")
                 .build();
 
         EuFundingForm fundingForm = new EuFundingForm();

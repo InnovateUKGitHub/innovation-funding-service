@@ -8,7 +8,6 @@ ${competitionName}
 Please create an account to view this competition.
 
 Name: ${notificationTarget.name}
-Role: Stakeholder
 
 Please confirm your account and create your password here: ${inviteUrl}
 

@@ -158,9 +158,9 @@ include::competitionInvite.adoc[]
 == Competition Participant
 include::competitionParticipant.adoc[]
 
-[[questionCompetitionSetup]]
-== Question Competition Setup
-include::questionCompetitionSetup.adoc[]
+[[questionSetupCompetition]]
+== Question Setup Competition
+include::questionSetupCompetition.adoc[]
 
 [[competitionSetupFinance]]
 == Competition Setup Finance
@@ -217,6 +217,7 @@ include::profile.adoc[]
 [[organisation]]
 == Organisation
 include::organisation.adoc[]
+include::companies-house.adoc[]
 
 [[forminputresponsefileupload]]
 == FormInputResponse File Upload

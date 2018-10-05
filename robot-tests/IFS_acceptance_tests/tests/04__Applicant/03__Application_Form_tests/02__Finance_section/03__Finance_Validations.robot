@@ -23,7 +23,7 @@ Other funding client side
     When the user clicks the button twice    css = label[for$="otherPublicFunding-yes"]
     And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
-    # This line should be after css=label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
+    # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Funding source cannot be blank.
     Then the user should see a field error   Invalid secured date.
     And the user should see a field error    This field should be 1 or higher.
@@ -32,8 +32,8 @@ Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
-    And the user selects the checkbox    agree-terms-page
-    And the user clicks the button/link  jQuery = button:contains("Mark as complete")
+    And the user selects the checkbox                    agree-terms-page
+    And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Funding source cannot be blank.
     And the user should see a field and summary error    Please use MM-YYYY format.
     And the user should see a field and summary error    This field should be 1 or higher.
@@ -94,8 +94,8 @@ Overhead cost client side
 
 Overhead cost server side
     [Documentation]    INFUND-844
-    Given the user selects the checkbox    agree-terms-page
-    When the user clicks the button/link   jQuery = button:contains("Mark as complete")
+    Given the user selects the checkbox        agree-terms-page
+    When the user clicks the button/link       jQuery = button:contains("Mark as complete")
     Then the user should see a summary error   You should upload a completed overheads spreadsheet.
 
 Materials client side
