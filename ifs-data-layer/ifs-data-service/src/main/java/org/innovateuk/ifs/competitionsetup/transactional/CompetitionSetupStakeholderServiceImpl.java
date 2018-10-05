@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.invite.mapper.StakeholderInviteMapper;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -67,6 +69,9 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private StakeholderInviteMapper stakeholderInviteMapper;
 
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
@@ -192,4 +197,12 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
         return serviceSuccess(stakeholderUsers);
     }
+
+    @Override
+    public ServiceResult<StakeholderInviteResource> getInviteByHash(String hash) {
+        StakeholderInvite stakeholderInvite = stakeholderInviteRepository.getByHash(hash);
+        return serviceSuccess(stakeholderInviteMapper.mapToResource(stakeholderInvite));
+
+    }
+
 }

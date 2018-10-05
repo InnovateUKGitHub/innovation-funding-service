@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeholderService;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,22 +19,27 @@ import java.util.List;
  * Stakeholder controller to handle RESTful services related to stakeholders
  */
 @RestController
-@RequestMapping("/competition/setup/{competitionId}/stakeholder")
+@RequestMapping("/competition/setup")
 public class CompetitionSetupStakeholderController {
 
     @Autowired
     private CompetitionSetupStakeholderService competitionSetupStakeholderService;
 
-    @PostMapping("/invite")
+    @PostMapping("/{competitionId}/stakeholder/invite")
     public RestResult<Void> inviteStakeholder(@PathVariable("competitionId") final long competitionId, @RequestBody InviteUserResource inviteUserResource) {
 
         return competitionSetupStakeholderService.inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId).toPostResponse();
     }
 
-    @GetMapping("/find-all")
+    @GetMapping("/{competitionId}/stakeholder/find-all")
     public RestResult<List<UserResource>> findStakeholders(@PathVariable("competitionId") final long competitionId) {
 
         return competitionSetupStakeholderService.findStakeholders(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/get-invite/{inviteHash}")
+    public RestResult<StakeholderInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash) {
+        return competitionSetupStakeholderService.getInviteByHash(inviteHash).toGetResponse();
     }
 }
 
