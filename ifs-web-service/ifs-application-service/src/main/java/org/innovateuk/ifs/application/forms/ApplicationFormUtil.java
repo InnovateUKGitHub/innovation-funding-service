@@ -48,17 +48,17 @@ public final class ApplicationFormUtil {
     public static boolean isMarkQuestionAsIncompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_INCOMPLETE);
     }
-
-    public static boolean isNotRequestingFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey(NOT_REQUESTING_FUNDING);
-    }
-
-    public static boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey("request-funding");
-    }
+//
+//    public static boolean isNotRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+//        return params.containsKey(NOT_REQUESTING_FUNDING);
+//    }
+//
+//    public static boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+//        return params.containsKey(REQUESTING_FUNDING);
+//    }
 
     public static boolean isFundingRequest(@NotNull Map<String, String[]> params) {
-        return isNotRequestingFundingRequest(params) || isRequestingFundingRequest(params);
+        return params.containsKey("request-funding");
     }
 
     public static boolean isMarkSectionRequest(@NotNull Map<String, String[]> params) {

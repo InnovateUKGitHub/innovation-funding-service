@@ -63,7 +63,7 @@
                 th:max="${model.maximumGrantClaimPercentage}" th:readonly="${model.readonly}" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-input--error'"
                 th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|" th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
                 th:value="${model.organisationGrantClaimPercentage}" placeholder="0" th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
-                                data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}" /><span
+                                data-max-errormessage=#{validation.finance.grant.claim.percentage.max.value.or.lower('%max%')}" /><span
                 class="govuk-body govuk-!-padding-left-1">&percnt;</span>
         </div>
     </div>
