@@ -66,6 +66,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/assessment-panel-invite/get-available-assessors/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "firstName,asc"))
@@ -96,7 +97,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.getAvailableAssessorIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/assessment-panel-invite/get-available-assessor-ids/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessment-panel-invite/get-available-assessor-ids/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -119,7 +121,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/assessment-panel-invite/get-created-invites/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
-                .param("sort", "name,asc"))
+                .param("sort", "name,asc")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -149,7 +152,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/assessment-panel-invite/invite-users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(existingUserStagedInviteListResource)))
+                .content(toJson(existingUserStagedInviteListResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         requestFields(
@@ -169,7 +173,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/assessment-panel-invite/send-all-invites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(assessorInviteSendResource)))
+                .content(toJson(assessorInviteSendResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -191,7 +196,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         when(reviewInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-send/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-send/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -209,7 +215,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
         when(reviewInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(reviewParticipantResource)));
 
-        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-by-user/{userId}", userId))
+        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-by-user/{userId}", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -228,6 +235,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-resend/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
@@ -252,6 +260,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/resend-invites")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
@@ -284,7 +293,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
-                .param("statuses", "PENDING"))
+                .param("statuses", "PENDING")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -314,7 +324,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         when(reviewInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(reviewInviteResource));
 
-        mockMvc.perform(post("/assessment-panel-invite/open-invite/{hash}", hash))
+        mockMvc.perform(post("/assessment-panel-invite/open-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -330,7 +341,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         when(reviewInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessment-panel-invite/accept-invite/{hash}", hash))
+        mockMvc.perform(post("/assessment-panel-invite/accept-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -345,7 +357,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         when(reviewInviteServiceMock.rejectInvite(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessment-panel-invite/reject-invite/{hash}", hash))
+        mockMvc.perform(post("/assessment-panel-invite/reject-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -360,7 +373,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
 
         when(reviewInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/assessment-panel-invite/check-existing-user/{hash}", hash))
+        mockMvc.perform(get("/assessment-panel-invite/check-existing-user/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andDo(document("assessment-panel-invite/{method-name}",
@@ -377,7 +391,8 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/assessment-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessment-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
@@ -397,6 +412,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/assessment-panel-invite/delete-invite")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
@@ -417,6 +433,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         when(reviewInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/assessment-panel-invite/delete-all-invites")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
                 .andDo(document("assessment-panel-invite/{method-name}",
