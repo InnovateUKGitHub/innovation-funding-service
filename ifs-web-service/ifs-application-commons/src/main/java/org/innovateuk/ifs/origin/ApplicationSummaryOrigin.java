@@ -7,6 +7,7 @@ public enum ApplicationSummaryOrigin implements BackLinkOrigin {
     ASSESSOR_INTERVIEW("/assessment/assessor/dashboard/competition/{competitionId}/interview", "Interview"),
     MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications", "Back"),
     APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors", "Back"),
+    FUNDING_APPLICATIONS("/competition/{competitionId}/funding", "Back"),
     ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}", "Application overview"),
     COMP_EXEC_INTERVIEW("/management/assessment/interview/competition/{competitionId}/applications/view-status", "Applications"),
     PREVIOUS_APPLICATIONS("/competition/{competitionId}/applications/previous", "Back"),
