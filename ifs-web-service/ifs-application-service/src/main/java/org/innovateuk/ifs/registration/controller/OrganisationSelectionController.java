@@ -12,6 +12,7 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,9 @@ public class OrganisationSelectionController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private ProcessRoleService processRoleService;
+
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
                                             @ModelAttribute(FORM_ATTR_NAME) OrganisationSelectionForm form,
@@ -85,7 +89,9 @@ public class OrganisationSelectionController {
     }
 
     private boolean cannotSelectOrganisation(UserResource user) {
-        return user == null || !user.hasRole(Role.APPLICANT);
+        return user == null
+                || !user.hasRole(Role.APPLICANT)
+                || organisationRestService.getAllByUserId(user.getId()).getSuccess().isEmpty();
     }
 
     private String nextPageInFlow(HttpServletRequest request) {
