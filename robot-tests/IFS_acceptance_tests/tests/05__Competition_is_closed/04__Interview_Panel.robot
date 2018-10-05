@@ -180,7 +180,6 @@ CompAdmin resends the interview panel invite
     And the user should see the element       jQuery = td:contains("${assessor_madeleine}") ~ td:contains("Invite declined: ${today}")
     And the user clicks the button/link       jQuery = tr:contains("${assessor_ben}") label
     And the user clicks the button/link       jquery = tr:contains("${assessor_madeleine}") label    #resending the interview panel invite to an assessor that has been rejected initially
-    sleep  2s
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery = td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
@@ -297,7 +296,6 @@ the competition admin selects the applications and adds them to the invite list
     the user clicks the button/link    jQuery = tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery = tr:contains("${computer_vision_application}") label
     the user clicks the button/link    jQuery = tr:contains("${crowd_source_application_name}") label
-    sleep  2s
     the user clicks the button/link    jQuery = button:contains("Add selected to invite list")
     the user should see the element    link = Review and send invites
     the user should see the element    jQuery = td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
