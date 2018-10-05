@@ -11,7 +11,8 @@ public class FinanceForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private ApplicationFinanceType applicationFinanceType;
 
-    private boolean includeGrowthTable;
+    @NotNull(message = "{validation.field.must.not.be.blank}")
+    private Boolean includeGrowthTable;
 
     @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String fundingRules;
@@ -24,14 +25,14 @@ public class FinanceForm extends CompetitionSetupForm {
         this.applicationFinanceType = applicationFinanceType;
     }
 
-    public boolean isIncludeGrowthTable() {
+    public Boolean getIncludeGrowthTable() {
         return includeGrowthTable;
     }
 
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+    public void setIncludeGrowthTable(Boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
     }
-
+    
     public String getFundingRules() {
         return fundingRules;
     }

@@ -23,14 +23,18 @@ public class ManageStakeholderModelPopulator {
     @Autowired
     private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
 
-    public ManageStakeholderViewModel populateModel(CompetitionResource competition) {
+    public ManageStakeholderViewModel populateModel(CompetitionResource competition, String tab) {
         List<UserResource> availableStakeholders = userRestService.findByUserRole(STAKEHOLDER).getSuccess();
         List<UserResource> stakeholdersAssignedToCompetition = competitionSetupStakeholderRestService.findStakeholders(competition.getId()).getSuccess();
         availableStakeholders.removeAll(stakeholdersAssignedToCompetition);
 
+        List<UserResource> pendingStakeholderInvitesForCompetition = competitionSetupStakeholderRestService.findPendingStakeholderInvites(competition.getId()).getSuccess();
+
         return new ManageStakeholderViewModel(competition.getId(), competition.getName(),
                 sortByName(availableStakeholders),
-                sortByName(stakeholdersAssignedToCompetition));
+                sortByName(stakeholdersAssignedToCompetition),
+                sortByName(pendingStakeholderInvitesForCompetition),
+                tab);
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
