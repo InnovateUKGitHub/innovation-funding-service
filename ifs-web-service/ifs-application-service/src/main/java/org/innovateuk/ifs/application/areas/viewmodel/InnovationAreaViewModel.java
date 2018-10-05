@@ -13,8 +13,8 @@ public class InnovationAreaViewModel {
     private boolean noInnovationAreaApplicable;
     private String applicationName;
 
-    Long applicationId;
-    Long questionId;
+    private Long applicationId;
+    private Long questionId;
 
     List<InnovationAreaResource> availableInnovationAreas;
 
