@@ -39,7 +39,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
 
         when(sectionServiceMock.getById(id)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseURI + "/{id}", id))
+        mockMvc.perform(get(baseURI + "/{id}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -55,7 +56,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         final Long sectionId = 1L;
 
         when(sectionServiceMock.getNextSection(sectionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
-        mockMvc.perform(get(baseURI + "/getNextSection/{sectionId}", sectionId))
+        mockMvc.perform(get(baseURI + "/getNextSection/{sectionId}", sectionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -71,7 +73,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
 
         when(sectionServiceMock.getPreviousSection(sectionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseURI + "/getPreviousSection/{sectionId}", sectionId))
+        mockMvc.perform(get(baseURI + "/getPreviousSection/{sectionId}", sectionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -87,7 +90,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
 
         when(sectionServiceMock.getSectionByQuestionId(questionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
-        mockMvc.perform(get(baseURI + "/getSectionByQuestionId/{questionId}", questionId))
+        mockMvc.perform(get(baseURI + "/getSectionByQuestionId/{questionId}", questionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -103,7 +107,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
 
         when(sectionServiceMock.getQuestionsForSectionAndSubsections(sectionId)).thenReturn(serviceSuccess(asSet(1L, 2L, 3L)));
 
-        mockMvc.perform(get(baseURI + "/getQuestionsForSectionAndSubsections/{sectionId}", sectionId))
+        mockMvc.perform(get(baseURI + "/getQuestionsForSectionAndSubsections/{sectionId}", sectionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -123,7 +128,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         when(sectionServiceMock.getSectionsByCompetitionIdAndType(competitionId, sectionType)).thenReturn(serviceSuccess(
                 singletonList(sectionResourceBuilder.build())));
 
-        mockMvc.perform(get(baseURI + "/getSectionsByCompetitionIdAndType/{competitionId}/{sectionType}", competitionId, sectionType))
+        mockMvc.perform(get(baseURI + "/getSectionsByCompetitionIdAndType/{competitionId}/{sectionType}", competitionId, sectionType)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -142,7 +148,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         when(sectionServiceMock.getByCompetitionId(competitionId)).thenReturn(serviceSuccess(singletonList(
                 sectionResourceBuilder.build())));
 
-        mockMvc.perform(get(baseURI + "/getByCompetition/{competitionId}", competitionId))
+        mockMvc.perform(get(baseURI + "/getByCompetition/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -160,7 +167,8 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         when(sectionServiceMock.getByCompetitionIdVisibleForAssessment(competitionId)).thenReturn(serviceSuccess(
                 singletonList(sectionResourceBuilder.build())));
 
-        mockMvc.perform(get(baseURI + "/getByCompetitionIdVisibleForAssessment/{competitionId}", competitionId))
+        mockMvc.perform(get(baseURI + "/getByCompetitionIdVisibleForAssessment/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(

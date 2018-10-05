@@ -28,7 +28,8 @@ public class AgreementControllerDocumentation extends BaseControllerMockMVCTest<
     public void findCurrent() throws Exception {
         when(agreementServiceMock.getCurrent()).thenReturn(serviceSuccess(agreementResourceBuilder.build()));
 
-        mockMvc.perform(get("/agreement/findCurrent"))
+        mockMvc.perform(get("/agreement/findCurrent")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("agreement/{method-name}",
                         responseFields(agreementResourceFields)

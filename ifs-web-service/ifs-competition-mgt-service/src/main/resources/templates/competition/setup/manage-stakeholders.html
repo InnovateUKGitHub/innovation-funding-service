@@ -15,11 +15,22 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Stakeholders', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
-
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to invite this user.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Stakeholders', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
+
+        <h2 class="govuk-heading-m">Key statistics</h2>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-bottom-6">
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}">0</span>
+                    <small>Stakeholders added</small>
+                </div>
+            </div>
         </div>
 
         <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
@@ -29,7 +40,7 @@
 
             <div class="govuk-details__text">
 
-              <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${model.competitionId})}">
+              <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder&tab={tab}(competitionId=${model.competitionId},tab=${param.tab == null or param.tab[0] == 'add' ? 'add' : 'added'})}">
 
                   <p class="govuk-body">Enter the new stakeholder's details below.</p>
 
@@ -103,39 +114,94 @@
             </h2>
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
-                    <a th:href="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${model.competitionId})}"
-                       aria-selected="true"
+                    <a href="?tab=add"
+                       th:attr="aria-selected=${param.tab == null or param.tab[0] == 'add' ? true : false}"
                        class="govuk-tabs__tab">Add</a>
                 </li>
                 <li class="govuk-tabs__list-item">
-                    <a th:href="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${model.competitionId})}"
-                       class="govuk-tabs__tab">Added to competition (0)</a>
+                    <a href="?tab=added"
+                       th:attr="aria-selected=${param.tab != null and param.tab[0] == 'added' ? true : false}"
+                       class="govuk-tabs__tab">Added to competition (<span th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}"></span>)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
-                <p class="govuk-body govuk-!-font-weight-bold">
-                    <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableStakeholders)}"></span>
-                    stakeholders available to add
-                </p>
+                <th:block th:unless="${param.tab != null and param.tab[0] == 'added'}">
+                    <p class="govuk-body govuk-!-font-weight-bold">
+                        <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableStakeholders)}"></span>
+                        stakeholders available to add
+                    </p>
+                    <table class="govuk-table stakeholder-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Name</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="stakeholder : ${model.availableStakeholders}">
+                            <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
+                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell alignright">
+                                <form method="POST"
+                                      th:action="@{/competition/setup/{competitionId}/manage-stakeholders?addStakeholder=addStakeholder&stakeholderUserId={stakeholderUserId}(competitionId=${model.competitionId},stakeholderUserId=${stakeholder.id})}">
+                                    <button type="submit"
+                                            class="button-secondary govuk-!-margin-0">
+                                        Add
+                                        <span class="govuk-visually-hidden">
+                                            <th:block th:text="${stakeholder.name}" />
+                                            as stakeholder
+                                        </span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+                <th:block th:if="${param.tab != null and param.tab[0] == 'added'}">
+                    <p class="govuk-body govuk-!-font-weight-bold">
+                        <span class="govuk-!-font-size-48" th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}"></span>
+                        stakeholders added to this competition
+                    </p>
 
-                <table class="govuk-table stakeholder-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Name</th>
-                        <th class="govuk-table__header" scope="col">Email address</th>
-                        <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="stakeholders : ${model.availableStakeholders}">
-                        <td class="govuk-table__cell" th:text="${stakeholders.name}">Alexis Kinney</td>
-                        <td class="govuk-table__cell" th:text="${stakeholders.email}">alexis@kinney.com</td>
-                        <td class="govuk-table__cell alignright">
-                            <button class="button-secondary govuk-!-margin-0">Add <span class="govuk-visually-hidden"><th:block th:text="${stakeholders.name}" /> as stakeholder</span></button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <table class="govuk-table stakeholder-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Name</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th class="govuk-table__header" scope="col">Status</th>
+                            <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="stakeholder : ${model.pendingStakeholderInvitesForCompetition}">
+                            <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
+                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell">Invite pending</td>
+                            <td class="govuk-table__cell alignright"></td>
+                        </tr>
+                        <tr class="govuk-table__row" th:each="stakeholder : ${model.stakeholdersAssignedToCompetition}">
+                            <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
+                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell">Added</td>
+                            <td class="govuk-table__cell alignright">
+                                <form method="POST"
+                                      th:action="@{/competition/setup/{competitionId}/manage-stakeholders?removeStakeholder=removeStakeholder&stakeholderUserId={stakeholderUserId}(competitionId=${model.competitionId},stakeholderUserId=${stakeholder.id})}">
+                                    <button type="submit"
+                                            class="button-secondary govuk-!-margin-0">
+                                        Remove
+                                        <span class="govuk-visually-hidden">
+                                            <th:block th:text="${stakeholder.name}" />
+                                            as stakeholder
+                                        </span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th:block>
             </section>
         </div>
 
