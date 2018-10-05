@@ -70,7 +70,7 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin  Assessor
+Force Tags        CompAdmin  Assessor  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 

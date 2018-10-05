@@ -17,7 +17,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
 Resource          PS_Common.robot
 
 

@@ -22,7 +22,7 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin    Assessor
+Force Tags        CompAdmin    Assessor  Pending
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***

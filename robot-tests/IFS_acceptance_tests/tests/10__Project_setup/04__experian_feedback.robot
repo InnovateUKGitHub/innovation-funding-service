@@ -16,7 +16,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-9061 Internal server error on bank details being approved multiple times by proj finance
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
-Force Tags        Experian    Project Setup
+Force Tags        Experian    Project Setup  Pending
 Resource          PS_Common.robot
 
 *** Variables ***

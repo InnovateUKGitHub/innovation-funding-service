@@ -28,7 +28,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-2731  PS - External - Submitting Bank details with manually added Oper Address leads to ISE
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
 Resource          PS_Common.robot
 
 # Alternative Bank account pair:12345677 - 000004 #

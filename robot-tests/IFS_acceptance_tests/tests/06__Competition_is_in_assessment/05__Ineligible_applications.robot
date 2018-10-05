@@ -24,7 +24,7 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-2994 New Stakeholder role and permissions
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 

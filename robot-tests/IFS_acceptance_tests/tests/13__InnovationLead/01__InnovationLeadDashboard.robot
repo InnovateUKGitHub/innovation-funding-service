@@ -6,7 +6,7 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...             IFS-1308 Innovation Leads: Project Setup
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
-Force Tags      InnovationLead
+Force Tags      InnovationLead  Pending
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource        ../10__Project_setup/PS_Common.robot

@@ -18,7 +18,7 @@ Documentation     INFUND-1987
 ...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 

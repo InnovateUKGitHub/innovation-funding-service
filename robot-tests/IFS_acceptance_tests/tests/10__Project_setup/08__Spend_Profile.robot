@@ -71,7 +71,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-2221 Spend Profile Generation - Ensure Bank Details are approved or not required
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
 Resource          PS_Common.robot
 
 *** Variables ***

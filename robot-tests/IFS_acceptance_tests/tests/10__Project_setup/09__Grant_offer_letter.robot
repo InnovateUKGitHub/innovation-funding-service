@@ -44,7 +44,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-2533 Reason for rejecting GOL
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup    Upload
+Force Tags        Project Setup    Upload  Pending
 Resource          PS_Common.robot
 
 

@@ -18,7 +18,7 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               IFS-3560 Email subject for application funded and funding to include competition name and application ID
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin  Applicant
+Force Tags        CompAdmin  Applicant  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../10__Project_setup/PS_Common.robot

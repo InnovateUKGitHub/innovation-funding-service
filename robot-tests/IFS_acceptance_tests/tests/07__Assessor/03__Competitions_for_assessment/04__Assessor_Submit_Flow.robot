@@ -24,7 +24,7 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
 Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Assessor
+Force Tags        Assessor  Pending
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../07__Assessor/Assessor_Commons.robot
 

@@ -40,7 +40,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-3943 Assessor profile view - Internal
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
-Force Tags        CompAdmin  Assessor
+Force Tags        CompAdmin  Assessor  Pending
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***

@@ -30,7 +30,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        Assessor
+Force Tags        Assessor  Pending
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
 

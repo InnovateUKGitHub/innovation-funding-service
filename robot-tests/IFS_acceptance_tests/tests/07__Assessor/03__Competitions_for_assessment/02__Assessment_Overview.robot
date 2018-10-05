@@ -9,7 +9,7 @@ Documentation     INFUND-3303: As an Assessor I want the ability to reject the a
 ...               INFUND-5379 The Applications for assessment dashboard shouldn't show the rejected applications
 Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Assessor
+Force Tags        Assessor  Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

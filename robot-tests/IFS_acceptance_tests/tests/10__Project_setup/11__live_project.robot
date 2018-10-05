@@ -3,6 +3,7 @@ Documentation     INFUND-6376 As a partner I want to be shown information in IFS
 Resource          PS_Common.robot
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    Close browser and delete emails
+Force Tags        Project Setup  Pending
 
 *** Test Cases ***
 Project dashboard shows message that the project is live

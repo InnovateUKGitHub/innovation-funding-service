@@ -14,7 +14,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-3553 Email subject for Monitoring Officer to include competition name and application ID
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
 Resource          PS_Common.robot
 
 *** Variables ***

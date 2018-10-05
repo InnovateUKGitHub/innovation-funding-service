@@ -8,7 +8,7 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-2904 CSS Search by application number
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Support  CompAdmin
+Force Tags        Support  CompAdmin  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 

@@ -44,7 +44,7 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               INF-2637 Manage interview panel link on competition dashboard - Internal
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Tear Down
-Force Tags        CompAdmin  Assessor
+Force Tags        CompAdmin  Assessor  Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
