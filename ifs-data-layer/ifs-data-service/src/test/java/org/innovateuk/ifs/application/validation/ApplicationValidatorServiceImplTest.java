@@ -123,7 +123,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
 
     @Test
-    public void validateFormInputResponseEmptyResponse() {
+    public void validateFormInputResponseWhenEmptyResponse() {
         long applicationId = 1L;
         long formInputId = 2L;
 
@@ -149,7 +149,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
 
     @Test
-    public void validateFormInputResponseApplicationDetails() {
+    public void validateFormInputResponseWhenApplicationDetails() {
         long applicationId = 1L;
         long formInputId = 2L;
 
@@ -186,7 +186,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     }
 
     @Test
-    public void validateFormInputResponseMarkedAsComplete() {
+    public void validateFormInputResponseWhenMarkedAsComplete() {
         Application application = newApplication().build();
         long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
@@ -208,7 +208,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     }
 
     @Test
-    public void validateFormInputResponseIsResearchUser() {
+    public void validateFormInputResponseWhenIsResearchUser() {
         Application application = newApplication().build();
         long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
@@ -286,7 +286,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     }
 
     @Test
-    public void validateCostItemMarkedAsCompleteByIdIsNull() {
+    public void validateCostItemWhenMarkedAsCompleteByIdIsNull() {
         long applicationId = 1L;
         long organisationId = 999L;
         Question question = newQuestion().build();
