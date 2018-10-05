@@ -227,7 +227,7 @@ public class ApplicationSectionController {
 
         switch (section.getType()) {
             case FUNDING_FINANCES:
-                return  validateRequestingFunding(params, bindingResult) &&
+                return  validateRequestingFunding(params, bindingResult) &
                         validateOtherFundingSelectionMade(params, bindingResult) &&
                         validateTermsAndConditionsAgreement(form, bindingResult);
 

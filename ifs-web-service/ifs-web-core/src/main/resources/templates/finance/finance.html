@@ -1425,7 +1425,7 @@
                 </legend>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-otherPublicFunding'})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=cost-otherPublicFunding)" />
                 <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                 <div class="govuk-radios">
                     <div class="govuk-radios__item" data-target="other-funding-table">
