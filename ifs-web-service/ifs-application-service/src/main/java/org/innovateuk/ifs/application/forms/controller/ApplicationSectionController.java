@@ -260,7 +260,7 @@ public class ApplicationSectionController {
     }
 
     private boolean validateRequestingFunding(Map<String, String[]> params, BindingResult bindingResult) {
-        if (isRequestingFundingRequest(params)) {
+        if (isFundingRequest(params)) {
             return true;
         }
         bindingResult.rejectValue("formInput[request-funding]", "validation.finance.funding.requesting.blank");
