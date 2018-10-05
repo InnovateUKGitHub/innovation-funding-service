@@ -1,10 +1,10 @@
-IFS.application.setTableValidation = (function () {
+IFS.application.tableValidation = (function () {
   'use strict'
   return {
     settings: {
     },
     init: function () {
-      IFS.application.setTableValidation.checkForErrors()
+      IFS.application.tableValidation.checkForErrors()
     },
     checkForErrors: function () {
       var formInTable = jQuery('.form-in-table').length > 0
