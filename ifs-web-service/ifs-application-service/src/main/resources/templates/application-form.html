@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="fundingFinancesSection=${model.section.type == T(org.innovateuk.ifs.form.resource.SectionType).FUNDING_FINANCES}">
 
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body class="govuk-template__body app-form finance set-table-validation">
+<body class="govuk-template__body app-form finance" th:classappend="${fundingFinancesSection} ? 'set-table-validation'">
 
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />

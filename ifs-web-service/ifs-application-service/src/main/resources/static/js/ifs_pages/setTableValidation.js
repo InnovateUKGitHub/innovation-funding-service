@@ -13,8 +13,6 @@ IFS.application.setTableValidation = (function () {
       if (formInTable && formInTableErrors > 0) {
         jQuery('.form-in-table').addClass('govuk-form-group--error')
       }
-
-      console.log('checking for errors in table ' + formInTableErrors)
     }
   }
 })()
