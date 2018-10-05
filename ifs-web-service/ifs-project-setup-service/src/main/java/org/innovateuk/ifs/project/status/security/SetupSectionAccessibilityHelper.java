@@ -246,6 +246,21 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessDocumentsSection(OrganisationResource organisation) {
+
+        if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
+            return ACCESSIBLE;
+        }
+
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                        "is complete")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()

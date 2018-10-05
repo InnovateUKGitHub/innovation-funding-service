@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
+
+import java.util.List;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
@@ -86,6 +90,31 @@ public class SetupSectionStatus {
         } else {
             return HOURGLASS;
         }
+    }
+
+    public SectionStatus documentsSectionStatus(final boolean isProjectManager,
+                                                final int expectedNumberOfDocuments,
+                                                List<ProjectDocumentResource> projectDocuments) {
+
+        int actualNumberOfDocuments = projectDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
+            return TICK;
+        }
+
+        if (isProjectManager) {
+            if (projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+                return CROSS;
+            }
+
+            if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                    .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus()))) {
+                return FLAG;
+            }
+        }
+
+        return HOURGLASS;
     }
 
     public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
