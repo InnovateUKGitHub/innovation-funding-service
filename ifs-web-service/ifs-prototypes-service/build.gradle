@@ -61,3 +61,5 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 }
+
+processResources.dependsOn ":ifs-web-service:applyProfiles"
