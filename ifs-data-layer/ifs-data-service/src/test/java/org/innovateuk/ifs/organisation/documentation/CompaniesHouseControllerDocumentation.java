@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.transactional.CompaniesHouseApiService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,6 +84,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                         ),
                         responseFields(fieldWithPath("[]").description("List of Organisation search results"))
                                 .andWithPrefix("[].", organisationSearchResultFields())
+                                .and(fieldWithPath("[].extraAttributes.Key").description("extra attribute"))
                 ));
 
         verify(companyHouseService,only()).searchOrganisations(searchText);
@@ -106,6 +108,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("id").description("Id of the Organisation to search.")
                         ),
                         responseFields(organisationSearchResultFields())
+                        .and(fieldWithPath("extraAttributes.Key").description("extra attribute"))
                 ));
         verify(companyHouseService,only()).getOrganisationById(id);
     }

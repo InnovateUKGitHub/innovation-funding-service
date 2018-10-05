@@ -54,13 +54,6 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                                 parameterWithName("id").description("id of the grantClaimMaximum to be retrieved")
                         ),
                         responseFields(grantClaimMaximumResourceFields)
-                            .andWithPrefix("organisationType.", new FieldDescriptor[]{
-                                fieldWithPath("id").description("Id of the organisation type"),
-                                fieldWithPath("name").description("Name of the organisation type"),
-                                fieldWithPath("description").description("Description of the organisation type"),
-                                fieldWithPath("visibleInSetup").description("Whether or not organisation type is visible in setup"),
-                                fieldWithPath("parentOrganisationType").description("Parent organisation type")
-                        })
                 ));
     }
 
@@ -96,13 +89,6 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                 .andDo(document(
                         "grant-claim-maximum/{method-name}",
                         responseFields(grantClaimMaximumResourceFields)
-                            .andWithPrefix("organisationType.", new FieldDescriptor[]{
-                                fieldWithPath("id").description("Id of the organisation type"),
-                                fieldWithPath("name").description("Name of the organisation type"),
-                                fieldWithPath("description").description("Description of the organisation type"),
-                                fieldWithPath("visibleInSetup").description("Whether or not organisation type is visible in setup"),
-                                fieldWithPath("parentOrganisationType").description("Parent organisation type")
-                        })
                 ));
     }
 
