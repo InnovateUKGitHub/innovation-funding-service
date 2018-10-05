@@ -54,7 +54,7 @@ public final class ApplicationFormUtil {
     }
 
     public static boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey(REQUESTING_FUNDING);
+        return params.containsKey("request-funding");
     }
 
     public static boolean isFundingRequest(@NotNull Map<String, String[]> params) {
