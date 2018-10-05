@@ -6,7 +6,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body class="govuk-template__body app-form finance" th:classappend="${fundingFinancesSection} ? 'set-table-validation'">
+<body class="govuk-template__body app-form finance" th:classappend="${fundingFinancesSection} ? 'table-validation'">
 
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
