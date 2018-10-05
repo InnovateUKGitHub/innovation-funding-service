@@ -43,5 +43,8 @@ IFS.application.loadOrder = {
   },
   'competition-management': {
     init: function () { IFS.application.competitionManagement.init() }
+  },
+  'set-table-validation': {
+    init: function () { IFS.application.setTableValidation.init() }
   }
 }
