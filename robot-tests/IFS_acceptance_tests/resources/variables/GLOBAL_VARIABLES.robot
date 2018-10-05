@@ -47,6 +47,7 @@ ${openCompetitionResearch_name}  Photonics for Research
 ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_name}']}
 
 ${openGenericCompetition}  Generic innovation
+${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
