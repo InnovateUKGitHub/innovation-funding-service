@@ -57,7 +57,8 @@ public class ApplicantControllerDocumentation extends BaseControllerMockMVCTest<
 
         when(applicationService.getQuestion(USER_ID, QUESTION_ID, APPLICATION_ID)).thenReturn(serviceSuccess(applicantQuestionResource().build()));
 
-        mockMvc.perform(get("/applicant/{user}/{application}/question/{question}", USER_ID, APPLICATION_ID, QUESTION_ID))
+        mockMvc.perform(get("/applicant/{user}/{application}/question/{question}", USER_ID, APPLICATION_ID, QUESTION_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicant/{method-name}",
                         pathParameters(
@@ -102,7 +103,8 @@ public class ApplicantControllerDocumentation extends BaseControllerMockMVCTest<
 
         when(applicationService.getSection(USER_ID, SECTION_ID, APPLICATION_ID)).thenReturn(serviceSuccess(applicantSectionResource().build()));
 
-        mockMvc.perform(get("/applicant/{user}/{application}/section/{section}", USER_ID, APPLICATION_ID, QUESTION_ID))
+        mockMvc.perform(get("/applicant/{user}/{application}/section/{section}", USER_ID, APPLICATION_ID, QUESTION_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicant/{method-name}",
                         pathParameters(

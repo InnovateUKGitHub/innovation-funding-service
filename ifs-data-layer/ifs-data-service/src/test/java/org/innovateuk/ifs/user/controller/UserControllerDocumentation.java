@@ -65,7 +65,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
+        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("emailAddress").description("E-mail address of the user who a verification link should be sent to by e-mail")
@@ -82,7 +83,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userResource)))
+                .content(objectMapper.writeValueAsString(userResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for")
@@ -98,7 +100,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD))
+        mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userRole").description("The role to get the users by.")
@@ -119,7 +122,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userResource)))
+                .content(objectMapper.writeValueAsString(userResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for"),
@@ -134,7 +138,9 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void testFindActiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
         when(userServiceMock.findActiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
                         .andWithPrefix("content[].", UserDocs.userResourceFields)
@@ -145,7 +151,9 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void testFindInactiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
         when(userServiceMock.findInactiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
                         .andWithPrefix("content[].", UserDocs.userResourceFields)
@@ -178,7 +186,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/internal/create/{inviteHash}", "SomeHashString")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(internalUserRegistrationResource)))
+                .content(objectMapper.writeValueAsString(internalUserRegistrationResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteHash").description("Hash from invite to be used for creating new account")
@@ -193,7 +202,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId))
+        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         pathParameters(
@@ -211,7 +221,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(editUserResource)))
+                .content(toJson(editUserResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/internal/edit/{method-name}",
                         requestFields(EditUserResourceDocs.editUserResourceFields)
@@ -226,7 +237,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(get("/user/id/{userId}/deactivate", userId))
+        mockMvc.perform(get("/user/id/{userId}/deactivate", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Identifier of the user being deactivated")
@@ -240,7 +252,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(get("/user/id/{userId}/reactivate", userId))
+        mockMvc.perform(get("/user/id/{userId}/reactivate", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Identifier of the user being reactivated")
@@ -257,7 +270,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
         when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
-        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
+        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)))
                 .andDo(document(
@@ -283,7 +297,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
+        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name())
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "user/{method-name}",

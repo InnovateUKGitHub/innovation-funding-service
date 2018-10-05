@@ -9,7 +9,7 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -64,7 +64,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     private RegistrationCookieService registrationCookieService;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
     private ApplicationRestService applicationRestService;
@@ -103,7 +103,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
-        when(companyHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
+        when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
@@ -152,7 +152,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
         Cookie[] cookies = mockMvc.perform(post("/organisation/create/find-organisation")
                 .param("organisationSearchName", "BusinessName")
-                .param("not-in-company-house", ""))
+                .param("not-in-companies-house", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn().getResponse().getCookies();
@@ -251,7 +251,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSearchOrganisation_findBusinessSearchCompanyHouse() throws Exception {
+    public void testSearchOrganisation_findBusinessSearchCompaniesHouse() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
         organisationFormCookieValue.setOrganisationSearching(true);
 
@@ -268,7 +268,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testFindBusinessSearchCompanyHouseInvalid() throws Exception {
+    public void testFindBusinessSearchCompaniesHouseInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
 
         mockMvc.perform(post("/organisation/create/find-organisation")
@@ -279,7 +279,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisationtest_findBusinessConfirmCompanyDetailsInvalid() throws Exception {
+    public void testSaveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -295,7 +295,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompanyDetailsPage() throws Exception {
+    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompaniesDetailsPage() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 

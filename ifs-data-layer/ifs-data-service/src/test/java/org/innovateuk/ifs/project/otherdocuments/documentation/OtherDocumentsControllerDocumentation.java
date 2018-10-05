@@ -47,7 +47,8 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
         when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -66,7 +67,8 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
         when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -79,7 +81,8 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
     @Test
     public void setPartnerDocumentsSubmittedDate() throws Exception {
         when(otherDocumentsServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
+        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(

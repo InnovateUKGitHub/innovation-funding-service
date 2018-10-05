@@ -62,9 +62,10 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
                 FinanceCheckURIs.PATH;
 
-        mockMvc.perform(get(url, 123L, 456L)).
-                andExpect(status().isOk()).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get(url, 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
@@ -103,10 +104,11 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH;
 
-        mockMvc.perform(get(url, 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(expected))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get(url, 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
                         ),
@@ -135,10 +137,11 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH + "/overview";
 
-        mockMvc.perform(get(url, 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(expected))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get(url, 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
                         ),
@@ -168,10 +171,11 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility";
 
-        mockMvc.perform(get(url, 123L, 456L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(expected))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get(url, 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check eligibility is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check eligibility is linked")
@@ -183,13 +187,14 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getTurnover() throws Exception{
+    public void getTurnover() throws Exception {
         Long applicationId = 1L;
         Long organisationId = 2L;
 
         when(financeCheckServiceMock.getTurnoverByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
 
-        MvcResult mvcResult = mockMvc.perform(get("/project/turnover/{applicationId}/{organisationId}", applicationId, organisationId))
+        MvcResult mvcResult = mockMvc.perform(get("/project/turnover/{applicationId}/{organisationId}", applicationId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which the applicant's annual turnover is requested"),
@@ -200,13 +205,14 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getHeadcount() throws Exception{
+    public void getHeadcount() throws Exception {
         Long applicationId = 1L;
         Long organisationId = 2L;
 
         when(financeCheckServiceMock.getHeadCountByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
 
-        MvcResult mvcResult = mockMvc.perform(get("/project/headcount/{applicationId}/{organisationId}", applicationId, organisationId))
+        MvcResult mvcResult = mockMvc.perform(get("/project/headcount/{applicationId}/{organisationId}", applicationId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which the applicant's staff headcount is requested"),

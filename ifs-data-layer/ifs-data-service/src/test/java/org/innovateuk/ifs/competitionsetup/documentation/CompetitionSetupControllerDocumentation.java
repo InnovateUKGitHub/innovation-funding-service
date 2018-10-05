@@ -44,7 +44,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionComplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(put("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -61,7 +62,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -79,7 +81,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionComplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(put("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -98,7 +101,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionIncomplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(put("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -116,7 +120,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         Long competitionTypeId = 3L;
         when(competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionTypeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/setup/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
+        mockMvc.perform(post("/competition/setup/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -137,6 +142,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         when(competitionSetupService.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/setup/{id}/update-competition-initial-details", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(competitionResource)))
                 .andExpect(status().isOk())
@@ -156,7 +162,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
 
         when(competitionSetupService.deleteCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/competition/setup/{id}", competitionId))
+        mockMvc.perform(delete("/competition/setup/{id}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document("competition/{method-name}",
                         pathParameters(parameterWithName("id").description("Id of the competition to delete")))

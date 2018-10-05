@@ -99,7 +99,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertEquals(STANDARD, result.getApplicationFinanceType());
-        assertTrue(result.isIncludeGrowthTable());
+        assertTrue(result.getIncludeGrowthTable());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertEquals(NO_FINANCES, result.getApplicationFinanceType());
-        assertFalse(result.isIncludeGrowthTable());
+        assertFalse(result.getIncludeGrowthTable());
     }
 
     @Test
@@ -123,6 +123,6 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertNull(result.getApplicationFinanceType());
-        assertFalse(result.isIncludeGrowthTable());
+        assertFalse(result.getIncludeGrowthTable());
     }
 }

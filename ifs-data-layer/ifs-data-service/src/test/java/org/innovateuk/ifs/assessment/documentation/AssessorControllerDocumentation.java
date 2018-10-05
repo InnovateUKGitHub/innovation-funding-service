@@ -48,6 +48,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
         when(assessorServiceMock.registerAssessorByHash(hash, userRegistrationResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessor/register/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
                 .andExpect(status().isOk())
@@ -70,7 +71,8 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
 
         when(assessorServiceMock.getAssessorProfile(assessorId)).thenReturn(serviceSuccess(assessorProfileResource));
 
-        mockMvc.perform(get("/assessor/profile/{assessorId}", assessorId))
+        mockMvc.perform(get("/assessor/profile/{assessorId}", assessorId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessor/get-assessor-profile",
                         pathParameters(
@@ -91,7 +93,8 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
         when(competitionServiceMock.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
         when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId))
+        mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "assessor/{method-name}",

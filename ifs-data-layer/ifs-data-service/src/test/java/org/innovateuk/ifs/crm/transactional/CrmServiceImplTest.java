@@ -47,7 +47,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void testSycCrmContact() {
         Long userId = 1L;
         UserResource user = newUserResource().build();
-        List<OrganisationResource> organisations = newOrganisationResource().withCompanyHouseNumber("Something", "Else").build(2);
+        List<OrganisationResource> organisations = newOrganisationResource().withCompaniesHouseNumber("Something", "Else").build(2);
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisations));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
@@ -62,7 +62,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     private Predicate<SilContact> matchSilContact(UserResource user, OrganisationResource organisation) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
-            assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompanyHouseNumber()));
+            assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompaniesHouseNumber()));
             return true;
         };
     }

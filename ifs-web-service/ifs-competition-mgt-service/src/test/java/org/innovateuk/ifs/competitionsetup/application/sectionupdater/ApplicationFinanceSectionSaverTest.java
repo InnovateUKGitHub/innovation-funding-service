@@ -102,7 +102,6 @@ public class ApplicationFinanceSectionSaverTest {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competition.getId())
                 .withApplicationFinanceType(NO_FINANCES)
-                .withIncludeGrowthTable(false)
                 .build();
 
         when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());

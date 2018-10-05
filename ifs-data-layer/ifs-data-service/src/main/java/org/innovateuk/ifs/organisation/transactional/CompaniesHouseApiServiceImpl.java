@@ -31,34 +31,34 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * This class communicates with the Companies House API.
  * This is used to get information abouts companies.
  *
- * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
+ * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "", matchIfMissing = true)
-public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
+public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
-    private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(CompaniesHouseApiServiceImpl.class);
 
-    @Value("${ifs.data.company-house.url}")
-    private String companyHouseUrl = null;
+    @Value("${ifs.data.companies-house.url}")
+    private String companiesHouseUrl = null;
 
     private static final int SEARCH_ITEMS_MAX = 10;
 
-    private static final String COMPANY_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
+    private static final String COMPANIES_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
 
     private static final String SEARCH_WORD_KEY = "q";
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
 
     @Autowired
-    @Qualifier("companyhouse_adaptor")
+    @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
              // encoded in the web-services.
-            JsonNode companiesResources = restGet(COMPANY_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
+            JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
             JsonNode companyItems = companiesResources.path("items");
             List<OrganisationSearchResult> results = new ArrayList<>();
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
@@ -76,7 +76,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     }
 
     protected <T> T restGet(String path, Class<T> c) {
-        return adaptor.restGetEntity(companyHouseUrl + path, c).getBody();
+        return adaptor.restGetEntity(companiesHouseUrl + path, c).getBody();
     }
 
     /**
@@ -90,12 +90,12 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
      * @return
      */
     protected <T> T restGet(String path, Class<T> c, Map<String, Object> variables) {
-        return adaptor.restGetEntity(companyHouseUrl + path, c, variables).getBody();
+        return adaptor.restGetEntity(companiesHouseUrl + path, c, variables).getBody();
     }
 
     /**
      * Method to build the query variable map. The keys in the map must match the
-     * keys defined in the URL path 'COMPANY_HOUSE_SEARCH_PATH'.
+     * keys defined in the URL path 'COMPANIES_HOUSE_SEARCH_PATH'.
      * @param searchWord
      * @return {@link Map}
      */
@@ -157,7 +157,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
         return org;
     }
     
-    protected void setCompanyHouseUrl(String companyHouseUrl) {
-		this.companyHouseUrl = companyHouseUrl;
+    protected void setCompaniesHouseUrl(String companiesHouseUrl) {
+		this.companiesHouseUrl = companiesHouseUrl;
 	}
 }

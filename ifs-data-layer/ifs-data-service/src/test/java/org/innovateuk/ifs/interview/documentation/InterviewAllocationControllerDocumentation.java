@@ -67,6 +67,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/allocate-assessors/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc"))
@@ -107,6 +108,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "target.id,asc"))
@@ -142,7 +144,8 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getAllocatedApplicationsByAssessorId(competitionId, userId))
                 .thenReturn(serviceSuccess(Collections.singletonList(interviewResource)));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessorId/{userId}", competitionId, userId))
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessorId/{userId}", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -173,6 +176,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/{userId}", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "target.id,asc"))
@@ -207,7 +211,8 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getUnallocatedApplicationIds(competitionId, userId))
                 .thenReturn(serviceSuccess(expectedIds));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-application-ids/{userId}", competitionId, userId))
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-application-ids/{userId}", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -226,7 +231,8 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         long applicationId = 2L;
 
         when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
+        mockMvc.perform(post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -245,7 +251,8 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getInviteToSend(competitionId, userId))
                 .thenReturn(serviceSuccess(newAssessorInvitesToSendResource().build()));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}/invite-to-send", competitionId, userId))
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}/invite-to-send", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -269,6 +276,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/{competitionId}/allocated-applications/{userId}/send-invite", competitionId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(interviewNotifyAllocationResource)))
                 .andExpect(status().isOk())
@@ -293,7 +301,8 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getUnallocatedApplicationsById(applicationIds))
                 .thenReturn(serviceSuccess(interviewApplicationResources));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ',')))
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ','))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(

@@ -64,7 +64,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
-        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId))
+        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
@@ -81,10 +82,11 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
-        mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectTeamStatusResource)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
@@ -96,11 +98,12 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
-        mockMvc.perform(get("/project/{projectId}/team-status", 123L).
-                param("filterByUserId", "456")).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L)
+                .param("filterByUserId", "456")
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectTeamStatusResource)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
@@ -121,7 +124,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
-        mockMvc.perform(get("/project/{id}/status", projectId))
+        mockMvc.perform(get("/project/{id}/status", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project that is being requested")
@@ -130,7 +134,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                 ));
     }
 
-    private ProjectTeamStatusResource buildTeamStatus(){
+    private ProjectTeamStatusResource buildTeamStatus() {
         ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
 

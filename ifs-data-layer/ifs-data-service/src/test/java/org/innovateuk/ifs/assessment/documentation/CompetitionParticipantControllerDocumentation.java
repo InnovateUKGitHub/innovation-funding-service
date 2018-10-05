@@ -45,7 +45,8 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         when(competitionParticipantServiceMock.getCompetitionParticipants(userId, role)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status))
+        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitionparticipant/{method-name}",
                         pathParameters(

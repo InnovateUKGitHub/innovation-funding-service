@@ -50,7 +50,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
         when(applicationNotificationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId))
+        mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -64,7 +65,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
     public void feedbackReleased() throws Exception {
         when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/postSubmission/feedback-released"))
+        mockMvc.perform(get("/competition/postSubmission/feedback-released")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -78,7 +80,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
     public void getOpenQueryCount() throws Exception {
         when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
 
-        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open/count", 321L))
+        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open/count", 321L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -94,7 +97,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
 
-        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open", 321L))
+        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open", 321L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -117,7 +121,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         List<SpendProfileStatusResource> pendingSpendProfiles = Arrays.asList(resource1, resource2);
         when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
-        mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfiles)))
                 .andDo(document(
@@ -142,7 +147,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         when(competitionService.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
 
-        mockMvc.perform(get("/competition/postSubmission/{competitionId}/count-pending-spend-profiles", competitionId))
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/count-pending-spend-profiles", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfileCount)))
                 .andDo(document(
@@ -160,7 +166,8 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         Long competitionId = 2L;
         when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/postSubmission/{id}/close-assessment", competitionId))
+        mockMvc.perform(put("/competition/postSubmission/{id}/close-assessment", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",

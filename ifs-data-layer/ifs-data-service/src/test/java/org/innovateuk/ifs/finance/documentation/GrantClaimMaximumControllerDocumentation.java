@@ -45,7 +45,8 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
 
         when(grantClaimMaximumService.getGrantClaimMaximumById(grantClaimMaximumId)).thenReturn(serviceSuccess(newGrantClaimMaximumResource().build()));
 
-        mockMvc.perform(get("/grant-claim-maximum/{id}", grantClaimMaximumId))
+        mockMvc.perform(get("/grant-claim-maximum/{id}", grantClaimMaximumId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "grant-claim-maximum/{method-name}",
@@ -69,7 +70,8 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
         Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
         when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
 
-        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType))
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "grant-claim-maximum/{method-name}",
@@ -87,6 +89,7 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
         when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcm));
 
         mockMvc.perform(post("/grant-claim-maximum/")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson((gcm))))
                 .andExpect(status().isCreated())
@@ -111,6 +114,7 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                 (true));
 
         mockMvc.perform(get("/grant-claim-maximum/maximum-funding-level-overridden/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(String.valueOf(true)))
                 .andExpect(status().isOk())

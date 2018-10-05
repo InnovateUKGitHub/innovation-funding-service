@@ -60,7 +60,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -90,7 +91,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -116,7 +118,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("all", "")
                         .param("filter", filter)
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -148,7 +151,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("size", size + "")
                         .param("filter", filter)
                         .param("informFilter", informFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(

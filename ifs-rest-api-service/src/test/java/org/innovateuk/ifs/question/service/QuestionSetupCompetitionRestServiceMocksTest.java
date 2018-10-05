@@ -11,7 +11,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 
-public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionSetupCompetitionRestServiceImpl> {
+public class QuestionSetupCompetitionRestServiceMocksTest extends
+        BaseRestServiceUnitTest<QuestionSetupCompetitionRestServiceImpl> {
 
     private static final String questionRestURL = "/question-setup";
 
@@ -21,11 +22,12 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_getByQuestionId() {
+    public void getByQuestionId() {
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
-        setupGetWithRestResultExpectations(questionRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class, expected);
+        setupGetWithRestResultExpectations(questionRestURL + "/get-by-id/" + questionId,
+                CompetitionSetupQuestionResource.class, expected);
 
         CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccess();
 
@@ -34,7 +36,7 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_save() {
+    public void save() {
         long questionId = 1L;
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
@@ -47,23 +49,36 @@ public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<Q
     }
 
     @Test
-    public void test_deleteById() {
-        long questionId = 1L;
-        setupDeleteWithRestResultExpectations(questionRestURL + "/deleteById/" + questionId);
+    public void addDefaultToCompetition() {
+        long competitionId = 1L;
 
-        RestResult<Void> response = service.deleteById(questionId);
+        CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
+        setupPostWithRestResultExpectations(questionRestURL + "/add-default-to-competition/" + competitionId,
+                CompetitionSetupQuestionResource.class, null, expected, CREATED);
+
+        RestResult<CompetitionSetupQuestionResource> response = service.addDefaultToCompetition(competitionId);
 
         assertTrue(response.isSuccess());
     }
 
     @Test
-    public void test_addDefaultToCompetition() {
+    public void addResearchCategoryQuestionToCompetition() {
         long competitionId = 1L;
 
-        CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
-        setupPostWithRestResultExpectations(questionRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class, null, expected, CREATED);
+        setupPostWithRestResultExpectations(questionRestURL + "/add-research-category-question-to-competition/" +
+                competitionId, CREATED);
 
-        RestResult<CompetitionSetupQuestionResource> response = service.addDefaultToCompetition(competitionId);
+        RestResult<Void> response = service.addResearchCategoryQuestionToCompetition(competitionId);
+
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void deleteById() {
+        long questionId = 1L;
+        setupDeleteWithRestResultExpectations(questionRestURL + "/delete-by-id/" + questionId);
+
+        RestResult<Void> response = service.deleteById(questionId);
 
         assertTrue(response.isSuccess());
     }

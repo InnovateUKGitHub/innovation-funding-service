@@ -18,7 +18,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
-import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
@@ -465,7 +465,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("assessment/application-detailed-finances"))
                 .andReturn();
 
-        DefaultYourProjectCostsSectionViewModel resultCostsViewModel = (DefaultYourProjectCostsSectionViewModel) result.getModelAndView().getModel().get("detailedCostings");
+        StandardYourProjectCostsSectionViewModel resultCostsViewModel = (StandardYourProjectCostsSectionViewModel) result.getModelAndView().getModel().get("detailedCostings");
         assertThat(resultCostsViewModel.isSection(), equalTo(true));
         assertThat(resultCostsViewModel.isComplete(), equalTo(false));
         assertThat(resultCostsViewModel.getDefaultProjectCostSections().size(), equalTo(1));

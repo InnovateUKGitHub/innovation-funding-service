@@ -41,7 +41,8 @@ public class AssessorCompetitionSummaryControllerDocumentation extends BaseContr
         when(assessorCompetitionSummaryServiceMock.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/assessor/{assessorId}/competition/{competitionId}/summary", assessorId, competitionId))
+        mockMvc.perform(get("/assessor/{assessorId}/competition/{competitionId}/summary", assessorId, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessor-competition-summary/{method-name}",
                         pathParameters(

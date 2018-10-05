@@ -78,6 +78,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
             log.error(e);
             organisationName = organisation.getName();
         }
-        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
+        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class);
     }
 }

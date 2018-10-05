@@ -7,8 +7,6 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
-*** Variables ***
-
 *** Test Cases ***
 Milestone date for application in progress is visible
     [Documentation]  INFUND-37 INFUND-5485

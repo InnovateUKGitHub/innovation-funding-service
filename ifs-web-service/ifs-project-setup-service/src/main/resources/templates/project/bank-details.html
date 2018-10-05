@@ -19,7 +19,7 @@
           <th:block th:insert="fragments/elements :: error-summary-list(form)" />
       </div>
 
-      <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='govuk-heading-xl'" />
+      <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=${project.name},size='govuk-heading-xl'" />
 
       <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
 
@@ -39,7 +39,7 @@
         <h2 class="govuk-heading-m">Organisation information</h2>
         <p class="govuk-body govuk-!-margin-top-6">
             <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
-            <th:block th:if="${organisation.companyHouseNumber}" th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
+            <th:block th:if="${organisation.companiesHouseNumber}" th:text="|Company no. ${organisation.companiesHouseNumber}|">02423435</th:block>
         </p>
 
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
@@ -49,7 +49,7 @@
         <th:block th:unless="${readonly}">
 
           <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error') ">
-            <label class="govuk-label" for="accountNumber">
+            <label class="govuk-label govuk-label--s" for="accountNumber">
               Account number
             </label>
             <span class="govuk-hint">For example: 15481965</span>
@@ -73,7 +73,7 @@
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error')">
             <label for="sortCode">
-              <span class="govuk-label">Sort code</span>
+              <span class="govuk-label govuk-label--s">Sort code</span>
               <span class="govuk-hint">For example: 311212</span>
               <th:block th:if="${#fields.hasErrors('sortCode')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>

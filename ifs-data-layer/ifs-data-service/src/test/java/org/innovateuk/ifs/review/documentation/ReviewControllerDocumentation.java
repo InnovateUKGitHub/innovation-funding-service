@@ -45,7 +45,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
     @Test
     public void assignApplication() throws Exception {
         when(reviewServiceMock.assignApplicationToPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/assign-application/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/assign-application/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -58,7 +59,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
     @Test
     public void unassignApplication() throws Exception {
         when(reviewServiceMock.unassignApplicationFromPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/unassign-application/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/unassign-application/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -73,7 +75,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
         List<ReviewResource> assessmentResources = reviewResourceBuilder.build(2);
 
         when(reviewServiceMock.getReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
-        mockMvc.perform(get("/assessmentpanel/user/{userId}/competition/{competitionId}", userId, competitionId))
+        mockMvc.perform(get("/assessmentpanel/user/{userId}/competition/{competitionId}", userId, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -95,7 +98,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
 
         when(reviewServiceMock.getReview(reviewId)).thenReturn(serviceSuccess(reviewResource));
 
-        mockMvc.perform(get("/assessmentpanel/review/{reviewId}", reviewId))
+        mockMvc.perform(get("/assessmentpanel/review/{reviewId}", reviewId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -112,7 +116,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
     public void acceptInvitation() throws Exception {
         when(reviewServiceMock.acceptReview(reviewId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessmentpanel/review/{reviewId}/accept", reviewId))
+        mockMvc.perform(put("/assessmentpanel/review/{reviewId}/accept", reviewId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -128,6 +133,7 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
         when(reviewServiceMock.rejectReview(reviewId, rejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{reviewId}/reject", reviewId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(rejectOutcomeResource)))
                 .andExpect(status().isOk())

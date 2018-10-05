@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
-import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -96,7 +96,7 @@ public class YourProjectCostsSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
         when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
+        StandardYourProjectCostsSectionViewModel viewModel = (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));

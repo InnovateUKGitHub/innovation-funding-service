@@ -32,7 +32,8 @@ public class AssessorCountOptionsControllerDocumentation extends BaseControllerM
     public void getAllByCompetitionType() throws Exception {
         when(assessorCountOptionService.findAllByCompetitionType(anyLong())).thenReturn(ServiceResult.serviceSuccess(AssessorCountOptionFixture.programmeAssessorOptionResourcesList()));
 
-        mockMvc.perform(get("/assessor-count-options/{id}", 1L))
+        mockMvc.perform(get("/assessor-count-options/{id}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessor-count-options/{method-name}",
                         pathParameters(

@@ -37,7 +37,8 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
         when(termsAndConditionsService.getById(termsAndConditionsId)).thenReturn(serviceSuccess
                 (grantTermsAndConditionsResourceBuilder.build()));
 
-        mockMvc.perform(get("/terms-and-conditions/getById/{id}", termsAndConditionsId))
+        mockMvc.perform(get("/terms-and-conditions/getById/{id}", termsAndConditionsId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("terms-and-conditions/{method-name}",
                         pathParameters(
@@ -53,7 +54,8 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
         when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess
                 (response));
 
-        mockMvc.perform(get("/terms-and-conditions/getLatest"))
+        mockMvc.perform(get("/terms-and-conditions/getLatest")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "terms-and-conditions/{method-name}",
@@ -71,7 +73,8 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
         when(termsAndConditionsService.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess
                 (siteTermsAndConditionsResource));
 
-        mockMvc.perform(get("/terms-and-conditions/site"))
+        mockMvc.perform(get("/terms-and-conditions/site")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("terms-and-conditions/{method-name}",
                         responseFields(termsAndConditionsResourceFields)

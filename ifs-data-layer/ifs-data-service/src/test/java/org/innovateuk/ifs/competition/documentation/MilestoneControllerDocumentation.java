@@ -40,7 +40,8 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         when(milestoneService.getAllPublicMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build(1)));
 
-        mockMvc.perform(get("/milestone/{id}/public", competitionId))
+        mockMvc.perform(get("/milestone/{id}/public", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("milestone/{method-name}",
                         pathParameters(
@@ -58,7 +59,8 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         when(milestoneService.getAllMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build(1)));
 
-        mockMvc.perform(get("/milestone/{id}/", competitionId))
+        mockMvc.perform(get("/milestone/{id}/", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("milestone/{method-name}",
                         pathParameters(
@@ -75,7 +77,8 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
         Long competitionId = 2L;
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build()));
 
-        mockMvc.perform(get("/milestone/{competitionId}/getByType?type=" + MilestoneType.OPEN_DATE, competitionId))
+        mockMvc.perform(get("/milestone/{competitionId}/getByType?type=" + MilestoneType.OPEN_DATE, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("milestone/{method-name}",
                         pathParameters(
@@ -93,7 +96,8 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
         Long competitionId = 2L;
         when(milestoneService.create(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build()));
 
-        mockMvc.perform(post("/milestone/{competitionId}?type=" + MilestoneType.OPEN_DATE, competitionId))
+        mockMvc.perform(post("/milestone/{competitionId}?type=" + MilestoneType.OPEN_DATE, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isCreated())
                 .andDo(document("milestone/{method-name}",
                         pathParameters(
@@ -115,7 +119,8 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         mockMvc.perform(put("/milestone/many")
             .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(milestoneResources)))
+            .content(objectMapper.writeValueAsString(milestoneResources))
+                .header("IFS_AUTH_TOKEN", "123abc"))
             .andExpect(status().isOk())
             .andDo(document("milestone/{method-name}",
                 requestFields(
@@ -131,6 +136,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/milestone/")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(milestoneResource)))
                 .andExpect(status().isOk())

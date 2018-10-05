@@ -43,6 +43,7 @@ public class CostTotalControllerDocumentation extends MockMvcTest<CostTotalContr
 
         mockMvc.perform(
                 post("/cost-total")
+                        .header("IFS_AUTH_TOKEN", "123abc")
                         .content(json(financeCostTotalResource))
                         .contentType(MediaType.APPLICATION_JSON)
         )
@@ -66,6 +67,7 @@ public class CostTotalControllerDocumentation extends MockMvcTest<CostTotalContr
 
         mockMvc.perform(
                 post("/cost-totals")
+                        .header("IFS_AUTH_TOKEN", "123abc")
                         .content(json(financeCostTotalResources))
                         .contentType(MediaType.APPLICATION_JSON)
         )

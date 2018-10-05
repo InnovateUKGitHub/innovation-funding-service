@@ -68,9 +68,10 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.generateSpendProfile(123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/spend-profile/generate", 123L)).
-                andExpect(status().isCreated()).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(post("/project/{projectId}/spend-profile/generate", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isCreated())
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile information is being generated")
@@ -83,7 +84,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
                 .thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
+        mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -101,7 +103,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(isA(Long.class)))
                 .thenReturn(serviceSuccess(ApprovalType.APPROVED));
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
+        mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(ApprovalType.APPROVED)))
                 .andDo(document("project/{method-name}",
@@ -128,7 +131,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).thenReturn(serviceSuccess(table));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(table)))
                 .andDo(document("project/{method-name}",
@@ -157,7 +161,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.getSpendProfileCSV(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileCSVResource));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(spendProfileCSVResource)))
                 .andDo(document("project/{method-name}",
@@ -176,7 +181,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         when(spendProfileServiceMock.getSpendProfileCSV(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(notFoundError(SpendProfileResource.class, projectId, organisationId)));
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -193,7 +199,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         when(spendProfileServiceMock.getSpendProfileCSV(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE));
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().is5xxServerError())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -214,7 +221,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         when(spendProfileServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(notFoundError(SpendProfileResource.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -240,7 +248,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(spendProfileResource)))
                 .andDo(document("project/{method-name}",
@@ -263,7 +272,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         when(spendProfileServiceMock.getSpendProfile(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfile.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -291,7 +301,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(table)))
+                .content(objectMapper.writeValueAsString(table))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -314,7 +325,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId))
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -334,7 +346,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId))
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -351,7 +364,8 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(

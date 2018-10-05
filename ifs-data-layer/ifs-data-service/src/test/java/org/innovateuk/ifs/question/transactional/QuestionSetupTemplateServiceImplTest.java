@@ -14,8 +14,7 @@ import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersis
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Arrays;
-
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
@@ -49,8 +48,8 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testDeleteQuestionInCompetition_questionNotFoundShouldResultInServiceFailure() {
-        final Long questionId = 1L;
+    public void deleteQuestionInCompetition_questionNotFoundShouldResultInServiceFailure() {
+        final long questionId = 1L;
 
         when(questionRepositoryMock.findFirstById(questionId)).thenReturn(null);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(questionId);
@@ -58,7 +57,7 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testDeleteQuestionInCompetition_questionWithoutCompetitionShouldResultInServiceFailure() {
+    public void deleteQuestionInCompetition_questionWithoutCompetitionShouldResultInServiceFailure() {
         Question question = newQuestion().build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
@@ -67,7 +66,7 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testDeleteAssessedQuestionInCompetition_competitionNotInSetupOrReadyStateShouldResultInFailure() {
+    public void deleteQuestionInCompetition_competitionNotInSetupOrReadyStateShouldResultInFailure() {
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Question question = newQuestion().withCompetition(competition).build();
 
@@ -78,20 +77,19 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testDeleteAssessedQuestionInCompetition_questionSectionTotalQuestionIsOneOrLessShouldResultInFailure() {
-        final Long questionId = 1L;
+    public void deleteAssessedQuestionInCompetition_questionSectionTotalQuestionIsOneOrLessShouldResultInFailure() {
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         Section section = newSection().withName(APPLICATION_QUESTIONS.getName()).build();
-        Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).withId(questionId).build();
+        Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
-        when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(questionId);
+        when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(1L);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(question.getId());
         assertTrue(resultAssessedQuestion.isFailure());
     }
 
     @Test
-    public void testDeleteQuestionInCompetition_invalidSectionShouldResultInFailure() {
+    public void deleteQuestionInCompetition_invalidSectionShouldResultInFailure() {
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         Question question = newQuestion().withCompetition(readyToOpenCompetition).build();
 
@@ -103,14 +101,14 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testAddDefaultAssessedQuestionToCompetition_competitionIsNullShouldResultInFailure() throws Exception {
+    public void addDefaultAssessedQuestionToCompetition_competitionIsNullShouldResultInFailure() {
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(null);
 
         assertTrue(result.isFailure());
     }
 
     @Test
-    public void testAddDefaultAssessedQuestionToCompetition_competitionIsNotInReadyOrSetupStateShouldResultInFailure() throws Exception {
+    public void addDefaultAssessedQuestionToCompetition_competitionIsNotInReadyOrSetupStateShouldResultInFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
@@ -119,7 +117,7 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testAddDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() throws Exception {
+    public void addDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
 
         when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), APPLICATION_QUESTIONS.getName())).thenReturn(null);
@@ -130,14 +128,14 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
     }
 
     @Test
-    public void testAddDefaultAssessedQuestionToCompetition_addingQuestionShouldResultInPersistingAndReprioritizingQuestions() throws Exception {
+    public void addDefaultAssessedQuestionToCompetition_addingQuestionShouldResultInPersistingAndReprioritizingQuestions() {
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         Section section = newSection().build();
         Question createdQuestion = newQuestion().build();
 
         when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName())).thenReturn(section);
         when(defaultApplicationQuestionCreatorMock.buildQuestion(competition)).thenReturn(createdQuestion);
-        when(questionTemplatePersistorServiceMock.persistByEntity(any())).thenReturn(Arrays.asList(createdQuestion));
+        when(questionTemplatePersistorServiceMock.persistByEntity(any())).thenReturn(asList(createdQuestion));
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competition);
 
@@ -147,7 +145,7 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
         expectedQuestion.setSection(section);
         expectedQuestion.setCompetition(competition);
 
-        verify(questionTemplatePersistorServiceMock).persistByEntity(Arrays.asList(createdQuestion));
+        verify(questionTemplatePersistorServiceMock).persistByEntity(asList(createdQuestion));
         verify(questionPriorityOrderServiceMock).prioritiseAssessedQuestionAfterCreation(isA(Question.class));
     }
 }

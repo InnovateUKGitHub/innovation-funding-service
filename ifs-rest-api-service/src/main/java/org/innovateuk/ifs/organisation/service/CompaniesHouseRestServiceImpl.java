@@ -14,13 +14,13 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationSearchResultListType;
 
 /**
- * Class to expose methods to communicate with the company house api.
+ * Class to expose methods to communicate with the companies house api.
  */
 @Service
-public class CompanyHouseRestServiceImpl extends BaseRestService implements CompanyHouseRestService {
-    private static final Log log = LogFactory.getLog(CompanyHouseRestServiceImpl.class);
+public class CompaniesHouseRestServiceImpl extends BaseRestService implements CompaniesHouseRestService {
+    private static final Log log = LogFactory.getLog(CompaniesHouseRestServiceImpl.class);
 
-    private String companyHouseRestUrl = "/companyhouse";
+    private static final String COMPANIES_HOUSE_REST_URL = "/companies-house";
 
     @Override
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(String searchText){
@@ -32,10 +32,11 @@ public class CompanyHouseRestServiceImpl extends BaseRestService implements Comp
             searchTextEncoded = searchText;
         }
 
-        return getWithRestResultAnonymous(companyHouseRestUrl + "/searchCompanyHouse/" + searchTextEncoded, organisationSearchResultListType());
+        return getWithRestResultAnonymous(COMPANIES_HOUSE_REST_URL + "/search/" + searchTextEncoded, organisationSearchResultListType());
     }
+
     @Override
     public RestResult<OrganisationSearchResult> getOrganisationById(String id){
-        return getWithRestResultAnonymous(companyHouseRestUrl + "/getCompanyHouse/" + id, OrganisationSearchResult.class);
+        return getWithRestResultAnonymous(COMPANIES_HOUSE_REST_URL + "/company/" + id, OrganisationSearchResult.class);
     }
 }

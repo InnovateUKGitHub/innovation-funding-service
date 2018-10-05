@@ -48,7 +48,8 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
         when(publicContentItemService.findFilteredItems(any(Optional.class), any(Optional.class), any(Optional.class), any(Integer.class)))
                 .thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/public-content/items/find-by-filter?innovationAreaId=1&searchString=keyword&pageNumber=2&pageSize=20"))
+        mockMvc.perform(get("/public-content/items/find-by-filter?innovationAreaId=1&searchString=keyword&pageNumber=2&pageSize=20")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("public-content/items/{method-name}",
                         requestParameters(
@@ -74,7 +75,8 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         when(publicContentItemService.byCompetitionId(id)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/public-content/items/by-competition-id/{id}", id))
+        mockMvc.perform(get("/public-content/items/by-competition-id/{id}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("public-content/items/{method-name}",
                         pathParameters(

@@ -57,6 +57,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
         when(competitionSetupProjectDocumentServiceMock.save(projectDocumentResource)).thenReturn(serviceSuccess(projectDocumentResource));
 
         mockMvc.perform(post("/competition/setup/project-document/save")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(projectDocumentResource)))
                 .andExpect(status().isOk())
@@ -85,6 +86,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
         when(competitionSetupProjectDocumentServiceMock.saveAll(projectDocumentResources)).thenReturn(serviceSuccess(projectDocumentResources));
 
         mockMvc.perform(post("/competition/setup/project-document/save-all")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(projectDocumentResources)))
                 .andExpect(status().isOk())
@@ -111,7 +113,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
         when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(projectDocumentResource));
 
         mockMvc.perform(get("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
-        )
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectDocumentResource)))
                 .andDo(document("competition/setup/project-document/{method-name}",
@@ -134,7 +136,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
         when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(projectDocumentResources));
 
         mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
-        )
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectDocumentResources)))
                 .andDo(document("competition/setup/project-document/{method-name}",
@@ -155,7 +157,8 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
         long projectDocumentId = 1L;
         when(competitionSetupProjectDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId))
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competition/setup/project-document/{method-name}",
                         pathParameters(

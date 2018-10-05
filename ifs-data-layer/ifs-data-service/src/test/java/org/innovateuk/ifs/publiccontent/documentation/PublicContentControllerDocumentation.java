@@ -41,7 +41,8 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.build()));
 
-        mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId))
+        mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("public-content/{method-name}",
                         pathParameters(
@@ -60,7 +61,8 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         when(publicContentService.publishByCompetitionId(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/public-content/publish-by-competition-id/{competitionId}", competitionId))
+        mockMvc.perform(post("/public-content/publish-by-competition-id/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("public-content/{method-name}",
                         pathParameters(
@@ -76,6 +78,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
         when(publicContentService.updateSection(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/update-section/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
@@ -99,6 +102,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
         when(publicContentService.markSectionAsComplete(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/mark-section-as-complete/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())

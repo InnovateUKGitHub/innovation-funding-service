@@ -48,7 +48,8 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         List<AssessorFormInputResponseResource> responses = assessorFormInputResponseResourceBuilder.build(2);
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponses(assessmentId)).thenReturn(serviceSuccess(responses));
 
-        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}", assessmentId))
+        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("assessorFormInputResponse/{method-name}",
                         pathParameters(
                                 parameterWithName("assessmentId").description("Id of the assessment associated with responses being requested")
@@ -66,7 +67,8 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         List<AssessorFormInputResponseResource> responses = assessorFormInputResponseResourceBuilder.build(2);
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId)).thenReturn(serviceSuccess(responses));
 
-        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId))
+        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("assessorFormInputResponse/{method-name}",
                         pathParameters(
                                 parameterWithName("assessmentId").description("Id of the assessment associated with responses being requested"),
@@ -92,6 +94,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(responses)))
                 .andExpect(status().is2xxSuccessful())
@@ -108,7 +111,8 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(response));
 
-        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/scores", applicationId))
+        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/scores", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("assessorFormInputResponse/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application associated with the aggregate scores being requested")
@@ -125,7 +129,8 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
 
         when(assessorFormInputResponseServiceMock.getAssessmentAggregateFeedback(applicationId, questionId)).thenReturn(serviceSuccess(response));
 
-        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("assessorFormInputResponse/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application associated with the aggregate feedback being requested"),

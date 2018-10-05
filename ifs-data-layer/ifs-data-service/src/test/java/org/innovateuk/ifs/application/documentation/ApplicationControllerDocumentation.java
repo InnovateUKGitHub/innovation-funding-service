@@ -66,7 +66,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
 
-        mockMvc.perform(get("/application/{id}", application1Id))
+        mockMvc.perform(get("/application/{id}", application1Id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -84,7 +85,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         List<ApplicationResource> applications = applicationResourceBuilder.build(applicationNumber);
         when(applicationServiceMock.findAll()).thenReturn(serviceSuccess(applications));
 
-        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+        mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(
                         document("application/{method-name}",
@@ -104,7 +106,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
 
-        mockMvc.perform(get("/application/findByUser/{id}", userId))
+        mockMvc.perform(get("/application/findByUser/{id}", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -129,7 +132,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
         when(applicationServiceMock.wildcardSearchById(searchString, pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
 
-        mockMvc.perform(get("/application/wildcardSearchById?searchString=" + searchString + "&page=" + pageNumber + "&size=" + pageSize))
+        mockMvc.perform(get("/application/wildcardSearchById?searchString=" + searchString + "&page=" + pageNumber + "&size=" + pageSize)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)))
                 .andDo(document("application/{method-name}",
@@ -153,6 +157,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(testApplicationResource1));
 
         mockMvc.perform(post("/application/saveApplicationDetails/{id}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testApplicationResource1)))
                 .andExpect(status().isOk())
@@ -172,7 +177,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId))
+        mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -193,7 +199,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.updateApplicationState(applicationId, state)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(put("/application/updateApplicationState?applicationId={applicationId}&state={state}", applicationId, state))
+        mockMvc.perform(put("/application/updateApplicationState?applicationId={applicationId}&state={state}", applicationId, state)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         requestParameters(
@@ -209,7 +216,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationProgressServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(true);
 
-        mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
+        mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -227,7 +235,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 
-        mockMvc.perform(get("/application/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", competitionId, userId, role))
+        mockMvc.perform(get("/application/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", competitionId, userId, role)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -257,6 +266,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, organisationId, userId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
@@ -283,6 +293,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationNotificationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationIneligibleSendResource)))
                 .andExpect(status().isOk())
@@ -301,7 +312,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
-                        .contentType(APPLICATION_JSON))
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                                 pathParameters(
@@ -317,7 +329,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.showApplicationTeam(applicationId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
-        mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId))
+        mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
@@ -340,7 +353,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
 
-        mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
+        mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(JsonMappingUtil.toJson(previousApplicationPageResource)))
                 .andDo(document(
@@ -368,7 +382,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.findLatestEmailFundingDateByCompetitionId(competitionId)).thenReturn(serviceSuccess(ZonedDateTime.now()));
 
-        mockMvc.perform(get("/application/getLatestEmailFundingDate/{competitionId}", competitionId))
+        mockMvc.perform(get("/application/getLatestEmailFundingDate/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(

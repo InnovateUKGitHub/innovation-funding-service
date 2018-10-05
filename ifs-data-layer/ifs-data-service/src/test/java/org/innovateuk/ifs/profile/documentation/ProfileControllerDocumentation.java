@@ -45,7 +45,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(profileServiceMock.getProfileAgreement(userId)).thenReturn(serviceSuccess(profileAgreementResource));
 
-        mockMvc.perform(get("/profile/id/{id}/getProfileAgreement", userId))
+        mockMvc.perform(get("/profile/id/{id}/getProfileAgreement", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
@@ -62,7 +63,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(profileServiceMock.updateProfileAgreement(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/profile/id/{id}/updateProfileAgreement", userId))
+        mockMvc.perform(put("/profile/id/{id}/updateProfileAgreement", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
@@ -78,7 +80,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(profileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkillsResource));
 
-        mockMvc.perform(get("/profile/id/{id}/getProfileSkills", userId))
+        mockMvc.perform(get("/profile/id/{id}/getProfileSkills", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
@@ -98,7 +101,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/profile/id/{id}/updateProfileSkills", userId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
+                .content(objectMapper.writeValueAsString(profileSkillsEditResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
@@ -115,7 +119,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(profileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/profile/id/{id}/getUserProfile", userId))
+        mockMvc.perform(get("/profile/id/{id}/getUserProfile", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
@@ -135,7 +140,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/profile/id/{id}/updateUserProfile", userId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileDetails)))
+                .content(objectMapper.writeValueAsString(profileDetails))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("profile/{method-name}",
                         pathParameters(
