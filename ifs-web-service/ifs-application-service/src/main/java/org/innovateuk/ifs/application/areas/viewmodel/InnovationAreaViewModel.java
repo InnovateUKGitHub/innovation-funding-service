@@ -8,9 +8,10 @@ import java.util.List;
  * View Model for an Innovation Area selection overview.
  */
 public class InnovationAreaViewModel {
-    Long selectedInnovationAreaId;
-    boolean noInnovationAreaApplicable;
-    String applicationName;
+
+    private Long selectedInnovationAreaId;
+    private boolean noInnovationAreaApplicable;
+    private String applicationName;
 
     Long applicationId;
     Long questionId;
