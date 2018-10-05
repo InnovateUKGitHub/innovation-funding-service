@@ -42,10 +42,11 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(post(url, 123L, 456L).
-                contentType(APPLICATION_JSON)).
-                andExpect(status().isCreated()).
-                andDo(document("project/finance/{method-name}",
+        mockMvc.perform(post(url, 123L, 456L)
+                .contentType(APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isCreated())
+                .andDo(document("project/finance/{method-name}",
                         pathParameters(
                                 parameterWithName("projectFinanceId").description("Id of project finance associated with particular project and organisation to which a new cost row should to be added"),
                                 parameterWithName("questionId").description("Id of question for which a new finance row should be added")
@@ -60,10 +61,11 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
 
         when(projectFinanceRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(post(url, 123L, 456L).
-                contentType(APPLICATION_JSON)).
-                andExpect(status().isCreated()).
-                andDo(document("project/finance/{method-name}",
+        mockMvc.perform(post(url, 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andDo(document("project/finance/{method-name}",
                         pathParameters(
                                 parameterWithName("projectFinanceId").description("Id of project finance associated with particular project and organisation to which a new cost row should be added (without persisting)"),
                                 parameterWithName("questionId").description("Id of question for which a new finance row should be added (without persisting)")
@@ -78,10 +80,11 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
 
         when(projectFinanceRowServiceMock.getCostItem(123L)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(get(url, 123L).
-                contentType(APPLICATION_JSON)).
-                andExpect(status().isOk()).
-                andDo(document("project/finance/{method-name}",
+        mockMvc.perform(get(url, 123L)
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("project/finance/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of cost item to be returned")
                         ),
@@ -96,6 +99,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
         when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         mockMvc.perform(put("/cost/project/update/{id}", "123")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
                 .andExpect(status().isOk()).
@@ -113,6 +117,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         when(projectFinanceRowServiceMock.deleteCost(456L, 789L, 123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/cost/project/456/organisation/789/delete/{id}", "123")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent()).
                 andDo(document("project/finance/{method-name}",
