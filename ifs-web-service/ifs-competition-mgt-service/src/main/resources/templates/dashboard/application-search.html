@@ -18,9 +18,8 @@
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
                   th:with="setPageTitle='Search results',
                         size='govuk-heading-l',
-                        supportUser=${model.isSupport()}"
-        />
-    </form>
+                        supportUser=${model.isSupport()}"/>
+        </form>
 
         <th:block th:if="${model.searchStringPresent}">
             <p class="govuk-body">

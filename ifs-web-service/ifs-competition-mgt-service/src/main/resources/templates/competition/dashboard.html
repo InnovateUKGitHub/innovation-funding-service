@@ -5,11 +5,11 @@
     <form role="search"
           method="get"
           id="searchform"
-          th:with="supportUser=${model.getTabs().support()}"
+          th:with="supportUser=${model.getTabs().support()} ?: false"
           th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
                   th:with="showSearch=${model.counts.liveCount > 0},
-                      supportUser=${model.getTabs().support()}"/>
+                      supportUser=${model.getTabs().support()} ?: false"/>
     </form>
 </th:block>
 
@@ -22,13 +22,13 @@
         <div class="govuk-grid-column-one-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
-                <input th:if="${supportUser == false || supportUser == null}" type="text"
+                <input th:if="${supportUser == false}" type="text"
                        th:value="${searchQuery}"
                        th:name="${'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
                        placeholder='Search competitions'/>
-                <input th:unless="${supportUser==false || supportUser == null}" type="text"
+                <input th:unless="${supportUser==false}" type="text"
                        th:value="${searchQuery}"
                        th:name="${'searchQuery'}"
                        id="searchQuery"

@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETIT
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -398,9 +399,14 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andExpect(model().attribute("results", is(searchResult)))
                 .andReturn();
 
+        CompetitionSearchResult actualCompetitionSearchResult = (CompetitionSearchResult) result.getModelAndView().getModel().get("results");
+        String actualSearchQuery = (String) result.getModelAndView().getModel().get("searchQuery");
         DashboardTabsViewModel tabs = (DashboardTabsViewModel) result.getModelAndView().getModel().get("tabs");
 
+        assertEquals(searchQuery,actualSearchQuery);
+        assertNotNull(actualCompetitionSearchResult);
         assertTrue(tabs.support());
+        verify(competitionDashboardSearchService).searchCompetitions(searchQuery, defaultPage);
     }
 
     @Test

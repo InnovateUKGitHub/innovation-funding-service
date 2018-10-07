@@ -138,10 +138,10 @@ public class CompetitionManagementDashboardController {
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                         @RequestParam(name = "page", defaultValue = "1") int page,
+                         @RequestParam(name = "page", defaultValue = "0") int page,
                          Model model,
                          UserResource user) {
 
@@ -149,7 +149,7 @@ public class CompetitionManagementDashboardController {
     }
 
     @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/dashboard/application/search")
     public String applicationSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
                                     @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
@@ -174,10 +174,10 @@ public class CompetitionManagementDashboardController {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
-        if(isSearchNumeric) {
+        if (isSearchNumeric) {
             return searchApplication(trimmedSearchQuery, pageNumber, pageSize, model, request, user);
         } else {
-            return searchCompetition(trimmedSearchQuery, page, model, user); 
+            return searchCompetition(trimmedSearchQuery, pageNumber, model, user);
         }
     }
 
@@ -203,7 +203,7 @@ public class CompetitionManagementDashboardController {
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page));
         model.addAttribute("searchQuery", trimmedSearchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
 
