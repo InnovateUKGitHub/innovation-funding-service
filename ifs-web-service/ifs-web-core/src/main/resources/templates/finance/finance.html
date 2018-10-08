@@ -193,7 +193,7 @@
 
     <!-- =========================== Form: Financial Year End =========================== -->
     <div th:fragment="financial_year_end(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}"
-        class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-form-group--error'">
+         class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-form-group--error'">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})" class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="|formInput[${formInput.id}]|">
                 <h2 class="govuk-fieldset__heading">End of last financial year</h2>
@@ -1101,7 +1101,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-description]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-description]|">
                         <span>Item description</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                     </label>
@@ -1280,8 +1280,8 @@
                             &pound;<th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">150,000</th:block>
                         </td>
                     </tr>
-                </tbody>
-                <tfoot class="govuk-table__foot">
+                    </tbody>
+                    <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" colspan="3" scope="row">Total subcontracting costs</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory?.total != null ? costCategory.total : '0'}">
@@ -1320,7 +1320,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-name]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-name]|">
                         Subcontractor name
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-name'})" />
@@ -1334,7 +1334,7 @@
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-input--error'"  />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-country]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-country]|">
                         Country where the subcontractor will work
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-country'})" />
@@ -1349,7 +1349,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-role]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-role]|">
                         Role of the subcontractor in the project and description of the work they’ll do
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
@@ -1723,7 +1723,7 @@
                                    th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
                                    th:checked="${costCategory.otherPublicFunding?.equals('Yes')}" />
                             <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                                class="govuk-label govuk-radios__label">
+                                   class="govuk-label govuk-radios__label">
                                 Yes
                             </label>
                         </div>
