@@ -26,7 +26,7 @@ public class DocumentsController {
                                    UserResource loggedInUser) {
 
         model.addAttribute("model", populator.populate(projectId));
-        return "project/documents-all"; // TODO - XXX - Create this view please.
+        return "project/documents-all";
     }
 }
 

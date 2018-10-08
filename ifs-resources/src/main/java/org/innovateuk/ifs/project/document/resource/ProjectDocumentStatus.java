@@ -37,6 +37,14 @@ public class ProjectDocumentStatus {
         return status;
     }
 
+    public boolean isNotSubmitted() {
+        return status == DocumentStatus.UNSET || status == DocumentStatus.UPLOADED;
+    }
+
+    public boolean isAwaitingReview() { return status == DocumentStatus.SUBMITTED; }
+
+    public boolean isApproved() { return status == DocumentStatus.APPROVED; }
+
     public void setStatus(DocumentStatus status) {
         this.status = status;
     }

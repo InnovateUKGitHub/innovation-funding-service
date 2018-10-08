@@ -133,6 +133,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionAccesses.getOtherDocumentsSection();
     }
 
+    public SectionAccess getDocumentsSection() {
+        return sectionAccesses.getDocumentsSection();
+    }
+
     public SectionAccess getGrantOfferLetterSection() {
         return sectionAccesses.getGrantOfferLetterSection();
     }
@@ -157,6 +161,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public SectionStatus getOtherDocumentsStatus() {
         return sectionStatuses.getOtherDocumentsStatus();
+    }
+
+    public SectionStatus getDocumentsStatus() {
+        return sectionStatuses.getDocumentsStatus();
     }
 
     public SectionStatus getGrantOfferLetterStatus() {
