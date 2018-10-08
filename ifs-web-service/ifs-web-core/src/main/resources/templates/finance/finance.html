@@ -16,13 +16,13 @@
                 <div class="govuk-radios">
                     <div class="govuk-radios__item" data-target="request-funding">
                         <input type="radio" class="govuk-radios__input" id="request-funding-yes" name="request-funding"
-                            required="required" />
+                               th:checked="${model.organisationGrantClaimPercentage > 0}" required="required" />
                         <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
                     </div>
                     <th:block th:insert="finance/finance :: requesting_funding" />
                     <div class="govuk-radios__item">
                         <input type="radio" class="govuk-radios__input" id="request-funding-no" name="request-funding"
-                            required="required" />
+                               th:checked="${model.organisationGrantClaimPercentage == 0}" required="required" />
                         <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
                     </div>
                 </div>
