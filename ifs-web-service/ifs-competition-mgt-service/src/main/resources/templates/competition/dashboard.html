@@ -5,11 +5,10 @@
     <form role="search"
           method="get"
           id="searchform"
-          th:with="supportUser=${model.getTabs().support()} ?: false"
+          th:with="supportUser=${model.getTabs().support() ? true : false}"
           th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
-                  th:with="showSearch=${model.counts.liveCount > 0},
-                      supportUser=${model.getTabs().support()} ?: false"/>
+                  th:with="showSearch=${model.counts.liveCount > 0}"/>
     </form>
 </th:block>
 

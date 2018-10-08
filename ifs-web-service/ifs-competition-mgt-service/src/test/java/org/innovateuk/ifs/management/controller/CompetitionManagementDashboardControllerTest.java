@@ -405,6 +405,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         assertEquals(searchQuery,actualSearchQuery);
         assertNotNull(actualCompetitionSearchResult);
+        assertEquals(searchResult,actualCompetitionSearchResult);
         assertTrue(tabs.support());
         verify(competitionDashboardSearchService).searchCompetitions(searchQuery, defaultPage);
     }

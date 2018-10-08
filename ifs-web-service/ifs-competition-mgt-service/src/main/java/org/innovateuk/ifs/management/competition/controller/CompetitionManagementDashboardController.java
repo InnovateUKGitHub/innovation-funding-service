@@ -40,7 +40,7 @@ public class CompetitionManagementDashboardController {
     private static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE = "0";
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
@@ -148,36 +148,35 @@ public class CompetitionManagementDashboardController {
         return searchCompetition(searchQuery, page, model, user);
     }
 
-    @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
+    @SecuredBySpring(value = "READ", description = "The IFS Administrators are allowed to view the application search page")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/dashboard/application/search")
     public String applicationSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
                                     @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                     Model model,
                                     HttpServletRequest request,
                                     UserResource user) {
 
-        return searchApplication(searchQuery, pageNumber, pageSize, model, request, user);
+        return searchApplication(searchQuery, page, pageSize, model, request, user);
     }
 
     @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping("/dashboard/support/search")
     public String supportSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
-                                    @RequestParam(name = "page", defaultValue = "1") int page,
-                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                    Model model,
-                                    HttpServletRequest request,
-                                    UserResource user) {
+                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                Model model,
+                                HttpServletRequest request,
+                                UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
         if (isSearchNumeric) {
-            return searchApplication(trimmedSearchQuery, pageNumber, pageSize, model, request, user);
+            return searchApplication(trimmedSearchQuery, page, pageSize, model, request, user);
         } else {
-            return searchCompetition(trimmedSearchQuery, pageNumber, model, user);
+            return searchCompetition(trimmedSearchQuery, page, model, user);
         }
     }
 
@@ -210,11 +209,11 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH+"search";
     }
 
-    private String searchApplication(String searchQuery, int pageNumber, int pageSize, Model model, HttpServletRequest request, UserResource user) {
+    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         String existingSearchQuery = Objects.toString(request.getQueryString(), "");
 
-        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchQuery, pageNumber, pageSize);
+        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchQuery, page, pageSize);
 
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
