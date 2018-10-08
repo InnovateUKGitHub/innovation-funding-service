@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -104,6 +103,8 @@ public class CompetitionResource {
     private ZonedDateTime createdOn;
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
+
+    private Boolean includeJesForm;
 
     private boolean nonFinanceType;
 
@@ -687,6 +688,14 @@ public class CompetitionResource {
 
     public void setModifiedOn(final ZonedDateTime modifiedOn) {
         this.modifiedOn = modifiedOn;
+    }
+
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
     }
 
     @Override

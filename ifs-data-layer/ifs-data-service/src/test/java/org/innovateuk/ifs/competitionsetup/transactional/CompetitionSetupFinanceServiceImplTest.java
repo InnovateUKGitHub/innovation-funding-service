@@ -45,9 +45,11 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     public void save() {
         long competitionId = 1L;
         boolean isIncludeGrowthTable = false;
+        Boolean includeJesForm = true;
         CompetitionSetupFinanceResource compSetupFinanceRes = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competitionId)
                 .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeJesForm(includeJesForm)
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
@@ -83,6 +85,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
         assertTrue(!simpleMap(financialOverviewRows, FormInput::getActive).contains(!isIncludeGrowthTable));
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
+        assertEquals(c.getIncludeJesForm(), includeJesForm);
     }
 
     @Test

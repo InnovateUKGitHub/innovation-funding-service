@@ -239,6 +239,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("nonFinanceType", nonFinanceTypes);
     }
 
+    public CompetitionResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
+    }
+
     public CompetitionResourceBuilder withCreatedBy(String... users) {
         return withArraySetFieldByReflection("createdBy", users);
     }

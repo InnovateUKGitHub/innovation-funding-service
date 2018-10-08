@@ -32,6 +32,10 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
         return withArray((includeGrowthTable, competitionSetupFinance) -> setField("includeGrowthTable", includeGrowthTable, competitionSetupFinance), includeGrowthTables);
     }
 
+    public CompetitionSetupFinanceResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
+    }
+
     @Override
     protected CompetitionSetupFinanceResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionSetupFinanceResource>> actions) {
         return new CompetitionSetupFinanceResourceBuilder(actions);
