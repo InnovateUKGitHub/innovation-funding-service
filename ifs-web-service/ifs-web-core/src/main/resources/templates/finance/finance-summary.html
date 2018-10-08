@@ -52,7 +52,7 @@
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
                                 <a th:if="${showAssessorDetailedFinanceLink}"
-                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})}"
+                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
                                    th:style="'font-weight: normal;'"
                                    class="govuk-link">
                                     View finances
@@ -135,16 +135,33 @@
                             <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
                                 <small>Partner</small>
                             </div>
-                            <a th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' th:style="'font-weight: normal;'"
-                               class="govuk-link">
-                                View finances
-                            </a>
-                            <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'"
-                               class="govuk-link">
-                                View finances
-                            </a>
+                            <th:block th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}">
+                                <a th:if="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'+applicationOrganisation.id}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
+                                   class="govuk-link">
+                                    View finances
+                                </a>
+                                <a th:unless="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
+                                   class="govuk-link">
+                                    View finances
+                                </a>
+                            </th:block>
+                            <th:block th:unless="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}">
+                                <th:block th:if="${originQuery != null}">
+                                    <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
+                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}+${originQuery}' th:style="'font-weight: normal;'"
+                                       class="govuk-link">
+                                        View finances
+                                    </a>
+                                </th:block>
+                                <th:block th:unless="${originQuery != null}">
+                                    <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
+                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'"
+                                       class="govuk-link">
+                                        View finances
+                                    </a>
+                                </th:block>
+                            </th:block>
+
                             <th:block th:if="${currentApplication.isOpen()}">
                                 <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                                     <img class="table-tick" width="20" height="17"

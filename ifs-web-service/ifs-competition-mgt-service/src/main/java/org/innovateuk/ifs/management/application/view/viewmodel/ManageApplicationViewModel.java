@@ -10,7 +10,7 @@ public class ManageApplicationViewModel {
 
     private final SummaryViewModel summaryViewModel;
     private final String backUrl;
-    private final String queryParams;
+    private final String originQuery;
     private final boolean readOnly;
     private final boolean canReinstate;
     private final boolean stakeholder;
@@ -20,7 +20,7 @@ public class ManageApplicationViewModel {
 
     public ManageApplicationViewModel(SummaryViewModel summaryViewModel,
                                       String backUrl,
-                                      String queryParams,
+                                      String originQuery,
                                       boolean readOnly,
                                       boolean canReinstate,
                                       boolean stakeholder,
@@ -30,7 +30,7 @@ public class ManageApplicationViewModel {
                                       ) {
         this.summaryViewModel = summaryViewModel;
         this.backUrl = backUrl;
-        this.queryParams = queryParams;
+        this.originQuery = originQuery;
         this.readOnly = readOnly;
         this.canReinstate = canReinstate;
         this.stakeholder = stakeholder;
@@ -47,8 +47,8 @@ public class ManageApplicationViewModel {
         return backUrl;
     }
 
-    public String getQueryParams() {
-        return queryParams;
+    public String getOriginQuery() {
+        return originQuery;
     }
 
     public boolean isReadOnly() {
