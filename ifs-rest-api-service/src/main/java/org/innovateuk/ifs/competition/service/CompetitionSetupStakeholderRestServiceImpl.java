@@ -28,7 +28,7 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
 
     @Override
     public RestResult<List<UserResource>> findStakeholders(long competitionId) {
-        return getWithRestResult(format("%s/%s/stakeholder/find-all", competitionSetupStakeholderRestURL + competitionId), userListType());
+        return getWithRestResult(format("%s/%s/stakeholder/find-all", competitionSetupStakeholderRestURL , competitionId), userListType());
     }
 
     @Override

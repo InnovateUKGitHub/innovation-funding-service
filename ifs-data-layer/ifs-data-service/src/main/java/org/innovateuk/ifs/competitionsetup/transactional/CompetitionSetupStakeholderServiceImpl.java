@@ -80,7 +80,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private String webBaseUrl;
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.gov.uk";
-    private static final String WEB_CONTEXT = "/management/competition/setup/stakeholder";
+    private static final String WEB_CONTEXT = "/management/stakeholder";
 
     enum Notifications {
         STAKEHOLDER_INVITE
