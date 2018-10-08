@@ -81,6 +81,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
 ...
 ...               IFS-4253 New Stakeholder invite and create account email
+...
+...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -89,10 +91,10 @@ Resource          CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
-${peter_freeman}       Peter Freeman
-${competitionTitle}    Test competition
-${amendedQuestion}     Need or challenge
-${customQuestion}      How innovative is your project?
+${peter_freeman}     Peter Freeman
+${competitionTitle}  Test competition
+${amendedQuestion}   Need or challenge
+${customQuestion}    How innovative is your project?
 
 *** Test Cases ***
 User can create a new competition
@@ -196,17 +198,17 @@ The user must select the Terms and Conditions they want Applicants to accept
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
     [Tags]
-    Given the user clicks the button/link    link = Public content
+    Given the user clicks the button/link        link = Public content
     Then the user should not see an error in the page
-    And the user should see the element      jQuery = h1:contains("Public content")
-    And the user should see the element      jQuery = a:contains("Competition information and search")
-    And the user should see the element      jQuery = a:contains("Summary")
-    And the user should see the element      jQuery = a:contains("Eligibility")
-    And the user should see the element      jQuery = a:contains("Scope")
-    And the user should see the element      jQuery = a:contains("Dates")
-    And the user should see the element      jQuery = a:contains("How to apply")
-    And the user should see the element      jQuery = a:contains("Supporting information")
-    [Teardown]  the user clicks the button/link    link = Return to setup overview
+    And the user should see the element          jQuery = h1:contains("Public content")
+    And the user should see the element          jQuery = a:contains("Competition information and search")
+    And the user should see the element          jQuery = a:contains("Summary")
+    And the user should see the element          jQuery = a:contains("Eligibility")
+    And the user should see the element          jQuery = a:contains("Scope")
+    And the user should see the element          jQuery = a:contains("Dates")
+    And the user should see the element          jQuery = a:contains("How to apply")
+    And the user should see the element          jQuery = a:contains("Supporting information")
+    [Teardown]  the user clicks the button/link  link = Return to setup overview
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
@@ -216,35 +218,35 @@ New application shows in Preparation section with the new name
 Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]
-    [Setup]    the user clicks the button/link    link = ${competitionTitle}
-    Given the user clicks the button/link         link = Funding information
-    And the user clicks the button/link           id = generate-code
-    And the user enters text to a text field      id = funders[0].funder    FunderName
-    And the user enters text to a text field      id = funders[0].funderBudget    20000
-    And the user enters text to a text field      id = pafNumber    2016
-    And the user enters text to a text field      id = budgetCode    2004
-    And the user enters text to a text field      id = activityCode    4242
-    When the user clicks the button/link          jQuery = Button:contains("+Add co-funder")
-    And the user should see the element           jQuery = Button:contains("+Add co-funder")
-    And the user should see the element           jQuery = Button:contains("Remove")
-    And the user enters text to a text field      id = 1-funder    FunderName2
-    And the user enters text to a text field      id = 1-funderBudget    1000
-    Then the total should be correct              Total: £21,000
-    When the user clicks the button/link          jQuery = Button:contains("Remove")
-    Then the total should be correct              Total: £20,000
+    [Setup]    the user clicks the button/link  link = ${competitionTitle}
+    Given the user clicks the button/link       link = Funding information
+    And the user clicks the button/link         id = generate-code
+    And the user enters text to a text field    id = funders[0].funder    FunderName
+    And the user enters text to a text field    id = funders[0].funderBudget    20000
+    And the user enters text to a text field    id = pafNumber    2016
+    And the user enters text to a text field    id = budgetCode    2004
+    And the user enters text to a text field    id = activityCode    4242
+    When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
+    And the user should see the element         jQuery = Button:contains("+Add co-funder")
+    And the user should see the element         jQuery = Button:contains("Remove")
+    And the user enters text to a text field    id = 1-funder    FunderName2
+    And the user enters text to a text field    id = 1-funderBudget    1000
+    Then the total should be correct            Total: £21,000
+    When the user clicks the button/link        jQuery = Button:contains("Remove")
+    Then the total should be correct            Total: £20,000
 
 Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]
     Given the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=button:contains("Done")
+    When the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = td:contains("FunderName")
     And the user should see the element     jQuery = th:contains("Total") ~ td:contains("£20,000")
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
     And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("1901-1")
-    And the user should see the element     jQuery=button:contains("Edit")
+    And the user should see the element     jQuery = button:contains("Edit")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
@@ -280,6 +282,7 @@ Eligibility: Contain the correct options
     And the user should see the element    jQuery = label:contains("Public sector")
     And the user should see the element    css = label[for="comp-resubmissions-yes"]
     And the user should see the element    css = label[for="comp-resubmissions-no"]
+    And the user selects the radio button  researchCategoriesApplicable  comp-researchCategoriesApplicable-yes
     And the user should see the element    jQuery = label:contains("Feasibility studies")
     And the user should see the element    jQuery = label:contains("Industrial research")
     And the user should see the element    jQuery = label:contains("Experimental development")
@@ -359,7 +362,7 @@ Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
-    When The user clicks the button/link  link = Application
+    When the user clicks the button/link  link = Application
     Then the user should see the element  jQuery = h2:contains("Sector competition questions")
     When the user should see the element  link = Application details
     Then the user should see the element  link = Project summary
@@ -381,17 +384,17 @@ Application - Application process Page
 Application: Application details validations
     [Documentation]  IFS-2776
     [Tags]
-    Given the user clicks the button/link      link = Application details
+    Given the user clicks the button/link      jQuery = a:contains("Application details")
     And the user enters text to a text field   id = minProjectDuration  ${empty}
     And the user enters text to a text field   id = maxProjectDuration  ${empty}
     # And the user unchecks the resubmission radio button
     # TODO IFS-3188
 
-    When the user selects the radio button    useResubmissionQuestion  true
-    Then the user should see the element      jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
-    And the user should see the element       jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
-    When the user clicks the button/link      css = button[type="submit"]
-    Then the user should see the element      css = .govuk-error-summary__list
+    When the user selects the radio button       useResubmissionQuestion  true
+    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    When the user clicks the button/link         css = button[type="submit"]
+    Then the user should see the element         css = .govuk-error-summary__list
 
     When the user enters text to a text field    id = minProjectDuration  -2
     And the user enters text to a text field     id = maxProjectDuration  -3
@@ -403,10 +406,10 @@ Application: Application details validations
     Then the user should see a field error       The minimum must be smaller than the maximum.
     And the user should see a field error        This field should be 60 or lower.
 
-    When the user enters text to a text field      id = minProjectDuration  59
-    And the user clicks the button/link            css = button[type="submit"]
-    Then the user should see a summary error       This field should be 60 or lower
-    [Teardown]  the user clicks the button/link    link = Application
+    When the user enters text to a text field    id = minProjectDuration  59
+    And the user clicks the button/link          css = button[type="submit"]
+    Then the user should see a summary error     This field should be 60 or lower
+    [Teardown]  the user clicks the button/link  link = Application
 
 
 Application: Application details
@@ -527,9 +530,8 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]
     Given the user clicks the button/link          link = Finances
-    When the user should see the element           jQuery=h1:contains("Application finances")
-    And the user should see the element            jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    And the user selects the radio button          applicationFinanceType  STANDARD
+    When the user should see the element           jQuery = h1:contains("Application finances")
+    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
@@ -734,51 +736,24 @@ The Applicant is able to apply to the competition once is Open
 
 The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
-    When the user clicks the button/link     link = Research category
-    Then the user should see the element     css = label[for="researchCategory1"]
-    And the user should see the element      css = label[for="researchCategory2"]
-    When the user clicks the button twice    jQuery = label:contains("Feasibility studies")
-    And the user clicks the button/link      id = application-question-save
+    When the user clicks the button/link       link = Research category
+    Then the user should see the element       css = label[for="researchCategory1"]
+    And the user should see the element        css = label[for="researchCategory2"]
+    When the user clicks the button twice      jQuery = label:contains("Feasibility studies")
+    And the user clicks the button/link        id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
-    Given the user should see the element            jQuery = li:contains("${customQuestion}")
-    And the user should not see the element          jQuery = li:contains("Costs and value for money")
+    Given the user should see the element      jQuery = li:contains("${customQuestion}")
+    And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
-The internal user cannot invite a Stakeholder when they have triggered the name validation
-    [Documentation]  IFS-4190
+The user can see the VAT text in Your project costs
+    [Documentation]  IFS-4345
     [Tags]
-    Given log in as a different user                     &{Comp_admin1_credentials}
-    And the user navigates to the page                   ${SERVER}/management/competition/setup/${competitionId}/manage-stakeholders
-    When the user triggers the name validation
-    Then the user should see the name validation messages
-
-The internal user cannot invite a Stakeholder when they have triggered the email validation
-    [Documentation]  IFS-4190
-    [Tags]
-    Then the user triggers the email validation
-
-The internal user cannot invite a user with an Innovate UK email as a Stakeholder
-    [Documentation]  IFS-4190
-    [Tags]
-    When the user enters an Innovate UK email
-    Then the user should see a field and summary error    Stakeholders cannot be registered with an Innovate UK email address.
-
-The internal user invites a Stakeholder
-    [Documentation]  IFS-4190
-    [Tags]
-    Then the user enters the correct details of a Stakeholder
-    # A check to verify the invite will come in another ticket.
-    And logout as user
-    # Logging out here as it'll return a Page not found as it'll click the invite link in the next test case, and still be logged in as the comp admin.
-
-The invited Stakeholder accepts the invite in his or her email
-    [Documentation]  IFS-4253
-    [Tags]
-    When the user reads his email and clicks the link    ${test_mailbox_one}+stakeHolder@test.com  Invite to Innovation Funding Service  You have been invited to view the following competition on the Innovation Funding Service:
-    Then the user should see the element                 id = sign-in-form
-    # This is a temporary check until the account creation stage comes in another ticket.
+    Given the user clicks the button/link      link = Your finances
+    When the user clicks the button/link       link = Your project costs
+    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -916,7 +891,7 @@ the user should not be able to edit the assessed question feedback
     the user should not see the element    id = guidanceRows[0].scoreTo
     the user should not see the element    id = guidanceRows[0].justification
     the user should not see the element    jQuery = Button:contains("+Add guidance row")
-    the user should not see the element    id =question.scoreTotal
+    the user should not see the element    id = question.scoreTotal
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -950,33 +925,3 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
-
-the user triggers the name validation
-    the user clicks the button/link         jQuery = span:contains("Invite a new stakeholder")
-    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
-    the user clicks the button/link         css = button[name = "inviteStakeholder"]
-
-the user should see the name validation messages
-    the user should see a field and summary error    Please enter a first name.
-    the user should see a field and summary error    Your first name should have at least 2 characters.
-    the user should see a field and summary error    Please enter a last name.
-    the user should see a field and summary error    Your last name should have at least 2 characters.
-
-the user triggers the email validation
-    the user enters text to a text field             id = firstName     Stake
-    the user enters text to a text field             id = lastName      Holder
-    the user enters text to a text field             id = emailAddress  stakeHoldertest.com
-    the user clicks the button/link                  css = button[name = "inviteStakeholder"]
-    the user should see a field and summary error    Please enter a valid email address.
-
-the user enters an Innovate UK email
-    the user enters text to a text field    id = firstName     Stake
-    the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.test
-    the user clicks the button/link         css = button[name = "inviteStakeholder"]
-
-the user enters the correct details of a Stakeholder
-    the user enters text to a text field    id = firstName     Stake
-    the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  ${test_mailbox_one}+stakeHolder@test.com
-    the user clicks the button/link         css = button[name = "inviteStakeholder"]
