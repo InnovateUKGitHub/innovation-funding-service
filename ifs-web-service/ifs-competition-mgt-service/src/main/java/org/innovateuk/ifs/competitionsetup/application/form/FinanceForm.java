@@ -1,19 +1,22 @@
 package org.innovateuk.ifs.competitionsetup.application.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.NotNull;
 
+@FieldRequiredIf(required = "includeGrowthTable", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "fundingRules", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class FinanceForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private ApplicationFinanceType applicationFinanceType;
 
-    private boolean includeGrowthTable;
+    private boolean financesRequired;
 
-    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    private Boolean includeGrowthTable;
+
     private String fundingRules;
 
     public ApplicationFinanceType getApplicationFinanceType() {
@@ -24,11 +27,19 @@ public class FinanceForm extends CompetitionSetupForm {
         this.applicationFinanceType = applicationFinanceType;
     }
 
-    public boolean isIncludeGrowthTable() {
+    public boolean isFinancesRequired() {
+        return financesRequired;
+    }
+
+    public void setFinancesRequired(boolean financesRequired) {
+        this.financesRequired = financesRequired;
+    }
+
+    public Boolean getIncludeGrowthTable() {
         return includeGrowthTable;
     }
 
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+    public void setIncludeGrowthTable(Boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
     }
 

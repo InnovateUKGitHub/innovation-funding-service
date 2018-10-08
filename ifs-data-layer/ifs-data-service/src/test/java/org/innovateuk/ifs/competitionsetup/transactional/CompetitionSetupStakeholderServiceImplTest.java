@@ -4,12 +4,15 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
+import org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -268,6 +271,77 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertEquals(stakeholderUserResources, result.getSuccess());
 
         verify(stakeholderRepositoryMock).findStakeholders(competitionId);
+    }
+
+    @Test
+    public void addStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        Competition competition = CompetitionBuilder.newCompetition()
+                .withId(competitionId)
+                .build();
+
+        User stakeholderUser = UserBuilder.newUser()
+                .withId(stakeholderUserId)
+                .build();
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
+
+        ServiceResult<Void> result = service.addStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+
+        verify(stakeholderRepositoryMock).save(any(Stakeholder.class));
+
+        // Create a captor and verify that the correct and expected Stakeholder was saved
+        ArgumentCaptor<Stakeholder> captor = ArgumentCaptor.forClass(Stakeholder.class);
+        verify(stakeholderRepositoryMock).save(captor.capture());
+        Stakeholder savedStakeholder = captor.getValue();
+
+        assertEquals(competition, savedStakeholder.getProcess());
+        assertEquals(stakeholderUser, savedStakeholder.getUser());
+        assertEquals(CompetitionParticipantRole.STAKEHOLDER, savedStakeholder.getRole());
+        assertEquals(ParticipantStatus.ACCEPTED, savedStakeholder.getStatus());
+    }
+
+    @Test
+    public void removeStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        ServiceResult<Void> result = service.removeStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+
+        verify(stakeholderRepositoryMock).deleteStakeholder(competitionId, stakeholderUserId);
+    }
+
+    @Test
+    public void findPendingStakeholderInvites() throws Exception {
+
+        long competitionId = 1L;
+
+        String user1Name = "Rayon Kevin";
+        String user2Name = "Sonal Dsilva";
+        String user1Email = "Rayon.Kevin@gmail.com";
+        String user2Email = "Sonal.Dsilva@gmail.com";
+        List<StakeholderInvite> pendingStakeholderInvites = StakeholderInviteBuilder.newStakeholderInvite()
+                .withName(user1Name, user2Name)
+                .withEmail(user1Email, user2Email)
+                .build(2);
+
+        when(stakeholderInviteRepositoryMock.findByCompetitionIdAndStatus(competitionId, SENT)).thenReturn(pendingStakeholderInvites);
+
+        ServiceResult<List<UserResource>> result = service.findPendingStakeholderInvites(competitionId);
+        assertTrue(result.isSuccess());
+
+        verify(stakeholderInviteRepositoryMock).findByCompetitionIdAndStatus(competitionId, SENT);
+        assertEquals(user1Name, result.getSuccess().get(0).getFirstName());
+        assertEquals(user2Name, result.getSuccess().get(1).getFirstName());
+        assertEquals(user1Email, result.getSuccess().get(0).getEmail());
+        assertEquals(user2Email, result.getSuccess().get(1).getEmail());
     }
 }
 

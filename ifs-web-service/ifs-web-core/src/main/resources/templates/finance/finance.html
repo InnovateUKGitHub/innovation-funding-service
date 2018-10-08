@@ -49,8 +49,7 @@
             <!--/* edit */-->
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize">
-                        <h2 class="govuk-fieldset__heading" th:text="${formInput.description}"></h2>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize" th:text="${formInput.description}">
                     </legend>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:if="${#fields.hasErrors('organisationSize')}">
@@ -91,7 +90,7 @@
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-form-group--error'">
-                <label class="govuk-label"
+                <label class="govuk-label--s"
                        th:for="|formInput[${formInput.id}]|"
                        th:id="'form-label-'+${formInput.id}"
                        th:text="${formInput.description}">
@@ -124,7 +123,7 @@
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-form-group--error'">
-                <label class="govuk-label"
+                <label class="govuk-label--s"
                        th:for="|formInput[${formInput.id}]|"
                        th:id="'form-label-'+${formInput.id}"
                        th:text="${formInput.description}">
@@ -1063,7 +1062,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-description]|">
+                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-description]|">
                         <span>Item description</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                     </label>
@@ -1071,8 +1070,8 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:id="|formInput[cost-${costIdentifier}-existing]|">
-                            <h2 class="govuk-fieldset__heading">New or existing item</h2>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="|formInput[cost-${costIdentifier}-existing]|">
+                            New or existing item
                         </legend>
 
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" />
@@ -1109,7 +1108,7 @@
                     </fieldset>
                 </div>
                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-deprecation]|" class="govuk-label">
+                    <label th:for="|formInput[cost-${costIdentifier}-deprecation]|" class="govuk-label govuk-label--s">
                         Depreciation period (months)
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-deprecation'})" />
@@ -1128,7 +1127,7 @@
                              />
                 </div>
                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-npv]|" class="govuk-label">
+                    <label th:for="|formInput[cost-${costIdentifier}-npv]|" class="govuk-label govuk-label--s">
                         Net present value at the start of your project or the price you bought it for (&pound;)
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-npv'})" />
@@ -1148,7 +1147,7 @@
 
                 </div>
                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-residualValue]|" class="govuk-label">
+                    <label th:for="|formInput[cost-${costIdentifier}-residualValue]|" class="govuk-label govuk-label--s">
                         Residual value at end of project (&pound;)
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-residualValue'})" />
@@ -1169,7 +1168,7 @@
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-utilisation]|"
-                           class="govuk-label">
+                           class="govuk-label govuk-label--s">
                         Utilisation (&percnt;)
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-utilisation'})" />
@@ -1187,7 +1186,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'govuk-form-group--error'">
-                    <label th:for="${'cost-capital_usage-'+costIdentifier+'-netCost'}" class="govuk-label">
+                    <label th:for="${'cost-capital_usage-'+costIdentifier+'-netCost'}" class="govuk-label govuk-label--s">
                         Net cost
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-netCost'})" />
@@ -1283,7 +1282,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label"
+                    <label class="govuk-label--s"
                            th:for="|formInput[cost-${costIdentifier}-name]|">
                         Subcontractor name
                     </label>
@@ -1298,7 +1297,7 @@
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-input--error'"  />
                 </div>
                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-country]|">
+                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-country]|">
                         Country where the subcontractor will work
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-country'})" />
@@ -1313,7 +1312,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label"
+                    <label class="govuk-label--s"
                            th:for="|formInput[cost-${costIdentifier}-role]|">
                         Role of the subcontractor in the project and description of the work they’ll do
                     </label>
@@ -1322,7 +1321,7 @@
                 </div>
 
                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-cost]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-cost]|">
                         Cost
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />

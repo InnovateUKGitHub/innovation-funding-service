@@ -47,6 +47,7 @@ ${openCompetitionResearch_name}  Photonics for Research
 ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_name}']}
 
 ${openGenericCompetition}  Generic innovation
+${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
@@ -185,6 +186,7 @@ ${wrong_filetype_validation_error}    Your upload must be a PDF.
 ${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
+${email_already_in_use}           This email address is already in use.
 
 # Database variables
 ${database_name}    ifs
