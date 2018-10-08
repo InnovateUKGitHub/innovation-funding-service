@@ -7,15 +7,14 @@ import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
 import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DocumentsPopulator {
@@ -40,18 +39,20 @@ public class DocumentsPopulator {
         List<ProjectDocumentResource> configuredProjectDocuments = competition.getProjectDocuments();
         List<org.innovateuk.ifs.project.document.resource.ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
-        Map<String, DocumentStatus> documents = new LinkedHashMap<>();
+        List<ProjectDocumentStatus> documents = new ArrayList<>();
+
         for (ProjectDocumentResource configuredDocument : configuredProjectDocuments) {
-            String title = configuredDocument.getTitle();
-            documents.put(title, getProjectDocumentStatus(projectDocuments, title));
+            documents.add(new ProjectDocumentStatus(configuredDocument.getId(),
+                    configuredDocument.getTitle(),
+                    getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
         }
 
         return new AllDocumentsViewModel(projectId, project.getName(), documents);
     }
 
-    private DocumentStatus getProjectDocumentStatus(List<org.innovateuk.ifs.project.document.resource.ProjectDocumentResource> projectDocuments, String title) {
+    private DocumentStatus getProjectDocumentStatus(List<org.innovateuk.ifs.project.document.resource.ProjectDocumentResource> projectDocuments, Long documentConfigId) {
 
-        return projectDocuments.stream().filter(projectDocumentResource -> projectDocumentResource.getProjectDocument().getTitle().equalsIgnoreCase(title))
+        return projectDocuments.stream().filter(projectDocumentResource -> projectDocumentResource.getProjectDocument().getId().equals(documentConfigId))
                 .findFirst()
                 .map(projectDocumentResource -> projectDocumentResource.getStatus())
                 .orElse(DocumentStatus.UNSET);

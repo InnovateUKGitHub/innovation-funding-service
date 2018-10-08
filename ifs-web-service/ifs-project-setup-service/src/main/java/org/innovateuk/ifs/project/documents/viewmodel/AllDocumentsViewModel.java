@@ -2,17 +2,17 @@ package org.innovateuk.ifs.project.documents.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
 
-import java.util.Map;
+import java.util.List;
 
 public class AllDocumentsViewModel {
 
     private Long projectId;
     private String projectName;
-    private Map<String, DocumentStatus> documents;
+    private List<ProjectDocumentStatus> documents;
 
-    public AllDocumentsViewModel(Long projectId, String projectName, Map<String, DocumentStatus> documents) {
+    public AllDocumentsViewModel(Long projectId, String projectName, List<ProjectDocumentStatus> documents) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.documents = documents;
@@ -34,11 +34,11 @@ public class AllDocumentsViewModel {
         this.projectName = projectName;
     }
 
-    public Map<String, DocumentStatus> getDocuments() {
+    public List<ProjectDocumentStatus> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Map<String, DocumentStatus> documents) {
+    public void setDocuments(List<ProjectDocumentStatus> documents) {
         this.documents = documents;
     }
 
