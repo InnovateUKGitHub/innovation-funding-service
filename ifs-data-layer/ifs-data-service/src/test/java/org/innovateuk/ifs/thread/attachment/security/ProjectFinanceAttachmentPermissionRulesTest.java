@@ -8,8 +8,10 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
+import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
@@ -46,6 +48,9 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     @Mock
     private QueryRepository queryRepositoryMock;
+
+    @Mock
+    private NoteRepository noteRepositoryMock;
 
     @Mock
     private AttachmentMapper attachmentMapperMock;
@@ -94,9 +99,18 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     @Test
-    public void thatProjectFinanceUsersCanFetchAnySavedAttachment() throws Exception {
+    public void thatProjectFinanceUsersCanFetchAnySavedQueryAttachment() throws Exception {
         final Query query = query();
         when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
+        when(noteRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
+        assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
+    }
+
+    @Test
+    public void thatProjectFinanceUsersCanFetchAnySavedNoteAttachment() throws Exception {
+        final Note note = note();
+        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
+        when(noteRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(note));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
@@ -159,6 +173,10 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     private Query query() {
         return new Query(92L, 1993L, "", null, null, "", ZonedDateTime.now());
+    }
+
+    private Note note() {
+        return new Note(93L, 1993L, "", null, "", ZonedDateTime.now());
     }
 
     private Attachment asDomain(AttachmentResource attachmentResource, Long uploaderId) {
