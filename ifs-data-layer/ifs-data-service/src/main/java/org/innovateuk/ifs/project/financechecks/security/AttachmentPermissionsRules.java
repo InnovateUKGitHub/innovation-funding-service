@@ -6,11 +6,10 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
-import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
-import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.threads.repository.ThreadRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 @Component
 @PermissionRules
 public class AttachmentPermissionsRules {
+
     @Autowired
     private AttachmentMapper attachmentMapper;
 
@@ -35,17 +35,16 @@ public class AttachmentPermissionsRules {
     private QueryRepository queryRepository;
 
     @Autowired
-    private NoteRepository noteRepository;
+    private QueryMapper queryMapper;
 
     @Autowired
-    private QueryMapper queryMapper;
+    private ThreadRepository threadRepository;
 
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project Finance can upload attachments.")
     public boolean projectFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
@@ -101,15 +100,10 @@ public class AttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return !findQueryTheAttachmentIsLinkedTo(attachment).isPresent()
-                && !findNoteTheAttachmentIsLinkedTo(attachment).isPresent();
+        return threadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {
         return queryRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).stream().findFirst();
-    }
-
-    private Optional<Note> findNoteTheAttachmentIsLinkedTo(AttachmentResource attachment) {
-        return noteRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).stream().findFirst();
     }
 }
