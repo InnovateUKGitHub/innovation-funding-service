@@ -94,7 +94,7 @@ public class ApplicationFinanceSectionSaverTest {
     @Test
     public void doSaveSection_noFinances() {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .build();
 
         assertTrue(competition.isNonFinanceType());

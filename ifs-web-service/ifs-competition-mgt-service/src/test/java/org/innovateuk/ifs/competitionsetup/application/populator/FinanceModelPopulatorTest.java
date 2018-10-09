@@ -34,7 +34,7 @@ public class FinanceModelPopulatorTest {
                 .withName("name")
                 .withId(competitionId)
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .build();
 
         assertTrue(competition.isNonFinanceType());

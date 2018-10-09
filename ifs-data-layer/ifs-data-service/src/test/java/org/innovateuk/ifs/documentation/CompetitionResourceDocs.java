@@ -69,6 +69,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility").optional(),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
             fieldWithPath("projectDocuments").description("List of documents required during the project setup phase").optional(),
+            fieldWithPath("nonFinanceType").description("Does the competition have finance questions").optional(),
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),

@@ -158,6 +158,8 @@ the user marks the Finance section as complete if it's present
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link = Finances
+    the element should be disabled     application-finance-standard
+    the element should be disabled     application-finance-standard-with-vat
     the user selects the radio button  applicationFinanceType  NO_FINANCES
     the user clicks the button/link    jQuery = .govuk-button:contains("Done")
 

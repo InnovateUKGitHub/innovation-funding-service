@@ -1,8 +1,11 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
-apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
+
+processResources.dependsOn applyProfiles
 
 apply from: "../flyway.gradle"
 
@@ -150,6 +153,7 @@ task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"

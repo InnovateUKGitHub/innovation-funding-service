@@ -1,11 +1,14 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
-apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
+
+processResources.dependsOn applyProfiles
 
 
 apply from: "../flyway.gradle"
@@ -93,7 +96,9 @@ test {
 
 }
 
-
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.serverPort=8080
+ext.ifsFlywayLocations="db/migration"
+

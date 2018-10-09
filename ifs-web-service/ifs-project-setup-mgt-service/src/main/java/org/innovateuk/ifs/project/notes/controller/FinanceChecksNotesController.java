@@ -367,7 +367,7 @@ public class FinanceChecksNotesController {
     private boolean postParametersMatchOrigin(HttpServletRequest request, Long projectId, Long organisationId, Long noteId, Long userId){
         List<Long> getParams = cookieUtil.getCookieAsList(request, ORIGIN_GET_COOKIE, new TypeReference<List<Long>>() {
         });
-        return getParams.size() == 4 && getParams.get(0) == projectId && getParams.get(1) == organisationId && getParams.get(2) == noteId && getParams.get(3) == userId;
+        return getParams.size() == 4 && getParams.get(0).equals(projectId) && getParams.get(1).equals(organisationId) && getParams.get(2).equals(noteId) && getParams.get(3).equals(userId);
     }
 
     private void deleteCookies(HttpServletResponse response, Long projectId, Long organisationId, Long noteId) {

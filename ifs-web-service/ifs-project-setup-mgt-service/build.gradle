@@ -71,3 +71,4 @@ processResources {
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
+processResources.dependsOn ":ifs-web-service:applyProfiles"
