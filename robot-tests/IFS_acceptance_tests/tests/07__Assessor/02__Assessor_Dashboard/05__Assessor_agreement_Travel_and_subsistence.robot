@@ -10,7 +10,7 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-7061 As an assessor I can view the travel and subsistence rates so that I know how much I can claim
 Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        Assessor  Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
