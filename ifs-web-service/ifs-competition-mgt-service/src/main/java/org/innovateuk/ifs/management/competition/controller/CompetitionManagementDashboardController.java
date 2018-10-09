@@ -136,7 +136,7 @@ public class CompetitionManagementDashboardController {
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
-            " support, innovation lead and stakeholder roles are allowed to view the search page for competitions")
+            "innovation lead and stakeholder roles are allowed to view the search page for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
