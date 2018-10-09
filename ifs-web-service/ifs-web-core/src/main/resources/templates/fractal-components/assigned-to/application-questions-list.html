@@ -1,79 +1,81 @@
-<h1 class="govuk-heading-l">Example 1. As lead partner</h1>
+<div class="govuk-width-container">
+    <h1 class="govuk-heading-l">Example 1. As lead partner</h1>
 
-<section>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
-  <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
-</section>
+    <section>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
+      <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
+    </section>
 
-<ul class="task-list">
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
-    </div>
-    <div class="assign-container action-required">
-      <span class="action-required">Assigned to</span>
-      <div class="assign-button-container">
-        <div class="assign-button">
-          <span class="action-required">You</span>
+    <ul class="task-list">
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
         </div>
-        {{ render '@assign-list' }}
-      </div>
-    </div>
-  </li>
-
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">2. Potential market</a></h3>
-    </div>
-    <div class="assign-container action-required">
-      <span class="secondary-notification">Assigned to</span>
-      <div class="assign-button-container">
-        <div class="assign-button">
-          <span class="secondary-notification">Jessica Doe</span>
+        <div class="assign-container action-required">
+          <span class="action-required">Assigned to</span>
+          <div class="assign-button-container">
+            <div class="assign-button">
+              <span class="action-required">You</span>
+            </div>
+            {{ render '@assign-list' }}
+          </div>
         </div>
-        {{ render '@assign-list' }}
-      </div>
-    </div>
-  </li>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">3. Project exploitation</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
-</ul>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">2. Potential market</a></h3>
+        </div>
+        <div class="assign-container action-required">
+          <span class="secondary-notification">Assigned to</span>
+          <div class="assign-button-container">
+            <div class="assign-button">
+              <span class="secondary-notification">Jessica Doe</span>
+            </div>
+            {{ render '@assign-list' }}
+          </div>
+        </div>
+      </li>
 
-<h1 class="govuk-heading-l">Example 2. As collaborator</h1>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">3. Project exploitation</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
+    </ul>
 
-<section>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
-  <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
-</section>
+    <h1 class="govuk-heading-l">Example 2. As collaborator</h1>
 
-<ul class="task-list">
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
-    </div>
-    <span class="secondary-notification">Assigned to Steve Smith</span>
-  </li>
+    <section>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
+      <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
+    </section>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link" class="govuk-link">2. Potential market</a></h3>
-    </div>
-    <span class="action-required">Assigned to you</span>
-  </li>
+    <ul class="task-list">
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
+        </div>
+        <span class="secondary-notification">Assigned to Steve Smith</span>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#">3. Project exploitation</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
-</ul>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link" class="govuk-link">2. Potential market</a></h3>
+        </div>
+        <span class="action-required">Assigned to you</span>
+      </li>
+
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link>3. Project exploitation</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
+    </ul>
+</div>
