@@ -112,6 +112,13 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
         return costItems;
     }
 
+    private static boolean isRequestingFunding(Map<String, String[]> params) {
+        String[] requestFundingParams = params.get("request-funding");
+        return  requestFundingParams.length != 0 &&
+                requestFundingParams[0] != null &&
+                "yes".equals(requestFundingParams[0]);
+    }
+
     /**
      * Retrieve the complete cost item data row, so everything is together
      */
@@ -126,7 +133,7 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
             } else {
                 continue;
             }
-            FinanceFormField financeFormField = getCostFormField(costTypeKey, value);
+            FinanceFormField financeFormField = getCostFormField(costTypeKey, value, isRequestingFunding(params));
             if (financeFormField == null) {
                 continue;
             }
@@ -152,12 +159,25 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
         return costKeyMap;
     }
 
-    FinanceFormField getCostFormField(String costTypeKey, String value) {
+    private static String filterGrantClaim(String[] keyParts, String value, boolean requestingFunding) {
+        if (!requestingFunding && keyParts[1].equals("grantclaimpercentage")) {
+            return "0";
+        }
+        else {
+            return value;
+        }
+    }
+
+    FinanceFormField getCostFormField(String costTypeKey, String value, boolean requestingFunding) {
         String[] keyParts = costTypeKey.split("-");
+
+        // IFS-2610 if not requesting funding then set the grant claim percentage to zero
+        final String filteredValue = filterGrantClaim(keyParts, value, requestingFunding);
+
         if (keyParts.length > 3) {
-            return new FinanceFormField(keyParts[0] + "-" + keyParts[2] + "-" + keyParts[3], value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
+            return new FinanceFormField(keyParts[0] + "-" + keyParts[2] + "-" + keyParts[3], filteredValue, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
         } else if (keyParts.length == 3) {
-            return new FinanceFormField(keyParts[0] + "-" + keyParts[2], value, null, keyParts[2], keyParts[1], keyParts[0]);
+            return new FinanceFormField(keyParts[0] + "-" + keyParts[2], filteredValue, null, keyParts[2], keyParts[1], keyParts[0]);
         }
         return null;
     }

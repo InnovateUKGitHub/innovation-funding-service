@@ -18,6 +18,7 @@
                                    class="govuk-radios__input"
                                    id="request-funding-yes"
                                    name="request-funding"
+                                   value="yes"
                                    th:checked="${model.organisationGrantClaimPercentage > 0}"
                                    required="required" />
                             <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
@@ -28,6 +29,7 @@
                                    class="govuk-radios__input"
                                    id="request-funding-no"
                                    name="request-funding"
+                                   value="no"
                                    th:checked="${model.organisationGrantClaimPercentage == 0}"
                                    required="required" />
                             <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
