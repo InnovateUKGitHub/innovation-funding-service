@@ -40,6 +40,7 @@ import org.springframework.validation.Validator;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -108,7 +109,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(applicationValidationUtil.validateResponse(formInputResponse1, false)).thenReturn(bindingResult1);
         when(applicationValidationUtil.validateResponse(formInputResponse2, false)).thenReturn(bindingResult2);
-        when(formInputRepository.findOne(formInputId)).thenReturn(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build());
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build()));
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
 
@@ -118,7 +119,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(formInputResponseRepository).findByApplicationIdAndFormInputId(applicationId, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse1, false);
         verify(applicationValidationUtil).validateResponse(formInputResponse2, false);
-        verify(formInputRepository, times(1)).findOne(formInputId);
+        verify(formInputRepository, times(1)).findById(formInputId);
     }
 
 
@@ -134,7 +135,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         BindingResult bindingResultForEmptyResponse =  ValidatorTestUtil.getBindingResult(emptyResponse);
 
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
-        when(formInputRepository.findOne(formInputId)).thenReturn(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build());
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build()));
         when(applicationValidationUtil.validateResponse(isA(FormInputResponse.class), eq(false))).thenReturn(bindingResultForEmptyResponse);
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
@@ -143,7 +144,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         assertEquals(bindingResultForEmptyResponse, bindingResults.get(0));
 
         verify(formInputResponseRepository).findByApplicationIdAndFormInputId(applicationId, formInputId);
-        verify(formInputRepository, times(2)).findOne(formInputId);
+        verify(formInputRepository, times(2)).findById(formInputId);
         verify(applicationValidationUtil).validateResponse(isA(FormInputResponse.class), eq(false));
     }
 
@@ -167,8 +168,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(applicationValidationUtil.validateResponse(formInputResponse1, false)).thenReturn(bindingResult1);
         when(applicationValidationUtil.validateResponse(formInputResponse2, false)).thenReturn(bindingResult2);
-        when(formInputRepository.findOne(formInputId)).thenReturn(newFormInput().withType(FormInputType.APPLICATION_DETAILS).build());
-        when(applicationRepository.findOne(applicationId)).thenReturn(application);
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.APPLICATION_DETAILS).build()));
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationValidationUtil.addValidation(eq(application), isA(Validator.class))).thenReturn(applicationBindingResult);
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
@@ -179,8 +180,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(formInputResponseRepository).findByApplicationIdAndFormInputId(applicationId, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse1, false);
         verify(applicationValidationUtil).validateResponse(formInputResponse2, false);
-        verify(formInputRepository).findOne(formInputId);
-        verify(applicationRepository).findOne(applicationId);
+        verify(formInputRepository).findById(formInputId);
+        verify(applicationRepository).findById(applicationId);
         verify(applicationValidationUtil).addValidation(eq(application), isA(Validator.class));
 
     }
@@ -196,7 +197,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
         when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
-        when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(formInput));
 
         BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
 
@@ -204,7 +205,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
-        verify(formInputRepository, only()).findOne(formInputId);
+        verify(formInputRepository, only()).findById(formInputId);
     }
 
     @Test
@@ -222,20 +223,20 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
         when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
-        when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(formInput));
         when(applicationValidationUtil.addValidation(application, academicJesValidator)).thenReturn(bindingResultExpected);
         when(organisationService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(ServiceResult.serviceSuccess(organisationResult));
-        when(userRepository.findOne(loggedInUser.getId())).thenReturn(user);
+        when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
         BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
 
         assertEquals(bindingResultExpected, actual);
 
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
-        verify(formInputRepository, only()).findOne(formInputId);
+        verify(formInputRepository, only()).findById(formInputId);
         verify(applicationValidationUtil).addValidation(application, academicJesValidator);
         verify(organisationService, only()).getByUserAndApplicationId(user.getId(), application.getId());
-        verify(userRepository, only()).findOne(loggedInUser.getId());
+        verify(userRepository, only()).findById(loggedInUser.getId());
 
     }
 
@@ -266,7 +267,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         List<ValidationMessages> expected = emptyList();
 
 
-        when(processRoleRepository.findOne(markedAsCompleteById)).thenReturn(processRole);
+        when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
         when(financeRowCostsService.getCostItems(1L, questionId)).thenReturn(serviceSuccess(costItems));
         when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
@@ -278,7 +279,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         assertEquals(expected, result);
 
 
-        verify(processRoleRepository).findOne(markedAsCompleteById);
+        verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
         verify(financeRowCostsService, times(1)).getCostItems(1L, questionId);
         verify(applicationValidationUtil).validateCostItem(costItems, question);
@@ -310,7 +311,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
                 .withFinanceFileEntry(1L)
                 .build();
 
-        when(processRoleRepository.findOne(markedAsCompleteById)).thenReturn(processRole);
+        when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
         when(financeRowCostsService.getCostItems(applicationFinanceId, questionId)).thenReturn(serviceSuccess(costItems));
         when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
@@ -319,7 +320,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         assertEquals(validationMessages, result);
 
-        verify(processRoleRepository).findOne(markedAsCompleteById);
+        verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
         verify(financeRowCostsService).getCostItems(applicationFinanceId, questionId);
         verify(applicationValidationUtil).validateCostItem(costItems, question);
