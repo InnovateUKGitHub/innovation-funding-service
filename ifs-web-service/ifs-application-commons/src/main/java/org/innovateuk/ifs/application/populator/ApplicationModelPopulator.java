@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -72,6 +73,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -203,7 +207,7 @@ public class ApplicationModelPopulator {
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
             if (!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeViewHandlerProvider.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+                financeViewHandlerProvider.getFinanceModelManager(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
         }
     }

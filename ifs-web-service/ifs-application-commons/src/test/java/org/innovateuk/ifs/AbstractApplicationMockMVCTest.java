@@ -578,8 +578,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn
                 (applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceFormHandler(competitionResource, 1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, 1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupQuestionStatus(ApplicationResource application) {

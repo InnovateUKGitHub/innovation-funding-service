@@ -95,7 +95,7 @@ public class YourProjectCostsSectionPopulatorTest {
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(), section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         StandardYourProjectCostsSectionViewModel viewModel = (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
@@ -145,7 +145,7 @@ public class YourProjectCostsSectionPopulatorTest {
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(), section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true, Optional.empty(), true);
 
         assertThat(viewModel.isSection(), equalTo(true));

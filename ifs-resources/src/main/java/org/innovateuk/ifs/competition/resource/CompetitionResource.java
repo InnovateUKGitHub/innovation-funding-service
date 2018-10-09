@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -696,6 +697,10 @@ public class CompetitionResource {
 
     public void setIncludeJesForm(Boolean includeJesForm) {
         this.includeJesForm = includeJesForm;
+    }
+
+    public boolean showJesFinances(long organisationType) {
+        return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
     }
 
     @Override

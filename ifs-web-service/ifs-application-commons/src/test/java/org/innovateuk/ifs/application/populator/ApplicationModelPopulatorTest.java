@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -82,6 +83,9 @@ public class ApplicationModelPopulatorTest {
 
     @Mock
     protected UserRestService userRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Test
     public void testAddApplicationAndSections() {
@@ -177,13 +181,15 @@ public class ApplicationModelPopulatorTest {
         List<QuestionResource> costsQuestions = QuestionResourceBuilder.newQuestionResource().build(2);
         Long organisationType = 1L;
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
+        CompetitionResource competition = newCompetitionResource().build();
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
         when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
         when(organisationRestService.getPrimaryForUser(user.getId())).thenReturn(restSuccess(userOrganisation));
-        when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
+        when(competitionRestService.getCompetitionById(competitionId).getSuccess()).thenReturn(competition);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));

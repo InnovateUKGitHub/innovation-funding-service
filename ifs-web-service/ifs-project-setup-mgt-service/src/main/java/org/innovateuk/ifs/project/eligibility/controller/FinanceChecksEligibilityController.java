@@ -156,7 +156,7 @@ public class FinanceChecksEligibilityController {
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisation.getId()).getSuccess();
 
         FileDetailsViewModel jesFileDetailsViewModel = null;
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition, organisationResource.getOrganisationType());
         if (!isUsingJesFinances) {
             populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
         } else {
@@ -194,10 +194,13 @@ public class FinanceChecksEligibilityController {
                              @PathVariable(QUESTION_ID) final Long questionId,
                              UserResource user) {
         Long organisationType = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationType();
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
+        FinanceRowItem costItem = addCost(competition, organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
-        financeViewHandlerProvider.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
+        financeViewHandlerProvider.getProjectFinanceModelManager(competition, organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
@@ -251,7 +254,8 @@ public class FinanceChecksEligibilityController {
                                                          HttpServletRequest request) {
         ValidationMessages errors = new ValidationMessages();
 
-        ValidationMessages saveErrors = financeViewHandlerProvider.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        ValidationMessages saveErrors = financeViewHandlerProvider.getProjectFinanceFormHandler(competition, organisationType).update(request, organisationId, projectId, competitionId);
 
         removeCapitalUsageExistingErrors(saveErrors);
 
@@ -274,8 +278,8 @@ public class FinanceChecksEligibilityController {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
     }
 
-    private FinanceRowItem addCost(Long orgType, Long organisationId, Long projectId, Long questionId) {
-        return financeViewHandlerProvider.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
+    private FinanceRowItem addCost(CompetitionResource competitionResource, Long orgType, Long organisationId, Long projectId, Long questionId) {
+        return financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -387,8 +391,10 @@ public class FinanceChecksEligibilityController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider
-                .getProjectFinanceModelManager(organisation.getOrganisationType()))
+                .getProjectFinanceModelManager(competition, organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";

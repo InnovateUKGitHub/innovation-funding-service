@@ -54,7 +54,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 section.allQuestions()
                         .filter(question -> QuestionType.COST.equals(question.getQuestion().getType()))
                         .collect(Collectors.toList());
-        financeViewHandlerProvider.getFinanceModelManager(
+        financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationType()
         )
                 .addOrganisationFinanceDetails(

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
