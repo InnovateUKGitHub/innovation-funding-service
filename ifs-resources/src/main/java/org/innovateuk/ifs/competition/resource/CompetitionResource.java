@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.ZeroDowntime;
@@ -27,10 +26,6 @@ public class CompetitionResource {
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of(
-            "Expression of interest",
-            "The Prince's Trust"
-    );
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -110,6 +105,8 @@ public class CompetitionResource {
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
 
+    private boolean nonFinanceType;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -153,6 +150,14 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public boolean isNonFinanceType() {
+        return nonFinanceType;
+    }
+
+    public void setNonFinanceType(boolean nonFinanceType) {
+        this.nonFinanceType = nonFinanceType;
     }
 
     public Long getId() {
@@ -543,12 +548,6 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
-            " value dependent on applicationFinanceType")
-    public boolean isFullApplicationFinance() {
-        return ApplicationFinanceType.STANDARD == applicationFinanceType;
-    }
-
     public boolean getSetupComplete() {
         return setupComplete;
     }
@@ -595,11 +594,6 @@ public class CompetitionResource {
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
         this.assessorFinanceView = assessorFinanceView;
-    }
-
-    @JsonIgnore
-    public boolean isNonFinanceType() {
-        return NON_FINANCE_TYPES.contains(competitionTypeName);
     }
 
     @JsonIgnore

@@ -1,0 +1,25 @@
+=== Get organisation by Companies House name
+
+==== Request
+include::{snippets}/companies-house/search-by-companies-house-name/http-request.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-name/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/companies-house/search-by-companies-house-name/http-response.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-name/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/companies-house/search-by-companies-house-name/curl-request.adoc[]
+
+=== Get organisation by Companies House id
+
+==== Request
+include::{snippets}/companies-house/search-by-companies-house-id/http-request.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/companies-house/search-by-companies-house-id/http-response.adoc[]
+include::{snippets}/companies-house/search-by-companies-house-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/companies-house/search-by-companies-house-id/curl-request.adoc[]

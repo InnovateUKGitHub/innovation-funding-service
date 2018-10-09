@@ -1,0 +1,15 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+
+<p style="margin: 0 0 1em 0;">You have been invited to view the following competition on the Innovation Funding Service:</p>
+<p style="margin: 0 0 1em 0;"><b>${competitionName}</b></p>
+
+
+<a href="${dashboardUrl}" class="govuk-button">Sign in</a>
+
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+
+<p style="margin: 0 0 1em 0;">Innovation Funding Service Team</p>
+</@layout.default>

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.organisation.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.organisation.controller.CompanyHouseController;
+import org.innovateuk.ifs.organisation.controller.CompaniesHouseController;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.organisation.transactional.CompanyHouseApiService;
+import org.innovateuk.ifs.organisation.transactional.CompaniesHouseApiService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.documentation.CompanyHouseDocs.organisationSearchResultFields;
+import static org.innovateuk.ifs.documentation.CompaniesHouseDocs.organisationSearchResultFields;
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
@@ -31,16 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class CompanyHouseControllerDocumentation extends BaseControllerMockMVCTest<CompanyHouseController> {
+public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVCTest<CompaniesHouseController> {
 
     @Mock
-    private CompanyHouseApiService companyHouseService;
+    private CompaniesHouseApiService companyHouseService;
 
     private OrganisationSearchResult organisationSearchResults;
 
     @Override
-    protected CompanyHouseController supplyControllerUnderTest() {
-        return new CompanyHouseController();
+    protected CompaniesHouseController supplyControllerUnderTest() {
+        return new CompaniesHouseController();
     }
 
     @Before
@@ -65,19 +65,19 @@ public class CompanyHouseControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void searchByCompanyHouseName() throws Exception {
+    public void searchByCompaniesHouseName() throws Exception {
 
         String searchText = "Batman Robin";
 
         when(companyHouseService.searchOrganisations(any()))
                 .thenReturn(ServiceResult.serviceSuccess(Arrays.asList(organisationSearchResults)));
 
-        mockMvc.perform(get("/companyhouse/searchCompanyHouse/{searchText}",searchText)
+        mockMvc.perform(get("/companies-house/search/{searchText}",searchText)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(organisationSearchResults))))
                 .andExpect(status().isOk())
-                .andDo(document("company-house/{method-name}",
+                .andDo(document("companies-house/{method-name}",
                         pathParameters(
                                 parameterWithName("searchText").description("Name of the Organisation to search.")
                         ),
@@ -89,19 +89,19 @@ public class CompanyHouseControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void searchByCompanyHouseId() throws Exception {
+    public void searchByCompaniesHouseId() throws Exception {
 
         String id = "08241216";
 
         when(companyHouseService.getOrganisationById(any()))
                 .thenReturn(ServiceResult.serviceSuccess(organisationSearchResults));
 
-        mockMvc.perform(get("/companyhouse/getCompanyHouse/{id}",id)
+        mockMvc.perform(get("/companies-house/getCompanyHouse/{id}",id)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(organisationSearchResults)))
-                .andDo(document("company-house/{method-name}",
+                .andDo(document("companies-house-house/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the Organisation to search.")
                         ),
