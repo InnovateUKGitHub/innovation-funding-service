@@ -52,6 +52,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     private static final String INNOVATION_AREA_NAME_ONE = "one";
     private static final String INNOVATION_AREA_NAME_TWO = "two";
+    private static final int PAGE_NUMBER = 0;
+    private static final int PAGE_SIZE =  40;
 
     @InjectMocks
 	private CompetitionManagementDashboardController controller;
@@ -283,51 +285,45 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void applicationSearchWhenSearchStringNotSpecified() throws Exception {
-        int pageNumber = 0;
-        int pageSize = 40;
 
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
 
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId("", pageNumber, pageSize)).thenReturn(expectedApplicationPageResource);
+        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
+        when(competitionDashboardSearchService.wildcardSearchByApplicationId("", PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/application-search"));
 
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("", pageNumber, pageSize);
+        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("", PAGE_NUMBER, PAGE_SIZE);
 
     }
 
     @Test
     public void applicationSearchWhenSearchStringHasWhiteSpaces() throws Exception {
         String searchQuery = "           12           ";
-        int pageNumber = 0;
-        int pageSize = 40;
 
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
 
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId("12", pageNumber, pageSize)).thenReturn(expectedApplicationPageResource);
+        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
+        when(competitionDashboardSearchService.wildcardSearchByApplicationId("12", PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search?searchQuery=" + searchQuery))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/application-search"));
 
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("12", pageNumber, pageSize);
+        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("12", PAGE_NUMBER, PAGE_SIZE);
 
     }
 
     @Test
     public void applicationSearch() throws Exception {
         String searchQuery = "12";
-        int pageNumber = 0;
-        int pageSize = 40;
 
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
 
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, pageNumber, pageSize)).thenReturn(expectedApplicationPageResource);
+        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
+        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search?searchQuery=" + searchQuery))
                 .andExpect(status().isOk())
@@ -344,24 +340,23 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(40, model.getApplicationPagination().getPageSize());
         assertFalse(model.isSupport());
 
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, pageNumber, pageSize);
+        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE);
 
     }
 
     @Test
-    public void supportUserNumericInputSearchApplication() throws Exception {
+    public void supportUserNumericInputSearchReturnsApplication() throws Exception {
 
         UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
         setLoggedInUser(userResource);
 
         String searchQuery = "12";
-        int pageNumber = 0;
-        int pageSize = 40;
+
 
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
 
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, pageNumber, pageSize)).thenReturn(expectedApplicationPageResource);
+        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
+        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/support/search?searchQuery=" + searchQuery))
                 .andExpect(status().isOk())
@@ -378,7 +373,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(40, model.getApplicationPagination().getPageSize());
         assertTrue(model.isSupport());
 
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, pageNumber, pageSize);
+        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE);
     }
 
     @Test
@@ -405,6 +400,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         assertEquals(searchQuery,actualSearchQuery);
         assertNotNull(actualCompetitionSearchResult);
+        assertEquals(searchResult.getMappedCompetitions(),actualCompetitionSearchResult.getMappedCompetitions());
         assertEquals(searchResult,actualCompetitionSearchResult);
         assertTrue(tabs.support());
         verify(competitionDashboardSearchService).searchCompetitions(searchQuery, defaultPage);
