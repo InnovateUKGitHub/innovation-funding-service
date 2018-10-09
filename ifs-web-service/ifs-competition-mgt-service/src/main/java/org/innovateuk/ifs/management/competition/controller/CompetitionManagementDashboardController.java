@@ -8,13 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
-import org.innovateuk.ifs.management.dashboard.viewmodel.ApplicationSearchDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.DashboardTabsViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.LiveDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.NonIFSDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.PreviousDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.ProjectSetupDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.UpcomingDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,7 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -44,14 +37,20 @@ public class CompetitionManagementDashboardController {
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
-    @Autowired
     private CompetitionDashboardSearchService competitionDashboardSearchService;
 
-    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
-    @Autowired
     private BankDetailsRestService bankDetailsRestService;
+
+    @Autowired
+    public CompetitionManagementDashboardController(CompetitionDashboardSearchService competitionDashboardSearchService,
+                                                    CompetitionSetupRestService competitionSetupRestService,
+                                                    BankDetailsRestService bankDetailsRestService) {
+        this.competitionDashboardSearchService = competitionDashboardSearchService;
+        this.competitionSetupRestService = competitionSetupRestService;
+        this.bankDetailsRestService = bankDetailsRestService;
+    }
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
@@ -148,19 +147,6 @@ public class CompetitionManagementDashboardController {
         return searchCompetition(searchQuery, page, model, user);
     }
 
-    @SecuredBySpring(value = "READ", description = "The IFS Administrators are allowed to view the application search page")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
-    @GetMapping("/dashboard/application/search")
-    public String applicationSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                    Model model,
-                                    HttpServletRequest request,
-                                    UserResource user) {
-
-        return searchApplication(searchQuery, page, pageSize, model, request, user);
-    }
-
     @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping("/dashboard/support/search")
@@ -219,8 +205,7 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
-                        trimmedSearchQuery,
-                        user.hasRole(SUPPORT));
+                        trimmedSearchQuery);
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

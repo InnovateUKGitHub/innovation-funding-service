@@ -13,12 +13,10 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form role="search" method="get" id="searchform"
-                     th:with = "supportUser=${model.isSupport()}"
-                     th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/application/search'}}">
+                     th:action="@{/dashboard/support/search}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
                   th:with="setPageTitle='Search results',
-                        size='govuk-heading-l',
-                        supportUser=${model.isSupport()}"/>
+                        size='govuk-heading-l'"/>
         </form>
 
         <th:block th:if="${model.searchStringPresent}">
@@ -30,7 +28,7 @@
             </p>
         </th:block>
 
-        <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination}, isSupport=${model.support})" />
+        <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

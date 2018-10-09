@@ -284,67 +284,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void applicationSearchWhenSearchStringNotSpecified() throws Exception {
-
-        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
-
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId("", PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("dashboard/application-search"));
-
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("", PAGE_NUMBER, PAGE_SIZE);
-
-    }
-
-    @Test
-    public void applicationSearchWhenSearchStringHasWhiteSpaces() throws Exception {
-        String searchQuery = "           12           ";
-
-        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
-
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId("12", PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search?searchQuery=" + searchQuery))
-                .andExpect(status().isOk())
-                .andExpect(view().name("dashboard/application-search"));
-
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId("12", PAGE_NUMBER, PAGE_SIZE);
-
-    }
-
-    @Test
-    public void applicationSearch() throws Exception {
-        String searchQuery = "12";
-
-        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
-
-        ApplicationPageResource expectedApplicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, PAGE_NUMBER, PAGE_SIZE);
-        when(competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedApplicationPageResource);
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/application/search?searchQuery=" + searchQuery))
-                .andExpect(status().isOk())
-                .andExpect(view().name("dashboard/application-search"))
-                .andReturn();
-
-        ApplicationSearchDashboardViewModel model = (ApplicationSearchDashboardViewModel) result.getModelAndView().getModelMap().get("model");
-
-        assertEquals(applicationResources, model.getApplications());
-        assertEquals(4L, model.getApplicationCount());
-        assertEquals(searchQuery, model.getSearchString());
-        assertEquals(5, model.getApplicationPagination().getTotalPages());
-        assertEquals(0, model.getApplicationPagination().getCurrentPage());
-        assertEquals(40, model.getApplicationPagination().getPageSize());
-        assertFalse(model.isSupport());
-
-        verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE);
-
-    }
-
-    @Test
     public void supportUserNumericInputSearchReturnsApplication() throws Exception {
 
         UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
@@ -371,7 +310,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(5, model.getApplicationPagination().getTotalPages());
         assertEquals(0, model.getApplicationPagination().getCurrentPage());
         assertEquals(40, model.getApplicationPagination().getPageSize());
-        assertTrue(model.isSupport());
 
         verify(competitionDashboardSearchService).wildcardSearchByApplicationId(searchQuery, PAGE_NUMBER, PAGE_SIZE);
     }
@@ -469,6 +407,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Override
     protected CompetitionManagementDashboardController supplyControllerUnderTest() {
-        return new CompetitionManagementDashboardController();
+        return new CompetitionManagementDashboardController(competitionDashboardSearchService,competitionSetupRestService,bankDetailsRestService);
     }
 }
