@@ -205,7 +205,6 @@ public class CompetitionManagementDashboardController {
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
                         searchQuery);
         model.addAttribute("model", viewModel);
-        model.addAttribute("tabs", new DashboardTabsViewModel(user));
 
         return TEMPLATE_PATH + "application-search";
     }
