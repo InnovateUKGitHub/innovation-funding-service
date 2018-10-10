@@ -72,7 +72,7 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    watchStatus
+    watchSilStubAndPrototypesStatus
 
     upgradeSurvey
 
@@ -152,23 +152,14 @@ function forceReload {
         oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    watchStatus
+    watchSilStubAndPrototypesStatus
 
     forceReloadSurvey
 
     forceReloadEuGrantRegistration
 }
 
-function watchStatus {
-    rolloutStatus application-svc
-    rolloutStatus front-door-svc
-    rolloutStatus assessment-svc
-    rolloutStatus competition-mgt-svc
-    rolloutStatus project-setup-mgt-svc
-    rolloutStatus project-setup-svc
-    rolloutStatus registration-svc
-    rolloutStatus idp
-    rolloutStatus shib
+function watchSilStubAndPrototypesStatus {
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
