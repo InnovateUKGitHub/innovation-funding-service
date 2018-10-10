@@ -6,9 +6,9 @@ subsets:
 # These addresses must be changed for individual environments
 # Addresses for the current cluster
 - addresses:
-  - ip: 10.100.5.10
-  - ip: 10.100.6.11
-  - ip: 10.100.7.12
+  - ip: ${GLUSTER_IP_1}
+  - ip: ${GLUSTER_IP_2}
+  - ip: ${GLUSTER_IP_3}
   ports:
   - port: 1
     protocol: TCP
