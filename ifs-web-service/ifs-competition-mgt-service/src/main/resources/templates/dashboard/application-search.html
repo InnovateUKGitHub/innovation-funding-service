@@ -16,7 +16,8 @@
                      th:action="@{/dashboard/support/search}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
                   th:with="setPageTitle='Search results',
-                        size='govuk-heading-l'"/>
+                           size='govuk-heading-l',
+                           supportUser=${tabs.support()}"/>
         </form>
 
         <th:block th:if="${model.searchStringPresent}">
