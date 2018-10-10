@@ -9,7 +9,9 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,6 +30,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -55,10 +58,14 @@ public class YourOrganisationSectionPopulatorTest {
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
     @Test
     public void testPopulate() {
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ApplicantSectionResource section = newApplicantSectionResource()
-                .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
+                .withCurrentApplicant(newApplicantResource().withOrganisation(organisation).build())
                 .withCurrentUser(newUserResource().build())
                 .withCompetition(newCompetitionResource().build())
                 .withApplication(newApplicationResource().build())
@@ -79,6 +86,7 @@ public class YourOrganisationSectionPopulatorTest {
         when(overviewRow.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build());
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
         YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L), true);
 
@@ -92,5 +100,4 @@ public class YourOrganisationSectionPopulatorTest {
         assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
         assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), equalTo(true));
     }
-
 }
