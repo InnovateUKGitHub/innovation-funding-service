@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -16,7 +15,6 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.SectionService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,9 +222,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Boolean> sectionCompleteForAllOrganisations(Section section, Application application) {
-        List<Organisation> organisations = simpleMap(application.getApplicationFinances(), ApplicationFinance::getOrganisation);
-        for (Organisation organisation : organisations) {
-            ServiceResult<Boolean> sectionComplete = isSectionComplete(section, application, organisation.getId());
+        List<Long> organisations = simpleMap(application.getProcessRoles(), ProcessRole::getOrganisationId);
+        for (Long organisationId : organisations) {
+            ServiceResult<Boolean> sectionComplete = isSectionComplete(section, application, organisationId);
             if (sectionComplete.isFailure()) {
                 return sectionComplete;
             }
