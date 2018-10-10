@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -45,10 +49,12 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -89,6 +95,12 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private FinanceUtil financeUtil;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {
@@ -136,12 +148,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long organisationId = 1L;
         Long projectId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
@@ -151,6 +174,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
 
@@ -163,15 +189,25 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileConfirm() throws Exception {
-
         Long organisationId = 1L;
         Long projectId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
@@ -181,6 +217,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
 
@@ -196,11 +235,22 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long projectId = 1L;
         Long organisationId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -225,6 +275,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
@@ -301,12 +354,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
         Long organisationId = 1L;
         Long projectId = 2L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
@@ -324,6 +388,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(spendProfileService.markSpendProfileComplete(projectResource.getId(), organisationId)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -373,12 +440,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long organisationId = 1L;
         Long projectId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
@@ -394,6 +472,12 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -469,11 +553,22 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long projectId = 1L;
         Long organisationId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -498,6 +593,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
@@ -534,12 +632,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long organisationId = 1L;
         Long projectId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         List<ProjectUserResource> projectUserResources = newProjectUserResource()
@@ -577,6 +686,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
         ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
@@ -596,12 +708,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Long organisationId = 1L;
         Long projectId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
@@ -617,6 +740,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
+
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
         expectedViewModel.setLeadPartner(false);

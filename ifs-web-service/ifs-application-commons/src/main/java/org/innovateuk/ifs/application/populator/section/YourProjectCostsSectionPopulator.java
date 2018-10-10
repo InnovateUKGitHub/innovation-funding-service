@@ -115,7 +115,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 section.getCurrentApplicant().getOrganisation().getId()
         );
         boolean viewModelIsReadOnly = readOnly || completedSectionIds.contains(section.getSection().getId());
-        if (section.getCurrentApplicant().isResearch()) {
+        if (section.getCompetition().showJesFinances(section.getCurrentApplicant().getOrganisation().getOrganisationType())) {
             return new JesYourProjectCostsSectionViewModel(
                     section,
                     Collections.emptyList(),

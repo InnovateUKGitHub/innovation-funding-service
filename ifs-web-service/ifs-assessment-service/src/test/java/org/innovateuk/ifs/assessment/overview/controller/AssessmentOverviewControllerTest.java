@@ -455,7 +455,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         when(formInputViewModelGenerator.fromSection(section, costSection, form, true)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(), section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
@@ -531,7 +531,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(), section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
@@ -793,8 +793,8 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceFormHandler(competition, 1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, 1L)).thenReturn(defaultFinanceModelManager);
 
         return appFinanceList;
     }

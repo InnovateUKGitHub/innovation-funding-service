@@ -48,10 +48,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -175,8 +172,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(74);
@@ -197,7 +194,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
@@ -234,7 +231,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 

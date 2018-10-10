@@ -8,11 +8,11 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdo
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -25,6 +25,8 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
@@ -36,14 +38,11 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -579,7 +578,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
@@ -607,7 +606,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
@@ -722,7 +721,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));

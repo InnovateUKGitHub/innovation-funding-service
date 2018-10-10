@@ -9,6 +9,8 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -30,6 +32,7 @@ import java.util.Map;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -76,7 +79,11 @@ public class ApplicationSectionSaverTest {
     @Mock
     private ApplicationQuestionNonFileSaver nonFileSaver;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private final ApplicationResource application = newApplicationResource().withId(1234L).build();
+    private final CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
     private final Long competitionId = 23412L;
     private final ApplicationForm form = new ApplicationForm();
     private final Long sectionId = 912509L;
@@ -97,7 +104,8 @@ public class ApplicationSectionSaverTest {
         when(organisationService.getOrganisationType(userId, application.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         FinanceFormHandler defaultFinanceFormHandler = mock(DefaultFinanceFormHandler.class);
         when(defaultFinanceFormHandler.update(request, userId, application.getId(), competitionId)).thenReturn(new ValidationMessages());
-        when(financeViewHandlerProvider.getFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(financeViewHandlerProvider.getFinanceFormHandler(competition, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(false);
     }
 

@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -75,6 +78,12 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private FinanceUtil financeUtil;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping
@@ -287,8 +296,9 @@ public class ProjectSpendProfileController {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
-
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
+        ApplicationResource application = applicationService.getById(projectResource.getApplication());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition, organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
