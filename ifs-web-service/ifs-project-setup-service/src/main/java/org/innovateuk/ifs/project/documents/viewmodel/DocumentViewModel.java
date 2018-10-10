@@ -8,20 +8,24 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 public class DocumentViewModel {
 
     private Long projectId;
+    private Long documentId;
     private String projectName;
     private String title;
+    private String guidance;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private boolean projectManager;
 
     public DocumentViewModel(Long projectId, String projectName, String title,
-                             FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager) {
+                             FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager, String guidance, Long documentId) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.title = title;
         this.fileDetails = fileDetails;
         this.status = status;
         this.projectManager = projectManager;
+        this.guidance = guidance;
+        this.documentId = documentId;
     }
 
     public Long getProjectId() {
@@ -48,6 +52,22 @@ public class DocumentViewModel {
         this.title = title;
     }
 
+    public String getGuidance() {
+        return guidance;
+    }
+
+    public void setGuidance(String guidance) {
+        this.guidance = guidance;
+    }
+
+    public Long getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(Long documentId) {
+        this.documentId = documentId;
+    }
+
     public DocumentStatus getStatus() {
         return status;
     }
@@ -71,6 +91,19 @@ public class DocumentViewModel {
     public void setProjectManager(boolean projectManager) {
         this.projectManager = projectManager;
     }
+
+    public boolean isEditable() {
+        return projectManager && status != DocumentStatus.APPROVED;
+    }
+
+    public boolean isShowSubmitDocumentsButton() {
+        return projectManager && status == DocumentStatus.UNSET;
+    }
+
+    public boolean isShowDisabledSubmitDocumentsButton() {
+        return projectManager && status == DocumentStatus.REJECTED;
+    }
+
 
     @Override
     public boolean equals(Object o) {

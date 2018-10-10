@@ -80,6 +80,6 @@ public class DocumentsPopulator {
         return new DocumentViewModel(project.getId(), project.getName(), configuredProjectDocument.getTitle(),
                 fileDetails,
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
-                isProjectManager);
+                isProjectManager, configuredProjectDocument.getGuidance(), configuredProjectDocument.getId());
     }
 }
