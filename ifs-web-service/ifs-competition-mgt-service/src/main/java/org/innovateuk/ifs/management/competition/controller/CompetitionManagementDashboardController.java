@@ -187,25 +187,23 @@ public class CompetitionManagementDashboardController {
     }
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
-        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page));
-        model.addAttribute("searchQuery", trimmedSearchQuery);
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page));
+        model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
 
         return TEMPLATE_PATH+"search";
     }
 
     private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
-        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         String existingSearchQuery = Objects.toString(request.getQueryString(), "");
 
-        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchQuery, page, pageSize);
+        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
 
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
-                        trimmedSearchQuery);
+                        searchQuery);
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";
