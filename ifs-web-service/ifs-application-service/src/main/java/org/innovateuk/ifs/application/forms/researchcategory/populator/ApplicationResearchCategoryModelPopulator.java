@@ -57,7 +57,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
 
-        return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
+        return new ResearchCategoryViewModel(applicationResource.getName(),
                 applicationResource.getId(),
                 questionId,
                 getResearchCategories(applicationResource.getCompetition()),

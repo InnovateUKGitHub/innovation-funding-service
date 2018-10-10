@@ -8,12 +8,13 @@ import java.util.List;
  * View Model for an Innovation Area selection overview.
  */
 public class InnovationAreaViewModel {
-    Long selectedInnovationAreaId;
-    boolean noInnovationAreaApplicable;
-    String currentCompetitionName;
 
-    Long applicationId;
-    Long questionId;
+    private Long selectedInnovationAreaId;
+    private boolean noInnovationAreaApplicable;
+    private String applicationName;
+
+    private Long applicationId;
+    private Long questionId;
 
     List<InnovationAreaResource> availableInnovationAreas;
 
@@ -56,11 +57,11 @@ public class InnovationAreaViewModel {
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
-    public String getCurrentCompetitionName() {
-        return currentCompetitionName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setCurrentCompetitionName(String currentCompetitionName) {
-        this.currentCompetitionName = currentCompetitionName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 }
