@@ -7,12 +7,12 @@
           id="searchform"
           th:with="supportUser=${model.getTabs().support()}"
           th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''}, supportUser=${supportUser})"
                   th:with="showSearch=${model.counts.liveCount > 0}"/>
     </form>
 </th:block>
 
-<div th:fragment="comp-dashboard-header(searchQuery)">
+<div th:fragment="comp-dashboard-header(searchQuery, supportUser)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <th:block th:insert="fragments/layout :: page-title"
