@@ -10,4 +10,6 @@ public interface DefaultFinanceRowRestService extends FinanceRowRestService {
 
     RestResult<Void> delete(Long costId);
 
+    RestResult<FinanceRowItem> addWithResponse(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
+
 }

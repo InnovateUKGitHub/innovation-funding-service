@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-
 /**
  * This enum marks sections as a given type.
  */
@@ -28,7 +26,7 @@ public enum SectionType {
 
     public static List<SectionType> sectionsNotRequiredForOrganisationType(Long organisationTypeId) {
         if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
-            return asList(ORGANISATION_FINANCES, FUNDING_FINANCES);
+            return Collections.singletonList(ORGANISATION_FINANCES);
         } else {
             return Collections.emptyList();
         }

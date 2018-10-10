@@ -31,12 +31,26 @@ public class FinanceRowController {
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
     	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
-        if(createResult.isFailure()){
+        if (createResult.isFailure()) {
             return RestResult.restFailure(createResult.getFailure());
-        }else{
+        } else {
             FinanceRowItem costItem = createResult.getSuccess();
             ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
             return RestResult.restSuccess(validationMessages, HttpStatus.CREATED);
+        }
+    }
+
+    @PostMapping("/add-with-response/{applicationFinanceId}/{questionId}")
+    public RestResult<FinanceRowItem> addWithResponse(
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
+            @PathVariable("questionId") final Long questionId,
+            @RequestBody(required=false) final FinanceRowItem newCostItem) {
+        RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
+        if (createResult.isFailure()) {
+            return RestResult.restFailure(createResult.getFailure());
+        } else {
+            FinanceRowItem costItem = createResult.getSuccess();
+            return RestResult.restSuccess(costItem, HttpStatus.CREATED);
         }
     }
     

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,5 +18,11 @@ public class DefaultFinanceRowRestServiceImpl extends BaseFinanceRowRestServiceI
     @Override
     public RestResult<Void> delete(Long costId) {
         return deleteWithRestResult(getCostRestUrl() + "/delete/" + costId);
+    }
+
+    @Override
+    public RestResult<FinanceRowItem> addWithResponse(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {
+        return postWithRestResult(getCostRestUrl() + "/add-with-response/" + applicationFinanceId + "/" + questionId, costItem,
+                FinanceRowItem.class);
     }
 }

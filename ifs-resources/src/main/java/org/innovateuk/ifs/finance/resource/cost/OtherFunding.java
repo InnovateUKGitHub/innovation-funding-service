@@ -13,7 +13,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
     private String fundingSource;
     private String securedDate;
 
-
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal fundingAmount;
 

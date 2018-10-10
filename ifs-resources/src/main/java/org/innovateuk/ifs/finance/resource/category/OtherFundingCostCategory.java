@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 
@@ -30,7 +31,7 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
 
     @Override
     public void calculateTotal() {
-        if(getOtherPublicFunding() == null || !"Yes".equals(getOtherPublicFunding())) {
+        if(!otherFundingSet()) {
             total = BigDecimal.ZERO;
         } else {
             total = costs.stream()
@@ -77,5 +78,10 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
     @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
+    }
+
+    @JsonIgnore
+    public boolean otherFundingSet() {
+        return getOtherPublicFunding() != null && "Yes".equals(getOtherPublicFunding());
     }
 }
