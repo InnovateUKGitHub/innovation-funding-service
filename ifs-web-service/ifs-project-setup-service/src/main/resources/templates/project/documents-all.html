@@ -23,7 +23,7 @@
             <li th:each="document : ${model.documents}">
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a th:href="@{/project/{id}/partner/document/view/{documentId}(id=${model.projectId}, documentId=${document.documentConfigId})}"
+                        <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                            th:text=${document.title}
                            class="govuk-link" />
                     </h3>

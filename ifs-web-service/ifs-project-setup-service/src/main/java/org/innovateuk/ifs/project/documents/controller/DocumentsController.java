@@ -22,11 +22,22 @@ public class DocumentsController {
     //TODO - XXX - Permissions
     //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/all")
-    public String viewAllDocuments(@PathVariable("projectId") Long projectId, Model model,
+    public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
 
-        model.addAttribute("model", populator.populate(projectId));
+        model.addAttribute("model", populator.populateAllDocuments(projectId));
         return "project/documents-all";
+    }
+    //TODO - XXX - Permissions
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @GetMapping("/config/{documentConfigId}")
+    public String viewDocument(@PathVariable("projectId") long projectId,
+                               @PathVariable("documentConfigId") long documentConfigId,
+                               Model model,
+                               UserResource loggedInUser) {
+
+        model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId, loggedInUser));
+        return "project/document"; // TODO - XXX - Create this view please.
     }
 }
 

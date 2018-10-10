@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.document.resource;
 
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+
 public class ProjectDocumentResource {
 
     private Long id;
@@ -8,7 +10,7 @@ public class ProjectDocumentResource {
 
     private org.innovateuk.ifs.competition.resource.ProjectDocumentResource projectDocument;
 
-    private Long fileEntry;
+    private FileEntryResource fileEntry;
 
     private DocumentStatus status;
 
@@ -36,11 +38,11 @@ public class ProjectDocumentResource {
         this.projectDocument = projectDocument;
     }
 
-    public Long getFileEntry() {
+    public FileEntryResource getFileEntry() {
         return fileEntry;
     }
 
-    public void setFileEntry(Long fileEntry) {
+    public void setFileEntry(FileEntryResource fileEntry) {
         this.fileEntry = fileEntry;
     }
 
