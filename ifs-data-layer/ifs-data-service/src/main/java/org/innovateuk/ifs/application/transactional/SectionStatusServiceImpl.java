@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -222,7 +223,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Boolean> sectionCompleteForAllOrganisations(Section section, Application application) {
-        List<Long> organisations = simpleMap(application.getProcessRoles(), ProcessRole::getOrganisationId);
+        Set<Long> organisations = simpleMapSet(application.getProcessRoles(), ProcessRole::getOrganisationId);
         for (Long organisationId : organisations) {
             ServiceResult<Boolean> sectionComplete = isSectionComplete(section, application, organisationId);
             if (sectionComplete.isFailure()) {
@@ -238,7 +239,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private Map<Long, Set<Long>> completedSections(Application application) {
         List<Section> sections = application.getCompetition().getSections();
         List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
-        List<Long> organisations = simpleMap(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
+        Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
 
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
 
