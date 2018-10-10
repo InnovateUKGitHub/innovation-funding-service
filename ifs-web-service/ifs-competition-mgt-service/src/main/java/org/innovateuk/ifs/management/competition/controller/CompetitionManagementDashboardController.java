@@ -143,8 +143,8 @@ public class CompetitionManagementDashboardController {
                          @RequestParam(name = "page", defaultValue = "0") int page,
                          Model model,
                          UserResource user) {
-
-        return searchCompetition(searchQuery, page, model, user);
+        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        return searchCompetition(trimmedSearchQuery, page, model, user);
     }
 
     @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
