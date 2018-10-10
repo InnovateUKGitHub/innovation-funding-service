@@ -77,9 +77,10 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        return new DocumentViewModel(project.getId(), project.getName(), configuredProjectDocument.getTitle(),
+        return new DocumentViewModel(project.getId(), project.getName(),
+                configuredProjectDocument.getId(), configuredProjectDocument.getTitle(), configuredProjectDocument.getGuidance(),
                 fileDetails,
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
-                isProjectManager, configuredProjectDocument.getGuidance(), configuredProjectDocument.getId());
+                isProjectManager);
     }
 }

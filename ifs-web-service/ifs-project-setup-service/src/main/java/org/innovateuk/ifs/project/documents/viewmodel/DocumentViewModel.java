@@ -8,24 +8,24 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 public class DocumentViewModel {
 
     private Long projectId;
-    private Long documentId;
     private String projectName;
+    private Long documentConfigId;
     private String title;
     private String guidance;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private boolean projectManager;
 
-    public DocumentViewModel(Long projectId, String projectName, String title,
-                             FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager, String guidance, Long documentId) {
+    public DocumentViewModel(Long projectId, String projectName, Long documentConfigId, String title, String guidance,
+                             FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
+        this.documentConfigId = documentConfigId;
         this.title = title;
+        this.guidance = guidance;
         this.fileDetails = fileDetails;
         this.status = status;
         this.projectManager = projectManager;
-        this.guidance = guidance;
-        this.documentId = documentId;
     }
 
     public Long getProjectId() {
@@ -44,6 +44,14 @@ public class DocumentViewModel {
         this.projectName = projectName;
     }
 
+    public Long getDocumentConfigId() {
+        return documentConfigId;
+    }
+
+    public void setDocumentConfigId(Long documentConfigId) {
+        this.documentConfigId = documentConfigId;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -58,14 +66,6 @@ public class DocumentViewModel {
 
     public void setGuidance(String guidance) {
         this.guidance = guidance;
-    }
-
-    public Long getDocumentId() {
-        return documentId;
-    }
-
-    public void setDocumentId(Long documentId) {
-        this.documentId = documentId;
     }
 
     public DocumentStatus getStatus() {

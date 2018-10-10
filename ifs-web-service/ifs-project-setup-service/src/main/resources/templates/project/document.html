@@ -63,15 +63,15 @@
             </details>
 
             <!--/* allowed to edit */-->
-            <form th:action="@{/project/{id}/document/config/{documentId}(documentId=${model.documentId},id=${model.projectId})}"
+            <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})}"
                   th:if="${model.isEditable()}"
                   th:object="${form}"
                   method="post"
                   enctype="multipart/form-data"
                   th:with="viewmode='edit',
-                           downloadUrl=@{/project/{id}/document/download/{documentId}(documentId=${model.documentId},id=${model.projectId})},
+                           downloadUrl=@{/project/{id}/document/download/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})},
                            filename=${model.fileDetails?.filename},
-                           inputField='uploadDocument',
+                           inputField='document',
                            validationField=${inputField},
                            mayRemove=true,
                            removeName='removeFileClicked',
@@ -83,7 +83,7 @@
             <!--/* not allowed to edit */-->
             <th:block th:unless="${model.isEditable()}"
                       th:with="viewmode='readonly',
-                               downloadUrl=@{/project/{id}/document/{documentId}(documentId=${model.documentId}, id=${model.projectId})},
+                               downloadUrl=@{/project/{id}/document/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})},
                                filename=${model.fileDetails?.filename},
                                inputField='',
                                validationField='',

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.innovateuk.ifs.project.documents.form.DocumentsForm;
+import org.innovateuk.ifs.project.documents.form.DocumentForm;
 
 /**
  * Controller backing the Documents page
@@ -37,7 +37,7 @@ public class DocumentsController {
                                Model model,
                                UserResource loggedInUser) {
 
-        DocumentsForm form = new DocumentsForm();
+        DocumentForm form = new DocumentForm();
         model.addAttribute("form", form);
         model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId, loggedInUser));
         return "project/document";
