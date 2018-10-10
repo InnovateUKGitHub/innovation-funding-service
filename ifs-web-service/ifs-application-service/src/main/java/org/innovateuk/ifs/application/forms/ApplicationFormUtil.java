@@ -34,6 +34,7 @@ public final class ApplicationFormUtil {
     public static final String PROJECT_LOCATION_KEY = "projectLocation";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
+    public static final String REQUEST_FUNDING = "request-funding";
 
     private ApplicationFormUtil() {}
 

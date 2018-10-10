@@ -271,6 +271,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(TERMS_AGREED_KEY, "1")
                         .param("-otherPublicFunding", String.valueOf(true))
+                        .param(REQUEST_FUNDING, "no")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -288,6 +289,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param("-otherPublicFunding", String.valueOf(true))
+                        .param(REQUEST_FUNDING, "no")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
@@ -307,6 +309,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(TERMS_AGREED_KEY, "1")
+                        .param(REQUEST_FUNDING, "no")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
