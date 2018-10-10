@@ -43,6 +43,13 @@ public class ProjectDocument {
     public ProjectDocument() {
     }
 
+    public ProjectDocument(Project project, org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocument, FileEntry fileEntry, DocumentStatus status) {
+        this.project = project;
+        this.projectDocument = projectDocument;
+        this.fileEntry = fileEntry;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

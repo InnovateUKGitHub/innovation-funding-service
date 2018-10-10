@@ -4,7 +4,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Form backing the Other Documents page
+ * Form for Document
  */
 public class DocumentForm extends BaseBindingResultTarget {
 
@@ -18,3 +18,4 @@ public class DocumentForm extends BaseBindingResultTarget {
         this.document = document;
     }
 }
+
