@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,12 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
     @Override
     public RestResult<StakeholderInviteResource> getInvite(String inviteHash) {
         return getWithRestResultAnonymous(format("%s/get-invite/%s", competitionSetupStakeholderRestURL, inviteHash), StakeholderInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> createStakeholder(String inviteHash, StakeholderRegistrationResource stakeholderRegistrationResource) {
+            String url = competitionSetupStakeholderRestURL + "/stakeholder/create/" + inviteHash;
+            return postWithRestResultAnonymous(url, stakeholderRegistrationResource, Void.class);
     }
 }
 

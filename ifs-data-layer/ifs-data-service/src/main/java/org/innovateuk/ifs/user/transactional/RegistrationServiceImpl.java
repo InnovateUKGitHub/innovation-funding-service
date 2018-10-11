@@ -5,12 +5,15 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.StakeholderInvite;
+import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -68,6 +71,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private RegistrationNotificationService registrationEmailService;
+
+    @Autowired
+    private StakeholderInviteRepository stakeholderInviteRepository;
 
     @Override
     @Transactional
@@ -250,6 +256,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
+    @Override
+    public ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource) {
+        return getStakeholderByHash(hash).andOnSuccess(stakeholderInvite ->
+                getInternalRoleResources(Role.STAKEHOLDER).andOnSuccess(roleResource -> {
+                    return createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
+                            .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
+                            .andOnSuccessReturnVoid();
+                }));
+    }
+
     private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
         if (role == IFS_ADMINISTRATOR){
             return getIFSAdminRoles(role); // IFS Admin has multiple roles
@@ -269,9 +285,27 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+    private ServiceResult<Void> createStakeholderUser(StakeholderRegistrationResource stakeholderRegistrationResource, StakeholderInvite stakeholderInvite) {
+        final UserResource userResource = stakeholderRegistrationResource.toUserResource();
+        userResource.setEmail(stakeholderInvite.getEmail());
+        userResource.setRoles(singletonList(Role.STAKEHOLDER));
+        return validateUser(userResource).
+                andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
+                });
+    }
+
     private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
         roleInvite.open();
         roleInviteRepository.save(roleInvite);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
+        stakeholderInvite.open();
+        stakeholderInviteRepository.save(stakeholderInvite);
         return serviceSuccess();
     }
 
@@ -281,6 +315,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
         return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+    }
+
+    private ServiceResult<StakeholderInvite> getStakeholderByHash(String hash) {
+        return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {

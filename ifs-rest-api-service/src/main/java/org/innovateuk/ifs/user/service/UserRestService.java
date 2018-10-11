@@ -64,8 +64,6 @@ public interface UserRestService {
 
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
 
-    RestResult<Void> createStakeholder(String inviteHash, StakeholderRegistrationResource stakeholderRegistrationResource);
-
     RestResult<Void> editInternalUser(EditUserResource editUserResource);
 
     RestResult<Void> agreeNewSiteTermsAndConditions(long userId);

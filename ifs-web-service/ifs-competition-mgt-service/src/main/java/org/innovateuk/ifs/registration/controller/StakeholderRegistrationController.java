@@ -5,19 +5,18 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
-import org.innovateuk.ifs.registration.form.InternalUserRegistrationForm;
 import org.innovateuk.ifs.registration.form.StakeholderRegistrationForm;
 import org.innovateuk.ifs.registration.populator.StakeholderRegistrationModelPopulator;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.service.StakeholderService;
-import org.innovateuk.ifs.registration.viewmodel.StakeholderRegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,7 +45,6 @@ public class StakeholderRegistrationController {
         this.competitionSetupStakeholderRestService = competitionSetupStakeholderRestService;
         this.stakeholderService = stakeholderService;
     }
-
 
     @GetMapping("/{inviteHash}/register")
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") StakeholderRegistrationForm stakeholderRegistrationForm) {

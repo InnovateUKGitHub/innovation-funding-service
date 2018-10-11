@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -93,8 +94,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return validateInvite(invitedUser)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> getCompetition(competitionId))
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser)).andOnSuccess(() -> getCompetition(competitionId))
                 .andOnSuccess(competition -> saveInvite(invitedUser, competition)
                                     .andOnSuccess(stakeholderInvite -> sendNotification(stakeholderInvite, competition))
                              );
@@ -204,5 +204,4 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return serviceSuccess(stakeholderInviteMapper.mapToResource(stakeholderInvite));
 
     }
-
 }

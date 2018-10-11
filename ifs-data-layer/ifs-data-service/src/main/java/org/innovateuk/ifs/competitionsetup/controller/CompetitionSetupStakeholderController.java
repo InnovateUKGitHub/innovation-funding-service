@@ -4,7 +4,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeholderService;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,9 @@ public class CompetitionSetupStakeholderController {
     @Autowired
     private CompetitionSetupStakeholderService competitionSetupStakeholderService;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @PostMapping("/{competitionId}/stakeholder/invite")
     public RestResult<Void> inviteStakeholder(@PathVariable("competitionId") final long competitionId, @RequestBody InviteUserResource inviteUserResource) {
 
@@ -40,6 +45,11 @@ public class CompetitionSetupStakeholderController {
     @GetMapping("/get-invite/{inviteHash}")
     public RestResult<StakeholderInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash) {
         return competitionSetupStakeholderService.getInviteByHash(inviteHash).toGetResponse();
+    }
+
+    @PostMapping("/stakeholder/create/{inviteHash}")
+    public RestResult<Void> createStakeholder(@PathVariable("inviteHash") String inviteHash, @RequestBody StakeholderRegistrationResource stakeholderRegistrationResource){
+        return registrationService.createStakeholder(inviteHash, stakeholderRegistrationResource).toPostCreateResponse();
     }
 }
 

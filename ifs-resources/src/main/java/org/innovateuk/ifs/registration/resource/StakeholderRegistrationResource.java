@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.resource;
 
+import org.innovateuk.ifs.user.resource.UserResource;
+
 public class StakeholderRegistrationResource {
     private String firstName;
     private String lastName;
@@ -27,5 +29,13 @@ public class StakeholderRegistrationResource {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserResource toUserResource() {
+        UserResource userResource = new UserResource();
+        userResource.setFirstName(this.getFirstName());
+        userResource.setLastName(this.getLastName());
+        userResource.setPassword(this.getPassword());
+        return userResource;
     }
 }

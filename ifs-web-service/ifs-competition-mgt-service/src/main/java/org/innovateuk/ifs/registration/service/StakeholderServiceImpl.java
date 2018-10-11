@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestServiceImpl;
 import org.innovateuk.ifs.registration.form.InternalUserRegistrationForm;
 import org.innovateuk.ifs.registration.form.StakeholderRegistrationForm;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StakeholderServiceImpl implements StakeholderService {
     @Autowired
-    private UserRestService userRestService;
+    private CompetitionSetupStakeholderRestServiceImpl competitionSetupStakeholderRestService;
 
     @Override
     public ServiceResult<Void> createStakeholder(String inviteHash, StakeholderRegistrationForm stakeholderRegistrationForm) {
@@ -21,6 +22,6 @@ public class StakeholderServiceImpl implements StakeholderService {
         stakeholderRegistrationResource.setPassword(stakeholderRegistrationForm.getPassword());
         stakeholderRegistrationResource.setFirstName(stakeholderRegistrationForm.getFirstName());
         stakeholderRegistrationResource.setLastName(stakeholderRegistrationForm.getLastName());
-        return userRestService.createStakeholder(inviteHash, stakeholderRegistrationResource).toServiceResult();
+        return competitionSetupStakeholderRestService.createStakeholder(inviteHash, stakeholderRegistrationResource).toServiceResult();
     }
 }
