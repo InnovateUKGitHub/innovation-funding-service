@@ -10,6 +10,7 @@ the user selects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label, [name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
+    Sleep 400ms
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
@@ -18,6 +19,7 @@ the user unselects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label,[name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
+    Sleep  400ms
 
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
@@ -44,6 +46,7 @@ the user selects the radio button
     Click Element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
     # Error checking
     the user should not see an error in the page
+    Sleep 400ms
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
