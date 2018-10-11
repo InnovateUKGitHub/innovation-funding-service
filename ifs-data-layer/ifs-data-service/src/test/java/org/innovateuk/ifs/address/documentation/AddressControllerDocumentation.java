@@ -38,7 +38,8 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
 
         when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/address/validatePostcode/?postcode=" +  postCode))
+        mockMvc.perform(get("/address/validatePostcode/?postcode=" +  postCode)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("address/{method-name}",
                         requestParameters(
                                 parameterWithName("postcode").description("Postcode to validate")
@@ -55,7 +56,8 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
 
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
-        mockMvc.perform(get("/address/doLookup/?lookup=" + postCode))
+        mockMvc.perform(get("/address/doLookup/?lookup=" + postCode)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("address/{method-name}",
                         requestParameters(
                                 parameterWithName("lookup").description("Postcode to look up")
@@ -77,7 +79,8 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
         AddressResource addressResource = addressResourceBuilder.build();
         when(addressServiceMock.getById(id)).thenReturn(serviceSuccess(addressResource));
 
-        mockMvc.perform(get("/address/{id}", id))
+        mockMvc.perform(get("/address/{id}", id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("address/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of Address to find")

@@ -13,5 +13,5 @@ Please confirm your account and create your password here: ${inviteUrl}
 
 Yours sincerely
 
-IFS Team
+Innovation Funding Service Team
 </@layout.defaultPlainText>

@@ -6,7 +6,6 @@ ext.ifsDatasourceHost = "ifs-database"
 ext.ifsDatasourceUrl="jdbc:mysql://ifs-finance-database:3306/ifs_finance"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
-ext.ifsFlywayLocations="db/migration"
 
 
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-finance-database:3307/ifs_finance_test"

@@ -28,7 +28,8 @@ public class CostTotalMaintenanceControllerDocumentation extends MockMvcTest<Cos
     public void sendAll() throws Exception {
         when(allFinanceTotalsSender.sendAllFinanceTotals()).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/cost/sendAll"))
+        mockMvc.perform(put("/cost/sendAll")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(isEmptyString()))
                 .andDo(document(
