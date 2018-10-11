@@ -145,7 +145,7 @@ public class CompetitionManagementDashboardController {
         return searchCompetition(trimmedSearchQuery, page, model, user);
     }
 
-    @SecuredBySpring(value = "READ", description = "The support users allowed to view the application and competition search pages")
+    @SecuredBySpring(value = "READ", description = "The support users are allowed to view the application and competition search pages")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping("/dashboard/support/search")
     public String supportSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
@@ -158,7 +158,7 @@ public class CompetitionManagementDashboardController {
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
         if (isSearchNumeric) {
-            return searchApplication(trimmedSearchQuery, page, pageSize, model, request, user);
+            return searchApplication(trimmedSearchQuery, page, pageSize, model, request);
         } else {
             return searchCompetition(trimmedSearchQuery, page, model, user);
         }
@@ -192,7 +192,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
+    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request) {
         String existingSearchQuery = Objects.toString(request.getQueryString(), "");
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
