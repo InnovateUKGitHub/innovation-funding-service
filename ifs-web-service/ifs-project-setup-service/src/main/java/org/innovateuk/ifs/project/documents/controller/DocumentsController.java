@@ -66,7 +66,7 @@ public class DocumentsController {
 
     //TODO - XXX - Permissions
     //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @PostMapping(value = "/config/{documentConfigId}", params = "uploadDocument")
+    @PostMapping(value = "/config/{documentConfigId}", params = "uploadDocumentClicked")
     public String uploadDocument(@PathVariable("projectId") long projectId,
                                  @PathVariable("documentConfigId") long documentConfigId,
                                  @ModelAttribute(FORM_ATTR) DocumentForm form,
