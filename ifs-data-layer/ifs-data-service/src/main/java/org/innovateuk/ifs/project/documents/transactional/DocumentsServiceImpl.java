@@ -7,6 +7,8 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.BasicFileAndContents;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -14,7 +16,6 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -96,5 +98,31 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         ProjectDocument projectDocument = new ProjectDocument(project, projectDocumentConfig, fileEntry, DocumentStatus.UPLOADED);
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getFileContents(long projectId, long documentConfigId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = getFileEntry(project, documentConfigId);
+
+/*            return fileService.getFileByFileEntryId(fileEntry.getId())
+                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));*/
+
+            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
+        });
+    }
+
+    private FileEntry getFileEntry(Project project, long documentConfigId) {
+        return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
+                .get()
+                .getFileEntry();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getFileEntryDetails(long projectId, long documentConfigId) {
+        return getProject(projectId)
+                .andOnSuccessReturn(project -> fileEntryMapper.mapToResource(getFileEntry(project, documentConfigId)));
     }
 }

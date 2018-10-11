@@ -8,14 +8,18 @@ import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -50,5 +54,20 @@ public class DataDocumentsController {
                                                     fileValidator, validMediaTypesForDocument, maxFileSizeBytesForProjectSetupDocuments, request,
                                                     (fileAttributes, inputStreamSupplier) ->
                    documentsService.createDocumentFileEntry(projectId, documentConfigId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
+
+    @GetMapping("/config/{documentConfigId}/file-contents")
+    @ResponseBody
+    public ResponseEntity<Object> getFileContents(@PathVariable(value = "projectId") long projectId,
+                                                  @PathVariable("documentConfigId") long documentConfigId) throws IOException {
+
+        return fileControllerUtils.handleFileDownload(() -> documentsService.getFileContents(projectId, documentConfigId));
+    }
+
+    @GetMapping(value = "/config/{documentConfigId}/file-entry-details", produces = "application/json")
+    public RestResult<FileEntryResource> getFileEntryDetails(@PathVariable(value = "projectId") long projectId,
+                                                             @PathVariable("documentConfigId") long documentConfigId) throws IOException {
+
+        return documentsService.getFileEntryDetails(projectId, documentConfigId).toGetResponse();
     }
 }

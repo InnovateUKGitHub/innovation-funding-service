@@ -69,7 +69,7 @@
                   method="post"
                   enctype="multipart/form-data"
                   th:with="viewmode='edit',
-                           downloadUrl=@{/project/{id}/document/download/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})},
+                           downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId},id=${model.projectId})},
                            filename=${model.fileDetails?.filename},
                            inputField='document',
                            validationField=${inputField},
@@ -83,7 +83,7 @@
             <!--/* not allowed to edit */-->
             <th:block th:unless="${model.isEditable()}"
                       th:with="viewmode='readonly',
-                               downloadUrl=@{/project/{id}/document/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})},
+                               downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId}, id=${model.projectId})},
                                filename=${model.fileDetails?.filename},
                                inputField='',
                                validationField='',

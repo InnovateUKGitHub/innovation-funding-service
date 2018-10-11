@@ -1,12 +1,16 @@
 package org.innovateuk.ifs.project.documents.controller;
 
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +19,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
  * Controller backing the Documents page
@@ -96,6 +104,27 @@ public class DocumentsController {
 
     private String redirectToViewDocumentPage(long projectId, long documentConfigId) {
         return format("redirect:/project/%s/document/config/%s", projectId, documentConfigId);
+    }
+
+    //TODO - XXX - Permissions
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @GetMapping("/config/{documentConfigId}/download")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> downloadDocument(@PathVariable("projectId") long projectId,
+                                                              @PathVariable("documentConfigId") long documentConfigId) {
+
+        final Optional<ByteArrayResource> fileContents = documentsRestService.getFileContents(projectId, documentConfigId).getSuccess();
+        final Optional<FileEntryResource> fileEntryDetails = documentsRestService.getFileEntryDetails(projectId, documentConfigId).getSuccess();
+        return returnFileIfFoundOrThrowNotFoundException(projectId, documentConfigId, fileContents, fileEntryDetails);
+    }
+
+    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(long projectId, long documentConfigId,
+                                                                                        Optional<ByteArrayResource> fileContents, Optional<FileEntryResource> fileEntryDetails) {
+        if (fileContents.isPresent() && fileEntryDetails.isPresent()) {
+            return getFileResponseEntity(fileContents.get(), fileEntryDetails.get());
+        } else {
+            throw new ObjectNotFoundException("Could not find document with document config id: " + documentConfigId + " for project: " + projectId, asList(projectId, documentConfigId));
+        }
     }
 }
 
