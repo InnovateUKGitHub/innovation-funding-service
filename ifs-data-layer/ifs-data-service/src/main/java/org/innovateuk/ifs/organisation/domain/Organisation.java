@@ -89,7 +89,7 @@ public class Organisation {
     }
 
     public String getCompaniesHouseNumber() {
-        return companyHouseNumber;
+        return companiesHouseNumber;
     }
 
     public void setCompaniesHouseNumber(String companiesHouseNumber) {
