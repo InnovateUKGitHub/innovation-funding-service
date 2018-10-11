@@ -63,9 +63,10 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
-                put("/project/{projectId}/bank-details", projectId).
-                        contentType(APPLICATION_JSON).
-                        content(toJson(bankDetailsResource)))
+                put("/project/{projectId}/bank-details", projectId)
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(bankDetailsResource))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -97,9 +98,10 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
-                        contentType(APPLICATION_JSON).
-                        content(toJson(bankDetailsResource)))
+                post("/project/{projectId}/bank-details", projectId)
+                        .header("IFS_AUTH_TOKEN", "123abc")
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)))
                 .andDo(document("project/{method-name}",
@@ -112,15 +114,16 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getBankDetailsProjectSummary() throws  Exception {
+    public void getBankDetailsProjectSummary() throws Exception {
         Long projectId = 123L;
         List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withCompetitionName("Galaxy Note 7 disaster case study").withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
         when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
-        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(bankDetailsStatusSummary))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(bankDetailsStatusSummary)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
                         ),

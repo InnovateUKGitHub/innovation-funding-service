@@ -98,6 +98,9 @@
                 th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"/>
         </div>
     </th:block>
+
+    <div th:if="${model.isBusinessOrganisation()}" th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+
     <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
 </th:block>
 
@@ -149,7 +152,7 @@
                            class="govuk-link"></a>
                     </th:block>
                     <th:block th:if="${model.allReadOnly}">
-                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
+                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})} + ${originQuery}"
                            th:text="${childSection.section.name}"
                            class="govuk-link"></a>
                     </th:block>
@@ -274,7 +277,7 @@
             <p class="govuk-body">Where will most of the project work take place?</p>
             <!--/* edit */-->
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="projectLocation">
+                <label class="govuk-label govuk-label--s" for="projectLocation">
                     Postcode
                 </label>
                 <th:block th:if="${#fields.hasErrors('projectLocation')}">

@@ -62,6 +62,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
 
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/invite", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk())
@@ -98,6 +99,73 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 ));
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
+    }
+
+    @Test
+    public void addStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        when(competitionSetupStakeholderService.addStakeholder(competitionId, stakeholderUserId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/add", competitionId, stakeholderUserId)
+                )
+                .andExpect(status().isOk())
+                .andDo(document("competition/setup/stakeholder/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the Competition to which the Stakeholder is being added"),
+                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being added")
+                        )
+                ));
+
+        verify(competitionSetupStakeholderService).addStakeholder(competitionId, stakeholderUserId);
+    }
+
+    @Test
+    public void removeStakeholder() throws Exception {
+
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        when(competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/remove", competitionId, stakeholderUserId)
+        )
+                .andExpect(status().isOk())
+                .andDo(document("competition/setup/stakeholder/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the Competition from which the Stakeholder is being removed"),
+                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being removed")
+                        )
+                ));
+
+        verify(competitionSetupStakeholderService).removeStakeholder(competitionId, stakeholderUserId);
+    }
+
+    @Test
+    public void findPendingStakeholderInvites() throws Exception {
+
+        long competitionId = 1L;
+
+        List<UserResource> pendingStakeholderInvites = UserResourceBuilder.newUserResource().build(2);
+
+        when(competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId)).thenReturn(serviceSuccess(pendingStakeholderInvites));
+
+        mockMvc.perform(get("/competition/setup/{competitionId}/stakeholder/pending-invites", competitionId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingStakeholderInvites)))
+                .andDo(document("competition/setup/stakeholder/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("The competition id for which pending stakeholder invites need to be retrieved")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of pending stakeholder invites for the competition")
+                        )
+                ));
+
+        verify(competitionSetupStakeholderService).findPendingStakeholderInvites(competitionId);
     }
 }
 

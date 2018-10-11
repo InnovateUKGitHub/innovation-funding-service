@@ -67,6 +67,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel-invite/get-available-assessors/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "firstName,asc"))
@@ -97,7 +98,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.getAvailableAssessorIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel-invite/get-available-assessor-ids/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-available-assessor-ids/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -118,6 +120,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel-invite/get-created-invites/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
@@ -149,6 +152,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel-invite/invite-users")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteListResource)))
                 .andExpect(status().isOk())
@@ -169,6 +173,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel-invite/send-all-invites/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(assessorInviteSendResource)))
                 .andExpect(status().isOk())
@@ -192,7 +197,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
 
         when(interviewInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/interview-panel-invite/get-all-invites-to-send/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-all-invites-to-send/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -210,7 +216,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         InterviewParticipantResource interviewPanelParticipantResource = newInterviewParticipantResource().build();
         when(interviewInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(interviewPanelParticipantResource)));
 
-        mockMvc.perform(get("/interview-panel-invite/get-all-invites-by-user/{userId}", userId))
+        mockMvc.perform(get("/interview-panel-invite/get-all-invites-by-user/{userId}", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -229,7 +236,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/interview-panel-invite/get-all-invites-to-resend/{competitionId}", competitionId)
-                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .param("inviteIds", simpleJoiner(inviteIds, ","))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -255,7 +263,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         mockMvc.perform(post("/interview-panel-invite/resend-invites")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         requestParameters(
@@ -285,7 +294,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
-                .param("statuses", "PENDING"))
+                .param("statuses", "PENDING")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -315,7 +325,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
 
         when(interviewInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(interviewReviewPanelInviteResource));
 
-        mockMvc.perform(post("/interview-panel-invite/open-invite/{hash}", hash))
+        mockMvc.perform(post("/interview-panel-invite/open-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -331,7 +342,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
 
         when(interviewInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel-invite/accept-invite/{hash}", hash))
+        mockMvc.perform(post("/interview-panel-invite/accept-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -346,7 +358,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
 
         when(interviewInviteServiceMock.rejectInvite(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel-invite/reject-invite/{hash}", hash))
+        mockMvc.perform(post("/interview-panel-invite/reject-invite/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -361,7 +374,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
 
         when(interviewInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/interview-panel-invite/check-existing-user/{hash}", hash))
+        mockMvc.perform(get("/interview-panel-invite/check-existing-user/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andDo(document("interview-panel-invite/{method-name}",
@@ -378,7 +392,8 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
@@ -398,6 +413,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/interview-panel-invite/delete-invite")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
@@ -418,6 +434,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
         when(interviewInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/interview-panel-invite/delete-all-invites")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
                 .andDo(document("interview-panel-invite/{method-name}",
