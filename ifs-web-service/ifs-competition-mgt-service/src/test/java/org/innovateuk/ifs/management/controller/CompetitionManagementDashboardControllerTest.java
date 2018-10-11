@@ -284,10 +284,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void supportUserNumericInputSearchReturnsApplication() throws Exception {
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
-        setLoggedInUser(userResource);
-
+    public void supportUserNumericInputSearchReturnsApplication() throws Exception { 
         String searchQuery = "12";
 
 
