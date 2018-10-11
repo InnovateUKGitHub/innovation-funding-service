@@ -93,7 +93,7 @@ public class FinanceFormPopulatorTest {
         final boolean isIncludeGrowthTable = true;
 
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .build();
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()

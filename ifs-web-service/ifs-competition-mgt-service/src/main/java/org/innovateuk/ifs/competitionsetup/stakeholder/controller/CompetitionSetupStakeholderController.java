@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -42,6 +43,8 @@ public class CompetitionSetupStakeholderController {
 
     private static final String MODEL = "model";
     private static final String FORM_ATTR_NAME = "form";
+    private static final String DEFAULT_TAB = "add";
+    private static final String ADDED_TAB = "added";
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -57,13 +60,15 @@ public class CompetitionSetupStakeholderController {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_STAKEHOLDERS')")
     @GetMapping("/{competitionId}/manage-stakeholders")
-    public String manageStakeholders(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model) {
+    public String manageStakeholders(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                     @RequestParam(value = "tab", defaultValue = DEFAULT_TAB) String tab,
+                                     Model model) {
 
         InviteStakeholderForm form = new InviteStakeholderForm();
-        return doViewManageStakeholders(competitionId, model, form);
+        return doViewManageStakeholders(competitionId, model, form, tab);
     }
 
-    private String doViewManageStakeholders(long competitionId, Model model, InviteStakeholderForm form) {
+    private String doViewManageStakeholders(long competitionId, Model model, InviteStakeholderForm form, String tab) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -71,18 +76,20 @@ public class CompetitionSetupStakeholderController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        model.addAttribute(MODEL, manageStakeholderModelPopulator.populateModel(competition));
+        model.addAttribute(MODEL, manageStakeholderModelPopulator.populateModel(competition, tab));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "competition/setup/manage-stakeholders";
     }
 
     @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"inviteStakeholder"})
-    public String inviteStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model,
-                                        @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
-                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+    public String inviteStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    @RequestParam(value = "tab", defaultValue = DEFAULT_TAB) String tab,
+                                    Model model,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
+                                    @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form);
+        Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form, tab);
 
         form.setVisible(true);
 
@@ -93,7 +100,7 @@ public class CompetitionSetupStakeholderController {
             RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource, competitionId);
 
             return handleInviteStakeholderErrors(saveResult, validationHandler).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + tab);
 
         });
     }
@@ -110,5 +117,23 @@ public class CompetitionSetupStakeholderController {
         invitedUser.setEmail(form.getEmailAddress());
 
         return new InviteUserResource(invitedUser);
+    }
+
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"addStakeholder"})
+    public String addStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                 @RequestParam("stakeholderUserId") long stakeholderUserId,
+                                 Model model) {
+
+        competitionSetupStakeholderRestService.addStakeholder(competitionId, stakeholderUserId);
+        return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + DEFAULT_TAB;
+    }
+
+    @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"removeStakeholder"})
+    public String removeStakeholder(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    @RequestParam("stakeholderUserId") long stakeholderUserId,
+                                    Model model) {
+
+        competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
+        return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
     }
 }
