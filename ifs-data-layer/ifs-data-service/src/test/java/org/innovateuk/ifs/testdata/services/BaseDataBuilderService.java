@@ -65,7 +65,7 @@ public abstract class BaseDataBuilderService {
     }
 
     OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccess());
+        return doAs(systemRegistrar(), () -> organisationService.getAllByUserId(id).getSuccess().get(0));
     }
 
     protected UserResource systemRegistrar() {

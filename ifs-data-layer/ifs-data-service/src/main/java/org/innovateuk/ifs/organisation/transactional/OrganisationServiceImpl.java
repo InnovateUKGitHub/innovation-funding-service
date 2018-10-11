@@ -7,7 +7,6 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -83,15 +82,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> findById(final long organisationId) {
         return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId))
                 .andOnSuccess(organisation -> serviceSuccess(organisationMapper.mapToResource(organisation)));
-    }
-
-    @Override
-    public ServiceResult<OrganisationResource> getPrimaryForUser(final long userId) {
-        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
-        if (organisations.isEmpty()) {
-            return serviceFailure(CommonErrors.notFoundError(Organisation.class));
-        }
-        return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
     }
 
     @Override
