@@ -284,9 +284,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void supportUserNumericInputSearchReturnsApplication() throws Exception { 
+    public void supportUserNumericInputSearchReturnsApplication() throws Exception {
         String searchQuery = "12";
-
 
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
 
@@ -347,7 +346,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void testLiveDashBoardSupportView() throws Exception {
+    public void liveDashBoardSupportView() throws Exception {
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
 
@@ -372,7 +371,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void testLiveDashBoardSupportViewInnovationLead() throws Exception {
+    public void liveDashBoardSupportViewInnovationLead() throws Exception {
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build());
 
