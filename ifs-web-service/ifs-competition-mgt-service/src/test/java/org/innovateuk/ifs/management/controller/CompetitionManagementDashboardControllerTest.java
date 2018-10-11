@@ -285,7 +285,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void supportUserNumericInputSearchReturnsApplication() throws Exception {
-
         UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
         setLoggedInUser(userResource);
 
@@ -316,10 +315,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void supportAlphabeticalInputSearchReturnsCompetition() throws Exception {
-
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
-        setLoggedInUser(userResource);
-
         CompetitionSearchResult searchResult = new CompetitionSearchResult();
         String searchQuery = "search";
         int defaultPage = 0;
@@ -336,11 +331,10 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         String actualSearchQuery = (String) result.getModelAndView().getModel().get("searchQuery");
         DashboardTabsViewModel tabs = (DashboardTabsViewModel) result.getModelAndView().getModel().get("tabs");
 
-        assertEquals(searchQuery,actualSearchQuery);
+        assertEquals(searchQuery, actualSearchQuery);
         assertNotNull(actualCompetitionSearchResult);
-        assertEquals(searchResult.getMappedCompetitions(),actualCompetitionSearchResult.getMappedCompetitions());
-        assertEquals(searchResult,actualCompetitionSearchResult);
-        assertTrue(tabs.support());
+        assertEquals(searchResult.getMappedCompetitions(), actualCompetitionSearchResult.getMappedCompetitions());
+        assertEquals(searchResult, actualCompetitionSearchResult);
         verify(competitionDashboardSearchService).searchCompetitions(searchQuery, defaultPage);
     }
 
@@ -407,6 +401,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Override
     protected CompetitionManagementDashboardController supplyControllerUnderTest() {
-        return new CompetitionManagementDashboardController(competitionDashboardSearchService,competitionSetupRestService,bankDetailsRestService);
+        return new CompetitionManagementDashboardController(competitionDashboardSearchService, competitionSetupRestService, bankDetailsRestService);
     }
 }

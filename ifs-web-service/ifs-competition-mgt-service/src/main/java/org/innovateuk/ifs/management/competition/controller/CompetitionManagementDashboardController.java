@@ -43,7 +43,6 @@ public class CompetitionManagementDashboardController {
 
     private BankDetailsRestService bankDetailsRestService;
 
-    @Autowired
     public CompetitionManagementDashboardController(CompetitionDashboardSearchService competitionDashboardSearchService,
                                                     CompetitionSetupRestService competitionSetupRestService,
                                                     BankDetailsRestService bankDetailsRestService) {
@@ -191,7 +190,7 @@ public class CompetitionManagementDashboardController {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
 
-        return TEMPLATE_PATH+"search";
+        return TEMPLATE_PATH + "search";
     }
 
     private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
