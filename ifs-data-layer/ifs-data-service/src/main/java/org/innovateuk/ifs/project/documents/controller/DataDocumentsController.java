@@ -5,7 +5,6 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
-import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/project/{projectId}/document")
-public class DocumentsController {
+//TODO - XXX - rename class back to normal.
+public class DataDocumentsController {
 
     @Autowired
     private DocumentsService documentsService;
