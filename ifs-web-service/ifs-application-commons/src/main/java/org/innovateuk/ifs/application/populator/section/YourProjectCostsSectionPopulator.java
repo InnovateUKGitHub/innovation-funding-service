@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
-import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -74,9 +74,9 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
         );
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
 
-        if (viewModel instanceof DefaultYourProjectCostsSectionViewModel) {
-            DefaultYourProjectCostsSectionViewModel defaultViewModel = (DefaultYourProjectCostsSectionViewModel) viewModel;
-            defaultViewModel.setDefaultProjectCostSections(section.getApplicantChildrenSections().stream().map(
+        if (viewModel instanceof StandardYourProjectCostsSectionViewModel) {
+            StandardYourProjectCostsSectionViewModel standardViewModel = (StandardYourProjectCostsSectionViewModel) viewModel;
+            standardViewModel.setDefaultProjectCostSections(section.getApplicantChildrenSections().stream().map(
                     childSection -> {
                         DefaultProjectCostSection costSection = new DefaultProjectCostSection();
                         costSection.setApplicantResource(section);
@@ -125,7 +125,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                     readOnlyAllApplicantApplicationFinances
             );
         } else {
-            return new DefaultYourProjectCostsSectionViewModel(
+            return new StandardYourProjectCostsSectionViewModel(
                     section,
                     Collections.emptyList(),
                     getNavigationViewModel(section),

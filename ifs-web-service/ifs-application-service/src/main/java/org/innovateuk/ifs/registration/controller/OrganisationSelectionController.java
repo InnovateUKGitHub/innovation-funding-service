@@ -85,7 +85,9 @@ public class OrganisationSelectionController {
     }
 
     private boolean cannotSelectOrganisation(UserResource user) {
-        return user == null || !user.hasRole(Role.APPLICANT);
+        return user == null
+                || !user.hasRole(Role.APPLICANT)
+                || organisationRestService.getAllByUserId(user.getId()).getSuccess().isEmpty();
     }
 
     private String nextPageInFlow(HttpServletRequest request) {

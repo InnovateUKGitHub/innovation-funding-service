@@ -45,7 +45,7 @@ public class ApplicationNavigationPopulatorTest {
     private ApplicationService applicationService;
 
     @Test
-    public void testAddNavigation() {
+    public void addNavigation() {
         SectionResource section = SectionResourceBuilder.newSectionResource().build();
         Long applicationId = 1L;
         String previousName = "prev";
@@ -70,69 +70,69 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSection(){
+    public void addAppropriateBackURLToModelWithoutSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedApplication(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedApplication(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationClosed(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedCompetition(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedCompetition(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationCompetitionClosed(applicationId);
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), contains("Application overview"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSection(){
+    public void addAppropriateBackURLToModelWithFinanceSubSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithGeneralSection(){
+    public void addAppropriateBackURLToModelWithGeneralSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithQuestionGroup() {
+    public void navigationSkipsExcludedSectionTypesWithQuestionGroup() {
         SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
         Long applicationId = 1L;
 
@@ -165,7 +165,7 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
+    public void navigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
         SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
         Long applicationId = 1L;
 
@@ -200,27 +200,27 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withCompetition(11L).withType(SectionType.OVERVIEW_FINANCES).build();
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
-        verify(model).addAttribute(eq("backURL"), contains("management/competition/11/application/1"));
-        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
+        verify(model).addAttribute(eq("backURL"), contains("application/" + applicationId + "/summary"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application summary"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).withParentSection(33L).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/section/33/22"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));

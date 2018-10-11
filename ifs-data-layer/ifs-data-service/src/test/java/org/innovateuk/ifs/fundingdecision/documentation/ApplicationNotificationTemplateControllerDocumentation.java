@@ -26,7 +26,7 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
     protected ApplicationNotificationTemplateController supplyControllerUnderTest() {
         return new ApplicationNotificationTemplateController();
     }
-    
+
     @Test
     public void getSuccessfulNotificationTemplate() throws Exception {
         Long competitionId = 1L;
@@ -35,8 +35,9 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
         when(applicationNotificationTemplateService.getSuccessfulNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-notification-template/successful/{competitionId}", competitionId)
-        			.contentType(MediaType.APPLICATION_JSON))
-        		.andDo(document("application-notification-template/{method-name}",
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("application-notification-template/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Competition ID to get the template of.")
                         ),
@@ -54,7 +55,8 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
         when(applicationNotificationTemplateService.getUnsuccessfulNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-notification-template/unsuccessful/{competitionId}", competitionId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-notification-template/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Competition ID to get the template of.")
@@ -74,7 +76,8 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
         when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-notification-template/ineligible/{competitionId}", competitionId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-notification-template/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Competition ID to get the template of.")

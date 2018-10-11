@@ -112,7 +112,7 @@
                                 </th:block>
                                 <th:block th:if="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
                                     <td class="govuk-table__cell">
-                                        <a th:href="'/application/' + ${row.id} + '/summary'"
+                                        <a th:href="'/application/' + ${row.id} + '/summary' + ${originQuery}"
                                            th:text="${row.id}" class="govuk-link">194731</a>
                                     </td>
                                 </th:block>

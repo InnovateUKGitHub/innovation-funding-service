@@ -39,7 +39,8 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder.buildSet(1);
         when(organisationServiceMock.findByApplicationId(applicationId)).thenReturn(serviceSuccess(organisationResourceSet));
 
-        mockMvc.perform(get("/organisation/find-by-application-id/{applicationId}", applicationId))
+        mockMvc.perform(get("/organisation/find-by-application-id/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -57,7 +58,8 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         OrganisationResource organisationResource = organisationResourceBuilder.build();
         when(organisationServiceMock.findById(organisationId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/find-by-id/{organisationId}", organisationId))
+        mockMvc.perform(get("/organisation/find-by-id/{organisationId}", organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -75,7 +77,8 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationServiceMock.getByUserAndApplicationId(userId, applicationId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/by-user-and-application-id/{userId}/{applicationId}", userId, applicationId))
+        mockMvc.perform(get("/organisation/by-user-and-application-id/{userId}/{applicationId}", userId, applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -94,7 +97,8 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/by-user-and-project-id/{userId}/{projectId}", userId, projectId))
+        mockMvc.perform(get("/organisation/by-user-and-project-id/{userId}/{projectId}", userId, projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
@@ -112,6 +116,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(organisationResource));
 
         mockMvc.perform(post("/organisation/create-or-match")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isCreated())
@@ -128,6 +133,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         when(organisationServiceMock.update(organisationResource)).thenReturn(serviceSuccess(organisationResource));
 
         mockMvc.perform(put("/organisation/update")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isOk())
@@ -145,6 +151,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(organisationResource));
 
         mockMvc.perform(post("/organisation/create-and-link-by-invite")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteHash", inviteHash)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
@@ -168,6 +175,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
         when(organisationServiceMock.updateOrganisationNameAndRegistration(organisationId, name, registration)).thenReturn(serviceSuccess(organisationResource));
 
         mockMvc.perform(post("/organisation/update-name-and-registration/{organisationId}", organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("name", name)
                 .param("registration", registration))
                 .andExpect(status().isCreated())

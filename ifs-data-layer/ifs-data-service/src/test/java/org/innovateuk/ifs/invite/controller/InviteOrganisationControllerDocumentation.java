@@ -34,7 +34,8 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
         when(inviteOrganisationServiceMock.getById(inviteOrganisationResource.getId()))
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
-        mockMvc.perform(get("/inviteorganisation/{id}", inviteOrganisationResource.getId()))
+        mockMvc.perform(get("/inviteorganisation/{id}", inviteOrganisationResource.getId())
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("invite-organisation/{method-name}",
                         pathParameters(
@@ -54,7 +55,8 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
         mockMvc.perform(get("/inviteorganisation/organisation/{organisationId}/application/{applicationId}",
-                organisationId, applicationId))
+                organisationId, applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("invite-organisation/{method-name}",
                         pathParameters(
