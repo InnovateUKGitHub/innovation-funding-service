@@ -37,7 +37,7 @@ public class ApplicationCompletedViewModel {
         return markedAsComplete.get();
     }
 
-    public Boolean completedOrMarkedAsComplete(QuestionResource questionResource, SectionResource sectionResource) throws ExecutionException, InterruptedException {
+    public boolean completedOrMarkedAsComplete(QuestionResource questionResource, SectionResource sectionResource) throws ExecutionException, InterruptedException {
         return (questionResource.isMarkAsCompletedEnabled() && getMarkedAsComplete().contains(questionResource.getId()))
                 || completedSectionsByUserOrganisation.contains(sectionResource.getId());
     }

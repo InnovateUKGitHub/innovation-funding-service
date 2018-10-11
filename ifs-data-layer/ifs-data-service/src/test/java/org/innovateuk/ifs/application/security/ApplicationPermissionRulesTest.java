@@ -462,20 +462,17 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void markAsIneligibleAllowedBeforeAssessment() {
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
-            allGlobalRoleUsers.forEach(user -> {
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
-                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
-                when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
-                if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
-                    assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
-                } else {
-                    assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
-                }
-            });
-        });
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
+            Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+            when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+            if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
+                assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            } else {
+                assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            }
+        }));
     }
-
 
     @Test
     public void consortiumCanCheckCollaborativeFundingCriteriaIsMet() {

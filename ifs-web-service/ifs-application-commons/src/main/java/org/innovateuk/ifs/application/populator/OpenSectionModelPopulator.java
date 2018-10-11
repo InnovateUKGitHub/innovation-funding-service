@@ -52,7 +52,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
         addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, form, applicantSection);
-        if (applicantSection.getSection().getType().equals(OVERVIEW_FINANCES)) {
+        if (applicantSection.getSection().getType() == OVERVIEW_FINANCES) {
             financeOverviewPopulator.addOverviewDetails(openSectionViewModel, model, form, applicantSection);
         }
 
