@@ -270,6 +270,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
     }
 
+    public CompetitionBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
+        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
+    }
+
     public CompetitionBuilder withCreatedBy(User... users) {
         return withArraySetFieldByReflection("createdBy", users);
     }
