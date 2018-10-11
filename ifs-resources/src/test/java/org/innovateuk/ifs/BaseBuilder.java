@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -65,6 +66,10 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
 
     public <R> S withArraySetFieldByReflection(String fieldName, R[] values) {
         return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, value), values);
+    }
+
+    public S withArraySetFieldByReflection(String fieldName, boolean[] values) {
+        return withArraySetFieldByReflection(fieldName, ArrayUtils.toObject(values));
     }
 
     public <R> S withArraySetFieldByReflection(String fieldName, R[] values, String valueFieldName) {

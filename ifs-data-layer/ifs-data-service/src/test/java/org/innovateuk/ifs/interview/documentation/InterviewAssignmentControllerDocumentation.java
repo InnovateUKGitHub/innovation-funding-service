@@ -83,6 +83,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewAssignmentServiceMock.assignApplications(stagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/assign-applications")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(stagedApplicationInviteListResource)))
                 .andExpect(status().isOk())
@@ -102,6 +103,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewAssignmentServiceMock.getAvailableApplications(competitionId, pageable)).thenReturn(serviceSuccess(availableApplicationPageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/available-applications/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
@@ -132,6 +134,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewAssignmentServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/staged-applications/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
@@ -162,6 +165,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewAssignmentServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentAssignedPageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/assigned-applications/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
@@ -189,7 +193,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
     public void getAvailableApplicationIds() throws Exception {
         when(interviewAssignmentServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L))
+        mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -206,7 +211,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         long applicationId = 123L;
         when(interviewAssignmentServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId))
+        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -222,7 +228,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         long competitionId = 123L;
         when(interviewAssignmentServiceMock.unstageApplications(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId))
+        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -237,7 +244,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
     public void getEmailTemplate() throws Exception {
         when(interviewApplicationInviteServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
 
-        mockMvc.perform(get("/interview-panel/email-template"))
+        mockMvc.perform(get("/interview-panel/email-template")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
@@ -252,6 +260,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewApplicationInviteServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(sendResource)))
                 .andExpect(status().isOk())
@@ -274,6 +283,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewAssignmentServiceMock.isApplicationAssigned(applicationId)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/interview-panel/is-assigned/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
@@ -291,7 +301,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
         when(interviewApplicationFeedbackServiceMock.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
 
-        mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId))
+        mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntryResource)))
                 .andDo(document("interview-panel/{method-name}",
@@ -319,7 +330,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         final long applicationId = 22L;
         when(interviewApplicationFeedbackServiceMock.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId))
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
@@ -335,6 +347,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/feedback/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(status().isCreated())
@@ -362,6 +375,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewApplicationInviteServiceMock.getSentInvite(applicationId)).thenReturn(serviceSuccess(sentInvite));
 
         mockMvc.perform(get("/interview-panel/sent-invite/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
@@ -385,6 +399,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         when(interviewApplicationInviteServiceMock.resendInvite(applicationId, sendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/resend-invite/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(sendResource)))
                 .andExpect(status().isOk())
