@@ -8,6 +8,6 @@ public class StakeholderRegistrationModelPopulator {
 
     public StakeholderRegistrationViewModel populateModel(String email){
 
-        return new StakeholderRegistrationViewModel(email, "Stakeholder");
+        return new StakeholderRegistrationViewModel(email, "stakeholder");
     }
 }
