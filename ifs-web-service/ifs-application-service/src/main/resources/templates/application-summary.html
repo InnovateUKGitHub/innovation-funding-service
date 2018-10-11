@@ -19,9 +19,13 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:unless="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}"/>
 
-            <th:block th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.currentApplication},linkTitle='Application overview',linkUrl=@{/application/{id}(id=${model.currentApplication.id})}"/>
+            <th:block th:if="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='All Applications',linkUrl=@{/management/competition/{competitionId}/applications/all(competitionId=${model.currentCompetition.id})}"/>
+            <th:block th:unless="${model.support}">
+                <th:block th:unless="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}"/>
+
+                <th:block th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.currentApplication},linkTitle='Application overview',linkUrl=@{/application/{id}(id=${model.currentApplication.id})}"/>
+            </th:block>
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -36,13 +40,11 @@
                 <p class="hint govuk-body-l govuk-!-margin-top-6" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
                     Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
                 </p>
-
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
                     <div class="collapsible-finances-summary">
                         <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false, userIsLeadApplicant = ${model.userIsLeadApplicant}, supportUserAndSummaryPage = ${model.support})" />
                     </div>
                 </form>
-
                 <div th:if="${!model.currentCompetition.isOpen() and !model.currentApplication.isSubmitted()}">
                     <div class="warning-alert">
                         <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>

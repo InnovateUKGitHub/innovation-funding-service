@@ -5,11 +5,7 @@ Dear ${notificationTarget.name}
 You have been invited to view the following competition on the Innovation Funding Service:
 ${competitionName}
 
-Please create an account to view this competition.
-
-Name: ${notificationTarget.name}
-
-Please confirm your account and create your password here: ${inviteUrl}
+Please sign in here: ${dashboardUrl}
 
 Yours sincerely
 
