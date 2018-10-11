@@ -13,7 +13,6 @@ import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
