@@ -156,25 +156,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testPostEditCompetitionFinanceNoFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
-                .thenReturn(ServiceResult.serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/question/finance/none/edit")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("applicationFinanceType", String.valueOf(NO_FINANCES)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
-
-        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
-    }
-
-    @Test
     public void testViewCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)

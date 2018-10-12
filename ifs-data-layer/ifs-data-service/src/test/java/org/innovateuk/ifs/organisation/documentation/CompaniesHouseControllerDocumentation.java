@@ -72,12 +72,12 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
         when(companyHouseService.searchOrganisations(any()))
                 .thenReturn(ServiceResult.serviceSuccess(Arrays.asList(organisationSearchResults)));
 
-        mockMvc.perform(get("/companyhouse/searchCompanyHouse/{searchText}",searchText)
+        mockMvc.perform(get("/companies-house/search/{searchText}",searchText)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(organisationSearchResults))))
                 .andExpect(status().isOk())
-                .andDo(document("company-house/{method-name}",
+                .andDo(document("companies-house/{method-name}",
                         pathParameters(
                                 parameterWithName("searchText").description("Name of the Organisation to search.")
                         ),
@@ -96,12 +96,12 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
         when(companyHouseService.getOrganisationById(any()))
                 .thenReturn(ServiceResult.serviceSuccess(organisationSearchResults));
 
-        mockMvc.perform(get("/companyhouse/getCompanyHouse/{id}",id)
+        mockMvc.perform(get("/companies-house/company/{id}",id)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(organisationSearchResults)))
-                .andDo(document("company-house/{method-name}",
+                .andDo(document("companies-house-house/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the Organisation to search.")
                         ),

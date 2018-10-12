@@ -37,7 +37,7 @@ public class ManageApplicationModelPopulator {
     public ManageApplicationViewModel populate(ApplicationResource application,
                                                CompetitionResource competition,
                                                String backUrl,
-                                               String queryParam,
+                                               String originQuery,
                                                UserResource user,
                                                List<AppendixResource> appendices,
                                                ApplicationForm form) {
@@ -52,7 +52,7 @@ public class ManageApplicationModelPopulator {
         return new ManageApplicationViewModel(
                 summaryViewModel,
                 backUrl,
-                queryParam,
+                originQuery,
                 readOnly,
                 canReinstate,
                 user.hasRole(STAKEHOLDER),

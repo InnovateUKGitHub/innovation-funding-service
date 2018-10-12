@@ -37,7 +37,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
-import static org.innovateuk.ifs.competition.resource.CompetitionResource.NON_FINANCE_TYPES;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
@@ -286,7 +285,7 @@ public class EligibilitySectionSaverTest {
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName(NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 

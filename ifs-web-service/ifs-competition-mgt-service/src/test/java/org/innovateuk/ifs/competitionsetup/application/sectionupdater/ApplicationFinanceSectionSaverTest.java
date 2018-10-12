@@ -93,7 +93,7 @@ public class ApplicationFinanceSectionSaverTest {
     @Test
     public void doSaveSection_noFinances() {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .build();
 
         assertTrue(competition.isNonFinanceType());
@@ -101,7 +101,6 @@ public class ApplicationFinanceSectionSaverTest {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competition.getId())
                 .withApplicationFinanceType(NO_FINANCES)
-                .withIncludeGrowthTable(false)
                 .build();
 
         when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
