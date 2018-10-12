@@ -279,16 +279,27 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         long competitionId = 1L;
         long stakeholderUserId = 2L;
 
+        String competitionName = "competition1";
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
+                .withName(competitionName)
                 .build();
 
+        String stakeholderFirstName = "Rayon";
+        String stakeholderLastName = "Kevin";
+        String stakeholderUserEmail = "Rayon.Kevin@gmail.com";
         User stakeholderUser = UserBuilder.newUser()
                 .withId(stakeholderUserId)
+                .withFirstName(stakeholderFirstName)
+                .withLastName(stakeholderLastName)
+                .withEmailAddress(stakeholderUserEmail)
                 .build();
 
+        Stakeholder savedStakeholderInDB = new Stakeholder(competition, stakeholderUser);
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
+        when(stakeholderRepositoryMock.save(any(Stakeholder.class))).thenReturn(savedStakeholderInDB);
+        when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.addStakeholder(competitionId, stakeholderUserId);
         assertTrue(result.isSuccess());
@@ -304,6 +315,20 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertEquals(stakeholderUser, savedStakeholder.getUser());
         assertEquals(CompetitionParticipantRole.STAKEHOLDER, savedStakeholder.getRole());
         assertEquals(ParticipantStatus.ACCEPTED, savedStakeholder.getStatus());
+
+
+        verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
+
+        //Create a captor for the sent notification
+        ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
+        verify(notificationServiceMock).sendNotificationWithFlush(notificationCaptor.capture(), eq(EMAIL));
+
+        Notification sentNotification = notificationCaptor.getValue();
+        assertEquals(competitionName, sentNotification.getGlobalArguments().get("competitionName"));
+        assertEquals("null/management/dashboard/live", sentNotification.getGlobalArguments().get("dashboardUrl"));
+        assertEquals(stakeholderFirstName + " " + stakeholderLastName, sentNotification.getTo().get(0).getName());
+        assertEquals(stakeholderUserEmail, sentNotification.getTo().get(0).getEmailAddress());
+        assertEquals(CompetitionSetupStakeholderServiceImpl.Notifications.ADD_STAKEHOLDER, sentNotification.getMessageKey());
     }
 
     @Test
