@@ -223,7 +223,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Boolean> sectionCompleteForAllOrganisations(Section section, Application application) {
-        Set<Long> organisations = simpleMapSet(application.getProcessRoles(), ProcessRole::getOrganisationId);
+        List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
+        Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
         for (Long organisationId : organisations) {
             ServiceResult<Boolean> sectionComplete = isSectionComplete(section, application, organisationId);
             if (sectionComplete.isFailure()) {
