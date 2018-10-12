@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 
 /**
  * Class for creating the model for the open section page.
@@ -164,13 +165,13 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     private boolean getFinancesOverviewCompleteForAllOrganisations(Set<Long> completedSections,
                                                                    Long competitionId) {
-        // Get finances overview section id
-        Optional<Long> optionalFinanceOverviewSectionId = sectionService.getSectionsForCompetitionByType(competitionId, OVERVIEW_FINANCES)
-                .stream()
-                .findFirst()
-                .map(SectionResource::getId);
 
-        return completedSections.contains(optionalFinanceOverviewSectionId.get());
+        // Get finances overview section id
+        Optional<Long> optionalFinanceOverviewSectionId =
+                getOnlyElementOrEmpty(sectionService.getSectionsForCompetitionByType(competitionId,
+                        OVERVIEW_FINANCES)).map(SectionResource::getId);
+
+        return optionalFinanceOverviewSectionId.map(completedSections::contains).orElse(false);
     }
 
     private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {

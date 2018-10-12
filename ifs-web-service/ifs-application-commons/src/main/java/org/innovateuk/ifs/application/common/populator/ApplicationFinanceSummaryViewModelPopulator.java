@@ -147,12 +147,15 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
     private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
                                                                    Long competitionId) {
-        long financeOverviewSectionId = getOnlyElement(sectionService.getSectionsForCompetitionByType(competitionId,
-                OVERVIEW_FINANCES)).getId();
+        Optional<Long> optionalFinanceOverviewSectionId =
+                getOnlyElementOrEmpty(sectionService.getSectionsForCompetitionByType(competitionId,
+                        OVERVIEW_FINANCES)).map(SectionResource::getId);
 
-        return completedSectionsByOrganisation.keySet()
-                .stream()
-                .allMatch(id -> completedSectionsByOrganisation.get(id).contains(financeOverviewSectionId));
+        return optionalFinanceOverviewSectionId
+                .map(financeOverviewSectionId -> completedSectionsByOrganisation.values()
+                        .stream()
+                        .allMatch(completedSections -> completedSections.contains(financeOverviewSectionId)))
+                .orElse(false);
     }
 
     private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
