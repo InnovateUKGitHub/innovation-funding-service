@@ -8,12 +8,12 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -23,11 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -40,10 +41,10 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionStatusService questionStatusService;
 
     @Autowired
-    private QuestionStatusService questionStatusService;
+    private FinanceService financeService;
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
@@ -64,7 +65,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                     List<Section> sections = application.getCompetition().getSections();
 
                     final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = simpleMap(sections, section ->
-                            isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
+                            isSectionComplete(section, application, organisationId).andOnSuccessReturn(isComplete -> Pair.of(section.getId(), isComplete)));
 
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedSectionsAndStatus = aggregate(unaggregatedSectionsAndStatus);
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedCompleteSectionsAndStatus = aggregatedSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> simpleFilter(sectionsWithStatus, Pair::getValue));
@@ -153,13 +154,17 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         return incompleteSections;
     }
 
-    private ServiceResult<Boolean> isSectionComplete(Section section, long applicationId, long organisationId) {
-        return isMainSectionComplete(section, applicationId, organisationId).andOnSuccess(
+    private ServiceResult<Boolean> isSectionComplete(Section section, Application application, long organisationId) {
+        if (section.getType() == OVERVIEW_FINANCES) {
+            return isFinanceOverviewSectionComplete(application);
+        }
+
+        return isMainSectionComplete(section, application, organisationId).andOnSuccess(
                 mainSectionComplete -> {
                     // If there are child sections are they complete?
                     if (mainSectionComplete && section.hasChildSections()) {
                         for (final Section childSection : section.getChildSections()) {
-                            final ServiceResult<Boolean> sectionComplete = isSectionComplete(childSection, applicationId, organisationId);
+                            final ServiceResult<Boolean> sectionComplete = isSectionComplete(childSection, application, organisationId);
                             if (sectionComplete.isFailure()) {
                                 return sectionComplete;
                             } else if (!sectionComplete.getSuccess()) {
@@ -172,13 +177,12 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 });
     }
 
-    private ServiceResult<Boolean> isMainSectionComplete(Section section, long applicationId, long organisationId) {
-
+    private ServiceResult<Boolean> isMainSectionComplete(Section section, Application application,
+                                                         long organisationId) {
         for (Question question : section.getQuestions()) {
-
             if (question.isMarkAsCompletedEnabled()) {
-                final ServiceResult<Boolean> markedAsComplete = questionStatusService.isMarkedAsComplete(question, applicationId, organisationId);
-                // if one of the questions is incomplete then the whole section is incomplete
+                final ServiceResult<Boolean> markedAsComplete = questionStatusService.isMarkedAsComplete(question,
+                        application.getId(), organisationId);
                 if (markedAsComplete.isFailure()) {
                     return markedAsComplete;
                 } else if (!markedAsComplete.getSuccess()) {
@@ -189,50 +193,60 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         return serviceSuccess(true);
     }
 
-
-    @Override
-    public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, long applicationId, Section excludedSection) {
-        return getApplication(applicationId).andOnSuccess(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
+    private ServiceResult<Boolean> isFinanceOverviewSectionComplete(Application application) {
+        Section finances = application.getCompetition().getSections().stream().filter(section ->
+                section.isType(SectionType.FINANCE)).findFirst().get();
+        return sectionCompleteForAllOrganisations(finances, application).andOnSuccess(complete ->
+        {
+            if (complete) {
+                return financeService.collaborativeFundingCriteriaMet(application.getId());
+            }
+            return serviceSuccess(false);
+        });
     }
 
-    private ServiceResult<Boolean> childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
-        boolean allSectionsWithSubsectionsAreComplete = true;
-
-        List<Section> sections;
-        // if no parent defined, just check all sections.
-        if (parentSection == null) {
-            sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(application.getCompetition().getId());
-        } else {
-            sections = parentSection.getChildSections();
-        }
-
-        List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
-        for (Section section : sections) {
-            for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId()).getSuccess()) {
-                    allSectionsWithSubsectionsAreComplete = false;
-                    break;
+    @Override
+    public ServiceResult<Boolean> sectionsCompleteForAllOrganisations(long applicationId) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+            List <Section> sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(application.getCompetition().getId());
+            for (Section section : sections) {
+                ServiceResult<Boolean> sectionComplete = sectionCompleteForAllOrganisations(section, application);
+                if (sectionComplete.isFailure()) {
+                    return sectionComplete;
+                }
+                if (!sectionComplete.getSuccess()) {
+                    return serviceSuccess(false);
                 }
             }
-            if (!allSectionsWithSubsectionsAreComplete) {
-                break;
+            return serviceSuccess(true);
+        });
+    }
+
+    private ServiceResult<Boolean> sectionCompleteForAllOrganisations(Section section, Application application) {
+        Set<Long> organisations = simpleMapSet(application.getProcessRoles(), ProcessRole::getOrganisationId);
+        for (Long organisationId : organisations) {
+            ServiceResult<Boolean> sectionComplete = isSectionComplete(section, application, organisationId);
+            if (sectionComplete.isFailure()) {
+                return sectionComplete;
+            }
+            if (!sectionComplete.getSuccess()) {
+                return serviceSuccess(false);
             }
         }
-        return serviceSuccess(allSectionsWithSubsectionsAreComplete);
+        return serviceSuccess(true);
     }
 
     private Map<Long, Set<Long>> completedSections(Application application) {
-
         List<Section> sections = application.getCompetition().getSections();
         List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
-        List<Long> organisations = simpleMap(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
+        Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
 
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
 
         for (Long organisationId : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
             for (Section section : sections) {
-                if (this.isSectionComplete(section, application.getId(), organisationId).getSuccess()) {
+                if (this.isSectionComplete(section, application, organisationId).getSuccess()) {
                     completedSections.add(section.getId());
                 }
             }
@@ -240,7 +254,4 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         }
         return organisationMap;
     }
-
-
-
 }

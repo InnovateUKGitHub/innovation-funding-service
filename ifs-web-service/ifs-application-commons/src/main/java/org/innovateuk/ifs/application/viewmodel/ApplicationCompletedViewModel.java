@@ -13,15 +13,20 @@ import java.util.concurrent.Future;
 public class ApplicationCompletedViewModel {
     private Set<Long> sectionsMarkedAsComplete;
     private Future<Set<Long>> markedAsComplete;
-    private Set<Long> completedSections;
-    private boolean userFinanceSectionCompleted;
+    private Set<Long> completedSectionsByUserOrganisation;
+    private boolean financeSectionComplete;
+    private boolean financeOverviewSectionComplete;
 
     public ApplicationCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
                                          Future<Set<Long>> markedAsComplete,
-                                         boolean userFinanceSectionCompleted) {
+                                         Set<Long> completedSectionsByUserOrganisation,
+                                         boolean financeSectionComplete,
+                                         boolean financeOverviewSectionComplete) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.markedAsComplete = markedAsComplete;
-        this.userFinanceSectionCompleted = userFinanceSectionCompleted;
+        this.completedSectionsByUserOrganisation = completedSectionsByUserOrganisation;
+        this.financeSectionComplete = financeSectionComplete;
+        this.financeOverviewSectionComplete = financeOverviewSectionComplete;
     }
 
     public Set<Long> getSectionsMarkedAsComplete() {
@@ -32,20 +37,16 @@ public class ApplicationCompletedViewModel {
         return markedAsComplete.get();
     }
 
-    public void setCompletedSections(Set<Long> completedSections) {
-        this.completedSections = completedSections;
-    }
-
-    public Set<Long> getCompletedSections() {
-        return completedSections;
-    }
-
-    public boolean getUserFinanceSectionCompleted() {
-        return userFinanceSectionCompleted;
-    }
-
-    public Boolean completedOrMarkedAsComplete(QuestionResource questionResource, SectionResource sectionResource) throws ExecutionException, InterruptedException {
+    public boolean completedOrMarkedAsComplete(QuestionResource questionResource, SectionResource sectionResource) throws ExecutionException, InterruptedException {
         return (questionResource.isMarkAsCompletedEnabled() && getMarkedAsComplete().contains(questionResource.getId()))
-                || completedSections.contains(sectionResource.getId());
+                || completedSectionsByUserOrganisation.contains(sectionResource.getId());
+    }
+
+    public boolean isFinanceSectionComplete() {
+        return financeSectionComplete;
+    }
+
+    public boolean isFinanceOverviewSectionComplete() {
+        return financeOverviewSectionComplete;
     }
 }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.overview.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 
@@ -20,7 +19,6 @@ public class ApplicationOverviewViewModel {
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
     private Integer completedQuestionsPercentage;
-    private Long financeSectionId;
     private ApplicationOverviewUserViewModel user;
     private ApplicationOverviewAssignableViewModel assignable;
     private ApplicationCompletedViewModel completed;
@@ -30,7 +28,7 @@ public class ApplicationOverviewViewModel {
                                         String applicationName,
                                         ApplicationState applicationState,
                                         boolean applicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
-                                        OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
+                                        OrganisationResource userOrganisation, Integer completedQuestionsPercentage,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
                                         ApplicationCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
         this.applicationId = applicationId;
@@ -41,7 +39,6 @@ public class ApplicationOverviewViewModel {
         this.currentCompetition = currentCompetition;
         this.userOrganisation = userOrganisation;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
-        this.financeSectionId = financeSectionId;
         this.user = user;
         this.assignable = assignable;
         this.completed = completed;
@@ -80,10 +77,6 @@ public class ApplicationOverviewViewModel {
         return completedQuestionsPercentage;
     }
 
-    public Long getFinanceSectionId() {
-        return financeSectionId;
-    }
-
     public ApplicationOverviewUserViewModel getUser() {
         return user;
     }
@@ -98,12 +91,5 @@ public class ApplicationOverviewViewModel {
 
     public ApplicationOverviewSectionViewModel getSection() {
         return section;
-    }
-
-    public boolean isFinanceSectionComplete(SectionResource section) {
-        if (section.getId().equals(financeSectionId)) {
-            return completed.getUserFinanceSectionCompleted();
-        }
-        return completed.getSectionsMarkedAsComplete().contains(financeSectionId);
     }
 }
