@@ -13,4 +13,8 @@ public interface DocumentsRestService {
     RestResult<Optional<ByteArrayResource>> getFileContents(long projectId, long documentConfigId);
 
     RestResult<Optional<FileEntryResource>> getFileEntryDetails(long projectId, long documentConfigId);
+
+    RestResult<Void> deleteDocument(long projectId, long documentConfigId);
+
+    RestResult<Void> submitDocument(long projectId, long documentConfigId);
 }

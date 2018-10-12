@@ -74,8 +74,8 @@
                            inputField='document',
                            validationField=${inputField},
                            mayRemove=true,
-                           removeName='removeFileClicked',
-                           saveName='uploadDocumentClicked'">
+                           removeName='deleteDocument',
+                           saveName='uploadDocument'">
 
                 <!--/* file is not uploaded */-->
                 <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />

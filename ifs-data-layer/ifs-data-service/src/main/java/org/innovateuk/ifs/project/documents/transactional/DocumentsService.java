@@ -39,4 +39,16 @@ public interface DocumentsService {
     @PreAuthorize("isAuthenticated()")
     ServiceResult<FileEntryResource> getFileEntryDetails(long projectId, long documentConfigId);
 
+    //TODO - XXX - Permissions
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
+    @SecuredBySpring(value = "XXX", description = "XXX")
+    @PreAuthorize("isAuthenticated()")
+    ServiceResult<Void> deleteDocument(long projectId, long documentConfigId);
+
+    //TODO - XXX - Permissions
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
+    @SecuredBySpring(value = "XXX", description = "XXX")
+    @PreAuthorize("isAuthenticated()")
+    ServiceResult<Void> submitDocument(long projectId, long documentConfigId);
+
 }

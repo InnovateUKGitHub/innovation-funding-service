@@ -30,5 +30,17 @@ public class DocumentsRestServiceImpl extends BaseRestService implements Documen
         String url = projectRestURL + "/" + projectId + "/document/config/" + documentConfigId + "/file-entry-details";
         return getWithRestResult(url, FileEntryResource.class).toOptionalIfNotFound();
     }
+
+    @Override
+    public RestResult<Void> deleteDocument(long projectId, long documentConfigId) {
+        String url = projectRestURL + "/" + projectId + "/document/config/" + documentConfigId + "/delete";
+        return deleteWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<Void> submitDocument(long projectId, long documentConfigId) {
+        String url = projectRestURL + "/" + projectId + "/document/config/" + documentConfigId + "/submit";
+        return postWithRestResult(url);
+    }
 }
 
