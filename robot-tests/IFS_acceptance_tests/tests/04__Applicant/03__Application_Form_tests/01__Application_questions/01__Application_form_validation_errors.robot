@@ -117,7 +117,7 @@ Custom Suite Setup
 
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css = input
-    Run Keyword And Ignore Error Without Screenshots    Focus To Element    id = application-question-complete
+    Run Keyword And Ignore Error Without Screenshots    Set Focus To Element    id = application-question-complete
     wait for autosave
     the user should not see the element    css = .govuk-error-message
 
@@ -140,7 +140,7 @@ the applicant inserts an invalid date
 the applicant clears the text area of the "Project Summary"
     Clear Element Text    css = .textarea-wrapped .editor
     Press Key             css = .textarea-wrapped .editor    \\8
-    Focus To Element                   css = .app-submit-btn
+    Set Focus To Element                   css = .app-submit-btn
     wait for autosave
 
 Applicant goes to the application details page of the Robot application
@@ -149,9 +149,9 @@ Applicant goes to the application details page of the Robot application
     And the user clicks the button/link     link = Application details
 
 the applicant should not see the validation error of the duration any more
-    Focus To Element      css = .app-submit-btn
+    Set Focus To Element      css = .app-submit-btn
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
-    Focus To Element      css = .app-submit-btn
+    Set Focus To Element      css = .app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months

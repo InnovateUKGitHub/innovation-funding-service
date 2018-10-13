@@ -181,7 +181,7 @@ the user fills in Capital usage
     wait for autosave
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
     wait for autosave
-    Focus To Element                                   css = .section-total-summary > [data-mirror^="#section-total"]
+    Set Focus To Element                                   css = .section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
     capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Capital usage")
@@ -364,7 +364,7 @@ the user completes the new account creation
     Logging in and Error Checking               ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
-    Focus To Element      css = .textarea-wrapped .editor
+    Set Focus To Element      css = .textarea-wrapped .editor
     Input Text    css = .textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name = mark_as_complete
     the user should see the element    name = mark_as_incomplete

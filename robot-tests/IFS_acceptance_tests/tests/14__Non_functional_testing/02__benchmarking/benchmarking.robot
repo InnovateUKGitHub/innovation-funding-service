@@ -166,7 +166,7 @@ the applicant edits the finance sections
     the applicant adds in some travel and subsistence costs
 
 Assign the adding value section to Jessica Doe
-    Focus To Element    css = #form-input-1081 .editor
+    Set Focus To Element    css = #form-input-1081 .editor
     Input Text    css = #form-input-1081 .editor    lead Applicant's text 123...
     Click Element    css = #form-input-1081 .assign-button button
     Click Element    xpath = //div[@id = "form-input-1081"]//button[contains(text(),"Jessica Doe")]
@@ -197,7 +197,7 @@ the applicant adds in some labour costs
 the applicant edits the overhead details
     Click Element    css = [aria-controls = "collapsible-2"]
     Select Radio Button    overheads-rateType-29-51    CUSTOM_RATE
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     Time Until Element Is Visible    id = cost-overheads-51-customRate    Changing the options in the overheads subsection
     reload page
 
@@ -208,7 +208,7 @@ the applicant adds in some materials costs
     Input Text    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     input text    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     Click link    link = Add another materials cost
     Time Until Page Contains Element    css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    Adding another row to the Materials table
     Input Text    css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
@@ -224,12 +224,12 @@ the applicant adds in some subcontracting costs
     Time Until Page Contains Element    css = #collapsible-5 .form-row:nth-child(1)    Adding a row to the subcontracting costs table
     Input Text    css = #collapsible-5 .form-row:nth-child(1) input[id$=subcontractingCost]    100
     input text    css = #collapsible-5 .form-row:nth-child(1) input[id$=companyName]    test
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     Click link    Link = Add another subcontractor
     Time Until Page Contains Element    css = #collapsible-5 .form-row:nth-child(2)    Adding another row to the subcontracting costs table
     Input Text    css = #collapsible-5 .form-row:nth-child(2) input[id$=subcontractingCost]    100
     input text    css = #collapsible-5 .form-row:nth-child(2) input[id$=companyName]    test
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     click element    link = Remove
     time until element is not visible    css = #collapsible-5 .form-row:nth-child(2) input[id$ = subcontractingCost]    Removing a row from the subcontracting costs table
     reload page
@@ -241,13 +241,13 @@ the applicant adds in some travel and subsistence costs
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     Click link    Add another travel cost
     Time Until Page Contains Element    css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    Adding another row to the travel table
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     Input Text    css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    Focus To Element    css = .app-submit-btn
+    Set Focus To Element    css = .app-submit-btn
     click element    link = Remove
     time until element is not visible    css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    Removing a row from the travel table
     reload page

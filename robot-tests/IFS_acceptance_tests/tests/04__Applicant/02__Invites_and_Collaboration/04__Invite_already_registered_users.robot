@@ -53,7 +53,7 @@ Invite a user with the same organisation under the same organisation
 the user enters profile details
     The user enters text to a text field  id = firstName    Dennis
     The user enters text to a text field  id = lastName    Bergkamp
-    Focus To Element                                   css = [name="create-account"]
+    Set Focus To Element                                   css = [name="create-account"]
     The user clicks the button/link       css = [name="create-account"]
 
 the user should see the change in the view team members page

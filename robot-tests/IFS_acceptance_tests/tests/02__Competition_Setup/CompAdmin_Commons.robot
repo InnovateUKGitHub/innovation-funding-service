@@ -273,7 +273,7 @@ the internal user navigates to public content
 
 The application list is sorted by
     [Arguments]    ${sorting_factor}
-    Select From List    name = sort    ${sorting_factor}
+    Select From List By Label    name = sort    ${sorting_factor}
 
 The applications should be sorted by column
     [Arguments]    ${column_number}

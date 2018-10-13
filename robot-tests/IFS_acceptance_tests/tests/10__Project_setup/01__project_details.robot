@@ -604,7 +604,7 @@ User is able to accept new site terms and conditions
 *** Keywords ***
 the user should see a validation error
     [Arguments]    ${ERROR1}
-    Focus To Element    jQuery = button:contains("Save")
+    Set Focus To Element    jQuery = button:contains("Save")
     wait for autosave
     Then the user should see an error    ${ERROR1}
 
