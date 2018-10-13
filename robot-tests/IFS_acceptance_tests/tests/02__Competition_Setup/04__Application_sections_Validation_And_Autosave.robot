@@ -90,7 +90,7 @@ Custom Suite setup
 the user leaves all the question field empty
     Clear Element Text    css = .editor
     Press Key    css = .editor    \\8
-    focus    css = button[type="submit"]
+    Focus To Element      css = button[type="submit"]
     wait for autosave
     The user enters text to a text field    id = question.shortTitle     ${EMPTY}
     The user enters text to a text field    id = question.title          ${EMPTY}
@@ -110,12 +110,12 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    css = button[type="submit"]
+    Focus To Element      css = button[type="submit"]
     Wait Until Element Is Not Visible Without Screenshots    css = .govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user moves focus and waits for autosave
-    focus    link = Sign out
+    Focus To Element      link = Sign out
     Wait For Autosave
 
 the user should see the correct inputs in the Applications questions form

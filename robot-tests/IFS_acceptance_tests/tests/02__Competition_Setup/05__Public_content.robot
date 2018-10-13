@@ -472,7 +472,7 @@ the user enters valid data in the summary details
 
 the user enters valid data in the eligibility details
     The user enters text to a text field    id = contentGroups[0].heading              Minimum Eligibility Threshold
-    The user enters text to a text field    jQuery = .editor:eq(0)        We are establishing a system that will place a greater focus on prevention, which will mean that the care and support needs of people will be considered earlier than is currently the case. This will build on the strengths of the person and look to prevent, reduce or delay their need for care and support. The Bill will introduce a new system that will support people to live independently and put personalisation at the heart of the process
+    The user enters text to a text field    jQuery = .editor:eq(0)        We are establishing a system that will place a greater Focus To Element   on prevention, which will mean that the care and support needs of people will be considered earlier than is currently the case. This will build on the strengths of the person and look to prevent, reduce or delay their need for care and support. The Bill will introduce a new system that will support people to live independently and put personalisation at the heart of the process
 
 the user enters valid data in How-to-apply details
     The user enters text to a text field    id = contentGroups[0].heading              Read the Guidance

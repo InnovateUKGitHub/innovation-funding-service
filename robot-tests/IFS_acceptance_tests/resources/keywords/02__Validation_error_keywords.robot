@@ -5,8 +5,8 @@ Resource          ../defaultResources.robot
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
-    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
-    Run Keyword And Ignore Error Without Screenshots    Focus    link=Contact us
+    Run Keyword And Ignore Error Without Screenshots    Focus To Element      jQuery=Button:contains("Mark as complete")
+    Run Keyword And Ignore Error Without Screenshots    Focus To Element      link=Contact us
     Wait Until Page Contains Element Without Screenshots    jQuery=.govuk-error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
 

@@ -781,13 +781,13 @@ The invited Stakeholder accepts the invite in his or her email
 
 *** Keywords ***
 the user moves focus and waits for autosave
-    focus    link=Sign out
+    Focus To Element    link=Sign out
     Wait For Autosave
 
 the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
-    Focus    jQuery=button:contains("Done")
+    Focus To Element    jQuery=button:contains("Done")
     Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 
 the user fills the milestones with valid data
@@ -830,7 +830,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
-    Focus    jQuery = button:contains(Done)
+    Focus To Element    jQuery = button:contains(Done)
     wait for autosave
 
 the weekdays should be correct

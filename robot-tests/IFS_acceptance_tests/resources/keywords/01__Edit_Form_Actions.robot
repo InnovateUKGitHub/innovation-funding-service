@@ -61,7 +61,7 @@ the user moves focus to the element
     # Error checking
     the user should not see an error in the page
     Wait Until Element Is Visible Without Screenshots    ${element}
-    focus    ${element}
+    Focus To Element    ${element}
 
 the user moves the mouse away from the element
     [Arguments]    ${element}
@@ -76,7 +76,7 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
-    Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
+    Run Keyword And Ignore Error Without Screenshots    Focus To Element    link=Sign out
     Wait for autosave
 
 The user enters large text to a text field
@@ -86,7 +86,7 @@ The user enters large text to a text field
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    1500ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
-    Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
+    Run Keyword And Ignore Error Without Screenshots    Focus To Element    link=Sign out
     Wait for autosave
 
 the user sees the text in the element
@@ -112,7 +112,7 @@ The user enters multiple strings into a text field
     Wait Until Element Is Visible Without Screenshots   ${field}
     Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
     Mouse Out                                           ${field}
-    Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
+    Run Keyword And Ignore Error Without Screenshots    Focus To Element    link=Sign out
     Wait for autosave
 
 # DropDown

@@ -417,7 +417,7 @@ the applicant enters valid inputs
     The user enters text to a text field    name = organisations[1].organisationName  ${organisationLudlowName}
     The user enters text to a text field    name = organisations[1].invites[0].personName    Jessica Doe
     The user enters text to a text field    name = organisations[1].invites[0].email    ${collaborator1_credentials["email"]}
-    focus                                   jquery = button:contains("Save changes")
+    Focus To Element                                     jquery = button:contains("Save changes")
     The user clicks the button/link         jquery = button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation

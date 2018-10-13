@@ -215,6 +215,6 @@ the user should see correct grant percentage
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link    link = Your project costs
-    Focus    jQuery = button:contains("Edit")
+    Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")
     wait for autosave
