@@ -81,7 +81,7 @@ the user fills in the CS Eligibility
 the user selects Research Participation if required
     [Arguments]  ${percentage}
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  id = researchParticipationAmountId
-    Run Keyword If  '${status}' == 'PASS'  the user selects the option from the drop-down menu  ${percentage}  researchParticipation
+    Run Keyword If  '${status}' == 'PASS'  the user selects the index from the drop-down menu  ${percentage}  researchParticipation
     Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id = researchParticipation
 
 the user fills in the CS Milestones
