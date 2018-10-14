@@ -119,6 +119,7 @@ The user enters multiple strings into a text field
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
+    Wait Until Element Is Enabled   ${drop-down}
     Select From List By Label    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
@@ -127,6 +128,7 @@ the user selects the option from the drop-down menu
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
+    Wait Until Element Is Enabled   ${drop-down}
     Select From List By Index    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
