@@ -279,7 +279,7 @@ The application list is sorted by
 
 The applications should be sorted by column
     [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
+    ${row_count}=    Get Element Count    //*[td]
     @{sorted_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
