@@ -234,15 +234,15 @@ Custom Suite Setup
 
 The key statistics are calculated
     #Calculation of the Invited Assessors
-    ${INVITED_ASSESSORS} =     Get Element Count    //table/tbody/tr
+    ${INVITED_ASSESSORS} =     Get matching xpath count    //table/tbody/tr
     ${INVITED_COUNT} =     Get text    css = div:nth-child(1) > div > span
     Should Be Equal As Integers    ${INVITED_ASSESSORS}    ${INVITED_COUNT}
     #Calculation of the Accepted Assessors
-    ${ACCEPTED_ASSESSORS} =     Get Element Count    //*[text() = "Invite accepted"]
+    ${ACCEPTED_ASSESSORS} =     Get matching xpath count    //*[text() = "Invite accepted"]
     ${ACCEPTED_COUNT} =     Get text    css = div:nth-child(2) > div > span
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${ACCEPTED_ASSESSORS}
     #Calculation of the declined Assessors
-    ${DECLINED_ASSESSORS} =     Get Element Count    //*[text() = "Invite declined"]
+    ${DECLINED_ASSESSORS} =     Get matching xpath count    //*[text() = "Invite declined"]
     ${DECLINED_COUNT} =     Get text    css = div:nth-child(3) > div > span
     Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
 
