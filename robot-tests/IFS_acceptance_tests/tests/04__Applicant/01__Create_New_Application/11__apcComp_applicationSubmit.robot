@@ -5,6 +5,8 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...
 ...               IFS-1497  As an applicant I am able to confirm the project location for my organisation
 ...
+...               IFS-4221  As an applicant I am only able to invite contributors to a single project type competition application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Resource          ../../../resources/defaultResources.robot
@@ -26,7 +28,7 @@ Comp Admin creates an APC competition
     Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  true   # 1 means 30%
+    And the user fills in the CS Eligibility       ${business_type_id}  1  true  single   # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
@@ -40,11 +42,12 @@ Comp Admin creates an APC competition
     Then the user clicks the button/link           css = button[type = "submit"]
 
 Applicant applies to newly created APC competition
-    [Documentation]  IFS-2286
+    [Documentation]  IFS-2286  IFS-4221
     [Tags]  MySQL
     When the competition is open                  ${apcCompetitionTitle}
     And Log in as a different user                &{lead_applicant_credentials}
     Then logged in user applies to competition    ${apccompetitionTitle}  1
+    And the applicant cannot add a collaborator to a single comp
 
 Applicant submits his application
     [Documentation]  IFS-2286
@@ -66,3 +69,8 @@ the lead applicant fills all the questions and marks as complete(APC)
     the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{APC_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the applicant cannot add a collaborator to a single comp
+    the user clicks the button/link      link = Application team
+    the user should not see the element  link = Add a collaborator organisation
+    the user clicks the button/link      link = Application overview
