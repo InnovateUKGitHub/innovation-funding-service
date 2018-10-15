@@ -89,7 +89,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         </th:block>
                     </tr>
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
                         <th class="govuk-table__header" scope="row">Total</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                             <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
@@ -216,8 +216,8 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header"  scope="row">Total
+                <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
+                    <th class="govuk-table__header" scope="row">Total
                         <div th:if="${currentApplication.isOpen()}">
                             <th:block th:if="${yourFinancesCompleteForAllOrganisations}">
                                 <img class="table-total-tick" width="20" height="17"

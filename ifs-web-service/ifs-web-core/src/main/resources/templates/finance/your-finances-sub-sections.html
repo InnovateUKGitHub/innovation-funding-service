@@ -253,11 +253,10 @@
 </th:block>
 
     <th:block th:fragment="overview_finances(model, internalView)">
-        <h2 class="govuk-heading-m">Funding rules for this competition</h2>
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
                   th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"
-                      th:with="model=${model.openSectionViewModel}" >
+                      th:with="model=${model.openSectionViewModel}">
                 <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
                                                 currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
                                                 completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),

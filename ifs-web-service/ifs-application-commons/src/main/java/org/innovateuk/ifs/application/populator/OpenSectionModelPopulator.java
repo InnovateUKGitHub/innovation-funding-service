@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -24,6 +25,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
@@ -161,6 +164,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                     sectionsMarkedAsComplete, applicantSection.getCompetition().getId());
             openSectionViewModel.setYourFinancesCompleteForAllOrganisations(yourFinancesCompleteForAllOrganisations);
         }
+        openSectionViewModel.setCollaborativeProject(isCollaborativeProject(applicantSection));
     }
 
     private boolean getFinancesOverviewCompleteForAllOrganisations(Set<Long> completedSections,
@@ -172,6 +176,14 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                         OVERVIEW_FINANCES)).map(SectionResource::getId);
 
         return optionalFinanceOverviewSectionId.map(completedSections::contains).orElse(false);
+    }
+
+    private boolean isCollaborativeProject(ApplicantSectionResource applicantSection) {
+        // A project is collaborative if the competition is collaborative or if there is more than a single
+        // organisation when the competition supports collaboration
+        CollaborationLevel collaborationLevel = applicantSection.getCompetition().getCollaborationLevel();
+        return collaborationLevel == COLLABORATIVE ||
+                (collaborationLevel == SINGLE_OR_COLLABORATIVE && applicantSection.allOrganisations().count() > 1);
     }
 
     private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
