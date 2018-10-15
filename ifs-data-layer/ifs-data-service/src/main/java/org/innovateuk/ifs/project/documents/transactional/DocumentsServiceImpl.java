@@ -12,9 +12,11 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,14 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -40,6 +50,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Autowired
     private ProjectDocumentRepository projectDocumentRepository;
+
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
     private FileService fileService;
@@ -88,14 +101,23 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                        .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
+                        .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
+    }
+
+    private ServiceResult<Void> validateProjectIsInSetup(Project project) {
+        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
+        }
+
+        return serviceSuccess();
     }
 
     private FileEntryResource createProjectDocument(Project project, org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocumentConfig, Pair<File, FileEntry> fileDetails) {
 
         FileEntry fileEntry = fileDetails.getValue();
-        ProjectDocument projectDocument = new ProjectDocument(project, projectDocumentConfig, fileEntry, DocumentStatus.UPLOADED);
+        ProjectDocument projectDocument = new ProjectDocument(project, projectDocumentConfig, fileEntry, UPLOADED);
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -115,14 +137,71 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     }
 
     private FileEntry getFileEntry(Project project, long documentConfigId) {
+        return getProjectDocument(project, documentConfigId)
+                .getFileEntry();
+    }
+
+    private ProjectDocument getProjectDocument(Project project, long documentConfigId) {
+        return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
+                .get();
+    }
+
+/*    private FileEntry getFileEntry(Project project, long documentConfigId) {
         return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
                 .get()
                 .getFileEntry();
-    }
+    }*/
 
     @Override
     public ServiceResult<FileEntryResource> getFileEntryDetails(long projectId, long documentConfigId) {
         return getProject(projectId)
                 .andOnSuccessReturn(project -> fileEntryMapper.mapToResource(getFileEntry(project, documentConfigId)));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
+        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                                .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
+                                .andOnSuccess(() -> deleteFile(project, documentConfigId))
+                            );
+    }
+
+    private ServiceResult<Void> deleteProjectDocument(Project project, long documentConfigId) {
+        ProjectDocument projectDocumentToDelete = getProjectDocument(project, documentConfigId);
+        if (APPROVED.equals(projectDocumentToDelete.getStatus())) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED);
+        } else {
+            projectDocumentRepository.delete(projectDocumentToDelete);
+            return serviceSuccess();
+        }
+    }
+
+    private void deleteFile(Project project, long documentConfigId) {
+        FileEntry fileEntry = getFileEntry(project, documentConfigId);
+        fileService.deleteFileIgnoreNotFound(fileEntry.getId());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
+        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                        .andOnSuccessReturnVoid(() -> submitDocument(project, documentConfigId)
+                        )
+                );
+    }
+
+    private ServiceResult<Void> submitDocument(Project project, long documentConfigId) {
+        ProjectDocument projectDocumentToBeSubmitted = getProjectDocument(project, documentConfigId);
+
+        if (UPLOADED.equals(projectDocumentToBeSubmitted.getStatus())) {
+            projectDocumentToBeSubmitted.setStatus(SUBMITTED);
+            projectDocumentRepository.save(projectDocumentToBeSubmitted);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED);
+        }
     }
 }

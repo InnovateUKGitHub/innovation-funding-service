@@ -74,8 +74,8 @@
                            inputField='document',
                            validationField=${inputField},
                            mayRemove=true,
-                           removeName='removeFileClicked',
-                           saveName='uploadDocumentClicked'">
+                           removeName='deleteDocument',
+                           saveName='uploadDocument'">
 
                 <!--/* file is not uploaded */-->
                 <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
@@ -96,7 +96,7 @@
         </div>
 
         <th:block th:if="${model.isShowSubmitDocumentsButton()}">
-            <a th:href="@{/project/{id}/document/confirm(id=${model.getProjectId()})}" class="govuk-button govuk-!-margin-top-6"
+            <a id="submitDocument" name="submitDocument" th:href="@{/project/{id}/document/config/{documentConfigId}/submit(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" class="govuk-button govuk-!-margin-top-6"
                data-js-modal="modal-partner-document">Submit document</a>
         </th:block>
 

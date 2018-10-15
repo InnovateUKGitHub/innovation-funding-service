@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,5 +70,19 @@ public class DataDocumentsController {
                                                              @PathVariable("documentConfigId") long documentConfigId) throws IOException {
 
         return documentsService.getFileEntryDetails(projectId, documentConfigId).toGetResponse();
+    }
+
+    @DeleteMapping(value = "/config/{documentConfigId}/delete", produces = "application/json")
+    public RestResult<Void> deleteDocument(@PathVariable(value = "projectId") long projectId,
+                                           @PathVariable("documentConfigId") long documentConfigId) throws IOException {
+
+        return documentsService.deleteDocument(projectId, documentConfigId).toDeleteResponse();
+    }
+
+    @PostMapping("/config/{documentConfigId}/submit")
+    public RestResult<Void> submitDocument(@PathVariable(value = "projectId") long projectId,
+                                           @PathVariable("documentConfigId") long documentConfigId) {
+
+        return documentsService.submitDocument(projectId, documentConfigId).toPostResponse();
     }
 }

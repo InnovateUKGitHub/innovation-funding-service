@@ -104,12 +104,13 @@ public class SetupSectionStatus {
         }
 
         if (isProjectManager) {
-            if (projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+/*            if (projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
                 return CROSS;
-            }
+            }*/
 
             if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
-                    .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus()))) {
+                    .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                                                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
                 return FLAG;
             }
         }
