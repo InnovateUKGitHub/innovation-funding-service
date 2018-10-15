@@ -45,6 +45,8 @@ public class ProjectDocumentStatus {
 
     public boolean isApproved() { return status == DocumentStatus.APPROVED; }
 
+    public boolean isRejected() { return status == DocumentStatus.REJECTED; }
+
     public void setStatus(DocumentStatus status) {
         this.status = status;
     }

@@ -28,7 +28,7 @@
                            class="govuk-link" />
                     </h3>
                 </div>
-               <div th:if="${document.notSubmitted}"
+               <div th:if="${document.notSubmitted || document.isRejected}"
                      class="task-status-incomplete">
                     <span>Incomplete</span>
                 </div>
