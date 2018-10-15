@@ -124,14 +124,6 @@ Initial details - User enters valid values and marks as done
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
 
-Initial details - Innovation sector of Open should be visible
-    [Documentation]    INFUND-9152
-    [Tags]
-    Given the user clicks the button/link                       jQuery = .govuk-button:contains("Edit")  # Click Edit
-    When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
-    Then the user selects the option from the drop-down menu    Sector    id = competitionTypeId
-    When the user clicks the button/link                        css = button[class = "govuk-button"]  # Click Done
-
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]
