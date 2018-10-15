@@ -277,6 +277,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withPriority(9).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
         SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withPriority(10).withType
                 (SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource11 = sectionResourceBuilder.with(id(11L)).with(name("Finances overview")).withPriority(11)
+                .withType(SectionType.OVERVIEW_FINANCES).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
@@ -284,7 +286,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4,
                 sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9,
-                sectionResource10);
+                sectionResource10, sectionResource11);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -298,6 +300,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .asList(sectionResource9));
         when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(Arrays
                 .asList(sectionResource10));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.OVERVIEW_FINANCES)).thenReturn(Arrays
+                .asList(sectionResource11));
 
         when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
                 (q21Resource, q22Resource, q23Resource)));
