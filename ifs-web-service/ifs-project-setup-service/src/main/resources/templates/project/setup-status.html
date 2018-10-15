@@ -96,8 +96,8 @@
                         </th:block>
                     </div>
                     <th:block
-                        th:insert="project/fragments :: project-setup-status-indicator(${model.otherDocumentsStatus.getSectionStatus()})"
-                        th:if="${model.otherDocumentsSection.accessible}"/>
+                        th:insert="project/fragments :: project-setup-status-indicator(${model.DocumentsStatus.getSectionStatus()})"
+                        th:if="${model.DocumentsSection.accessible}"/>
                 </li>
                 <!--/* ========================= Other documents ========================= */-->
                 <li th:unless="${model.projectDocuments}" th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
