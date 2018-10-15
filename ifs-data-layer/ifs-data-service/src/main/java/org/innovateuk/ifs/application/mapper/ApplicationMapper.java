@@ -42,7 +42,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationProcess.processState", target = "applicationState"),
             @Mapping(source = "applicationProcess.ineligibleOutcomes", target = "ineligibleOutcome"),
-            @Mapping(source = "leadOrganisationId", target = "leadOrganisationId")
+            @Mapping(source = "leadOrganisationId", target = "leadOrganisationId"),
+            @Mapping(source = "competition.collaborationLevel", target = "collaborationLevel")
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
