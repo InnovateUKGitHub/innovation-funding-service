@@ -29,9 +29,11 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -161,16 +163,19 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
-                                .andOnSuccess(() -> {
-                                    deleteProjectDocument(project, documentConfigId);
-                                    deleteFile(project, documentConfigId);
-                                    })
+                                .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
+                                .andOnSuccess(() -> deleteFile(project, documentConfigId))
                             );
     }
 
-    private void deleteProjectDocument(Project project, long documentConfigId) {
+    private ServiceResult<Void> deleteProjectDocument(Project project, long documentConfigId) {
         ProjectDocument projectDocumentToDelete = getProjectDocument(project, documentConfigId);
-        projectDocumentRepository.delete(projectDocumentToDelete);
+        if (APPROVED.equals(projectDocumentToDelete.getStatus())) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED);
+        } else {
+            projectDocumentRepository.delete(projectDocumentToDelete);
+            return serviceSuccess();
+        }
     }
 
     private void deleteFile(Project project, long documentConfigId) {
