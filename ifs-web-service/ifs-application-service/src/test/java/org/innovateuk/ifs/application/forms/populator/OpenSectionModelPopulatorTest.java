@@ -23,7 +23,6 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,6 +40,7 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -49,12 +49,18 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -180,8 +186,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelWithValidObjects() throws Exception {
-
+    public void populateModel_withValidObjects() {
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
@@ -198,44 +203,56 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testYourFinancesCompleteForAllOrganisations() {
-        List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
-        List<OrganisationResource> organisations = newOrganisationResource().build(3);
+    public void populateModel_yourFinancesCompleteForAllOrganisations() {
+        SectionResource financesSection = newSectionResource().build();
+        SectionResource financeOverviewSection = newSectionResource()
+                .withId(4L)
+                .build();
+        Set<Long> completedSectionIdsIncludingFinancesOverviewSection = asLinkedSet(1L, 2L, 3L, 4L);
+        List<Long> organisationIds = asList(1L, 2L, 3L);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisations = new HashMap<>();
-        completedSectionsByOrganisations.put(organisations.get(0).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(1).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(2).getId(), new HashSet<>());
+        Map<Long, Set<Long>> completedSectionsByOrganisations = simpleToMap(organisationIds, identity(),
+                organisationId -> completedSectionIdsIncludingFinancesOverviewSection);
 
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisations);
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), FINANCE)).thenReturn(asList(financesSection));
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES)).thenReturn(asList(financeOverviewSection));
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
-        assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(false, viewModel.getYourFinancesCompleteForAllOrganisations());
+        assertTrue(viewModel.getYourFinancesCompleteForAllOrganisations());
+
+        verify(sectionService).getCompletedSectionsByOrganisation(application.getId());
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), FINANCE);
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES);
     }
 
     @Test
-    public void testYourFinancesInCompleteForAnOrganisations() {
-        List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
-        List<OrganisationResource> organisations = newOrganisationResource().build(3);
+    public void populateModel_yourFinancesInCompleteForAnOrganisation() {
+        SectionResource financesSection = newSectionResource().build();
+        SectionResource financeOverviewSection = newSectionResource()
+                .withId(4L)
+                .build();
+        Set<Long> completedSectionIdsExcludingFinancesOverviewSection = asLinkedSet(1L, 2L, 3L);
+        List<Long> organisationIds = asList(1L, 2L, 3L);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisations = new HashMap<>();
-        completedSectionsByOrganisations.put(organisations.get(0).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(1).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(2).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
+        Map<Long, Set<Long>> completedSectionsByOrganisations = simpleToMap(organisationIds, identity(),
+                organisationId -> completedSectionIdsExcludingFinancesOverviewSection);
 
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisations);
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), FINANCE)).thenReturn(asList(financesSection));
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES)).thenReturn(asList(financeOverviewSection));
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
-        assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(true, viewModel.getYourFinancesCompleteForAllOrganisations());
+        assertFalse(viewModel.getYourFinancesCompleteForAllOrganisations());
+
+        verify(sectionService).getCompletedSectionsByOrganisation(application.getId());
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), FINANCE);
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES);
     }
 }

@@ -77,7 +77,8 @@ public class ApplicationTeamModelPopulator {
                 isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
                 isComplete,
                 userIsLeadApplicant,
-                allReadonly);
+                allReadonly,
+                applicationResource.getCollaborationLevel());
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {

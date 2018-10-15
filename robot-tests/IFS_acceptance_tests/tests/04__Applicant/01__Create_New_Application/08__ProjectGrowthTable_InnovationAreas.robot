@@ -42,7 +42,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true     # 1 means 30%
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     # TODO IFS-4186 Uncomment when this functionality is enabled.
     #And the user fills in the CS Documents in other projects
@@ -118,7 +118,7 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true     # 1 means 30%
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors

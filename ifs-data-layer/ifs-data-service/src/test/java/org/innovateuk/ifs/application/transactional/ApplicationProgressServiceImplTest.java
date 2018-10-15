@@ -15,8 +15,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -56,16 +54,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ApplicationProgressServiceImplTest {
 
     @Mock
-    private QuestionService questionServiceMock;
-
-    @Mock
     private QuestionStatusService questionStatusServiceMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
-
-    @Mock
-    private SectionService sectionServiceMock;
 
     @Mock
     private SectionStatusService sectionStatusServiceMock;
@@ -88,7 +80,6 @@ public class ApplicationProgressServiceImplTest {
     private FormInputResponse existingFormInputResponse;
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
-    private Long organisationId = 456L;
 
     private Question multiAnswerQuestion;
     private Question leadAnswerQuestion;
@@ -171,14 +162,14 @@ public class ApplicationProgressServiceImplTest {
     }
 
     @Test
-    public void getApplicationReadyToSubmit() throws Exception {
+    public void getApplicationReadyToSubmit() {
 
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
 
         when(questionStatusServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("29"));
 
         boolean result = service.applicationReadyForSubmit(app.getId());
@@ -186,14 +177,14 @@ public class ApplicationProgressServiceImplTest {
     }
 
     @Test
-    public void applicationNotReadyToSubmitResearchParticipationTooHigh() throws Exception {
+    public void applicationNotReadyToSubmitResearchParticipationTooHigh() {
 
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
 
         when(questionStatusServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("31"));
 
         boolean result = service.applicationReadyForSubmit(app.getId());
@@ -201,28 +192,28 @@ public class ApplicationProgressServiceImplTest {
     }
 
     @Test
-    public void applicationNotReadyToSubmitProgressNotComplete() throws Exception {
+    public void applicationNotReadyToSubmitProgressNotComplete() {
 
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         when(questionStatusServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
 
         boolean result = service.applicationReadyForSubmit(app.getId());
         assertFalse(result);
     }
 
     @Test
-    public void applicationNotReadyToSubmitChildSectionsNotComplete() throws Exception {
+    public void applicationNotReadyToSubmitChildSectionsNotComplete() {
 
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(questionStatusServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
 
         when(questionStatusServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(app.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         boolean result = service.applicationReadyForSubmit(app.getId());
         assertFalse(result);
