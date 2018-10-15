@@ -98,6 +98,15 @@
                 th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"/>
         </div>
     </th:block>
+
+    <th:block th:if="${model.isBusinessOrganisation()}">
+        <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+
+        <div class="message-alert">
+            <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
+        </div>
+    </th:block>
+
     <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})"/>
 </th:block>
 
@@ -149,7 +158,7 @@
                            class="govuk-link"></a>
                     </th:block>
                     <th:block th:if="${model.allReadOnly}">
-                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
+                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})} + ${originQuery}"
                            th:text="${childSection.section.name}"
                            class="govuk-link"></a>
                     </th:block>

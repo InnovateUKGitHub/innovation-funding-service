@@ -37,11 +37,6 @@ public class OrganisationController {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
-    @GetMapping("/primary-for-user/{userId}")
-    public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final long userId) {
-        return organisationService.getPrimaryForUser(userId).toGetResponse();
-    }
-
     @GetMapping("/by-user-and-application-id/{userId}/{applicationId}")
     public RestResult<OrganisationResource> getByUserAndApplicationId(@PathVariable("userId") final long userId,
                                                               @PathVariable("applicationId") final long applicationId) {

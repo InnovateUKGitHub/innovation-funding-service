@@ -42,6 +42,21 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
             String url = competitionSetupStakeholderRestURL + "/stakeholder/create/" + inviteHash;
             return postWithRestResultAnonymous(url, stakeholderRegistrationResource, Void.class);
     }
+
+    @Override
+    public RestResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
+        return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/add", Void.class);
+    }
+
+    @Override
+    public RestResult<Void> removeStakeholder(long competitionId, long stakeholderUserId) {
+        return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/remove", Void.class);
+    }
+
+    @Override
+    public RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
+        return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites", userListType());
+    }
 }
 
 

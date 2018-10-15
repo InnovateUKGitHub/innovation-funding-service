@@ -48,8 +48,23 @@ public class CompetitionSetupStakeholderController {
     }
 
     @PostMapping("/stakeholder/create/{inviteHash}")
-    public RestResult<Void> createStakeholder(@PathVariable("inviteHash") String inviteHash, @RequestBody StakeholderRegistrationResource stakeholderRegistrationResource){
+    public RestResult<Void> createStakeholder(@PathVariable("inviteHash") String inviteHash, @RequestBody StakeholderRegistrationResource stakeholderRegistrationResource) {
         return registrationService.createStakeholder(inviteHash, stakeholderRegistrationResource).toPostCreateResponse();
+    }
+
+    @PostMapping("/{stakeholderUserId}/add")
+    public RestResult<Void> addStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
+        return competitionSetupStakeholderService.addStakeholder(competitionId, stakeholderUserId).toPostResponse();
+    }
+
+    @PostMapping("/{stakeholderUserId}/remove")
+    public RestResult<Void> removeStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
+        return competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId).toPostResponse();
+    }
+
+    @GetMapping("/pending-invites")
+    public RestResult<List<UserResource>> findPendingStakeholderInvites(@PathVariable("competitionId") final long competitionId) {
+        return competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId).toGetResponse();
     }
 }
 

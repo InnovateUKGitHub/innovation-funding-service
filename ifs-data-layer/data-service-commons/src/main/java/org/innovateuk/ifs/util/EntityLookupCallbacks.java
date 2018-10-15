@@ -87,9 +87,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * This find() method, given 3 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
-     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     * BiFunction can then be called with the 3 successful ServiceResult values as its 3 inputs
      */
     public static <SuccessType1, SuccessType2, SuccessType3> ServiceResultTuple3Handler<SuccessType1, SuccessType2, SuccessType3> find(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
@@ -100,9 +100,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * This find() method, given 3 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
-     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     * BiFunction can then be called with the 3 successful ServiceResult values as its 3 inputs
      */
     public static <SuccessType1, SuccessType2, SuccessType3> ServiceResultTuple3Handler<SuccessType1, SuccessType2, SuccessType3> find(
             ServiceResult<SuccessType1> getterFn1,
@@ -113,9 +113,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * This find() method, given 4 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
-     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     * BiFunction can then be called with the 4 successful ServiceResult values as its 4 inputs
      */
     public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
@@ -127,9 +127,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * This find() method, given 4 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
-     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     * BiFunction can then be called with the 4 successful ServiceResult values as its 4 inputs
      */
     public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
             ServiceResult<SuccessType1> getterFn1,
@@ -138,6 +138,36 @@ public class EntityLookupCallbacks {
             ServiceResult<SuccessType4> getterFn4) {
 
         return find(() -> getterFn1, () -> getterFn2, () -> getterFn3, () -> getterFn4);
+    }
+
+    /**
+     * This find() method, given 5 ServiceResult suppliers, supplies a ServiceResultTuple5Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 5 successful ServiceResult values as its 5 inputs
+     */
+    public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4, SuccessType5> ServiceResultTuple5Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4, SuccessType5> find(
+            ServiceResult<SuccessType1> getterFn1,
+            ServiceResult<SuccessType2> getterFn2,
+            ServiceResult<SuccessType3> getterFn3,
+            ServiceResult<SuccessType4> getterFn4,
+            ServiceResult<SuccessType5> getterFn5) {
+
+        return find(() -> getterFn1, () -> getterFn2, () -> getterFn3, () -> getterFn4, () -> getterFn5);
+    }
+
+    /**
+     * This find() method, given 5 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 5 successful ServiceResult values as its 5 inputs
+     */
+    public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4, SuccessType5> ServiceResultTuple5Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4, SuccessType5> find(
+            Supplier<ServiceResult<SuccessType1>> getterFn1,
+            Supplier<ServiceResult<SuccessType2>> getterFn2,
+            Supplier<ServiceResult<SuccessType3>> getterFn3,
+            Supplier<ServiceResult<SuccessType4>> getterFn4,
+            Supplier<ServiceResult<SuccessType5>> getterFn5) {
+
+        return new ServiceResultTuple5Handler<>(getterFn1, getterFn2, getterFn3, getterFn4, getterFn5);
     }
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
@@ -224,9 +254,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This class is produced by the find() method, which given 2 ServiceResult suppliers, is able to execute the ServiceResults
+     * This class is produced by the find() method, which given 3 ServiceResult suppliers, is able to execute the ServiceResults
      * in a chain and fail early if necessary.  Assuming that they are all successes, a supplied BiFunction can then be called
-     * with the 2 successful ServiceResult values as its 2 inputs
+     * with the 3 successful ServiceResult values as its 3 inputs
      *
      * @param <R>
      * @param <S>
@@ -263,9 +293,9 @@ public class EntityLookupCallbacks {
     }
 
     /**
-     * This class is produced by the find() method, which given 2 ServiceResult suppliers, is able to execute the ServiceResults
+     * This class is produced by the find() method, which given 4 ServiceResult suppliers, is able to execute the ServiceResults
      * in a chain and fail early if necessary.  Assuming that they are all successes, a supplied BiFunction can then be called
-     * with the 2 successful ServiceResult values as its 2 inputs
+     * with the 4 successful ServiceResult values as its 4 inputs
      *
      * @param <R>
      * @param <S>
@@ -298,6 +328,48 @@ public class EntityLookupCallbacks {
 
     }
 
+    /**
+     * This class is produced by the find() method, which given 5 ServiceResult suppliers, is able to execute the ServiceResults
+     * in a chain and fail early if necessary.  Assuming that they are all successes, a supplied BiFunction can then be called
+     * with the 5 successful ServiceResult values as its 5 inputs
+     *
+     * @param <R>
+     * @param <S>
+     */
+    public static class ServiceResultTuple5Handler<R, S, T, U, V> {
+
+        private Supplier<ServiceResult<R>> getterFn1;
+        private Supplier<ServiceResult<S>> getterFn2;
+        private Supplier<ServiceResult<T>> getterFn3;
+        private Supplier<ServiceResult<U>> getterFn4;
+        private Supplier<ServiceResult<V>> getterFn5;
+
+        public ServiceResultTuple5Handler(Supplier<ServiceResult<R>> getterFn1, Supplier<ServiceResult<S>> getterFn2,
+                                          Supplier<ServiceResult<T>> getterFn3, Supplier<ServiceResult<U>> getterFn4,
+                                          Supplier<ServiceResult<V>> getterFn5) {
+            this.getterFn1 = getterFn1;
+            this.getterFn2 = getterFn2;
+            this.getterFn3 = getterFn3;
+            this.getterFn4 = getterFn4;
+            this.getterFn5 = getterFn5;
+        }
+
+        public <A> ServiceResult<A> andOnSuccess(PentFunction<R, S, T, U, V, ServiceResult<A>> mainFunction) {
+            return getterFn1.get().
+                    andOnSuccess(result1 -> getterFn2.get().
+                            andOnSuccess(result2 -> getterFn3.get().
+                                    andOnSuccess(result3 -> getterFn4.get().
+                                            andOnSuccess(result4 -> getterFn5.get().
+                                                    andOnSuccess(result5 -> mainFunction.apply(result1, result2,
+                                                            result3, result4, result5))))));
+        }
+
+        public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
+            return andOnSuccess((p1, p2, p3, p4, p5) -> ServiceResult.serviceSuccess(supplier.get()));
+        }
+
+    }
+
     @FunctionalInterface
     public interface TriFunction<R, S, T, A> {
 
@@ -308,5 +380,11 @@ public class EntityLookupCallbacks {
     public interface QuadFunction<R, S, T, U, A> {
 
         A apply(R r, S s, T t, U u);
+    }
+
+    @FunctionalInterface
+    public interface PentFunction<R, S, T, U, V, A> {
+
+        A apply(R r, S s, T t, U u, V v);
     }
 }

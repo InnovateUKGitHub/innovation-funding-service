@@ -17,7 +17,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.view.populator.ManageApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,15 +71,15 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        String queryParam = buildOriginQueryString(NavigationOrigin.valueOf(origin), queryParams);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         queryParams.put("competitionId", asList(String.valueOf(competitionId)));
         queryParams.put("applicationId", asList(String.valueOf(application.getId())));
-        String backUrl = buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
+        String backUrl = buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
 
         ManageApplicationViewModel viewModel = manageApplicationModelPopulator.populate(application,
                         competition,
                         backUrl,
-                        queryParam,
+                        originQuery,
                         user,
                         getAppendices(application.getId(), responses),
                         form);

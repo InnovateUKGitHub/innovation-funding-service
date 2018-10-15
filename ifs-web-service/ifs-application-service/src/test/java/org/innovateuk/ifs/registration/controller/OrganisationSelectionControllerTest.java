@@ -6,6 +6,7 @@ import org.innovateuk.ifs.registration.populator.OrganisationSelectionViewModelP
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +16,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -49,6 +52,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         when(populator.populate(eq(loggedInUser), any(), eq("/organisation/create/initialize")))
                 .thenReturn(model);
+        when(organisationRestService.getAllByUserId(loggedInUser.getId())).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
 
         mockMvc.perform(get("/organisation/select"))
@@ -57,6 +61,24 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("model", model));
 
         verify(populator).populate(eq(loggedInUser), any(), eq("/organisation/create/initialize"));
+    }
+
+    @Test
+    public void viewPreviousOrganisations_redirectIfNoAttachedOrganisations() throws Exception {
+        when(organisationRestService.getAllByUserId(loggedInUser.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(get("/organisation/select"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/organisation/create/initialize"));
+    }
+
+    @Test
+    public void viewPreviousOrganisations_redirectIfNotApplicant() throws Exception {
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build());
+
+        mockMvc.perform(get("/organisation/select"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/organisation/create/initialize"));
     }
 
     @Test
