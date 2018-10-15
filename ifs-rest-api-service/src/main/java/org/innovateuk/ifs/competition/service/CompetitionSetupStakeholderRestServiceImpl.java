@@ -39,23 +39,23 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
 
     @Override
     public RestResult<Void> createStakeholder(String inviteHash, StakeholderRegistrationResource stakeholderRegistrationResource) {
-            String url = competitionSetupStakeholderRestURL + "/stakeholder/create/" + inviteHash;
+            String url = format("%s/stakeholder/create/%s", competitionSetupStakeholderRestURL, inviteHash);
             return postWithRestResultAnonymous(url, stakeholderRegistrationResource, Void.class);
     }
 
     @Override
     public RestResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
-        return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/add", Void.class);
+        return postWithRestResult(format("%s/%s/stakeholder/%s/add", competitionSetupStakeholderRestURL, competitionId, stakeholderUserId), Void.class);
     }
 
     @Override
     public RestResult<Void> removeStakeholder(long competitionId, long stakeholderUserId) {
-        return postWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/remove", Void.class);
+        return postWithRestResult(format("%s/%s/stakeholder/%s/remove",competitionSetupStakeholderRestURL, competitionId, stakeholderUserId), Void.class);
     }
 
     @Override
     public RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
-        return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites", userListType());
+        return getWithRestResult(format("%s/%s/stakeholder/pending-invites", competitionSetupStakeholderRestURL, competitionId), userListType());
     }
 }
 

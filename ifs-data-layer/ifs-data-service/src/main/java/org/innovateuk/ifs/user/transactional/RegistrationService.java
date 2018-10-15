@@ -47,6 +47,7 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#userToEdit, 'EDIT_INTERNAL_USER')")
     ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new internal Users on behalf of non-logged in users with invite hash")
     ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource);
 }

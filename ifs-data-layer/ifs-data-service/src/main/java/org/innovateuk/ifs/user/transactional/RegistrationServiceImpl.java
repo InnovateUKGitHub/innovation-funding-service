@@ -257,13 +257,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource) {
-        return getStakeholderByHash(hash).andOnSuccess(stakeholderInvite ->
-                getInternalRoleResources(Role.STAKEHOLDER).andOnSuccess(roleResource -> {
+        return getStakeholderInviteByHash(hash)
+                // .andOnSuccess(stakeholderInvite -> getInternalRoleResources(Role.STAKEHOLDER)
+                        .andOnSuccess(stakeholderInvite -> {
                     return createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
                             .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
                             .andOnSuccessReturnVoid();
-                }));
+                });
     }
 
     private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
@@ -317,7 +319,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
-    private ServiceResult<StakeholderInvite> getStakeholderByHash(String hash) {
+    private ServiceResult<StakeholderInvite> getStakeholderInviteByHash(String hash) {
         return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 

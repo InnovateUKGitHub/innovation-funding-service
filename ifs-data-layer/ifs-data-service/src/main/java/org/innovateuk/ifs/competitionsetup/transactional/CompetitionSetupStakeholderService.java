@@ -38,4 +38,3 @@ public interface CompetitionSetupStakeholderService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<UserResource>> findPendingStakeholderInvites(long competitionId);
 }
-

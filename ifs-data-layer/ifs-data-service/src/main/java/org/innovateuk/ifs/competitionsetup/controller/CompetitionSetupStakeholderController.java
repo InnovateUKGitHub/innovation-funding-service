@@ -32,13 +32,11 @@ public class CompetitionSetupStakeholderController {
 
     @PostMapping("/{competitionId}/stakeholder/invite")
     public RestResult<Void> inviteStakeholder(@PathVariable("competitionId") final long competitionId, @RequestBody InviteUserResource inviteUserResource) {
-
         return competitionSetupStakeholderService.inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId).toPostResponse();
     }
 
     @GetMapping("/{competitionId}/stakeholder/find-all")
     public RestResult<List<UserResource>> findStakeholders(@PathVariable("competitionId") final long competitionId) {
-
         return competitionSetupStakeholderService.findStakeholders(competitionId).toGetResponse();
     }
 
@@ -52,17 +50,17 @@ public class CompetitionSetupStakeholderController {
         return registrationService.createStakeholder(inviteHash, stakeholderRegistrationResource).toPostCreateResponse();
     }
 
-    @PostMapping("/{stakeholderUserId}/add")
+    @PostMapping("/{competitionId}/stakeholder/{stakeholderUserId}/add")
     public RestResult<Void> addStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
         return competitionSetupStakeholderService.addStakeholder(competitionId, stakeholderUserId).toPostResponse();
     }
 
-    @PostMapping("/{stakeholderUserId}/remove")
+    @PostMapping("/{competitionId}/stakeholder/{stakeholderUserId}/remove")
     public RestResult<Void> removeStakeholder(@PathVariable("competitionId") final long competitionId, @PathVariable("stakeholderUserId") final long stakeholderUserId) {
         return competitionSetupStakeholderService.removeStakeholder(competitionId, stakeholderUserId).toPostResponse();
     }
 
-    @GetMapping("/pending-invites")
+    @GetMapping("/{competitionId}/stakeholder/pending-invites")
     public RestResult<List<UserResource>> findPendingStakeholderInvites(@PathVariable("competitionId") final long competitionId) {
         return competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId).toGetResponse();
     }
