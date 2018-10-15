@@ -28,9 +28,8 @@ Non registered users non companies house route
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     When the user clicks the Not on companies house link
-    Then the user fills in the non CH address
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    Then The user should see the element           jQuery = h1:contains("Your details")
+    Then the user clicks the button/link           jQuery = .govuk-button:contains("Save and continue")
+    And The user should see the element            jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -44,7 +43,7 @@ Non registered users sign-up companies house route
     Given Applicant goes to the registration form
     When the user verifies email                      Phil    Smith    ${test_mailbox_one}+business@gmail.com
     Then the user directed to correct dashboard       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    and the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
+    And the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
@@ -111,10 +110,3 @@ the user is redirected to overview page if he has been there already
     the user should see the element      jQuery = h1:contains("Application overview")
     the user clicks the button/link      link = Application team
     logout as user
-
-the user fills in the non CH address
-    And the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element           css = #select-address-block
-    And the user clicks the button/link            css = #select-address-block > button
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Continue")

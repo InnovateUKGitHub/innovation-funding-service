@@ -169,7 +169,7 @@ logged in user applies to competition
     the user selects the radio button    organisationTypeId  ${applicationType}
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user clicks the Not on companies house link
-    the user fills in the address details
+    the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
     the user clicks the button/link      id = application-question-save
