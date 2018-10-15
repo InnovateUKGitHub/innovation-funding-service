@@ -41,24 +41,4 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
             application.setStateAidAgreed(Boolean.FALSE);
         }
     }
-
-//    public void handleRequestFundingRequests(Map<String, String[]> params, long applicationId, long competitionId, long processRoleId) {
-//        if (isNotRequestingFundingRequest(params)) {
-//            setRequestingFunding(NOT_REQUESTING_FUNDING, applicationId, competitionId, processRoleId);
-//        } else {
-//            setRequestingFunding(REQUESTING_FUNDING, applicationId, competitionId, processRoleId);
-//        }
-//    }
-
-//    private void setRequestingFunding(String requestingFunding, long applicationId, long competitionId, long processRoleId) {
-//        SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
-//        SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
-//        if (REQUESTING_FUNDING.equals(requestingFunding)) {
-//            sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
-//            sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
-//        } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
-//            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
-//            sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
-//        }
-//    }
 }
