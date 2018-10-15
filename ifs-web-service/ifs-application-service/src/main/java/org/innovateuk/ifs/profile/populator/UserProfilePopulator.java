@@ -32,6 +32,6 @@ public class UserProfilePopulator {
     }
 
     private OrganisationProfileViewModel toOrganisationViewModel(OrganisationResource organisation) {
-        return new OrganisationProfileViewModel(organisation.getName(), organisation.getCompanyHouseNumber(), organisation.getOrganisationTypeName());
+        return new OrganisationProfileViewModel(organisation.getName(), organisation.getCompaniesHouseNumber(), organisation.getOrganisationTypeName());
     }
 }
