@@ -70,8 +70,8 @@ Viability and eligibility sections both available
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery = .govuk-button:contains("Post a new query")
-    Then the user should see the option in the drop-down menu    Viability    section
-    And the user should see the option in the drop-down menu    Eligibility    section
+    Then the user should see the option in the drop-down menu    Viability only    section
+    And the user should see the option in the drop-down menu    Eligibility only    section
 
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
@@ -148,7 +148,7 @@ New query can be posted
 Query Section dropdown filters the queries displayed
     [Documentation]    INFUND-4840 INFUND-4844
     [Tags]
-    When the user selects the option from the drop-down menu  viability  querySection
+    When the user selects the option from the drop-down menu  Viability only  querySection
     Then the user should not see the element  css = #post-new-response
     # that means that the eligibility queries are not visible or any other.
     # Tried to catch with .query.eligibility-section[aria = hidden = "true"], but without success
@@ -171,7 +171,7 @@ Project finance user can add another query while he is awaiting for response
     Then the user clicks the button/link      jQuery = th:contains("${Dreambit_Name}") ~ td:contains("View")
     When the user clicks the button/link      css = a[id = "post-new-query"]
     And the user enters text to a text field  id = queryTitle  a viability query's title
-    And the user selects the option from the drop-down menu  VIABILITY    id = section
+    And the user selects the option from the drop-down menu  Viability only   id = section
     And the user enters text to a text field  css = .editor    another query body
     And the user clicks the button/link       css = .govuk-grid-column-one-half button[type = "submit"]  # Post query
     Then the user should not see an error in the page
@@ -179,7 +179,7 @@ Project finance user can add another query while he is awaiting for response
 Queries show in reverse chronological order
     [Documentation]    INFUND-4840 INFUND-4844
     [Tags]
-    Given the user selects the option from the drop-down menu  all  querySection
+    Given the user selects the option from the drop-down menu  All  querySection
     When the user should see the element  jQuery = h2:nth-of-type(1):contains("a viability query's title")
     Then the user should see the element  jQuery = h2:nth-of-type(2):contains("an eligibility query's title")
     # Query responses tab
