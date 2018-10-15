@@ -9,6 +9,7 @@ ext.comp_management_users = project.properties['compManagementUsers'] ?: 1
 ext.applicant_users = project.properties['applicantUsers'] ?: 1
 ext.assessor_users = project.properties['assessorUsers'] ?: 1
 ext.provisioning = project.properties['provisioning'] ?: "local"
+ext.data_path = project.properties['dataPath'] ?: "jmeter/Representative/"
 
 task prepareTaurusDeployment(type: Copy) {
 

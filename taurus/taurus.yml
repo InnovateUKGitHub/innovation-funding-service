@@ -12,11 +12,11 @@ modules:
       longer_pause_deviation : 15000
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
-      users_csv : user_data.csv
-      competitions_csv : competition_data.csv
-      invites_csv : invite_data.csv
-      assessor_csv : assessor_data.csv
-      front_door_competitions_csv : front-door-competitions.csv
+      users_csv : "${data_path}user_data.csv"
+      competitions_csv : "${data_path}competition_data.csv"
+      invites_csv : "${data_path}invite_data.csv"
+      assessor_csv : "${data_path}assessor_data.csv"
+      front_door_competitions_csv : "${data_path}front-door-competitions.csv"
       summariser.name : summary
       summariser.interval : 5
       summariser.log : true
@@ -95,4 +95,4 @@ scenarios:
 reporting:
 - module: passfail
   criteria:
-  - "avg-rt>5s500ms for 10s, continue as failed"
+  - "fail>50% for 10s, stop as failed"
