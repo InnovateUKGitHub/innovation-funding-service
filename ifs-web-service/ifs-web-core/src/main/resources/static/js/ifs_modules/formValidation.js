@@ -26,7 +26,8 @@ IFS.core.formValidation = (function () {
           lastname: '#lastName'
         },
         messageInvalid: {
-          tooWeak: 'Password is too weak.'
+          tooWeak: 'Password is too weak.',
+          containsName: 'Password should not contain either your first or last name.'
         }
       },
       containsLowercase: {
@@ -161,29 +162,30 @@ IFS.core.formValidation = (function () {
       })
     },
     checkPasswordPolicy: function (field, errorStyles) {
+      //  clear tooWeakPassword and containsName message as this is validated in the back end.
+      IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'), 'show')
+      IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-containsName', 'visuallyhidden'), 'show')
+      // clear the customError if it has been set by a server validation error
+      if (s.html5validationMode && field[0].validity.customError) {
+        field[0].setCustomValidity('')
+      }
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
       var hasLowercase = IFS.core.formValidation.checkFieldContainsLowercase(field)
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.govuk-form-group')
-      var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
+      var conformsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
-        if (confirmsToPasswordPolicy) {
+        if (conformsToPasswordPolicy) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
-          //  clear tooWeakPassword message as this is validated in the back end.
-          IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
-          // clear the customError if it has been set by a server validation error
-          if (s.html5validationMode && field[0].validity.customError) {
-            field[0].setCustomValidity('')
-          }
         } else {
           formGroup.addClass('govuk-form-group--error')
           field.addClass('govuk-input--error')
         }
       }
-      return confirmsToPasswordPolicy
+      return conformsToPasswordPolicy
     },
     checkFieldContainsUppercase: function (field) {
       var fieldVal = field.val()
@@ -858,7 +860,6 @@ IFS.core.formValidation = (function () {
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
-
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
@@ -872,7 +873,6 @@ IFS.core.formValidation = (function () {
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
-
       // if it is a .govuk-form-group we assume the basic form structure with just one field per group
       // i.e.
       // <div class="govuk-form-group">
