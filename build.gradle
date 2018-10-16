@@ -36,7 +36,7 @@ if (!project.hasProperty('osTestArgs')) {
 buildscript {
 
     ext {
-        springBootVersion = '2.0.3.RELEASE'
+        springBootVersion = '2.0.5.RELEASE'
     }
 
     repositories {
