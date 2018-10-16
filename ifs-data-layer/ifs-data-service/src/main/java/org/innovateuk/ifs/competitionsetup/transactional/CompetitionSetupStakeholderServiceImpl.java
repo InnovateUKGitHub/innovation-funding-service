@@ -18,7 +18,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -36,10 +35,7 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -99,10 +95,16 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return validateInvite(invitedUser)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser)).andOnSuccess(() -> getCompetition(competitionId))
-                .andOnSuccess(competition -> saveInvite(invitedUser, competition)
-                                    .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition))
-                             );
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> getCompetition(competitionId))
+                .andOnSuccess(competition -> saveAndSendInvite(invitedUser, competition))
+                .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> saveAndSendInvite(UserResource invitedUser, Competition competition) {
+        return saveInvite(invitedUser, competition)
+                .andOnSuccess(invite -> sendStakeholderInviteNotification(invite, competition))
+                .andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser) {
@@ -258,7 +260,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         List<StakeholderInvite> pendingStakeholderInvites = stakeholderInviteRepository.findByCompetitionIdAndStatus(competitionId, SENT);
 
         List<UserResource> pendingStakeholderInviteUsers = simpleMap(pendingStakeholderInvites,
-                pendingStakeholderInvite -> convert(pendingStakeholderInvite));
+                                                                     this::convert);
 
         return serviceSuccess(pendingStakeholderInviteUsers);
     }

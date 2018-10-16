@@ -5,8 +5,11 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
@@ -74,6 +77,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private StakeholderInviteRepository stakeholderInviteRepository;
+
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
 
     @Override
     @Transactional
@@ -260,12 +266,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource) {
         return getStakeholderInviteByHash(hash)
-                // .andOnSuccess(stakeholderInvite -> getInternalRoleResources(Role.STAKEHOLDER)
-                        .andOnSuccess(stakeholderInvite -> {
-                    return createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
-                            .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
-                            .andOnSuccessReturnVoid();
-                });
+                .andOnSuccess(stakeholderInvite -> createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
+                        .andOnSuccess(user -> associateUserWithCompetition(stakeholderInvite.getTarget(), user))
+                        .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
+                        .andOnSuccessReturnVoid());
+    }
+
+    private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
+        stakeholderRepository.save(new Stakeholder(competition, user));
+        return serviceSuccess();
     }
 
     private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
@@ -287,7 +296,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
-    private ServiceResult<Void> createStakeholderUser(StakeholderRegistrationResource stakeholderRegistrationResource, StakeholderInvite stakeholderInvite) {
+    private ServiceResult<User> createStakeholderUser(StakeholderRegistrationResource stakeholderRegistrationResource, StakeholderInvite stakeholderInvite) {
         final UserResource userResource = stakeholderRegistrationResource.toUserResource();
         userResource.setEmail(stakeholderInvite.getEmail());
         userResource.setRoles(singletonList(Role.STAKEHOLDER));
@@ -295,7 +304,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
                     return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
+                            andOnSuccess(this::activateUser)
+                            .andOnSuccessReturn(() -> user);
                 });
     }
 
