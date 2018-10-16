@@ -211,7 +211,7 @@ Application finances: validation empty
     And the user enters text to a text field                   css = .editor  ${EMPTY}
     When the user moves focus to the element                   jQuery = button:contains("Done")
     Then the user should see a field and summary error         This field cannot be left blank.
-    And The user should see a field and summary error          Select whether to include the project growth table.
+    And the user should see a field and summary error          Select whether to include the project growth table.
     And the user enters text to a text field                   css = .editor  Funding rules for this competition added
     And the user selects the radio button                      applicationFinanceType  STANDARD
     And the user selects the radio button                      includeGrowthTable  false
