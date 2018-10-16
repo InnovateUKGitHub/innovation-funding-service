@@ -128,11 +128,11 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
             FileEntry fileEntry = getFileEntry(project, documentConfigId);
 
-/*            return fileService.getFileByFileEntryId(fileEntry.getId())
-                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));*/
+            return fileService.getFileByFileEntryId(fileEntry.getId())
+                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
 
-            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
+/*            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));*/
         });
     }
 
