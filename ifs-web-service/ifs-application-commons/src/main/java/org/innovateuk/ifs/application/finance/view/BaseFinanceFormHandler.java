@@ -114,7 +114,8 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
 
     private static boolean isRequestingFunding(Map<String, String[]> params) {
         String[] requestFundingParams = params.get("request-funding");
-        return  requestFundingParams.length != 0 &&
+        return  requestFundingParams != null &&
+                requestFundingParams.length != 0 &&
                 requestFundingParams[0] != null &&
                 "yes".equals(requestFundingParams[0]);
     }
