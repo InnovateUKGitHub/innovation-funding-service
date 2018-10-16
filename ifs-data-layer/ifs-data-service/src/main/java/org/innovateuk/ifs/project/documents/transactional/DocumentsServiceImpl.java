@@ -13,7 +13,6 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -24,12 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -170,8 +170,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private ServiceResult<Void> deleteProjectDocument(Project project, long documentConfigId) {
         ProjectDocument projectDocumentToDelete = getProjectDocument(project, documentConfigId);
-        if (APPROVED.equals(projectDocumentToDelete.getStatus())) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED_ONCE_APPROVED);
+        if (Arrays.asList(APPROVED, SUBMITTED).contains(projectDocumentToDelete.getStatus())) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED);
         } else {
             projectDocumentRepository.delete(projectDocumentToDelete);
             return serviceSuccess();
