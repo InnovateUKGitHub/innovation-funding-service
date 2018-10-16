@@ -12,6 +12,8 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
@@ -45,6 +47,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.REJECTED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
@@ -78,8 +83,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Competition competition = competitionRepository.findOne(competitionId);
         List<Project> projects = projectRepository.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN));
         List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
+        boolean projectDocuments = competition.getProjectDocuments().size() > 0;
         CompetitionProjectsStatusResource competitionProjectsStatusResource
-                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
+                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectDocuments, projectStatuses);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
     }
@@ -129,6 +135,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getSpendProfileStatus(project, financeChecksStatus),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
                 getOtherDocumentsStatus(project),
+                getDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
                 golWorkflowHandler.isSent(project));
@@ -288,6 +295,29 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
         if (project.getDocumentsSubmittedDate() != null) {
             return ACTION_REQUIRED;
+        }
+
+        return PENDING;
+    }
+
+    private ProjectActivityStates getDocumentsStatus(Project project) {
+
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+
+        if (projectDocuments.size() == 0) {
+            return PENDING;
+        }
+
+        if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))){
+            return ACTION_REQUIRED;
+        }
+
+        if (matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))){
+            return REJECTED;
+        }
+
+        if (matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))){
+            return COMPLETE;
         }
 
         return PENDING;
