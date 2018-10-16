@@ -5,6 +5,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-1497  As an applicant I am able to confirm the project location for my organisation
 ...
+...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Resource          ../../../resources/defaultResources.robot
@@ -26,7 +28,7 @@ Comp Admin creates an ATI competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  true    # 1 means 30%
+    And the user fills in the CS Eligibility       ${business_type_id}  1  true  collaborative  # 1 means 30%
     And user fills in funding overide
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
@@ -47,8 +49,8 @@ Applicant applies to newly created ATI competition
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
-Applicant submits his application
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497
+Single applicant cannot submits his application to a collaborative comp
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -58,6 +60,13 @@ Applicant submits his application
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
+    And the finance overview is marked as incomplete
+    And the application cannot be submited
+
+Invite a collaborator and check the application can the be submitted
+    [Documentation]  IFS-3421
+    [Tags]
+    Given the lead invites already registered user
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
@@ -117,3 +126,27 @@ the user checks the override value is applied
     the user selects the checkbox       agree-terms-page
     the user clicks the button/link     css = button[name=mark_section_as_complete]
     the user clicks the button/link     link = Application overview
+
+the finance overview is marked as incomplete
+    the user clicks the button/link    link = Finances overview
+    the user should see the element    jQuery = .warning-alert:contains("This competition only accepts collaborations. At least 2 partners must request funding.")
+    the user clicks the button/link    link = Application overview
+
+the application cannot be submited
+    the user clicks the button/link                   link = Review and submit
+    the user should see that the element is disabled  jQuery = button:contains("Submit application")
+    the user clicks the button/link                   link = Application overview
+
+the lead invites already registered user
+    the user fills in the inviting steps           ${collaborator1_credentials["email"]}
+    the user clicks the button/link                jQuery=button:contains("Save and return to application overview")
+    Logout as user
+    the user reads his email and clicks the link   ${collaborator1_credentials["email"]}   Invitation to collaborate in ${ATIcompetitionTitle}    You will be joining as part of the organisation    2
+    the user clicks the button/link                link = Continue
+    logging in and error checking                  &{collaborator1_credentials}
+    the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link                link = Your finances
+    the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
+    Log in as a different user                     &{lead_applicant_credentials}
+    the user clicks the button/link                link = ${ATIapplicationTitle}
+    the applicant completes Application Team

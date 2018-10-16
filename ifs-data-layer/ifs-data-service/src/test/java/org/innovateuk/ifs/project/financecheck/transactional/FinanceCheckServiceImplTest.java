@@ -808,9 +808,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
-
-        FinanceCheckServiceImpl impl = new FinanceCheckServiceImpl();
-        return impl;
+        return new FinanceCheckServiceImpl();
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> createProjectFinance() {

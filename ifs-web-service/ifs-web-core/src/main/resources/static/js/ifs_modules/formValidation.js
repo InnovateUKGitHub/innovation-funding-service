@@ -257,16 +257,6 @@ IFS.core.formValidation = (function () {
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'email')
       var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
 
-      // If server response finds email already invited then cancel error msg on change of email details
-      // Get value of error msg
-      // If email is changed then remove error msg
-      // var currentServerError = field.closest('tr').find('.govuk-error-message').text()
-      // var currentServerMsgCheck = 'An invite has already been created for this email address.'
-
-      // if (currentServerError === currentServerMsgCheck) {
-      //   IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
-      // }
-
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
         var validEmail = emailRegex.test(email)
