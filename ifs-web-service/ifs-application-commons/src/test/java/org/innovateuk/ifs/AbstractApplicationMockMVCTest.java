@@ -188,8 +188,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withStartDate(ZonedDateTime.now().minusDays(2))
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withMinProjectDuraction(1)
-                .withMaxProjectDuraction(36)
+                .withMinProjectDuration(1)
+                .withMaxProjectDuration(36)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
