@@ -86,6 +86,7 @@
                                    value="true"
                                    type="radio"
                                    th:field="*{includeGrowthTable}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
                                    required="required" />
                             <label for="include-growth-table-yes"
                                    class="govuk-label govuk-radios__label">
@@ -98,6 +99,7 @@
                                    value="false"
                                    type="radio"
                                    th:field="*{includeGrowthTable}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
                                    required="required"
                                    th:disabled="${model.subsection.sectorCompetition}" />
                             <label for="include-growth-table-no"
