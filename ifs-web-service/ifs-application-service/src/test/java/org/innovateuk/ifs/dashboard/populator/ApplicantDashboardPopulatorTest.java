@@ -99,7 +99,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withMinProjectDuration(1)
-                .withMaxProjectDuraction(36)
+                .withMaxProjectDuration(36)
                 .build();
         CompetitionResource compInProjectSetup = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)

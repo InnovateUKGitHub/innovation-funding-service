@@ -43,7 +43,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setMinProjectDuration(minProjectDuration));
     }
 
-    public CompetitionResourceBuilder withMaxProjectDuraction(Integer maxProjectDuration) {
+    public CompetitionResourceBuilder withMaxProjectDuration(Integer maxProjectDuration) {
         return with(competition -> competition.setMaxProjectDuration(maxProjectDuration));
     }
 
