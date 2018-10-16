@@ -119,7 +119,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         Competition competition = newCompetition()
                 .withIncludeProjectGrowthTable(true)
                 .build();
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 

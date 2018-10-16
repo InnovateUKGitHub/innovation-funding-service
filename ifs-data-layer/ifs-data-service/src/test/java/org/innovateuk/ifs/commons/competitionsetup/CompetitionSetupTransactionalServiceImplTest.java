@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -58,7 +59,7 @@ public class CompetitionSetupTransactionalServiceImplTest extends BaseServiceUni
         staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!yearEnd.getActive()).build();
         organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!yearEnd.getActive()).build();
 
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(STAFF_COUNT))).thenReturn(singletonList(staffCountFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(ORGANISATION_TURNOVER))).thenReturn(singletonList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(FINANCIAL_STAFF_COUNT))).thenReturn(singletonList(count));
@@ -79,7 +80,7 @@ public class CompetitionSetupTransactionalServiceImplTest extends BaseServiceUni
         organisationTurnoverFormInput =
                 newFormInput().withType(ORGANISATION_TURNOVER).withActive(!staffCountFormInput.getActive()).build();
 
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(STAFF_COUNT))).thenReturn(singletonList(staffCountFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(ORGANISATION_TURNOVER))).thenReturn(singletonList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(FINANCIAL_STAFF_COUNT))).thenReturn(singletonList(count));
@@ -106,7 +107,7 @@ public class CompetitionSetupTransactionalServiceImplTest extends BaseServiceUni
                 yearEnd.getActive(),
                 !yearEnd.getActive() /*Inconsistent*/).build(4);
 
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(STAFF_COUNT))).thenReturn(singletonList(staffCountFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(ORGANISATION_TURNOVER))).thenReturn(singletonList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(FINANCIAL_STAFF_COUNT))).thenReturn(singletonList(count));
@@ -126,7 +127,7 @@ public class CompetitionSetupTransactionalServiceImplTest extends BaseServiceUni
         // becomes inconsistent
 
         // Not consistent - Staff Count and Turnover inputs do not have inverse state to Finance inputs.
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(STAFF_COUNT))).thenReturn(singletonList(staffCountFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(ORGANISATION_TURNOVER))).thenReturn(singletonList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(FINANCIAL_STAFF_COUNT))).thenReturn(singletonList(count));
@@ -152,7 +153,7 @@ public class CompetitionSetupTransactionalServiceImplTest extends BaseServiceUni
         organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!yearEnd.getActive()).build();
 
 
-        when(competitionRepositoryMock.findById(competition.getId()).get()).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(STAFF_COUNT))).thenReturn(singletonList(staffCountFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(ORGANISATION_TURNOVER))).thenReturn(singletonList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competition.getId(), singletonList(FINANCIAL_STAFF_COUNT))).thenReturn(singletonList(count));
