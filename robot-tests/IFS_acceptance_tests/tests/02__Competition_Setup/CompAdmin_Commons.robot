@@ -62,9 +62,9 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}
+    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link    link = Eligibility
-    the user clicks the button twice   css = label[for="single-or-collaborative-collaborative"]
+    the user clicks the button twice   css = label[for="single-or-collaborative-${collaborative}"]
     the user selects the radio button  researchCategoriesApplicable    ${researchCategory}
     Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #if
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]

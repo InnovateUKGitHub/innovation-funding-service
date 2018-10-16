@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.security.OrganisationPermissionRules;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,6 +15,11 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,103 +34,142 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void viewAddOrganisationPageWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
-
         long loggedInUserId = 7L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.OPEN);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, COLLABORATIVE);
         assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
     @Test
     public void viewAddOrganisationPageWhenNotLoggedInAsLeadAndApplicationSubmitted() {
-
         long loggedInUserId = 7L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.SUBMITTED);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                SUBMITTED, COLLABORATIVE);
         assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
     @Test
     public void viewAddOrganisationPageWhenLoggedInAsLeadAndApplicationSubmitted() {
-
         long loggedInUserId = 2L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.SUBMITTED);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                SUBMITTED, COLLABORATIVE);
         assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
     @Test
     public void viewAddOrganisationPageWhenLoggedInAsLeadAndApplicationNotSubmitted() {
-
         long loggedInUserId = 2L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.OPEN);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, COLLABORATIVE);
+        assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewAddOrganisationPageWhenCollaborationLevelIsSingle() {
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, SINGLE);
+        assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewAddOrganisationPageWhenCollaborationLevelIsSingleOrCollaborative() {
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, SINGLE_OR_COLLABORATIVE);
+        assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewAddOrganisationPageWhenCollaborationLevelIsCollaborative() {
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, COLLABORATIVE);
         assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
     @Test
     public void addNewOrganisationWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
-
         long loggedInUserId = 7L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.OPEN);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, COLLABORATIVE);
         assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 
     @Test
     public void addNewOrganisationWhenNotLoggedInAsLeadAndApplicationSubmitted() {
-
         long loggedInUserId = 7L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.SUBMITTED);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                SUBMITTED, COLLABORATIVE);
         assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 
     @Test
     public void addNewOrganisationWhenLoggedInAsLeadAndApplicationSubmitted() {
-
         long loggedInUserId = 2L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.SUBMITTED);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                SUBMITTED, COLLABORATIVE);
         assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 
     @Test
     public void addNewOrganisationWhenLoggedInAsLeadAndApplicationNotSubmitted() {
-
         long loggedInUserId = 2L;
         long leadApplicantUserId = 2L;
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
-        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(), ApplicationState.OPEN);
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
+                OPEN, COLLABORATIVE);
         assertTrue(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 
-    private UserResource setUpMocking(long loggedInUserId, long leadApplicantUserId, long applicationId, ApplicationState applicationState) {
+    private UserResource setUpMocking(long loggedInUserId,
+                                      long leadApplicantUserId,
+                                      long applicationId,
+                                      ApplicationState applicationState,
+                                      CollaborationLevel collaborationLevel) {
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
                 .withId(applicationId)
                 .withApplicationState(applicationState)
+                .withCollaborationLevel(collaborationLevel)
                 .build();
         when(applicationServiceMock.getById(applicationId)).thenReturn(applicationResource);
 
         ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource()
                 .withUserId(leadApplicantUserId)
                 .build();
-        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(processRoleResource);
+        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+                (processRoleResource);
 
         UserResource loggedInUser = new UserResource();
         loggedInUser.setId(loggedInUserId);

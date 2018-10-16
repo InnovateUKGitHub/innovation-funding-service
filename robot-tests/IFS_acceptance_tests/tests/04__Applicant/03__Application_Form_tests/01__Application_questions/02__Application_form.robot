@@ -190,7 +190,7 @@ the text box should be editable
 the question should not be marked as complete on the application overview page
     The user clicks the button/link        link = Application overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
-    the user should not see the element    jQuery = li:nth-child(2) span:contains("Complete")
+    the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 
 Log in and create a new application for the Aerospace competition
     The user logs-in in new browser  &{lead_applicant_credentials}
