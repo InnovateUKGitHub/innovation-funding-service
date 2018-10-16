@@ -79,7 +79,7 @@ public class YourFundingFormPopulator {
         }
 
         form.setRequestingFunding(claimPercentage.isPresent());
-        form.setFundingLevel(fundingLevel);
+        form.setGrantClaimPercentage(fundingLevel);
         form.setOtherFunding(otherFundingSet);
         form.setOtherFundingRows(rows);
         form.setOtherFundingQuestionId(otherFundingQuestion.getId());

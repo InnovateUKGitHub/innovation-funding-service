@@ -1,17 +1,26 @@
 package org.innovateuk.ifs.application.forms.yourfunding.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 
+@FieldRequiredIf(required = "grantClaimPercentage", argument = "requestingFunding", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "termsAgreed", argument = "complete", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class YourFundingForm {
 
+    @NotNull
     private Boolean requestingFunding;
 
-    private Integer fundingLevel;
+    private Integer grantClaimPercentage;
 
+    @NotNull
     private Boolean otherFunding;
 
+    @Valid
     private Map<Long, OtherFundingRowForm> otherFundingRows;
 
     private Boolean termsAgreed;
@@ -30,12 +39,12 @@ public class YourFundingForm {
         this.requestingFunding = requestingFunding;
     }
 
-    public Integer getFundingLevel() {
-        return fundingLevel;
+    public Integer getGrantClaimPercentage() {
+        return grantClaimPercentage;
     }
 
-    public void setFundingLevel(Integer fundingLevel) {
-        this.fundingLevel = fundingLevel;
+    public void setGrantClaimPercentage(Integer grantClaimPercentage) {
+        this.grantClaimPercentage = grantClaimPercentage;
     }
 
     public Boolean getOtherFunding() {

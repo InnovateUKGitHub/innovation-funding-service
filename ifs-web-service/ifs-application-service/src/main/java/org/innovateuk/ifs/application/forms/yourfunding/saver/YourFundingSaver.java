@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.yourfunding.saver;
 
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -16,6 +18,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Component
@@ -34,14 +37,18 @@ public class YourFundingSaver {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
 
-        saveGrantClaim(finance, form);
+        ValidationMessages messages = saveGrantClaim(finance, form).getSuccess();
 
-        saveOtherFunding(finance, form);
+        saveOtherFunding(finance, form, messages);
 
-        return serviceSuccess();
+        if (messages.getErrors().isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(messages.getErrors());
+        }
     }
 
-    private void saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form) {
+    private RestResult<ValidationMessages> saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form) {
         GrantClaim claim = finance.getGrantClaim();
         boolean newRow = claim == null;
         if (claim == null) {
@@ -49,30 +56,30 @@ public class YourFundingSaver {
         }
 
         if (form.getRequestingFunding()) {
-            claim.setGrantClaimPercentage(form.getFundingLevel());
+            claim.setGrantClaimPercentage(form.getGrantClaimPercentage());
         } else {
             claim.setGrantClaimPercentage(0);
         }
 
         if (newRow) {
-            financeRowRestService.add(finance.getId(), form.getGrantClaimQuestionId(), claim);
+            return financeRowRestService.add(finance.getId(), form.getGrantClaimQuestionId(), claim);
         } else {
-            financeRowRestService.update(claim);
+            return financeRowRestService.update(claim);
         }
     }
 
-    private void saveOtherFunding(ApplicationFinanceResource finance, YourFundingForm form) {
+    private void saveOtherFunding(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {
         OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
-        financeRowRestService.update(otherFundingCategory.getOtherFunding());
+        messages.addAll(financeRowRestService.update(otherFundingCategory.getOtherFunding()).getSuccess());
         if (form.getOtherFunding()) {
             form.getOtherFundingRows().forEach((id, cost) -> {
                 if (id == null) {
                     if (!cost.isBlank()) {
-                        financeRowRestService.add(finance.getId(), form.getOtherFundingQuestionId(), toFunding(cost));
+                        messages.addAll(financeRowRestService.add(finance.getId(), form.getOtherFundingQuestionId(), toFunding(cost)).getSuccess());
                     }
                 } else {
-                    financeRowRestService.update(toFunding(cost));
+                    messages.addAll(financeRowRestService.update(toFunding(cost)).getSuccess());
                 }
             });
         }

@@ -32,8 +32,8 @@
 
     <th:block th:fragment="requesting_funding">
         <div class="govuk-radios__conditional" id="request-funding">
-            <div th:class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingLevel')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="funding-level">
+            <div th:class="govuk-form-group" th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" for="grantClaimPercentage">
                     Select a funding level
                     <span class="govuk-hint">
                         <th:block th:if="${model.business}">
@@ -49,15 +49,15 @@
                         </th:block>
                     </span>
                 </label>
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingLevel')}" th:text="${err}" />
-                <input id="funding-level"
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('grantClaimPercentage')}" th:text="${err}" />
+                <input id="grantClaimPercentage"
                        type="number"
                        class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
                        min="0"
                        th:max="${model.maximumFundingLevel}"
                        required="required"
-                       th:classappend="${#fields.hasErrors('fundingLevel')} ? 'govuk-input--error'"
-                       th:field="*{fundingLevel}"
+                       th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-input--error'"
+                       th:field="*{grantClaimPercentage}"
                        placeholder="0"
                        th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
                                 data-max-errormessage=#{validation.finance.grant.claim.percentage.max.value.or.lower('%max%')}" />

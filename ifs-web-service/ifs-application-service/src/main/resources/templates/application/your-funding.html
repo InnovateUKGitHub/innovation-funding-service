@@ -142,7 +142,7 @@
                 <th:block th:if="${model.complete}">
                     <dl class="govuk-list readonly-data">
                         <dt>Funding level</dt>
-                        <dd th:text="${form.fundingLevel+'%'}">50%</dd>
+                        <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>
                     </dl>
                     <h2 class="govuk-heading-m">Other funding for this project</h2>
                     <th:block th:unless="${form.otherFunding}">
