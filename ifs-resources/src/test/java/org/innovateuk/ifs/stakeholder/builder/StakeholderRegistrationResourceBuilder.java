@@ -2,7 +2,6 @@ package org.innovateuk.ifs.stakeholder.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
-import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -36,15 +35,7 @@ public class StakeholderRegistrationResourceBuilder extends BaseBuilder<Stakehol
         return withArray((lastName, stakeholderRegistrationResource) -> setField("lastName", lastName, stakeholderRegistrationResource), lastNames);
     }
 
-    public StakeholderRegistrationResourceBuilder withEmail(String... emails) {
-        return withArray((email, stakeholderRegistrationResource) -> setField("email", email, stakeholderRegistrationResource), emails);
-    }
-
     public StakeholderRegistrationResourceBuilder withPassword(String... passwords) {
         return withArray((password, stakeholderRegistrationResource) -> setField("password", password, stakeholderRegistrationResource), passwords);
-    }
-
-    public StakeholderRegistrationResourceBuilder withRoles(List<Role>... roles) {
-        return withArray((roleList, stakeholderRegistrationResource) -> setField("roles", roleList, stakeholderRegistrationResource), roles);
     }
 }

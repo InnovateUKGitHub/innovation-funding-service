@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 
@@ -41,5 +43,29 @@ public class StakeholderRegistrationResource {
         userResource.setLastName(this.getLastName());
         userResource.setPassword(this.getPassword());
         return userResource;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StakeholderRegistrationResource that = (StakeholderRegistrationResource) o;
+
+        return new EqualsBuilder()
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(password, that.password)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(firstName)
+                .append(lastName)
+                .append(password)
+                .toHashCode();
     }
 }
