@@ -93,7 +93,7 @@ public class DocumentViewModel {
     }
 
     public boolean isEditable() {
-        return projectManager && status != DocumentStatus.APPROVED;
+        return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
 
     public boolean isShowSubmitDocumentsButton() {
