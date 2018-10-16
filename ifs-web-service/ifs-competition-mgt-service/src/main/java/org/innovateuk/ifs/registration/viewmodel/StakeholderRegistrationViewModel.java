@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
+/**
+ * Holder of model attributes for registration of stakeholders
+ */
 public class StakeholderRegistrationViewModel {
     private String email;
     private String roleName;

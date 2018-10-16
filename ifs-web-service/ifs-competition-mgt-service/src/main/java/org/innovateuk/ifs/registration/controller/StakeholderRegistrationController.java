@@ -10,13 +10,11 @@ import org.innovateuk.ifs.registration.populator.StakeholderRegistrationModelPop
 import org.innovateuk.ifs.registration.service.StakeholderService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,10 +22,14 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
-
+/**
+ * Controller to manage registration of stakeholder users
+ */
 @Controller
 @RequestMapping("/stakeholder")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = StakeholderRegistrationController.class)
+@SecuredBySpring(value = "Controller",
+        description = "Anyone can register for an account, if they have the invite hash",
+        securedType = StakeholderRegistrationController.class)
 @PreAuthorize("permitAll")
 public class StakeholderRegistrationController {
 

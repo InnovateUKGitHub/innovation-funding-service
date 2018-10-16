@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.registration.form;
 
+
+/**
+ * Form field model for registration of stakeholder users
+ */
 public class StakeholderRegistrationForm {
     private String firstName;
     private String lastName;

@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.invite.resource;
 
+
+/**
+ * DTO for {@link org.innovateuk.ifs.invite.domain.StakeholderInvite}s.
+ */
 public class StakeholderInviteResource {
     private long id;
     private String hash;

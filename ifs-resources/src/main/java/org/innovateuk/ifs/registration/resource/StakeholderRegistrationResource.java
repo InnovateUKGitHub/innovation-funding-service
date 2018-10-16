@@ -2,6 +2,10 @@ package org.innovateuk.ifs.registration.resource;
 
 import org.innovateuk.ifs.user.resource.UserResource;
 
+
+/**
+ * DTO for registering a Stakeholder user
+ */
 public class StakeholderRegistrationResource {
     private String firstName;
     private String lastName;
