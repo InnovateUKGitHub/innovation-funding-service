@@ -106,9 +106,9 @@ Validation on duration of Project
     [Tags]
     Given the user clicks the button/link               link = Edit
     And the user moves focus to the element             id = durationInMonths
-    And the user should see an error                    This field cannot be left blank.
+    And the user should see an error                    ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
 
 
 Project Finance can edit the duration of the Project
@@ -500,7 +500,7 @@ Finance checks eligibility
     And the user clicks the button/link              jQuery = section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css = [name^="labour-labourDaysYearly"]    -230
     And the user clicks the button/link              css = section:nth-of-type(1) .govuk-button[name = "save-eligibility"]
-    Then the user should see a field error           This field should be 1 or higher.
+    Then the user should see a field error           ${field_should_be_1_or_higher}
     And the user collapses the section               Labour
     And the user reloads the page
     When the user expands the section                Materials
@@ -508,7 +508,7 @@ Finance checks eligibility
     When the user clicks the button/link             jQuery = section:nth-of-type(3) button[name = add_cost]
     When the user enters text to a text field        css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     And the user clicks the button/link              css = section:nth-of-type(3) .govuk-button[name = "save-eligibility"]
-    Then the user should see a field error           This field cannot be left blank
+    Then the user should see a field error           ${empty_field_warning_message}
     And the user collapses the section               Materials
     And the user reloads the page
     When the user expands the section                Capital usage
@@ -522,7 +522,7 @@ Finance checks eligibility
     When the user clicks the button/link             css = section:nth-of-type(6) button[name = add_cost]
     And the user enters text to a text field         css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    123
     When the user clicks the button/link             jQuery = section:nth-of-type(6) .govuk-button[name = "save-eligibility"]
-    Then the user should see a field error           This field cannot be left blank
+    Then the user should see a field error           ${empty_field_warning_message}
     And the user collapses the section               Travel and subsistence
     And the user reloads the page
     When the user clicks the button/link             jQuery = section:nth-of-type(7) button:contains("Other costs")
@@ -530,7 +530,7 @@ Finance checks eligibility
     When the user clicks the button/link             jQuery = section:nth-of-type(7) button[name = add_cost]
     And the user enters text to a text field         css = #other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
     When the user clicks the button/link             css = section:nth-of-type(7) .govuk-button[name = "save-eligibility"]
-    Then the user should see a field error           This field cannot be left blank
+    Then the user should see a field error           ${empty_field_warning_message}
     When the user clicks the button/link             link = Finance checks
     Then the user clicks the button/link             jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
 

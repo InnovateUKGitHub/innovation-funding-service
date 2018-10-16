@@ -201,8 +201,8 @@ the applicant enters invalid inputs
     The user enters text to a text field  css = [name$="exceptions_staff"]  999.999
     The user enters text to a text field  css = [name$="exceptions_other_costs"]  ${EMPTY}
     The user enters text to a text field  css = [name$="tsb_reference"]  ${EMPTY}
-    the user should see a field error  This field can only accept whole numbers.
-    the user should see a field error  This field cannot be left blank.
+    the user should see a field error  ${only_accept_whole_numbers_message}
+    the user should see a field error  ${empty_field_warning_message}
 
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed

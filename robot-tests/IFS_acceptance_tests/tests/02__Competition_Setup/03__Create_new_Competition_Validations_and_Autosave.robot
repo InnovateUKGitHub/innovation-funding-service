@@ -42,7 +42,7 @@ Initial details: server-side validations
     And the user should see an error        Please select a competition type.
     And the user should see an error        Please select an innovation sector.
     And the user should see an error        Please select an innovation area.
-    And the user should see an error        Please enter a valid date.
+    And the user should see an error        ${enter_a_valid_date}
     And the user should see an error        Please select an Innovation Lead.
     And the user should see an error        Please select a Portfolio Manager.
     And the user should see an error        Please select a state aid option.
@@ -210,7 +210,7 @@ Application finances: validation empty
     And the user clicks the button/link       link = Finances
     And the user enters text to a text field  css = .editor  ${EMPTY}
     When the user moves focus to the element  jQuery = button:contains("Done")
-    Then the user should see an error         This field cannot be left blank.
+    Then the user should see an error         ${empty_field_warning_message}
     And the user enters text to a text field  css = .editor  Funding rules for this competition added
     And the user selects the radio button     applicationFinanceType  STANDARD
     And the user clicks the button/link       jQuery = button:contains("Done")
@@ -243,10 +243,10 @@ Assessor: Client-side validation
     [Documentation]  INFUND-5641
     When The user enters text to a text field    id = assessorPay  1.1
     And the user selects the radio button        assessorCount   5
-    Then the user should see an error            This field can only accept whole numbers
+    Then the user should see an error            ${only_accept_whole_numbers_message}
     When The user enters text to a text field    id = assessorPay  120
     And the user selects the radio button        assessorCount   5
-    Then The user should not see the text in the page  This field can only accept whole numbers
+    Then The user should not see the text in the page  ${only_accept_whole_numbers_message}
     And the user clicks the button/link          link = Competition setup
 
 # TODO IFS-4186 Uncomment when this functionality is enabled.

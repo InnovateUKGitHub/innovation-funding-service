@@ -42,7 +42,7 @@ Funding level validations
     [Tags]
     When the user provides invalid value as percentage then he should see the error  This field should be 50% or lower.  60
     When the user provides invalid value as percentage then he should see the error  This field should be 0% or higher.  -14
-    When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
+    When the user provides invalid value as percentage then he should see the error  ${only_accept_whole_numbers_message}  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  24
     Then the user cannot see a validation error in the page
@@ -55,7 +55,7 @@ Other funding validations
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
     And The user should see a field and summary error   Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
-    And The user should see a field and summary error   This field cannot be left blank.
+    And The user should see a field and summary error   ${empty_field_warning_message}
     When the user enters text to a text field           css = [name*=other_funding-securedDate]    12-${nextyear}
     And the user enters text to a text field            css = [name*=other_funding-fundingSource]  Lottery funding
     And the user enters text to a text field            css = [name*=other_funding-fundingAmount]    20000

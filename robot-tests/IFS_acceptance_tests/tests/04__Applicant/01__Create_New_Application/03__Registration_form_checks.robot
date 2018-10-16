@@ -37,11 +37,11 @@ Your details: Server-side validations
     And the user enters text to a text field                        id = password    ${EMPTY}
     And browser validations have been disabled
     And the user clicks the button/link                             css = [name="create-account"]
-    Then the user should see an error                               Please enter a first name.
+    Then the user should see an error                               ${enter_a_first_name}
     And the user should see an error                                We were unable to create your account
-    And the user should see an error                                Please enter a last name.
-    And the user should see an error                                Please enter a phone number.
-    And the user should see an error                                Please enter a valid email address.
+    And the user should see an error                                ${enter_a_last_name}
+    And the user should see an error                                ${enter_a_phone_number}
+    And the user should see an error                                ${enter_a_valid_email}
     And the user should see an error                                Please enter your password.
 
 Your details: client-side password hint validation
@@ -103,7 +103,7 @@ the user cannot login with the invalid email
     Input Password                            id = password  ${correct_password}
     Click Button                              css = button[name="_eventId_proceed"]
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
-    Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address
+    Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    ${enter_a_valid_email}
     Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
     Click Button                              css = button[name="_eventId_proceed"]
     The user should see the text in the page  ${unsuccessful_login_message}

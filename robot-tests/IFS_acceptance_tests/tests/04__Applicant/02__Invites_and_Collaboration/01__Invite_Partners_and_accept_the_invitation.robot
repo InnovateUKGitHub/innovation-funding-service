@@ -77,7 +77,7 @@ Lead organisation server-side validations
     And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
     And the user clicks the button/link       css = [id^="invite-collaborator"]
-    Then The user should see a field and summary error  Please enter a valid email address.
+    Then The user should see a field and summary error  ${enter_a_valid_email}
     And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
