@@ -187,6 +187,12 @@ ${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
 ${email_already_in_use}           This email address is already in use.
+${enter_a_first_name}                 Please enter a first name.
+${enter_a_last_name}                  Please enter a last name.
+${enter_a_valid_email}                Please enter a valid email address.
+${enter_a_valid_date}                 Please enter a valid date.
+${enter_a_phone_number}               Please enter a valid phone number.
+${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
 
 # Database variables
 ${database_name}    ifs
