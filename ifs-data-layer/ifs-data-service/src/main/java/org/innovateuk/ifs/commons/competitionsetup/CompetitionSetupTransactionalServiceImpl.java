@@ -2,6 +2,7 @@ package org.innovateuk.ifs.commons.competitionsetup;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
@@ -33,9 +34,14 @@ public class CompetitionSetupTransactionalServiceImpl extends BaseTransactionalS
 
     @Override
     public ServiceResult<Boolean> isIncludeGrowthTable(Long compId) {
+        // The result could be any of one these tests as they should all be consistent.
+        // Ensure consistency before returning the result
+        ServiceResult<Boolean> isIncludeGrowthTableByCompetition = isIncludeGrowthTableByCompetition(compId);
         ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover = find(countInput(compId), turnoverInput(compId)).andOnSuccess(this::isIncludeGrowthTableByCountAndTurnover);
         ServiceResult<Boolean> isIncludeGrowthTableByFinance = find(financeYearEnd(compId), financeOverviewRow(compId), financeCount(compId)).andOnSuccess(this::isIncludeGrowthTableByFinance);
-        return find(isIncludeGrowthTableByCountAndTurnover, isIncludeGrowthTableByFinance).andOnSuccess(this::isIncludeGrowthTableByCountTurnoverAndFinance);
+        return find(isIncludeGrowthTableByCompetition,
+                isIncludeGrowthTableByCountAndTurnover,
+                isIncludeGrowthTableByFinance).andOnSuccess(this::isIncludeGrowthTableByCompetitionAndCountTurnoverAndFinance);
     }
 
     @Override
@@ -60,21 +66,26 @@ public class CompetitionSetupTransactionalServiceImpl extends BaseTransactionalS
 
     @Override
     public ServiceResult<List<FormInput>> financeOverviewRow(Long competitionId) {
-        return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW)));
+        return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, singletonList(FINANCIAL_OVERVIEW_ROW)));
     }
 
     private ServiceResult<FormInput> getOnlyForCompetition(Long competitionId, FormInputType formInputType) {
-        List<FormInput> all = formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(formInputType));
+        List<FormInput> all = formInputRepository.findByCompetitionIdAndTypeIn(competitionId, singletonList(formInputType));
         return getOnlyElementOrFail(all);
     }
-
-
-    private ServiceResult<Boolean> isIncludeGrowthTableByCountTurnoverAndFinance(boolean byCountAndTurnover, boolean byFinance) {
-        boolean isConsistent = byCountAndTurnover == byFinance;
+    
+    private ServiceResult<Boolean> isIncludeGrowthTableByCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccessReturn(Competition::getIncludeProjectGrowthTable);
+    }
+    
+    private ServiceResult<Boolean> isIncludeGrowthTableByCompetitionAndCountTurnoverAndFinance(boolean byCompetition,
+                                                                                 boolean byCountAndTurnover,
+                                                                                 boolean byFinance) {
+        boolean isConsistent = byCompetition == byCountAndTurnover == byFinance;
         if (isConsistent) {
-            return serviceSuccess(byCountAndTurnover);
+            return serviceSuccess(byCompetition);
         } else {
-            return serviceFailure(new Error("include.growth.table.count.turnover.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
+            return serviceFailure(new Error("include.growth.table.competition.count.turnover.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
