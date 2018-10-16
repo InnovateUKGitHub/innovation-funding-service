@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -21,6 +22,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -49,7 +54,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         applicationResource = newApplicationResource().build();
         organisationResource = newOrganisationResource().build();
 
@@ -67,7 +72,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
+    public void leadApplicantCanInviteAnOrganisationToTheApplication() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -77,7 +82,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void consortiumCanViewAnyInviteOrganisation() throws Exception {
+    public void consortiumCanViewAnyInviteOrganisation() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -88,7 +93,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void supportCanViewAnyInviteOrganisation() throws Exception {
+    public void supportCanViewAnyInviteOrganisation() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -99,7 +104,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void consortiumCanViewAnInviteOrganisationToTheApplication() throws Exception {
+    public void consortiumCanViewAnInviteOrganisationToTheApplication() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
@@ -109,11 +114,12 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void consortiumCanViewAnInviteOrganisationToTheApplicationForAConfirmedOrganisation() throws Exception {
+    public void consortiumCanViewAnInviteOrganisationToTheApplicationForAConfirmedOrganisation() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
                 .withOrganisation(organisationResource.getId())
-                .withInviteResources(inviteResource).build();
+                .withInviteResources(inviteResource)
+                .build();
 
         assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, collaborator));
@@ -121,9 +127,11 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantCanSaveInviteAnOrganisationToTheApplication() throws Exception {
+    public void leadApplicantCanSaveInviteAnOrganisationToTheApplication() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
         assertTrue(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, collaborator));
@@ -131,11 +139,15 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationCreated() throws Exception {
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationCreated() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
                 .withApplicationState(ApplicationState.CREATED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
@@ -146,11 +158,15 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationOpen() throws Exception {
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationOpen() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
@@ -161,9 +177,11 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantAndCollaboratorCannotCreateApplicationInvitesIfApplicationEditableWhenApplicationCreated() throws Exception {
+    public void leadApplicantAndCollaboratorCannotCreateApplicationInvitesIfApplicationEditableWhenApplicationCreated() {
         List<ApplicationInviteResource> inviteResource = ApplicationInviteResourceBuilder.newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), Role.LEADAPPLICANT))
                 .thenReturn(false);
@@ -181,16 +199,20 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantAndCollaboratorCannotCreateApplicationInvitesIfApplicationEditableWhenApplicationOpen() throws Exception {
+    public void leadApplicantAndCollaboratorCannotCreateApplicationInvitesIfApplicationEditableWhenApplicationOpen() {
         List<ApplicationInviteResource> inviteResource = ApplicationInviteResourceBuilder.newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), Role.LEADAPPLICANT))
                 .thenReturn(false);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), Role.COLLABORATOR))
                 .thenReturn(false);
 
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
@@ -201,11 +223,15 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationSubmitted() throws Exception {
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationSubmitted() {
         List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
 
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
                 .withApplicationState(ApplicationState.SUBMITTED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
@@ -213,5 +239,97 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, otherApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditable_newCollaboratingOrganisationAndCollaborationLevelIsSingle() {
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
+
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE).build();
+        Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.OPEN).build();
+        when(applicationRepositoryMock.findOne(applicationResource.getId()))
+                .thenReturn(application);
+
+        assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource,
+                leadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditable_newCollaboratingOrganisationAndCollaborationLevelIsSingleOrCollaborative() {
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
+
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
+        Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.OPEN).build();
+        when(applicationRepositoryMock.findOne(applicationResource.getId()))
+                .thenReturn(application);
+
+        assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditable_existingOrganisationAndCollaborationLevelIsSingleOrCollaborative() {
+        long existingOrganisationId = 1L;
+
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisation(existingOrganisationId)
+                .withInviteResources(inviteResource)
+                .build();
+
+        Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
+        Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.OPEN).build();
+        when(applicationRepositoryMock.findOne(applicationResource.getId()))
+                .thenReturn(application);
+
+        assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditable_newCollaboratingOrganisationAndCollaborationLevelIsCollaborative() {
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(inviteResource)
+                .build();
+
+        Competition competition = newCompetition().withCollaborationLevel(COLLABORATIVE).build();
+        Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.OPEN).build();
+        when(applicationRepositoryMock.findOne(applicationResource.getId()))
+                .thenReturn(application);
+
+        assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanCreateApplicationInvitesIfApplicationEditable_existingOrganisationAndCollaborationLevelIsCollaborative() {
+        long existingOrganisationId = 1L;
+
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisation(existingOrganisationId)
+                .withInviteResources(inviteResource)
+                .build();
+
+        Competition competition = newCompetition().withCollaborationLevel(COLLABORATIVE).build();
+        Application application = ApplicationBuilder.newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.OPEN).build();
+        when(applicationRepositoryMock.findOne(applicationResource.getId()))
+                .thenReturn(application);
+
+        assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
     }
 }

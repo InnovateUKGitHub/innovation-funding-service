@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -13,11 +12,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class OrganisationDocs {
 
-    @ZeroDowntime(description = "Migrate: remove companyHouseNumber", reference = "IFS-4194")
     public static final FieldDescriptor[] organisationResourceFields = {
             fieldWithPath("id").description("Id of the organisation").optional(),
             fieldWithPath("name").description("Name of the organisation").optional(),
-            fieldWithPath("companyHouseNumber").description("The companies house number").optional(),
             fieldWithPath("companiesHouseNumber").description("The companies house number").optional(),
             fieldWithPath("processRoles").description("Ids of the process roles").optional(),
             fieldWithPath("applicationFinances").description("Ids of the applications finances").optional(),

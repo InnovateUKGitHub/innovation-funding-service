@@ -88,9 +88,8 @@ public class Organisation {
         return users;
     }
 
-    @ZeroDowntime(description = "Migrate: change to companiesHouseNumber", reference = "IFS-4194")
     public String getCompaniesHouseNumber() {
-        return companyHouseNumber;
+        return companiesHouseNumber;
     }
 
     public void setCompaniesHouseNumber(String companiesHouseNumber) {

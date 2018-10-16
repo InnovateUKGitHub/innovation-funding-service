@@ -79,27 +79,6 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getPrimaryForUser() throws Exception {
-        long userId = 1L;
-        OrganisationResource organisationResource = organisationResourceBuilder.build();
-
-        when(organisationServiceMock.getPrimaryForUser(userId)).thenReturn(serviceSuccess(organisationResource));
-
-        mockMvc.perform(get("/organisation/primary-for-user/{userId}", userId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Identifier of the user to find the primary organisation for")
-                        ),
-                        responseFields(organisationResourceFields)
-                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
-                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
-                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
-                ));
-    }
-
-    @Test
     public void getByUserAndApplicationId() throws Exception {
         long userId = 1L;
         long applicationId = 2L;

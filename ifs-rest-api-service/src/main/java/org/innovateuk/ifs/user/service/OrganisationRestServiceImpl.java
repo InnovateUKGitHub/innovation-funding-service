@@ -40,11 +40,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> getPrimaryForUser(Long userId) {
-        return getWithRestResult(organisationRestURL + "/primary-for-user/" + userId, OrganisationResource.class);
-    }
-
-    @Override
     public RestResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
         return getWithRestResult(organisationRestURL + "/by-user-and-application-id/" + userId + "/" + applicationId, OrganisationResource.class);
     }

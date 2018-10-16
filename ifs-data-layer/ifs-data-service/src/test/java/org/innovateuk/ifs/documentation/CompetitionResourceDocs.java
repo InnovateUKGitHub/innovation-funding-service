@@ -70,6 +70,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
             fieldWithPath("projectDocuments").description("List of documents required during the project setup phase").optional(),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions").optional(),
+            fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
-import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuritySetter;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,19 +34,13 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     @Autowired
     private QuestionService questionService;
     @Autowired
-    private SectionService sectionService;
-    @Autowired
-    private SectionStatusService sectionStatusService;
-    @Autowired
     private QuestionStatusService questionStatusService;
     @Autowired
     private QuestionMapper questionMapper;
 
     private Section section;
     private Long applicationId;
-    private Section excludedSections;
     private Long sectionId;
-    private Long excludedSectionId;
     private Long collaboratorIdOne;
     private Long leadApplicantProcessRole;
     private Long leadApplicantOrganisationId;
@@ -59,10 +51,8 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     @Before
     public void setUp() throws Exception {
         sectionId = 1L;
-        excludedSectionId = 2L;
         applicationId = 1L;
         section = sectionRepository.findById(sectionId).get();
-        excludedSections = section = sectionRepository.findById(excludedSectionId).get();
 
         leadApplicantProcessRole = 1L;
         leadApplicantOrganisationId = 3L;
@@ -81,31 +71,28 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         this.controller = controller;
     }
 
-    /**
-     * Check if all sections under Your-Finances is marked-as-complete.
-     */
     @Test
-    public void testChildSectionsAreCompleteForAllOrganisations() throws Exception {
-        excludedSections = null;
-
+    public void getCompletedSections() {
         section = sectionRepository.findById(sectionIdYourProjectCostsFinances).get();
         assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
-        assertTrue(sectionStatusService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
-        assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccess().size());
+
+        assertEquals(7,
+                controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
+        assertEquals(7,
+                controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
 
         // Mark one question as incomplete.
         questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-	    Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
+	    Question question = questionService.getQuestionById(28L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccess());
 
-        assertFalse(sectionStatusService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
-        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
+        assertEquals(6, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
 
         UserResource collaborator = newUserResource().withId(collaboratorIdOne).build();
         SecuritySetter.swapOutForUser(collaborator);
-        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
+        assertEquals(7, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
 
         section = sectionRepository.findById(11L).get();
         assertEquals("Materials", section.getName());

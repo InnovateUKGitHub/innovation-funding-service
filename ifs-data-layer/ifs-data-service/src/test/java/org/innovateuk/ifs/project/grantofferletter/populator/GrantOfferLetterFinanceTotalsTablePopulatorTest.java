@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +53,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
     private Organisation organisation2;
     private Organisation organisation3;
     private Organisation organisation4;
+    private Organisation organisation5;
 
     private Cost cost1;
     private Cost cost2;
@@ -81,6 +84,11 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
         organisation4 = newOrganisation()
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH)
                 .withName("Org4")
+                .build();
+
+        organisation5 = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .withName("Org5")
                 .build();
 
         cost1 = newCost()
@@ -139,14 +147,22 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
                 .withValue(BigDecimal.valueOf(8))
                 .build();
 
-        ProjectFinance pf = newProjectFinance().build();
+        List<ProjectFinance> pfList = newProjectFinance().build(2);
 
         ProjectFinanceRow pfr = newProjectFinanceRow().withQuantity(30)
                 .withName("grant-claim")
                 .build();
 
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(pf);
-        when(projectFinanceRowRepositoryMock.findByTargetId(pf.getId())).thenReturn(singletonList(pfr));
+        ProjectFinanceRow nullPfr = newProjectFinanceRow()
+                .withName("grant-claim")
+                .build();
+
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), eq(organisation1.getId()))).thenReturn(pfList.get(0));
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), eq(organisation2.getId()))).thenReturn(pfList.get(0));
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), eq(organisation5.getId()))).thenReturn(pfList.get(1));
+
+        when(projectFinanceRowRepositoryMock.findByTargetId(pfList.get(0).getId())).thenReturn(singletonList(pfr));
+        when(projectFinanceRowRepositoryMock.findByTargetId(pfList.get(1).getId())).thenReturn(singletonList(nullPfr));
 
     }
 
@@ -159,6 +175,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
         finances.put(organisation2, asList(cost3, cost4));
         finances.put(organisation3, asList(cost5, cost6));
         finances.put(organisation4, asList(cost7, cost8));
+        finances.put(organisation5, emptyList());
 
         GrantOfferLetterFinanceTotalsTable table = populator.createTable(finances, projectId);
 
@@ -166,6 +183,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
         assertEquals(BigDecimal.valueOf(100), table.getGrantClaim(organisation3.getName()));
         assertEquals( BigDecimal.valueOf(434), table.getTotalEligibleCosts(organisation2.getName()));
         assertEquals(BigDecimal.valueOf(914), table.getTotalEligibleCosts(organisation4.getName()));
+        assertEquals(BigDecimal.valueOf(0), table.getTotalEligibleCosts(organisation5.getName()));
         assertEquals( new BigDecimal("32.70"), table.getTotalGrant(organisation1.getName()));
         assertEquals(new BigDecimal("84.00"), table.getTotalGrant(organisation3.getName()));
         assertEquals(new BigDecimal("543"), table.getIndustryTotalEligibleCosts());
@@ -182,10 +200,11 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
         assertTrue(table.getIndustrialOrgs().contains(organisation2.getName()));
         assertTrue(table.getAcademicOrgs().contains(organisation3.getName()));
         assertTrue(table.getAcademicOrgs().contains(organisation4.getName()));
+        assertTrue(table.getIndustrialOrgs().contains(organisation5.getName()));
 
         // verifying that both mocks are invoked, but only for the industrial organisations
-        verify(projectFinanceRepositoryMock, times(2)).findByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(projectFinanceRowRepositoryMock, times(2)).findByTargetId(anyLong());
+        verify(projectFinanceRepositoryMock, times(3)).findByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(projectFinanceRowRepositoryMock, times(3)).findByTargetId(anyLong());
     }
 
 }

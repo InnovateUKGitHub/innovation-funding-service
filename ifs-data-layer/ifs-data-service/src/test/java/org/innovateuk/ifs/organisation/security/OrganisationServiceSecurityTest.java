@@ -64,15 +64,6 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         assertAccessDenied(() -> classUnderTest.findById(1L), () -> verifyUserHasAccessToOrganisation(1));
     }
 
-    @Test
-    public void testGetPrimaryForUser() {
-        when(classUnderTestMock.getPrimaryForUser(1L))
-                .thenReturn(serviceSuccess(newOrganisationResource().build()));
-
-        assertAccessDenied(() -> classUnderTest.getPrimaryForUser(1L),
-                           () -> verifyUserHasAccessToOrganisation(1));
-    }
-
     private void verifyUserHasAccessToOrganisation(int times) {
         verify(rules, times(times))
                 .systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
