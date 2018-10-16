@@ -35,48 +35,48 @@ execution:
   files:
   - jmeter/Representative/invite_data.csv
 
-- scenario: applicant_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: "${applicant_users}"
-  files:
-  - jmeter/Representative/user_data.csv
-
-- scenario: registration_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: "${registration_users}"
-  files:
-  - jmeter/Representative/competition_data.csv
-
-- scenario: front_door_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: "${front_door_users}"
-  files:
-  - jmeter/Representative/front-door-competitions.csv
-
-- scenario: competition_management
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: "${comp_management_users}"
-
-- scenario: assessor_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: "${assessor_users}"
-  files:
-  - jmeter/Representative/assessor_data.csv
+#- scenario: applicant_users
+#  iterations: 1
+#  locations:
+#    eu-west-2: 1
+#    europe-west2-a: 1
+#  concurrency: "${applicant_users}"
+#  files:
+#  - jmeter/Representative/user_data.csv
+#
+#- scenario: registration_users
+#  iterations: 1
+#  locations:
+#    eu-west-2: 1
+#    europe-west2-a: 1
+#  concurrency: "${registration_users}"
+#  files:
+#  - jmeter/Representative/competition_data.csv
+#
+#- scenario: front_door_users
+#  iterations: 1
+#  locations:
+#    eu-west-2: 1
+#    europe-west2-a: 1
+#  concurrency: "${front_door_users}"
+#  files:
+#  - jmeter/Representative/front-door-competitions.csv
+#
+#- scenario: competition_management
+#  iterations: 1
+#  locations:
+#    eu-west-2: 1
+#    europe-west2-a: 1
+#  concurrency: "${comp_management_users}"
+#
+#- scenario: assessor_users
+#  iterations: 1
+#  locations:
+#    eu-west-2: 1
+#    europe-west2-a: 1
+#  concurrency: "${assessor_users}"
+#  files:
+#  - jmeter/Representative/assessor_data.csv
 
 scenarios:
   invite_users:
