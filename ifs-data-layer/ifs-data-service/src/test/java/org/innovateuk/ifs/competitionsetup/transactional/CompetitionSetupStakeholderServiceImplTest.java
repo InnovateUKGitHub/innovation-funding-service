@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
-import org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
@@ -13,6 +12,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.mapper.StakeholderInviteMapper;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -32,25 +33,20 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder.newStakeholderInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderInviteResourceBuilder.newStakeholderInviteResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the CompetitionSetupStakeholderServiceImpl with mocked repository.
@@ -79,6 +75,9 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private UserMapper userMapperMock;
+
+    @Mock
+    private StakeholderInviteMapper stakeholderInviteMapperMock;
 
     @Override
     protected CompetitionSetupStakeholderServiceImpl supplyServiceUnderTest() {
@@ -278,6 +277,28 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
+    public void getInviteByHash() {
+
+        StakeholderInvite invite = newStakeholderInvite()
+                .withEmail("test@test.test")
+                .build();
+
+        StakeholderInviteResource inviteResource = newStakeholderInviteResource()
+                .withEmail("test@test.test")
+                .build();
+
+        final String hash = "1234hash";
+
+        when(stakeholderInviteRepositoryMock.getByHash(hash)).thenReturn(invite);
+        when(stakeholderInviteMapperMock.mapToResource(invite)).thenReturn(inviteResource);
+
+        ServiceResult<StakeholderInviteResource> result = service.getInviteByHash(hash);
+
+        assertTrue(result.isSuccess());
+        assertEquals(inviteResource, result.getSuccess());
+    }
+
+    @Test
     public void addStakeholder() {
 
         long competitionId = 1L;
@@ -358,7 +379,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         String user2Name = "Sonal Dsilva";
         String user1Email = "Rayon.Kevin@gmail.com";
         String user2Email = "Sonal.Dsilva@gmail.com";
-        List<StakeholderInvite> pendingStakeholderInvites = StakeholderInviteBuilder.newStakeholderInvite()
+        List<StakeholderInvite> pendingStakeholderInvites = newStakeholderInvite()
                 .withName(user1Name, user2Name)
                 .withEmail(user1Email, user2Email)
                 .build(2);
