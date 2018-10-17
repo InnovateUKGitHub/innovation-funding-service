@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Documents'" />
 </head>
-<body class="project-other-documents">
+<body class="govuk-template__body project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -23,7 +23,7 @@
         <th:block th:unless="${model.projectManager}">
             <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
         </th:block>
-        
+
         <p class="govuk-body govuk-!-margin-top-6">These documents should be reviewed by all partners in the project team.</p>
 
         <ul class="task-list">
