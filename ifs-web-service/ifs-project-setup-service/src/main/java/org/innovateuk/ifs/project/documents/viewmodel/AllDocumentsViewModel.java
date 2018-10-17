@@ -11,11 +11,13 @@ public class AllDocumentsViewModel {
     private Long projectId;
     private String projectName;
     private List<ProjectDocumentStatus> documents;
+    private boolean projectManager;
 
-    public AllDocumentsViewModel(Long projectId, String projectName, List<ProjectDocumentStatus> documents) {
+    public AllDocumentsViewModel(Long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.documents = documents;
+        this.projectManager = projectManager;
     }
 
     public Long getProjectId() {
@@ -42,6 +44,10 @@ public class AllDocumentsViewModel {
         this.documents = documents;
     }
 
+    public boolean isProjectManager() {
+        return projectManager;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,6 +60,7 @@ public class AllDocumentsViewModel {
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
                 .append(documents, that.documents)
+                .append(projectManager, that.projectManager)
                 .isEquals();
     }
 
@@ -63,6 +70,7 @@ public class AllDocumentsViewModel {
                 .append(projectId)
                 .append(projectName)
                 .append(documents)
+                .append(projectManager)
                 .toHashCode();
     }
 }

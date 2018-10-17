@@ -48,7 +48,7 @@ public class DocumentsPopulator {
                     getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
         }
 
-        return new AllDocumentsViewModel(projectId, project.getName(), documents);
+        return new AllDocumentsViewModel(projectId, project.getName(), competition.getId(), basicDetails.getApplication().getId(), documents);
     }
 
     private BasicDetails populateBasicDetails(long projectId) {

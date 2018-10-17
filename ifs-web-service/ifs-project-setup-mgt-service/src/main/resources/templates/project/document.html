@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review document'" />
+</head>
+<body class="govuk-template__body competition-management project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+
+	<main class="govuk-main-wrapper" id="main-content" role="main">
+	    <th:block th:insert="fragments/layout :: main-content-end" />
+	</main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

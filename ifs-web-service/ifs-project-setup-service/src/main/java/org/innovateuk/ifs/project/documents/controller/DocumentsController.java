@@ -53,7 +53,7 @@ public class DocumentsController {
     public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
 
-        model.addAttribute("model", populator.populateAllDocuments(projectId));
+        model.addAttribute("model", populator.populateAllDocuments(projectId, loggedInUser));
         return "project/documents-all";
     }
     //TODO - XXX - Permissions

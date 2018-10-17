@@ -16,10 +16,17 @@
 	<main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-	    <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application. Your Monitoring Officer will approve or reject them.</p>
-	    <p class="govuk-body govuk-!-margin-top-6">You should review these documents with all partners in the project team.</p>
+        <th:block th:if="${model.projectManager}">
+	       <p class="govuk-body govuk-!-margin-top-6">As Project Manager, you can upload and submit additional documents to support your application.</p>
+        </th:block>
+        
+        <th:block th:unless="${model.projectManager}">
+            <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
+        </th:block>
+        
+        <p class="govuk-body govuk-!-margin-top-6">These documents should be reviewed by all partners in the project team.</p>
 
-		<ul class="task-list">
+        <ul class="task-list">
             <li th:each="document : ${model.documents}">
                 <div class="task">
                     <h3 class="govuk-heading-s">

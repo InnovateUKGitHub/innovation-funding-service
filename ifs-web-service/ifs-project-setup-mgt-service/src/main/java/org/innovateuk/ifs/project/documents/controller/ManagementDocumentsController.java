@@ -27,6 +27,17 @@ public class ManagementDocumentsController {
                                    UserResource loggedInUser) {
 
         model.addAttribute("model", populator.populateAllDocuments(projectId));
-        return "project/documents-all"; //TODO - XXX - Create this view please.
+        return "project/documents-all";
+    }
+
+    //TODO - XXX - Permissions
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @GetMapping("/review/{documentConfigId}")
+    public String viewDocument(@PathVariable("projectId") long projectId,
+                               @PathVariable("documentConfigId") long documentConfigId,
+                               Model model,
+                               UserResource loggedInUser) {
+
+        return "project/document";
     }
 }
