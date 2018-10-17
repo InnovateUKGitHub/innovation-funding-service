@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.invite.resource;
 
+
+/**
+ * DTO for {@link org.innovateuk.ifs.invite.domain.StakeholderInvite}s.
+ */
 public class StakeholderInviteResource {
     private long id;
     private String hash;
     private String email;
-    private long competition;
+    private long competitionId;
 
     public long getId() {
         return id;
@@ -30,11 +34,11 @@ public class StakeholderInviteResource {
         this.email = email;
     }
 
-    public long getCompetition() {
-        return competition;
+    public long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setCompetition(long competition) {
-        this.competition = competition;
+    public void setCompetitionId(long competition) {
+        this.competitionId = competitionId;
     }
 }

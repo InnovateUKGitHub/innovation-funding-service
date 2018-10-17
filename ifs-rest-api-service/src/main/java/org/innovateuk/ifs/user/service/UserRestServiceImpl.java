@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
