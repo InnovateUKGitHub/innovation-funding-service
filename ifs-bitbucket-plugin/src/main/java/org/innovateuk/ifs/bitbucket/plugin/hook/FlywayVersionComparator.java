@@ -17,7 +17,7 @@ public class FlywayVersionComparator implements Comparator<List<Integer>> {
             return -1;
         } else if (o2.isEmpty()) {
             return 1;
-        } else if (o1.get(0) == o2.get(0)){
+        } else if (o1.get(0).compareTo(o2.get(0)) == 0) {
             return compare(o1.subList(1, o1.size()), o2.subList(1, o2.size()));
         } else {
             return o1.get(0).compareTo(o2.get(0));
