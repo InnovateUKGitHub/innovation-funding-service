@@ -11,7 +11,7 @@ import java.util.Objects;
 @FieldRequiredIf(required = "grantClaimPercentage", argument = "requestingFunding", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "termsAgreed", argument = "complete", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class YourFundingForm {
-
+    public static final String EMPTY_ROW_ID = "empty";
     @NotNull
     private Boolean requestingFunding;
 
@@ -21,7 +21,7 @@ public class YourFundingForm {
     private Boolean otherFunding;
 
     @Valid
-    private Map<Long, OtherFundingRowForm> otherFundingRows;
+    private Map<String, OtherFundingRowForm> otherFundingRows;
 
     private Boolean termsAgreed;
 
@@ -55,11 +55,11 @@ public class YourFundingForm {
         this.otherFunding = otherFunding;
     }
 
-    public Map<Long, OtherFundingRowForm> getOtherFundingRows() {
+    public Map<String, OtherFundingRowForm> getOtherFundingRows() {
         return otherFundingRows;
     }
 
-    public void setOtherFundingRows(Map<Long, OtherFundingRowForm> otherFundingRows) {
+    public void setOtherFundingRows(Map<String, OtherFundingRowForm> otherFundingRows) {
         this.otherFundingRows = otherFundingRows;
     }
 

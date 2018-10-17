@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.yourfunding.viewmodel;
 public class YourFundingViewModel {
     private final long applicationId;
 
+    private final long sectionId;
+
     private final long competitionId;
 
     private final boolean complete;
@@ -25,8 +27,9 @@ public class YourFundingViewModel {
 
     private final Integer maximumFundingLevel;
 
-    public YourFundingViewModel(long applicationId, long competitionId, boolean complete, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel) {
+    public YourFundingViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel) {
         this.applicationId = applicationId;
+        this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
         this.leadApplicant = leadApplicant;
@@ -42,6 +45,10 @@ public class YourFundingViewModel {
 
     public long getApplicationId() {
         return applicationId;
+    }
+
+    public long getSectionId() {
+        return sectionId;
     }
 
     public long getCompetitionId() {

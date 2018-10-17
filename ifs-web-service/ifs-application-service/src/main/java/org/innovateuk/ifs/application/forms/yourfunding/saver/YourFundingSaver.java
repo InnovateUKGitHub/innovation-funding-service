@@ -15,14 +15,19 @@ import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static java.lang.Long.parseLong;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Component
 public class YourFundingSaver {
+
+    private final static Logger LOG = LoggerFactory.getLogger(YourFundingSaver.class);
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -74,7 +79,7 @@ public class YourFundingSaver {
         messages.addAll(financeRowRestService.update(otherFundingCategory.getOtherFunding()).getSuccess());
         if (form.getOtherFunding()) {
             form.getOtherFundingRows().forEach((id, cost) -> {
-                if (id == null) {
+                if (YourFundingForm.EMPTY_ROW_ID.equals(id)) {
                     if (!cost.isBlank()) {
                         messages.addAll(financeRowRestService.add(finance.getId(), form.getOtherFundingQuestionId(), toFunding(cost)).getSuccess());
                     }
@@ -96,13 +101,32 @@ public class YourFundingSaver {
         Long costId = financeRowRestService.addWithResponse(finance.getId(), form.getOtherFundingQuestionId(), new OtherFunding()).getSuccess().getId();
         OtherFundingRowForm rowForm = new OtherFundingRowForm();
         rowForm.setCostId(costId);
-        form.getOtherFundingRows().put(costId, rowForm);
+        form.getOtherFundingRows().put(String.valueOf(costId), rowForm);
     }
 
-    public void removeOtherFundingRow(YourFundingForm form, Long costId) {
+    public void removeOtherFundingRow(YourFundingForm form, String costId) {
         form.getOtherFundingRows().remove(costId);
-        if (costId != null) {
-            financeRowRestService.delete(costId);
+        if (!YourFundingForm.EMPTY_ROW_ID.equals(costId)) {
+            financeRowRestService.delete(parseLong(costId));
+        }
+    }
+
+    public void autoSave(String field, String value, long applicationId, UserResource user) {
+        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+
+        try {
+            switch (field) {
+                case "grantClaimPercentage":
+                    GrantClaim grantClaim = finance.getGrantClaim();
+                    grantClaim.setGrantClaimPercentage(Integer.valueOf(value));
+                    financeRowRestService.update(grantClaim);
+                    return;
+                default:
+                    return;
+            }
+        } catch (NumberFormatException e) {
+            LOG.debug(e);
         }
     }
 }

@@ -65,6 +65,7 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationRequired);
 
         return new YourFundingViewModel(applicationId,
+                section.getSection().getId(),
                 section.getCompetition().getId(),
                 complete,
                 section.getCurrentApplicant().isLead(),

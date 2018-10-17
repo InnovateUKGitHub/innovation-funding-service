@@ -62,7 +62,7 @@ public class YourFundingFormPopulator {
         OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         boolean otherFundingSet = otherFundingCategory.otherFundingSet();
 
-        Map<Long, OtherFundingRowForm> rows = otherFundingCategory.getCosts().stream().map(cost -> {
+        Map<String, OtherFundingRowForm> rows = otherFundingCategory.getCosts().stream().map(cost -> {
             OtherFunding otherFunding = (OtherFunding) cost;
             OtherFundingRowForm row = new OtherFundingRowForm();
 
@@ -72,10 +72,10 @@ public class YourFundingFormPopulator {
             row.setSource(otherFunding.getFundingSource());
 
             return row;
-        }).collect(toLinkedMap(OtherFundingRowForm::getCostId, Function.identity()));
+        }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
 
-        if (!rows.containsKey(null)) {
-            rows.put(null, new OtherFundingRowForm());
+        if (!rows.containsKey(YourFundingForm.EMPTY_ROW_ID)) {
+            rows.put(YourFundingForm.EMPTY_ROW_ID, new OtherFundingRowForm());
         }
 
         form.setRequestingFunding(claimPercentage.isPresent());

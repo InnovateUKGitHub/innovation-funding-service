@@ -111,7 +111,7 @@
     </th:block>
 
     <th:block th:fragment="other_funding_row (id, row)">
-        <tr class="govuk-table__row" th:with="path=${id == null ? 'otherFundingRows[]' : 'otherFundingRows[__${id}__]'}">
+        <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}">
             <input type="hidden"
                    th:field="*{__${path}__.costId}" />
             <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">

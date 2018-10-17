@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.forms.yourfunding.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
@@ -11,6 +14,7 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,10 +128,20 @@ public class YourFundingController {
                                    @PathVariable long applicationId,
                                    @PathVariable long sectionId,
                                    @ModelAttribute("form") YourFundingForm form,
-                                   @RequestParam("remove_other_funding") Long costId) {
+                                   @RequestParam("remove_other_funding") String costId) {
 
         saver.removeOtherFundingRow(form, costId);
         return viewYourFunding(model, applicationId, sectionId, user);
+    }
+
+    @PostMapping("auto-save")
+    public @ResponseBody
+    JsonNode autoSave(@RequestParam String fieldName,
+                      @RequestParam String value) {
+        LoggerFactory.getLogger(this.getClass()).error(String.format("Auto save field: (%s) value: (%s) ", fieldName, value));
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        return node;
     }
 
 

@@ -25,13 +25,16 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Your funding NEW PAGE',subTitle=${model.applicationName},size='govuk-heading-xl'" />
         <th:block th:if="${model.fundingSectionLocked}">
             <th:block th:insert="application/your-funding-fragments :: locked" />
         </th:block>
         <th:block th:unless="${model.fundingSectionLocked}">
             <form th:object="${form}"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  data-autosave="your-funding"
+                  th:attr="data-application-id=${model.applicationId},
+                           data-section-id=${model.sectionId}"
                   enctype="multipart/form-data"
                   novalidate="novalidate"
                   method="POST">
