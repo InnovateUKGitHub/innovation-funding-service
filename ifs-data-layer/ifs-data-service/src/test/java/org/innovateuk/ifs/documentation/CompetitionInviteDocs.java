@@ -55,6 +55,13 @@ public class CompetitionInviteDocs {
             fieldWithPath("content").description("The content body of the invite email")
     };
 
+    public static final FieldDescriptor[] stakeholderInviteResourceFields = {
+            fieldWithPath("id").description("The id associated with this invite"),
+            fieldWithPath("hash").description("The hash associated with this invite"),
+            fieldWithPath("email").description("The email address used for the invite"),
+            fieldWithPath("competitionId").description("The id of the competition this user is invited to")
+    };
+
     public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {
             fieldWithPath("userId").description("User id of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
