@@ -68,7 +68,7 @@ public abstract class AbstractApplicantResource {
         this.applicants = applicants;
     }
 
-    public Stream<OrganisationResource> allOrganisations() {
+    public Stream<OrganisationResource> getAllOrganisations() {
         return applicants.stream().map(ApplicantResource::getOrganisation);
     }
 }
