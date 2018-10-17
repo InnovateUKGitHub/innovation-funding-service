@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
-    <main class="govuk-main-wrapper" id="main-content" role="main" style="background-color:pink">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
@@ -32,8 +32,8 @@
         <th:block th:unless="${model.fundingSectionLocked}">
             <form th:object="${form}"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-                  data-autosave="your-funding"
-                  th:attr="data-application-id=${model.applicationId},
+                  th:attr="data-autosave=@{/application/{applicationId}/form/your-funding/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})},
+                           data-application-id=${model.applicationId},
                            data-section-id=${model.sectionId}"
                   enctype="multipart/form-data"
                   novalidate="novalidate"

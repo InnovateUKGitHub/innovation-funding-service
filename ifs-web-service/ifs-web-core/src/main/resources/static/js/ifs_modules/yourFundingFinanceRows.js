@@ -5,95 +5,63 @@ IFS.core.yourFunding = (function () {
   return {
     init: function () {
       IFS.core.yourFunding.backForwardCacheReload()
-      //      jQuery('body').on('click', '[data-repeatable-rowcontainer]', function (e) {
-      //        e.preventDefault()
-      //        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
-      //        IFS.core.repeatableFinanceRows.addRow(this, e)
-      //      })
-      //      jQuery('body').on('click', '.js-remove-row', function (e) {
-      //        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
-      //        IFS.core.repeatableFinanceRows.removeRow(this, e)
-      //      })
-
+      jQuery('body').on('click', '[name="add_other_funding"]', function (e) {
+        e.preventDefault()
+        IFS.core.yourFunding.backForwardCacheInvalidate()
+        IFS.core.yourFunding.addRow(this, e)
+      })
+      jQuery('body').on('click', '[name="remove_other_funding"]', function (e) {
+        e.preventDefault()
+        IFS.core.yourFunding.backForwardCacheInvalidate()
+        IFS.core.yourFunding.removeRow(this, e)
+      })
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
         IFS.core.yourFunding.persistUnsavedRow(name, newFieldId)
       })
-      var buttonHtml = '<button type="submit" name="remove_cost" class="button-clear js-remove-row" value="">Remove</button>'
-      jQuery('[data-repeatable-row] .buttonplaceholder').replaceWith(buttonHtml)
-      jQuery('body').trigger('updateSerializedFormState')
     },
-    getAjaxUrl: function (el) {
+    getBaseUrl: function (el) {
       var inst = jQuery(el)
-      var elValue = inst.val()
-      var elName = inst.prop('name')
-      var hasValue = typeof (elValue) !== 'undefined'
-      var hasName = typeof (elName) !== 'undefined'
-
-      if (hasName && hasValue) {
-        var host = window.location.protocol + '//' + window.location.host
-        var url = ''
-        if (jQuery('#application_id').length === 1) {
-          url = host + '/application/' + jQuery('#application_id').val() + '/form/' + elName + '/' + elValue
-        }
-        if (jQuery('#projectId').length === 1) {
-          url = host + '/project-setup-management/project/' + jQuery('#projectId').val() + '/finance-check/organisation/' + jQuery('#organisationId').val() + '/eligibility/' + elName + '/' + elValue
-        }
-      }
-
-      return url
+      var form = inst.closest('form')
+      return '/application/' + form.data('application-id') + '/form/your-funding/' + form.data('section-id')
     },
     addRow: function (el, event) {
       var addRowButton = jQuery(el)
-      var url = IFS.core.yourFunding.getAjaxUrl(el)
+      var url = IFS.core.yourFunding.getBaseUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
-          url: url,
+          url: url + '/add-row',
+          method: 'POST',
           beforeSend: function () {
             addRowButton.before('<span class="govuk-hint">Adding a new row</span>')
           },
           cache: false
         }).done(function (data) {
-          var target = jQuery(addRowButton.attr('data-repeatable-rowcontainer'))
-          var buttonHtml = '<button type="submit" name="remove_cost" class="button-clear js-remove-row" value="">Remove</button>'
-          // find the .buttonplaceholder span and add empty valued remove_cost as it hasn't been persisted yet but can be removed client side
-          // (we don't do this on the server because of non-js situation)
-          addRowButton.prevAll('.govuk-hint').remove() // remove hint text
-          data = jQuery(data)
-          data.find('.buttonplaceholder').replaceWith(buttonHtml)
-          target.append(data)
-
-          jQuery('body').trigger('updateSerializedFormState')
-          var appendRow = data.find('[type="number"][name],[type="text"][name],[type="email"][name],[type="radio"][name],textarea[name]').first().attr('name')
-          if (typeof (appendRow) !== 'undefined') {
-            jQuery('[name=' + appendRow + ']').focus()
+          var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
+          var emptyRow = target.find('[name*="otherFundingRows[empty]"]')
+          if (emptyRow.length) {
+            emptyRow.closest('tr').before(data)
+          } else {
+            target.append(data)
           }
+          addRowButton.prevAll('.govuk-hint').remove()
+          jQuery('body').trigger('updateSerializedFormState')
         })
       }
     },
     removeRow: function (el, event) {
       var removeButton = jQuery(el)
       var rowValue = removeButton.val()
-      if (rowValue !== '') {
-        var url = IFS.core.yourFunding.getAjaxUrl(el)
-        if (url.length) {
-          event.preventDefault()
-          jQuery.ajaxProtected({
-            url: url
-          }).done(function (data) {
-            data = jQuery.parseJSON(data)
-            if (data.status === 'OK') {
-              jQuery('[data-repeatable-row=' + rowValue + ']').remove()
-              jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
-            }
-          })
-        }
-      } else {
-        var closestRow = removeButton.closest('[data-repeatable-row]')
-        if (closestRow.length) {
-          jQuery('[data-repeatable-row=' + closestRow.attr('data-repeatable-row') + ']').remove()
+      var url = IFS.core.yourFunding.getBaseUrl(el)
+      if (url.length) {
+        event.preventDefault()
+        jQuery.ajaxProtected({
+          url: url + '/remove-row/' + rowValue,
+          method: 'POST'
+        }).done(function (data) {
+          removeButton.closest('tr').remove()
           jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
-        }
+        })
       }
     },
     backForwardCacheReload: function () {
@@ -116,6 +84,9 @@ IFS.core.yourFunding = (function () {
       if (name.indexOf('otherFundingRows[empty]') !== -1) {
         jQuery('[name^="otherFundingRows[empty]"]').each(function () {
           var input = jQuery(this)
+          if (input.attr('name') === 'otherFundingRows[empty].costId') {
+            input.val(newFieldId)
+          }
           input.attr('name', input.attr('name').replace('otherFundingRows[empty]', 'otherFundingRows[' + newFieldId + ']'))
         })
         jQuery('[name="remove_other_funding"][value="empty"]').val(newFieldId)

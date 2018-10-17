@@ -111,6 +111,10 @@ public class YourFundingSaver {
 
     public void removeOtherFundingRow(YourFundingForm form, String costId) {
         form.getOtherFundingRows().remove(costId);
+        removeFundingRow(costId);
+    }
+
+    public void removeFundingRow(String costId) {
         if (!YourFundingForm.EMPTY_ROW_ID.equals(costId)) {
             financeRowRestService.delete(parseLong(costId));
         }

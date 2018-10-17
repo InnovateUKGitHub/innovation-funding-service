@@ -136,14 +136,11 @@ IFS.core.autoSave = (function () {
             value: field.val()
           }
           break
-        case 'your-funding':
+        default :
           jsonObj = {
             field: field.attr('name'),
             value: field.val()
           }
-          break
-        default :
-          jsonObj = false
       }
       return jsonObj
     },
@@ -177,13 +174,8 @@ IFS.core.autoSave = (function () {
           var assessmentId = form.attr('action').split('/')[2]
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
           break
-        case 'your-funding':
-          var application = form.data('application-id')
-          var sectionId = form.data('section-id')
-          url = '/application/' + application + '/form/your-funding/' + sectionId + '/auto-save'
-          break
         default:
-          url = false
+          url = saveType
       }
       return url
     },

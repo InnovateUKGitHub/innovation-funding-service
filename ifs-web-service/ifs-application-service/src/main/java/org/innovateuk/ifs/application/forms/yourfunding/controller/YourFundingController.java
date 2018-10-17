@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingViewModelPopulator;
@@ -14,7 +15,6 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -142,11 +142,33 @@ public class YourFundingController {
                       @RequestParam String field,
                       @RequestParam String value) {
         Optional<Long> fieldId = saver.autoSave(field, value, applicationId, user);
-        LoggerFactory.getLogger(this.getClass()).error(String.format("Auto save field: (%s) value: (%s) ", field, value));
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         fieldId.ifPresent(id -> node.put("fieldId", id));
         return node;
+    }
+
+    @PostMapping("remove-row/{rowId}")
+    public @ResponseBody
+    JsonNode removeRow(UserResource user,
+                      @PathVariable long applicationId,
+                      @PathVariable String rowId) {
+        saver.removeFundingRow(rowId);
+        return new ObjectMapper().createObjectNode();
+    }
+
+    @PostMapping("add-row")
+    public String addRow(Model model,
+                         UserResource user,
+                        @PathVariable long applicationId,
+                        @ModelAttribute("form") YourFundingForm form,
+                         BindingResult bindingResult) {
+        form.setOtherFundingRows(new LinkedHashMap<>());
+        saver.addOtherFundingRow(form, applicationId, user);
+        OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
+        model.addAttribute("id", row.getCostId());
+        model.addAttribute("row", row.getCostId());
+        return "application/your-funding-fragments :: other_funding_row_controller";
     }
 
 

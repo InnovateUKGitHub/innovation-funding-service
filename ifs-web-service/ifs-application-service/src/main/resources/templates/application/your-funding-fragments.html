@@ -110,6 +110,12 @@
         </div>
     </th:block>
 
+    <th:block th:fragment="other_funding_row_controller">
+        <th:block th:object="${form}">
+            <th:block th:insert="application/your-funding-fragments :: other_funding_row (${id}, ${row})" />
+        </th:block>
+    </th:block>
+
     <th:block th:fragment="other_funding_row (id, row)">
         <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}">
             <input type="hidden"
