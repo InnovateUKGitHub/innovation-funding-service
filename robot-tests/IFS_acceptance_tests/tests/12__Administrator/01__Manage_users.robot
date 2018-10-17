@@ -63,7 +63,7 @@ The user must use an Innovate UK email
     And the user enters text to a text field              id = lastName  User
     When the user enters text to a text field             id = emailAddress  ${invalidEmail}
     And the user clicks the button/link                   jQuery = button:contains("Send invite")
-    Then the user should see a field and summary error    Users cannot be registered without an Innovate UK email address.
+    Then the user should see a field and summary error    Internal users must be registered with an @innovateuk.ukri.org email address.
     [Teardown]  the user clicks the button/link           link = Cancel
 
 Client side validations for invite new internal user
