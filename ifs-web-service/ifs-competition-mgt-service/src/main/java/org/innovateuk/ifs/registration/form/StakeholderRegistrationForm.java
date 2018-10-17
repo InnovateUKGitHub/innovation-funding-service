@@ -11,7 +11,11 @@ import javax.validation.constraints.Size;
 /**
  * Form field model for registration of stakeholder users
  */
-public class StakeholderRegistrationForm extends InternalUserRegistrationForm {
+public class StakeholderRegistrationForm {
+
+    public StakeholderRegistrationForm() {
+
+    }
 
     public StakeholderRegistrationForm(String firstName, String lastName, String password) {
         this.firstName = firstName;
