@@ -79,13 +79,14 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="include-growth-table-yes"
                                    class="govuk-radios__input"
                                    value="true"
                                    type="radio"
                                    th:field="*{includeGrowthTable}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
                                    required="required" />
                             <label for="include-growth-table-yes"
                                    class="govuk-label govuk-radios__label">
@@ -98,6 +99,7 @@
                                    value="false"
                                    type="radio"
                                    th:field="*{includeGrowthTable}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
                                    required="required"
                                    th:disabled="${model.subsection.sectorCompetition}" />
                             <label for="include-growth-table-no"
