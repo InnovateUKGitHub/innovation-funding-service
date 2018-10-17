@@ -6,20 +6,39 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
 
 import java.util.List;
 
+/**
+ * View model for viewing all documents
+ */
 public class AllDocumentsViewModel {
 
-    private Long projectId;
-    private String projectName;
     private Long competitionId;
     private Long applicationId;
+    private Long projectId;
+    private String projectName;
     private List<ProjectDocumentStatus> documents;
 
-    public AllDocumentsViewModel(Long projectId, String projectName, Long competitionId, Long applicationId, List<ProjectDocumentStatus> documents) {
-        this.projectId = projectId;
-        this.projectName = projectName;
+    public AllDocumentsViewModel(Long competitionId, Long applicationId, Long projectId, String projectName, List<ProjectDocumentStatus> documents) {
         this.competitionId = competitionId;
         this.applicationId = applicationId;
+        this.projectId = projectId;
+        this.projectName = projectName;
         this.documents = documents;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public Long getProjectId() {
@@ -36,14 +55,6 @@ public class AllDocumentsViewModel {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public Long getApplicationId() {
-        return applicationId;
     }
 
     public List<ProjectDocumentStatus> getDocuments() {
@@ -63,6 +74,8 @@ public class AllDocumentsViewModel {
         AllDocumentsViewModel that = (AllDocumentsViewModel) o;
 
         return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(applicationId, that.applicationId)
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
                 .append(documents, that.documents)
@@ -72,6 +85,8 @@ public class AllDocumentsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(applicationId)
                 .append(projectId)
                 .append(projectName)
                 .append(documents)

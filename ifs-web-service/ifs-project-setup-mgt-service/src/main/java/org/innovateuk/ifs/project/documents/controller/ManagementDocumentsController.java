@@ -32,12 +32,19 @@ public class ManagementDocumentsController {
 
     //TODO - XXX - Permissions
     //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @GetMapping("/review/{documentConfigId}")
+    @GetMapping("/config/{documentConfigId}")
     public String viewDocument(@PathVariable("projectId") long projectId,
                                @PathVariable("documentConfigId") long documentConfigId,
                                Model model,
                                UserResource loggedInUser) {
 
+        return doViewDocument(projectId, documentConfigId, model);
+    }
+
+    private String doViewDocument(long projectId, long documentConfigId, Model model) {
+
+        model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId));
         return "project/document";
     }
+
 }
