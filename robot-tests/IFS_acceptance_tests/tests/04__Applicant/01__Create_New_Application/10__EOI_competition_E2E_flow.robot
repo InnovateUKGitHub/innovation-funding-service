@@ -125,7 +125,7 @@ The competition admin creates a EOI Comp
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_EOI}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility                    ${orgType}  1  true     # 1 means 30%
+    the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
     the user fills in the CS Milestones                     ${month}  ${nextyear}
     the user marks the Application as done  no              ${compType_EOI}
     the user fills in the CS Assessors

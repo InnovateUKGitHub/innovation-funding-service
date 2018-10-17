@@ -32,7 +32,7 @@ public class BasePermissionRules {
         return !applicationResource.isSubmitted();
     }
 
-    private ApplicationResource getApplication(Long applicationId){
+    protected ApplicationResource getApplication(Long applicationId){
         return applicationService.getById(applicationId);
     }
 }

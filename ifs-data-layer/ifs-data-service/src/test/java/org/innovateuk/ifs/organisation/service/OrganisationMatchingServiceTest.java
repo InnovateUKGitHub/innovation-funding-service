@@ -99,7 +99,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldMatchWhenCompaniesHouseNumberAndTypeMatchAndCallsPatternMatchers() throws Exception {
-        when(organisationRepositoryMock.findByCompanyHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
+        when(organisationRepositoryMock.findByCompaniesHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -112,7 +112,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchWhenOrganisationTypeDiffers() throws Exception {
-        when(organisationRepositoryMock.findByCompanyHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
+        when(organisationRepositoryMock.findByCompaniesHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -122,7 +122,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchNoMatchingOrganisationIsFound() throws Exception {
-        when(organisationRepositoryMock.findByCompanyHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Collections.emptyList());
+        when(organisationRepositoryMock.findByCompaniesHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(Collections.emptyList());
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);

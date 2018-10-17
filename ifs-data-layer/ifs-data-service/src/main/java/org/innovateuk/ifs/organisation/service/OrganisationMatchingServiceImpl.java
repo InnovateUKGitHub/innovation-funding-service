@@ -51,6 +51,6 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     }
 
     private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
-        return organisationRepository.findByCompanyHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
+        return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
 }

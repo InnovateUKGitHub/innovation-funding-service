@@ -62,7 +62,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withProjectAddressOrganisationAddress() {
         return with(data -> doAs(data.getLeadApplicant(), () -> {
             Long leadApplicantId = data.getLeadApplicant().getId();
-            OrganisationResource leadOrganisation = organisationService.getPrimaryForUser(leadApplicantId).getSuccess();
+            OrganisationResource leadOrganisation = organisationService.getByUserAndApplicationId(leadApplicantId, data.getApplication().getId()).getSuccess();
             AddressResource address = leadOrganisation.getAddresses().get(0).getAddress();
             projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccess();
         }));
