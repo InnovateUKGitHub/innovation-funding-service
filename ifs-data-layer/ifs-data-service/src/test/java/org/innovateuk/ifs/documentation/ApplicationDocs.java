@@ -36,9 +36,16 @@ public class ApplicationDocs {
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable").optional(),
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible").optional(),
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation").optional(),
-            fieldWithPath("leadOrganisationName").description("the name of the lead organisation").optional(),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel").optional(),
             fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)").optional()
+    };
+
+    public static final FieldDescriptor[] previousApplicationResourceFields = {
+            fieldWithPath("id").description("Id of the application").optional(),
+            fieldWithPath("name").description("Name of the application").optional(),
+            fieldWithPath("leadOrganisationName").description("the name of the lead organisation").optional(),
+            fieldWithPath("applicationState").description("ApplicationState").optional(),
+            fieldWithPath("competition").description("Competition Id").optional(),
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()

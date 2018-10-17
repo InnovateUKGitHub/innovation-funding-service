@@ -369,7 +369,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("filter").description("The filter to be applied")
                         ),
                         responseFields(PageResourceDocs.pageResourceFields)
-                        .andWithPrefix("content[].", ApplicationDocs.applicationResourceFields)
+                        .andWithPrefix("content[].", ApplicationDocs.previousApplicationResourceFields)
                 ));
 
         verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
