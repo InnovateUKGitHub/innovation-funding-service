@@ -138,7 +138,7 @@ IFS.core.autoSave = (function () {
           break
         case 'your-funding':
           jsonObj = {
-            fieldName: field.attr('name'),
+            field: field.attr('name'),
             value: field.val()
           }
           break

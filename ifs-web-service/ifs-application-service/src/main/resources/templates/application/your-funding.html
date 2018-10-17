@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your funding'" />
 </head>
-<body class="govuk-template__body application">
+<body class="govuk-template__body your-funding">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
-    <main class="govuk-main-wrapper" id="main-content" role="main">
+    <main class="govuk-main-wrapper" id="main-content" role="main" style="background-color:pink">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your funding NEW PAGE',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
         <th:block th:if="${model.fundingSectionLocked}">
             <th:block th:insert="application/your-funding-fragments :: locked" />
         </th:block>
@@ -38,6 +38,8 @@
                   enctype="multipart/form-data"
                   novalidate="novalidate"
                   method="POST">
+
+                <input type="hidden" id="cacheTest" value=""/>
                 <th:block th:unless="${model.complete}" >
                     <input type="hidden"
                            th:field="*{grantClaimQuestionId}" />

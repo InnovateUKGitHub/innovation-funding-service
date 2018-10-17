@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class FinanceRowController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
-    	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
+    	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, newCostItem).toPostCreateResponse();
         if (createResult.isFailure()) {
             return RestResult.restFailure(createResult.getFailure());
         } else {
@@ -40,18 +41,11 @@ public class FinanceRowController {
         }
     }
 
-    @PostMapping("/add-with-response/{applicationFinanceId}/{questionId}")
+    @PostMapping("/add-with-response/{applicationFinanceId}")
     public RestResult<FinanceRowItem> addWithResponse(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
-        RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
-        if (createResult.isFailure()) {
-            return RestResult.restFailure(createResult.getFailure());
-        } else {
-            FinanceRowItem costItem = createResult.getSuccess();
-            return RestResult.restSuccess(costItem, HttpStatus.CREATED);
-        }
+        return financeRowCostsService.addCost(applicationFinanceId, newCostItem).toPostCreateResponse();
     }
     
     @PostMapping("/add-without-persisting/{applicationFinanceId}/{questionId}")

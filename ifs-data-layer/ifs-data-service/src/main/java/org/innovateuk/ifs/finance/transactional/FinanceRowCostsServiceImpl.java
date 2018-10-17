@@ -13,13 +13,17 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import org.innovateuk.ifs.finance.mapper.FinanceRowMetaFieldMapper;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +70,9 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private QuestionService questionService;
+
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
         return find(financeRowMetaFieldRepository.findOne(id), notFoundError(FinanceRowMetaField.class, id));
@@ -89,9 +96,10 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     @Transactional
-    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final Long questionId, final FinanceRowItem newCostItem) {
-        return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
-                getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
+    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final FinanceRowItem newCostItem) {
+        return find(applicationFinance(applicationFinanceId)).andOnSuccess((applicationFinance) ->
+                getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application ->
+                getQuestion(newCostItem, application).andOnSuccess(question -> {
                     OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
                     if (newCostItem != null) {
                         FinanceRow newCost = addCostItem(applicationFinance, question, newCostItem);
@@ -101,7 +109,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
                         organisationFinanceHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), cost);
                         return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
                     }
-                })
+                }))
         );
     }
 
@@ -227,6 +235,11 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
+    }
+
+    private ServiceResult<Question> getQuestion(FinanceRowItem newCostItem, Application application) {
+        return questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition().getId(), newCostItem.getCostType().getFormInputType())
+                .andOnSuccess(questionResource ->  getQuestion(questionResource.getId()));
     }
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {

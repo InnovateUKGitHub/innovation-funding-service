@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -136,11 +137,15 @@ public class YourFundingController {
 
     @PostMapping("auto-save")
     public @ResponseBody
-    JsonNode autoSave(@RequestParam String fieldName,
+    JsonNode autoSave(UserResource user,
+                      @PathVariable long applicationId,
+                      @RequestParam String field,
                       @RequestParam String value) {
-        LoggerFactory.getLogger(this.getClass()).error(String.format("Auto save field: (%s) value: (%s) ", fieldName, value));
+        Optional<Long> fieldId = saver.autoSave(field, value, applicationId, user);
+        LoggerFactory.getLogger(this.getClass()).error(String.format("Auto save field: (%s) value: (%s) ", field, value));
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
+        fieldId.ifPresent(id -> node.put("fieldId", id));
         return node;
     }
 

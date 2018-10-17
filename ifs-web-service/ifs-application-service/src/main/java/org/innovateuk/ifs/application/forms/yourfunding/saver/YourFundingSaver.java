@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.yourfunding.saver;
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -19,6 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Optional;
 
 import static java.lang.Long.parseLong;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -98,7 +103,7 @@ public class YourFundingSaver {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
 
-        Long costId = financeRowRestService.addWithResponse(finance.getId(), form.getOtherFundingQuestionId(), new OtherFunding()).getSuccess().getId();
+        Long costId = financeRowRestService.addWithResponse(finance.getId(), new OtherFunding()).getSuccess().getId();
         OtherFundingRowForm rowForm = new OtherFundingRowForm();
         rowForm.setCostId(costId);
         form.getOtherFundingRows().put(String.valueOf(costId), rowForm);
@@ -111,22 +116,45 @@ public class YourFundingSaver {
         }
     }
 
-    public void autoSave(String field, String value, long applicationId, UserResource user) {
+    public Optional<Long> autoSave(String field, String value, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
 
         try {
-            switch (field) {
-                case "grantClaimPercentage":
-                    GrantClaim grantClaim = finance.getGrantClaim();
-                    grantClaim.setGrantClaimPercentage(Integer.valueOf(value));
-                    financeRowRestService.update(grantClaim);
-                    return;
-                default:
-                    return;
+            if (field.equals("grantClaimPercentage")) {
+                finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+                GrantClaim grantClaim = finance.getGrantClaim();
+                grantClaim.setGrantClaimPercentage(Integer.valueOf(value));
+                financeRowRestService.update(grantClaim).getSuccess();
+            } else if (field.startsWith("otherFundingRows")) {
+                String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
+                String rowField = field.substring(field.indexOf("].") + 2);
+                OtherFunding cost;
+
+                if (id.equals(YourFundingForm.EMPTY_ROW_ID)) {
+                    cost = (OtherFunding) financeRowRestService.addWithResponse(finance.getId(), new OtherFunding()).getSuccess();
+                } else {
+                    cost = (OtherFunding) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();
+                }
+
+                if (rowField.equals("source")) {
+                    cost.setFundingSource(value);
+                } else if (rowField.equals("date")) {
+                    cost.setSecuredDate(value);
+                } else if (rowField.equals("fundingAmount")) {
+                    cost.setFundingAmount(new BigDecimal(value));
+                } else {
+                    throw new IFSRuntimeException(String.format("Auto save other funding field not handled %s", rowField), Collections.emptyList());
+                }
+                financeRowRestService.update(cost);
+                return Optional.of(cost.getId());
+            } else {
+                throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
             }
-        } catch (NumberFormatException e) {
-            LOG.debug(e);
+        } catch (Exception e) {
+            LOG.debug("Error auto saving", e);
+            LOG.info(String.format("Unable to auto save field (%s) value (%s)", field, value));
         }
+        return Optional.empty();
     }
 }

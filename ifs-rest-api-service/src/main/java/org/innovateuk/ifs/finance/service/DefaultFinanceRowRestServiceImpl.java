@@ -21,8 +21,13 @@ public class DefaultFinanceRowRestServiceImpl extends BaseFinanceRowRestServiceI
     }
 
     @Override
-    public RestResult<FinanceRowItem> addWithResponse(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {
-        return postWithRestResult(getCostRestUrl() + "/add-with-response/" + applicationFinanceId + "/" + questionId, costItem,
+    public RestResult<FinanceRowItem> addWithResponse(Long applicationFinanceId, FinanceRowItem costItem) {
+        return postWithRestResult(getCostRestUrl() + "/add-with-response/" + applicationFinanceId, costItem,
                 FinanceRowItem.class);
+    }
+
+    @Override
+    public RestResult<FinanceRowItem> getCost(Long costId) {
+        return getWithRestResult(getCostRestUrl() + "/" + costId, FinanceRowItem.class);
     }
 }
