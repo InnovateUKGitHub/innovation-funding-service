@@ -858,7 +858,7 @@ The user enters valid data in the initial details
     And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
     And the user selects the option from the drop-down menu    Offshore wind  name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Biosciences     name = innovationAreaCategoryIds[0]
+    And the user selects the index from the drop-down menu     19     name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Emerging and enabling  id = innovationSectorCategoryId
     And the user selects the option from the drop-down menu    Satellite applications  name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Space technology  name = innovationAreaCategoryIds[1]
