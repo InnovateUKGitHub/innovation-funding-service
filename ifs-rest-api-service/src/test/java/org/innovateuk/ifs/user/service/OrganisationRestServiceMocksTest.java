@@ -97,17 +97,6 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     }
 
     @Test
-    public void getPrimaryForUser() {
-        long userId = 1L;
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        setupGetWithRestResultExpectations(format("%s/primary-for-user/%s", organisationsUrl, userId), OrganisationResource.class, organisationResource);
-
-        OrganisationResource result = service.getPrimaryForUser(userId).getSuccess();
-
-        assertEquals(result, organisationResource);
-    }
-
-    @Test
     public void getByUserAndApplicationId() {
         long userId = 1L;
         long applicationId = 2L;

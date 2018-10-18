@@ -40,12 +40,6 @@ public class OrganisationResource {
         this.name = name;
     }
 
-    @ZeroDowntime(description = "Migrate: remove", reference = "IFS-4194")
-    @Deprecated
-    public String getCompanyHouseNumber() {
-        return getCompaniesHouseNumber();
-    }
-
     public String getCompaniesHouseNumber() {
         return companiesHouseNumber;
     }

@@ -54,8 +54,8 @@ public class SectionStatusController {
     }
 
     @GetMapping("/all-sections-marked-as-complete/{applicationId}")
-    public RestResult<Boolean> getCompletedSections(@PathVariable("applicationId") final long applicationId) {
-        return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
+    public RestResult<Boolean> allSectionsMarkedAsComplete(@PathVariable("applicationId") final long applicationId) {
+        return sectionStatusService.sectionsCompleteForAllOrganisations(applicationId).toGetResponse();
     }
 
     @GetMapping("/get-incomplete-sections/{applicationId}")

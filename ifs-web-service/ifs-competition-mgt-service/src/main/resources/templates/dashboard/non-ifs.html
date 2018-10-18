@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
+            <th:block th:insert="competition/dashboard :: dashboard-search-bar"/>
         </form>
 
         <div class="govuk-tabs" data-module="tabs">

@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -124,7 +125,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -187,7 +189,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -250,7 +253,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -313,7 +317,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -436,7 +441,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         expectedViewModel.setSummary(true);
@@ -470,6 +476,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 .withName("Application name")
                 .withApplicationState(applicationState)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCollaborationLevel(SINGLE_OR_COLLABORATIVE)
                 .build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);

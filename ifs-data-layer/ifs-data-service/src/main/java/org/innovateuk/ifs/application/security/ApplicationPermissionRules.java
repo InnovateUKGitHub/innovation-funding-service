@@ -31,9 +31,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);
-        final boolean isCollaborator = isCollaborator(applicationResource.getId(), user);
-        return isLeadApplicant || isCollaborator;
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
@@ -200,6 +198,12 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
         Competition competition = competitionRepository.findOne(application.getCompetition());
         return (isInternalAdmin(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
+    }
+
+    @PermissionRule(value = "CHECK_COLLABORATIVE_FUNDING_CRITERIA_MET", description = "The consortium can check collaborative funding criteria is met")
+    public boolean consortiumCanCheckCollaborativeFundingCriteriaIsMet(final ApplicationResource applicationResource,
+                                                                       final UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
