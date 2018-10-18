@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.documents.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 
 /**
  * View model for viewing/actions on each document
@@ -14,13 +15,15 @@ public class DocumentViewModel {
     private Long documentConfigId;
     private String title;
     private FileDetailsViewModel fileDetails;
+    private DocumentStatus status;
 
-    public DocumentViewModel(Long projectId, String projectName, Long documentConfigId, String title, FileDetailsViewModel fileDetails) {
+    public DocumentViewModel(Long projectId, String projectName, Long documentConfigId, String title, FileDetailsViewModel fileDetails, DocumentStatus status) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.documentConfigId = documentConfigId;
         this.title = title;
         this.fileDetails = fileDetails;
+        this.status = status;
     }
 
     public Long getProjectId() {
@@ -63,6 +66,14 @@ public class DocumentViewModel {
         this.fileDetails = fileDetails;
     }
 
+    public DocumentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DocumentStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,6 +88,7 @@ public class DocumentViewModel {
                 .append(documentConfigId, that.documentConfigId)
                 .append(title, that.title)
                 .append(fileDetails, that.fileDetails)
+                .append(status, that.status)
                 .isEquals();
     }
 
@@ -88,6 +100,7 @@ public class DocumentViewModel {
                 .append(documentConfigId)
                 .append(title)
                 .append(fileDetails)
+                .append(status)
                 .toHashCode();
     }
 }
