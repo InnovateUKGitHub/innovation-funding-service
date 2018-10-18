@@ -92,7 +92,7 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        return new DocumentViewModel(project.getId(), project.getName(),
+        return new DocumentViewModel(project.getId(), project.getName(), basicDetails.getApplication().getId(),
                 configuredProjectDocument.getId(), configuredProjectDocument.getTitle(),
                 fileDetails);
     }

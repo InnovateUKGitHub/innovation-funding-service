@@ -123,11 +123,11 @@
                       </tbody>
                       <tfoot class="govuk-table__foot bank-export">
                         <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
-                          <td class="govuk-table__cell" colspan="3"></td>
+                          <td class="govuk-table__cell" colspan="4"></td>
                           <td class="govuk-table__cell aligncentre">
                             <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
                           </td>
-                          <td class="govuk-table__cell" colspan="4"></td>
+                          <td class="govuk-table__cell" colspan="3"></td>
                         </tr>
                       </tfoot>
                     </table>

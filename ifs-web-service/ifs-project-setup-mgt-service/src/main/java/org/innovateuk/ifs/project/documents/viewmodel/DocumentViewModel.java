@@ -11,13 +11,15 @@ public class DocumentViewModel {
 
     private Long projectId;
     private String projectName;
+    private Long applicationId;
     private Long documentConfigId;
     private String title;
     private FileDetailsViewModel fileDetails;
 
-    public DocumentViewModel(Long projectId, String projectName, Long documentConfigId, String title, FileDetailsViewModel fileDetails) {
+    public DocumentViewModel(Long projectId, String projectName, Long applicationId, Long documentConfigId, String title, FileDetailsViewModel fileDetails) {
         this.projectId = projectId;
         this.projectName = projectName;
+        this.applicationId = applicationId;
         this.documentConfigId = documentConfigId;
         this.title = title;
         this.fileDetails = fileDetails;
@@ -37,6 +39,10 @@ public class DocumentViewModel {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
     }
 
     public Long getDocumentConfigId() {
