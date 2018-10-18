@@ -109,7 +109,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     @Test
     public void inviteStakeholderWhenEmailDomainIsIncorrect() throws Exception {
 
-        invitedUser.setEmail("Rayon.Kevin@innovateuk.gov.uk");
+        invitedUser.setEmail("Rayon.Kevin@innovateuk.ukri.org");
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
         assertTrue(result.isFailure());
@@ -130,6 +130,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
     @Test
     public void inviteStakeholderWhenUserAlreadyInvited() throws Exception {
+
         StakeholderInvite stakeholderInvite = new StakeholderInvite();
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
@@ -164,6 +165,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
         when(stakeholderInviteRepositoryMock.save(any(StakeholderInvite.class))).thenReturn(savedStakeholderInvite);
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
+
         User loggedInUser = newUser().build();
         when(loggedInUserSupplierMock.get()).thenReturn(loggedInUser);
 
