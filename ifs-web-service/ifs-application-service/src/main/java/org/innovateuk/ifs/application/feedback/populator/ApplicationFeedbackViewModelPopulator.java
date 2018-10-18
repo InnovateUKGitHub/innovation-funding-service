@@ -144,6 +144,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 applicationFundingBreakdownViewModel,
                 interviewFeedbackViewModel,
                 projectWithdrawn,
+                application.isCollaborativeProject(),
                 ApplicationSummaryOrigin.valueOf(origin),
                 buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams),
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
