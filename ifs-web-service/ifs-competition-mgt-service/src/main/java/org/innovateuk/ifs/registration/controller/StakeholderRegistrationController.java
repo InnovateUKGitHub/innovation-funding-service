@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.StakeholderRegistrationForm;
 import org.innovateuk.ifs.registration.populator.StakeholderRegistrationModelPopulator;
 import org.innovateuk.ifs.registration.service.StakeholderService;
@@ -41,11 +42,17 @@ public class StakeholderRegistrationController {
 
     private final StakeholderService stakeholderService;
 
+    private final InviteUserRestService inviteUserRestService;
+
     @Autowired
-    public StakeholderRegistrationController(StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator, CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService, StakeholderService stakeholderService) {
+    public StakeholderRegistrationController(StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator,
+                                             CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService,
+                                             StakeholderService stakeholderService,
+                                             InviteUserRestService inviteUserRestService) {
         this.stakeholderRegistrationModelPopulator = stakeholderRegistrationModelPopulator;
         this.competitionSetupStakeholderRestService = competitionSetupStakeholderRestService;
         this.stakeholderService = stakeholderService;
+        this.inviteUserRestService = inviteUserRestService;
     }
 
     @GetMapping("/{inviteHash}/register")
@@ -79,9 +86,28 @@ public class StakeholderRegistrationController {
                 });
                 return validationHandler.
                         failNowOrSucceedWith(failureView,
-                                () -> format("redirect:/registration/%s/register/account-created", inviteHash));
+                                () -> format("redirect:/stakeholder/%s/register/account-created", inviteHash));
             });
         }
+    }
+
+    @GetMapping(value = "/{inviteHash}/register/account-created")
+    public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
+        boolean userIsLoggedIn = loggedInUser != null;
+
+        // the user is already logged in, take them back to the dashboard
+        if (userIsLoggedIn) {
+            return "redirect:/";
+        }
+
+        return inviteUserRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+            if (!userExists) {
+                return format("redirect:/registration/%s/register", inviteHash);
+            }
+            else {
+                return "registration/account-created";
+            }
+        }).getSuccess();
     }
 
     private String doViewYourDetails(Model model, String inviteHash, UserResource loggedInUser) {
