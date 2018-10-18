@@ -63,21 +63,23 @@
                             <li th:each="childSection : ${model.section.subSections.get(section.id)}">
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
-                                        <a th:href="'/application/'+${model.applicationId}+'/form/section/'+${childSection.id}"
-                                           th:text="${childSection.getName()}"
+                                        <a th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${model.applicationId},sectionId=${childSection.id})}"
+                                           th:text="${childSection.name}"
                                            class="govuk-link" />
                                     </h3>
                                 </div>
-                                <th:block th:if="${model.user.userIsLeadApplicant or childSection.id.equals(model.financeSectionId)}">
-                                    <div th:unless="${model.isFinanceSectionComplete(childSection)}"
-                                         class="task-status-incomplete">
-                                        <span>Incomplete</span>
-                                    </div>
-                                    <div th:if="${model.isFinanceSectionComplete(childSection)}"
-                                         class="task-status-complete">
-                                        <span>Complete</span>
-                                        </div>
-                                </th:block>
+                                <div
+                                    th:if="${childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).FINANCE}"
+                                    th:with="complete=${model.completed.financeSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
+                                </div>
+                                <div
+                                    th:if="${model.user.userIsLeadApplicant && childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}"
+                                    th:with="complete=${model.completed.financeOverviewSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
+                                </div>
                             </li>
                         </th:block>
                     </ul>

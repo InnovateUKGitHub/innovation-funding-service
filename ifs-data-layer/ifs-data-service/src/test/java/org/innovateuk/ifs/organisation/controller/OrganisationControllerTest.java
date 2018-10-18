@@ -78,15 +78,6 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     }
 
     @Test
-    public void getPrimaryForUserShouldReturnOrganisation() throws Exception {
-        when(organisationServiceMock.getPrimaryForUser(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
-
-        mockMvc.perform(get("/organisation/primary-for-user/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
-    }
-
-    @Test
     public void getByUserAndApplicationId() throws Exception {
         when(organisationServiceMock.getByUserAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
