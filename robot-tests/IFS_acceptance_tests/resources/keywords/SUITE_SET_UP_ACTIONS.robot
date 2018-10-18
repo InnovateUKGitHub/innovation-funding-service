@@ -124,7 +124,7 @@ Invite and accept the invitation
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 css = .govuk-button[type="submit"]
-    the research user finds org in companies house      Liv  University of Liverpool
+    the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
@@ -151,8 +151,8 @@ the user fills in the inviting steps
 
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
-    [Arguments]  ${searchName}  ${link}
-    the user enters text to a text field  id=organisationSearchName  ${searchName}
+    [Arguments]  ${search}  ${link}
+    the user enters text to a text field  id=organisationSearchName  ${search}
     the user clicks the button/link       jQuery=.govuk-button:contains("Search")
     the user clicks the button/link       link= ${link}
     the user clicks the button/link       jQuery=.govuk-button:contains("Save and continue")
