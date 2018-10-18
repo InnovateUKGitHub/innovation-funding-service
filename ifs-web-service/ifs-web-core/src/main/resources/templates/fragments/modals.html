@@ -197,7 +197,8 @@
     </div>
 </th:block>
 
-<!-- Accept documents on review -->
+<!-- TODO: remove when old document upload is removed.
+ --><!-- Accept documents on review -->
 <th:block th:fragment="modal-accept-docs">
     <div class="modal-accept-docs" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -258,6 +259,38 @@
         </div>
     </div>
 </th:block>
+
+<!-- accept document on review -->
+<th:block th:fragment="modal-accept-configured-doc">
+    <div class="modal-accept-configured-doc" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Approve document</h2>
+        <p class="govuk-body">The Project Manager will be notified by email.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" id="accept-document" name="approved" value="true">Accept document</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Reject document on review -->
+<th:block th:fragment="modal-reject-configured-doc">
+    <div class="modal-reject-configured-doc warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Reject document</h2>
+            <p class="govuk-body">The Project Manager will be notified by email.</p>
+            <p class="govuk-body">Please contact them to explain your decision so they can upload a revised version.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" id="reject-document" name="rejected" value="false">Reject document</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 
 <!-- Confirmation on finance checks -->
 <th:block th:fragment="approve-eligibility-modal">
