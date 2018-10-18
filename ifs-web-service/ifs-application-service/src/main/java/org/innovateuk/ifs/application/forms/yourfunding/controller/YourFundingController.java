@@ -113,7 +113,7 @@ public class YourFundingController {
     }
 
     @PostMapping(params = "add_other_funding")
-    public String addFundingRow(Model model,
+    public String addFundingRowFormPost(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
                                 @PathVariable long sectionId,
@@ -124,20 +124,20 @@ public class YourFundingController {
     }
 
     @PostMapping(params = "remove_other_funding")
-    public String removeFundingRow(Model model,
+    public String removeFundingRowFormPost(Model model,
                                    UserResource user,
                                    @PathVariable long applicationId,
                                    @PathVariable long sectionId,
                                    @ModelAttribute("form") YourFundingForm form,
                                    @RequestParam("remove_other_funding") String costId) {
 
-        saver.removeOtherFundingRow(form, costId);
+        saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, applicationId, sectionId, user);
     }
 
     @PostMapping("auto-save")
     public @ResponseBody
-    JsonNode autoSave(UserResource user,
+    JsonNode ajaxAutoSave(UserResource user,
                       @PathVariable long applicationId,
                       @RequestParam String field,
                       @RequestParam String value) {
@@ -150,15 +150,15 @@ public class YourFundingController {
 
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
-    JsonNode removeRow(UserResource user,
+    JsonNode ajaxRemoveRow(UserResource user,
                       @PathVariable long applicationId,
                       @PathVariable String rowId) {
-        saver.removeFundingRow(rowId);
+        saver.removeOtherFundingRow(rowId);
         return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping("add-row")
-    public String addRow(Model model,
+    public String ajaxAddRow(Model model,
                          UserResource user,
                         @PathVariable long applicationId,
                         @ModelAttribute("form") YourFundingForm form,
@@ -168,9 +168,8 @@ public class YourFundingController {
         OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
         model.addAttribute("id", row.getCostId());
         model.addAttribute("row", row.getCostId());
-        return "application/your-funding-fragments :: other_funding_row_controller";
+        return "application/your-funding-fragments :: ajax_other_funding_row";
     }
-
 
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
