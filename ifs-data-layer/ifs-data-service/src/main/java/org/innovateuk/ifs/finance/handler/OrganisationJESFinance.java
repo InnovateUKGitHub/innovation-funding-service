@@ -62,7 +62,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
-        if(costTypeSupportedByHandler(costType)) {
+        if(initialiseCostTypeSupported(costType)) {
             Long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
             try{
@@ -79,7 +79,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
         return null;
     }
 
-    private boolean costTypeSupportedByHandler(FinanceRowType costType) {
+    private boolean initialiseCostTypeSupported(FinanceRowType costType) {
         return asList(FINANCE, OTHER_FUNDING).contains(costType);
     }
 
