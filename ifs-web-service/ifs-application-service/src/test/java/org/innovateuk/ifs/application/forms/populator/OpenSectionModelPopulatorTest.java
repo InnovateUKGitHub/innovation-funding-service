@@ -59,7 +59,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
@@ -127,7 +126,10 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withCollaborationLevel(COLLABORATIVE)
                 .build();
 
-        application = newApplicationResource().withCompetition(competition.getId()).build();
+        application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(true)
+                .build();
 
         applicationForm = new ApplicationForm();
         applicationForm.setApplication(application);
@@ -264,6 +266,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     @Test
     public void populateMode_nonCollaborativeProjectWhenCollaborationLevelIsSingle() {
         competition.setCollaborationLevel(CollaborationLevel.SINGLE);
+        application.setCollaborativeProject(false);
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
@@ -276,6 +279,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     @Test
     public void populateMode_nonCollaborativeProjectWithSingleOrganisationWhenCollaborationIsSupported() {
         competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
+        application.setCollaborativeProject(false);
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
@@ -288,19 +292,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     @Test
     public void populateMode_nonCollaborativeProjectWithMultipleOrganisationsWhenCollaborationIsSupported() {
         competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
-
-        ApplicantResource applicant = applicantSection.getCurrentApplicant();
-        ApplicantResource additionalApplicant = newApplicantResource()
-                .withProcessRole(newProcessRoleResource()
-                        .withUser(newUserResource().build())
-                        .withRoleName(COLLABORATOR.getName())
-                        .build())
-                .withOrganisation(newOrganisationResource()
-                        .withOrganisationType(BUSINESS.getId())
-                        .build())
-                .build();
-
-        applicantSection.setApplicants(asList(applicant, additionalApplicant));
+        application.setCollaborativeProject(true);
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 

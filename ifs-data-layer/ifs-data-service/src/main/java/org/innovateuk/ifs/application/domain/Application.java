@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -364,5 +365,31 @@ public class Application implements ProcessActivity {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
+    }
+
+    public boolean isCollaborativeProject() {
+        CollaborationLevel collaborationLevel = competition.getCollaborationLevel();
+
+        if (collaborationLevel == null) {
+            return false;
+        }
+
+        switch (collaborationLevel) {
+            case SINGLE:
+                return false;
+            case COLLABORATIVE:
+                return true;
+            case SINGLE_OR_COLLABORATIVE: {
+                long uniqueOrganisations = processRoles
+                        .stream()
+                        .filter(ProcessRole::isLeadApplicantOrCollaborator)
+                        .map(ProcessRole::getOrganisationId)
+                        .distinct()
+                        .count();
+                return uniqueOrganisations > 1;
+            }
+            default:
+                throw new IllegalArgumentException("Unexpected enum constant: " + collaborationLevel);
+        }
     }
 }
