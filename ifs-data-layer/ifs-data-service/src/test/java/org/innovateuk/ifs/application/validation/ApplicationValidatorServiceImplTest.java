@@ -18,7 +18,6 @@ import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -44,6 +43,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -82,9 +82,6 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private ProjectFinanceRowService projectFinanceRowService;
-
-    @Mock
-    private AcademicJesValidator academicJesValidator;
 
     @Mock
     private OrganisationService organisationService;
@@ -190,17 +187,18 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         Application application = newApplication().build();
         long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
-        BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
+        BindingResult bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
         FormInput formInput = newFormInput().build();
         long formInputId = formInput.getId();
+        ValidationMessages expectedValidationMessage = ValidationMessages.fromBindingResult(bindingResult);
 
         when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
-        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
+        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
         when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
 
-        BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
+        ValidationMessages actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
 
-        assertEquals(bindingResultExpected, actual);
+        assertEquals(expectedValidationMessage, actual);
 
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
@@ -212,28 +210,28 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         Application application = newApplication().build();
         long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
-        BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);
+        BindingResult bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
         FormInput formInput = newFormInput().withType(FormInputType.FINANCE_UPLOAD).build();
         long formInputId = formInput.getId();
         OrganisationResource organisationResult = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
         User user = newUser().build();
+        ValidationMessages expectedValidationMessage = ValidationMessages.fromBindingResult(bindingResult);
+        expectedValidationMessage.addError(fieldError("jesFileUpload", null, "validation.application.jes.upload.required"));
 
         when(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId)).thenReturn(formInputResponse);
-        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResultExpected);
+        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
         when(formInputRepository.findOne(formInputId)).thenReturn(formInput);
-        when(applicationValidationUtil.addValidation(application, academicJesValidator)).thenReturn(bindingResultExpected);
         when(organisationService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(ServiceResult.serviceSuccess(organisationResult));
         when(userRepository.findOne(loggedInUser.getId())).thenReturn(user);
-        BindingResult actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
+        ValidationMessages actual = service.validateFormInputResponse(application, formInputId, markedAsCompleteById);
 
-        assertEquals(bindingResultExpected, actual);
+        assertEquals(expectedValidationMessage, actual);
 
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
         verify(formInputRepository, only()).findOne(formInputId);
-        verify(applicationValidationUtil).addValidation(application, academicJesValidator);
         verify(organisationService, only()).getByUserAndApplicationId(user.getId(), application.getId());
         verify(userRepository, only()).findOne(loggedInUser.getId());
 
