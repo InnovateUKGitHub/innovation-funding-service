@@ -96,12 +96,12 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
         when(companyHouseService.getOrganisationById(any()))
                 .thenReturn(ServiceResult.serviceSuccess(organisationSearchResults));
 
-        mockMvc.perform(get("/companies-house/getCompanyHouse/{id}",id)
+        mockMvc.perform(get("/companies-house/company/{id}",id)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(organisationSearchResults)))
-                .andDo(document("companies-house-house/{method-name}",
+                .andDo(document("companies-house/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the Organisation to search.")
                         ),

@@ -13,7 +13,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 @Configurable
 public class OrganisationApplicationFinanceOverviewImpl implements OrganisationFinanceOverview {
@@ -43,9 +44,7 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
     }
 
     public Map<Long, BaseFinanceResource> getFinancesByOrganisation() {
-        return applicationFinances
-                .stream()
-                .collect(Collectors.toMap(ApplicationFinanceResource::getOrganisation, f -> f));
+        return simpleToMap(applicationFinances, ApplicationFinanceResource::getOrganisation, f -> f);
     }
 
     public Map<Long, Pair<BaseFinanceResource, FileEntryResource>> getAcademicOrganisationFileEntries() {
