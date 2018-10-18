@@ -264,17 +264,19 @@
                     </th:block>
                 </ul>
                 <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
-                    <a th:if="${applicationOrganisation.id == userOrganisation.id}"
-                       th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                       th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                       class="govuk-body govuk-link">Return to the finances section to complete your finances</a>
+                    <p class="govuk-body"
+                       th:if="${applicationOrganisation.id == userOrganisation.id}"
+                       th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                      <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                         class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
                 </th:block>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
             </div>
             <div th:unless="${collaborativeProject}" class="warning-alert">
-                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your finances as complete</h2>
-                <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                   class="govuk-body govuk-link">Return to the finances section to complete your finances</a>
+                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your finances as complete.</h2>
+                <p class="govuk-body">
+                    <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                       class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete.</p>
             </div>
         </th:block>
