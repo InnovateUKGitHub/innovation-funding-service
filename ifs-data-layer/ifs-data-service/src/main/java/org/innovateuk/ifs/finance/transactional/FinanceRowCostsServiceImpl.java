@@ -99,17 +99,26 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final FinanceRowItem newCostItem) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccess((applicationFinance) ->
                 getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application ->
-                getQuestion(newCostItem, application).andOnSuccess(question -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
-                    if (newCostItem != null) {
-                        FinanceRow newCost = addCostItem(applicationFinance, question, newCostItem);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)newCost));
-                    } else {
-                        ApplicationFinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
-                        organisationFinanceHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), cost);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
-                    }
-                }))
+                getQuestion(newCostItem, application).andOnSuccess(question ->
+                        addCost(applicationFinanceId, question.getId(), newCostItem)))
+        );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, Long questionId, final FinanceRowItem newCostItem) {
+        return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
+                getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
+                            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+                            if (newCostItem != null) {
+                                FinanceRow newCost = addCostItem(applicationFinance, question, newCostItem);
+                                return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)newCost));
+                            } else {
+                                ApplicationFinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
+                                organisationFinanceHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), cost);
+                                return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+                            }
+                        })
         );
     }
 

@@ -31,7 +31,7 @@ public class FinanceRowController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
-    	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, newCostItem).toPostCreateResponse();
+    	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
         if (createResult.isFailure()) {
             return RestResult.restFailure(createResult.getFailure());
         } else {
