@@ -94,6 +94,7 @@ public class DocumentsPopulator {
 
         return new DocumentViewModel(project.getId(), project.getName(), basicDetails.getApplication().getId(),
                 configuredProjectDocument.getId(), configuredProjectDocument.getTitle(),
-                fileDetails);
+                fileDetails,
+                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET));
     }
 }
