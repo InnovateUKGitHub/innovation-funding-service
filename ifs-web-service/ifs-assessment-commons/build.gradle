@@ -5,7 +5,7 @@ apply plugin: 'idea'
 
 buildscript {
 
-    ext['thymeleaf.version'] = '3.0.9.RELEASE'
+    ext['thymeleaf.version'] = '3.0.8.RELEASE'
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
