@@ -14,6 +14,8 @@ public class ProjectDocumentResource {
 
     private DocumentStatus status;
 
+    private String statusComments;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class ProjectDocumentResource {
 
     public void setStatus(DocumentStatus status) {
         this.status = status;
+    }
+
+    public String getStatusComments() {
+        return statusComments;
+    }
+
+    public void setStatusComments(String statusComments) {
+        this.statusComments = statusComments;
     }
 }
