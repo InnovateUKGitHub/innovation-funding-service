@@ -28,7 +28,7 @@ dependencies {
     compile project(":ifs-resources")
     compile project(":ifs-security")
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa:2.0.0.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:2.0.5.RELEASE"
     compile "org.apache.tika:tika-parsers:1.14"
     compile "org.apache.httpcomponents:httpasyncclient:4.1.3"
 
