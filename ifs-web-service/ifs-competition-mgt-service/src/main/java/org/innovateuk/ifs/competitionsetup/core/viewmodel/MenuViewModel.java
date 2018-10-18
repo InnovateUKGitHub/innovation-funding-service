@@ -48,4 +48,16 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     public boolean sectionIsDocuments(CompetitionSetupSection setupSection) {
         return setupSection.equals(CompetitionSetupSection.PROJECT_DOCUMENT);
     }
+
+    public boolean sectionIsInitialDetails(CompetitionSetupSection setupSection) {
+        return setupSection.equals(CompetitionSetupSection.INITIAL_DETAILS);
+    }
+
+    public boolean sectionIsPublicContent(CompetitionSetupSection setupSection) {
+        return setupSection.equals(CompetitionSetupSection.CONTENT);
+    }
+
+    public boolean sectionIsMilestones(CompetitionSetupSection setupSection) {
+        return setupSection.equals(CompetitionSetupSection.MILESTONES);
+    }
 }

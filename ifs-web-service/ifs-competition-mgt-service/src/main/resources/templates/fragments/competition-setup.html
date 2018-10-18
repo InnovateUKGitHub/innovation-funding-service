@@ -10,47 +10,83 @@
                 <p class="govuk-body">Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
             </div>
         </div>
-        <ul class="task-list">
-            <li th:each="(section, iteration : ${sections})" th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section)}">
-                <div class="task">
-                    <h2 class="govuk-heading-s">
-                        <a th:if="${model.initialCompleteOrSectionIsInitial(section)}"
-                           th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-                           th:text="${section.name}"
-                           class="govuk-link">Section Name</a>
-                        <th:block th:unless="${model.initialCompleteOrSectionIsInitial(section)}"
-                                  th:text="${section.name}">Section Name</th:block>
-                    </h2>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="highlight-panel govuk-!-padding-6 govuk-!-padding-top-3">
+                    <h2 class="govuk-heading-m">Publish</h2>
+                    <ul class="task-list">
+                        <th:block th:each="(section, iteration : ${sections})"
+                                  th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section) && (model.sectionIsInitialDetails(section) || model.sectionIsPublicContent(section) || model.sectionIsMilestones(section))}"
+                                  th:insert="fragments/competition-setup :: comp-setup-navigation-list-item(section)" />
+                    </ul>
+                    <h2 class="govuk-heading-m">Competition setup</h2>
+                    <ul class="task-list">
+                        <th:block th:each="(section, iteration : ${sections})"
+                                  th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section) && !model.sectionIsInitialDetails(section) && !model.sectionIsPublicContent(section) && !model.sectionIsMilestones(section)}"
+                                  th:insert="fragments/competition-setup :: comp-setup-navigation-list-item(section)" />
+                    </ul>
+                    <p th:if="${!isReadyToOpen}"
+                       class="govuk-body">When complete, this competition will open on the date set in Milestones.</p>
+                    <a th:if="${!isReadyToOpen}"
+                       data-js-modal="complete-modal"
+                       th:disabled="${!setupReady}"
+                       class="govuk-button govuk-!-margin-right-0" id="compCTA">Complete setup</a>
+                    <a th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}"
+                       data-js-modal="delete-modal" class="button-clear">Delete competition</a>
                 </div>
-                <div th:if="${model.publicContentPublishedAndSectionIsContent(section)}"
-                      th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
-                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}"
-                      th:text="${'Last published ' + publishDay + ' ' + publishTime}"
-                      class="notification">Last published</div>
-                <div th:if="${model.sectionCompleteAndCompetitionNotLive(section)}" class="task-status-complete"><span>Complete</span></div>
-            </li>
-            <li>
-                <div class="task">
-                    <h2 class="govuk-heading-s">
-                        <th:block th:if="${model.general.initialComplete}">
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}" class="govuk-link">Stakeholders</a>
-                        </th:block>
-                        <th:block th:unless="${model.general.initialComplete}">Stakeholders</th:block>
-                    </h2>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="highlight-panel govuk-!-padding-6 govuk-!-padding-top-3">
+                    <h2 class="govuk-heading-m">Competition access</h2>
+                    <ul class="task-list">
+
+                        <li>
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}" class="govuk-link">Innovation leads</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Innovation leads</th:block>
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                    <!--/*<h2 class="govuk-heading-m">Project setup</h2>
+                    <ul class="task-list">
+                        <li>
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a href="/" class="govuk-link">Documents</a>
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>*/-->
                 </div>
-            </li>
-        </ul>
-        <div th:if="${!isReadyToOpen}" class="govuk-!-margin-top-6">
-            <p class="govuk-body">Once you complete, this competition will be ready to open.</p>
-            <a data-js-modal="complete-modal"
-               th:disabled="${!setupReady}"
-               class="govuk-button govuk-!-margin-right-0" id="compCTA">Complete</a>
-        </div>
-        <div class="govuk-!-margin-top-6"
-             th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
-            <a data-js-modal="delete-modal" class="button-clear">Delete competition</a>
+            </div>
         </div>
     </th:block>
+</th:block>
+
+<!-- ===================Comp admin navigation list item============================== -->
+<th:block th:fragment="comp-setup-navigation-list-item(section)">
+    <li>
+        <div class="task">
+            <h3 class="govuk-heading-s">
+                <a th:if="${model.initialCompleteOrSectionIsInitial(section)}"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
+                   th:text="${section.name}"
+                   class="govuk-link">Section Name</a>
+                <th:block th:unless="${model.initialCompleteOrSectionIsInitial(section)}"
+                          th:text="${section.name}">Section Name</th:block>
+            </h3>
+        </div>
+        <div th:if="${model.publicContentPublishedAndSectionIsContent(section)}"
+             th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}"
+             th:text="${'Last published ' + publishDay + ' ' + publishTime}"
+             class="notification">Last published</div>
+        <div th:if="${model.sectionCompleteAndCompetitionNotLive(section)}" class="task-status-complete"><span>Complete</span></div>
+    </li>
 </th:block>
 
 <!-- ===================Comp admin Page back button============================== -->

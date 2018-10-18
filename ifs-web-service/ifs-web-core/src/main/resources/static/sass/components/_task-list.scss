@@ -167,3 +167,18 @@
     }
   }
 }
+
+.govuk-grid-column-one-half {
+  .task-list {
+    > li {
+      .task {
+        width: 33%;
+      }
+
+      .notification {
+        width: 50%;
+        color: $govuk-button-colour;
+      }
+    }
+  }
+}
