@@ -192,7 +192,7 @@ the user marks each question as complete
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link = Finances
-    the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
+    the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
     the user selects the radio button     applicationFinanceType  STANDARD
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
     the user clicks the button/link       css = button[type="submit"]
