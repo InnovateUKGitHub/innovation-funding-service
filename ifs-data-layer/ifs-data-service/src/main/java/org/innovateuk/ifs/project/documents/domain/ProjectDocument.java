@@ -40,6 +40,8 @@ public class ProjectDocument {
     @Enumerated(STRING)
     private DocumentStatus status;
 
+    private String statusComments;
+
     public ProjectDocument() {
     }
 
@@ -88,5 +90,13 @@ public class ProjectDocument {
 
     public void setStatus(DocumentStatus status) {
         this.status = status;
+    }
+
+    public String getStatusComments() {
+        return statusComments;
+    }
+
+    public void setStatusComments(String statusComments) {
+        this.statusComments = statusComments;
     }
 }
