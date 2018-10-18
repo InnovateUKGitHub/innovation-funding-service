@@ -110,7 +110,7 @@
         </div>
     </th:block>
 
-    <th:block th:fragment="other_funding_row_controller">
+    <th:block th:fragment="ajax_other_funding_row">
         <th:block th:object="${form}">
             <th:block th:insert="application/your-funding-fragments :: other_funding_row (${id}, ${row})" />
         </th:block>
