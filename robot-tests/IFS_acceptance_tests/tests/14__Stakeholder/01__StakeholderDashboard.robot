@@ -99,7 +99,7 @@ the user triggers the email validation
 the user enters an Innovate UK email
     the user enters text to a text field    id = firstName     Stake
     the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.test
+    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.ukri.test
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user enters the correct details of a Stakeholder

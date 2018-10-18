@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
@@ -52,6 +53,8 @@ public class ApplicationResource {
     private Long leadOrganisationId;
 
     private boolean isInAssessmentReviewPanel;
+
+    private CollaborationLevel collaborationLevel;
 
     public Long getId() {
         return id;
@@ -249,6 +252,14 @@ public class ApplicationResource {
         this.isInAssessmentReviewPanel = inAssessmentReviewPanel;
     }
 
+    public CollaborationLevel getCollaborationLevel() {
+        return collaborationLevel;
+    }
+
+    public void setCollaborationLevel(final CollaborationLevel collaborationLevel) {
+        this.collaborationLevel = collaborationLevel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -258,15 +269,26 @@ public class ApplicationResource {
         ApplicationResource that = (ApplicationResource) o;
 
         return new EqualsBuilder()
+                .append(noInnovationAreaApplicable, that.noInnovationAreaApplicable)
+                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(applicationState, that.applicationState)
-                .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
+                .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
+                .append(completion, that.completion)
+                .append(stateAidAgreed, that.stateAidAgreed)
+                .append(resubmission, that.resubmission)
+                .append(previousApplicationNumber, that.previousApplicationNumber)
+                .append(previousApplicationTitle, that.previousApplicationTitle)
+                .append(researchCategory, that.researchCategory)
+                .append(innovationArea, that.innovationArea)
+                .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(leadOrganisationId, that.leadOrganisationId)
-                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
+                .append(collaborationLevel, that.collaborationLevel)
                 .isEquals();
     }
 
@@ -278,10 +300,21 @@ public class ApplicationResource {
                 .append(startDate)
                 .append(durationInMonths)
                 .append(applicationState)
-                .append(ineligibleOutcome)
                 .append(competition)
+                .append(competitionName)
+                .append(competitionStatus)
+                .append(completion)
+                .append(stateAidAgreed)
+                .append(resubmission)
+                .append(previousApplicationNumber)
+                .append(previousApplicationTitle)
+                .append(researchCategory)
+                .append(innovationArea)
+                .append(noInnovationAreaApplicable)
+                .append(ineligibleOutcome)
                 .append(leadOrganisationId)
                 .append(isInAssessmentReviewPanel)
+                .append(collaborationLevel)
                 .toHashCode();
     }
 }

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.NotNull;
 
-@FieldRequiredIf(required = "includeGrowthTable", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "includeGrowthTable", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeGrowthTable.required}")
 @FieldRequiredIf(required = "fundingRules", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class FinanceForm extends CompetitionSetupForm {
 
