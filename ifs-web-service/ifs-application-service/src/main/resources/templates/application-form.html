@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
-      th:with="fundingFinancesSection=${model.section.type == T(org.innovateuk.ifs.form.resource.SectionType).FUNDING_FINANCES}">
+      th:with="fundingFinancesSection=${model.isSection() && model.section.type == T(org.innovateuk.ifs.form.resource.SectionType).FUNDING_FINANCES}">
 
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
