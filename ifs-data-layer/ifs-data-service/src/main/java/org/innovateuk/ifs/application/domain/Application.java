@@ -370,6 +370,9 @@ public class Application implements ProcessActivity {
     public boolean isCollaborativeProject() {
         CollaborationLevel collaborationLevel = competition.getCollaborationLevel();
 
+        // A project is collaborative if the competition is collaborative or if there is more than a single
+        // organisation when the competition supports collaboration
+
         if (collaborationLevel == null) {
             return false;
         }
