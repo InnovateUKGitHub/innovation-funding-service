@@ -1,0 +1,50 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${euGrant.contact.name},</p>
+
+<p style="margin: 0 0 1em 0;">Thank you for registering your Horizon 2020 funding details. This is the first step to transitioning your funding during the Brexit process. You will receive further instruction from us to complete the process over the coming months.</p>
+
+<dl class="govuk-list" style="margin-top: 2em">
+    <dt><strong>Reference code</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.shortCode}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Organisation type</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.organisation.organisationType.displayName}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Registered name</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.organisation.name}</dd>
+    <#if euGrant.organisation.companiesHouseNumber??>
+    <dt style="margin: 1em 0 0 0;"><strong>Registration number</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.organisation.companiesHouseNumber}</dd>
+    </#if>
+    <dt style="margin: 1em 0 0 0;"><strong>Full name</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.contact.name}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Job title</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.contact.jobTitle}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Email</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.contact.email}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Telephone</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.contact.telephone}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Grant agreement number</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.grantAgreementNumber}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Type of action</strong></dt>
+    <dd style="margin-left: 0;">(${euGrant.funding.actionType.name}) ${euGrant.funding.actionType.description}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Participant identification code</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.participantId}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Project name</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.projectName}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Project start date</strong></dt>
+    <dd style="margin-left: 0;">${projectStartDate}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Project end date</strong></dt>
+    <dd style="margin-left: 0;">${projectEndDate}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>EU funding contribution for above project
+        (EUR)</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.fundingContribution}</dd>
+    <dt style="margin: 1em 0 0 0;"><strong>Is your organisation the project co-ordinator on this project?</strong></dt>
+    <dd style="margin-left: 0;">${euGrant.funding.projectCoordinator?string('Yes', 'No')}</dd>
+</dl>
+
+<p style="margin: 2em 0 1em 0;">If you spot any errors in the information above, please ring 0300 321 4357 or email EUGrantsFunding@ukri.org</p>
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+
+  <@layout.senderHTML />
+</@layout.default>

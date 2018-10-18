@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -38,6 +38,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -74,7 +75,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInput formInput = formInputRepository.findOne(formInputId);
         if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
-            results.add(applicationValidationUtil.addValidation(application, new ApplicationMarkAsCompleteValidator()));
+            results.add(applicationValidationUtil.addValidation(application, new ApplicationDetailsMarkAsCompleteValidator()));
         }
 
         return results;
@@ -116,19 +117,19 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         List<ObjectError> errors = new ArrayList<>();
         FormInput formInput = formInputRepository.findOne(formInputId);
 
-        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
+        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser(application.getId())) {
             errors.addAll(applicationValidationUtil.addValidation(application, academicJesValidator).getAllErrors());
         }
 
         return errors;
     }
 
-    private boolean isResearchUser() {
+    private boolean isResearchUser(long applicationId) {
         Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
         if(userResult.isPresent()) {
-            Optional<OrganisationResource> organisationResult = organisationService.getPrimaryForUser(userResult.get().getId()).getOptionalSuccessObject();
+            Optional<OrganisationResource> organisationResult = organisationService.getByUserAndApplicationId(userResult.get().getId(), applicationId).getOptionalSuccessObject();
             if(organisationResult.isPresent()) {
-                return OrganisationTypeEnum.RESEARCH.getId().equals(organisationResult.get().getOrganisationType());
+                return OrganisationTypeEnum.RESEARCH.getId() == organisationResult.get().getOrganisationType();
             }
         }
 

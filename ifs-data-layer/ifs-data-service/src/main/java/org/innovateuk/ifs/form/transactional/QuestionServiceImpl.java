@@ -90,7 +90,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
             if (section.getParentSection() != null) {
                 Optional<SectionResource> previousSection = sectionService.getPreviousSection(section).getOptionalSuccessObject();
-                if (previousSection != null) {
+                if (previousSection.isPresent()) {
                     Optional<Question> lastQuestionInSection = previousSection.get().getQuestions()
                             .stream()
                             .map(questionRepository::findOne)

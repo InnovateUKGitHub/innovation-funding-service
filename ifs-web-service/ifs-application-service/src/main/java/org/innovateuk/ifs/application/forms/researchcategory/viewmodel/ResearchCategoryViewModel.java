@@ -10,20 +10,18 @@ import java.util.List;
  */
 public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
-    private String currentCompetitionName;
+    private String applicationName;
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
-    private boolean useNewApplicantMenu;
     private String researchCategory;
     private boolean userLeadApplicant;
     private String leadApplicantName;
 
-    public ResearchCategoryViewModel(String currentCompetitionName,
+    public ResearchCategoryViewModel(String applicationName,
                                      Long applicationId,
                                      Long questionId,
                                      List<ResearchCategoryResource> availableResearchCategories,
                                      boolean hasApplicationFinances,
-                                     boolean useNewApplicantMenu,
                                      String researchCategory,
                                      boolean closed,
                                      boolean complete,
@@ -32,17 +30,16 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      boolean userLeadApplicant,
                                      String leadApplicantName) {
         super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
-        this.currentCompetitionName = currentCompetitionName;
+        this.applicationName = applicationName;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
-        this.useNewApplicantMenu = useNewApplicantMenu;
         this.researchCategory = researchCategory;
         this.userLeadApplicant = userLeadApplicant;
         this.leadApplicantName = leadApplicantName;
     }
 
-    public String getCurrentCompetitionName() {
-        return currentCompetitionName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public List<ResearchCategoryResource> getAvailableResearchCategories() {
@@ -51,10 +48,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public boolean getHasApplicationFinances() {
         return hasApplicationFinances;
-    }
-
-    public boolean isUseNewApplicantMenu() {
-        return useNewApplicantMenu;
     }
 
     public String getResearchCategory() {
@@ -67,6 +60,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public String getLeadApplicantName() {
         return leadApplicantName;
+    }
+
+    public boolean getUseSelectState() {
+        return availableResearchCategories.size() > 1;
     }
 
     @Override

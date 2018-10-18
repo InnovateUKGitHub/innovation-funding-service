@@ -7,6 +7,8 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
+import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
@@ -30,7 +32,9 @@ import org.mapstruct.Mappings;
                 CompetitionFunderMapper.class,
                 OrganisationTypeMapper.class,
                 GrantTermsAndConditionsMapper.class,
-                GrantClaimMaximumMapper.class
+                GrantClaimMaximumMapper.class,
+                ProjectDocumentMapper.class,
+                FileTypeMapper.class
         }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
@@ -41,6 +45,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "competitionType.name", target = "competitionTypeName"),
             @Mapping(source = "leadTechnologist.name", target = "leadTechnologistName"),
             @Mapping(source = "executive.name", target = "executiveName"),
+            @Mapping(source = "createdBy.name", target = "createdBy"),
+            @Mapping(source = "modifiedBy.name", target = "modifiedBy")
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);

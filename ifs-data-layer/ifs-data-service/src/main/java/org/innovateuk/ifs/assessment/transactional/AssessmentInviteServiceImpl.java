@@ -27,13 +27,12 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -65,6 +63,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -106,13 +105,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private NotificationTemplateRenderer renderer;
@@ -391,23 +387,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
-                        getByEmailAndCompetitionWithValidation(invite.getEmail(), competitionId).handleSuccessOrFailure(
-                                failure -> getInnovationArea(invite.getInnovationAreaId())
-                                        .andOnSuccess(innovationArea ->
-                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
-                                        )
-                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
-                                                "invites[" + index + "].innovationArea",
-                                                invite.getInnovationAreaId(),
-                                                "validation.competitionAssessmentInvite.create.innovationArea.required"
-                                                ))
-                                        ),
-                                success -> serviceFailure(Error.fieldError(
-                                        "invites[" + index + "].email",
-                                        invite.getEmail(),
-                                        "validation.competitionAssessmentInvite.create.email.exists"
-                                ))
-                        )
+                                     validateUserDoesntAlreadyExistWithIncompatibleRole(index, invite.getEmail())
+                                     .andOnSuccess(() -> validateUserIsNotAlreadyInvitedToThisCompetition(index, invite.getEmail(), competitionId))
+                                     .andOnSuccess(() -> validateInnovationArea(index, invite.getInnovationAreaId()))
+                                     .andOnSuccess(innovationArea -> inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea))
                 ))
                 .andOnSuccess(list -> aggregate(list))
                 .andOnSuccessReturnVoid();
@@ -457,7 +440,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             String customTextHtml = plainTextToHtml(customTextPlain);
 
-            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+            return processAnyFailuresOrSucceed(simpleMap(
                     assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentParticipantRepository.save(
@@ -483,11 +466,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getParticipantByInviteId(inviteId)
-                .andOnSuccess(participant ->
-                        resendInviteNotification(participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
-                )
-                .andOnSuccessReturnVoid();
+        return getParticipantByInviteId(inviteId).andOnSuccess(participant -> {
+            AssessmentInvite updatedInvite = participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now());
+            return resendInviteNotification(updatedInvite, assessorInviteSendResource);
+        }).andOnSuccessReturnVoid();
     }
 
     @Override
@@ -496,7 +478,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
         String customTextHtml = plainTextToHtml(customTextPlain);
 
-        return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+        return processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
                 invite -> {
                     updateParticipantStatus(invite);
@@ -513,7 +495,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private ServiceResult<Notification> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+    private ServiceResult<Void> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
         // Strip any HTML that may have been added to the content by the user.
         String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -528,7 +510,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 "bodyHtml", bodyHtml
         ));
 
-        return notificationSender.sendNotification(notification);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
@@ -553,7 +535,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                         "customTextHtml", customTextHtml
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private void addAssessorRoleToUser(User user) {
@@ -590,29 +572,51 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return find(assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
     }
 
-    private ServiceResult<Void> getByEmailAndCompetitionWithValidation(String email, long competitionId) {
+    private ServiceResult<Void> validateUserDoesntAlreadyExistWithIncompatibleRole(int index, String email) {
 
+        // currently only new users or applicants can become assessors
+        boolean userExistsWithIncompatibleRole = userRepository.findByEmailAndRolesNot(email, Role.APPLICANT).isPresent();
+        if (userExistsWithIncompatibleRole) {
+            return ServiceResult.serviceFailure(Error.fieldError(
+                    "invites[" + index + "].email",
+                    email,
+                    "validation.competitionAssessmentInvite.create.user.exists"
+            ));
+        }
+
+        return ServiceResult.serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserIsNotAlreadyInvitedToThisCompetition(int index, String email, long competitionId) {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
+        AssessorCreatedInvitePageResource resource = getInvitePageResource(competitionId, pageable).getSuccess();
 
-        List<String> existingEmails = resource.getSuccess().getContent().stream()
+        boolean userIsAlreadyInvitedOnThisPage = resource.getContent()
+                .stream()
                 .map(AssessorCreatedInviteResource::getEmail)
-                .collect(Collectors.toList());
+                .anyMatch(e -> e.equals(email));
 
-        List<String> userIsAlreadyInvitedList = existingEmails.stream()
-                .filter(e -> e.equals(email))
-                .collect(Collectors.toList());
+        boolean userInviteAlreadyExists = assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null;
 
-        Optional<User> userExists = userRepository.findByEmail(email);
-
-        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
-
-        if (assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
-            return ServiceResult.serviceSuccess();
-        } else {
-            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        if (userInviteAlreadyExists || userIsAlreadyInvitedOnThisPage) {
+            return serviceFailure(Error.fieldError(
+                    "invites[" + index + "].email",
+                    email,
+                    "validation.competitionAssessmentInvite.create.email.exists"
+            ));
         }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<InnovationArea> validateInnovationArea(int index, long innovationAreaId) {
+        return getInnovationArea(innovationAreaId)
+                .andOnFailure(() -> serviceFailure(Error.fieldError(
+                        "invites[" + index + "].innovationArea",
+                        innovationAreaId,
+                        "validation.competitionAssessmentInvite.create.innovationArea.required"
+                )));
     }
 
     private ServiceResult<Void> deleteInvite(AssessmentInvite invite) {
@@ -660,9 +664,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return
-                    applyInnovationAreaToUserProfile(participant, user)
-                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+            return applyInnovationAreaToUserProfile(participant, user)
+                    .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
         }
     }
 
@@ -720,9 +723,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private void updateParticipantStatus(AssessmentInvite invite){
+    private void updateParticipantStatus(AssessmentInvite invite) {
         AssessmentParticipant assessmentParticipant = assessmentParticipantRepository.getByInviteHash(invite.getHash());
-        if(assessmentParticipant.getStatus() != PENDING){
+        if (assessmentParticipant.getStatus() != PENDING) {
             assessmentParticipant.setStatus(PENDING);
             assessmentParticipantRepository.save(assessmentParticipant);
         }

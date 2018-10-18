@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.config;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.exceptions.TemplateProcessingException;
@@ -21,7 +19,6 @@ import static org.springframework.util.ReflectionUtils.doWithFields;
  */
 public final class FieldsToGlobalProcessor
         extends AbstractStandardExpressionAttributeTagProcessor {
-    private static final Log LOG = LogFactory.getLog(FieldsToGlobalProcessor.class);
 
     public static final int PRECEDENCE = 600;
     public static final String ATTR_NAME = "global";

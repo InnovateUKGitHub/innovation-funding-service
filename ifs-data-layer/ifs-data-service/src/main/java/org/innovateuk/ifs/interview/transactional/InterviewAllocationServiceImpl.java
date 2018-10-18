@@ -14,12 +14,9 @@ import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -67,7 +65,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
     @Autowired
     private InterviewMapper interviewMapper;
 
@@ -195,8 +193,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                         assessor,
                         NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS
 
-                ))
-                .andOnSuccessReturnVoid();
+                ));
     }
 
     private ServiceResult<InterviewParticipant> createInterviews(InterviewNotifyAllocationResource interviewNotifyAllocationResource, InterviewParticipant interviewParticipant) {
@@ -261,6 +258,6 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                         "customTextHtml", customTextHtml
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

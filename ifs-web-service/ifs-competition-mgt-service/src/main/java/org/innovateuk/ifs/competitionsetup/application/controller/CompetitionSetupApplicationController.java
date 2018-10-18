@@ -19,6 +19,7 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +56,7 @@ public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
-    private static final String questionView = "competition/setup/question";
+    private static final String QUESTION_VIEW = "competition/setup/question";
     private static final String MODEL = "model";
 
     @Autowired
@@ -71,6 +72,9 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    @Autowired
     private QuestionSetupRestService questionSetupRestService;
 
     @Autowired
@@ -82,11 +86,12 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> result = questionSetupCompetitionRestService
+                .addDefaultToCompetition(competitionId).toServiceResult();
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
-        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
+        Supplier<String> successView = () -> successViewFunction.apply(result.getSuccess());
 
         return successView.get();
     }
@@ -94,7 +99,7 @@ public class CompetitionSetupApplicationController {
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
                                          @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+        questionSetupCompetitionRestService.deleteById(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
@@ -182,16 +187,6 @@ public class CompetitionSetupApplicationController {
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             Model model) {
-
-        return handleFinanceSaving(competitionId, model, form, validationHandler);
-    }
-
-    @PostMapping("/question/finance/none/edit")
-    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm form,
-                                              BindingResult bindingResult,
-                                              ValidationHandler validationHandler,
-                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                              Model model) {
 
         return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
@@ -392,7 +387,8 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
-        ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
+        ServiceResult<String> view = questionSetupCompetitionRestService.getByQuestionId(questionId).toServiceResult()
+                .andOnSuccessReturn(
                 questionResource -> {
                     QuestionSetupType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;
@@ -406,7 +402,7 @@ public class CompetitionSetupApplicationController {
                     model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable));
                     model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
-                    return questionView;
+                    return QUESTION_VIEW;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
 
         return view.getSuccess();

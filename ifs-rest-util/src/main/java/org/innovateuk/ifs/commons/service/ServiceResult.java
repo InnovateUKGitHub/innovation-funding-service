@@ -6,11 +6,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
+import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -24,7 +27,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> {
+public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFailure> {
 
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);
 
@@ -50,6 +53,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     @Override
     public ServiceResult<T> andOnSuccess(Runnable successHandler) {
         return (ServiceResult<T>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public ServiceResult<T> andOnSuccessDo(Consumer<T> successHandler) {
+        return (ServiceResult<T>) super.andOnSuccessDo(successHandler);
     }
 
     @Override
@@ -88,6 +96,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return (ServiceResult<R>) super.andOnSuccessReturn(successHandler);
     }
 
+    @Override
+    public ServiceResult<T> handleSuccessOrFailureNoReturn(ExceptionThrowingConsumer<? super ServiceFailure> failureHandler, ExceptionThrowingConsumer<? super T> successHandler) {
+        return (ServiceResult<T>) super.handleSuccessOrFailureNoReturn(failureHandler, successHandler);
+    }
+
     /**
      * Not used currently TODO Implement this in future for consistency with RestResult
      *
@@ -100,22 +113,22 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
-    protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
+    protected <R> BaseFailingOrSucceedingResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
         return serviceSuccess(success.getSuccess());
     }
 
     @Override
-    protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(ServiceFailure failure) {
+    protected <R> BaseFailingOrSucceedingResult<R, ServiceFailure> createFailure(ServiceFailure failure) {
         return serviceFailure(failure);
     }
 
     @Override
-    protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(R success) {
+    protected <R> BaseFailingOrSucceedingResult<R, ServiceFailure> createSuccess(R success) {
         return serviceSuccess(success);
     }
 
     @Override
-    protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
+    protected <R> BaseFailingOrSucceedingResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
         return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError());
     }
 
@@ -319,6 +332,15 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful, and return a specific failure in the event that there were any errors detected.
+     */
+    public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, Function<List<ServiceResult<R>>, ServiceResult<T>> failureResponseFn, ServiceResult<T> successResponse) {
+        List<ServiceResult<R>> failures = simpleFilter(results, ServiceResult::isFailure);
+        return !failures.isEmpty() ? failureResponseFn.apply(failures) : successResponse;
+    }
+
+    /**
      * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
      * response (an Either with a left of ServiceFailure).
      * <p>
@@ -382,7 +404,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * @return
      */
     public static <T> ServiceResult<List<T>> aggregate(final List<ServiceResult<T>> input) {
-        return BaseEitherBackedResult.aggregate(
+        return BaseFailingOrSucceedingResult.aggregate(
                 input,
                 (f1, f2) -> new ServiceFailure(combineLists(f1.getErrors(), f2.getErrors())),
                 serviceSuccess(emptyList()));
@@ -410,5 +432,12 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
                 Map.Entry::getKey, q -> aggregate(q.getValue()).getSuccess()));
     }
 
+    public static <T> HttpStatus findStatusCode(List<ServiceResult<T>> failures) {
 
+        List<Error> aggregateErrors = aggregate(failures).getFailure().getErrors();
+
+        return simpleFindFirst(aggregateErrors, error -> error.getStatusCode() != null).
+                map(Error::getStatusCode).
+                orElse(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

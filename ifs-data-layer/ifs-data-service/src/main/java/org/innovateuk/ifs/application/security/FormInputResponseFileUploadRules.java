@@ -51,24 +51,6 @@ public class FormInputResponseFileUploadRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "An Assessor can download a file for an answer to an Application they are Assessing")
-    public boolean assessorCanDownloadFileForApplicationTheyAreAssessing(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return userIsAssessorOnThisApplication(fileEntry, user);
-    }
-
-    private boolean userIsAssessorOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        ProcessRole assessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                Role.ASSESSOR,
-                fileEntry.getCompoundId().getApplicationId());
-        ProcessRole panelAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                Role.PANEL_ASSESSOR,
-                fileEntry.getCompoundId().getApplicationId());
-        ProcessRole interviewAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                Role.INTERVIEW_ASSESSOR,
-                fileEntry.getCompoundId().getApplicationId());
-        return assessorProcessRole != null || panelAssessorProcessRole != null || interviewAssessorProcessRole != null;
-    }
-
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return userIsApplicantOnThisApplication(fileEntry.getCompoundId().getApplicationId(), user);
     }

@@ -6,17 +6,19 @@ import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupFinanceCon
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
+import static org.innovateuk.ifs.documentation.CompetitionSetupFinanceDocs.COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -34,17 +36,18 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
 
     @Test
     public void save() throws Exception {
-        final Long competitionId = 1L;
-        CompetitionSetupFinanceResource resource = newCompetitionSetupFinanceResource().
-                withCompetitionId(competitionId).
-                withFullApplicationFinance(false).
-                withIncludeGrowthTable(false).
-                build();
+        long competitionId = 1L;
+        CompetitionSetupFinanceResource resource = newCompetitionSetupFinanceResource()
+                .withCompetitionId(competitionId)
+                .withApplicationFinanceType(NO_FINANCES)
+                .withIncludeGrowthTable(false)
+                .build();
         when(competitionSetupFinanceService.save(resource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 put(baseUrl + "/{competitionId}", competitionId).
                         contentType(APPLICATION_JSON).
-                        content(toJson(resource))).
+                        content(toJson(resource))
+                        .header("IFS_AUTH_TOKEN", "123abc")).
                 andDo(document("competition-setup-finance/{method-name}", pathParameters(parameterWithName("competitionId").description("The competition id")), requestFields(
                         COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS
                 )));
@@ -52,25 +55,20 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
 
     @Test
     public void getByCompetition() throws Exception {
-        final Long competitionId = 1L;
-        CompetitionSetupFinanceResource resource = newCompetitionSetupFinanceResource().
-                withCompetitionId(competitionId).
-                withFullApplicationFinance(false).
-                withIncludeGrowthTable(false).
-                build();
+        long competitionId = 1L;
+        CompetitionSetupFinanceResource resource = newCompetitionSetupFinanceResource()
+                .withCompetitionId(competitionId)
+                .withApplicationFinanceType(NO_FINANCES)
+                .withIncludeGrowthTable(false)
+                .build();
         when(competitionSetupFinanceService.getForCompetition(competitionId)).thenReturn(serviceSuccess(resource));
         mockMvc.perform(
                 get(baseUrl + "/{competitionId}", competitionId).
                         contentType(APPLICATION_JSON).
-                        content(toJson(resource))).
+                        content(toJson(resource))
+                        .header("IFS_AUTH_TOKEN", "123abc")).
                 andDo(document("competition-setup-finance/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         responseFields(COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS)));
     }
-
-    public static final FieldDescriptor[] COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS = {
-            fieldWithPath("competitionId").description("The id of the competition"),
-            fieldWithPath("fullApplicationFinance").description("Full application finance"),
-            fieldWithPath("includeGrowthTable").description("The active status of staff count and organisation turnover form inputs are false when this is true"),
-    };
 }

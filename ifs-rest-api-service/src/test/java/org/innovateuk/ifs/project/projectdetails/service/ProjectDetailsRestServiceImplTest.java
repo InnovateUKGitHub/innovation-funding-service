@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -71,7 +71,7 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testInviteProjectManager() {
         long projectId = 123L;
-        InviteProjectResource invite = new InviteProjectResource();
+        ProjectInviteResource invite = new ProjectInviteResource();
 
         String expectedUrl = projectRestURL + "/" + projectId + "/invite-project-manager";
         setupPostWithRestResultExpectations(expectedUrl, invite, OK);
@@ -84,7 +84,7 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testInviteFinanceContact() {
         long projectId = 123L;
-        InviteProjectResource invite = new InviteProjectResource();
+        ProjectInviteResource invite = new ProjectInviteResource();
 
         String expectedUrl = projectRestURL + "/" + projectId + "/invite-finance-contact";
         setupPostWithRestResultExpectations(expectedUrl, invite, OK);

@@ -9,27 +9,36 @@ import org.springframework.stereotype.Service;
  * Implements {@link QuestionSetupCompetitionRestService}
  */
 @Service
-public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService implements QuestionSetupCompetitionRestService {
+public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService implements
+        QuestionSetupCompetitionRestService {
 
-    private static final String questionSetupRestURL = "/question-setup";
+    private static final String QUESTION_SETUP_REST_URL = "/question-setup";
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-        return getWithRestResult(questionSetupRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class);
+        return getWithRestResult(QUESTION_SETUP_REST_URL + "/get-by-id/" + questionId,
+                CompetitionSetupQuestionResource.class);
     }
 
     @Override
     public RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return putWithRestResult(questionSetupRestURL + "/save", competitionSetupQuestionResource, Void.class);
+        return putWithRestResult(QUESTION_SETUP_REST_URL + "/save", competitionSetupQuestionResource, Void.class);
     }
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId) {
-        return postWithRestResult(questionSetupRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class);
+        return postWithRestResult(QUESTION_SETUP_REST_URL + "/add-default-to-competition/" +
+                competitionId, CompetitionSetupQuestionResource.class);
     }
 
     @Override
-    public RestResult<Void> deleteById(Long questionId) {
-        return deleteWithRestResult(questionSetupRestURL + "/deleteById/" + questionId, Void.class);
+    public RestResult<Void> addResearchCategoryQuestionToCompetition(final long competitionId) {
+        return postWithRestResult(QUESTION_SETUP_REST_URL + "/add-research-category-question-to-competition/" +
+                competitionId, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteById(long questionId) {
+        return deleteWithRestResult(QUESTION_SETUP_REST_URL + "/delete-by-id/" + questionId, Void.class);
     }
 }

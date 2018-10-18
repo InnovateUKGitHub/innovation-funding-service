@@ -37,7 +37,7 @@ public class AssessorCompetitionPermissionRules {
     @PermissionRule(value = "ASSESSOR_INTERVIEW", description = "Only assessors can see the competition" +
             " if its in interview panel.")
     public boolean assessorInterviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
+        competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isAssessor(loggedInUser) && assessorAssignedToInterview(competitionCompositeId, loggedInUser);
     }
 

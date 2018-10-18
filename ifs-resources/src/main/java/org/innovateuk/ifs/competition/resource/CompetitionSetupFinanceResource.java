@@ -8,8 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class CompetitionSetupFinanceResource {
     private Long competitionId;
-    private boolean fullApplicationFinance;
-    private boolean includeGrowthTable;
+    private ApplicationFinanceType applicationFinanceType;
+    private Boolean includeGrowthTable;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -19,19 +19,19 @@ public class CompetitionSetupFinanceResource {
         this.competitionId = competitionId;
     }
 
-    public boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
     }
 
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
+    public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
     }
 
-    public boolean isIncludeGrowthTable() {
+    public Boolean getIncludeGrowthTable() {
         return includeGrowthTable;
     }
 
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+    public void setIncludeGrowthTable(Boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
     }
 
@@ -49,9 +49,9 @@ public class CompetitionSetupFinanceResource {
         CompetitionSetupFinanceResource that = (CompetitionSetupFinanceResource) o;
 
         return new EqualsBuilder()
-                .append(fullApplicationFinance, that.fullApplicationFinance)
                 .append(includeGrowthTable, that.includeGrowthTable)
                 .append(competitionId, that.competitionId)
+                .append(applicationFinanceType, that.applicationFinanceType)
                 .isEquals();
     }
 
@@ -59,17 +59,16 @@ public class CompetitionSetupFinanceResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
-                .append(fullApplicationFinance)
+                .append(applicationFinanceType)
                 .append(includeGrowthTable)
                 .toHashCode();
     }
-
 
     @Override
     public String toString() {
         return "CompetitionSetupFinanceResource{" +
                 "competitionId=" + competitionId +
-                ", fullApplicationFinance=" + fullApplicationFinance +
+                ", applicationFinanceType=" + applicationFinanceType +
                 ", includeGrowthTable=" + includeGrowthTable +
                 '}';
     }

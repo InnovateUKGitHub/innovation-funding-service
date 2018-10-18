@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -48,6 +46,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -60,9 +59,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class StatusServiceImpl extends AbstractProjectServiceImpl implements StatusService {
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
@@ -73,9 +69,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
-
-    @Autowired
-    private FinanceService financeService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -274,7 +267,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 return COMPLETE;
             }
             else {
-                if(isSupport(user) || isInnovationLead(user)){
+                if(isSupport(user) || isInnovationLead(user) || isStakeholder(user)){
                     return NOT_STARTED;
                 } else {
                     return ACTION_REQUIRED;

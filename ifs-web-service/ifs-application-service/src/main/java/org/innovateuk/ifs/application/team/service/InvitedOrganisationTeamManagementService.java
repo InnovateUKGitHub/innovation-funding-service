@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementVi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class InvitedOrganisationTeamManagementService extends AbstractTeamManage
                 applicationId, inviteOrganisationId, loggedInUser.getId());
     }
 
-    public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public ServiceResult<Void> executeStagedInvite(long applicationId,
                                                                     long inviteOrganisationId,
                                                                     ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, inviteOrganisationId);

@@ -5,10 +5,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -18,12 +15,14 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInf
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -31,16 +30,14 @@ import org.springframework.validation.Validator;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -52,6 +49,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.*;
 import static org.innovateuk.ifs.competitionsetup.initialdetail.sectionupdater.InitialDetailsSectionUpdater.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -94,6 +92,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     private UserService userService;
 
     @Mock
+    private UserRestService userRestService;
+
+    @Mock
     private CompetitionRestService competitionRestService;
 
     @Override
@@ -105,20 +106,20 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setUp() {
         super.setUp();
 
-        when(userService.findUserByType(COMP_ADMIN))
+        when(userRestService.findByUserRole(COMP_ADMIN))
                 .thenReturn(
-                        newUserResource()
+                        restSuccess(newUserResource()
                                 .withFirstName("Comp")
                                 .withLastName("Admin")
-                                .build(1)
+                                .build(1))
                 );
 
-        when(userService.findUserByType(INNOVATION_LEAD))
+        when(userRestService.findByUserRole(INNOVATION_LEAD))
                 .thenReturn(
-                        newUserResource()
+                        restSuccess(newUserResource()
                                 .withFirstName("Comp")
                                 .withLastName("Technologist")
-                                .build(1)
+                                .build(1))
                 );
 
         List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
@@ -374,7 +375,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertEquals(bindingResult.getFieldErrorCount("openingDate"), 2);
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
         assertTrue(bindingResult.hasFieldErrors("innovationSectorCategoryId"));
@@ -561,7 +562,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("openingDate"));
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
@@ -613,7 +614,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount("openingDate"));
         List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(toList());
         assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
         assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
@@ -716,10 +717,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
+                .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
                 .param("researchParticipationAmountId", "1")
-                .param("resubmission", "yes"))
+                .param("resubmission", "yes")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
@@ -744,7 +747,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1")
                 .param("researchParticipationAmountId", "1")
-                .param("resubmission", "yes"))
+                .param("resubmission", "yes")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "streamName"));
@@ -761,7 +765,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withFullApplicationFinance(true)
+                .withApplicationFinanceType(STANDARD)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
@@ -790,7 +794,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withFullApplicationFinance(null)
+                .withApplicationFinanceType((ApplicationFinanceType) null)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
@@ -805,9 +809,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
+                .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
-                .param("resubmission", "no"))
+                .param("resubmission", "no")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
@@ -903,9 +909,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withId(COMPETITION_ID)
                 .build();
 
-        Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-        sectionSetupStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
@@ -967,7 +970,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("assessorPay", "10")
                 .param("hasAssessmentPanel", "0")
                 .param("hasInterviewStage", "0")
-                .param("assessorFinanceView","OVERVIEW"))
+                .param("assessorFinanceView", "OVERVIEW"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
 

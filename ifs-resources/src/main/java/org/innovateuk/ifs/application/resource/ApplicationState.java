@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ApplicationState implements ProcessState, IdentifiableEnum<ApplicationState> {
+public enum ApplicationState implements ProcessState, IdentifiableEnum {
 
     CREATED(27, State.CREATED, "Started"), // initial state
     SUBMITTED(29,State.SUBMITTED, "Submitted"),
@@ -49,11 +49,12 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
             INELIGIBLE
     );
 
-    public static final ImmutableSet<ApplicationState> unsuccessfulStates = Sets.immutableEnumSet(
+    public static final ImmutableSet<ApplicationState> previousStates = Sets.immutableEnumSet(
             INELIGIBLE,
             INELIGIBLE_INFORMED,
             REJECTED,
-            WITHDRAWN
+            WITHDRAWN,
+            APPROVED
     );
 
     public static final ImmutableSet<ApplicationState> ineligibleStates = Sets.immutableEnumSet(

@@ -55,7 +55,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
-            fieldWithPath("fullApplicationFinance").description("If full finances are required for applications"),
+            fieldWithPath("applicationFinanceType").description("The type of finances for the application"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
@@ -67,9 +67,14 @@ public class CompetitionResourceDocs {
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last"),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
-            fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old " +
-                    "menu view are complete"),
-            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition")
+            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition"),
+            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase"),
+            fieldWithPath("nonFinanceType").description("Does the competition have finance questions"),
+            fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
+            fieldWithPath("createdBy").description("user who created this competition"),
+            fieldWithPath("createdOn").description("when the competition was created"),
+            fieldWithPath("modifiedBy").description("user who modified this competition"),
+            fieldWithPath("modifiedOn").description("when the competition was modified")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

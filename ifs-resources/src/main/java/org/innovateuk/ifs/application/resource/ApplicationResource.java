@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
@@ -49,11 +50,11 @@ public class ApplicationResource {
 
     private IneligibleOutcomeResource ineligibleOutcome;
 
-    private String leadOrganisationName;
+    private Long leadOrganisationId;
 
     private boolean isInAssessmentReviewPanel;
 
-    private boolean useNewApplicantMenu;
+    private CollaborationLevel collaborationLevel;
 
     public Long getId() {
         return id;
@@ -144,14 +145,13 @@ public class ApplicationResource {
         this.ineligibleOutcome = ineligibleOutcome;
     }
 
-    public String getLeadOrganisationName() {
-        return leadOrganisationName;
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
     }
 
-    public void setLeadOrganisationName(String leadOrganisationName) {
-        this.leadOrganisationName = leadOrganisationName;
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
     }
-
 
     public String getCompetitionName() {
         return competitionName;
@@ -252,12 +252,12 @@ public class ApplicationResource {
         this.isInAssessmentReviewPanel = inAssessmentReviewPanel;
     }
 
-    public boolean isUseNewApplicantMenu() {
-        return useNewApplicantMenu;
+    public CollaborationLevel getCollaborationLevel() {
+        return collaborationLevel;
     }
 
-    public void setUseNewApplicantMenu(final boolean useNewApplicantMenu) {
-        this.useNewApplicantMenu = useNewApplicantMenu;
+    public void setCollaborationLevel(final CollaborationLevel collaborationLevel) {
+        this.collaborationLevel = collaborationLevel;
     }
 
     @Override
@@ -269,15 +269,26 @@ public class ApplicationResource {
         ApplicationResource that = (ApplicationResource) o;
 
         return new EqualsBuilder()
+                .append(noInnovationAreaApplicable, that.noInnovationAreaApplicable)
+                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(applicationState, that.applicationState)
-                .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
-                .append(leadOrganisationName, that.leadOrganisationName)
-                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
+                .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
+                .append(completion, that.completion)
+                .append(stateAidAgreed, that.stateAidAgreed)
+                .append(resubmission, that.resubmission)
+                .append(previousApplicationNumber, that.previousApplicationNumber)
+                .append(previousApplicationTitle, that.previousApplicationTitle)
+                .append(researchCategory, that.researchCategory)
+                .append(innovationArea, that.innovationArea)
+                .append(ineligibleOutcome, that.ineligibleOutcome)
+                .append(leadOrganisationId, that.leadOrganisationId)
+                .append(collaborationLevel, that.collaborationLevel)
                 .isEquals();
     }
 
@@ -289,10 +300,21 @@ public class ApplicationResource {
                 .append(startDate)
                 .append(durationInMonths)
                 .append(applicationState)
-                .append(ineligibleOutcome)
                 .append(competition)
-                .append(leadOrganisationName)
+                .append(competitionName)
+                .append(competitionStatus)
+                .append(completion)
+                .append(stateAidAgreed)
+                .append(resubmission)
+                .append(previousApplicationNumber)
+                .append(previousApplicationTitle)
+                .append(researchCategory)
+                .append(innovationArea)
+                .append(noInnovationAreaApplicable)
+                .append(ineligibleOutcome)
+                .append(leadOrganisationId)
                 .append(isInAssessmentReviewPanel)
+                .append(collaborationLevel)
                 .toHashCode();
     }
 }

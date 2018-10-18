@@ -12,11 +12,15 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -49,7 +53,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.util.EmailService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -68,17 +71,34 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -91,15 +111,21 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDetailsService> {
 
     @Mock
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -109,9 +135,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private ProjectRepository projectRepositoryMock;
-
-    @Mock
-    private ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
     private LoggedInUserSupplier loggedInUserSupplierMock;
@@ -135,6 +158,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private ProjectWorkflowHandler projectWorkflowHandlerMock;
 
     @Mock
+    private ProjectInviteRepository projectInviteRepositoryMock;
+
+    @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
 
     @Mock
@@ -144,7 +170,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
-    private InviteProjectMapper inviteProjectMapperMock;
+    private ProjectInviteMapper projectInviteMapperMock;
 
     @Mock
     private UserRepository userRepositoryMock;
@@ -160,6 +186,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private AddressTypeRepository addressTypeRepositoryMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSource;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -717,7 +746,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
@@ -726,7 +755,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
 
@@ -740,7 +769,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
             assertTrue(e instanceof IllegalArgumentException);
 
             assertNull(result);
-            verify(projectEmailService, never()).sendEmail(any(), any(), any());
+            verify(notificationService, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
             // This exception flow is the only expected flow, so return from here and assertFalse if no exception
             return;
@@ -755,7 +784,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .build();
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
@@ -777,7 +806,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteProjectManagerWhenUnableToSendNotification() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -804,13 +833,16 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
-                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
+                serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+        ProjectInvite projectInvite = newProjectInvite()
                 .withEmail("a@b.com")
                 .withName("A B")
-                .build());
+                .build();
+
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
@@ -820,12 +852,14 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+
+        verify(projectInviteRepositoryMock).save(projectInvite);
     }
 
     @Test
     public void inviteProjectManagerSuccess() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -852,13 +886,24 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ProjectInvite projectInvite = newProjectInvite().
+                withEmail("a@b.com").
+                withName("A B").
+                build();
+
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+
+        verify(projectInviteRepositoryMock).save(projectInvite);
     }
 
     @Test
@@ -866,7 +911,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
@@ -892,7 +937,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void inviteFinanceContactSuccess() {
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -918,16 +963,23 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ProjectInvite projectInvite = newProjectInvite()
                 .withName("A B")
                 .withEmail("a@b.com")
-                .build());
+                .build();
+
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+
+        verify(projectInviteRepositoryMock).save(projectInvite);
     }
 
     @Test
@@ -1038,14 +1090,14 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        verify(organisationAddressRepositoryMock).delete(singletonList(organisationAddress));
         assertEquals(newAddress, project.getAddress());
     }
 
     @Test
     public void inviteProjectFinanceUser(){
 
-        InviteProjectResource inviteResource = newInviteProjectResource()
+        ProjectInviteResource inviteResource = newProjectInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
@@ -1083,15 +1135,23 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ProjectInvite projectInvite = newProjectInvite()
                 .withEmail("a@b.com")
                 .withName("A B")
-                .build());
+                .build();
+
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
         ServiceResult<Void> success = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(success.isSuccess());
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+
+        verify(projectInviteRepositoryMock).save(projectInvite);
+        verify(projectInviteMapperMock).mapToDomain(inviteResource);
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
  */
 public interface CompetitionSetupSectionModelPopulator {
 
-	CompetitionSetupSection sectionToPopulateModel();
-	
-	CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource);
+    CompetitionSetupSection sectionToPopulateModel();
+
+    CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource);
 }

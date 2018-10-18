@@ -15,7 +15,7 @@ Mark as complete Your funding with only one input should not be possible
     When the user clicks the button/link      link = Your funding
     And the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  70
     And the user moves focus to the element   css = [data-target="other-funding-table"] label
-    Then the user should see the element      jQuery = .disabled:contains("Mark as complete")
+    Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
 Other funding client side
     [Documentation]    INFUND-2214
@@ -23,7 +23,7 @@ Other funding client side
     When the user clicks the button twice    css = label[for$="otherPublicFunding-yes"]
     And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
-    # This line should be after css=label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
+    # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Funding source cannot be blank.
     Then the user should see a field error   Invalid secured date.
     And the user should see a field error    This field should be 1 or higher.
@@ -31,10 +31,9 @@ Other funding client side
 Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
-    And the user selects the checkbox    agree-terms-page
-    And the user clicks the button/link  jQuery = button:contains("Mark as complete")
+    And the user selects the checkbox                    agree-terms-page
+    And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Funding source cannot be blank.
     And the user should see a field and summary error    Please use MM-YYYY format.
     And the user should see a field and summary error    This field should be 1 or higher.
@@ -95,13 +94,13 @@ Overhead cost client side
 
 Overhead cost server side
     [Documentation]    INFUND-844
-    Given the user selects the checkbox    agree-terms-page
-    When the user clicks the button/link   jQuery = button:contains("Mark as complete")
+    Given the user selects the checkbox        agree-terms-page
+    When the user clicks the button/link       jQuery = button:contains("Mark as complete")
     Then the user should see a summary error   You should upload a completed overheads spreadsheet.
 
 Materials client side
     [Documentation]    INFUND-844
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
@@ -111,7 +110,7 @@ Materials client side
 
 Materials server side
     [Documentation]    INFUND-844
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    1212121212121212121212
@@ -256,7 +255,7 @@ the user enters invalid inputs in the other funding fields
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    the user moves focus to the element     css = button.button[type="submit"]
+    the user moves focus to the element     css = button.govuk-button[type="submit"]
 
 Remove row
     [Arguments]    ${section}    ${close button}

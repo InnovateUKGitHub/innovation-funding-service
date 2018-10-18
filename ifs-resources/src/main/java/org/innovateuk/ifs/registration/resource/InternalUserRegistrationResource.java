@@ -40,9 +40,6 @@ public class InternalUserRegistrationResource {
 
     private List<Role> roles;
 
-    public InternalUserRegistrationResource() {
-    }
-
     public String getPassword() {
         return password;
     }

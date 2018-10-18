@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 /**
  * Populator for creating the {@link BankDetailsReviewViewModel}
  */
-
 @Service
 public class BankDetailsReviewModelPopulator {
 
@@ -41,7 +41,7 @@ public class BankDetailsReviewModelPopulator {
                 financeContact.getPhoneNumber(),
                 organisation.getId(),
                 organisation.getName(),
-                organisation.getCompanyHouseNumber(),
+                organisation.getCompaniesHouseNumber(),
                 bankDetails.getAccountNumber(),
                 bankDetails.getSortCode(),
                 bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
@@ -55,7 +55,7 @@ public class BankDetailsReviewModelPopulator {
 
     public void populateExitingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, ChangeBankDetailsForm form){
         form.setOrganisationName(organisation.getName());
-        form.setRegistrationNumber(organisation.getCompanyHouseNumber());
+        form.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         form.setSortCode(bankDetails.getSortCode());
         form.setAccountNumber(bankDetails.getAccountNumber());
         populateAddress(form.getAddressForm(), bankDetails);

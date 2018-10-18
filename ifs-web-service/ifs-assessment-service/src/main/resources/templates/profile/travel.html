@@ -1,95 +1,98 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Travel and subsistence rates'" />
     </head>
 
-    <body class="app-overview">
+    <body class="govuk-template__body app-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Travel and subsistence rates',size='heading-xlarge'" />
-            <div>
-                <h2 class="heading-medium">Travel and subsistence rates for non-civil service contracted personnel</h2>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Travel and subsistence rates',size='govuk-heading-xl'" />
+                <div>
+                    <h2 class="govuk-heading-m">Travel and subsistence rates for non-civil service contracted personnel</h2>
 
-                <p class="extra-margin">The table below shows the maximum amount of subsistence payable for meals and refreshments which includes an overnight stay. All expenditure must be fully supported by receipts.</p>
+                    <p class="govuk-body govuk-!-margin-top-6">The table below shows the maximum amount of subsistence payable for meals and refreshments which includes an overnight stay. All expenditure must be fully supported by receipts.</p>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col">Day subsistence</th>
-                        <th scope="col" class="numeric">Rate</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Breakfast (only if leaving home before 6:30am)</td>
-                        <td class="numeric">&pound;5</td>
-                    </tr>
-                    <tr>
-                        <td>Day subsistence: Lunch (only if lunch is not already provided)</td>
-                        <td class="numeric">&pound;5</td>
-                    </tr>
-                    <tr>
-                        <td>Dinner (only if returning home after 8:00pm)</td>
-                        <td class="numeric">&pound;20</td>
-                    </tr>
-                    <tr>
-                        <td>Non-alcoholic drinks. Maximum 2 drinks per day</td>
-                        <td class="numeric">&pound;2 per drink</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <h2 class="heading-medium">24 hour / overnight subsistence</h2>
-
-                <p>If you need to book overnight accommodation for assessor events, hotel receipts can be claimed up to the following values:</p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">24 hour / overnight subsistence</th>
-                            <th scope="col" class="numeric">Rate</th>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Day subsistence</th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>London (bed and breakfast)</td>
-                            <td class="numeric">&pound;125</td>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Breakfast (only if leaving home before 6:30am)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;5</td>
                         </tr>
-                        <tr>
-                            <td>Elsewhere in the UK (bed and breakfast)</td>
-                            <td class="numeric">&pound;85</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Day subsistence: Lunch (only if lunch is not already provided)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;5</td>
                         </tr>
-                    </tbody>
-                </table>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Dinner (only if returning home after 8:00pm)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;20</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Non-alcoholic drinks. Maximum 2 drinks per day</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;2 per drink</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                <h2 class="heading-medium">Public transport</h2>
+                    <h2 class="govuk-heading-m">24 hour / overnight subsistence</h2>
 
-                <p>Standard class train and air travel should be used where appropriate. First class travel may be permitted but only if you can provide evidence that this option was cheaper than standard travel.</p>
+                    <p class="govuk-body">If you need to book overnight accommodation for assessor events, hotel receipts can be claimed up to the following values:</p>
 
-                <h2 class="heading-medium">Mileage rates</h2>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">24 hour / overnight subsistence</th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">London (bed and breakfast)</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;125</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">Elsewhere in the UK (bed and breakfast)</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;85</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <p class="hint">These rates eliminate any individual tax/NIC liability</p>
+                    <h2 class="govuk-heading-m">Public transport</h2>
 
-                <h3 class="heading-small">Up to 10,000 miles</h3>
-                <p>45p <span class="hint">flat rate not dependent on car engine size</span></p>
+                    <p class="govuk-body">Standard class train and air travel should be used where appropriate. First class travel may be permitted but only if you can provide evidence that this option was cheaper than standard travel.</p>
 
-                <p class="extra-margin">
-                    <strong>Please make sure your travel claims, receipts and tickets are all submitted.</strong>
-                </p>
+                    <h2 class="govuk-heading-m">Mileage rates</h2>
 
-                <div class="extra-margin">
-                    <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
+                    <p class="govuk-hint">These rates eliminate any individual tax/NIC liability</p>
+
+                    <h3 class="govuk-heading-s">Up to 10,000 miles</h3>
+                    <p class="govuk-body">45p <span class="hint">flat rate not dependent on car engine size</span></p>
+
+                    <p class="govuk-body govuk-!-margin-top-6">
+                        <strong>Please make sure your travel claims, receipts and tickets are all submitted.</strong>
+                    </p>
+
+                    <div class="govuk-!-margin-top-6">
+                        <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
+                    </div>
+
                 </div>
 
-            </div>
-
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

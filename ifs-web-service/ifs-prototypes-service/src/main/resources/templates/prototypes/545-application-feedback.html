@@ -27,8 +27,8 @@
 		<div th:if="${param.unsuccessful == null}" th:remove="tag">
 
 			<div class="success-alert">
-				<h2 class="heading-small no-margin">Congratulations, your application has been successful.</h2>
-				<p>Average scores and written feedback from each assessor can be found below.</p>
+				<h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful.</h2>
+				<p class="govuk-body">Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
@@ -36,30 +36,30 @@
 		<div th:if="${param.unsuccessful != null}" th:remove="tag">
 
 			<div class="warning-alert">
-		        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>
-                <p>Average scores and written feedback from each assessor can be found below.</p>
+		        <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition</h2>
+                <p class="govuk-body">Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
 
-	    <h2 class="heading-medium">Overall scores</h2>
-		<table>
-			<tbody>
-			<tr>
-				<th>Question</th>
-				<td><strong>Q1</strong></td>
-				<td><strong>Q2</strong></td>
-				<td><strong>Q3</strong></td>
-				<td><strong>Q4</strong></td>
-				<td><strong>Q5</strong></td>
-				<td><strong>Q6</strong></td>
-				<td><strong>Q7</strong></td>
-				<td><strong>Q8</strong></td>
-				<td><strong>Q9</strong></td>
-				<td><strong>Q10</strong></td>
+	    <h2 class="govuk-heading-m">Overall scores</h2>
+		<table class="govuk-table">
+			<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<th class="govuk-table__header" scope="col">Question</th>
+				<td class="govuk-table__cell"><strong>Q1</strong></td>
+				<td class="govuk-table__cell"><strong>Q2</strong></td>
+				<td class="govuk-table__cell"><strong>Q3</strong></td>
+				<td class="govuk-table__cell"><strong>Q4</strong></td>
+				<td class="govuk-table__cell"><strong>Q5</strong></td>
+				<td class="govuk-table__cell"><strong>Q6</strong></td>
+				<td class="govuk-table__cell"><strong>Q7</strong></td>
+				<td class="govuk-table__cell"><strong>Q8</strong></td>
+				<td class="govuk-table__cell"><strong>Q9</strong></td>
+				<td class="govuk-table__cell"><strong>Q10</strong></td>
 			</tr>
-			<tr>
-				<th>Score</th>
+			<tr class="govuk-table__row">
+				<th class="govuk-table__header" scope="col">Score</th>
 				<td th:text="${score}">7</td>
 				<td th:text="${score}">7</td>
 				<td th:text="${score}">7</td>
@@ -79,256 +79,256 @@
 
 	<div th:if="${param.internal != null}" th:remove="tag">
 
-	<h2 class="heading-medium">Average scores</h2>
+	<h2 class="govuk-heading-m">Average scores</h2>
 
-		<table>
-			<thead>
-				<th scope="col">Assessor</th>
-				<th scope="col">Scope</th>
-				<th scope="col">Recc'd</th>
-				<th scope="col">Q1</th>
-				<th scope="col">Q2</th>
-				<th scope="col">Q3</th>
-				<th scope="col">Q4</th>
-				<th scope="col">Q5</th>
-				<th scope="col">Q6</th>
-				<th scope="col">Q7</th>
-				<th scope="col">Q8</th>
-				<th scope="col">Q9</th>
-				<th scope="col">Q10</th>
-				<th scope="col">Total</th>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<th class="govuk-table__header" scope="col">Assessor</th>
+				<th class="govuk-table__header" scope="col">Scope</th>
+				<th class="govuk-table__header" scope="col">Recc'd</th>
+				<th class="govuk-table__header" scope="col">Q1</th>
+				<th class="govuk-table__header" scope="col">Q2</th>
+				<th class="govuk-table__header" scope="col">Q3</th>
+				<th class="govuk-table__header" scope="col">Q4</th>
+				<th class="govuk-table__header" scope="col">Q5</th>
+				<th class="govuk-table__header" scope="col">Q6</th>
+				<th class="govuk-table__header" scope="col">Q7</th>
+				<th class="govuk-table__header" scope="col">Q8</th>
+				<th class="govuk-table__header" scope="col">Q9</th>
+				<th class="govuk-table__header" scope="col">Q10</th>
+				<th class="govuk-table__header" scope="col">Total</th>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Average</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>80</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>80</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Spread</th>
-					<td></td>
-					<td></td>
-					<td>1</td>
-					<td>2</td>
-					<td>0</td>
-					<td>1</td>
-					<td>2</td>
-					<td>3</td>
-					<td>2</td>
-					<td>0</td>
-					<td>1</td>
-					<td>2</td>
-					<td><strong>12</strong></td>
+					<td class="govuk-table__cell"></td>
+					<td class="govuk-table__cell"></td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">0</td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">3</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">0</td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell"><strong>12</strong></td>
 				</tr>
 			</tfoot>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<th scope="row">Ray Browne</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>84</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>84</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Julio Fario</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>84</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>84</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Brain Law</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td><strong>-</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell"><strong>-</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Colin Seabrook</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>6</td>
-					<td>8</td>
-					<td>9</td>
-					<td>7</td>
-					<td>8</td>
-					<td>4</td>
-					<td>8</td>
-					<td>7</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>72</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">6</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">7</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">4</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">7</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>72</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">David Standingford</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td><strong>-</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell"><strong>-</strong></td>
 				</tr>
 			</tbody>
 		</table>
 
 	</div>
 
-	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application details</h2>
-	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
+	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m govuk-!-margin-bottom-0')">Application details</h2>
+	<p class="govuk-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
 
-	<ul class="list-overview extra-margin">
+	<ul class="govuk-list list-overview extra-margin">
 		<!-- <li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Application details</h3>
+					<h3 class="govuk-heading-s">Application details</h3>
 				</div>
-				<div class="column-third">
-					<p class="form-hint no-margin">No feedback provided</p>
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li> -->
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Project summary</h3>
+					<h3 class="govuk-heading-s">Project summary</h3>
 				</div>
-				<div class="column-third">
-					<p class="form-hint no-margin">No feedback provided</p>
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Public description</h3>
+					<h3 class="govuk-heading-s">Public description</h3>
 				</div>
-				<div class="column-third">
-					<p class="form-hint no-margin">No feedback provided</p>
+				<div class="govuk-grid-column-one-third">
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Scope</h3>
+					<h3 class="govuk-heading-s">Scope</h3>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 			        In scope? 4/5 Yes
 			    </div>
 			</div>
 		</li>
 	</ul>
 
-	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application questions</h2>
-	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
-	<ul class="list-overview">
+	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m govuk-!-margin-bottom-0')">Application questions</h2>
+	<p class="govuk-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
+	<ul class="govuk-list list-overview">
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">1. Business opportunity</h3>
+					<h3 class="govuk-heading-s">1. Business opportunity</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">2. Potential market</h3>
+					<h3 class="govuk-heading-s">2. Potential market</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">3. Project exploitation</h3>
+					<h3 class="govuk-heading-s">3. Project exploitation</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">4. Economic benefit</h3>
+					<h3 class="govuk-heading-s">4. Economic benefit</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">5. Technical approach</h3>
+					<h3 class="govuk-heading-s">5. Technical approach</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">6. Innovation</h3>
+					<h3 class="govuk-heading-s">6. Innovation</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 
 
 
 				<div class="column-two-thirds" th:with="link=${param.unsuccessful} ? '/prototypes/545-application-feedback-question7?unsuccessful' : '/prototypes/545-application-feedback-question7'" th:unless="${param.internal != null}">
-					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
+					<h3 class="govuk-heading-s"><a th:href="${link}">7. Risks</a></h3>
 				</div>
 
 				<div class="column-two-thirds" th:with="link='/prototypes/545-application-feedback-question7?internal'" th:unless="${param.internal == null}">
-					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
+					<h3 class="govuk-heading-s"><a th:href="${link}">7. Risks</a></h3>
 				</div>
 
 
@@ -336,43 +336,43 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">8. Project team</h3>
+					<h3 class="govuk-heading-s">8. Project team</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">9. Funding</h3>
+					<h3 class="govuk-heading-s">9. Funding</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">10. Adding value</h3>
+					<h3 class="govuk-heading-s">10. Adding value</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 	</ul>
 
-	<div class="grid-row extra-margin">
+	<div class="govuk-grid-row extra-margin">
 		<div class="column-two-thirds">
 			&nbsp;
 		</div>
-		<div class="column-third">
-			<p>
+		<div class="govuk-grid-column-one-third">
+			<p class="govuk-body">
 				Average overall: <strong th:text="${score}+'0%'" class="heading-">SCORE</strong>
 			</p>
 		</div>
 	</div>
 
-	<h2 class="heading-medium">Finances</h2>
+	<h2 class="govuk-heading-m">Finances</h2>
 
 	<div class="collapsible section-overview">
 
@@ -393,31 +393,31 @@
 	</div>
 
 
-	<h2 class="heading-medium">
+	<h2 class="govuk-heading-m">
 		Your assessors' feedback
 	</h2>
 
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
-				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+				<p class="govuk-body">Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 			</div>
 
 		</li>
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 4')}">Assessor 2</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 4')}">Assessor 2</h4>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 5')}">Assessor 4</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 5')}">Assessor 4</h4>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
-				<h5 class="heading-small">Other comments</h5>
-				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+				<h5 class="govuk-heading-s">Other comments</h5>
+				<p class="govuk-body">Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 			</div>
 		</li>
 	</ul>

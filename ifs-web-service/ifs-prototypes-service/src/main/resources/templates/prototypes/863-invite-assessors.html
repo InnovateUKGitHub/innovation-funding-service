@@ -42,173 +42,173 @@
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-summary" />
 		</section>
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		<section class="data-area">
-			<h2 class="heading-large">Invite list</h2>
-			<div class="grid-row highlight-panel">
-				<div class="column-half">
-					<p><span class="heading-xlarge" id="assessor-count-display">0</span> assessors on the invite list</p>
+			<h2 class="govuk-heading-l">Invite list</h2>
+			<div class="govuk-grid-row highlight-panel">
+				<div class="govuk-grid-column-one-half">
+					<p class="govuk-body"><span class="govuk-heading-xl" id="assessor-count-display">0</span> assessors on the invite list</p>
 				</div>
-				<div class="column-half alignright">
-					<a href="/prototypes/863-invite-list" class="button large disabled view-invite-list">View invite list <span>(0)</span></a>
+				<div class="govuk-grid-column-one-half alignright">
+					<a href="/prototypes/863-invite-list" class="govuk-button large govuk-button--disabled view-invite-list">View invite list <span>(0)</span></a>
 				</div>
 			</div>
 
-			<h2 class="heading-large" id="current-assessors">Current assessors</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Current assessors</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" />
 
 			<div class="table-overflow">
 				<table id="assessor-list">
-					<thead>
-						<tr>
-							<th scope="col">Assessor</th>
-							<th scope="col">Type</th>
-							<th scope="col">Innovation area</th>
-							<th scope="col">Contract and DOI</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Assessor</th>
+							<th class="govuk-table__header" scope="col">Type</th>
+							<th class="govuk-table__header" scope="col">Innovation area</th>
+							<th class="govuk-table__header" scope="col">Contract and DOI</th>
 							<th class="alignright" scope="col">Action</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 						<tr class="filtered-result">
 							<th scope="row">Bill Knightly</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Oliver Romero</th>
-							<td>Academic</td>
+							<td class="govuk-table__cell">Academic</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Jeffrey	Carlson</th>
-							<td>Academic</td>
+							<td class="govuk-table__cell">Academic</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
-							<td><span class="no">No</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="no">No</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="row">Bill Limp</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Sonja Barton</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Juanita	Luna</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Irving Wolfe</th>
-							<td>Academic</td>
+							<td class="govuk-table__cell">Academic</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Verna Richards</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="row">Phil Bill</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="no">No</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="no">No</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Blake Kelley</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Gloria Kelly</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Lori Underwood</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Melanie	Daniels</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Bill Hale</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
-							<td><span class="no">No</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="no">No</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Christina Swanson</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="row">Ryan Bill</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="row">Stuart Bill</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 			                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
-							<td><span class="no">No</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="no">No</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Malcolm	Stewart</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Elmer Nelson</th>
-							<td>Industry</td>
+							<td class="govuk-table__cell">Industry</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th scope="row">Calvin Manning</th>
-							<td>Academic</td>
+							<td class="govuk-table__cell">Academic</td>
 							<td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
-							<td><span class="yes">Yes</span></td>
-							<td class="alignright"><a href="#" class="add-assessor">Add</a></td>
+							<td class="govuk-table__cell"><span class="yes">Yes</span></td>
+							<td class="govuk-table__cell alignright"><a href="#" class="add-assessor">Add</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -227,26 +227,26 @@
 
 			</div>
 
-			<h2 class="heading-large">
+			<h2 class="govuk-heading-l">
 				Add new assessors
 			</h2>
 
 			<ul> <!-- Based on existing invite markup from 633-application-invite -->
 				<li>
-					<table>
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>E-mail</th>
-								<th>&nbsp;</th>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th class="govuk-table__header" scope="col">Name</th>
+								<th class="govuk-table__header" scope="col">E-mail</th>
+								<th class="govuk-table__header" scope="col">&nbsp;</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr class="form-group">
-								<td>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-form-group">
+								<td class="govuk-table__cell">
 									<input readonly="readonly" type="text" name="name-item-1" id="name-item-1" class="form-control width-full" value="Joe Bloggs" />
 								</td>
-								<td>
+								<td class="govuk-table__cell">
 									<input readonly="readonly" type="email" name="mail-item-1" id="mail-item-1" class="form-control width-full" value="jbloggs@example.com" />
 								</td>
 								<td class="alignright remove">
@@ -257,23 +257,23 @@
 						</tbody>
 					</table>
 
-					<div class="grid-row extra-margin">
-						<div class="column-half">
+					<div class="govuk-grid-row extra-margin">
+						<div class="govuk-grid-column-one-half">
 							<a class="add-another-row button-link" href="javascript:void(0);">Add new row</a>
 						</div>
-						<!-- <div class="column-half alignright-button">
-							<a href="#" class="button button-secondary" id="add-to-list">Add to invite list <span>(0)</span></a>
+						<!-- <div class="govuk-grid-column-one-half alignright-button">
+							<a href="#" class="govuk-button button-secondary" id="add-to-list">Add to invite list <span>(0)</span></a>
 						</div> -->
 					</div>
 
 				</li>
 			</ul>
 
-			<hr />
+			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 			<p class="alignright-button extra-margin">
 
-				<a href="/prototypes/863-invite-list" class="button large disabled view-invite-list">View invite list <span>(0)</span></a>
+				<a href="/prototypes/863-invite-list" class="govuk-button large govuk-button--disabled view-invite-list">View invite list <span>(0)</span></a>
 
 			</p>
 		</section>

@@ -21,9 +21,9 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Set up your project'}, ${null})" />
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl class="font-xsmall">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <dl class="govuk-list govuk-!-font-size-16">
                 <dt>Project numer:</dt>
                 <dd>11</dd>
                 <dt>Competition:</dt>
@@ -32,8 +32,8 @@
                 <dd>Innovate UK</dd>
             </dl>
         </div>
-        <div class="column-half">
-            <ul class="list list-bullet">
+        <div class="govuk-grid-column-one-half">
+            <ul class="govuk-list govuk-list--bullet">
                 <li><a href="#">view application feedback</a></li>
                 <li><a href="#">view the grant terms and conditions</a></li>
                 <li><a href="/prototypes/IFS-1984-project-details">view project details</a></li>
@@ -42,14 +42,14 @@
     </div>
 
     <div class="message-alert" th:unless="${param.status[0] == 'step9'}">
-        <p>You must complete the following tasks to finish setting up your project.</p>
-        <p>All project partners have individual steps to complete in this section.</p>
-        <p><a href="#">View the status of partners.</a></p>
+        <p class="govuk-body">You must complete the following tasks to finish setting up your project.</p>
+        <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+        <p class="govuk-body"><a href="#">View the status of partners.</a></p>
     </div>
 
     <div class="success-alert" th:if="${param.status[0] == 'step9'}">
-        <p>You have completed all of the required steps to set up your project.</p>
-        <p>Your project will begin on 15th March 2018.</p>
+        <p class="govuk-body">You have completed all of the required steps to set up your project.</p>
+        <p class="govuk-body">Your project will begin on 15th March 2018.</p>
     </div>
 
     <div id="tasks-container" class="tabs">
@@ -64,34 +64,34 @@
 
         <section id="section1">
 
-            <h2 class="heading-medium">To complete
+            <h2 class="govuk-heading-m">To complete
                     <th:block th:if="${param.status == null or param.status[0] == 'step1'}">(1)</th:block>
                     <th:block th:if="${param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step5' or param.status[0] == 'step7'}">(1)</th:block>
                     <th:block th:if="${param.status[0] == 'step4' or param.status[0] == 'step5a' or param.status[0] == 'step6' or param.status[0] == 'step8' or param.status[0] == 'step9'}"></th:block>
             </h2>
 
-            <span class="heading-small">Current tasks</span>
+            <span class="govuk-heading-s">Current tasks</span>
 
             <th:block th:if="${param.status[0] == 'step4' or param.status[0] == 'step5a' or param.status[0] == 'step6'}">
-                <p>There are no current tasks to complete.<br />Your tasks require action from Innovate UK and will appear when they are ready.</p>
+                <p class="govuk-body">There are no current tasks to complete.<br />Your tasks require action from Innovate UK and will appear when they are ready.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step8'}">
-                <p>There are no current tasks to complete.</p>
+                <p class="govuk-body">There are no current tasks to complete.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step9'}">
-                <p>You have completed all tasks.</p>
+                <p class="govuk-body">You have completed all tasks.</p>
             </th:block>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="require-action" th:if="${param.status == null or param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-bank-details">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Each organisation must submit their bank details to be reviewed.
                             </p>
                         </div>
@@ -103,10 +103,10 @@
                     </li>
                     <li class="require-action" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-other-documents">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 The Project Manager must upload these documents to set up the project.
                             </p>
                         </div>
@@ -118,10 +118,10 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-finance-checks">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 You have a pending finance query to respond to.
                             </p>
                         </div>
@@ -133,10 +133,10 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step5'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-spend-profile">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Each organisation must submit their spend profile to the lead for review by Innovate UK.
                             </p>
                         </div>
@@ -148,10 +148,10 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step7'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-grant-offer-letter">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 The Project Manager must sign and upload the grant offer letter.
                             </p>
                         </div>
@@ -164,24 +164,24 @@
                 </ul>
             </div>
 
-            <span class="heading-small" th:unless="${param.status[0] == 'step9'}">Pending tasks</span>
+            <span class="govuk-heading-s" th:unless="${param.status[0] == 'step9'}">Pending tasks</span>
 
             <th:block th:if="${param.status[0] == 'step7'}">
-                <p>There are no pending tasks to complete.</p>
+                <p class="govuk-body">There are no pending tasks to complete.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step'}">
-                <p>You have completed all tasks.</p>
+                <p class="govuk-body">You have completed all tasks.</p>
             </th:block>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Monitoring Officer</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Innovate UK are assigning you a Monitoring Officer.
                             </p>
                         </div>
@@ -193,10 +193,10 @@
                     </li>
                     <li class="waiting" th:if="${param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 You bank details are being reviewed by Innovate UK.
                             </p>
                         </div>
@@ -208,10 +208,10 @@
                     </li>
                     <li class="waiting" th:if="${param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your documents have been uploaded and are being reviewed by Innovate UK.
                             </p>
                         </div>
@@ -223,10 +223,10 @@
                     </li>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step4'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Innovate UK will review your finances once bank details have been submitted.
                             </p>
                         </div>
@@ -238,10 +238,10 @@
                     </li>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step4' or param.status[0] == 'step5a'  or param.status[0] == 'step6'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 You can update your spend profile once finances have been approved.
                             </p>
                         </div>
@@ -253,10 +253,10 @@
                     </li>
                     <li class="waiting" th:unless="${param.status[0] == 'step7' or param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 The Project Manager can review and accept this once all tasks have been completed.
                             </p>
                         </div>
@@ -272,16 +272,16 @@
         </section>
 
         <section id="section2">
-            <h2 class="heading-medium">Completed tasks</h2>
+            <h2 class="govuk-heading-m">Completed tasks</h2>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="complete">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Project details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your project details have been completed for each organisation.
                             </p>
                         </div>
@@ -293,10 +293,10 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Monitoring officer</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Innovate UK have assigned your Monitoring Officer, James Smith.
                             </p>
                         </div>
@@ -308,10 +308,10 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your bank details have been approved by Innovate UK.
                             </p>
                         </div>
@@ -323,10 +323,10 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your documents have been uploaded and approved by Innovate UK.
                             </p>
                         </div>
@@ -338,10 +338,10 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step4'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your finances have been approved by Innovate UK.
                             </p>
                         </div>
@@ -353,10 +353,10 @@
                     </li>
                     <li class="complete" th:if="${param.status[0] == 'step7' or param.status[0] == 'step8' or param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your spend profile has been approved by Innovate UK.
                             </p>
                         </div>
@@ -368,10 +368,10 @@
                     </li>
                     <li class="complete" th:if="${param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body govuk-!-margin-0">
                                 Your grant offer letter has been signed and approved by Innovate UK.
                             </p>
                         </div>

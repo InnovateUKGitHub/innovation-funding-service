@@ -34,10 +34,10 @@ IFS.assessment.formCheckboxToggleSubmit = (function () {
 
       if (submitDisabled) {
         // disable button
-        jQuery(submitButton).addClass('disabled').prop('disabled', true)
+        jQuery(submitButton).addClass('govuk-button--disabled').prop('disabled', true)
       } else {
         // enable button
-        jQuery(submitButton).removeClass('disabled').removeAttr('disabled')
+        jQuery(submitButton).removeClass('govuk-button--disabled').removeAttr('disabled')
       }
     }
   }

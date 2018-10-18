@@ -20,6 +20,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,7 +51,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     public void setUp() {
         application = new ApplicationResource();
         application.setId(1L);
-        organisation = new Organisation(1L, "Worth Internet Systems");
+        organisation = new Organisation("Worth Internet Systems");
         applicationFinanceResource = newApplicationFinanceResource().withApplication(application.getId()).withOrganisation(organisation.getId()).build();
     }
 
@@ -158,7 +159,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testFinanceDetails() throws Exception {
+    public void financeDetails() throws Exception {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
         when(financeServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
@@ -171,7 +172,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testGetFinanceDetailsForApplication() throws Exception {
+    public void getFinanceDetailsForApplication() throws Exception {
         List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().build(3);
 
         when(financeServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));

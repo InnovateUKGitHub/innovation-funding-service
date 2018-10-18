@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,8 +21,16 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
-    private String companyHouseNumber; // might start with zero, so use a string.
+
+    @ZeroDowntime(description = "Contract: remove", reference = "IFS-4196")
+    @Column(name = "company_house_number")
+    private String companyHouseNumber;
+
+    @Column(name = "companies_house_number")
+    private String companiesHouseNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
@@ -30,9 +39,9 @@ public class Organisation {
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_organisation",
-            joinColumns = @JoinColumn(name = "organisation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @JoinTable(name = "process_role",
+            joinColumns = @JoinColumn(name = "organisationId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation",
@@ -45,22 +54,17 @@ public class Organisation {
     public Organisation() {
     }
 
-    public Organisation(Long id, String name) {
-        this.id = id;
+    public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(Long id, String name, String companyHouseNumber) {
-        this.id = id;
+    public Organisation(String name, String companiesHouseNumber) {
         this.name = name;
-        this.companyHouseNumber = companyHouseNumber;
+        this.companyHouseNumber = companiesHouseNumber;
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -84,12 +88,13 @@ public class Organisation {
         return users;
     }
 
-    public String getCompanyHouseNumber() {
-        return companyHouseNumber;
+    public String getCompaniesHouseNumber() {
+        return companiesHouseNumber;
     }
 
-    public void setCompanyHouseNumber(String companyHouseNumber) {
-        this.companyHouseNumber = companyHouseNumber;
+    public void setCompaniesHouseNumber(String companiesHouseNumber) {
+        this.companyHouseNumber = companiesHouseNumber;
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public List<OrganisationAddress> getAddresses() {

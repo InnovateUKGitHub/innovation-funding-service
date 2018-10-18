@@ -29,7 +29,8 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
     public void findAll() throws Exception {
         when(competitionTypeService.findAllTypes()).thenReturn(ServiceResult.serviceSuccess(asList(new CompetitionTypeResource())));
 
-        mockMvc.perform(get("/competition-type/findAll"))
+        mockMvc.perform(get("/competition-type/findAll")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competition-type/{method-name}",
                     responseFields(

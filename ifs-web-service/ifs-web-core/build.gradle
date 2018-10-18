@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
@@ -18,7 +18,6 @@ buildscript {
 
 group 'innovateuk'
 version project.version
-
 
 bootRepackage {
     enabled = false
@@ -74,3 +73,4 @@ ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e
 ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
 
 jar.dependsOn ":ifs-web-service:gulp_default"
+processResources.dependsOn ":ifs-web-service:applyProfiles"

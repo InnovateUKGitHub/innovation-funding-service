@@ -21,40 +21,40 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ineligible applications'}, ${null})" />
 
-	<p class="extra-margin">The following applications have been marked as ineligible and removed from the assessment list. Unless otherwise stated, the lead applicant has not been informed.</p>
+	<p class="govuk-body extra-margin">The following applications have been marked as ineligible and removed from the assessment list. Unless otherwise stated, the lead applicant has not been informed.</p>
 
 	<div class="search-filters extra-margin">
 
 		<form action="#" method="GET">
-			<fieldset>
+			<fieldset class="govuk-fieldset">
 
-				<div class="grid-row">
-					<div class="column-half">
-						<div class="form-group">
+				<div class="govuk-grid-row">
+					<div class="govuk-grid-column-one-half">
+						<div class="govuk-form-group">
 							<label class="form-label" for="filterSearch">Keywords</label>
-							<input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+							<input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
 						</div>
 
 
 					</div>
-					<div class="column-half">
-						<div class="grid-row">
-							<div class="form-group">
+					<div class="govuk-grid-column-one-half">
+						<div class="govuk-grid-row">
+							<div class="govuk-form-group">
 								<label class="form-label" for="filterInformed">Informed</label>
-								<select class="form-control" id="filterInformed" name="filterInformed">
+								<select class="govuk-select" id="filterInformed" name="filterInformed">
 									<option value="All">All</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
 							</div>
 						</div>
-						<div class="grid-row">
-							<div class="column-half extra-margin">
+						<div class="govuk-grid-row">
+							<div class="govuk-grid-column-one-half extra-margin">
 								<a href="#">Clear all filters</a>
 							</div>
-							<div class="column-half">
+							<div class="govuk-grid-column-one-half">
 								<div class="alignright">
-									<button class="button no-margin">Filter</button>
+									<button class="govuk-button govuk-!-margin-0">Filter</button>
 								</div>
 							</div>
 						</div>
@@ -65,14 +65,14 @@
 		</form>
 	</div>
 
-	<div class="grid-row sorting">
+	<div class="govuk-grid-row sorting">
 		<div class="column-two-thirds">
-			<h4><span class="heading-xlarge no-margin available">20</span> <strong>Applications</strong></h4>
+			<h4><span class="govuk-heading-xl govuk-!-margin-0 available">20</span> <strong>Applications</strong></h4>
 		</div>
-        <div class="column-third alignright">
-            <div class="form-group">
+        <div class="govuk-grid-column-one-third alignright">
+            <div class="govuk-form-group">
                 <label for="sort-by">Sort by</label>
-                <select name="sort-by" id="sort-by" class="form-control">
+                <select name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Application number">Application number</option>
                     <option value="Project title">Project title</option>
                     <option value="Lead organisation">Lead organisation</option>

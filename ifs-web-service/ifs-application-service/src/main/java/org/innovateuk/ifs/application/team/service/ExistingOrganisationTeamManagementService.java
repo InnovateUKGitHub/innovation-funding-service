@@ -5,11 +5,9 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementVi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,15 +24,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 @Service
 public class ExistingOrganisationTeamManagementService extends AbstractTeamManagementService {
 
-    @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
+
+    public ExistingOrganisationTeamManagementService(UserRestService userRestService) {
+        this.userRestService = userRestService;
+    }
 
     public ApplicationTeamManagementViewModel createViewModel(long applicationId, long organisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByOrganisationId(
                 applicationId, organisationId, loggedInUser.getId());
     }
 
-    public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public ServiceResult<Void> executeStagedInvite(long applicationId,
                                                                        long organisationId,
                                                                        ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, organisationId);
@@ -43,14 +44,13 @@ public class ExistingOrganisationTeamManagementService extends AbstractTeamManag
 
     @Override
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId) {
-
         return hasExistingOrganisationInvite(applicationId, organisationId) ||
                hasExistingUsersOnApplicationUsingThisOrganisation(applicationId, organisationId);
     }
 
     private boolean hasExistingUsersOnApplicationUsingThisOrganisation(Long applicationId, Long organisationId) {
 
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
         return simpleAnyMatch(processRoles, processRole -> processRole.getOrganisationId().equals(organisationId));
     }
 

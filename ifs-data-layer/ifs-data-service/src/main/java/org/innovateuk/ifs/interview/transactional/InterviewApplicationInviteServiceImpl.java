@@ -9,12 +9,9 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +24,7 @@ import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -47,7 +45,7 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
@@ -97,6 +95,18 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
     }
 
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment) {
+
+        InterviewAssignmentMessageOutcome outcome;
+        if (assignment.getMessage() == null) {
+            outcome = new InterviewAssignmentMessageOutcome();
+            outcome.setAssessmentInterviewPanel(assignment);
+        } else {
+            outcome = assignment.getMessage();
+        }
+        outcome.setMessage(assessorInviteSendResource.getContent());
+        outcome.setSubject(assessorInviteSendResource.getSubject());
+        interviewAssignmentWorkflowHandler.notifyInterviewPanel(assignment, outcome);
+
         User user = assignment.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         Notification notification = new Notification(
@@ -112,17 +122,6 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
                         "message", assessorInviteSendResource.getContent()
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid(() -> {
-            InterviewAssignmentMessageOutcome outcome;
-            if (assignment.getMessage() == null) {
-                outcome = new InterviewAssignmentMessageOutcome();
-                outcome.setAssessmentInterviewPanel(assignment);
-            } else {
-                outcome = assignment.getMessage();
-            }
-            outcome.setMessage(assessorInviteSendResource.getContent());
-            outcome.setSubject(assessorInviteSendResource.getSubject());
-            interviewAssignmentWorkflowHandler.notifyInterviewPanel(assignment, outcome);
-        });
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

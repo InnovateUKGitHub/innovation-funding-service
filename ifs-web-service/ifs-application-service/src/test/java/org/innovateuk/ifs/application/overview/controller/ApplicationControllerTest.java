@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewView
 import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -22,12 +23,13 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.invite.service.InviteService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +42,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.*;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -52,6 +53,8 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -109,6 +112,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @InjectMocks
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -132,7 +139,8 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
-        return new ApplicationController();
+        return new ApplicationController(applicationOverviewModelPopulator,
+                questionService, userRestService, applicationRestService, cookieFlashMessageFilter);
     }
 
     @Before
@@ -149,7 +157,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         when(applicationRestService.updateApplicationState(applications.get(0).getId(), ApplicationState.OPEN)).thenReturn(restSuccess());
 
-        ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
+        ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(FINANCE).build()).withCurrentUser(loggedInUser);
         sectionResources.forEach(sectionResource -> {
             when(applicantRestService.getSection(anyLong(), anyLong(), eq(sectionResource.getId()))).thenReturn(sectionBuilder.withSection(sectionResource).build());
         });
@@ -164,10 +172,13 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         ApplicationResource app = applications.get(0);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
 
-        Set<Long> sections = newHashSet(1L, 2L);
+        List<SectionResource> sections = newSectionResource().build(2);
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
-        mappedSections.put(organisations.get(0).getId(), sections);
+        mappedSections.put(organisations.get(0).getId(), CollectionFunctions.simpleMapSet(sections,
+                SectionResource::getId));
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
+        when(sectionService.getSectionsForCompetitionByType(app.getId(), FINANCE)).thenReturn(asList(sections.get(0)));
+        when(sectionService.getSectionsForCompetitionByType(app.getId(), OVERVIEW_FINANCES)).thenReturn(asList(sections.get(1)));
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -183,10 +194,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         assertEquals(app.getName(), viewModel.getApplicationName());
         assertEquals(app.getApplicationState(), viewModel.getApplicationState());
         assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
-        assertEquals(sections, viewModel.getCompleted().getCompletedSections());
+        assertTrue(viewModel.getCompleted().isFinanceSectionComplete());
+        assertTrue(viewModel.getCompleted().isFinanceOverviewSectionComplete());
         assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
-
-        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 0);
+        assertTrue(viewModel.getAssignable().getPendingAssignableUsers().isEmpty());
     }
 
     @Test
@@ -227,15 +238,17 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(LEADAPPLICANT).build();
 
-        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
-        verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
+        verify(applicationRestService).getApplicationById(app.getId());
+        verify(userRestService).findProcessRole(this.loggedInUser.getId(), app.getId());
+        verify(applicationRestService).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test
@@ -246,15 +259,17 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(COLLABORATOR).build();
 
-        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+        when(userRestService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(restSuccess(processRoleResource));
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
-        verify(applicationRestService, times(0)).updateApplicationState(app.getId(), ApplicationState.OPEN);
+        verify(applicationRestService).getApplicationById(app.getId());
+        verify(userRestService).findProcessRole(this.loggedInUser.getId(), app.getId());
+        verify(applicationRestService, never()).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test

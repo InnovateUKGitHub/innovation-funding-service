@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.team.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.controller.AcceptInviteController;
-import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -49,9 +49,6 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Mock
-    private RegistrationService registrationService;
 
     @Mock
     private RegistrationCookieService registrationCookieService;
@@ -113,7 +110,8 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
                 .withInviteOrganisation(organisationId)
                 .build()));
         when(inviteRestService.getInviteOrganisationByHash(anyString())).thenReturn(restSuccess(newInviteOrganisationResource().withOrganisation(organisationId).build()));
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(newOrganisationResource().withId(organisationId).build());
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(newOrganisationResource()
+                .withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
 
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))

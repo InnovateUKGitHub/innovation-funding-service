@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -22,8 +23,6 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
@@ -48,7 +47,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
-
 
     @Mock
     private UserService userServiceMock;
@@ -100,8 +98,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -109,19 +106,17 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty());
+        verify(registrationServiceMock, times(1)).createUser(userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
     @Test
     public void createUserWithCompetitionId() throws Exception {
-        final Long organisationId = 9999L;
-        final Long competitionId = 8888L;
+        final long organisationId = 9999L;
+        final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -129,8 +124,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId));
+        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, organisationId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
@@ -146,7 +140,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         users.add(testUser3);
 
         when(baseUserServiceMock.findAll()).thenReturn(serviceSuccess(users));
-        mockMvc.perform(get("/user/findAll/"))
+        mockMvc.perform(get("/user/findAll/")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("[0]firstName", is(testUser1.getFirstName())))
@@ -171,7 +166,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         UserResource testUser1 = newUserResource().withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
         when(baseUserServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
-        mockMvc.perform(get("/user/id/" + testUser1.getId()))
+        mockMvc.perform(get("/user/id/" + testUser1.getId())
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
@@ -186,7 +182,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final String password = "Passw0rd";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
-        mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password))
+        mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andDo(document("user/update-password",
@@ -203,7 +200,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
         when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andDo(document("user/verify-email",
@@ -242,7 +240,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         final Error error = notFoundError(Token.class, hash);
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
-        mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/" + hash).content(password))
+        mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/" + hash).content(password)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
                 .andExpect(contentError(error))
                 .andDo(document("user/update-password-token-not-found"));
@@ -254,7 +253,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(baseUserServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
-        mockMvc.perform(get("/user/uid/" + testUser1.getUid()))
+        mockMvc.perform(get("/user/uid/" + testUser1.getUid())
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
@@ -378,5 +378,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
+    }
+
+    @Test
+    public void grantRole() throws Exception {
+        long userId = 1L;
+        Role grantRole = Role.APPLICANT;
+
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 }

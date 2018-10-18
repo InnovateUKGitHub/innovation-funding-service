@@ -2,20 +2,24 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service implementation to deal with the finance part of competition setup.
  */
 @Service
-public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService implements CompetitionSetupFinanceService {
+public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService implements
+        CompetitionSetupFinanceService {
 
     @Autowired
     private CompetitionSetupTransactionalService competitionSetupTransactionalService;
@@ -23,56 +27,50 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     @Override
     @Transactional
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
-        Long compId = compSetupFinanceRes.getCompetitionId();
-
-        ServiceResult<Void> save = saveCountAndTurnover(compSetupFinanceRes).
-                andOnSuccess(() -> saveFinance(compSetupFinanceRes)).
-                andOnSuccess(competition(compId)).
-                andOnSuccessReturnVoid(competition -> competition.setFullApplicationFinance(compSetupFinanceRes.isFullApplicationFinance()));
-        return save;
-
+        return getCompetition(compSetupFinanceRes.getCompetitionId()).andOnSuccess(competition -> {
+            competition.setApplicationFinanceType(compSetupFinanceRes.getApplicationFinanceType());
+            competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
+            return isNoFinances(competition) ? serviceSuccess() : activateFormInputs(compSetupFinanceRes);
+        });
     }
 
     @Override
-    public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(Long compId) {
-        ServiceResult<Boolean> isIncludeGrowthTableResult = competitionSetupTransactionalService.isIncludeGrowthTable(compId);
-
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceResResult = find(isIncludeGrowthTableResult, getCompetition(compId)).
-                andOnSuccess((isIncludeGrowthTable, competition) -> {
-                    CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
-                    compSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
-                    compSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
-                    compSetupFinanceRes.setCompetitionId(compId);
-                    return serviceSuccess(compSetupFinanceRes);
-                });
-        return compSetupFinanceResResult;
+    public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccessReturn(this::buildCompetitionSetupFinanceResource);
     }
 
-    
-    private ServiceResult<Void> saveCountAndTurnover(CompetitionSetupFinanceResource compSetupFinanceRes) {
-        Long compId = compSetupFinanceRes.getCompetitionId();
 
-        ServiceResult<Void> saveCountAndTurnover = find(competitionSetupTransactionalService.countInput(compId), competitionSetupTransactionalService.turnoverInput(compId))
-                .andOnSuccess((count, turnover) -> {
-                    boolean isActive = !compSetupFinanceRes.isIncludeGrowthTable();
-                    count.setActive(isActive);
-                    turnover.setActive(isActive);
-                    return ServiceResult.serviceSuccess();
+    private ServiceResult<Void> activateFormInputs(CompetitionSetupFinanceResource compSetupFinanceRes) {
+        long competitionId = compSetupFinanceRes.getCompetitionId();
+
+        return find(
+                competitionSetupTransactionalService.countInput(competitionId),
+                competitionSetupTransactionalService.turnoverInput(competitionId),
+                competitionSetupTransactionalService.financeCount(competitionId),
+                competitionSetupTransactionalService.financeOverviewRow(competitionId),
+                competitionSetupTransactionalService.financeYearEnd(competitionId))
+                .andOnSuccess((countInput, turnoverInput, financeCount, financeOverviewRows, financeYearEnd) -> {
+                    boolean includeGrowthTable = TRUE.equals(compSetupFinanceRes.getIncludeGrowthTable());
+
+                    countInput.setActive(!includeGrowthTable);
+                    turnoverInput.setActive(!includeGrowthTable);
+                    financeCount.setActive(includeGrowthTable);
+                    financeOverviewRows.forEach(row -> row.setActive(includeGrowthTable));
+                    financeYearEnd.setActive(includeGrowthTable);
+
+                    return serviceSuccess();
                 });
-        return saveCountAndTurnover;
     }
 
-    private ServiceResult<Void> saveFinance(CompetitionSetupFinanceResource compSetupFinanceRes) {
-        Long compId = compSetupFinanceRes.getCompetitionId();
-        ServiceResult<Void> saveFinance = find(competitionSetupTransactionalService.financeCount(compId), competitionSetupTransactionalService.financeOverviewRow(compId), competitionSetupTransactionalService.financeYearEnd(compId))
-                .andOnSuccess((count, overviewRows, yearEnd) -> {
-                    boolean isActive = compSetupFinanceRes.isIncludeGrowthTable();
-                    count.setActive(isActive);
-                    yearEnd.setActive(isActive);
-                    overviewRows.forEach(row -> row.setActive(isActive));
-                    return ServiceResult.serviceSuccess();
-                });
-        return saveFinance;
+    private boolean isNoFinances(Competition competition) {
+        return competition.getApplicationFinanceType() == null || competition.getApplicationFinanceType() == NO_FINANCES;
     }
 
+    private CompetitionSetupFinanceResource buildCompetitionSetupFinanceResource(Competition competition) {
+        CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
+        competitionSetupFinanceResource.setCompetitionId(competition.getId());
+        competitionSetupFinanceResource.setApplicationFinanceType(competition.getApplicationFinanceType());
+        competitionSetupFinanceResource.setIncludeGrowthTable(competition.getIncludeProjectGrowthTable());
+        return competitionSetupFinanceResource;
+    }
 }

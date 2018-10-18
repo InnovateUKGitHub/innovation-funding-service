@@ -5,7 +5,7 @@
 <!--/* competition status with blue block */-->
 <th:block th:fragment="competition-status(competition)">
     <th:block th:unless="${competition == 'setup'}">
-      <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
+      <h2 th:switch="${competition.competitionStatus.name()}" class="govuk-heading-s govuk-!-margin-0 blue-block">
           <th:block th:case="'NOT_STARTED'">Competition not yet started</th:block>
           <th:block th:case="'OPEN'">Competition open</th:block>
           <th:block th:case="'IN_ASSESSMENT'">In assessment</th:block>
@@ -15,67 +15,27 @@
           <th:block th:case="*">test2</th:block>
       </h2>
     </th:block>
-    <h2 th:if="${competition == 'setup'}" class="bold-small blue-block">Competition Setup</h2>
-</th:block>
-
-
-<!--/* competition management menu */-->
-<th:block th:fragment="competition-mgt-menu(competitionStatus,competitionId)">
-
-    <th:block th:switch="${competitionStatus}">
-
-        <th:block th:case="'OPEN'">
-          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" />
-        </th:block>
-
-        <th:block th:case="'IN_ASSESSMENT'">
-          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
-        </th:block>
-        <th:block th:case="'FUNDERS_PANEL'">
-        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
-        </th:block>
-        <th:block th:case="'ASSESSOR_FEEDBACK'">
-        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" />
-        </th:block>
-    </th:block>
-</th:block>
-
-<th:block th:fragment="competition-mgt-menu-assessor-feedback(id)">
-  <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=overview'}">Overview</a></li>
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}">Applications not submitted</a></li>
-  </ul>
-</th:block>
-
-<th:block th:fragment="competition-mgt-menu-assessment(id)">
-  <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}">Applications not submitted</a></li>
-  </ul>
-</th:block>
-
-<th:block th:fragment="competition-mgt-menu-open(id)">
-  <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}">All applications</a></li>
-  </ul>
+    <h2 th:if="${competition == 'setup'}" class="govuk-heading-s govuk-!-margin-0 blue-block">Competition Setup</h2>
 </th:block>
 
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">
 	<div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
-      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Previous</button>
       <div class="status">
         Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
       </div>
-      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 1}">Next</button>
     </div>
 </th:block>
 
 <!-- Applications sort -->
 <th:block th:fragment="applications-sort(activeTab, activeSortField)">
 	<label for="sort-by">Sort by</label>
-    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'submitted'}">
+    <select id="sort-by"
+            name="sort"
+            class="js-auto-submit govuk-select"
+            th:if="${activeTab == 'submitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
@@ -85,12 +45,15 @@
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
 
     </select>
-    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
+    <select id="sort-by"
+            name="sort"
+            class="js-auto-submit govuk-select"
+            th:if="${activeTab == 'notSubmitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
         <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
     </select>
-    <button type="submit" class="button button-secondary no-margin">Sort</button>
+    <button type="submit" class="button-secondary govuk-!-margin-0">Sort</button>
 </th:block>
 </html>

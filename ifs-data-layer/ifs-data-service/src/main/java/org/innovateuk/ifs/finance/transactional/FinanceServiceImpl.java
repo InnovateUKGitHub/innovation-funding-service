@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -53,7 +54,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
     @Autowired
     private ProjectFinanceHandler projectFinanceHandler;
-
 
     @Override
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
@@ -126,6 +126,25 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
         }
     }
 
+    @Override
+    public ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+            Competition competition = application.getCompetition();
+            if (competition.getCollaborationLevel() == COLLABORATIVE) {
+                return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
+                    long numberSeekingFunding = financeTotals
+                            .stream()
+                            .filter(financeTotal -> financeTotal.getTotalFundingSought().compareTo(BigDecimal.ZERO) > 0)
+                            .count();
+
+                    return numberSeekingFunding > 1;
+                });
+            } else {
+                return serviceSuccess(true);
+            }
+        });
+    }
+
     private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
         return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
@@ -148,7 +167,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
 
     private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
+        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
     }
 
     private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource, Competition competition) {

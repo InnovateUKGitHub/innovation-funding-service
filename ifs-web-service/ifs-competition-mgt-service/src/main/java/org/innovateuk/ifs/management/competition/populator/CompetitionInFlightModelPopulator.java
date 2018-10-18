@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -54,6 +53,6 @@ public class CompetitionInFlightModelPopulator {
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD));
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER));
     }
 }

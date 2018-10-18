@@ -16,6 +16,8 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
+...
+...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Set predefined date variables
 Suite Teardown    The user closes the browser
 Test Teardown
@@ -23,173 +25,173 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 
-*** Variables ***
 # This suite uses application: Assign test
 
 *** Test Cases ***
 Lead applicant can assign a question
     [Documentation]  INFUND-275, INFUND-280, IFS-265
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     [Setup]  the user logs-in in new browser   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the applicant changes the name of the application
-    And the user clicks the button/link        link=Public description
-    Then the user should not see the element   jQuery=.form-footer:contains("Last updated:")
+    And the user clicks the button/link        link = Public description
+    Then the user should not see the element   jQuery = .form-footer:contains("Last updated:")
     When the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then the user should see the notification  Question assigned successfully
-    And the user should see the element        css=.textarea-wrapped .readonly
-    And the user should see the element        jQuery=.assign-container:contains("Dennis Bergkamp")
+    And the user should see the element        css = .textarea-wrapped .readonly
+    And the user should see the element        jQuery = .assign-container:contains("Dennis Bergkamp")
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
+    [Tags]
     When the user assigns the question to the collaborator      Stuart Anderson
-    And the user should see the element                         jQuery=.assign-container:contains("you")
+    And the user should see the element                         jQuery = .assign-container:contains("you")
     And the applicant assigns the question to the collaborator  Dennis Bergkamp
-    Then the user should see the element                        css=.textarea-wrapped .readonly
-    And the user should see the element                         jQuery=.assign-container:contains("Dennis Bergkamp")
+    Then the user should see the element                        css = .textarea-wrapped .readonly
+    And the user should see the element                         jQuery = .assign-container:contains("Dennis Bergkamp")
 
 The question is enabled for the assignee
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]  HappyPath  Email
+    [Tags]
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Assign test  #Application Title
+    And the user clicks the button/link   link = Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
-    And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
-    When the user clicks the button/link  jQuery=.button:contains("Review")
+    And the user should see the element   jQuery = li:contains("Public description") .task-status-incomplete
+    When the user clicks the button/link  jQuery = .govuk-button:contains("Review")
     And the user expands the section      Public description
-    Then the user should see the element  jQuery=button:contains("Assign to lead for review")
-    And the user clicks the button/link   jQuery=.form-group button:contains("Return and edit")
-    And the user should see the element   css=.textarea-wrapped .editor
+    Then the user should see the element  jQuery = button:contains("Assign to lead for review")
+    And the user clicks the button/link   jQuery = .govuk-form-group button:contains("Return and edit")
+    And the user should see the element   css = .textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page
     [Documentation]  INFUND-2417
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
-    Given the user clicks the button/link          link=Application overview
-    When The user clicks the button/link           link=View the grant terms and conditions
+    [Tags]
+    Given the user clicks the button/link          link = Application overview
+    When The user clicks the button/link           link = View the grant terms and conditions
     Then the user should see the text in the page  Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page   Entire agreement
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page          ${DASHBOARD_URL}
-    And the user clicks the button/link           link=Assign test
-    Then the user should not see the element      jQuery=.button:contains("Review and submit")
-    And the user clicks the button/link           jQuery=.button:contains("Review")
+    And the user clicks the button/link           link = Assign test
+    Then the user should not see the element      jQuery = .govuk-button:contains("Review and submit")
+    And the user clicks the button/link           jQuery = .govuk-button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
-    And the user should not see the element       jQuery=.button:contains("Submit application")
+    And the user should not see the element       jQuery = .govuk-button:contains("Submit application")
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link= Assign test
-    And the user clicks the button/link   link= Public description
+    And the user clicks the button/link   link = Assign test
+    And the user clicks the button/link   link = Public description
     When the collaborator edits the 'public description' question
-    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("today"):contains("by you")
+    Then the user should see the element  jQuery = .form-footer .form-footer__info:contains("today"):contains("by you")
 
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Assign test
-    And the user clicks the button/link   link=Public description
+    And the user clicks the button/link   link = Assign test
+    And the user clicks the button/link   link = Public description
     Then The user should see the text in the page  Assign to lead for review
 
 Collaborators can mark as ready for review
     [Documentation]  INFUND-877
     ...  This test depends on the previous test suite to run first
-    [Tags]  HappyPath  Email
-    When the user clicks the button/link       jQuery=button:contains("Assign to lead for review")
-    Then the user should see the notification  Question assigned successfully
-    And the user should see the text in the page  You have reassigned this question to
+    [Tags]
+    When the user clicks the button/link            jQuery = button:contains("Assign to lead for review")
+    Then the user should see the notification       Question assigned successfully
+    And the user should see the text in the page    You have reassigned this question to
 
 Collaborator cannot edit after marking ready for review
     [Documentation]  INFUND-275
     ...    This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
-    Then the user should see the element  css=.textarea-wrapped .readonly
+    [Tags]
+    Then the user should see the element  css = .textarea-wrapped .readonly
 
 Collaborators should not be able to edit application details
     [Documentation]  INFUND-2298
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
+    [Tags]
     Given the user navigates to the page      ${DASHBOARD_URL}
-    And the user clicks the button/link       link= Assign test
-    And the user clicks the button/link       link=Application details
-    Then the user should not see the element  css=[id="application.name"]
-    And the user should not see the element   css=input#application_details-startdate_day
-    And the user should not see the element   jQuery=button:contains("Mark as complete")
+    And the user clicks the button/link       link = Assign test
+    And the user clicks the button/link       link = Application details
+    Then the user should not see the element  css = [id="application.name"]
+    And the user should not see the element   css = input#application_details-startdate_day
+    And the user should not see the element   jQuery = button:contains("Mark as complete")
 
 The question should be reassigned to the lead applicant
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
+    [Tags]
     [Setup]  log in as a different user      ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user navigates to the page     ${DASHBOARD_URL}
-    And the user clicks the button/link      link= Assign test
+    And the user clicks the button/link      link = Assign test
     Then the user should see the browser notification  Dennis Bergkamp has assigned a question to you
-    And the user should see the element      jQuery=.assign-container:contains("you")
-    And the user clicks the button/link      link= Public description
-    And the user should see the element      css=.textarea-wrapped .editor
-    And the user should see the element      jQuery=.form-footer .form-footer__info:contains("today"):contains("by Dennis Bergkamp")
-    And the user should not see the element  css=.textarea-wrapped .readonly
+    And the user should see the element      jQuery = .assign-container:contains("you")
+    And the user clicks the button/link      link = Public description
+    And the user should see the element      css = .textarea-wrapped .editor
+    And the user should see the element      jQuery = .form-footer .form-footer__info:contains("today"):contains("by Dennis Bergkamp")
+    And the user should not see the element  css = .textarea-wrapped .readonly
 
 Appendices are assigned along with the question
     [Documentation]  INFUND-409
     ...  This test depends on the previous test suite to run first
-    [Tags]  Email
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link= Assign test
-    And the user clicks the button/link   link=6. Innovation
+    And the user clicks the button/link   link = Assign test
+    And the user clicks the button/link   link = 6. Innovation
     And the user should see the text in the page  Upload
     When the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then log in as a different user       ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link= Assign test
-    And the user clicks the button/link   link=6. Innovation
+    And the user clicks the button/link   link = Assign test
+    And the user clicks the button/link   link = 6. Innovation
     And the user should see the text in the page  Upload
-    And the user clicks the button/link   jQuery=button:contains("Assign to lead for review")
+    And the user clicks the button/link   jQuery = button:contains("Assign to lead for review")
     And the user should not see the text in the page  Upload
 
-Collaborator can see that Research area is not selected
-    [Documentation]  INFUND-6823
+RTO Collaborator is not guided that the research area is not selected
+    [Documentation]  IFS-4099
     [Tags]
     Given the user navigates to Your-finances page  Assign test
-    When the user clicks the button/link  link=Your funding
-    Then The user should see the element  jQuery=.list li:contains("the lead applicant must select a research category")
+    When the user clicks the button/link            link = Your funding
+    Then The user should not see the element        jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    And the user should see the element             css = [name^="finance-grantclaimpercentage"]
 
 Lead selects Research category
-    [Documentation]  INFUND-6823
-    [Tags]  Email
-    [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
+    [Documentation]  INFUND-6823  IFS-3938
+    [Tags]
+    [Setup]  log in as a different user        ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
-    And the user clicks the button/link   link=Your funding
-    Then the user should see the element  jQuery=li:contains("you must select a"):contains("research category")
-    When the user navigates to the page   ${DASHBOARD_URL}
-    Then the user clicks the button/link  link=Assign test
-    When the user selects Research category  Feasibility studies
+    And the user clicks the button/link        link = Your funding
+    Then the user should see the element       jQuery = li:contains("mark the") a:contains("research category")
+    When the user navigates to the page        ${DASHBOARD_URL}
+    Then the user clicks the button/link       link = Assign test
+    When the user selects Research category    Feasibility studies
 
 Lead marks finances as complete
     [Documentation]  INFUND-3016
     ...  This test depends on the previous test suite to run first
     [Tags]
     Given the user navigates to the page                 ${DASHBOARD_URL}
-    And the user clicks the button/link                  jQuery=.progress-list a:contains("Assign test")
+    And the user clicks the button/link                  jQuery = .progress-list a:contains("Assign test")
     Then the applicant completes the application details  Assign test  ${tomorrowday}  ${month}  ${nextyear}
     When the user navigates to Your-finances page         Assign test
-    Then the user should see the element                 link=Your project costs
-    And the user should see the element                  link=Your organisation
-    And the user should see the element                  jQuery=h3:contains("Your funding")
+    Then the user should see the element                 link = Your project costs
+    And the user should see the element                  link = Your organisation
+    And the user should see the element                  jQuery = h3:contains("Your funding")
     When the user fills in the project costs             labour costs  n/a
     And the user enters the project location
     And the user navigates to Your-finances page         Assign test
@@ -202,8 +204,8 @@ Collaborator from another organisation should be able to mark Finances as comple
     [Documentation]  INFUND-3016
     ...  This test depends on the previous test suite to run first
     [Tags]
-    [Setup]  log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    Given the user navigates to Your-finances page  Assign test
+    [Setup]  log in as a different user               ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    Given the user navigates to Your-finances page    Assign test
     Then the user should see all finance subsections incomplete
     And the collaborator is able to edit the finances
 
@@ -215,38 +217,38 @@ The question is disabled for other collaborators
     Given Steve smith assigns a question to the collaborator
     Given log in as a different user       &{collaborator2_credentials}
     And the user navigates to the page     ${APPLICATION_OVERVIEW_URL}
-    When the user clicks the button/link   jQuery=a:contains("Public description")
-    Then The user should see the element   css=.textarea-wrapped .readonly
+    When the user clicks the button/link   jQuery = a:contains("Public description")
+    Then The user should see the element   css = .textarea-wrapped .readonly
 
 The question is disabled on the summary page for other collaborators
     [Documentation]  INFUND-2302
     ...    This test case is still using the old application
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
-    When the user clicks the button/link     jQuery=button:contains("Public description")
-    Then the user should see the element     css=#collapsible-4 .question .readonly
-    And the user should not see the element  jQuery=button:contains("Assign to lead for review")
+    When the user clicks the button/link     jQuery = button:contains("Public description")
+    Then the user should see the element     css = #collapsible-4 .question .readonly
+    And the user should not see the element  jQuery = button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation
     [Documentation]  INFUND-8590
     [Tags]
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
-    Given the user clicks the button/link  link= Assign test
-    And the user clicks the button/link    link=Application team
-    And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
-    When the user clicks the button/link   jQuery=a:contains("Delete organisation"):first
-    And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")
+    Given the user clicks the button/link  link = Assign test
+    And the user clicks the button/link    link = Application team
+    And the user clicks the button/link    jQuery = .table-overflow:contains("Dennis") ~ p a
+    When the user clicks the button/link   jQuery = a:contains("Delete organisation"):first
+    And the user clicks the button/link    jQuery = .modal-delete-organisation button:contains("Delete organisation")
     Then the user should see the text in the page  Application team
     And the user should not see the text in the page  Dennis Bergkamp
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    And the user should not see the element  link= Assign test
+    And the user should not see the element  link = Assign test
 
 *** Keywords ***
 the collaborator edits the 'public description' question
-    Clear Element Text  css=.textarea-wrapped .editor
-    The user enters text to a text field  css=.textarea-wrapped .editor  collaborator's text
-    Focus  link=Sign out
+    Clear Element Text  css = .textarea-wrapped .editor
+    The user enters text to a text field  css = .textarea-wrapped .editor  collaborator's text
+    Focus  link = Sign out
     wait for autosave
     the user reloads the page
 
@@ -257,16 +259,12 @@ the collaborator is able to edit the finances
     the user fills in the funding information       Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link     link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link       link=Application details
-    And the user enters text to a text field  css=[id="application.name"]  Assign test
-    And The user clicks the button/link       jQuery=button:contains("Save and return")
+    Given the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    And the user clicks the button/link       link = Application details
+    And the user enters text to a text field  css = [id="application.name"]  Assign test
+    And The user clicks the button/link       jQuery = button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    the user clicks the button/link   jQuery=a:contains("Public description")
+    the user clicks the button/link   jQuery = a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
-
-the user fills out the research category
-    the user clicks the button/link    css=label[for="researchCategoryChoice-33"]
-    the user clicks the button/link    jQuery=button:contains(Save)

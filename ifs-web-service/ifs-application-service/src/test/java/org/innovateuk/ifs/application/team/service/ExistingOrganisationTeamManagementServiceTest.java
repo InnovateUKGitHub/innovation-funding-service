@@ -7,21 +7,22 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementMo
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -43,7 +44,7 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
     @Mock
-    private ProcessRoleService processRoleServiceMock;
+    private UserRestService userRestService;
 
     @Mock
     private InviteOrganisationRestService inviteOrganisationRestServiceMock;
@@ -52,7 +53,14 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
     private InviteRestService inviteRestServiceMock;
 
     protected ExistingOrganisationTeamManagementService supplyServiceUnderTest() {
-        return new ExistingOrganisationTeamManagementService();
+        return new ExistingOrganisationTeamManagementService(userRestService);
+    }
+
+    @Before
+    public void setUp() {
+        super.setup();
+        applicationId = 1L;
+        organisationId = 2L;
     }
 
     @Test
@@ -97,14 +105,12 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
                 .withInviteOrganisation(organisationId)
                 .withHash().build();
 
-        InviteResultsResource expectedInviteResultsResource = new InviteResultsResource();
+        when(inviteRestServiceMock.createInvitesByOrganisationForApplication(any(), any(), any())).thenReturn(restSuccess());
 
-        when(inviteRestServiceMock.createInvitesByOrganisationForApplication(any(), any(), any())).thenReturn(restSuccess(expectedInviteResultsResource));
+        ServiceResult<Void> result = service.executeStagedInvite(applicationId, organisationId, form);
 
-        InviteResultsResource result = service.executeStagedInvite(applicationId, organisationId, form).getSuccess();
-
-        assertEquals(result, expectedInviteResultsResource);
-        verify(inviteRestServiceMock, times(1)).createInvitesByOrganisationForApplication(applicationId, organisationId, singletonList(expectedInviteResource));
+        assertTrue(result.isSuccess());
+        verify(inviteRestServiceMock, times(1)).createInvitesByOrganisationForApplication(applicationId, organisationId, Arrays.asList(expectedInviteResource));
     }
 
     @Test
@@ -117,15 +123,14 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
 
         when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
                 thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
-
-        when(processRoleServiceMock.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoleResourceList);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoleResourceList));
 
         boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
         assertTrue(result);
 
         verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
-        verify(processRoleServiceMock).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService).findProcessRole(applicationId);
     }
 
     @Test
@@ -138,15 +143,14 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
 
         when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
                 thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
-
-        when(processRoleServiceMock.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoleResourceList);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoleResourceList));
 
         boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
         assertFalse(result);
 
         verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
-        verify(processRoleServiceMock).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService).findProcessRole(applicationId);
     }
 
     @Test
@@ -154,15 +158,14 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
 
         when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
                 thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
-
-        when(processRoleServiceMock.findProcessRolesByApplicationId(applicationId)).thenReturn(emptyList());
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(new ArrayList<>()));
 
         boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
         assertFalse(result);
 
         verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
-        verify(processRoleServiceMock).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService).findProcessRole(applicationId);
     }
 
     @Test
@@ -176,7 +179,7 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
         assertTrue(result);
 
         verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
-        verify(processRoleServiceMock, never()).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService, never()).findProcessRole(applicationId);
     }
 
     @Test

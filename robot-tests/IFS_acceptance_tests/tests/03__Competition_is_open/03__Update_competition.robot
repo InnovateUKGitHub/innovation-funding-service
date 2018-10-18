@@ -30,259 +30,259 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Application details are editable (Ready to Open)
     [Documentation]    INFUND-6937
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains(Upcoming)
-    And the user clicks the button/link    link=${ready_to_open_competition_name}
-    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
-    And the user clicks the button/link    link=Application
-    When the user clicks the button/link   link=Application details
-    And the user should see the element    jQuery=.button:contains("Edit this question")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    Given the user clicks the button/link    jQuery = a:contains(Upcoming)
+    And the user clicks the button/link      link = ${ready_to_open_competition_name}
+    And the user clicks the button/link      jQuery = a:contains(and update competition setup)
+    And the user clicks the button/link      link = Application
+    When the user clicks the button/link     link = Application details
+    And the user should see the element      jQuery = .govuk-button:contains("Edit this question")
+    And the user clicks the button/link      jQuery = .govuk-button:contains("Edit this question")
     Then the user is able to change the value of the fields
-    [Teardown]    the user clicks the button/link    link=Application
+    [Teardown]    the user clicks the button/link    link = Application
 
 Project summary is editable (Ready to Open)
     [Documentation]    INFUND-6938
     [Tags]
-    When The user clicks the button/link    link=Project summary
-    And the user should see the element    jquery=h1:contains("Project summary")
-    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then The user enters text to a text field    id=question.maxWords    100
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    When The user clicks the button/link         link = Project summary
+    And the user should see the element          jquery = h1:contains("Project summary")
+    When the user clicks the button/link         jQuery = .govuk-button:contains("Edit this question")
+    Then The user enters text to a text field    id = question.maxWords    100
+    And the user clicks the button/link          jQuery=button:contains("Done")
 
 Public description should be editable (Ready to Open)
     [Documentation]    INFUND-6939
     [Tags]
-    Given the user clicks the button/link    link=Public description
-    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    Given the user clicks the button/link        link = Public description
+    When the user clicks the button/link         jQuery = .govuk-button:contains("Edit this question")
+    Then The user enters text to a text field    id = question.maxWords    100
+    And the user clicks the button/link          jQuery = button:contains("Done")
 
 Scope is editable (Ready to Open)
     [Documentation]    INFUND-6940
     [Tags]
-    Given The user clicks the button/link    link=Scope
-    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    Given The user clicks the button/link        link = Scope
+    When the user clicks the button/link         jQuery = .govuk-button:contains("Edit this question")
+    Then The user enters text to a text field    id = question.maxWords    100
+    And the user clicks the button/link          jQuery = button:contains("Done")
 
 Assessed Questions are editable (Ready to Open)
     [Documentation]    INFUND-6936
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
-    Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link    jQuery = a:contains("Business opportunity")
+    Then the user should see the element    jQuery = h1:contains("Business opportunity")
+    And the user clicks the button/link     jQuery = .govuk-button:contains("Edit this question")
     And the user edits the assessed question information
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    And the user clicks the button/link     jQuery = button:contains("Done")
     And wait for autosave
-    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
+    When the user clicks the button/link    jQuery = a:contains("Business opportunity")
     Then the user sees the correct read only view of the question
-    And the user clicks the button/link    link = Return to application questions
+    And the user clicks the button/link     link = Return to application questions
 
 Finances are editable (Ready to Open)
     [Documentation]  INFUND-6941
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    When The user clicks the button/link         link=Finances
-    And the user should see the element          jQuery=h1:contains("Application finances")
-    When the user clicks the button/link         jQuery=a:contains("Edit this question")
+    When The user clicks the button/link         link = Finances
+    And the user should see the element          jQuery = h1:contains("Application finances")
+    When the user clicks the button/link         jQuery = a:contains("Edit this question")
     Then if textarea is empty the proper validation messages are shown
-    And the user clicks the button/link          jQuery=button:contains("Done")
-    [Teardown]  the user clicks the button/link  link=Competition setup
+    And the user clicks the button/link          jQuery = button:contains("Done")
+    [Teardown]  the user clicks the button/link  link = Competition setup
 
 Eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
-    [Tags]  HappyPath
-    When the user clicks the button/link    link=Eligibility
-    Then the user should see the element   jquery=h1:contains("Eligibility")
-    And The user clicks the button/link    jQuery=button:contains(Edit)
-    And the user selects the radio button  singleOrCollaborative  single
-    And The user clicks the button/link    jQuery=button:contains(Done)
+    [Tags]
+    When the user clicks the button/link    link = Eligibility
+    Then the user should see the element    jquery = h1:contains("Eligibility")
+    And The user clicks the button/link     jQuery = button:contains(Edit)
+    And the user selects the radio button   singleOrCollaborative  single
+    And The user clicks the button/link     jQuery = button:contains(Done)
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
-    [Tags]    HappyPath
-    [Setup]    The user clicks the button/link  jQuery=a:contains(Dashboard)
-    Given the user clicks the button/link       link=${openCompetitionBusinessRTO_name}
-    And the user clicks the button/link         jQuery=a:contains(and update competition setup)
-    When the user clicks the button/link        link=Funding information
-    And the user should see the element         jquery=h1:contains("Funding information")
-    And the user clicks the button/link         jQuery=.button:contains("Edit")
-    And The user enters text to a text field    id=funders[0].funder  Funders Edit test
-    And the user should see the element         id=funders[0].funderBudget
-    And the user should see the element         id=pafNumber
-    And the user should see the element         id=budgetCode
-    And the user should see the element         id=activityCode
-    And The user clicks the button/link         jQuery=button:contains("Done")
-    Then The user should see the element        jQuery=.button:contains("Edit")
+    [Tags]
+    [Setup]    The user clicks the button/link  jQuery = a:contains(Dashboard)
+    Given the user clicks the button/link       link = ${openCompetitionBusinessRTO_name}
+    And the user clicks the button/link         jQuery = a:contains(and update competition setup)
+    When the user clicks the button/link        link = Funding information
+    And the user should see the element         jquery = h1:contains("Funding information")
+    And the user clicks the button/link         jQuery = .govuk-button:contains("Edit")
+    And The user enters text to a text field    id = funders[0].funder  Funders Edit test
+    And the user should see the element         id = funders[0].funderBudget
+    And the user should see the element         id = pafNumber
+    And the user should see the element         id = budgetCode
+    And the user should see the element         id = activityCode
+    And The user clicks the button/link         jQuery = button:contains("Done")
+    Then The user should see the element        jQuery = .govuk-button:contains("Edit")
     And The user should see the text in the page   Funders Edit test
-    [Teardown]    the user clicks the button/link  link=Competition setup
+    [Teardown]    the user clicks the button/link  link = Competition setup
 
 Milestones are editable (Open)
     [Documentation]    INFUND-6694
     [Tags]
-    When the user clicks the button/link    link=Milestones
-    And the user clicks the button/link    jQuery=button:contains(Edit)
-    Then the user should see that the element is disabled    css=tr:nth-child(1) .year input
-    And the user should see that the element is disabled    css=tr:nth-child(2) .year input
+    When the user clicks the button/link                     link = Milestones
+    And the user clicks the button/link                      jQuery = button:contains(Edit)
+    Then the user should see that the element is disabled    css = tr:nth-child(1) .year input
+    And the user should see that the element is disabled     css = tr:nth-child(2) .year input
     And the user fills in the milestone data with valid information
-    And the user clicks the button/link    jQuery=button:contains(Done)
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user clicks the button/link                      jQuery = button:contains(Done)
+    And the user clicks the button/link                      jQuery = .govuk-button:contains("Edit")
     And the user resets the milestone data
-    And the user clicks the button/link    jQuery=button:contains(Done)
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    And the user clicks the button/link                      jQuery = button:contains(Done)
+    [Teardown]    the user clicks the button/link            link = Competition setup
 
 Application details are not editable (Open)
     [Documentation]    INFUND-6937
     [Tags]
-    When the user clicks the button/link    link=Application
-    And the user clicks the button/link    link=Application details
-    Then the user should not see the element    jQuery=.button:contains("Edit this question")
-    [Teardown]    The user clicks the button/link    link=Application
+    When the user clicks the button/link             link = Application
+    And the user clicks the button/link              link = Application details
+    Then the user should not see the element         jQuery = .govuk-button:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link = Application
 
 Assessed Questions are not editable (Open)
     [Documentation]    INFUND-6936
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
-    And the user should see the element    jquery=h1:contains("Business opportunity")
-    Then the user should not see the element    jquery=.button:contains("Edit")
-    [Teardown]    The user clicks the button/link    link=Application
+    When the user clicks the button/link             jQuery = a:contains("Business opportunity")
+    And the user should see the element              jquery = h1:contains("Business opportunity")
+    Then the user should not see the element         jquery = .govuk-button:contains("Edit")
+    [Teardown]    The user clicks the button/link    link = Application
 
 Eligibility is not editable (Open)
     [Documentation]    INFUND-6792
     [Tags]
-    [Setup]    The user clicks the button/link    link=Competition setup
-    When The user clicks the button/link    link=Eligibility
-    And the user should see the element    jquery=h1:contains("Eligibility")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=button:contains("Done")
+    [Setup]    The user clicks the button/link       link = Competition setup
+    When The user clicks the button/link             link = Eligibility
+    And the user should see the element              jquery = h1:contains("Eligibility")
+    Then The user should not see the element         css = input
+    And The user should not see the element          jquery = .govuk-button:contains("Edit")
+    And The user should not see the element          jquery = button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to setup overview
 
 Public Description is not editable (Open)
     [Documentation]    INFUND-6939
     [Tags]
-    Given The user clicks the button/link    link=Application
-    When The user clicks the button/link    link=Public description
-    And the user should see the element    jquery=h1:contains("Public description")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Done"]
+    Given The user clicks the button/link            link = Application
+    When The user clicks the button/link             link = Public description
+    And the user should see the element              jquery = h1:contains("Public description")
+    Then The user should not see the element         css = input
+    And The user should not see the element          jQuery = .govuk-button:contains("Edit this question")
+    And The user should not see the element          jQuery = .govuk-button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Project Summary is not editable (Open)
     [Documentation]    INFUND-6938
     [Tags]
-    When The user clicks the button/link    link=Project summary
-    And the user should see the element    jquery=h1:contains("Project summary")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Done"]
+    When The user clicks the button/link             link = Project summary
+    And the user should see the element              jQuery = h1:contains("Project summary")
+    Then The user should not see the element         css = input
+    And The user should not see the element          jQuery = .govuk-button:contains("Edit this question")
+    And The user should not see the element          jQuery = .govuk-button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Scope is not editable (Open)
     [Documentation]    INFUND-6940
     [Tags]
-    When The user clicks the button/link    link=Scope
-    Then the user should see the element    jquery=h1:contains("Scope")
-    And The user should not see the element    css = input
-    And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Done"]
+    When The user clicks the button/link             link = Scope
+    Then the user should see the element             jQuery = h1:contains("Scope")
+    And The user should not see the element          css = input
+    And The user should not see the element          jQuery = .govuk-button:contains("Edit this question")
+    And The user should not see the element          jQuery = .govuk-button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Finances not editable (Open)
     [Documentation]    INFUND-6941
     [Tags]
-    When The user clicks the button/link    link=Finances
-    And the user should see the element    jquery=h1:contains("Application finances")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=button:contains("Done")
+    When The user clicks the button/link             link = Finances
+    And the user should see the element              jquery = h1:contains("Application finances")
+    Then The user should not see the element         css = input
+    And The user should not see the element          jquery = .govuk-button:contains("Edit")
+    And The user should not see the element          jquery = button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Initial details editable before notify date (Open)
     [Documentation]    INFUND-6661
-    [Setup]    the user clicks the button/link    link=Competition setup
-    Given the user clicks the button/link    link=Initial details
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user should see that the element is disabled    id=openingDateDay
-    And the user should see that the element is disabled    id=openingDateMonth
-    And the user should see that the element is disabled    id=openingDateYear
-    And the user should see that the element is disabled    id=competitionTypeId
-    And the user should see that the element is disabled    id=innovationSectorCategoryId
-    And the user should see that the element is disabled    name=innovationAreaCategoryIds[0]
-    When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
-    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
-    And the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the element    jQuery=.button:contains("Edit")
-    And The user should see the text in the page    Ian Cooper
-    And The user should see the text in the page    John Doe
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    [Setup]    the user clicks the button/link              link = Competition setup
+    Given the user clicks the button/link                   link = Initial details
+    And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
+    And the user should see that the element is disabled    id = openingDateDay
+    And the user should see that the element is disabled    id = openingDateMonth
+    And the user should see that the element is disabled    id = openingDateYear
+    And the user should see that the element is disabled    id = competitionTypeId
+    And the user should see that the element is disabled    id = innovationSectorCategoryId
+    And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
+    When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
+    And the user selects the option from the drop-down menu     John Doe    id = executiveUserId
+    And the user clicks the button/link                     jQuery = button:contains("Done")
+    Then the user should see the element                    jQuery = .govuk-button:contains("Edit")
+    And The user should see the text in the page            Ian Cooper
+    And The user should see the text in the page            John Doe
+    [Teardown]    the user clicks the button/link           link = Competition setup
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
-    [Tags]    MySQL    HappyPath
+    [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
-    Given the user clicks the button/link    link=Assessors
-    Then the user should see the element    jQuery=.button:contains("Edit")
-    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("1")
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Given the user clicks the button/link     link = Assessors
+    Then the user should see the element      jQuery = .govuk-button:contains("Edit")
+    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")
+    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     Then the user selects the radio button    assessorCount    5
     And the user selects the radio button     hasAssessmentPanel    0
     And the user selects the radio button     hasInterviewStage    0
-    And the user should see the element    css=#assessorPay[readonly="readonly"]
-    When the user clicks the button/link    jQuery=button:contains("Done")
-    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("5")
-    And the user should see the element    jQuery=.button:contains("Edit")
+    And the user should see the element       css = #assessorPay[readonly="readonly"]
+    When the user clicks the button/link      jQuery = button:contains("Done")
+    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("5")
+    And the user should see the element       jQuery = .govuk-button:contains("Edit")
     [Teardown]    return the database to its previous status
 
 Initial details not editable after notify date (Open)
     [Documentation]    INFUND-6661
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
-    Given the user clicks the button/link    link=Initial details
-    Then the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=button:contains("Done")
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    [Setup]    the user navigates to the page        ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
+    Given the user clicks the button/link            link = Initial details
+    Then the user should not see the element         jQuery = .govuk-button:contains("Edit")
+    And the user should not see the element          jQuery = button:contains("Done")
+    [Teardown]    the user clicks the button/link    link = Competition setup
 
 Funding Information not editable after notifications date (Open)
     [Documentation]    INFUND-7183
     [Tags]
-    When The user clicks the button/link    link=Funding information
-    And the user should see the element    jquery=h1:contains("Funding information")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=button:contains("Done")
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    When The user clicks the button/link             link = Funding information
+    And the user should see the element              jQuery = h1:contains("Funding information")
+    Then The user should not see the element         css = input
+    And The user should not see the element          jQuery = .govuk-button:contains("Edit")
+    And The user should not see the element          jQuery = button:contains("Done")
+    [Teardown]    the user clicks the button/link    link = Competition setup
 
 Assessors not editable after Notifications Date (Open)
     [Documentation]    INFUND-6695
     [Tags]
-    When the user clicks the button/link    link=Assessors
-    Then the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=button:contains("Done")
+    When the user clicks the button/link        link = Assessors
+    Then the user should not see the element    jQuery = .govuk-button:contains("Edit")
+    And the user should not see the element     jQuery = button:contains("Done")
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
-    the user should see the element    jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    the user should see the element    jQuery=li div:contains('${READY_TO_OPEN_COMPETITION_NAME}') ~ *:contains(24/02/2018)
+    the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    the user should see the element    jQuery = li div:contains('${READY_TO_OPEN_COMPETITION_NAME}') ~ *:contains(24/02/2018)
     ${openDate} =    robot.libraries.DateTime.Convert Date    2018-02-24
     ${today} =    get current date
     Should Be True    '${today}'<'${openDate}'
 
 the user is able to change the value of the fields
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
-    the user enters text to a text field  id=minProjectDuration  2
-    the user enters text to a text field  id=maxProjectDuration  30
+    the user enters text to a text field  id = minProjectDuration  2
+    the user enters text to a text field  id = maxProjectDuration  30
     the user selects the radio button  useResubmissionQuestion    use-resubmission-question-no
-    the user clicks the button/link    jQuery=.button:contains("Done")
-    the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dt:contains("Minimum") + dd:contains("2")
-    the user should see the element    jQuery=dt:contains("Maximum") + dd:contains("30")
-    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("No")
-    the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    the user clicks the button/link    jQuery=label[for="use-resubmission-question-yes"]
-    the user clicks the button/link    jQuery=.button:contains("Done")
-    the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("Yes")
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    link = Application details
+    the user should see the element    jQuery = dt:contains("Minimum") + dd:contains("2")
+    the user should see the element    jQuery = dt:contains("Maximum") + dd:contains("30")
+    the user should see the element    jQuery = dt:contains("resubmission") + dd:contains("No")
+    the user clicks the button/link    jQuery = .govuk-button:contains("Edit this question")
+    the user clicks the button/link    jQuery = label[for="use-resubmission-question-yes"]
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    link = Application details
+    the user should see the element    jQuery = dt:contains("resubmission") + dd:contains("Yes")
 
 Custom suite setup
     the user logs-in in new browser  &{Comp_admin1_credentials}
@@ -304,46 +304,46 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    the user clicks the button/link    jQuery=button:contains("Done")   # this action  is marking appication section complete
-    the user clicks the button/link    link=Competition setup
-    the user clicks the button/link    link=Complete
-    the user clicks the button/link    css=button[type="submit"]
+    the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Complete
+    the user clicks the button/link    css = button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    17
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    18
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    19
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    21
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    22
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    12
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    13
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    14
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    15
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    16
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    17
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    18
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    19
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    21
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
 
 the user resets the milestone data
     The user resets the milestone data for milestone    SUBMISSION_DATE    ${createApplicationOpenCompetitionId}
@@ -359,20 +359,19 @@ the user resets the milestone data
     The user resets the milestone data for milestone    RELEASE_FEEDBACK    ${createApplicationOpenCompetitionId}
 
 if textarea is empty the proper validation messages are shown
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css=.editor  Funding rules for this competition are now entered.
-    run keyword if  '${status}'=='FAIL'  Run keywords  the user moves focus to the element  css=.editor
-    ...                                           AND  the user moves focus to the element  css=.button[type="submit"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
+    run keyword if  '${status}'=='FAIL'  Run keywords  the user moves focus to the element  css = .editor
+    ...                                           AND  the user moves focus to the element  css = .govuk-button[type="submit"]
     ...                                           AND  the user should see a field error  This field cannot be left blank
-    ...                                           AND  the user clicks the button/link  css=.button[type="submit"]
+    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
     ...                                           AND  the user should see a field and summary error  This field cannot be left blank
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone
     [Arguments]    ${milestone}    ${competitionId}
-    The user enters text to a text field    name=milestoneEntries[${milestone}].day    ${getMilestoneDay(${competitionId}, "${milestone}")}
-    The user enters text to a text field    name=milestoneEntries[${milestone}].month    ${getMilestoneMonth(${competitionId}, "${milestone}")}
-    The user enters text to a text field    name=milestoneEntries[${milestone}].year    ${getMilestoneYear(${competitionId}, "${milestone}")}
-
+    The user enters text to a text field    name = milestoneEntries[${milestone}].day    ${getMilestoneDay(${competitionId}, "${milestone}")}
+    The user enters text to a text field    name = milestoneEntries[${milestone}].month    ${getMilestoneMonth(${competitionId}, "${milestone}")}
+    The user enters text to a text field    name = milestoneEntries[${milestone}].year    ${getMilestoneYear(${competitionId}, "${milestone}")}
 
 Custom suite teardown
     the user moves the competition back again

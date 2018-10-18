@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.service;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode);
 
-    RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
+    RestResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource inviteResource);
 
-    RestResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
+    RestResult<Void> inviteProjectManager(Long projectId, ProjectInviteResource inviteResource);
 }

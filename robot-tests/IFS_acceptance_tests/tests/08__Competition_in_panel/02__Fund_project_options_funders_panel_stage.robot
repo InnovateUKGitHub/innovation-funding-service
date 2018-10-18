@@ -25,11 +25,11 @@ Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
-${application1Subject}  ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
-${application2Subject}  Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
-${onHoldMessage}  We have put your project on hold because our Assessment department is very busy at the moment.
-${unsuccMessage}  We are sorry to annouce that your application has failed the assessment procedure.
-${successMessage}  We are happy to inform you that your application is eligible for funding.
+${application1Subject}    ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
+${application2Subject}    Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
+${onHoldMessage}          We have put your project on hold because our Assessment department is very busy at the moment.
+${unsuccMessage}          We are sorry to annouce that your application has failed the assessment procedure.
+${successMessage}         We are happy to inform you that your application is eligible for funding.
 
 *** Test Cases ***
 Funding decision buttons should be disabled
@@ -41,61 +41,61 @@ Funding decision buttons should be disabled
 An application is selected and the buttons become enabled
     [Documentation]    INFUND-7377
     [Tags]
-    When the user selects the checkbox    app-row-2
+    When the user selects the checkbox      app-row-2
     Then the user should see the options to make funding decisions enabled
     When the user unselects the checkbox    app-row-2
     Then the user should see the options to make funding decisions disabled
 
 Internal user puts the application on hold
     [Documentation]  INFUND-7376
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user marks the application as  On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
 
 Proj Finance user can send Fund Decision notification
     [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page     ${funders_panel_competition_url}
-    When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
-    Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
+    When the user clicks the button/link     jQuery = a:contains("Manage funding notifications")
+    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    And the user should see the element      jQuery = button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
-    Then the user clicks the button/link     jQuery=button:contains("Write and send email")
-    And the user should see the element      css=#subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
-    When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
-    Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    When the user clicks the button/link     css=button[data-js-modal="send-to-all-applicants-modal"]
-    When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    Then the user clicks the button/link     jQuery = button:contains("Write and send email")
+    And the user should see the element      css = #subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
+    When the user clicks the button/link     jQuery = summary:contains("Review list of recipients")[aria-expanded="false"]
+    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    And the user should not see the element  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
+    When the user clicks the button/link     css = button[data-js-modal="send-to-all-applicants-modal"]
+    When the user clicks the button/link     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see a field and summary error  Please enter the email message.
     And the user cancels the process and needs to re-select the recipients
     When the internal sends the descision notification email to all applicants  ${onHoldMessage}
-    Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
+    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 Internal user can filter notified applications
     [Documentation]  INFUND-7376 INFUND-8065
     [Tags]
     Given the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
-    When the user enters text to a text field  css=#stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    And the user clicks the button/link        jQuery=button:contains("Filter")
-    Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    When the user clicks the button/link       jQuery=a:contains("Clear all filters")
-    And the user selects the option from the drop-down menu  No  id=sendFilter
-    And the user clicks the button/link        jQuery=button:contains("Filter")
-    Then the user should not see the element   jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    When the user selects the option from the drop-down menu  All  id=sendFilter
-    And the user selects the option from the drop-down menu  ON_HOLD  id=fundingFilter
-    And the user clicks the button/link        jQuery=button:contains("Filter")
-    Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    When the user enters text to a text field  css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    And the user clicks the button/link        jQuery = button:contains("Filter")
+    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    When the user clicks the button/link       jQuery = a:contains("Clear all filters")
+    And the user selects the option from the drop-down menu  No  id = sendFilter
+    And the user clicks the button/link        jQuery = button:contains("Filter")
+    Then the user should not see the element   jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    When the user selects the option from the drop-down menu  All  id = sendFilter
+    And the user selects the option from the drop-down menu  ON_HOLD  id = fundingFilter
+    And the user clicks the button/link        jQuery = button:contains("Filter")
+    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
 
 External lead applicant reads his email
     [Documentation]  INFUND-7376
-    [Tags]  HappyPath
+    [Tags]
     verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
 
 External collaborators read their email
     [Documentation]  IFS-360
-    [Tags]  HappyPath
+    [Tags]
     verify the user has received the on hold email    ${lead_applicant}
     verify the user has received the on hold email    ${collaborator1_credentials["email"]}
     verify the user has received the on hold email    ${collaborator2_credentials["email"]}
@@ -112,7 +112,7 @@ Unsuccessful Funding Decision
 
 Successful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377  IFS-2903
-    [Tags]  HappyPath
+    [Tags]
     Given the internal user marks the application as                         Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
     And the user checks that the statuses are changing correctly
     When the internal user sends an email notification                       Successful  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
@@ -123,35 +123,35 @@ Once Successful and Sent you cannot change your mind
     [Tags]
     Given log in as a different user                        &{internal_finance_credentials}
     When the user navigates to the page                     ${funders_panel_competition_url}/funding
-    Then the user should not see the element                css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    Then the user should not see the element                css = input[type = "checkbox"][value = "${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page                     ${funders_panel_competition_url}/manage-funding-applications
-    Then the user should not see the element                css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    And the user should see that the element is disabled    jQuery=button:contains("Write and send email")
+    Then the user should not see the element                css = input[type = "checkbox"][value = "${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    And the user should see that the element is disabled    jQuery = button:contains("Write and send email")
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
-    [Tags]  HappyPath
+    [Tags]
     Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
-    Then the user should see the element  jQuery=.projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Then the user should see the element  jQuery = .projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
 
 Internal user can see the comp in Project Setup once applicant is notified
     [Documentation]  IFS-1620
     [Tags]
     Given log in as a different user                       &{Comp_admin1_credentials}
-    When the user clicks the button/link                   jQuery=a:contains("Project setup")
-    And the user should see the element                    jQuery=h2:contains("Project setup")
-    Then the user clicks the button/link                   link=${FUNDERS_PANEL_COMPETITION_NAME}
+    When the user clicks the button/link                   jQuery = a:contains("Project setup")
+    And the user should see the element                    jQuery = h2:not(".govuk-tabs__title"):contains("Project setup")
+    Then the user clicks the button/link                   link = ${FUNDERS_PANEL_COMPETITION_NAME}
     And the user should be redirected to the correct page  ${notified_application_competition_status}
 
 Once all final decisions have been made and emails are sent Comp moves to Inform status
     [Documentation]  INFUND-8854
     [Tags]
-    Given the internal user marks the application as  Unsuccessful  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  2
-    And the internal user sends an email notification  Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  ${FUNDERS_PANEL_APPLICATION_2_NUMBER}
+    Given the internal user marks the application as     Unsuccessful  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  2
+    And the internal user sends an email notification    Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  ${FUNDERS_PANEL_APPLICATION_2_NUMBER}
     Then the external user reads his email and can see the correct status  Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}   worth.email.test.two+fundfailure@gmail.com
-    Given log in as a different user      &{Comp_admin1_credentials}
-    When the user navigates to the page   ${CA_Live}
-    Then the user should see the element  jQuery=section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
+    Given log in as a different user                     &{Comp_admin1_credentials}
+    When the user navigates to the page                  ${CA_Live}
+    Then the user should see the element                 jQuery = section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
 
 *** Keywords ***
 Custom Suite Setup
@@ -160,68 +160,68 @@ Custom Suite Setup
     set suite variable  ${today}
 
 the user should see the options to make funding decisions disabled
-    the user should see the element  jQuery=button:contains("Successful")[disabled]
-    the user should see the element  jQuery=button:contains("Unsuccessful")[disabled]
-    the user should see the element  jQuery=button:contains("On hold")[disabled]
+    the user should see the element  jQuery = button:contains("Successful")[disabled]
+    the user should see the element  jQuery = button:contains("Unsuccessful")[disabled]
+    the user should see the element  jQuery = button:contains("On hold")[disabled]
 
 the user should see the options to make funding decisions enabled
-    the user should not see the element  jQuery=button:contains("Successful")[disabled]
-    the user should not see the element  jQuery=button:contains("Unsuccessful")[disabled]
-    the user should not see the element  jQuery=button:contains("On hold")[disabled]
+    the user should not see the element  jQuery = button:contains("Successful")[disabled]
+    the user should not see the element  jQuery = button:contains("Unsuccessful")[disabled]
+    the user should not see the element  jQuery = button:contains("On hold")[disabled]
 
 the user sets the funding decision of application
     [Arguments]    ${checkbox}    ${decision_button}
     the user selects the checkbox    ${checkbox}
-    the user clicks the button/link    jQuery=button:contains("${decision_button}")
+    the user clicks the button/link    jQuery = button:contains("${decision_button}")
 
 the user cancels the process and needs to re-select the recipients
-    the user clicks the button/link  jQuery=a:contains("Cancel")
-    the user should see the element  jQuery=button[disabled]:contains("Write and send email")
+    the user clicks the button/link  jQuery = a:contains("Cancel")
+    the user should see the element  jQuery = button[disabled]:contains("Write and send email")
     the user selects the checkbox    app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
-    the user clicks the button/link  jQuery=button:contains("Write and send email")
+    the user clicks the button/link  jQuery = button:contains("Write and send email")
 
 the internal user marks the application as
     [Arguments]  ${decision}  ${application}  ${tr}
     log in as a different user       &{Comp_admin1_credentials}
     the user navigates to the page   ${funders_panel_competition_url}
-    the user clicks the button/link  jQuery=a:contains("Input and review funding decision")
+    the user clicks the button/link  jQuery = a:contains("Input and review funding decision")
     the user selects the checkbox    app-row-${tr}
-    the user clicks the button/link  jQuery=button:contains("${decision}")
-    the user should see the element  jQuery=td:contains("${application}") ~ td:contains("${decision}")
-    the user clicks the button/link  jQuery=a:contains("Competition")
+    the user clicks the button/link  jQuery = button:contains("${decision}")
+    the user should see the element  jQuery = td:contains("${application}") ~ td:contains("${decision}")
+    the user clicks the button/link  jQuery = a:contains("Competition")
 
 the internal user sends an email notification
     [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${id}
-    the user navigates to the page   ${funders_panel_competition_url}
-    the user clicks the button/link  jQuery=a:contains("Manage funding notifications")
-    the user should see the element  jQuery=td:contains("${application}") ~ td:contains("${decision}")
-    the user selects the checkbox    app-row-${id}
-    the user clicks the button/link  jQuery=button:contains("Write and send email")
-    the user enters text to a text field  css=.editor  ${message}
-    the user clicks the button/link       jQuery=button:contains("Send email")[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email")
-    the user should see the element       jQuery=td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
+    the user navigates to the page          ${funders_panel_competition_url}
+    the user clicks the button/link         jQuery = a:contains("Manage funding notifications")
+    the user should see the element         jQuery = td:contains("${application}") ~ td:contains("${decision}")
+    the user selects the checkbox           app-row-${id}
+    the user clicks the button/link         jQuery = button:contains("Write and send email")
+    the user enters text to a text field    css = .editor  ${message}
+    the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    the user should see the element         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status
     [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${mail}
     log in as a different user       ${mail}  ${short_password}
     the user reads his email         ${mail}  ${subject}  ${message}
     the user navigates to the page   ${server}/applicant/dashboard
-    the user should see the element  jQuery=div:contains("${application}") + div:contains("${decision}")
+    the user should see the element  jQuery = div:contains("${application}") + div:contains("${decision}")
 
 verify the user has received the on hold email
     [Arguments]  ${email_user}
     Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${email_user}
-    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
-    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Then the user should not see the element  jQuery = div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery = div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
 
 the internal user changes the funding decision status
     [Documentation]  IFS-2903
     [Arguments]  ${decision}  ${application}  ${tr}
     the user navigates to the page          ${funders_panel_competition_url}/funding
     the user selects the checkbox           app-row-${tr}
-    the user clicks the button/link         jQuery=button:contains("${decision}")
-    the user should see the element         jQuery=td:contains("${application}") ~ td:contains("${decision}")
+    the user clicks the button/link         jQuery = button:contains("${decision}")
+    the user should see the element         jQuery = td:contains("${application}") ~ td:contains("${decision}")
 
 the user checks that the statuses are changing correctly
     [Documentation]  IFS-2903

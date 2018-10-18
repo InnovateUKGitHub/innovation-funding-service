@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/overview}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact details',size='govuk-heading-xl'" />
+
+        <form th:action="@{/contact-details/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+
+            <fieldset class="govuk-fieldset">
+
+                <legend class="govuk-fieldset__legend">
+                    Who is the most appropriate person for us to contact about your Horizon 2020 project?
+                    We recommend your Legal Entity Appointed Representative (LEAR).
+                </legend>
+
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="name">Full name</label>
+                    <th:block th:if="${#fields.hasErrors('name')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('name')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-three-quarters"
+                           id="name"
+                           type="text"
+                           required="required"
+                           th:field="*{name}"
+                           pattern="\D{2,}"
+                           minlength="2"
+                           maxlength="70"
+                           th:attr="data-minlength-errormessage=#{validation.eugrant.fullname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.eugrant.fullname.length.max},
+                                    data-required-errormessage=#{validation.eugrant.fullname.required},
+                                    data-pattern-errormessage=#{validation.eugrant.fullname.invalid}" />
+                </div>
+
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('jobTitle')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="jobTitle">Job title</label>
+                    <th:block th:if="${#fields.hasErrors('jobTitle')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('jobTitle')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-three-quarters"
+                           id="jobTitle"
+                           type="text"
+                           th:field="*{jobTitle}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.eugrant.jobtitle.required}">
+                </div>
+
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="email">Email</label>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-three-quarters"
+                           id="email"
+                           type="email"
+                           th:field="*{email}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.eugrant.email.required}">
+                </div>
+
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('telephone')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="telephone">Telephone</label>
+                    <th:block th:if="${#fields.hasErrors('telephone')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('telephone')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-20"
+                           id="telephone"
+                           type="tel"
+                           th:field="*{telephone}"
+                           required="required"
+                           th:attr=
+                               "data-required-errormessage=#{validation.eugrant.telephone.required},
+                                data-tel-errormessage=#{validation.eugrant.telephone.format}" />
+                </div>
+
+                <button class="govuk-button" type="submit">Continue</button>
+
+            </fieldset>
+
+        </form>
+    </main>
+</div>
+<th:block th:insert="eugrant/fragments/layout :: non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

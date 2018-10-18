@@ -1,39 +1,43 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Account verification',hasFormErrors=${#fields.hasErrors('${resendEmailVerificationForm.*}')}" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verification',size='heading-xlarge'" />
-    <p>
-      Has your verification link expired? If you have an Innovation Funding Service account, please enter the email address you used to create the account.
-      We will send a new link to this email address which will allow you to verify your account.
-      Please note that verification links are only valid for 24 hours.
-    </p>
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
-            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'form-group-error'">
-                <label class="form-label" for="email">
-                    <span class="form-label-bold">Enter Email Address</span>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verification',size='govuk-heading-xl'" />
+        <p class="govuk-body">
+          Has your verification link expired? If you have an Innovation Funding Service account, please enter the email address you used to create the account.
+          We will send a new link to this email address which will allow you to verify your account.
+          Please note that verification links are only valid for 24 hours.
+        </p>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                    <label class="govuk-hint" for="email">
+                        Enter Email Address
+                    </label>
                     <th:block th:if="${#fields.hasErrors('email')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
-                </label>
-                <input class="form-control form-control-3-4"
-                       th:errorclass="form-control-error"
-                       type="email"
-                       th:field="*{email}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.standard.email.required}" />
-            </div>
-        <input class="button" value="Resend verification link email" type="submit"/>
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+                    <input class="govuk-input form-control-3-4"
+                           th:errorclass="govuk-input--error"
+                           type="email"
+                           th:field="*{email}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.email.required}" />
+                </div>
+            <input class="govuk-button" value="Resend verification link email" type="submit"/>
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

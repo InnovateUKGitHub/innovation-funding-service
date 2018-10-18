@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
@@ -85,13 +86,17 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return with(applicationResource -> applicationResource.setInnovationArea(innovationArea));
     }
 
+    public ApplicationResourceBuilder withLeadOrganisationId(Long... leadOrganisationIds) {
+        return withArray((leadOrganisationId, application) -> application.setLeadOrganisationId(leadOrganisationId), leadOrganisationIds);
+    }
+
     public ApplicationResourceBuilder withNoInnovationAreaApplicable(Boolean... noInnovationAreaApplicableArray) {
         return withArray((noInnovationAreaApplicable, application) ->
                 setField("noInnovationAreaApplicable", noInnovationAreaApplicable, application), noInnovationAreaApplicableArray);
     }
 
-    public ApplicationResourceBuilder withUseNewApplicantMenu(Boolean... useNewApplicantMenuArray) {
-        return withArray((useNewApplicantMenu, application) ->
-                setField("useNewApplicantMenu", useNewApplicantMenu, application), useNewApplicantMenuArray);
+    public ApplicationResourceBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
+        return withArray((collaborationLevel, application) -> application.setCollaborationLevel(collaborationLevel),
+                collaborationLevels);
     }
 }

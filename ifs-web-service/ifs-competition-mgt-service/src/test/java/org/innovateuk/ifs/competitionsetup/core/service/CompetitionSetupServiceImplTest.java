@@ -21,6 +21,7 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.viewmodel.Addition
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,7 +113,7 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
         when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
                 .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
-                        new CollaborationLevel[]{}, emptyList(), "", emptyList(), ""));
+                        new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
 

@@ -10,10 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(
-        config = GlobalMapperConfig.class,
-        uses = {
-            EthnicityMapper.class,
-        }
+        config = GlobalMapperConfig.class
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
 

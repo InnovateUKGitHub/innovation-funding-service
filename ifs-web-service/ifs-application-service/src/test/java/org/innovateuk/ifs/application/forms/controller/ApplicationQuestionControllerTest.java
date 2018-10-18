@@ -8,8 +8,6 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
@@ -23,6 +21,8 @@ import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewM
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Before;
@@ -99,8 +99,10 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Mock
     private YourFinancesSectionPopulator yourFinancesSectionPopulator;
 
@@ -159,7 +161,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         // save actions should always succeed.
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
 
@@ -183,7 +185,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionPage() throws Exception {
+    public void questionPage() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
@@ -207,7 +209,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmit() throws Exception {
+    public void questionSubmit() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -220,7 +222,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitEdit() throws Exception {
+    public void questionSubmitEdit() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -229,11 +231,11 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                         .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testQuestionSubmitAssign() throws Exception {
+    public void questionSubmitAssign() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -246,7 +248,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitMarkAsCompleteQuestion() throws Exception {
+    public void questionSubmitMarkAsCompleteQuestion() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -257,7 +259,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitSaveElement() throws Exception {
+    public void questionSubmitSaveElement() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);

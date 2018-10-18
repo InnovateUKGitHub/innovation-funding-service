@@ -71,7 +71,6 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.EthnicityRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -152,7 +151,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected SectionStatusService sectionStatusService;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
-    protected EthnicityRepository ethnicityRepository;
     protected AssessmentInviteRepository assessmentInviteRepository;
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
@@ -237,7 +235,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         sectionStatusService = serviceLocator.getBean(SectionStatusService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
-        ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
         assessmentInviteRepository = serviceLocator.getBean(AssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);

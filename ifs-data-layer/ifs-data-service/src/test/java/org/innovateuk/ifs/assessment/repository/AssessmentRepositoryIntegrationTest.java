@@ -73,16 +73,21 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     public void findAll() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
+        Application application = applicationRepository.findOne(1L);
 
         ProcessRole participant1 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(Role.ASSESSOR)
                 .build());
 
         ProcessRole participant2 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(Role.ASSESSOR)
                 .build());
-
-        Application application = applicationRepository.findOne(1L);
 
         List<Assessment> assessments = newAssessment()
                 .with(id(null))
@@ -100,15 +105,22 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findOneByParticipantId() {
+        Application application = applicationRepository.findOne(1L);
+
         ProcessRole participant1 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(Role.ASSESSOR)
                 .build());
 
         ProcessRole participant2 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(Role.ASSESSOR)
                 .build());
 
-        Application application = applicationRepository.findOne(1L);
 
         List<Assessment> assessments = newAssessment()
                 .with(id(null))
@@ -245,14 +257,30 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
         User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
 
-        ProcessRole participant1 = newProcessRole().withId().withUser(paulPlum).build();
-        ProcessRole participant2 = newProcessRole().withId().withUser(felixWilson).build();
-        ProcessRole participant3 = newProcessRole().withId().withUser(paulPlum).build();
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+
+        ProcessRole participant1 = newProcessRole()
+                .withId()
+                .withUser(paulPlum)
+                .withApplication(application1)
+                .withRole(Role.ASSESSOR)
+                .build();
+        ProcessRole participant2 = newProcessRole()
+                .withId()
+                .withUser(felixWilson)
+                .withApplication(application1)
+                .withRole(Role.ASSESSOR)
+                .build();
+        ProcessRole participant3 = newProcessRole()
+                .withId()
+                .withUser(paulPlum)
+                .withApplication(application2)
+                .withRole(Role.ASSESSOR)
+                .build();
 
         processRoleRepository.save(asList(participant1, participant2, participant3));
 
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
 
         List<Assessment> assessments = newAssessment()
                 .withId()

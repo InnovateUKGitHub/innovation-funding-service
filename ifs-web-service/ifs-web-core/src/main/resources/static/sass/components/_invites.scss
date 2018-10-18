@@ -12,7 +12,7 @@
   .boxed-list {
     > li {
       &:last-child {
-        background-color: $highlight-colour;
+        background-color: govuk-colour("grey-4");
       }
     }
   }

@@ -8,18 +8,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
-import org.innovateuk.ifs.management.dashboard.viewmodel.ApplicationSearchDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.DashboardTabsViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.LiveDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.NonIFSDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.PreviousDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.ProjectSetupDashboardViewModel;
-import org.innovateuk.ifs.management.dashboard.viewmodel.UpcomingDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,44 +26,54 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
 public class CompetitionManagementDashboardController {
     private static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE = "0";
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
-    @Autowired
     private CompetitionDashboardSearchService competitionDashboardSearchService;
 
-    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
-    @Autowired
     private BankDetailsRestService bankDetailsRestService;
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the competition management dashboard")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    public CompetitionManagementDashboardController(CompetitionDashboardSearchService competitionDashboardSearchService,
+                                                    CompetitionSetupRestService competitionSetupRestService,
+                                                    BankDetailsRestService bankDetailsRestService) {
+        this.competitionDashboardSearchService = competitionDashboardSearchService;
+        this.competitionSetupRestService = competitionSetupRestService;
+        this.bankDetailsRestService = bankDetailsRestService;
+    }
+
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of live competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of live competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/live")
-    public String live(Model model, UserResource user){
+    public String live(Model model, UserResource user) {
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(
+                liveCompetitions,
+                competitionDashboardSearchService.getCompetitionCounts(),
+                new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "live";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of competitions in project setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of competitions in project setup")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
@@ -82,7 +85,12 @@ public class CompetitionManagementDashboardController {
         }
 
         model.addAttribute(MODEL_ATTR,
-                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), countBankDetails, new DashboardTabsViewModel(user), projectFinanceUser));
+                new ProjectSetupDashboardViewModel(
+                        projectSetupCompetitions,
+                        competitionDashboardSearchService.getCompetitionCounts(),
+                        countBankDetails,
+                        new DashboardTabsViewModel(user),
+                        projectFinanceUser));
 
         return TEMPLATE_PATH + "projectSetup";
     }
@@ -104,12 +112,15 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of previous competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            " support, innovation lead and stakeholder roles are allowed to view the list of previous competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
-        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(
+                competitionDashboardSearchService.getPreviousCompetitions(),
+                competitionDashboardSearchService.getCompetitionCounts(),
+                new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "previous";
     }
@@ -122,48 +133,41 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the search page for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
+            "innovation lead and stakeholder roles are allowed to view the search page for competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                         @RequestParam(name = "page", defaultValue = "1") int page, Model model,
+                         @RequestParam(name = "page", defaultValue = "0") int page,
+                         Model model,
                          UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
-        model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("tabs", new DashboardTabsViewModel(user));
-        return TEMPLATE_PATH + "search";
+        return searchCompetition(trimmedSearchQuery, page, model, user);
     }
 
-    @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
-    @GetMapping("/dashboard/application/search")
-    public String applicationSearch(@RequestParam(name = "searchString", defaultValue = "") String searchString,
-                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
-                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                    Model model,
-                                    HttpServletRequest request,
-                                    UserResource user) {
-        String trimmedSearchString = StringUtils.normalizeSpace(searchString);
-        String existingQueryString = Objects.toString(request.getQueryString(), "");
+    @SecuredBySpring(value = "READ", description = "The support users are allowed to view the application and competition search pages")
+    @PreAuthorize("hasAuthority('support')")
+    @GetMapping("/dashboard/support/search")
+    public String supportSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
+                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                Model model,
+                                HttpServletRequest request,
+                                UserResource user) {
+        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
-        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchString, pageNumber, pageSize);
-
-        ApplicationSearchDashboardViewModel viewModel =
-                new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
-                                                        matchedApplications.getTotalElements(),
-                                                        new Pagination(matchedApplications, "search?" + existingQueryString),
-                                                        trimmedSearchString,
-                                                        user.hasRole(SUPPORT));
-        model.addAttribute("model", viewModel);
-
-        return TEMPLATE_PATH + "application-search";
+        if (isSearchNumeric) {
+            return searchApplication(trimmedSearchQuery, page, pageSize, model, request);
+        } else {
+            return searchCompetition(trimmedSearchQuery, page, model, user);
+        }
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin and project finance roles are allowed to view the page for setting up new competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
-    public String create(){
+    public String create() {
         CompetitionResource competition = competitionSetupRestService.create().getSuccess();
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
@@ -178,5 +182,28 @@ public class CompetitionManagementDashboardController {
             }
         }
         return formattedList;
+    }
+
+    private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page));
+        model.addAttribute("searchQuery", searchQuery);
+        model.addAttribute("tabs", new DashboardTabsViewModel(user));
+
+        return TEMPLATE_PATH + "search";
+    }
+
+    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request) {
+        String existingSearchQuery = Objects.toString(request.getQueryString(), "");
+
+        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
+
+        ApplicationSearchDashboardViewModel viewModel =
+                new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
+                        matchedApplications.getTotalElements(),
+                        new Pagination(matchedApplications, "search?" + existingSearchQuery),
+                        searchQuery);
+        model.addAttribute("model", viewModel);
+
+        return TEMPLATE_PATH + "application-search";
     }
 }

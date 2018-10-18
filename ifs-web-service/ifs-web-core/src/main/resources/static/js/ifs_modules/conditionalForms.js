@@ -51,14 +51,14 @@ IFS.core.conditionalForms = (function () {
         target.attr('aria-hidden', 'true')
         if (clearForm) {
           target.find('input[type=checkbox]').prop('checked', false)
-          target.find('textarea, input[type=text]').val('')
+          target.find('select, textarea, input[type=text]').val('')
           target.find('.editor').html('')
         }
         if (clearForm || clearValidation) {
           // clear validation
-          var formGroup = target.find('.form-group')
+          var formGroup = target.find('.govuk-form-group')
           formGroup.each(function () {
-            var field = jQuery(this).find('input, textarea')
+            var field = jQuery(this).find('input, textarea, select')
             var requiredAttribute = 'required'
             var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
             var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)

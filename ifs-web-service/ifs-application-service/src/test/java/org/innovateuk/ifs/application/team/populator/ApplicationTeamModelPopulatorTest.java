@@ -19,6 +19,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,13 +43,14 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
@@ -67,6 +69,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private UserService userService;
+    
+    @Mock
+    private UserRestService userRestService;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -120,7 +125,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -130,10 +136,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -183,7 +189,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -193,10 +200,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -246,7 +253,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -256,10 +264,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -309,7 +317,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -319,10 +328,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -349,10 +358,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertTrue(applicationTeamViewModel.isApplicationCanBegin());
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -378,10 +387,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertFalse(applicationTeamViewModel.isApplicationCanBegin());
 
-        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -432,7 +441,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 true,
-                false
+                false,
+                SINGLE_OR_COLLABORATIVE
         );
 
         expectedViewModel.setSummary(true);
@@ -446,11 +456,11 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(questionRestService, applicationService, userService, applicantRestService, inviteRestService);
+        InOrder inOrder = inOrder(questionRestService, applicationService, userService, userRestService, applicantRestService, inviteRestService);
         inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), APPLICATION_TEAM);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(userRestService).retrieveUserById(leadApplicant.getId());
         inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -466,6 +476,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 .withName("Application name")
                 .withApplicationState(applicationState)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCollaborationLevel(SINGLE_OR_COLLABORATIVE)
                 .build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
@@ -488,7 +499,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(newProcessRoleResource()
                 .withUser(leadApplicant)
                 .build());
-        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicant.getId())).thenReturn(restSuccess(leadApplicant));
         return leadApplicant;
     }
 

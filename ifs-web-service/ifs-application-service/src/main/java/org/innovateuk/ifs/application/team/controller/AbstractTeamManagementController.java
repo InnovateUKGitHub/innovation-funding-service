@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -24,9 +24,9 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -98,7 +98,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<InviteResultsResource> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
+                ServiceResult<Void> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
 
                 return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                         .failNowOrSucceedWith(failureView, () -> redirectToOrganisationTeamPage(applicationId, organisationId));
@@ -147,7 +147,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
-                                     @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             List<Long> existingApplicantIds = teamManagementService.getInviteIds(applicationId, organisationId);
@@ -160,14 +160,11 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    protected String redirectToApplicationTeamPage(long applicationId) {
+    private String redirectToApplicationTeamPage(long applicationId) {
         long competitionId = applicationService.getById(applicationId).getCompetition();
-        return questionRestService
-                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
-                .handleSuccessOrFailure(
-                        failure -> format("redirect:/application/%s/team", applicationId),
-                        question -> format("redirect:/application/%s/form/question/%s", applicationId, question.getId())
-                );
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_TEAM).getSuccess();
+        return format("redirect:/application/%s/form/question/%s", applicationId, question.getId());
     }
 
     protected String redirectToOrganisationTeamPage(long applicationId, long organisationId) {

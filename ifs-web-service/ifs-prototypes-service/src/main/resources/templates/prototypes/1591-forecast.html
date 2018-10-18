@@ -19,41 +19,41 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Forecast'})" />
 
-	<h2 class="heading-medium">Nomensa</h2>
+	<h2 class="govuk-heading-m">Nomensa</h2>
 
-	<p>The Profile Spend enables the entry of planned project costs for section of the proposed project. The profile spend should not be developed in isolation, but developed collaboratively with the project partners. Your profile spend has been developed from the information provided in the initial application and finalised with InnovateUK during your finance check.</p>
+	<p class="govuk-body">The Profile Spend enables the entry of planned project costs for section of the proposed project. The profile spend should not be developed in isolation, but developed collaboratively with the project partners. Your profile spend has been developed from the information provided in the initial application and finalised with InnovateUK during your finance check.</p>
 
-	<h2 class="heading-medium">Finance overview</h2>
+	<h2 class="govuk-heading-m">Finance overview</h2>
 
-	<table>
-		<thead>
-			<tr>
+	<table class="govuk-table">
+		<thead class="govuk-table__head">
+			<tr class="govuk-table__row">
 				<th scope="col" style="width: 50%">Summary</th>
 				<th scope="col" style="width: 50%">Amount</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>
+		<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Total cost
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					200,000
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Grant rate
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					50%
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Funding granted
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					90,0000
 				</td>
 			</tr>
@@ -65,15 +65,15 @@
 	</div>
 
 
-	<h2 class="heading-medium">Profile spend</h2>
+	<h2 class="govuk-heading-m">Profile spend</h2>
 
-	<p>This is the project cost taken form funding grant that has been approved by InnovateUK. Initially set as a flat profile spend, for review. This profile spend can edited to suit the project requirements and timeline</p>
+	<p class="govuk-body">This is the project cost taken form funding grant that has been approved by InnovateUK. Initially set as a flat profile spend, for review. This profile spend can edited to suit the project requirements and timeline</p>
 
 	<div class="table-overflow">
 		<table id="table-forecast">
-			<thead>
+			<thead class="govuk-table__head">
 				<tr class="aligncentre">
-					<th>&nbsp;</th>
+					<th class="govuk-table__header" scope="col">&nbsp;</th>
 					<th colspan="4" scope="col" class="header-span" id="year-1">Year 1</th>
 					<th class="separate-cell">&nbsp;</th>
 					<th colspan="4" scope="col" class="header-span" id="year-2">Year 2</th>
@@ -81,7 +81,7 @@
 					<th rowspan="2" scope="col" class="total granted" id="funding-granted">Funding granted</th>
 					<th rowspan="2" scope="col" class="total claimed" id="funding-claimed">Funding claimed</th>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th class="alignleft" scope="row">Period</th>
 					<th scope="col" id="y1-q1">Q1</th>
 					<th scope="col" id="y1-q2">Q2</th>
@@ -98,197 +98,197 @@
 			<tfoot>
 				<tr class="totals">
 					<th scope="row" id="total">Total</th>
-					<td>27,000</td>
-					<td>27,000</td>
-					<td>27,000</td>
-					<td>27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
 					<td class="total">108,000</td>
-					<td>27,000</td>
-					<td>27,000</td>
-					<td>27,000</td>
-					<td>27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
+					<td class="govuk-table__cell">27,000</td>
 					<td class="total">108,000</td>
 					<td class="total granted">216,000</td>
 					<td class="total claimed">195,000</td>
 				</tr>
 			</tfoot>
-			<tbody>
+			<tbody class="govuk-table__body">
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="labour">Labour</th>
-					<td>12,500</td>
-					<td>12,500</td>
-					<td>12,500</td>
-					<td>12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
 					<td class="total">50,000</td>
-					<td>12,500</td>
-					<td>12,500</td>
-					<td>12,500</td>
-					<td>12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
+					<td class="govuk-table__cell">12,500</td>
 					<td class="total">50,000</td>
 					<td class="total granted">100,000</td>
 					<td class="total claimed">100,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="labour">Labour</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 labour" id="labour-y1-q1" value="12,500" /><label for="labour-y1-q1" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 labour" id="labour-y1-q2" value="12,500" /><label for="labour-y1-q2" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 labour" id="labour-y1-q3" value="12,500" /><label for="labour-y1-q3" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 labour" id="labour-y1-q4" value="12,500" /><label for="labour-y1-q4" class="visuallyhidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 labour" id="labour-y1-q1" value="12,500" /><label for="labour-y1-q1" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 labour" id="labour-y1-q2" value="12,500" /><label for="labour-y1-q2" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 labour" id="labour-y1-q3" value="12,500" /><label for="labour-y1-q3" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 labour" id="labour-y1-q4" value="12,500" /><label for="labour-y1-q4" class="govuk-visually-hidden">Labour</label></td>
 					<td class="total">50,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q1 labour" id="labour-y2-q1" value="12,500" /><label for="labour-y2-q1" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q2 labour" id="labour-y2-q2" value="12,500" /><label for="labour-y2-q2" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q3 labour" id="labour-y2-q3" value="12,500" /><label for="labour-y2-q3" class="visuallyhidden">Labour</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y1-q4 labour" id="labour-y2-q4" value="12,500" /><label for="labour-y2-q4" class="visuallyhidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y1-q1 labour" id="labour-y2-q1" value="12,500" /><label for="labour-y2-q1" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y1-q2 labour" id="labour-y2-q2" value="12,500" /><label for="labour-y2-q2" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y1-q3 labour" id="labour-y2-q3" value="12,500" /><label for="labour-y2-q3" class="govuk-visually-hidden">Labour</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y1-q4 labour" id="labour-y2-q4" value="12,500" /><label for="labour-y2-q4" class="govuk-visually-hidden">Labour</label></td>
 					<td class="total">50,000</td>
 					<td class="total granted">100,000</td>
 					<td class="total claimed">100,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="admin">Admin support costs</th>
-					<td>2,500</td>
-					<td>2,500</td>
-					<td>2,500</td>
-					<td>2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
 					<td class="total">10,000</td>
-					<td>2,500</td>
-					<td>2,500</td>
-					<td>2,500</td>
-					<td>2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
+					<td class="govuk-table__cell">2,500</td>
 					<td class="total">10,000</td>
 					<td class="total granted">20,000</td>
 					<td class="total claimed">20,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="admin">Admin support costs</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 admin" id="admin-y1-q1" value="2,500" /><label for="admin-y1-q1" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 admin" id="admin-y1-q2" value="2,500" /><label for="admin-y1-q2" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 admin" id="admin-y1-q3" value="2,500" /><label for="admin-y1-q3" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 admin" id="admin-y1-q4" value="2,500" /><label for="admin-y1-q4" class="visuallyhidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 admin" id="admin-y1-q1" value="2,500" /><label for="admin-y1-q1" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 admin" id="admin-y1-q2" value="2,500" /><label for="admin-y1-q2" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 admin" id="admin-y1-q3" value="2,500" /><label for="admin-y1-q3" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 admin" id="admin-y1-q4" value="2,500" /><label for="admin-y1-q4" class="govuk-visually-hidden">Admin</label></td>
 					<td class="total">10,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 admin" id="admin-y2-q1" value="2,500" /><label for="admin-y2-q1" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 admin" id="admin-y2-q2" value="2,500" /><label for="admin-y2-q2" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 admin" id="admin-y2-q3" value="2,500" /><label for="admin-y2-q3" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 admin" id="admin-y2-q4" value="2,500" /><label for="admin-y2-q4" class="visuallyhidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q1 admin" id="admin-y2-q1" value="2,500" /><label for="admin-y2-q1" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q2 admin" id="admin-y2-q2" value="2,500" /><label for="admin-y2-q2" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q3 admin" id="admin-y2-q3" value="2,500" /><label for="admin-y2-q3" class="govuk-visually-hidden">Admin</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q4 admin" id="admin-y2-q4" value="2,500" /><label for="admin-y2-q4" class="govuk-visually-hidden">Admin</label></td>
 					<td class="total">10,000</td>
 					<td class="total granted">20,000</td>
 					<td class="total claimed">20,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="materials">Materials</th>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="materials">Materials</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 materials" id="materials-y1-q1" value="3,000" /><label for="materials-y1-q1" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 materials" id="materials-y1-q2" value="3,000" /><label for="materials-y1-q2" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 materials" id="materials-y1-q3" value="3,000" /><label for="materials-y1-q3" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 materials" id="materials-y1-q4" value="3,000" /><label for="materials-y1-q4" class="visuallyhidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 materials" id="materials-y1-q1" value="3,000" /><label for="materials-y1-q1" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 materials" id="materials-y1-q2" value="3,000" /><label for="materials-y1-q2" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 materials" id="materials-y1-q3" value="3,000" /><label for="materials-y1-q3" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 materials" id="materials-y1-q4" value="3,000" /><label for="materials-y1-q4" class="govuk-visually-hidden">Materials</label></td>
 					<td class="total">12,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 materials" id="materials-y2-q1" value="3,000" /><label for="materials-y2-q1" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 materials" id="materials-y2-q2" value="3,000" /><label for="materials-y2-q2" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 materials" id="materials-y2-q3" value="3,000" /><label for="materials-y2-q3" class="visuallyhidden">Materials</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 materials" id="materials-y2-q4" value="3,000" /><label for="materials-y2-q4" class="visuallyhidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q1 materials" id="materials-y2-q1" value="3,000" /><label for="materials-y2-q1" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q2 materials" id="materials-y2-q2" value="3,000" /><label for="materials-y2-q2" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q3 materials" id="materials-y2-q3" value="3,000" /><label for="materials-y2-q3" class="govuk-visually-hidden">Materials</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q4 materials" id="materials-y2-q4" value="3,000" /><label for="materials-y2-q4" class="govuk-visually-hidden">Materials</label></td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="capital">Capital usage</th>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="capital">Capital usage</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 capital" id="capital-y1-q1" value="3,000" /><label for="capital-y1-q1" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 capital" id="capital-y1-q2" value="3,000" /><label for="capital-y1-q2" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 capital" id="capital-y1-q3" value="3,000" /><label for="capital-y1-q3" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 capital" id="capital-y1-q4" value="3,000" /><label for="capital-y1-q4" class="visuallyhidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 capital" id="capital-y1-q1" value="3,000" /><label for="capital-y1-q1" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 capital" id="capital-y1-q2" value="3,000" /><label for="capital-y1-q2" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 capital" id="capital-y1-q3" value="3,000" /><label for="capital-y1-q3" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 capital" id="capital-y1-q4" value="3,000" /><label for="capital-y1-q4" class="govuk-visually-hidden">Capital</label></td>
 					<td class="total">12,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 capital" id="capital-y2-q1" value="3,000" /><label for="capital-y2-q1" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 capital" id="capital-y2-q2" value="3,000" /><label for="capital-y2-q2" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 capital" id="capital-y2-q3" value="3,000" /><label for="capital-y2-q3" class="visuallyhidden">Capital</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 capital" id="capital-y2-q4" value="3,000" /><label for="capital-y2-q4" class="visuallyhidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q1 capital" id="capital-y2-q1" value="3,000" /><label for="capital-y2-q1" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q2 capital" id="capital-y2-q2" value="3,000" /><label for="capital-y2-q2" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q3 capital" id="capital-y2-q3" value="3,000" /><label for="capital-y2-q3" class="govuk-visually-hidden">Capital</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q4 capital" id="capital-y2-q4" value="3,000" /><label for="capital-y2-q4" class="govuk-visually-hidden">Capital</label></td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="sub-contract">Sub-contracting costs</th>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="sub-contract">Sub-contracting costs</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 sub-contract" id="sub-contract-y1-q1" value="3,000" /><label for="sub-contract-y1-q1" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 sub-contract" id="sub-contract-y1-q2" value="3,000" /><label for="sub-contract-y1-q2" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 sub-contract" id="sub-contract-y1-q3" value="3,000" /><label for="sub-contract-y1-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 sub-contract" id="sub-contract-y1-q4" value="3,000" /><label for="sub-contract-y1-q4" class="visuallyhidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 sub-contract" id="sub-contract-y1-q1" value="3,000" /><label for="sub-contract-y1-q1" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 sub-contract" id="sub-contract-y1-q2" value="3,000" /><label for="sub-contract-y1-q2" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 sub-contract" id="sub-contract-y1-q3" value="3,000" /><label for="sub-contract-y1-q3" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 sub-contract" id="sub-contract-y1-q4" value="3,000" /><label for="sub-contract-y1-q4" class="govuk-visually-hidden">Sub-contracting costs</label></td>
 					<td class="total">12,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 sub-contract" id="sub-contract-y2-q1" value="3,000" /><label for="sub-contract-y2-q1" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 sub-contract" id="sub-contract-y2-q2" value="3,000" /><label for="sub-contract-y2-q2" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 sub-contract" id="sub-contract-y2-q3" value="3,000" /><label for="sub-contract-y2-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" value="3,000" /><label for="sub-contract-y2-q4" class="visuallyhidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q1 sub-contract" id="sub-contract-y2-q1" value="3,000" /><label for="sub-contract-y2-q1" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q2 sub-contract" id="sub-contract-y2-q2" value="3,000" /><label for="sub-contract-y2-q2" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q3 sub-contract" id="sub-contract-y2-q3" value="3,000" /><label for="sub-contract-y2-q3" class="govuk-visually-hidden">Sub-contracting costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" value="3,000" /><label for="sub-contract-y2-q4" class="govuk-visually-hidden">Sub-contracting costs</label></td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
 					<th id="other">Other costs</th>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
-					<td>3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
+					<td class="govuk-table__cell">3,000</td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
 				</tr>
 				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
 					<th id="other">Other costs</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 other" id="other-y1-q1" value="3,000" /><label for="other-y1-q1" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 other" id="other-y1-q2" value="3,000" /><label for="other-y1-q2" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 other" id="other-y1-q3" value="3,000" /><label for="other-y1-q3" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 other" id="other-y1-q4" value="3,000" /><label for="other-y1-q4" class="visuallyhidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q1 other" id="other-y1-q1" value="3,000" /><label for="other-y1-q1" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q2 other" id="other-y1-q2" value="3,000" /><label for="other-y1-q2" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q3 other" id="other-y1-q3" value="3,000" /><label for="other-y1-q3" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-1 y1-q4 other" id="other-y1-q4" value="3,000" /><label for="other-y1-q4" class="govuk-visually-hidden">Other costs</label></td>
 					<td class="total">12,000</td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 other" id="other-y2-q1" value="3,000" /><label for="other-y2-q1" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 other" id="other-y2-q2" value="3,000" /><label for="other-y2-q2" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 other" id="other-y2-q3" value="3,000" /><label for="other-y2-q3" class="visuallyhidden">Other costs</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 other" id="other-y2-q4" value="3,000" /><label for="other-y2-q4" class="visuallyhidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q1 other" id="other-y2-q1" value="3,000" /><label for="other-y2-q1" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q2 other" id="other-y2-q2" value="3,000" /><label for="other-y2-q2" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q3 other" id="other-y2-q3" value="3,000" /><label for="other-y2-q3" class="govuk-visually-hidden">Other costs</label></td>
+					<td class="govuk-table__cell"><input type="text" class="govuk-input" aria-labelledby="year-2 y2-q4 other" id="other-y2-q4" value="3,000" /><label for="other-y2-q4" class="govuk-visually-hidden">Other costs</label></td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
 					<td class="total claimed">24,000</td>
@@ -300,15 +300,15 @@
 	<div th:if="${param.status == null or param.status[0] != 'edit'}" th:remove="tag">
 
 		<div class="extra-margin">
-			<a href="/prototypes/1591-forecast?status=edit#table-forecast" class="button button-secondary">Edit forecast</a>
+			<a href="/prototypes/1591-forecast?status=edit#table-forecast" class="govuk-button button-secondary">Edit forecast</a>
 		</div>
 
-		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with their project plan before they are submitted to InnovateUK.</p>
+		<p class="govuk-body extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with their project plan before they are submitted to InnovateUK.</p>
 
-		<p>Depending on review by the lead or by InnovateUK the profile spend submitted may need to be modified. If you are requested to modify costs dased on review by InnovateUK you will also be supplied with feedback.</p>
+		<p class="govuk-body">Depending on review by the lead or by InnovateUK the profile spend submitted may need to be modified. If you are requested to modify costs dased on review by InnovateUK you will also be supplied with feedback.</p>
 
 		<div class="extra-margin">
-			<a href="#" class="button button-large">Submit</a>
+			<a href="#" class="govuk-button button-large">Submit</a>
 		</div>
 
 	</div>
@@ -325,7 +325,7 @@
 
 		<div class="extra-margin">
 
-			<a href="/prototypes/1591-forecast" class="button button-secondary">Save and return to forecast overview</a>
+			<a href="/prototypes/1591-forecast" class="govuk-button button-secondary">Save and return to forecast overview</a>
 
 		</div>
 

@@ -19,9 +19,9 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Finance contact'}, ${null})" />
 
-    <p>We will ask the finance contact to:</p>
+    <p class="govuk-body">We will ask the finance contact to:</p>
 
-    <ul class="list list-bullet">
+    <ul class="govuk-list govuk-list--bullet">
         <li>provide bank details for your organisation</li>
         <li>confirm any queries we have with your project costs</li>
         <li>review the spend profile of your project costs</li>
@@ -29,12 +29,12 @@
 
 	<form action="#" class="extra-margin">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
-			<legend class="heading-medium no-margin">Finance contact</legend>
-            <p class="form-hint">Please select the person responsible for finances in your organisation</p>
+			<legend class="govuk-heading-m govuk-!-margin-0">Finance contact</legend>
+            <p class="govuk-hint">Please select the person responsible for finances in your organisation</p>
 
-			<div class="form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+			<div class="govuk-form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
                 <div class="multiple-choice">
                     <input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
                     <label for="finances-name-1" class="block-label selection-button-radio">
@@ -57,7 +57,7 @@
                 </div>
 			</div>
 
-            <div class="form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
+            <div class="govuk-form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
 
                 <input type="hidden" name="user" value="nonLead">
 
@@ -86,12 +86,12 @@
 		</fieldset>
 
 		<div class="extra-margin">
-			<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+			<button class="button-clear" id="add-finance-contact">Add new team member</button>
 		</div>
 
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" />
 
-        <button class="button button-large extra-margin" formaction="/prototypes/IFS-1984-project-details">Save finance contact</button>
+        <button class="govuk-button button-large extra-margin" formaction="/prototypes/IFS-1984-project-details">Save finance contact</button>
 
 	</form>
 

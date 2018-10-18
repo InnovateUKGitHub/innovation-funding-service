@@ -37,7 +37,7 @@ IFS.core.progressiveGroupSelect = (function () {
       var parentSelectInstruction = el.attr('data-progressive-group-select-instruction')
       var parentSelectId = el.attr('data-progressive-group-select-id')
       var parentSelectErrorMessage = el.attr('data-progressive-group-select-errormessage')
-      var parentSelect = jQuery('<select class="form-control width-full js-progressive-group-select" aria-label="' + parentSelectTitle + '" id="' + parentSelectId + '" required="required" data-required-errormessage="' + parentSelectErrorMessage + '"><option value="">' + parentSelectInstruction + '</option></select>')
+      var parentSelect = jQuery('<select class="govuk-select js-progressive-group-select" aria-label="' + parentSelectTitle + '" id="' + parentSelectId + '" required="required" data-required-errormessage="' + parentSelectErrorMessage + '"><option value="">' + parentSelectInstruction + '</option></select>')
       var optgroupsArray = el.find('optgroup')
       var optionsArray = []
       var parentOptionsArray = []

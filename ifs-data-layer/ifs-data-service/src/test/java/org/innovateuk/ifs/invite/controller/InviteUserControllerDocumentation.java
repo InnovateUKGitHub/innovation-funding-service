@@ -61,9 +61,10 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void saveUserInvite() throws Exception {
 
-        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType())).thenReturn(serviceSuccess());
+        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/inviteUser/saveInvite")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk())
@@ -71,7 +72,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                         requestFields(InviteUserResourceDocs.inviteUserResourceFields)
                 ));
 
-        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType());
+        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole());
     }
 
     @Test
@@ -85,7 +86,8 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                                 .withEmail("example@test.com").withHash("SomeHashString")
                                 .withRoleName("Project Finance").build()));
 
-        mockMvc.perform(get("/inviteUser/getInvite/{inviteHash}", "SomeHashString"))
+        mockMvc.perform(get("/inviteUser/getInvite/{inviteHash}", "SomeHashString")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/getInvite/{method-name}",
                         pathParameters(
@@ -103,7 +105,8 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/inviteUser/checkExistingUser/{inviteHash}", "SomeHashString"))
+        mockMvc.perform(get("/inviteUser/checkExistingUser/{inviteHash}", "SomeHashString")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andDo(document("inviteUser/checkExistingUser/{method-name}",
@@ -119,7 +122,9 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     public void findPendingInternalUserInvites() throws Exception {
         RoleInvitePageResource roleInvitePageResource = buildRoleInvitePageResource();
         when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(roleInvitePageResource));
-        mockMvc.perform(get(buildPaginationUri("/inviteUser/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+        mockMvc.perform(get(buildPaginationUri("/inviteUser/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/{method-name}",
                         responseFields(PageResourceDocs.pageResourceFields)
                 ));;
@@ -135,7 +140,8 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.findExternalInvites(searchString, searchCategory)).thenReturn(serviceSuccess(externalInviteResources));
 
-        mockMvc.perform(get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name()))
+        mockMvc.perform(get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name())
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(externalInviteResources)))
                 .andDo(document(
@@ -158,7 +164,8 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.resendInternalUserInvite(123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/inviteUser/internal/pending/{inviteId}/resend", 123L))
+        mockMvc.perform(put("/inviteUser/internal/pending/{inviteId}/resend", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/inviteId/{method-name}",
                         pathParameters(

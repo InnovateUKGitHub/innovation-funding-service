@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.sections.SectionAccess;
+
+import org.innovateuk.ifs.sections.SectionAccess;
 
 /**
  * A convenient container for multiple Project Setup sections' access levels

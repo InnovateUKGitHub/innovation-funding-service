@@ -2,8 +2,6 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -31,10 +29,7 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.password").description("Password of the user"),
             fieldWithPath("user.status").description("Status of the user"),
             fieldWithPath("user.roles").description("Roles that the user is associated with"),
-            fieldWithPath("user.gender").description("Gender of the user"),
             fieldWithPath("user.allowMarketingEmails").description("allow marketing emails"),
-            fieldWithPath("user.disability").description("Disability of the user"),
-            fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),
             fieldWithPath("user.inviteName").description("Invite name of the user"),
             fieldWithPath("user.termsAndConditionsIds").description("Ids of accepted terms and conditions"),
@@ -58,9 +53,6 @@ public class AssessorProfileResourceDocs {
                             .withLastName("Last")
                             .withEmail("test@test.com")
                             .withPhoneNumber("012434 567890")
-                            .withGender(Gender.MALE)
-                            .withDisability(Disability.NOT_STATED)
-                            .withEthnicity(1L)
                             .withProfile(2L)
                             .withStatus(UserStatus.ACTIVE)
                             .withInviteName("First Last")

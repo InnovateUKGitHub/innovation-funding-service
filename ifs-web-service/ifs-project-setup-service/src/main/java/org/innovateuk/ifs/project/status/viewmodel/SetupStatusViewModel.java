@@ -5,8 +5,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.sections.SectionStatus;
 
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
-    private boolean hasCompanyHouse;
+    private boolean hasCompaniesHouse;
     private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
@@ -53,7 +53,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
-        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null && !organisation.getCompanyHouseNumber().isEmpty();
+        this.hasCompaniesHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();
@@ -164,8 +164,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return competitionId;
     }
 
-    public boolean isHasCompanyHouse() {
-        return hasCompanyHouse;
+    public boolean isHasCompaniesHouse() {
+        return hasCompaniesHouse;
     }
 
     public boolean isProjectComplete() {

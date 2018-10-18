@@ -1,0 +1,47 @@
+=== Create
+==== Request
+include::{snippets}/eu-grant/create/http-request.adoc[]
+include::{snippets}/eu-grant/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/create/http-response.adoc[]
+include::{snippets}/eu-grant/create/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/create/curl-request.adoc[]
+
+=== Find By Id
+==== Request
+include::{snippets}/eu-grant/find-by-id/http-request.adoc[]
+include::{snippets}/eu-grant/find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/find-by-id/http-response.adoc[]
+include::{snippets}/eu-grant/find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/find-by-id/curl-request.adoc[]
+
+=== Update
+==== Request
+include::{snippets}/eu-grant/update/http-request.adoc[]
+include::{snippets}/eu-grant/update/path-parameters.adoc[]
+include::{snippets}/eu-grant/update/request-fields.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/update/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/update/curl-request.adoc[]
+
+=== Submit
+==== Request
+include::{snippets}/eu-grant/submit/http-request.adoc[]
+include::{snippets}/eu-grant/submit/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant/submit/http-response.adoc[]
+include::{snippets}/eu-grant/submit/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant/submit/curl-request.adoc[]

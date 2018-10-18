@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.Map;
  */
 public class ProjectFinanceResource extends BaseFinanceResource {
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges;
+    private Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges;
 
     public ProjectFinanceResource(BaseFinanceResource originalFinance) {
         super(originalFinance);
@@ -32,11 +31,11 @@ public class ProjectFinanceResource extends BaseFinanceResource {
         super.setTarget(target);
     }
 
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getCostChanges() {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getCostChanges() {
         return costChanges;
     }
 
-    public void setCostChanges(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges) {
+    public void setCostChanges(Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges) {
         this.costChanges = costChanges;
     }
 

@@ -47,18 +47,6 @@ public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistratio
         return withArray((phoneNumber, userRegistrationResource) -> setField("phoneNumber", phoneNumber, userRegistrationResource), phoneNumbers);
     }
 
-    public UserRegistrationResourceBuilder withGender(Gender... genders) {
-        return withArray((gender, userRegistrationResource) -> setField("gender", gender, userRegistrationResource), genders);
-    }
-
-    public UserRegistrationResourceBuilder withDisability(Disability... disabilities) {
-        return withArray((disability, userRegistrationResource) -> setField("disability", disability, userRegistrationResource), disabilities);
-    }
-
-    public UserRegistrationResourceBuilder withEthnicity(EthnicityResource... ethnicities) {
-        return withArray((ethnicity, userRegistrationResource) -> setField("ethnicity", ethnicity, userRegistrationResource), ethnicities);
-    }
-
     public UserRegistrationResourceBuilder withPassword(String... passwords) {
         return withArray((password, userRegistrationResource) -> setField("password", password, userRegistrationResource), passwords);
     }

@@ -48,7 +48,7 @@ public class AssessorDashboardModelPopulator {
         this.competitionRestService = competitionRestService;
     }
 
-    public AssessorDashboardViewModel populateModel(Long userId) {
+    public AssessorDashboardViewModel populateModel(long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
 
@@ -170,6 +170,6 @@ public class AssessorDashboardModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
-        return ZonedDateTime.now().plusDays(1L).isAfter(panelDate);
+        return ZonedDateTime.now().isAfter(panelDate);
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to all competitions'}, ${'/competition/search'})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <h1 class="govuk-heading-l">Prototype page</h1>
+
+
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>

@@ -26,74 +26,74 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
             <span class="heading-secondary">Start new application</span>
             Confirm organisation details
         </h1>
 
         <th:block th:unless="${type == 'collaborator'}">
             <div class="message-alert">
-                <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+                <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
             </div>
-            <p class="extra-margin">This organisation will lead the application.</p>
+            <p class="govuk-body extra-margin">This organisation will lead the application.</p>
         </th:block>
 
         <th:block th:if="${type == 'collaborator'}">
             <th:block th:if="${status == 'orgAdded'}">
-                <p>The lead applicant has invited you to participate on this application as part of the following organisation:
+                <p class="govuk-body">The lead applicant has invited you to participate on this application as part of the following organisation:
                 <strong>EGGS</strong></p>
 
-                <p>Please review the organisation details below and confirm that they are correct.</p>
+                <p class="govuk-body">Please review the organisation details below and confirm that they are correct.</p>
             </th:block>
-            <p>This is the organisation you will be part of for the application.</p>
+            <p class="govuk-body">This is the organisation you will be part of for the application.</p>
         </th:block>
 
         <th:block th:unless="${status == 'orgAdded'}">
-            <h3 class="heading-small">Organisation type</h3>
-            <p>Business</p>
+            <h3 class="govuk-heading-s">Organisation type</h3>
+            <p class="govuk-body">Business</p>
 
-            <h3 class="heading-small">Registered name</h3>
-            <p th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
+            <h3 class="govuk-heading-s">Registered name</h3>
+            <p class="govuk-body" th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
         </th:block>
 
         <th:block th:unless="${param.entry != null and param.entry[0] == 'manual'}">
             <th:block th:if="${status == 'orgAdded'}">
-                <h3 class="heading-small">Organisation type</h3>
-                <p>Research</p>
+                <h3 class="govuk-heading-s">Organisation type</h3>
+                <p class="govuk-body">Research</p>
 
-                <h3 class="heading-small">Registered name</h3>
-                <p>EGGS</p>
+                <h3 class="govuk-heading-s">Registered name</h3>
+                <p class="govuk-body">EGGS</p>
             </th:block>
 
-            <h3 class="heading-small">Registration number</h3>
-            <p>05750811</p>
+            <h3 class="govuk-heading-s">Registration number</h3>
+            <p class="govuk-body">05750811</p>
 
-            <h3 class="heading-small">Registered address</h3>
-            <p>16 Queen Square
+            <h3 class="govuk-heading-s">Registered address</h3>
+            <p class="govuk-body">16 Queen Square
                 <br /> Bristol
                 <br /> BS1 4NT
             </p>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgAdded'}">
-            <p>If this is not the correct organisation, please <a href="#">email the lead applicant</a>.</p>
+            <p class="govuk-body">If this is not the correct organisation, please <a href="#">email the lead applicant</a>.</p>
         </th:block>
 
         <th:block th:if="${type == 'lead'}">
-            <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgNotAdded' and user == 'new'}">
-            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and user == 'existing'}">
-            <a class="button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgAdded' and user == 'new'}">
 
-            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Confirm and accept invitation</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Confirm and accept invitation</a>
         </th:block>
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->

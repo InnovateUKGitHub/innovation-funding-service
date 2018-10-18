@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -11,11 +13,21 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount.NONE;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * Competition setup section saver for the eligibility section.
@@ -26,12 +38,24 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     public static final String RESEARCH_CATEGORY_ID = "researchCategoryId";
     public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
 
-    @Autowired
+    private QuestionRestService questionRestService;
     private CompetitionSetupRestService competitionSetupRestService;
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
+                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                     QuestionRestService questionRestService,
+                                     QuestionSetupCompetitionRestService questionSetupCompetitionRestService) {
+        this.competitionSetupRestService = competitionSetupRestService;
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+        this.questionRestService = questionRestService;
+        this.questionSetupCompetitionRestService = questionSetupCompetitionRestService;
+    }
 
     @Override
     public CompetitionSetupSection sectionToSave() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return ELIGIBILITY;
     }
 
     @Override
@@ -43,14 +67,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
         competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
 
-        if (competition.isFullApplicationFinance() != null) {
+        if (competition.isNonFinanceType()) {
+            competition.setMaxResearchRatio(NONE.getAmount());
+        } else {
             ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
 
             if (amount != null) {
                 competition.setMaxResearchRatio(amount.getAmount());
             }
-        } else {
-            competition.setMaxResearchRatio(ResearchParticipationAmount.NONE.getAmount());
         }
 
         boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
@@ -62,14 +86,78 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
+        if(!competitionSetupForm.isAutoSaveAction()) {
+            handleResearchCategoryApplicableChanges(competition, eligibilityForm);
+            handleGrantClaimMaximumChanges(competition, eligibilityForm);
+        }
+
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
         CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
         competition.setCollaborationLevel(level);
-
         competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
 
         return competitionSetupRestService.update(competition).toServiceResult();
+    }
+
+    private ServiceResult<Void> handleResearchCategoryApplicableChanges(CompetitionResource competitionResource,
+                                                                        EligibilityForm eligibilityForm) {
+
+        Optional<QuestionResource> researchCategoryQuestionIfExists = getResearchCategoryQuestionIfExists
+                (competitionResource.getId());
+
+        if (eligibilityForm.getResearchCategoriesApplicable()) {
+            if (!researchCategoryQuestionIfExists.isPresent()) {
+                questionSetupCompetitionRestService.addResearchCategoryQuestionToCompetition(competitionResource
+                        .getId());
+            }
+        } else {
+            if (researchCategoryQuestionIfExists.isPresent()) {
+                QuestionResource researchCategoryQuestion = researchCategoryQuestionIfExists.get();
+                return questionSetupCompetitionRestService.deleteById(researchCategoryQuestion.getId())
+                        .toServiceResult();
+            }
+        }
+        return serviceSuccess();
+    }
+
+    private void handleGrantClaimMaximumChanges(CompetitionResource competition,
+                                                EligibilityForm eligibilityForm) {
+
+        if (eligibilityForm.getFundingLevelPercentage() != null) {
+            Set<GrantClaimMaximumResource> grantClaimMaximums = competition.getGrantClaimMaximums().stream()
+                    .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
+                    .collect(Collectors.toSet());
+
+            grantClaimMaximums.forEach(oldGCM -> {
+                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
+
+                if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
+                    // remove the old
+                    competition.getGrantClaimMaximums().remove(oldGCM.getId());
+                    // save the new
+                    GrantClaimMaximumResource saved = grantClaimMaximumRestService.save(toSaveGCM).getSuccess();
+                    competition.getGrantClaimMaximums().add(saved.getId());
+                }
+            });
+        } else {
+            Set<Long> gcmsForCompetitionType = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
+                    competition.getCompetitionType()).getSuccess();
+
+            // remove the old
+            competition.getGrantClaimMaximums().clear();
+
+            //save the new
+            competition.getGrantClaimMaximums().addAll(gcmsForCompetitionType);
+        }
+    }
+
+    private GrantClaimMaximumResource createNewGCM(GrantClaimMaximumResource oldGCM, Integer newValue) {
+        GrantClaimMaximumResource newGcm = new GrantClaimMaximumResource();
+        newGcm.setOrganisationSize(oldGCM.getOrganisationSize());
+        newGcm.setResearchCategory(oldGCM.getResearchCategory());
+        newGcm.setMaximum(newValue);
+        return newGcm;
     }
 
     @Override
@@ -98,6 +186,12 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         } else {
             collection.add(value);
         }
+    }
+
+    private Optional<QuestionResource> getResearchCategoryQuestionIfExists(long competitionId) {
+        RestResult<QuestionResource> researchCategoryQuestionResult = questionRestService
+                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, RESEARCH_CATEGORY);
+        return researchCategoryQuestionResult.toOptionalIfNotFound().getSuccess();
     }
 
     @Override

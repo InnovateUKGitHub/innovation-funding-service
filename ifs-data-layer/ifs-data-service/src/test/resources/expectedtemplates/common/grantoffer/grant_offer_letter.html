@@ -23,18 +23,18 @@
           <#if TownCity?has_content>${TownCity}<br/></#if>
           <#if PostCode?has_content>${PostCode}<br/></#if>
       </p>
-      <p class="bold">
+      <p class="govuk-!-font-weight-bold">
           Application number: ${ApplicationNumber}<br/>
 
           <#assign sendDate = .now>
               Date: ${sendDate?string["d MMMM yyyy"]}
       </p>
-      <p class="bold">
+      <p class="govuk-!-font-weight-bold">
           Dear ${LeadContact},
       </p>
 
-      <p class="bold">Grant Offer Letter</p>
-      <p class="bold">
+      <p class="govuk-!-font-weight-bold">Grant Offer Letter</p>
+      <p class="govuk-!-font-weight-bold">
           Competition: ${CompetitionName}<br/>
           Project Title: ${ProjectTitle}
       </p>
@@ -42,7 +42,7 @@
       <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
       <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
 
-      <p class="bold">Acceptance: Start and end dates</p>
+      <p class="govuk-!-font-weight-bold">Acceptance: Start and end dates</p>
       <p>
           You must now notify Innovate UK of the project’s start and end dates by completing, signing and returning the Annex to
           grants@innovateuk.ukri.org.
@@ -68,8 +68,8 @@
   </div>
   <div class="page">
       <h2>ANNEX</h2>
-      <h2 class="bold">ACCEPTANCE OF AWARD</h2>
-      <p class="bold">
+      <h2 class="govuk-!-font-weight-bold">ACCEPTANCE OF AWARD</h2>
+      <p class="govuk-!-font-weight-bold">
           Application number: ${ApplicationNumber}<br/>
           Date: ${sendDate?string["d MMMM yyyy"]}<br/>
           Innovate UK: ${CompetitionName}<br/>

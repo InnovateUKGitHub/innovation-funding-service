@@ -1,107 +1,144 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="project-details project-address">
+    <body class="govuk-template__body project-details project-address">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
-
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='heading-xlarge'" />
-
-            <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
-
-            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'form-group-error'">
-                    <fieldset id="addressType">
-                        <legend>
-                            <span class="heading-medium">Project address</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressType}')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
-                            </th:block>
-                        </legend>
-                        <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
-
-                        <th:block th:if="${model.registeredAddress}">
-                            <div class="multiple-choice" data-target="registeredAddress">
-                                <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}" />
-                                <label for="address-use-org">
-                                    Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
-                                </label>
-                            </div>
-
-                            <div id="registeredAddress" class="panel" th:if="${model.registeredAddress}">
-                                <p>
-                                  <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
-                                      <th:block th:text="${addressLine}">An address line</th:block><br />
-                                  </th:block>
-                                </p>
-                            </div>
-                        </th:block>
-
-                        <th:block th:if="${model.operatingAddress}">
-                            <div class="multiple-choice" data-target="operatingAddress">
-                                <input id="address-use-operating" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="OPERATING" th:field="*{addressType}" />
-                                <label for="address-use-operating">
-                                    Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
-                                </label>
-                            </div>
-
-                            <div id="operatingAddress" class="panel" th:if="${model.operatingAddress}">
-                                <p>
-                                  <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
-                                      <th:block th:text="${addressLine}">An address line</th:block><br />
-                                  </th:block>
-                                </p>
-                            </div>
-                        </th:block>
-
-                        <th:block th:if="${model.projectAddress}">
-                            <div class="multiple-choice" data-target="projectAddress">
-                                <input id="address-use-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="PROJECT" th:field="*{addressType}" />
-                                <label for="address-use-project">
-                                    Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
-                                </label>
-                            </div>
-
-                            <div id="projectAddress" class="panel" th:if="${model.projectAddress}">
-                                <p>
-                                  <th:block th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}">
-                                      <th:block th:text="${addressLine}">An address line</th:block><br />
-                                  </th:block>
-                                </p>
-                            </div>
-                        </th:block>
-
-                        <div class="multiple-choice" data-target="custom-postcode">
-                            <input id="address-add-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="ADD_NEW" th:field="*{addressType}" />
-                            <label for="address-add-project">
-                                Enter an alternative project address
-                            </label>
-                        </div>
-
-                        <div id="custom-postcode" class="panel">
-                            <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
-                        </div>
-                    </fieldset>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title"  id="error-summary-title">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <p>You can change your project address up until your grant offer letter is generated.</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-                <button class="button extra-margin">Save project address</button>
-            </form>
+                <p class="govuk-body">We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'govuk-form-group--error'">
+                        <fieldset id="addressType" class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <span class="govuk-fieldset__heading">Project address</span>
+                            </legend>
+                            <span class="govuk-hint">Please select the address where the majority of work will be carried out.</span>
+                            <th:block th:if="${#fields.hasErrors('*{addressType}')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios">
+                                <th:block th:if="${model.registeredAddress}">
+                                    <div class="govuk-radios__item" data-target="registeredAddress">
+                                        <input id="address-use-org"
+                                               class="govuk-radios__input"
+                                               type="radio"
+                                               name="project-address-group"
+                                               required="required"
+                                               th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}"
+                                               value="REGISTERED"
+                                               th:field="*{addressType}" />
+                                        <label for="address-use-org"
+                                               class="govuk-label govuk-radios__label">
+                                            Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
+                                        </label>
+                                    </div>
+
+                                    <div id="registeredAddress" class="govuk-body panel" th:if="${model.registeredAddress}">
+                                        <p class="govuk-body">
+                                            <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
+                                                <th:block th:text="${addressLine}">An address line</th:block><br />
+                                            </th:block>
+                                        </p>
+                                    </div>
+                                </th:block>
+
+                                <th:block th:if="${model.operatingAddress}">
+                                    <div class="govuk-radios__item" data-target="operatingAddress">
+                                        <input id="address-use-operating"
+                                               class="govuk-radios__input"
+                                               type="radio"
+                                               name="project-address-group"
+                                               required="required"
+                                               th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}"
+                                               value="OPERATING"
+                                               th:field="*{addressType}" />
+                                        <label for="address-use-operating"
+                                               class="govuk-label govuk-radios__label">
+                                            Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
+                                        </label>
+                                    </div>
+
+                                    <div id="operatingAddress" class="govuk-body panel" th:if="${model.operatingAddress}">
+                                        <p class="govuk-body">
+                                            <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+                                                <th:block th:text="${addressLine}">An address line</th:block><br />
+                                            </th:block>
+                                        </p>
+                                    </div>
+                                </th:block>
+
+                                <th:block th:if="${model.projectAddress}">
+                                    <div class="govuk-radios__item" data-target="projectAddress">
+                                        <input id="address-use-project"
+                                               class="govuk-radios__input"
+                                               type="radio"
+                                               name="project-address-group"
+                                               required="required"
+                                               th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}"
+                                               value="PROJECT"
+                                               th:field="*{addressType}" />
+                                        <label for="address-use-project"
+                                               class="govuk-label govuk-radios__label">
+                                            Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
+                                        </label>
+                                    </div>
+
+                                    <div id="projectAddress" class="govuk-body panel" th:if="${model.projectAddress}">
+                                        <p class="govuk-body">
+                                            <th:block th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}">
+                                                <th:block th:text="${addressLine}">An address line</th:block><br />
+                                            </th:block>
+                                        </p>
+                                    </div>
+                                </th:block>
+
+                                <div class="govuk-radios__item" data-target="custom-postcode">
+                                    <input id="address-add-project"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           name="project-address-group"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}"
+                                           value="ADD_NEW"
+                                           th:field="*{addressType}" />
+                                    <label for="address-add-project"
+                                           class="govuk-label govuk-radios__label">
+                                        Enter an alternative project address
+                                    </label>
+                                </div>
+
+                                <div id="custom-postcode" class="govuk-body panel">
+                                    <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+
+                    <p class="govuk-body">You can change your project address up until your grant offer letter is generated.</p>
+
+                    <button class="govuk-button govuk-!-margin-top-6">Save project address</button>
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />
