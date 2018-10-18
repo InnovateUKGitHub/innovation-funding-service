@@ -13,6 +13,18 @@
 
     <button id="invalidate" class="govuk-button" type="button">Invalidate all inputs</button>
 
+    <div class="govuk-error-summary"
+         role="alert"
+         aria-hidden="true"
+         aria-labelledby="error-summary-title"
+         tabindex="-1"
+         data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+            </ul>
+        </div>
+    </div>
 
     <div class="govuk-form-group">
         <label class="govuk-label govuk-label--s" for="minlength-field">
