@@ -90,7 +90,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
         verify(fileDownloaderMock, times(1)).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
         verify(organisationExtractorMock, times(1)).extractOrganisationsFromFile(downloadedFile);
         verify(academicRepositoryMock, times(1)).deleteAll();
-        verify(academicRepositoryMock, times(1)).save(expectedAcademicsToSave);
+        verify(academicRepositoryMock, times(1)).saveAll(expectedAcademicsToSave);
     }
 
     @Test
