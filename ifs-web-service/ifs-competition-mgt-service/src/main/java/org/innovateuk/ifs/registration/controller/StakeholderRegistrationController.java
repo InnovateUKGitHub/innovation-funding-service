@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.StakeholderRegistrationForm;
@@ -91,6 +92,7 @@ public class StakeholderRegistrationController {
         }
     }
 
+
     @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
@@ -100,11 +102,10 @@ public class StakeholderRegistrationController {
             return "redirect:/";
         }
 
-        return inviteUserRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
-            if (!userExists) {
-                return format("redirect:/registration/%s/register", inviteHash);
-            }
-            else {
+        return competitionSetupStakeholderRestService.getInvite(inviteHash).andOnSuccessReturn(invite -> {
+            if (InviteStatus.OPENED != invite.getStatus()) {
+                return format("redirect:/stakeholder/%s/register", inviteHash);
+            } else {
                 return "registration/account-created";
             }
         }).getSuccess();
