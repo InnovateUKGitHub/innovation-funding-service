@@ -232,9 +232,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
         verify(formInputRepository, only()).findOne(formInputId);
-        verify(organisationService, only()).getByUserAndApplicationId(user.getId(), application.getId());
-        verify(userRepository, only()).findOne(loggedInUser.getId());
-
+        verify(organisationService, times(2)).getByUserAndApplicationId(user.getId(), application.getId());
+        verify(userRepository, times(2)).findOne(loggedInUser.getId());
     }
 
     @Test
