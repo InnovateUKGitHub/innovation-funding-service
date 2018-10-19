@@ -260,7 +260,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
-    @Test
     public void applicationFinanceMarkAsCompleteFailWithoutStateAid() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
 
