@@ -46,18 +46,22 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean sectionIsDocuments(CompetitionSetupSection setupSection) {
-        return setupSection.equals(CompetitionSetupSection.PROJECT_DOCUMENT);
+        return CompetitionSetupSection.PROJECT_DOCUMENT.equals(setupSection);
     }
 
     public boolean sectionIsInitialDetails(CompetitionSetupSection setupSection) {
-        return setupSection.equals(CompetitionSetupSection.INITIAL_DETAILS);
+        return CompetitionSetupSection.INITIAL_DETAILS.equals(setupSection);
     }
 
     public boolean sectionIsPublicContent(CompetitionSetupSection setupSection) {
-        return setupSection.equals(CompetitionSetupSection.CONTENT);
+        return CompetitionSetupSection.CONTENT.equals(setupSection);
     }
 
     public boolean sectionIsMilestones(CompetitionSetupSection setupSection) {
-        return setupSection.equals(CompetitionSetupSection.MILESTONES);
+        return CompetitionSetupSection.MILESTONES.equals(setupSection);
+    }
+
+    public boolean sectionIsAssessor(CompetitionSetupSection setupSection) {
+        return CompetitionSetupSection.ASSESSORS.equals(setupSection);
     }
 }
