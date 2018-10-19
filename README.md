@@ -7,7 +7,8 @@ Grant management system.
 Before starting make sure you have the following installed
 
 * Linux or MacOS environment
-* Docker
+* Docker - with between 5 and 10Gb memory allocated in Docker preference (amount depending on how many of the services
+  you wish to deploy).
 * Java 8
 
 Update your /etc/hosts file to include
@@ -24,7 +25,10 @@ Create docker network
 
     docker network create ifs
 
-And build and deploy
+Copy the properties from the starter.properties file into ~/.gradle/gradle.properties - your local gradle properties
+file.
+
+Build and deploy
 
     ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test
 
