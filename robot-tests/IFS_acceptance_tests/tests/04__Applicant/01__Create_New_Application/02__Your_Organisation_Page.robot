@@ -23,7 +23,7 @@ Companies House: Valid company name
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     [Teardown]    The user goes back to the previous page
 
-Companies House: User can choose the organisation and same operating address
+Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
     [Tags]
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
