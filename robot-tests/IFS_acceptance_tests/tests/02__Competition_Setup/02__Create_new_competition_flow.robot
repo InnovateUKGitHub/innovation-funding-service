@@ -113,7 +113,7 @@ User can create a new competition
     And The user should not see the element    link = Public content
     And The user should see the element        link = Initial details
     And The user should not see the element    link = Stakeholders
-    And The user should see the element        jQuery = p:contains("Once you complete, this competition will be ready to open.")
+    And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
@@ -183,7 +183,7 @@ User should have access to all the sections
     # TODO IFS-4186 Uncomment when this functionality is enabled.
 #    And the user should see the element     link = Documents in project setup
     And The user should see the element      link = Public content
-    And The user should see the element      link = Stakeholders
+    And The user should see the element      link = Innovation leads
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
@@ -261,7 +261,6 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(3) .task-status-complete
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -321,7 +320,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(4) .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Milestones: Page should contain the correct fields
@@ -355,7 +354,7 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(5) .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Milestones") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Application - Application process Page
@@ -694,7 +693,7 @@ Innovation leads can be added to a competition
     [Tags]
     [Setup]  the user clicks the button/link  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
-    And The user clicks the button/link       link = Stakeholders
+    And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
     #And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     When the user clicks the button/link      jQuery = td:contains(${peter_freeman}) button:contains("Add")
