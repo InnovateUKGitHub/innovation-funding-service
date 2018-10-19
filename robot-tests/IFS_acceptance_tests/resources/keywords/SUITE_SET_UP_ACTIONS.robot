@@ -155,7 +155,8 @@ the user fills in the inviting steps
 
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
-    the user enters text to a text field  id=organisationSearchName  Liv
+    the user enters text to a text field  id=organisationSearchName  Live
+
     the user clicks the button/link       jQuery=.govuk-button:contains("Search")
     the user clicks the button/link       link= University of Liverpool
     the user clicks the button/link       jQuery=button:contains("Enter address manually")

@@ -42,7 +42,7 @@ Initial details: server-side validations
     And the user should see an error        Please select a competition type.
     And the user should see an error        Please select an innovation sector.
     And the user should see an error        Please select an innovation area.
-    And the user should see an error        ${enter_a_valid_date}
+    And the user should see an error        Please enter a valid date.
     And the user should see an error        Please select an Innovation Lead.
     And the user should see an error        Please select a Portfolio Manager.
     And the user should see an error        Please select a state aid option.
@@ -206,14 +206,16 @@ Application finances: validation empty
     [Documentation]  IFS-630
     [Tags]
     [Setup]    The user navigates to the Validation competition
-    Given the user clicks the button/link     link = Application
-    And the user clicks the button/link       link = Finances
-    And the user enters text to a text field  css = .editor  ${EMPTY}
-    When the user moves focus to the element  jQuery = button:contains("Done")
-    Then the user should see an error         ${empty_field_warning_message}
-    And the user enters text to a text field  css = .editor  Funding rules for this competition added
-    And the user selects the radio button     applicationFinanceType  STANDARD
-    And the user clicks the button/link       jQuery = button:contains("Done")
+    Given the user clicks the button/link                      link = Application
+    And the user clicks the button/link                        link = Finances
+    And the user enters text to a text field                   css = .editor  ${EMPTY}
+    When The user clicks the button/link                       jQuery = button:contains("Done")
+    Then the user should see a field and summary error         This field cannot be left blank.
+    And the user should see a field and summary error          Select whether to include the project growth table.
+    And the user enters text to a text field                   css = .editor  Funding rules for this competition added
+    And the user selects the radio button                      applicationFinanceType  STANDARD
+    And the user selects the radio button                      includeGrowthTable  false
+    And the user clicks the button/link                        jQuery = button:contains("Done")
 
 Application finances: able to edit the field
     [Documentation]  IFS-630
@@ -243,10 +245,10 @@ Assessor: Client-side validation
     [Documentation]  INFUND-5641
     When The user enters text to a text field    id = assessorPay  1.1
     And the user selects the radio button        assessorCount   5
-    Then the user should see an error            ${only_accept_whole_numbers_message}
+    Then the user should see an error            This field can only accept whole numbers
     When The user enters text to a text field    id = assessorPay  120
     And the user selects the radio button        assessorCount   5
-    Then The user should not see the text in the page  ${only_accept_whole_numbers_message}
+    Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
 # TODO IFS-4186 Uncomment when this functionality is enabled.
