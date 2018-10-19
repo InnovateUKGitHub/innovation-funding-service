@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -261,9 +259,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         teamOrg.setOrganisationName(organisation.getName());
         teamOrg.setOrganisationTypeName(organisation.getOrganisationType().getName());
-        teamOrg.setRegisteredAddress(getAddressByType(organisation, OrganisationAddressType.REGISTERED));
-
-        teamOrg.setOperatingAddress(getAddressByType(organisation, OrganisationAddressType.OPERATING));
 
         // Order users by lead, followed by other users in alphabetic order
         List<ApplicationTeamUserResource> users = application.getProcessRoles()
@@ -290,16 +285,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 .collect(toList());
         teamOrg.setUsers(users);
         return teamOrg;
-    }
-
-    private OrganisationAddressResource getAddressByType(Organisation organisation, OrganisationAddressType addressType) {
-        return organisationAddressMapper.mapToResource(
-                organisation.getAddresses()
-                        .stream()
-                        .filter(a -> a.getAddressType().getName().equals(addressType.name()))
-                        .findFirst()
-                        .orElse(null)
-        );
     }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(

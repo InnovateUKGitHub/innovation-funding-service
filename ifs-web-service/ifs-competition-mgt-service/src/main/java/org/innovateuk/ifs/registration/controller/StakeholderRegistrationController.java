@@ -37,24 +37,18 @@ public class StakeholderRegistrationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    private final StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator;
-
-    private final CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
-
-    private final StakeholderService stakeholderService;
-
-    private final InviteUserRestService inviteUserRestService;
+    @Autowired
+    private StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator;
 
     @Autowired
-    public StakeholderRegistrationController(StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator,
-                                             CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService,
-                                             StakeholderService stakeholderService,
-                                             InviteUserRestService inviteUserRestService) {
-        this.stakeholderRegistrationModelPopulator = stakeholderRegistrationModelPopulator;
-        this.competitionSetupStakeholderRestService = competitionSetupStakeholderRestService;
-        this.stakeholderService = stakeholderService;
-        this.inviteUserRestService = inviteUserRestService;
-    }
+    private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
+
+    @Autowired
+    private StakeholderService stakeholderService;
+
+    @Autowired
+    private InviteUserRestService inviteUserRestService;
+
 
     @GetMapping("/{inviteHash}/register")
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") StakeholderRegistrationForm stakeholderRegistrationForm) {

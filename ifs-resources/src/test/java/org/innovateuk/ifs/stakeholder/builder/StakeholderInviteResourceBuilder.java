@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.stakeholder.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 
 import java.util.List;
@@ -42,5 +43,9 @@ public class StakeholderInviteResourceBuilder extends BaseBuilder<StakeholderInv
 
     public StakeholderInviteResourceBuilder withEmail(String... emails) {
         return withArray((email, stakeholderInviteResource) -> setField("email", email, stakeholderInviteResource), emails);
+    }
+
+    public StakeholderInviteResourceBuilder withStatus(InviteStatus... statuses) {
+        return withArray((status, stakeholderInviteResource) -> setField("status", status, stakeholderInviteResource), statuses);
     }
 }
