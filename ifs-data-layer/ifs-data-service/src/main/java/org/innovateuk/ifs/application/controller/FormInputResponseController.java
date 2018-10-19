@@ -76,7 +76,7 @@ public class FormInputResponseController {
         BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
         if (bindingResult.hasErrors()) {
             LOG.debug("Got validation errors: ");
-            bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
+            bindingResult.getAllErrors().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
         }
 
         return new ValidationMessages(bindingResult);
