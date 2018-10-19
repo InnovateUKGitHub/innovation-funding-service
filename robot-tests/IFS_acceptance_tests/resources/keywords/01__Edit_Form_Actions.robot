@@ -134,6 +134,15 @@ the user selects the index from the drop-down menu
     # Error checking
     the user should not see an error in the page
 
+the user selects the value from the drop-down menu
+    [Arguments]    ${option}    ${drop-down}
+    Wait Until Element Is Visible Without Screenshots    ${drop-down}
+    Wait Until Element Is Enabled   ${drop-down}
+    Select From List By value    ${drop-down}    ${option}
+    mouse out    ${drop-down}
+    # Error checking
+    the user should not see an error in the page
+
 the user should see the option in the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     wait until element is visible without screenshots    ${drop-down}
