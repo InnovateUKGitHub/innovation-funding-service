@@ -74,13 +74,13 @@ public class OtherFundingValidatorTest {
     public void invalidMinimum() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
-        expectError(otherFunding, "validation.field.max.value.or.higher", 1);
+        expectError(otherFunding, "validation.finance.funding.amount");
     }
     @Test
     public void invalidFundingAmountNull() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", null);
-        expectError(otherFunding, "validation.field.must.not.be.blank");
+        expectError(otherFunding, "validation.finance.funding.amount");
     }
     @Test
     public void invalidSecuredDate() {

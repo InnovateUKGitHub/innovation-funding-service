@@ -95,30 +95,4 @@ public class ApplicationSectionFinanceSaverTest {
 
         assertEquals(Boolean.FALSE, application.getStateAidAgreed());
     }
-
-//    @Test
-//    public void handleRequestFundingRequests_requestFunding() {
-//        final Map<String, String[]> params = new HashMap<>();
-//        final Long applicationId = 3L;
-//        final Long processRoleId = 15L;
-//
-//        params.put(REQUESTING_FUNDING, null);
-//
-//        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-//
-//        verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
-//    }
-//
-//    @Test
-//    public void handleRequestFundingRequests_notRequestFunding() {
-//        final Map<String, String[]> params = new HashMap<>();
-//        final Long applicationId = 3L;
-//        final Long processRoleId = 15L;
-//
-//        params.put(NOT_REQUESTING_FUNDING, null);
-//
-//        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-//
-//        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
-//    }
 }

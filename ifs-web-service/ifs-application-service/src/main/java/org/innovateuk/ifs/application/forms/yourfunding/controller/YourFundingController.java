@@ -12,10 +12,12 @@ import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingVie
 import org.innovateuk.ifs.application.forms.yourfunding.saver.YourFundingSaver;
 import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}")
+@PreAuthorize("hasAuthority('applicant')")
+@SecuredBySpring(value = "YOUR_FUNDING_APPLICANT", description = "Applicants can all fill out the Your Funding section of the application.")
 public class YourFundingController {
     private static final String VIEW = "application/your-funding";
 
