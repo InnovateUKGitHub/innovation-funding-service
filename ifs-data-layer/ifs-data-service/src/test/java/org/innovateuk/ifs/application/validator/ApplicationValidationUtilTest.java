@@ -29,7 +29,6 @@ public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private ApplicationValidationUtil validationUtil;
 
-
     @Test
     public void testValidateProjectCostItem(){
         Materials material = new Materials();

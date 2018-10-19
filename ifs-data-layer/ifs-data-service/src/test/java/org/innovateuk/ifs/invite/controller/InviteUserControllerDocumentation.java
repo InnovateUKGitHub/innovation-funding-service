@@ -97,7 +97,6 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 ));
 
         verify(inviteUserServiceMock).getInvite("SomeHashString");
-
     }
 
     @Test

@@ -21,14 +21,16 @@ import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
@@ -106,21 +108,15 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
             // if this is a project cost we test for 1) fractional values, 2) negative values - empty values are okay.
-            if(!inputIsLong(value))
-            {
+            if(!inputIsLong(value)) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_DECIMAL_MESSAGE));
-            }
-            else if(!StringUtils.isEmpty(value) && Long.parseLong(value) < 0)
-            {
+            } else if(!StringUtils.isEmpty(value) && Long.parseLong(value) < 0) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_NEGATIVE_MESSAGE));
             }
-
-        }
-        else if(StringUtils.isEmpty(value)) {
+        } else if(StringUtils.isEmpty(value)) {
             // if this is a non cost ref we just ensure its not empty
-
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
