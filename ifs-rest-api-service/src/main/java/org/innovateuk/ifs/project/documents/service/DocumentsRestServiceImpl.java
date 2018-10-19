@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.documents.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,12 @@ public class DocumentsRestServiceImpl extends BaseRestService implements Documen
     public RestResult<Void> submitDocument(long projectId, long documentConfigId) {
         String url = projectRestURL + "/" + projectId + "/document/config/" + documentConfigId + "/submit";
         return postWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
+        String url = projectRestURL + "/" + projectId + "/document/config/" + documentConfigId + "/decision";
+        return postWithRestResult(url, decision, Void.class);
     }
 }
 

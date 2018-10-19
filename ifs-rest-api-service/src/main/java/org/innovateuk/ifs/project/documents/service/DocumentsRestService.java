@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.documents.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
@@ -17,4 +18,6 @@ public interface DocumentsRestService {
     RestResult<Void> deleteDocument(long projectId, long documentConfigId);
 
     RestResult<Void> submitDocument(long projectId, long documentConfigId);
+
+    RestResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
 }

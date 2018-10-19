@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.documents.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -13,8 +15,11 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,11 +34,16 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.REJECTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -59,6 +69,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
+
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
 
     private static final String PDF_FILE_TYPE = "PDF";
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
@@ -203,5 +216,46 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED);
         }
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
+
+        return validateProjectDocumentDecision(decision)
+                .andOnSuccess(() -> find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                        .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
+                        .andOnSuccessReturnVoid(() -> generateGrantOfferLetterIfReady(projectId))
+                ));
+    }
+
+    private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {
+
+        if (null == decision.getApproved()) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION);
+        } else if (!decision.getApproved()) {
+            return StringUtils.isBlank(decision.getRejectionReason()) ? serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION) : serviceSuccess();
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> applyDocumentDecision(Project project, long documentConfigId, ProjectDocumentDecision decision) {
+        ProjectDocument projectDocument = getProjectDocument(project, documentConfigId);
+
+        if (SUBMITTED.equals(projectDocument.getStatus())) {
+            projectDocument.setStatus(decision.getApproved()? APPROVED : REJECTED);
+            projectDocument.setStatusComments(!decision.getApproved()? decision.getRejectionReason() : null);
+            projectDocumentRepository.save(projectDocument);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
+        }
+    }
+
+    private ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
+        return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId)
+                .andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 }
