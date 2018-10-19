@@ -76,6 +76,7 @@
             </label>
             <div>
                 <input type="number"
+                       data-prevent-input-non-number
                        class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
@@ -98,6 +99,7 @@
                        th:id="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                        type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -116,6 +118,7 @@
                        th:id="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                        type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -135,7 +138,6 @@
                        [id='formInput[cost-${academicFinance.incurredTravelAndSubsistence?.id}-cost]'],
                        [id='formInput[cost-${academicFinance.incurredStaff?.id}-cost]']|"
                        data-calculation-operations="+"
-                       type="number"
                        readonly="readonly"
                        th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
             </div>
@@ -157,7 +159,9 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number"
+                       th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators"
+                       type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -174,7 +178,9 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number"
+                       th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs"
+                       type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -191,7 +197,9 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number"
+                       th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs"
+                       type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -229,6 +237,7 @@
                        th:id="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                        type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -252,7 +261,9 @@
             <div>
                 <input class="govuk-input"
                        th:id="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]"
-                       th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number"
+                       th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff"
+                       type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -271,6 +282,7 @@
                        th:id="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]"
                        th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
                        type="number"
+                       data-prevent-input-non-number
                        ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
