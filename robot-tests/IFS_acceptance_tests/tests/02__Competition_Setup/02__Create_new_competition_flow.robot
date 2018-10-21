@@ -835,8 +835,8 @@ The user enters valid data in the initial details
     And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
     And the user selects the value from the drop-down menu     19     name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Emerging and enabling  id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Satellite applications  name = innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu    Space technology  name = innovationAreaCategoryIds[1]
+    And the user selects the value from the drop-down menu     6  name = innovationAreaCategoryIds[0]
+    And the user selects the value from the drop-down menu     15  name = innovationAreaCategoryIds[1]
     And the user enters text to a text field                   id = openingDateDay    10
     And the user enters text to a text field                   id = openingDateMonth    1
     And the user enters text to a text field                   id = openingDateYear     ${nextyear}
@@ -891,10 +891,10 @@ Custom suite setup
 
 the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Space technology    name=innovationAreaCategoryIds[1]
+    the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
-    the user selects the option from the drop-down menu    Creative industries    name=innovationAreaCategoryIds[2]
+    the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again
     List Should not Contain Value    css = [id="innovationAreaCategoryIds[1]"]    Biosciences
