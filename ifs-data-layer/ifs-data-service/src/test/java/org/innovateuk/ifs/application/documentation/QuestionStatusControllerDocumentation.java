@@ -40,7 +40,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
-        mockMvc.perform(get("/questionStatus/mark-as-complete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById))
+        mockMvc.perform(get("/questionStatus/mark-as-complete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                             pathParameters(
                                     parameterWithName("questionId").description("Id of the question to be marked as complete"),
@@ -59,7 +60,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         when(questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(get("/questionStatus/mark-as-incomplete/{questionId}/{applicationId}/{markedAsIncompleteById}", questionId, applicationId, markedAsCompleteById))
+        mockMvc.perform(get("/questionStatus/mark-as-incomplete/{questionId}/{applicationId}/{markedAsIncompleteById}", questionId, applicationId, markedAsCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be marked as incomplete"),
@@ -79,7 +81,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         when(questionStatusService.assign(new QuestionApplicationCompositeId(questionId, applicationId), assignedTo, assignedBy)).thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(get("/questionStatus/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy))
+        mockMvc.perform(get("/questionStatus/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be reassigned"),
@@ -99,7 +102,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(serviceSuccess(ids));
 
-        mockMvc.perform(get("/questionStatus/get-marked-as-complete/{applicationId}/{organisationId}", applicationId, organisationId))
+        mockMvc.perform(get("/questionStatus/get-marked-as-complete/{applicationId}/{organisationId}", applicationId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which to get the questions that are marked as complete"),
@@ -118,7 +122,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.updateNotification(questionStatusId, notify)).thenReturn(serviceSuccess(null));
 
-        mockMvc.perform(get("/questionStatus/update-notification/{questionStatusId}/{notify}", questionStatusId, notify))
+        mockMvc.perform(get("/questionStatus/update-notification/{questionStatusId}/{notify}", questionStatusId, notify)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
                                 parameterWithName("questionStatusId").description("question status of which the notification status should be altered"),
@@ -140,7 +145,8 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(put("/questionStatus/mark-team-as-in-complete/{questionId}/{applicationId" +
                         "}/{markedAsInCompleteById}",
-                questionId, applicationId, markedAsInCompleteById))
+                questionId, applicationId, markedAsInCompleteById)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be marked as " +

@@ -23,7 +23,7 @@ Companies House: Valid company name
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     [Teardown]    The user goes back to the previous page
 
-Companies House: User can choose the organisation and same operating address
+Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
     [Tags]
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
@@ -61,12 +61,6 @@ Manually add the details and pass to the confirmation page
     [Setup]  the user expands enter details manually
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
-    And the user enters text to a text field      id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
-    And the user clicks the button/link           jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element          css = #select-address-block
-    And the user clicks the button/link           css = #select-address-block > button
-    And the user clicks the button/link           jQuery = button:contains("Continue")
     Then the user should see the element          jQuery = h3:contains("Organisation type")~ p:contains("Business")
     And the user should see the element           jQuery = h3:contains("Registered name")~ p:contains("Top of the Popps")
 

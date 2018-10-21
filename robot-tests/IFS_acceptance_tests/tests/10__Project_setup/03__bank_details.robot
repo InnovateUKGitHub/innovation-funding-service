@@ -76,7 +76,7 @@ Bank details page
     And the user should see the text in the page   We need bank details for those partners eligible for funding
     And the user clicks the button/link     link = Bank details
     Then the user should see the element    jQuery = .govuk-button:contains("Submit bank account details")
-    And the user should see the text in the page    Bank account
+    And the user should see the element     jQuery = h1:contains("Bank details")
 
 Bank details server side validations
     [Documentation]    INFUND-3010

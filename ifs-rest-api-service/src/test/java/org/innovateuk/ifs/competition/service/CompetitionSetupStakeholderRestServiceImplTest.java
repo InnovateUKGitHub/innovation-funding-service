@@ -33,6 +33,8 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
 
         RestResult<Void> result = service.inviteStakeholder(inviteUserResource, competitionId);
         assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class, inviteUserResource);
     }
 
     @Test
@@ -45,6 +47,47 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
         setupGetWithRestResultExpectations(url, userListType(), responseBody);
 
         List<UserResource> response = service.findStakeholders(competitionId).getSuccess();
+        assertEquals(responseBody, response);
+    }
+
+    @Test
+    public void addStakeholder() {
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/add";
+        setupPostWithRestResultExpectations(url, HttpStatus.OK);
+
+        RestResult<Void> result = service.addStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class);
+    }
+
+    @Test
+    public void removeStakeholder() {
+        long competitionId = 1L;
+        long stakeholderUserId = 2L;
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/" + stakeholderUserId + "/remove";
+        setupPostWithRestResultExpectations(url, HttpStatus.OK);
+
+        RestResult<Void> result = service.removeStakeholder(competitionId, stakeholderUserId);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(url, Void.class);
+    }
+
+    @Test
+    public void findPendingStakeholderInvites() {
+
+        long competitionId = 1L;
+        List<UserResource> responseBody = UserResourceBuilder.newUserResource().build(2);
+
+        String url = competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites";
+        setupGetWithRestResultExpectations(url, userListType(), responseBody);
+
+        List<UserResource> response = service.findPendingStakeholderInvites(competitionId).getSuccess();
         assertEquals(responseBody, response);
     }
 }

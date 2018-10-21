@@ -157,13 +157,12 @@ public class EuFundingForm {
         }
     }
 
-    private LocalDate getLocalDate(int month, int year) {
+    public LocalDate getLocalDate(int month, int year) {
 
         String date = String.valueOf(year) + "-" + String.format("%02d", month) + "-01";
 
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -38,30 +37,12 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
                         foundOrganisation,
                         submittedOrganisationResource
                 ))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.OPERATING,
-                        false
-                ))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.REGISTERED,
-                        true
-                ))
                 .findFirst();
     }
 
     private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.OPERATING,
-                        true
-                ))
                 .findFirst();
     }
 
@@ -70,6 +51,6 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     }
 
     private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
-        return organisationRepository.findByCompanyHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
+        return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
 }

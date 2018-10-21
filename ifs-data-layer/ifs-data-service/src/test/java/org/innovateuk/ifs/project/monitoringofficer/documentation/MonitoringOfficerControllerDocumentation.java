@@ -69,7 +69,8 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -95,7 +96,8 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource))
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -122,6 +124,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isInternalServerError())
@@ -149,6 +152,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
 
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isOk())

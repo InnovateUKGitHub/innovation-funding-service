@@ -34,8 +34,7 @@
                 </th:block>
                 <th:block th:if="${!model.allReadOnly}">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="researchCategoryLegend">
-                            <h2 class="govuk-fieldset__heading" th:text="${model.useSelectState} ? 'Select your research category' : 'Confirm research category'" ></h2>
+                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryLegend" th:text="${model.useSelectState} ? 'Select your research category' : 'Confirm research category'">
                         </legend>
                         <span class="govuk-hint">More <a
                             href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"

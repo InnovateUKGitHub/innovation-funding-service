@@ -35,17 +35,6 @@ public class GrantClaimMaximumResource {
         this.researchCategory = researchCategory;
     }
 
-    @ZeroDowntime(reference = "IFS-4271", description = "Retaining this method to support old REST clients. Returning" +
-            " the Business type here which represents all rows")
-    public OrganisationTypeResource getOrganisationType() {
-        OrganisationTypeResource organisationType = new OrganisationTypeResource();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
-        organisationType.setName("Business");
-        organisationType.setDescription("UK based business.");
-        organisationType.setVisibleInSetup(true);
-        return organisationType;
-    }
-
     public OrganisationSize getOrganisationSize() {
         return organisationSize;
     }

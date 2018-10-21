@@ -1,22 +1,13 @@
 *** Settings ***
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
-...
 ...               IFS-606: Manage internal users: Read only view of internal user profile
-...
 ...               IFS-27:  Invite new internal user
-...
 ...               IFS-642: Email to new internal user inviting them to register
-...
 ...               IFS-643: Complete internal user registration
-...
 ...               IFS-644: Disable or reenable user profile
-...
 ...               IFS-983: Manage users: Pending registration tab
-...
 ...               IFS-2412: Internal users resend invites
-...
 ...               IFS-2842: Add modals to the resending of invites to internal users
-...
 ...               IFS-1944: Internal - Invite internal user - error field is missing
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
@@ -26,8 +17,8 @@ Resource          ../../resources/defaultResources.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
-${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
-${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
+${localEmailInvtedUser}   ifs.innovationLead@innovateuk.ukri.test
+${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 
 *** Test Cases ***
@@ -281,28 +272,28 @@ User cannot see manage users page
     the user navigates to the page and gets a custom error message  ${USER_MGMT_URL}  ${403_error_message}
 
 the user fills in the email address for the invitee
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user enters text to a text field  id = emailAddress  ${localEmailInvtedUser}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user enters text to a text field  id = emailAddress  ${remoteEmailInvtedUser}
 
 The invitee reads his email and clicks the link
     [Arguments]  ${title}  ${pattern}
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  The user reads his email and clicks the link  ${localEmailInvtedUser}  ${title}  ${pattern}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  The user reads his email and clicks the link  ${remoteEmailInvtedUser}  ${title}  ${pattern}
 
 the invited user logs in
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  Logging in and Error Checking  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  Logging in and Error Checking  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user verifies pending tab content
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${localEmailInvtedUser}")
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${remoteEmailInvtedUser}")
 
 the user navigates to the View internal user details
@@ -311,15 +302,15 @@ the user navigates to the View internal user details
     the user clicks the button/link  link = ${user}
 
 the deactivated user is not able to login
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user cannot login with their new details  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user cannot login with their new details  ${remoteEmailInvtedUser}  ${correct_password}
 
 the re-activated user tries to login
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user resends the invite

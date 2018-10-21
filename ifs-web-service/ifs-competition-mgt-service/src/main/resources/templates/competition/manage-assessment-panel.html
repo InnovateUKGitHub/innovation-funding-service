@@ -19,11 +19,10 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
-                <!--/* TODO not sure we actually need to be in a form */-->
                <form th:action="@{/competition}" method="post">
-               <button class="govuk-button" type="submit"
-                       th:disabled="${!model.pendingReviewNotifications}"
-                       th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
+                   <button class="govuk-button" type="submit"
+                           th:disabled="${!model.pendingReviewNotifications}"
+                           th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
                </form>
            </div>
         </div>

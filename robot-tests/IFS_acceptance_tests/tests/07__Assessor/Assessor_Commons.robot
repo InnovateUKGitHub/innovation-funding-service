@@ -82,3 +82,12 @@ the compAdmin resends the invites for interview panel
 Get the total number of submitted applications
     ${NUMBER_OF_APPLICATIONS} =     Get Element Count    //div/table/tbody/tr
     Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+
+The internal user invites a user as an assessor
+    [Arguments]  ${name}  ${email}
+    the user clicks the button/link                      jQuery = span:contains("Add a non-registered assessor to your list")
+    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(1) input  ${name}
+    The user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${email}
+    the user selects the option from the drop-down menu  Emerging and enabling  css = .js-progressive-group-select
+    the user selects the option from the drop-down menu  Emerging technology    id = grouped-innovation-area
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")

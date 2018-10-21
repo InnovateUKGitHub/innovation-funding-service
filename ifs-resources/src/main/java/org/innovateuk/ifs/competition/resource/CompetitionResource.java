@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -27,10 +25,6 @@ public class CompetitionResource {
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of(
-            "Expression of interest",
-            "The Prince's Trust"
-    );
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -104,11 +98,14 @@ public class CompetitionResource {
     private Set<Long> grantClaimMaximums;
 
     private ApplicationFinanceType applicationFinanceType;
+    private Boolean includeProjectGrowthTable;
 
     private String createdBy;
     private ZonedDateTime createdOn;
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
+
+    private boolean nonFinanceType;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -153,6 +150,14 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public boolean isNonFinanceType() {
+        return nonFinanceType;
+    }
+
+    public void setNonFinanceType(boolean nonFinanceType) {
+        this.nonFinanceType = nonFinanceType;
     }
 
     public Long getId() {
@@ -543,12 +548,6 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this method to support old REST clients. Returning" +
-            " value dependent on applicationFinanceType")
-    public boolean isFullApplicationFinance() {
-        return ApplicationFinanceType.STANDARD == applicationFinanceType;
-    }
-
     public boolean getSetupComplete() {
         return setupComplete;
     }
@@ -595,11 +594,6 @@ public class CompetitionResource {
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
         this.assessorFinanceView = assessorFinanceView;
-    }
-
-    @JsonIgnore
-    public boolean isNonFinanceType() {
-        return NON_FINANCE_TYPES.contains(competitionTypeName);
     }
 
     @JsonIgnore
@@ -661,6 +655,14 @@ public class CompetitionResource {
 
     public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
         this.applicationFinanceType = applicationFinanceType;
+    }
+
+    public Boolean getIncludeProjectGrowthTable() {
+        return includeProjectGrowthTable;
+    }
+
+    public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
+        this.includeProjectGrowthTable = includeProjectGrowthTable;
     }
 
     public String getCreatedBy() {
@@ -763,6 +765,7 @@ public class CompetitionResource {
                 .append(stateAid, that.stateAid)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
+                .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -828,6 +831,7 @@ public class CompetitionResource {
                 .append(stateAid)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
+                .append(includeProjectGrowthTable)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)
