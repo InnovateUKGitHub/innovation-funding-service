@@ -145,7 +145,8 @@
                        th:id="__${path}__.date"
                        placeholder="MM-YYYY"
                        pattern="(0[1-9]|1[012])-[0-9]{4}"
-                       th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
+                       th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid},
+                                data-required-errormessage=#{validation.finance.secured.date.invalid}"
                        maxlength="7"
                        th:errorclass="govuk-input--error"
                        required="required" />
@@ -165,7 +166,8 @@
                        min="1"
                        max="9999999999999999999"
                        step="1"
-                       th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
+                       th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
+                                data-required-errormessage=#{validation.finance.funding.amount.invalid}" />
             </td>
             <td class="govuk-table__cell">
                 <button type="submit"

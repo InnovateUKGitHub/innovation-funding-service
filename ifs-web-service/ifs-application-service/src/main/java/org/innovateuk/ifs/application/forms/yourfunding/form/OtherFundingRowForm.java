@@ -10,16 +10,17 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 @FieldRequiredIf(required = "source", argument = "blank", predicate = false, message = "{validation.finance.funding.source.blank}")
 @FieldRequiredIf(required = "date", argument = "blank", predicate = false, message = "{validation.finance.secured.date.invalid}")
-@FieldRequiredIf(required = "fundingAmount", argument = "blank", predicate = false, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "fundingAmount", argument = "blank", predicate = false, message = "{validation.finance.funding.amount.invalid}")
 public class OtherFundingRowForm {
 
     private Long costId;
+
     private String source;
 
     @Pattern(regexp = "^(?:((0[1-9]|1[012])-[0-9]{4})|)$", message = "{validation.finance.secured.date.invalid}")
     private String date;
 
-    @Digits(integer = 20, fraction = 0, message = "{validation.field.max.number.of.digits}")
+    @Digits(integer = 20, fraction = 0, message = "{validation.finance.funding.amount.invalid}")
     private BigDecimal fundingAmount;
 
     public Long getCostId() {
@@ -55,6 +56,6 @@ public class OtherFundingRowForm {
     }
 
     public boolean isBlank() {
-        return isNullOrEmpty(source) && isNullOrEmpty(date) && fundingAmount == null;
+        return isNullOrEmpty(source) && isNullOrEmpty(date) && fundingAmount == null && costId == null;
     }
 }
