@@ -3,7 +3,7 @@
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <th:block th:fragment="financial_summary" th:if="${financeTotalPerType}">
         <div class="govuk-!-margin-bottom-6"
-            th:classappend="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
+            th:classappend="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" style="margin-bottom: 40px; padding-top: 10px; padding-bottom: 0; padding-bottom: 0px">
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
