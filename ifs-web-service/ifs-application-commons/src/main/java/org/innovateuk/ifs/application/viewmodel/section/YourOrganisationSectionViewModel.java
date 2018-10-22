@@ -21,6 +21,7 @@ public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
 
 
     private boolean isBusinessOrganisation;
+    private boolean stateAidEligibility;
     private boolean complete;
 
     public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource,
@@ -29,9 +30,11 @@ public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
                                             boolean allReadOnly,
                                             Optional<Long> applicantOrganisationId,
                                             boolean readOnlyAllApplicantApplicationFinances,
-                                            boolean isBusinessOrganisation) {
+                                            boolean isBusinessOrganisation,
+                                            boolean stateAidEligibility) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
         this.isBusinessOrganisation = isBusinessOrganisation;
+        this.stateAidEligibility = stateAidEligibility;
     }
 
     public boolean isComplete() {
@@ -46,8 +49,8 @@ public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
         return isBusinessOrganisation;
     }
 
-    public void setBusinessOrganisation(boolean businessOrganisation) {
-        isBusinessOrganisation = businessOrganisation;
+    public boolean isStateAidEligibility() {
+        return stateAidEligibility;
     }
 
     public AbstractFormInputViewModel getOrganisationSizeFormInputViewModel() {

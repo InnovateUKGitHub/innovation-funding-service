@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+
 /**
  * Your organisation populator section view models.
  */
@@ -32,7 +34,7 @@ public class YourOrganisationSectionPopulator extends AbstractSectionPopulator<Y
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    protected boolean isBusinessOrganisation(Long organisationId) {
+    private boolean isBusinessOrganisation(Long organisationId) {
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return organisationResource.getOrganisationType() == OrganisationTypeEnum.BUSINESS.getId();
     }
@@ -46,7 +48,15 @@ public class YourOrganisationSectionPopulator extends AbstractSectionPopulator<Y
     @Override
     protected YourOrganisationSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-        return new YourOrganisationSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), completedSectionIds.contains(section.getSection().getId()), applicantOrganisationId, readOnlyAllApplicantApplicationFinances, isBusinessOrganisation(section.getCurrentApplicant().getOrganisation().getId()));
+        boolean stateAidEligibility = TRUE.equals(section.getCompetition().getStateAid());
+        return new YourOrganisationSectionViewModel(section,
+                formInputViewModelGenerator.fromSection(section, section, form, readOnly),
+                getNavigationViewModel(section),
+                completedSectionIds.contains(section.getSection().getId()),
+                applicantOrganisationId,
+                readOnlyAllApplicantApplicationFinances,
+                isBusinessOrganisation(section.getCurrentApplicant().getOrganisation().getId()),
+                stateAidEligibility);
     }
 
     @Override
