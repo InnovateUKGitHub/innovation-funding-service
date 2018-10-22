@@ -26,6 +26,7 @@ public class YourFundingForm {
     private Map<String, OtherFundingRowForm> otherFundingRows;
 
     @AssertTrue(message = "{validation.field.must.not.be.blank}")
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Boolean termsAgreed;
 
     private long grantClaimQuestionId;

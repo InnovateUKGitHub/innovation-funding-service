@@ -91,21 +91,6 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     }
 
     @Test
-    public void saveYourFunding_missingRequiredFields() throws Exception {
-        YourFundingViewModel viewModel = mockUnlockedViewModel();
-
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
-                APPLICATION_ID, SECTION_ID))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attributeHasFieldErrorCode("form", "requestingFunding", "NotNull"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "otherFunding", "NotNull"))
-                .andExpect(view().name(VIEW))
-                .andExpect(status().isOk());
-
-        verifyZeroInteractions(saver);
-    }
-
-    @Test
     public void edit() throws Exception {
         YourFundingViewModel viewModel = mockUnlockedViewModel();
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
@@ -144,6 +129,23 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
     }
 
+
+    @Test
+    public void complete_missingRequiredFields() throws Exception {
+        YourFundingViewModel viewModel = mockUnlockedViewModel();
+
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
+                APPLICATION_ID, SECTION_ID)
+                .param("complete", "true"))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attributeHasFieldErrorCode("form", "requestingFunding", "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "otherFunding", "NotNull"))
+                .andExpect(view().name(VIEW))
+                .andExpect(status().isOk());
+
+        verifyZeroInteractions(saver);
+    }
+
     @Test
     public void complete_withoutTermsAgreed() throws Exception {
         YourFundingViewModel viewModel = mockUnlockedViewModel();
@@ -155,7 +157,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .param("grantClaimPercentage", "100")
                 .param("otherFunding", "false"))
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attributeHasFieldErrorCode("form", "termsAgreed", "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "termsAgreed", "NotNull"))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
