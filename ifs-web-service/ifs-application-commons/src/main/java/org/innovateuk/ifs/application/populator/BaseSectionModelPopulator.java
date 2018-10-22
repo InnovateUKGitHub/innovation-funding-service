@@ -61,7 +61,7 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
-        Boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName());
+        boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName());
         UserResource leadApplicant = applicantSection.getApplicants().stream()
                 .filter(ApplicantResource::isLead)
                 .map(ApplicantResource::getProcessRole)

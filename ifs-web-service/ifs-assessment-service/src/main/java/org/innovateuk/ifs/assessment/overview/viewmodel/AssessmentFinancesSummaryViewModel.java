@@ -13,17 +13,20 @@ public class AssessmentFinancesSummaryViewModel {
     private String applicationName;
     private long daysLeft;
     private long daysLeftPercentage;
+    private boolean collaborativeProject;
 
     public AssessmentFinancesSummaryViewModel(long assessmentId,
                                               long applicationId,
                                               String applicationName,
                                               long daysLeft,
-                                              long daysLeftPercentage) {
+                                              long daysLeftPercentage,
+                                              boolean collaborativeProject) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
+        this.collaborativeProject = collaborativeProject;
     }
 
     public long getAssessmentId() {
@@ -46,6 +49,10 @@ public class AssessmentFinancesSummaryViewModel {
         return daysLeftPercentage;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -63,6 +70,7 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationId, that.applicationId)
                 .append(daysLeft, that.daysLeft)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(collaborativeProject, that.collaborativeProject)
                 .append(applicationName, that.applicationName)
                 .isEquals();
     }
@@ -75,6 +83,7 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationName)
                 .append(daysLeft)
                 .append(daysLeftPercentage)
+                .append(collaborativeProject)
                 .toHashCode();
     }
 }
