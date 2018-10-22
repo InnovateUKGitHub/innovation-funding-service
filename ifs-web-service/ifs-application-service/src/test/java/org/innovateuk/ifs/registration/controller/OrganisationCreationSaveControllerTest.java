@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -75,16 +74,10 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(organisationSearchRestService.getOrganisation(anyLong(), anyString())).thenReturn(restSuccess(organisationSearchResult));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
-        AddressForm addressForm = new AddressForm();
-        addressForm.setPostcodeInput("ABC 12345");
-        addressForm.setSelectedPostcodeIndex(null);
-        addressForm.setPostcodeOptions(Collections.emptyList());
-
         organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setOrganisationType(1L);
 
         organisationForm = new OrganisationCreationForm();
-        organisationForm.setAddressForm(addressForm);
         organisationForm.setTriedToSave(true);
         organisationForm.setOrganisationSearchName(null);
         organisationForm.setSearchOrganisationId(COMPANY_ID);

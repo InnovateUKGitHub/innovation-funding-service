@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.PageableMatcher;
-import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.domain.Application;
@@ -17,7 +15,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -43,15 +40,12 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.PageableMatcher.srt;
-import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -593,44 +587,20 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ProcessRole collaborator2 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
         Application app = newApplication().withProcessRoles(lead, leadOrgCollaborator1, collaborator1, collaborator2).build();
 
-        AddressType registeredAddressType = newAddressType().withName("REGISTERED").build();
-        AddressType operatingAddressType = newAddressType().withName("OPERATING").build();
-        Address address1 = newAddress()
-                .withAddressLine1("1E")
-                .withAddressLine2("2.16")
-                .withAddressLine3("Polaris House")
-                .withTown("Swindon")
-                .withCounty("Wilts")
-                .withPostcode("SN1 1AA")
-                .build();
-        Address address2 = newAddress()
-                .withAddressLine1("2E")
-                .withAddressLine2("2.17")
-                .withAddressLine3("North Star House")
-                .withTown("Swindon")
-                .withCounty("Wiltshire")
-                .withPostcode("SN2 2AA")
-                .build();
-        OrganisationAddress leadOrgRegisteredAddress = newOrganisationAddress().withAddressType(registeredAddressType).withAddress(address1).build();
-        OrganisationAddress leadOrgOperatingAddress = newOrganisationAddress().withAddressType(operatingAddressType).withAddress(address2).build();
-
         Organisation leadOrg = newOrganisation()
                 .withName("Lead")
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH)
                 .withUser(Arrays.asList(leadOrgLeadUser,leadOrgNonLeadUser1,leadOrgNonLeadUser2))
-                .withAddress(Arrays.asList(leadOrgRegisteredAddress, leadOrgOperatingAddress))
                 .build();
         Organisation partnerOrgA = newOrganisation()
                 .withName("A")
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH)
                 .withUser(singletonList(partnerOrgLeadUser1))
-                .withAddress(singletonList(leadOrgRegisteredAddress))
                 .build();
         Organisation partnerOrgB = newOrganisation()
                 .withName("B")
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS)
                 .withUser(singletonList(partnerOrgLeadUser2))
-                .withAddress(singletonList(leadOrgOperatingAddress))
                 .build();
 
         when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(app));
@@ -657,8 +627,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .build();
         OrganisationAddressResource leadOrgRegisteredAddressResource = newOrganisationAddressResource().withAddressType(registeredAddressTypeResource).withAddress(addressResource1).build();
         OrganisationAddressResource leadOrgOperatingAddressResource = newOrganisationAddressResource().withAddressType(operatingAddressTypeResource).withAddress(addressResource2).build();
-        when(organisationAddressMapper.mapToResource(leadOrgRegisteredAddress)).thenReturn(leadOrgRegisteredAddressResource);
-        when(organisationAddressMapper.mapToResource(leadOrgOperatingAddress)).thenReturn(leadOrgOperatingAddressResource);
 
         UserResource leadOrgLeadUserResource = newUserResource().withFirstName("Lee").withLastName("Der").build();
         UserResource leadOrgNonLeadUser1Resource = newUserResource().withFirstName("A").withLastName("Bee").build();
@@ -676,20 +644,14 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ApplicationTeamOrganisationResource leadOrganisation = result.getSuccess().getLeadOrganisation();
         assertTrue(leadOrganisation.getOrganisationName().equals("Lead"));
-        assertTrue(leadOrganisation.getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
-        assertTrue(leadOrganisation.getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
         assertTrue(leadOrganisation.getUsers().get(0).getName().equals("Lee Der"));
 
         List<ApplicationTeamOrganisationResource> partnerOrganisations = result.getSuccess().getPartnerOrganisations();
         assertEquals(2, partnerOrganisations.size());
         assertTrue(partnerOrganisations.get(0).getOrganisationName().equals("A"));
-        assertTrue(partnerOrganisations.get(0).getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
-        assertTrue(partnerOrganisations.get(0).getOperatingAddress() == null);
         assertTrue(partnerOrganisations.get(0).getUsers().get(0).getName().equals("Ay Der"));
 
         assertTrue(partnerOrganisations.get(1).getOrganisationName().equals("B"));
-        assertTrue(partnerOrganisations.get(1).getRegisteredAddress() == null);
-        assertTrue(partnerOrganisations.get(1).getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
         assertTrue(partnerOrganisations.get(1).getUsers().get(0).getName().equals("Zee Der"));
     }
 

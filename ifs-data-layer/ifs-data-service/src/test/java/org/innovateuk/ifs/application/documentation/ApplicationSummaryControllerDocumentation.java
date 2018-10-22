@@ -185,8 +185,6 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         pathParameters(parameterWithName("applicationId").description("The application id")),
                         responseFields(
                                 fieldWithPath("leadOrganisation").description("Lead organisation"),
-                                fieldWithPath("leadOrganisation.operatingAddress").description("Operating address"),
-                                fieldWithPath("leadOrganisation.registeredAddress").description("Registered address"),
                                 fieldWithPath("leadOrganisation.organisationName").description("Organisation name"),
                                 fieldWithPath("leadOrganisation.organisationTypeName").description("Organisation type name"),
                                 fieldWithPath("leadOrganisation.users[]").description("Users in lead organisation"),
@@ -195,8 +193,6 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 fieldWithPath("leadOrganisation.users[].phoneNumber").description("User's telephone number"),
                                 fieldWithPath("leadOrganisation.users[].lead").description("Is user the lead applicant"),
                                 fieldWithPath("partnerOrganisations[]").description("Collaborating organisations"),
-                                fieldWithPath("partnerOrganisations[].operatingAddress").description("Operating address"),
-                                fieldWithPath("partnerOrganisations[].registeredAddress").description("Registered address"),
                                 fieldWithPath("partnerOrganisations[].organisationName").description("Organisation name"),
                                 fieldWithPath("partnerOrganisations[].organisationTypeName").description("Organisation type name"),
                                 fieldWithPath("partnerOrganisations[].users[]").description("Users in partner organisation"),

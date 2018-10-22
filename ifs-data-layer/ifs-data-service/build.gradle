@@ -150,7 +150,7 @@ test {
 
 
 task syncShib(type:Exec) {
-    commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 flywayClean.dependsOn applyProfiles
