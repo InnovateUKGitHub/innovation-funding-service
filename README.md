@@ -37,6 +37,11 @@ Access https://ifs.local-dev with one of the following users (with password "Pas
 * john.doe@innovateuk.test - competition admin
 * lee.bowman@innovateuk.test - project finance
 
+# Further configuration
+
+You can enable various services in your ~/.gradle/gradle.properties and then re-build if you wish to run more of the
+stack.  Note that you may need to allocate some more memory in Docker preferences for this.
+
 # Gradle Tasks
 
 Gradle is efficient - it wont re-run tasks if it doesn't need to (--rerun-tasks overrides this behaviour if you want).
