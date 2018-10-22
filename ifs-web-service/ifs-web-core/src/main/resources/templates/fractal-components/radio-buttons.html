@@ -1,0 +1,103 @@
+<div class="govuk-width-container">
+
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            This is a standard GDS component. Examples and code can be found at:<br />
+            <a href="https://design-system.service.gov.uk/components/radios/"
+               class="govuk-link">https://design-system.service.gov.uk/components/radios/</a>
+        </p>
+    </div>
+
+    <div class="govuk-form-group">
+        <fieldset id="addressType" class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <span class="govuk-fieldset__heading">Project address</span>
+            </legend>
+            <span class="govuk-hint">Please select the address where the majority of work will be carried out.</span>
+            <div class="govuk-radios">
+                <div class="govuk-radios__item" data-target="registeredAddress">
+                    <input id="address-use-org"
+                           class="govuk-radios__input"
+                           type="radio"
+                           name="addressType"
+                           required="required"
+                           value="REGISTERED"
+                           data-required-errormessage="You need to select an address before you can continue.">
+                    <label for="address-use-org" class="govuk-label govuk-radios__label">
+                        Use organisation address (<strong>S1 2ED</strong>)
+                    </label>
+                </div>
+                <div id="registeredAddress" class="govuk-body panel">
+                    <p class="govuk-body">
+                        1<br>
+                        Empire Road<br>
+                        Sheffield<br>
+                        South Yorkshire<br>
+                        S1 2ED<br>
+                    </p>
+                </div>
+                <div class="govuk-radios__item" data-target="operatingAddress">
+                    <input id="address-use-operating"
+                           class="govuk-radios__input"
+                           type="radio"
+                           name="addressType"
+                           required="required"
+                           value="OPERATING"
+                           data-required-errormessage="You need to select a project address before you can continue.">
+                    <label for="address-use-operating" class="govuk-label govuk-radios__label">
+                        Use operating address (<strong>S1 2ED</strong>)
+                    </label>
+                </div>
+                <div id="operatingAddress" class="govuk-body panel">
+                    <p class="govuk-body">
+                        1<br>
+                        Empire Road<br>
+                        Sheffield<br>
+                        South Yorkshire<br>
+                        S1 2ED<br>
+                    </p>
+                </div>
+                <div class="govuk-radios__item" data-target="custom-postcode">
+                    <input id="address-add-project"
+                           class="govuk-radios__input"
+                           type="radio"
+                           name="addressType"
+                           required="required"
+                           value="ADD_NEW"
+                           data-required-errormessage="You need to select a project address before you can continue.">
+                    <label for="address-add-project" class="govuk-label govuk-radios__label">
+                        Enter an alternative project address
+                    </label>
+                </div>
+                <div id="custom-postcode" class="govuk-body panel">
+                    <div id="manual-company-input">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-visually-hidden">Organisation details</legend>
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
+                                    Postcode
+                                </label>
+                                <input id="addressForm.postcodeInput"
+                                       class="govuk-input govuk-!-width-one-half"
+                                       type="text"
+                                       name="addressForm.postcodeInput"
+                                       value="">
+                                <button type="submit"
+                                        id="postcode-lookup"
+                                        class="govuk-button govuk-!-margin-0"
+                                        name="search-address">Find UK address</button>
+                            </div>
+                            <button type="submit"
+                                    class="button-clear govuk-!-margin-top-6"
+                                    name="manual-address">Enter address manually</button>
+                        </fieldset>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+</div>
