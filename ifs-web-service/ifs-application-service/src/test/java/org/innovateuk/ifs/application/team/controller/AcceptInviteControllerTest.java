@@ -7,7 +7,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.controller.AcceptInviteController;
 import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -50,9 +49,6 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Mock
-    private RegistrationService registrationService;
 
     @Mock
     private RegistrationCookieService registrationCookieService;

@@ -48,22 +48,12 @@
                 <h2 class="govuk-heading-m">Applications navigation</h2>
 
                 <ul class="govuk-list link-list">
-
                     <li th:unless="${model.innovationLeadView}">
                         <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
                     </li>
-
                     <li>
                         <a class="" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
                     </li>
-
-                    <!--/* TODO: Implement non submitted applications - INFUND-7372
-
-                    <li>
-                        <a class="" href="#">Non submitted applications</a>
-                    </li>
-
-                    */-->
                     <li>
                         <a class="" th:href="@{/competition/{cid}/applications/ineligible(cid=${model.competitionId})}">Ineligible applications</a>
                     </li>

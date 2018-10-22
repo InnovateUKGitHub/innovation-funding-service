@@ -30,13 +30,12 @@ public class ApplicationCompletedViewModelTest {
     public void setup() throws Exception {
         Set<Long> sectionsMarkedAsComplete = asSet(1L, 2L);
         Future<Set<Long>> markedAsComplete = mock(Future.class);
+        Set<Long> completedSectionsByUserOrganisation = asSet(1L, 2L);
+
         when(markedAsComplete.get()).thenReturn(sectionsMarkedAsComplete);
 
-        Set<Long> completedSections = asSet(1L, 2L);
-        Boolean userFinanceSectionCompleted = Boolean.FALSE;
-
-        viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
-        viewModel.setCompletedSections(completedSections);
+        viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete,
+                completedSectionsByUserOrganisation, false, false);
     }
 
     @Test
