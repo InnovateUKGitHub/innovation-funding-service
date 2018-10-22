@@ -33,7 +33,7 @@
             </div>
 
             <div class="warning-alert" th:if="${model.status.name() == 'REJECTED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+                <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
 
              
@@ -110,6 +110,10 @@
                 </div>
 
                 <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+            </th:block>
+            <th:block th:if="${model.status.name() == 'REJECTED'}">
+                <h3 class="govuk-heading-s">Reason for rejection</h3>
+                <p class="govuk-body" th:text="${model.rejectionReason}"></p>
             </th:block>
             <th:block th:unless="${model.status.name() == 'SUBMITTED'}">
                 <div class="govuk-!-margin-top-6">

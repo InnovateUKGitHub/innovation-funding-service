@@ -17,8 +17,10 @@ public class DocumentViewModel {
     private String title;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
+    private String rejectionReason;
 
-    public DocumentViewModel(Long projectId, String projectName, Long applicationId, Long documentConfigId, String title, FileDetailsViewModel fileDetails, DocumentStatus status) {
+    public DocumentViewModel(Long projectId, String projectName, Long applicationId, Long documentConfigId,
+                             String title, FileDetailsViewModel fileDetails, DocumentStatus status, String rejectionReason) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -26,6 +28,7 @@ public class DocumentViewModel {
         this.title = title;
         this.fileDetails = fileDetails;
         this.status = status;
+        this.rejectionReason = rejectionReason;
     }
 
     public Long getProjectId() {
@@ -79,6 +82,11 @@ public class DocumentViewModel {
     public void setStatus(DocumentStatus status) {
         this.status = status;
     }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
 
     @Override
     public boolean equals(Object o) {
