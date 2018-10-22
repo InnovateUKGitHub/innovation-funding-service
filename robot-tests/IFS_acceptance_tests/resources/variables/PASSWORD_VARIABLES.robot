@@ -9,3 +9,5 @@ ${lower_case_password}    thisisallinlowercase1
 ${upper_case_password}    THISISALLINUPPERCASE2
 ${no_numbers_password}    Thishasnonumbers
 ${personal_info_password}    Smith123456
+${passw0rd2}    Passw0rd2
+${newPassw0rd}    NewPassw0rd

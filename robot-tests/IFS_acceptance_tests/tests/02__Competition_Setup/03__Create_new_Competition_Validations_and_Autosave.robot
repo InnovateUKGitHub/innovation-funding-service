@@ -283,7 +283,6 @@ Custom suite setup
     ${tomorrowMonthWord} =  get tomorrow month as word
     set suite variable  ${tomorrowMonthWord}
 
-
 the user moves focus and waits for autosave
     focus    link=Sign out
     Wait For Autosave
