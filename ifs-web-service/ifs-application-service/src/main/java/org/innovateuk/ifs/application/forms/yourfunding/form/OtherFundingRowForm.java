@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 @FieldRequiredIf(required = "source", argument = "blank", predicate = false, message = "{validation.finance.funding.source.blank}")
-@FieldRequiredIf(required = "date", argument = "blank", predicate = false, message = "{validation.finance.secured.date.invalid}")
+@FieldRequiredIf(required = "date", argument = "blank", predicate = false, message = "{validation.finance.funding.date.invalid}")
 @FieldRequiredIf(required = "fundingAmount", argument = "blank", predicate = false, message = "{validation.finance.funding.amount.invalid}")
 public class OtherFundingRowForm {
 
@@ -17,7 +17,7 @@ public class OtherFundingRowForm {
 
     private String source;
 
-    @Pattern(regexp = "^(?:((0[1-9]|1[012])-[0-9]{4})|)$", message = "{validation.finance.secured.date.invalid}")
+    @Pattern(regexp = "^(?:((0[1-9]|1[012])-[0-9]{4})|)$", message = "{validation.finance.funding.date.invalid}")
     private String date;
 
     @Digits(integer = 20, fraction = 0, message = "{validation.finance.funding.amount.invalid}")

@@ -3,18 +3,20 @@ package org.innovateuk.ifs.application.forms.yourfunding.form;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 
 @FieldRequiredIf(required = "grantClaimPercentage", argument = "requestingFunding", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "termsAgreed", argument = "complete", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class YourFundingForm {
     public static final String EMPTY_ROW_ID = "empty";
     @NotNull
     private Boolean requestingFunding;
 
+    @Min(value = 1, message = "{validation.field.percentage.max.value.or.higher}")
     private Integer grantClaimPercentage;
 
     @NotNull
@@ -23,6 +25,7 @@ public class YourFundingForm {
     @Valid
     private Map<String, OtherFundingRowForm> otherFundingRows;
 
+    @AssertTrue(message = "{validation.field.must.not.be.blank}")
     private Boolean termsAgreed;
 
     private long grantClaimQuestionId;

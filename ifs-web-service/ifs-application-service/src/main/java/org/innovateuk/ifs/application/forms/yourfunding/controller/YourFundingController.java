@@ -72,15 +72,9 @@ public class YourFundingController {
                                   UserResource user,
                                   @PathVariable long applicationId,
                                   @PathVariable long sectionId,
-                                  @Valid @ModelAttribute("form") YourFundingForm form,
-                                  BindingResult bindingResult,
-                                  ValidationHandler validationHandler) {
-        Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, user);
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(saver.save(applicationId, form, user));
-            return validationHandler.failNowOrSucceedWith(failureView, successView);
-        });
+                                  @ModelAttribute("form") YourFundingForm form) {
+        saver.save(applicationId, form, user);
+        return redirectToYourFinances(applicationId);
     }
 
     @PostMapping(params = "edit")

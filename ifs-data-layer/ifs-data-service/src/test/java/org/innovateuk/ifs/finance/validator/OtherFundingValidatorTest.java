@@ -56,19 +56,19 @@ public class OtherFundingValidatorTest {
     public void invalidSecuredDateYear() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "2342", new BigDecimal(100));
-        expectError(otherFunding, "validation.finance.secured.date.invalid");
+        expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(2L, "Yes", "Source1", "15-2014", new BigDecimal(100));
-        expectError(otherFunding, "validation.finance.secured.date.invalid");
+        expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateNoMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100));
-        expectError(otherFunding, "validation.finance.secured.date.invalid");
+        expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidMinimum() {
@@ -86,13 +86,13 @@ public class OtherFundingValidatorTest {
     public void invalidSecuredDate() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100));
-        expectError(otherFunding, "validation.finance.secured.date.invalid");
+        expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateNoSource() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
-        expectError(otherFunding, "validation.finance.secured.date.invalid");
+        expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidOtherPublicFunding() {

@@ -83,9 +83,9 @@ public class OtherFundingValidator implements Validator {
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
         if(StringUtils.isBlank(securedDate)){
-            rejectValue(errors, "securedDate", "validation.finance.secured.date.invalid");
+            rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }else if(!isValidDate(securedDate)) {
-            rejectValue(errors, "securedDate", "validation.finance.secured.date.invalid");
+            rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }
     }
 
