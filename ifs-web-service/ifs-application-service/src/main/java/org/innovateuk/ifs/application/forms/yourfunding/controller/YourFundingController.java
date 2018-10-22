@@ -3,8 +3,6 @@ package org.innovateuk.ifs.application.forms.yourfunding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingFormPopulator;
@@ -16,6 +14,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -50,7 +49,7 @@ public class YourFundingController {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private ApplicantRestService applicantRestService;
+    private UserRestService userRestService;
 
     @GetMapping
     public String viewYourFunding(Model model,
@@ -90,8 +89,7 @@ public class YourFundingController {
                        @PathVariable long applicationId,
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourFundingForm form) {
-        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        sectionStatusRestService.markAsInComplete(sectionId, applicationId, section.getCurrentApplicant().getProcessRole().getId());
+        sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
         return viewYourFunding(model, user, applicationId, sectionId, form);
     }
 
@@ -108,8 +106,7 @@ public class YourFundingController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(applicationId, form, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-                sectionStatusRestService.markAsComplete(sectionId, applicationId, section.getCurrentApplicant().getProcessRole().getId())
+                sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
                         .getSuccess().forEach(validationHandler::addAnyErrors);
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
@@ -183,5 +180,9 @@ public class YourFundingController {
         YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
+    }
+
+    private long getProcessRoleId(long applicationId, long userId) {
+        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 }
