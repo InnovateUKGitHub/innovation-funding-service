@@ -36,3 +36,52 @@ Access https://ifs.local-dev with one of the following users (with password "Pas
 * steve.smith@empire.com - lead applicant
 * john.doe@innovateuk.test - competition admin
 * lee.bowman@innovateuk.test - project finance
+
+# Gradle Tasks
+
+Gradle is efficient - it wont re-run tasks if it doesn't need to (--rerun-tasks overrides this behaviour if you want).
+If a jar has been built and no source files have changed it wont build the jar again.
+
+
+| Task     | Description
+|----------|--------------
+| deploy   | Deploy docker service.
+| stop     | Stops docker service.
+| syncShib | Syncs user data from database to LDAP after database initialisation.
+| clean    | Cleans the build directory of the project.
+
+## Typical combinations
+
+Deploy a branch for the first time
+
+    ./gradlew clean build deploy wait -Pinitialise="true"
+
+Redeploy my changed jar files (no database changes)
+
+    ./gradlew clean build deploy wait
+
+Redeploy a specific service
+
+    ./gradlew ifs-web-service:ifs-application-service:deploy wait
+
+I have made database changes only
+
+    ./gradlew flywayClean flywayMigrate
+
+I am a tester and want to deploy my system for testing
+
+    ./robot_tests/micro_run_tests
+
+I am a tester and I want to swap to a new branch for testing
+
+    ./gradlew stop -Pinitialise=true && ./robot_tests/micro_run_tests
+
+Running a gradle task for only web services (eg. test)
+
+    ./gradlew test -p ifs-web-service
+
+Create asciidoc
+
+    ./gradlewe clean asciidoctorOnly
+
+
