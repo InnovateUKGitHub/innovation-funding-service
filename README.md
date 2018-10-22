@@ -2,13 +2,12 @@
 
 Grant management system.
 
-# Installation
+# Quick Installation
 
 Before starting make sure you have the following installed
 
 * Linux or MacOS environment
-* Docker - with between 5 and 10Gb memory allocated in Docker preference (amount depending on how many of the services
-  you wish to deploy).
+* Docker - increase Docker memory allocation to at least 8GiB
 * Java 8
 
 Update your /etc/hosts file to include
