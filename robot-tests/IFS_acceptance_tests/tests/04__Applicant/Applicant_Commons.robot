@@ -100,7 +100,6 @@ the user fills in the project costs
     the user fills in Travel and subsistence
     the user fills in Other costs
     the user clicks the button/link  css = label[for="stateAidAgreed"]
-    the user selects the checkbox    termsAgreed
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
