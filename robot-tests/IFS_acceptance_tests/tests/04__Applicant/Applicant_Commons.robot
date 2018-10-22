@@ -86,7 +86,8 @@ the user marks the finances as complete
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
-    the user clicks the button/link  link = Application overview
+    #Is the below needed for other tests?
+    #the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
@@ -269,7 +270,8 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link = Your funding
-    the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  45
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
     click element                         jQuery = label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
