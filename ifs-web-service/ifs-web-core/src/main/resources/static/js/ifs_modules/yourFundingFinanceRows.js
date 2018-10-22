@@ -67,7 +67,7 @@ IFS.core.yourFunding = (function () {
     backForwardCacheReload: function () {
       // INFUND-2965 ajax results don't show when using the back button on the page after
       var input = jQuery('#cacheTest')
-      if (input.val() !== '') {
+      if (input.length && input.val() !== '') {
         // the page has been loaded from the cache as the #cachetest has a value
         // equivalent of persisted == true
         jQuery('#cacheTest').val('')
