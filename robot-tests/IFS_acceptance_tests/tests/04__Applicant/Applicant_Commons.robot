@@ -272,7 +272,7 @@ the user fills in the funding information
     the user clicks the button/link       link = Your funding
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
-    click element                         jQuery = label:contains("No")
+    #click element                         jQuery = label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
     the user clicks the button/link       link = Your funding
