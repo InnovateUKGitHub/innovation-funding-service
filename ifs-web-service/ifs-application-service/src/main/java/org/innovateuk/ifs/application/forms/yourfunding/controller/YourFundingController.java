@@ -109,10 +109,10 @@ public class YourFundingController {
 
     @PostMapping(params = "add_other_funding")
     public String addFundingRowFormPost(Model model,
-                                UserResource user,
-                                @PathVariable long applicationId,
-                                @PathVariable long sectionId,
-                                @ModelAttribute("form") YourFundingForm form) {
+                                        UserResource user,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long sectionId,
+                                        @ModelAttribute("form") YourFundingForm form) {
 
         saver.addOtherFundingRow(form, applicationId, user);
         return viewYourFunding(model, applicationId, sectionId, user);
@@ -120,11 +120,11 @@ public class YourFundingController {
 
     @PostMapping(params = "remove_other_funding")
     public String removeFundingRowFormPost(Model model,
-                                   UserResource user,
-                                   @PathVariable long applicationId,
-                                   @PathVariable long sectionId,
-                                   @ModelAttribute("form") YourFundingForm form,
-                                   @RequestParam("remove_other_funding") String costId) {
+                                           UserResource user,
+                                           @PathVariable long applicationId,
+                                           @PathVariable long sectionId,
+                                           @ModelAttribute("form") YourFundingForm form,
+                                           @RequestParam("remove_other_funding") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, applicationId, sectionId, user);
@@ -133,9 +133,9 @@ public class YourFundingController {
     @PostMapping("auto-save")
     public @ResponseBody
     JsonNode ajaxAutoSave(UserResource user,
-                      @PathVariable long applicationId,
-                      @RequestParam String field,
-                      @RequestParam String value) {
+                          @PathVariable long applicationId,
+                          @RequestParam String field,
+                          @RequestParam String value) {
         Optional<Long> fieldId = saver.autoSave(field, value, applicationId, user);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -146,18 +146,18 @@ public class YourFundingController {
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
     JsonNode ajaxRemoveRow(UserResource user,
-                      @PathVariable long applicationId,
-                      @PathVariable String rowId) {
+                           @PathVariable long applicationId,
+                           @PathVariable String rowId) {
         saver.removeOtherFundingRow(rowId);
         return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping("add-row")
     public String ajaxAddRow(Model model,
-                         UserResource user,
-                        @PathVariable long applicationId,
-                        @ModelAttribute("form") YourFundingForm form,
-                         BindingResult bindingResult) {
+                             UserResource user,
+                             @PathVariable long applicationId,
+                             @ModelAttribute("form") YourFundingForm form,
+                             BindingResult bindingResult) {
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form, applicationId, user);
         OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
