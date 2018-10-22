@@ -61,6 +61,10 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
     }
 
+    public boolean allDocumentsApproved() {
+        return COMPLETE.equals(projectStatus.getDocumentsStatus());
+    }
+
     public boolean isOtherDocumentsRejected() {
         return REJECTED.equals(projectStatus.getOtherDocumentsStatus());
     }
