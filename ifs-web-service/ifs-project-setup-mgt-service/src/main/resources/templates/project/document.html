@@ -6,8 +6,6 @@
 <body class="govuk-template__body competition-management project-management">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
-<th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -23,7 +21,10 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div> -->
 
-        <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
+        <form th:object="${form}" id="other-documents-form" th:action="@{/project/{projectId}/document/config/{documentConfigId}(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}" method="post" novalidate="novalidate">
+
+            <th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
+            <th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
 
@@ -63,9 +64,9 @@
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input"
                                        id="radio-review-approve"
-                                       name="radio-review"
+                                       name="approved"
                                        type="radio"
-                                       value="approve"
+                                       value="true"
                                        required="required"
                                        data-switches-button-status="#submit-button"
                                        data-switches-modal-target="#submit-button"
@@ -77,9 +78,9 @@
                             <div class="govuk-radios__item" data-target="reject-document-panel">
                                 <input class="govuk-radios__input"
                                        id="radio-review-reject"
-                                       name="radio-review"
+                                       name="approved"
                                        type="radio"
-                                       value="reject"
+                                       value="false"
                                        required="required"
                                        data-switches-modal-target="#submit-button"
                                        data-switches-modal-target-value="modal-reject-configured-doc">
@@ -99,7 +100,7 @@
                             <input type="text"
                                    class="govuk-input"
                                    id="document-reject-reason"
-                                   name="DocumentRejectReason"
+                                   name="rejectionReason"
                                    required="required"
                                    maxlength="128"
                                    data-switches-button-status="#submit-button"
