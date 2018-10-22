@@ -5,7 +5,10 @@ package org.innovateuk.ifs.address.resource;
  */
 public enum OrganisationAddressType {
     ADD_NEW(0L),                            // Used for signalling a new address will be added.  Not stored in DB.
-    REGISTERED(1L), OPERATING(2L),          // Used for organisation creation
+    @Deprecated
+    REGISTERED(1L),                         // No longer capturing registered address as part of organisation creation
+    @Deprecated
+    OPERATING(2L),                          // No longer capturing operating address as part of organisation creation
     PROJECT(3L),                            // Used for project address (project setup)
     BANK_DETAILS(4L);                       // Used for bank details associated with project
 

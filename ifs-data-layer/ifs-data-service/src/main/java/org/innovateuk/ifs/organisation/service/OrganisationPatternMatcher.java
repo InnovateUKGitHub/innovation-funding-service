@@ -24,20 +24,6 @@ public class OrganisationPatternMatcher {
     private static final Log LOG = LogFactory.getLog(OrganisationPatternMatcher.class);
 
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
-    public boolean organisationAddressMatches(Organisation existingOrganisation, OrganisationResource submittedOrganisation, OrganisationAddressType addressType, boolean required) {
-        Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(existingOrganisation, addressType);
-        Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(submittedOrganisation, addressType);
-
-        if(organisationOperatingAddress.isPresent() && submittedOrganisationAddress.isPresent()) {
-            return addressesMatch(organisationOperatingAddress.get(), submittedOrganisationAddress.get());
-        } else if(!organisationOperatingAddress.isPresent() && !submittedOrganisationAddress.isPresent() && !required) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean organisationTypeMatches(Organisation organisation, OrganisationResource organisationResource) {
         try {
             return organisation.getOrganisationType().getId().equals(organisationResource.getOrganisationType());

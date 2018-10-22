@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -99,6 +98,7 @@ public class CompetitionResource {
     private Set<Long> grantClaimMaximums;
 
     private ApplicationFinanceType applicationFinanceType;
+    private Boolean includeProjectGrowthTable;
 
     private String createdBy;
     private ZonedDateTime createdOn;
@@ -657,6 +657,14 @@ public class CompetitionResource {
         this.applicationFinanceType = applicationFinanceType;
     }
 
+    public Boolean getIncludeProjectGrowthTable() {
+        return includeProjectGrowthTable;
+    }
+
+    public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
+        this.includeProjectGrowthTable = includeProjectGrowthTable;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }
@@ -757,6 +765,7 @@ public class CompetitionResource {
                 .append(stateAid, that.stateAid)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
+                .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -822,6 +831,7 @@ public class CompetitionResource {
                 .append(stateAid)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
+                .append(includeProjectGrowthTable)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

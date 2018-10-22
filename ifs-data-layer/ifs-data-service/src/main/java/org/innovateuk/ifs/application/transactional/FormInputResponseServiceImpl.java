@@ -87,8 +87,10 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         }
         response.setValue(htmlUnescapedValue);
         application.addFormInputResponse(response, userAppRole);
-        applicationRepository.save(application);
+
         formInputResponseRepository.save(response);
+        applicationRepository.save(application);
+
         return response;
     }
 

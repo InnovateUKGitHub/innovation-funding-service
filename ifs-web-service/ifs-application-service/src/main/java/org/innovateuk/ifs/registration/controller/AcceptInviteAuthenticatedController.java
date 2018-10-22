@@ -58,7 +58,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                             // Success
                             OrganisationResource organisation = organisationRestService.getOrganisationById(inviteOrganisation.getOrganisation()).getSuccess();
                             model.addAttribute("model",
-                                    new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation, getOrganisationAddress(organisation),
+                                    new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation,
                                             "/accept-invite-authenticated/confirm-invited-organisation/confirm"));
                             return "registration/confirm-registered-organisation";
                         }
