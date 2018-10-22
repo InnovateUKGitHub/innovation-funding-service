@@ -36,6 +36,11 @@ public class ApplicationInnovationAreaLink extends CategoryLink<Application, Inn
     }
 
     @Override
+    public Application getEntity() {
+        return application;
+    }
+
+    @Override
     public boolean equals(Object o) {
 
         if (this == o) {
@@ -61,10 +66,4 @@ public class ApplicationInnovationAreaLink extends CategoryLink<Application, Inn
                 .append(application)
                 .toHashCode();
     }
-
-    @Override
-    public Application getEntity() {
-        return application;
-    }
-
 }
