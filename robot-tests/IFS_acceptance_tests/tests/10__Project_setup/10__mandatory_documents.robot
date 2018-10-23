@@ -299,7 +299,7 @@ CompAdmin can see uploaded files
     When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    link = All projects
-    When the user clicks the button/link    css = #table-project-status tr:nth-child(2) td:nth-child(7) a
+    When the user navigates to the page     ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user clicks the button/link     jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
     Then the user should see the file without error
     When the user clicks the button/link    jQuery = h2:contains("Exploitation plan") + p a:contains("testing.pdf")
@@ -574,7 +574,7 @@ CompAdmin can see Project status updated
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery = tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(3) > a
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
@@ -585,7 +585,7 @@ Status updates correctly for internal user's table
     And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
     And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
-    And the user should see the element      css = #table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
+    And the user should see the element      css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(3) > a
 
 # Project used for sole applicant tests - High-speed rail and its effects on soil compaction -
 # has lead org type of Public sector, charity or non Je-S registered research organisation

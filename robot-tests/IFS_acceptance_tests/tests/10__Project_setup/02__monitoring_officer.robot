@@ -40,13 +40,13 @@ Status updates correctly for internal user's table
     [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element   css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
+    Then the user should see the element   css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok                     # Project details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Other Documents
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
