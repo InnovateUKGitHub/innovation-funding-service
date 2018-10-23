@@ -41,7 +41,9 @@ public class YourFundingFormValidator implements Validator {
     }
 
     private void validateOtherFundingRows(YourFundingForm form, Errors errors) {
-        if (form.getOtherFundingRows() != null) {
+        if (form.getOtherFundingRows() == null || form.getOtherFundingRows().isEmpty()) {
+            errors.rejectValue("otherFunding", "validation.finance.min.row.other.funding.single");
+        } else {
             form.getOtherFundingRows().forEach((id, row) -> {
                 if (!row.isBlank()) {
                     validateOtherFundingDate(id, row, errors);
