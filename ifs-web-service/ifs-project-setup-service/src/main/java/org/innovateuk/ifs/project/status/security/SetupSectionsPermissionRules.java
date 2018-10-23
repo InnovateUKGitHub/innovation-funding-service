@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -157,14 +158,31 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
             "section if their Organisation is a business type (i.e. if Companies House details are required)")
+    @OtherDocsWindDown
     public boolean partnerCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
     }
 
     @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A project manager can submit uploaded Other Documents " +
             "if they have not already been submitted, they are allowed to submit and haven't been rejected")
+    @OtherDocsWindDown
     public boolean projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSubmitOtherDocumentsCheck(projectCompositeId.id(), user);
+    }
+
+    @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A lead can access Documents section. A partner can access Documents " +
+            "section if their Companies House information is unnecessary or complete")
+    public boolean canAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessDocumentsSection);
+    }
+
+    @PermissionRule(value = "EDIT_DOCUMENTS_SECTION", description = "A project manager can edit Documents section")
+    public boolean projectManagerCanEditDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectManager(projectCompositeId.id(), user);
+    }
+
+    private boolean isProjectManager(Long projectId, UserResource user) {
+        return projectService.isProjectManager(user.getId(), projectId);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SECTION", description = "A lead partner can access the Grant Offer Letter " +

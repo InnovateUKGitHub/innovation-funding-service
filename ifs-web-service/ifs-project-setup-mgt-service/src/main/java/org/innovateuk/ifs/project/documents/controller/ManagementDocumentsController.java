@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,8 +47,7 @@ public class ManagementDocumentsController {
     @Autowired
     private DocumentsRestService documentsRestService;
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/all")
     public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
@@ -56,8 +56,7 @@ public class ManagementDocumentsController {
         return "project/documents-all";
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}")
     public String viewDocument(@PathVariable("projectId") long projectId,
                                @PathVariable("documentConfigId") long documentConfigId,
@@ -74,8 +73,7 @@ public class ManagementDocumentsController {
         return "project/document";
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}/download")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> downloadDocument(@PathVariable("projectId") long projectId,
@@ -95,9 +93,8 @@ public class ManagementDocumentsController {
         }
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @PostMapping("/config/{documentConfigId}")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'APPROVE_DOCUMENTS')")
+	@PostMapping("/config/{documentConfigId}")
     public String documentDecision(@PathVariable("projectId") long projectId,
                                    @PathVariable("documentConfigId") long documentConfigId,
                                    @ModelAttribute(FORM_ATTR) DocumentForm form,

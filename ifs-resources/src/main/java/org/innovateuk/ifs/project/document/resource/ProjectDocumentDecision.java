@@ -9,6 +9,9 @@ public class ProjectDocumentDecision {
 
     private String rejectionReason;
 
+    public ProjectDocumentDecision() {
+    }
+
     public ProjectDocumentDecision(Boolean approved, String rejectionReason) {
         this.approved = approved;
         this.rejectionReason = rejectionReason;

@@ -22,9 +22,10 @@
             <li th:each="document : ${model.documents}">
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
+                        <a th:unless="${document.notSubmitted}" th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                            th:text=${document.title}
                            class="govuk-link" />
+                        <th:block th:if="${document.notSubmitted}" th:text=${document.title}></th:block>
                     </h3>
                 </div>
                <div th:if="${document.notSubmitted}"
