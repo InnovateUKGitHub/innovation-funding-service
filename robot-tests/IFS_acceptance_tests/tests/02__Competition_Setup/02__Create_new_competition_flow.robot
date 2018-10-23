@@ -701,13 +701,13 @@ Innovation leads can be added to a competition
     Then the user should not see the element  jQuery = td:contains(${peter_freeman})
     #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery = span.lead-count:contains("1")
-    When the user clicks the button/link      jQuery = a:contains("Overview")
+    When the user clicks the button/link      jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = span.total-count:contains("1")
     #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
-    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Find")
+    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Add")
     Then the user should see the element      jQuery = td:contains(${peter_freeman}) button:contains("Add")
 
 User deletes the competition

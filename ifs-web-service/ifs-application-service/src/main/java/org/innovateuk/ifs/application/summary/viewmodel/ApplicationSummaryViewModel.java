@@ -17,6 +17,7 @@ public class ApplicationSummaryViewModel {
     private final boolean userIsLeadApplicant;
     private final boolean projectWithdrawn;
     private final boolean support;
+    private final boolean collaborativeProject;
 
     public ApplicationSummaryViewModel(ApplicationResource currentApplication,
                                        CompetitionResource currentCompetition,
@@ -26,7 +27,8 @@ public class ApplicationSummaryViewModel {
                                        ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
                                        boolean userIsLeadApplicant,
                                        boolean projectWithdrawn,
-                                       boolean support) {
+                                       boolean support,
+                                       boolean collaborativeProject) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
@@ -36,6 +38,7 @@ public class ApplicationSummaryViewModel {
         this.userIsLeadApplicant = userIsLeadApplicant;
         this.projectWithdrawn = projectWithdrawn;
         this.support = support;
+        this.collaborativeProject = collaborativeProject;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -82,4 +85,7 @@ public class ApplicationSummaryViewModel {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
 }
