@@ -45,19 +45,19 @@
                     <ul class="govuk-tabs__list">
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}"
-                               class="govuk-tabs__tab">Find</a>
+                               class="govuk-tabs__tab">Add</a>
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}"
                                aria-selected="true"
-                               class="govuk-tabs__tab">Overview</a>
+                               class="govuk-tabs__tab">Added to competition (<th:block th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></th:block>)</a>
                         </li>
                     </ul>
                     <section class="govuk-tabs__panel">
-                        <div class="govuk-body govuk-grid-row sorting">
+                        <div class="govuk-body govuk-grid-row sorting govuk-!-margin-bottom-6">
                             <div class="govuk-grid-column-one-half">
-                                    <span class="govuk-!-font-size-48 govuk-!-font-weight-bold total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
-                                    <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Innovation leads</span>
+                                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
+                                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Innovation leads added to this competition</span>
                             </div>
                         </div>
 
@@ -65,7 +65,7 @@
                             <table class="govuk-table stakeholder-table">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
-                                    <th class="govuk-table__header" scope="col">Innovation lead name</th>
+                                    <th class="govuk-table__header" scope="col">Name</th>
                                     <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>

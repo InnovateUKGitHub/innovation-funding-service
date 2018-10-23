@@ -17,6 +17,7 @@ public class ManageApplicationViewModel {
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
     private final List<AppendixResource> appendices;
+    private final boolean collaborativeProject;
 
     public ManageApplicationViewModel(SummaryViewModel summaryViewModel,
                                       String backUrl,
@@ -26,8 +27,8 @@ public class ManageApplicationViewModel {
                                       boolean stakeholder,
                                       ApplicationOverviewIneligibilityViewModel ineligibility,
                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
-                                      List<AppendixResource> appendices
-                                      ) {
+                                      List<AppendixResource> appendices,
+                                      boolean collaborativeProject) {
         this.summaryViewModel = summaryViewModel;
         this.backUrl = backUrl;
         this.originQuery = originQuery;
@@ -37,6 +38,7 @@ public class ManageApplicationViewModel {
         this.ineligibility = ineligibility;
         this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
         this.appendices = appendices;
+        this.collaborativeProject = collaborativeProject;
     }
 
     public SummaryViewModel getSummaryViewModel() {
@@ -73,5 +75,9 @@ public class ManageApplicationViewModel {
 
     public List<AppendixResource> getAppendices() {
         return appendices;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }
