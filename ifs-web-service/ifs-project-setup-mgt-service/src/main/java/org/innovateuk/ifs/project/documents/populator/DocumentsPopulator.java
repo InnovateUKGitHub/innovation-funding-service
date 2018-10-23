@@ -96,6 +96,6 @@ public class DocumentsPopulator {
                 configuredProjectDocument.getId(), configuredProjectDocument.getTitle(),
                 fileDetails,
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
-                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(new String("")));
+                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(""));
     }
 }

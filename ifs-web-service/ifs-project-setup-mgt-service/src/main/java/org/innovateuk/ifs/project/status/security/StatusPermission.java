@@ -22,8 +22,8 @@ public class StatusPermission {
                                     Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
                                     Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
                                     Boolean canAccessOtherDocuments, Boolean canAccessDocuments,
-                                    Boolean canAccessGrantOfferLetter,
-                                    Boolean canAccessGrantOfferLetterSend, ProjectActivityStates grantOfferLetterActivityState) {
+                                    Boolean canAccessGrantOfferLetter, Boolean canAccessGrantOfferLetterSend,
+                                    ProjectActivityStates grantOfferLetterActivityState) {
         this.canAccessCompaniesHouse = canAccessCompaniesHouse;
         this.canAccessProjectDetails = canAccessProjectDetails;
         this.canAccessMonitoringOfficer = canAccessMonitoringOfficer;
