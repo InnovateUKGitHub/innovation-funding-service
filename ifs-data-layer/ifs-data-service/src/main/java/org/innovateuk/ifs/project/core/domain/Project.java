@@ -92,7 +92,7 @@ public class Project implements ProcessActivity {
     private List<SpendProfile> spendProfiles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
-    private List<ProjectDocument> projectDocuments;
+    private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
     public Project() {}
 

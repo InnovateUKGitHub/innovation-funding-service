@@ -26,6 +26,9 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.model.*;
@@ -569,6 +572,61 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void generateGrantOfferLetterIfReadyWhenOtherDocsNotApprovedButDocsApproved() {
+
+        setupGolTemplate();
+
+        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
+        Organisation o2 = organisation(BUSINESS, "Org2\"");
+        Organisation o3 = organisation(BUSINESS, "Org3<");
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withGrantClaimPercentage(30)
+                .withApplication(456L)
+                .withOrganisation(3L)
+                .build();
+
+        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
+
+        Competition comp = newCompetition().withName("Test Comp<").build();
+        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+                .newProjectDocument()
+                .withCompetition(comp)
+                .withTitle("Risk Register")
+                .withGuidance("Guidance for Risk Register")
+                .build();
+        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+        project.getApplication().setCompetition(comp);
+
+        ProjectDocument projectDocument = ProjectDocumentBuilder
+                .newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build();
+        project.setProjectDocuments(singletonList(projectDocument));
+
+        Map<String, Object> templateArgs = setupTemplateArguments();
+
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+
+        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
+        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
+
+        assertTrue(checkGolTemplate());
+        assertTrue(result.isSuccess());
+        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
+    }
+
+    @Test
     public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
@@ -578,9 +636,17 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
+    public void testGenerateGrantOfferLetterOtherDocsAndDocsNotApproved() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
+        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+                .newProjectDocument()
+                .withCompetition(comp)
+                .withTitle("Risk Register")
+                .withGuidance("Guidance for Risk Register")
+                .build();
+        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+
         Organisation o1 = newOrganisation().withName("OrgLeader").build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
         ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(Role.LEADAPPLICANT).build();
@@ -734,7 +800,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withTown("Swindon&")
                 .withPostcode("SN1 1AA'")
                 .build();
-        Project project = newProject()
+        project = newProject()
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withName("project 1")
                 .withApplication(app)

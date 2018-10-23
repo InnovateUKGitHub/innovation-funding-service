@@ -81,11 +81,12 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
     [Tags]
     Given the user navigates to the page    ${internal_competition_status}
     And the competition admin should see the status of each project setup stage
-    #Internal user can view project details via the clickable 'hour glass' for Project details
+    # Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery = h1:contains("Project details")
     And the user clicks the button/link     link = Projects in setup
-    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
+#    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(2)  # Project details
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
@@ -698,12 +699,12 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status             # Monitoring officer
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status             # Bank details
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action      # Finance checks
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status             # Spend Profile
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting     # Other Docs
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status             # GOL
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Other Documents
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")
