@@ -29,7 +29,7 @@
                     </h3>
                 </div>
                <div th:if="${document.notSubmitted}"
-                     class="task-status">
+                     class="task-status-info">
                     <span>No file uploaded</span>
                 </div>
                 <div th:if="${document.awaitingReview}"
@@ -41,7 +41,7 @@
                     <span>Approved</span>
                 </div>
                 <div th:if="${document.rejected}"
-                     class="task-status-incomplete">
+                     class="task-status-rejected">
                     <span>Rejected</span>
                 </div>
             </li>
