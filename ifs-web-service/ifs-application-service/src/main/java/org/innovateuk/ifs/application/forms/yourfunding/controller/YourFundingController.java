@@ -159,14 +159,14 @@ public class YourFundingController {
     @PostMapping("add-row")
     public String ajaxAddRow(Model model,
                              UserResource user,
-                             @PathVariable long applicationId,
-                             @ModelAttribute("form") YourFundingForm form,
-                             BindingResult bindingResult) {
+                             @PathVariable long applicationId) {
+        YourFundingForm form = new YourFundingForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form, applicationId, user);
         OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
+        model.addAttribute("form", form);
         model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row.getCostId());
+        model.addAttribute("row", row);
         return "application/your-funding-fragments :: ajax_other_funding_row";
     }
 
