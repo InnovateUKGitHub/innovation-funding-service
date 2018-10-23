@@ -50,7 +50,6 @@ public class YourFundingViewModelPopulator {
 
     public YourFundingViewModel populate(long applicationId, long sectionId, UserResource user) {
 
-        //TODO Clean this up. Reduce rest calls.
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section
                 .getCurrentApplicant().getOrganisation().getId());

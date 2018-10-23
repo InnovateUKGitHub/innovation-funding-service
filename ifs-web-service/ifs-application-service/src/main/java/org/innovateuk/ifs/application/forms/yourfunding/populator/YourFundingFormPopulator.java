@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -36,9 +35,6 @@ public class YourFundingFormPopulator {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
 
     @Autowired
     private QuestionRestService questionRestService;
