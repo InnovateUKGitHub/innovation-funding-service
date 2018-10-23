@@ -110,7 +110,7 @@ User can create a new competition
     And The user should not see the element    link = Milestones
     And The user should not see the element    link = Application
     And The user should not see the element    link = Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
 #    And The user should not see the element    link = Documents in project setup
     And The user should not see the element    link = Public content
     And The user should see the element        link = Initial details
@@ -182,7 +182,7 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Eligibility")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
 #    And the user should see the element     link = Documents in project setup
     And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
@@ -551,7 +551,7 @@ Application: Done enabled when all questions are marked as complete
     When The user clicks the button/link      link = Return to setup overview
     Then the user should see the element      jQuery = li:contains("Application") .task-status-complete
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin adds document requirements
 #    [Documentation]    IFS-3916
 #    [Tags]
@@ -564,7 +564,7 @@ Application: Done enabled when all questions are marked as complete
 #    And the user clicks the button/link          css = button[type = "submit"]
 #    And the user should see the element          jQuery = span:contains("Test document type")
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin removes a document
 #    [Documentation]    IFS-3916
 #    [Tags]
