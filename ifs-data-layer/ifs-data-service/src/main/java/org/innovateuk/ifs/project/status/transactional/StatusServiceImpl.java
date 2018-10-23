@@ -302,21 +302,22 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getDocumentsStatus(Project project) {
 
-        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
-        if (projectDocuments.size() == 0) {
-            return PENDING;
-        }
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+        int expectedNumberOfDocuments = project.getApplication().getCompetition().getProjectDocuments().size();
+        int actualNumberOfDocuments = projectDocuments.size();
 
         if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))){
             return ACTION_REQUIRED;
         }
 
-        if (matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))){
+        if (actualNumberOfDocuments == expectedNumberOfDocuments
+                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))){
             return REJECTED;
         }
 
-        if (matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))){
+        if (actualNumberOfDocuments == expectedNumberOfDocuments
+                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))){
             return COMPLETE;
         }
 
