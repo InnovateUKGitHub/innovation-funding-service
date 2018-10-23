@@ -50,12 +50,8 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                                 Are you requesting funding?
                             </legend>
-
-                            <th:block th:if="${#fields.hasErrors('requestingFunding')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
-                                      th:text="${err}"></span>
-                            </th:block>
-
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
+                                  th:text="${err}"></span>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" data-target="request-funding">
                                     <input type="radio"
@@ -86,6 +82,8 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                                 <h2 class="govuk-fieldset__heading govuk-visually-hidden">Other funding</h2>
                             </legend>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
+                                  th:text="${err}"></span>
                             <span class="govuk-hint">Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.</span>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" data-target="other-funding-table">

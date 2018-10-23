@@ -151,7 +151,7 @@
                        th:errorclass="govuk-input--error"
                        required="required" />
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
                 <label th:for="__${path}__.fundingAmount" class="govuk-visually-hidden">
                     Funding amount (&pound;)
                 </label>
@@ -167,7 +167,7 @@
                        max="9999999999999999999"
                        step="1"
                        th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
-                                data-required-errormessage=#{validation.finance.funding.amount.invalid}" />
+                                data-required-errormessage=#{validation.finance.funding.amount}" />
             </td>
             <td class="govuk-table__cell">
                 <button type="submit"

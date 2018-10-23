@@ -66,7 +66,7 @@ public class FundingLevelResetHandler {
 
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
         if (applicationFinance.getGrantClaim() != null) {
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+            applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
             financeRowRestService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccess();
         }
     }

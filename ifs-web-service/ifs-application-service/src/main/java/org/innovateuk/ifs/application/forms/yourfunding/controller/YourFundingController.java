@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.yourfunding.saver.YourFundingSaver;
+import org.innovateuk.ifs.application.forms.yourfunding.validator.YourFundingFormValidator;
 import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -22,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -50,6 +50,9 @@ public class YourFundingController {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private YourFundingFormValidator yourFundingFormValidator;
 
     @GetMapping
     public String viewYourFunding(Model model,
@@ -92,11 +95,12 @@ public class YourFundingController {
                            UserResource user,
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
-                           @Valid @ModelAttribute("form") YourFundingForm form,
+                           @ModelAttribute("form") YourFundingForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, user);
+        yourFundingFormValidator.validate(form, bindingResult);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(applicationId, form, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {

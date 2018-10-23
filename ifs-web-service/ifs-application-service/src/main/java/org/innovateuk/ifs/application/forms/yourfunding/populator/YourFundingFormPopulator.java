@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
@@ -53,14 +54,13 @@ public class YourFundingFormPopulator {
         QuestionResource grantClaimQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE).getSuccess();
         QuestionResource otherFundingQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING).getSuccess();
 
-        Optional<Integer> claimPercentage = ofNullable(finance.getGrantClaim()).map(GrantClaim::getGrantClaimPercentage).filter(percentage -> percentage != 0);
-        Integer fundingLevel = null;
-        if (claimPercentage.isPresent()) {
-            fundingLevel = claimPercentage.get();
-        }
+        Optional<Integer> claimPercentage = ofNullable(finance.getGrantClaim()).map(GrantClaim::getGrantClaimPercentage);
+
+        Boolean requestingFunding = isRequestingFunding(claimPercentage);
+        Integer fundingLevel = Boolean.TRUE.equals(requestingFunding) ? claimPercentage.get() : null;
 
         OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
-        boolean otherFundingSet = otherFundingCategory.otherFundingSet();
+        Boolean otherFundingSet = isOtherFundingSet(otherFundingCategory);
 
         Map<String, OtherFundingRowForm> rows = otherFundingCategory.getCosts().stream().map(cost -> {
             OtherFunding otherFunding = (OtherFunding) cost;
@@ -78,11 +78,28 @@ public class YourFundingFormPopulator {
             rows.put(YourFundingForm.EMPTY_ROW_ID, new OtherFundingRowForm());
         }
 
-        form.setRequestingFunding(claimPercentage.isPresent());
+        form.setRequestingFunding(requestingFunding);
         form.setGrantClaimPercentage(fundingLevel);
         form.setOtherFunding(otherFundingSet);
         form.setOtherFundingRows(rows);
         form.setOtherFundingQuestionId(otherFundingQuestion.getId());
         form.setGrantClaimQuestionId(grantClaimQuestion.getId());
+    }
+
+    private Boolean isOtherFundingSet(OtherFundingCostCategory otherFundingCategory) {
+        if (otherFundingCategory.getOtherFunding() == null ||
+                isNullOrEmpty(otherFundingCategory.getOtherFunding().getOtherPublicFunding())) {
+            return null;
+        } else {
+            return otherFundingCategory.otherFundingSet();
+        }
+    }
+
+    private Boolean isRequestingFunding(Optional<Integer> claimPercentage) {
+        if (!claimPercentage.isPresent()) {
+            return null;
+        } else {
+            return !claimPercentage.get().equals(0);
+        }
     }
 }

@@ -1,39 +1,25 @@
 package org.innovateuk.ifs.application.forms.yourfunding.form;
 
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-
-import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 
-@FieldRequiredIf(required = "grantClaimPercentage", argument = "requestingFunding", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class YourFundingForm {
     public static final String EMPTY_ROW_ID = "empty";
-    @NotNull
+
     private Boolean requestingFunding;
 
-    @Min(value = 1, message = "{validation.field.percentage.max.value.or.higher}")
     private Integer grantClaimPercentage;
 
-    @NotNull
     private Boolean otherFunding;
 
-    @Valid
     private Map<String, OtherFundingRowForm> otherFundingRows;
 
-    @AssertTrue(message = "{validation.field.must.not.be.blank}")
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Boolean termsAgreed;
 
     private long grantClaimQuestionId;
 
     private long otherFundingQuestionId;
-
-    private boolean complete;
 
     public Boolean getRequestingFunding() {
         return requestingFunding;
@@ -91,14 +77,6 @@ public class YourFundingForm {
         this.otherFundingQuestionId = otherFundingQuestionId;
     }
 
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
-
     public BigDecimal getOtherFundingTotal() {
         return otherFundingRows == null ? BigDecimal.ZERO :
                 otherFundingRows.entrySet().stream()
@@ -107,4 +85,5 @@ public class YourFundingForm {
                         .filter(Objects::nonNull)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
 }
