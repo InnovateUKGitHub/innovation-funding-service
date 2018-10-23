@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  */
 public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
 
-
     private boolean isBusinessOrganisation;
     private boolean stateAidEligibility;
     private boolean complete;
