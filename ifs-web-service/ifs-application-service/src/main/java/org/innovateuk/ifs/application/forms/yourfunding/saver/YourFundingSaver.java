@@ -123,22 +123,12 @@ public class YourFundingSaver {
 
     private RestResult<ValidationMessages> saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form) {
         GrantClaim claim = finance.getGrantClaim();
-        boolean newRow = claim == null;
-        if (claim == null) {
-            claim = new GrantClaim();
-        }
-
         if (form.getRequestingFunding()) {
             claim.setGrantClaimPercentage(form.getGrantClaimPercentage());
         } else {
             claim.setGrantClaimPercentage(0);
         }
-
-        if (newRow) {
-            return financeRowRestService.add(finance.getId(), form.getGrantClaimQuestionId(), claim);
-        } else {
-            return financeRowRestService.update(claim);
-        }
+        return financeRowRestService.update(claim);
     }
 
     private void saveOtherFunding(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {

@@ -67,7 +67,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private OtherFundingCostCategory otherFundingCategory;
     private ApplicationFinanceResource finance;
     private ApplicationResource application;
-    private QuestionResource grantClaimQuestion;
     private QuestionResource otherFundingQuestion;
 
     @Override
@@ -111,13 +110,11 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         application = newApplicationResource()
                 .withCompetition(2L)
                 .build();
-        grantClaimQuestion = newQuestionResource().build();
         otherFundingQuestion = newQuestionResource().build();
 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
         when(applicationService.getById(APPLICATION_ID)).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(grantClaimQuestion));
         when(questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING)).thenReturn(restSuccess(otherFundingQuestion));
     }
 

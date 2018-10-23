@@ -17,8 +17,6 @@ public class YourFundingForm {
 
     private Boolean termsAgreed;
 
-    private long grantClaimQuestionId;
-
     private long otherFundingQuestionId;
 
     public Boolean getRequestingFunding() {
@@ -59,14 +57,6 @@ public class YourFundingForm {
 
     public void setTermsAgreed(Boolean termsAgreed) {
         this.termsAgreed = termsAgreed;
-    }
-
-    public long getGrantClaimQuestionId() {
-        return grantClaimQuestionId;
-    }
-
-    public void setGrantClaimQuestionId(long grantClaimQuestionId) {
-        this.grantClaimQuestionId = grantClaimQuestionId;
     }
 
     public long getOtherFundingQuestionId() {

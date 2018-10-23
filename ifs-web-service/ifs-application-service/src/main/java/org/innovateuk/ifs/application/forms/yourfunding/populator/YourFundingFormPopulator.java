@@ -47,7 +47,6 @@ public class YourFundingFormPopulator {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         ApplicationResource application = applicationService.getById(applicationId);
-        QuestionResource grantClaimQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE).getSuccess();
         QuestionResource otherFundingQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING).getSuccess();
 
         Optional<Integer> claimPercentage = ofNullable(finance.getGrantClaim()).map(GrantClaim::getGrantClaimPercentage);
@@ -79,7 +78,6 @@ public class YourFundingFormPopulator {
         form.setOtherFunding(otherFundingSet);
         form.setOtherFundingRows(rows);
         form.setOtherFundingQuestionId(otherFundingQuestion.getId());
-        form.setGrantClaimQuestionId(grantClaimQuestion.getId());
     }
 
     private Boolean isOtherFundingSet(OtherFundingCostCategory otherFundingCategory) {
