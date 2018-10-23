@@ -42,8 +42,6 @@
                 <input type="hidden" id="cacheTest" value=""/>
                 <th:block th:unless="${model.complete}" >
                     <input type="hidden"
-                           th:field="*{grantClaimQuestionId}" />
-                    <input type="hidden"
                            th:field="*{otherFundingQuestionId}" />
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
