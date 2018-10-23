@@ -39,28 +39,20 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
-
     private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
-
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
-
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
-
     @Autowired
     private FinanceService financeService;
-
     @Autowired
     private QuestionService questionService;
-
     public static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
     public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
-
     public static final String NON_DECIMAL_MESSAGE = "validation.standard.integer.non.decimal.format";
     public static final String NON_NEGATIVE_MESSAGE = "validation.standard.non.negative.integer.format";
     public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
-
     public static final String NON_DECIMAL_FIELD = "tsb_reference";
 
     @Override
@@ -77,7 +69,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         while (parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
-
             if (parameterValues.length > 0) {
                 validationMessages.addAll(storeCost(userId, applicationId, parameter, parameterValues[0], competitionId));
             }
@@ -98,31 +89,28 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (financeFormField == null) {
             return null;
         }
-
         FinanceRowHandler financeRowHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
-
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-
         if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
             // if this is a project cost we test for 1) fractional values, 2) negative values - empty values are okay.
-            if(!inputIsLong(value)) {
+            if (!inputIsLong(value)) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_DECIMAL_MESSAGE));
-            } else if(!StringUtils.isEmpty(value) && Long.parseLong(value) < 0) {
+            } else if (!StringUtils.isEmpty(value) && Long.parseLong(value) < 0) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_NEGATIVE_MESSAGE));
             }
-        } else if(StringUtils.isEmpty(value)) {
-            // if this is a non cost ref we just ensure its not empty
-            return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
-                    financeFormField, BLANK_FIELD_MESSAGE));
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        if (costItem != null) {
+        if (value.isEmpty()) {
+            ValidationMessages validationMessages = storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+            return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
+                    financeFormField, BLANK_FIELD_MESSAGE));
+        } else if (costItem != null) {
             return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
             return ValidationMessages.noErrors();
@@ -158,7 +146,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         } else {
             RestResult<ValidationMessages> messages = financeRowRestService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccess();
-
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccess();
@@ -173,7 +160,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     private void addFinanceRowItem(FinanceRowItem costItem, Long userId, Long applicationId, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
             financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccess();
@@ -225,16 +211,13 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     private ValidationMessages storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
-
         final Map<String, String[]> params = request.getParameterMap();
-
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccess();
         } else if (params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("jesFileUpload");
-
             if (file != null && !file.isEmpty()) {
                 ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
                 try {
@@ -243,12 +226,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                             file.getSize(),
                             file.getOriginalFilename(),
                             file.getBytes());
-
                     if (result.isFailure()) {
-
                         List<Error> errors = simpleMap(result.getFailure().getErrors(),
                                 e -> fieldError("jesFileUpload", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
-
                         return new ValidationMessages(errors);
                     }
                 } catch (IOException e) {
@@ -272,10 +252,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
-
     private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
-
         if (fieldNameReplaced.equals("projectLocation")) {
             applicationFinance.setWorkPostcode(value);
         } else {
