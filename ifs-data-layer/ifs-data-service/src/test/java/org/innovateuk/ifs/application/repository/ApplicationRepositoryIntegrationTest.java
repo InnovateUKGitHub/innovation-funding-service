@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.repository;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -27,6 +26,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -76,8 +77,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findSubmittedApplicationsNotOnInterviewPanel() {
-        Competition competition = newCompetition().with(id(null)).build();
-        competitionRepository.save(competition);
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -97,8 +98,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findSubmittedApplicationsNotOnInterviewPanel_noApplications() {
-        Competition competition = newCompetition().with(id(null)).build();
-        competitionRepository.save(competition);
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
         Pageable pageable = new PageRequest(0, 20);
 
@@ -110,9 +111,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findSubmittedApplicationsNotOnInterviewPanel_staged() {
-        Competition competition = newCompetition().with(id(null)).build();
-        competitionRepository.save(competition);
-
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -140,8 +140,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findSubmittedApplicationsNotOnInterviewPanel_inviteSent() {
-        Competition competition = newCompetition().with(id(null)).build();
-        competitionRepository.save(competition);
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
         List<Application> applications = newApplication()
                 .with(id(null))
@@ -200,13 +200,16 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findTopByCompetitionIdOrderByManageFundingEmailDateDesc() {
-        List<Competition> competitions = newCompetition().with(id(null)).build(2);
+        loginCompAdmin();
+
+        List<Competition> competitions = stream(
+                competitionRepository.save(newCompetition()
+                        .with(id(null))
+                        .build(2)).spliterator(), false).collect(toList());
 
         ZonedDateTime[] zonedDateTimes = IntStream.rangeClosed(1, 6).mapToObj(i ->
                 ZonedDateTime.of(2018, 8, 1, i, 0, 0, 0, ZoneId.systemDefault()))
                 .toArray(ZonedDateTime[]::new);
-
-        competitionRepository.save(competitions);
 
         Competition competition1 = competitions.get(0);
         Competition competition2 = competitions.get(1);
@@ -217,7 +220,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withManageFundingEmailDate(zonedDateTimes)
                 .build(6);
 
-        List<Application> saved = IteratorUtils.toList(repository.save(applications).iterator());
+        List<Application> saved = stream(repository.save(applications).spliterator(), false).collect(toList());
 
         Application expectedApplicationComp2WithMaxDate = saved.get(5);
 
