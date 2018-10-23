@@ -83,6 +83,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4253 New Stakeholder invite and create account email
 ...
 ...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
+...
+...               IFS-4186 Competition Setup - change layout to separate items not required for open
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -173,17 +175,17 @@ Initial details - should have a green check
     And the user should see the element     css = #compCTA[disabled]
 
 User should have access to all the sections
-    [Documentation]    INFUND-4725, IFS-1104  IFS-3086
-    Given The user should see the element    link = Terms and conditions
-    And The user should see the element      link = Funding information
-    And The user should see the element      link = Eligibility
-    And The user should see the element      link = Milestones
-    And The user should see the element      link = Application
-    And The user should see the element      link = Assessors
+    [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
+    Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
+    And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Eligibility")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
     # TODO IFS-4186 Uncomment when this functionality is enabled.
 #    And the user should see the element     link = Documents in project setup
-    And The user should see the element      link = Public content
-    And The user should see the element      link = Innovation leads
+    And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
+    And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
