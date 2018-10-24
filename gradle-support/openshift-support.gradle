@@ -276,28 +276,28 @@ task deleteProject(type: Exec) {
 
     ignoreExitValue true
 
-    doLast {
-        while ({
-            sleep(15 * 1000)
+    // doLast {
+    //     while ({
+    //         sleep(15 * 1000)
 
-            def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
-            def proc = ocCommand.execute()
+    //         def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
+    //         def proc = ocCommand.execute()
 
-            def stdErr = new StringBuffer()
-            proc.waitForProcessOutput(stdErr, System.err);
+    //         def stdErr = new StringBuffer()
+    //         proc.waitForProcessOutput(stdErr, System.err);
 
-            println proc.text
-            println stdErr.toString()
+    //         println proc.text
+    //         println stdErr.toString()
 
-            // When the project is deleted the error message is "Error from server (NotFound): namespaces "xxx" not found"
-            def projectDeleted = stdErr.toString().contains("not found")
-            if ( !projectDeleted ) {
-              println "Project is not deleted yet.. "
-            }
+    //         // When the project is deleted the error message is "Error from server (NotFound): namespaces "xxx" not found"
+    //         def projectDeleted = stdErr.toString().contains("not found")
+    //         if ( !projectDeleted ) {
+    //           println "Project is not deleted yet.. "
+    //         }
 
-            !projectDeleted
-        }()) continue
-    }
+    //         !projectDeleted
+    //     }()) continue
+    // }
 }
 
 task createProject(type: Exec, dependsOn: deleteProject) {
