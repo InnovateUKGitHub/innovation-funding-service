@@ -106,7 +106,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        if (value.isEmpty()) {
+        if (value.isEmpty() && financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
             ValidationMessages validationMessages = storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
             return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
