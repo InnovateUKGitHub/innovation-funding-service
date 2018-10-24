@@ -59,7 +59,8 @@ public class CompetitionInviteDocs {
             fieldWithPath("id").description("The id associated with this invite"),
             fieldWithPath("hash").description("The hash associated with this invite"),
             fieldWithPath("email").description("The email address used for the invite"),
-            fieldWithPath("competitionId").description("The id of the competition this user is invited to")
+            fieldWithPath("competitionId").description("The id of the competition this user is invited to"),
+            fieldWithPath("status").description("The current status of the sent invite"),
     };
 
     public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {

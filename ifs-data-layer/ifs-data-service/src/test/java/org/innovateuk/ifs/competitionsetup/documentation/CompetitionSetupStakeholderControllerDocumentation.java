@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeho
 import org.innovateuk.ifs.documentation.CompetitionInviteDocs;
 import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
 import org.innovateuk.ifs.documentation.UserRegistrationResourceDocs;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
@@ -116,6 +117,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 .withHash(TEST_HASH)
                 .withCompetition(1L)
                 .withEmail("test@test.test")
+                .withStatus(InviteStatus.SENT)
                 .build();
 
         when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
