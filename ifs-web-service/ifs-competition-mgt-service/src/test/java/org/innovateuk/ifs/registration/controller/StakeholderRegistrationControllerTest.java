@@ -56,7 +56,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
         when(competitionSetupStakeholderRestServiceMock.getInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
         mockMvc.perform(get(URL_PREFIX + "/hash/register"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("registration/register"));
+                .andExpect(view().name("stakeholders/create-account"));
     }
 
     @Test

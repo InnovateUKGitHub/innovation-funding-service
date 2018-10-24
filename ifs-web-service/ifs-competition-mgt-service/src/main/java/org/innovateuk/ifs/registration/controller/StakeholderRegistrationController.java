@@ -54,7 +54,7 @@ public class StakeholderRegistrationController {
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") StakeholderRegistrationForm stakeholderRegistrationForm) {
         StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getInvite(inviteHash).getSuccess();
         model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
-        return "registration/register";
+        return "stakeholders/create-account";
     }
 
     @PostMapping("/{inviteHash}/register")
