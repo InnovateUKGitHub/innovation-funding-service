@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,15 +44,20 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
     private final Set<InterviewAssignmentState> NOTIFIED_INTERVIEW_ASSIGNMENT_STATES =
             asLinkedSet(AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE);
 
+    private Competition competition;
+
+    @Before
+    public void setUp() throws Exception {
+        loginCompAdmin();
+
+        competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .build());
+    }
+
     @Test
     public void findByTargetCompetitionIdAndActivityStateState() {
         Pageable pageable = new PageRequest(0, 20);
-
-        Competition competition = newCompetition()
-                .with(id(null))
-                .build();
-
-        competitionRepository.save(competition);
 
         Application application = newApplication()
                 .with(id(null))
@@ -77,12 +83,6 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void existsByTargetIdAndActivityStateState() {
-        Competition competition = newCompetition()
-                .with(id(null))
-                .build();
-
-        competitionRepository.save(competition);
-
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
@@ -107,12 +107,6 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void countByTargetCompetitionIdAndActivityStateState() {
-        Competition competition = newCompetition()
-                .with(id(null))
-                .build();
-
-        competitionRepository.save(competition);
-
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
@@ -137,12 +131,6 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void countByTargetCompetitionIdAndActivityStateState_createdAssignment() {
-        Competition competition = newCompetition()
-                .with(id(null))
-                .build();
-
-        competitionRepository.save(competition);
-
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
@@ -167,12 +155,6 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void countByTargetCompetitionIdAndActivityStateState_noApplications() {
-        Competition competition = newCompetition()
-                .with(id(null))
-                .build();
-
-        competitionRepository.save(competition);
-
         flushAndClearSession();
 
         int count = repository.countByTargetCompetitionIdAndActivityStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);

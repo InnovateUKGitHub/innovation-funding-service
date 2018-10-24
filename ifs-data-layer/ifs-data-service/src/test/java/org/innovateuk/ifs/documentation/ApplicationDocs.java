@@ -37,7 +37,8 @@ public class ApplicationDocs {
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible").optional(),
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation").optional(),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel").optional(),
-            fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)").optional()
+            fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)").optional(),
+            fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative").optional()
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {
