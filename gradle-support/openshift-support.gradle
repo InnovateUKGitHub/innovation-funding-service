@@ -269,6 +269,11 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 // Remote tasks
 
 task deleteProject {
+    doFirst {
+        def ocCommand = "oc delete project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
+        println ocCommand.execute().text
+    }
+
     doLast {
         while ({
             sleep(5 * 1000)
@@ -282,7 +287,7 @@ task deleteProject {
             // When the project is deleted the error message is "Error from server (NotFound): namespaces "xxx" not found"
             def projectDeleted = stdErr.toString().contains("not found")
             if ( !projectDeleted ) {
-              println "Project is not deleted"
+              println "Project is not deleted yet.. "
             }
 
             !projectDeleted
@@ -292,8 +297,8 @@ task deleteProject {
 
 task createProject(type: Exec, dependsOn: deleteProject) {
     doFirst {
-        executable = 'setup-files/scripts/openshift/os-create-project.sh'
-        args = [openshiftEnv, "remote", project.version]
+        executable 'oc'
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 }
 
