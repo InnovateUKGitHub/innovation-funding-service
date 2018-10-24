@@ -245,8 +245,7 @@ public class ApplicationSectionController {
 
         switch (section.getType()) {
             case PROJECT_COST_FINANCES:
-                return userIsResearch(userId, applicationId) ?
-                        validateTermsAndConditionsAgreement(form, bindingResult) :
+                return userIsResearch(userId, applicationId) ||
                         validateStateAidAgreement(form, bindingResult);
 
             case ORGANISATION_FINANCES:
@@ -262,14 +261,6 @@ public class ApplicationSectionController {
 
     private boolean userIsResearch(long userId, long applicationId) {
         return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
-    }
-
-    private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
-        if (form.isTermsAgreed()) {
-            return true;
-        }
-        bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
-        return false;
     }
 
     private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {

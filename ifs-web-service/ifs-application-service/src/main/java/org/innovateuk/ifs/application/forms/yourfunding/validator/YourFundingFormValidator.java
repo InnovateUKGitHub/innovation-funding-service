@@ -95,12 +95,12 @@ public class YourFundingFormValidator {
         ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
         if (form.getGrantClaimPercentage() != null) {
             if (form.getGrantClaimPercentage() <= 0) {
-                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min.value.or.lower");
+                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min");
             } else {
                 OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
                 ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
                 if (form.getGrantClaimPercentage() >= finance.getMaximumFundingLevel()) {
-                    errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max.value.or.lower",  new String[] {String.valueOf(finance.getMaximumFundingLevel())}, "");
+                    errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max",  new String[] {String.valueOf(finance.getMaximumFundingLevel())}, "");
                 }
             }
         }

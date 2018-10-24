@@ -278,21 +278,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void applicationFinanceMarkAsCompleteSuccessWithoutStateAidButWithTermsForAcademic() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build()));
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, String.valueOf("1"))
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
-    }
-
-    @Test
     public void applicationYourOrganisationMarkAsCompleteFailWithoutOrganisationSize() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
         when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
@@ -326,15 +311,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
-    }
-
-    @Test
-    public void academicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAndYourFundingAsNotRequired() throws Exception {
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
-        ).andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -447,15 +423,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId()));
-    }
-
-    @Test
-    public void overheadFile_overheadFileSaverIsCalledOnFormSubmit() throws Exception {
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
-        ).andExpect(status().is3xxRedirection());
     }
 
     @Test

@@ -43,11 +43,6 @@
     <th:block th:insert="finance/academic-finance :: finance_fields (${model}, 'true')"/>
     <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
 
-    <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
-         th:with="fieldName='form.academicTermsAgreed'"
-         class="agree-to-terms-container govuk-!-margin-top-6"
-         th:unless="${model.allReadOnly}"></div>
-
 </th:block>
 
 <th:block th:fragment="assessment_detailed_finance (model, internalView)" th:with="question=${detailedCostings.applicantQuestion.question}, userOrganisation=${detailedCostings.currentApplicant.organisation}, readonly=${detailedCostings.allReadOnly or detailedCostings.complete}">

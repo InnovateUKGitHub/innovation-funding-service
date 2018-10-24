@@ -28,7 +28,6 @@ public final class ApplicationFormUtil {
     public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
-    public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
     public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String PROJECT_LOCATION_KEY = "projectLocation";
