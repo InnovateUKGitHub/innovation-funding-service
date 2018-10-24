@@ -280,11 +280,10 @@ task deleteProject(type: Exec) {
         while ({
             sleep(15 * 1000)
 
-            def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true 2>&1"
+            def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
             def proc = ocCommand.execute()
 
-            // When the project is deleted the error message is "Error from server (NotFound): namespaces "xxx" not found"
-            def projectDeleted = proc.text.contains("not found")
+            def projectDeleted = proc.text.exitValue() == 1
             if ( !projectDeleted ) {
               println "Project is not deleted yet.. "
             }
