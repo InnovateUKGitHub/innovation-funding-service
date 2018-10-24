@@ -34,7 +34,6 @@ public final class ApplicationFormUtil {
     public static final String PROJECT_LOCATION_KEY = "projectLocation";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
-    public static final String REQUEST_FUNDING = "request-funding";
 
     private ApplicationFormUtil() {}
 
@@ -48,10 +47,6 @@ public final class ApplicationFormUtil {
 
     public static boolean isMarkQuestionAsIncompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_INCOMPLETE);
-    }
-
-    public static boolean isFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey("request-funding");
     }
 
     public static boolean isMarkSectionRequest(@NotNull Map<String, String[]> params) {

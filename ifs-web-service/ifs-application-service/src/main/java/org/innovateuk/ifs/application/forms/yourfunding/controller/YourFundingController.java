@@ -100,7 +100,7 @@ public class YourFundingController {
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, user);
-        yourFundingFormValidator.validate(form, bindingResult);
+        yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(applicationId, form, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {

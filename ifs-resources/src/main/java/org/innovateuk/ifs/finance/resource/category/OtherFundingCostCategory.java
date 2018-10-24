@@ -82,6 +82,6 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
 
     @JsonIgnore
     public boolean otherFundingSet() {
-        return getOtherPublicFunding() != null && "Yes".equals(getOtherPublicFunding());
+        return "Yes".equals(getOtherPublicFunding());
     }
 }

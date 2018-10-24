@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -47,9 +46,14 @@ public class YourFundingSaver {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
 
-        ValidationMessages messages = saveGrantClaim(finance, form).getSuccess();
+        ValidationMessages messages = new ValidationMessages();
 
-        saveOtherFunding(finance, form, messages);
+        if (form.getRequestingFunding() != null) {
+            saveGrantClaim(finance, form, messages);
+        }
+        if (form.getOtherFunding() != null) {
+            saveOtherFunding(finance, form, messages);
+        }
 
         if (messages.getErrors().isEmpty()) {
             return serviceSuccess();
@@ -121,14 +125,14 @@ public class YourFundingSaver {
         return Optional.empty();
     }
 
-    private RestResult<ValidationMessages> saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form) {
+    private void saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {
         GrantClaim claim = finance.getGrantClaim();
         if (form.getRequestingFunding()) {
             claim.setGrantClaimPercentage(form.getGrantClaimPercentage());
         } else {
             claim.setGrantClaimPercentage(0);
         }
-        return financeRowRestService.update(claim);
+        messages.addAll(financeRowRestService.update(claim).getSuccess());
     }
 
     private void saveOtherFunding(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {

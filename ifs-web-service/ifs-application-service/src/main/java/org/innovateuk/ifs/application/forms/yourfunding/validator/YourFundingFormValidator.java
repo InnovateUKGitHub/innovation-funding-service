@@ -2,10 +2,15 @@ package org.innovateuk.ifs.application.forms.yourfunding.validator;
 
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -15,20 +20,19 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Boolean.TRUE;
 
 @Component
-public class YourFundingFormValidator implements Validator {
+public class YourFundingFormValidator {
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return YourFundingForm.class.equals(clazz);
-    }
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        YourFundingForm form = (YourFundingForm) target;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    public void validate(YourFundingForm form, Errors errors, UserResource user, long applicationId) {
 
         ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
         if (TRUE.equals(form.getRequestingFunding())) {
-            validateFundingLevel(form, errors);
+            validateFundingLevel(form, errors, user, applicationId);
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -87,11 +91,17 @@ public class YourFundingFormValidator implements Validator {
         }
     }
 
-    private void validateFundingLevel(YourFundingForm form, Errors errors) {
+    private void validateFundingLevel(YourFundingForm form, Errors errors,  UserResource user, long applicationId) {
         ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
         if (form.getGrantClaimPercentage() != null) {
             if (form.getGrantClaimPercentage() <= 0) {
-                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min.value.or.lower",  new String[] {"1"}, "");
+                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min.value.or.lower");
+            } else {
+                OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
+                ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+                if (form.getGrantClaimPercentage() >= finance.getMaximumFundingLevel()) {
+                    errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max.value.or.lower",  new String[] {String.valueOf(finance.getMaximumFundingLevel())}, "");
+                }
             }
         }
     }

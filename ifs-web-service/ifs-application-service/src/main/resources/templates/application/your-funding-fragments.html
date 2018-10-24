@@ -56,11 +56,11 @@
                        min="1"
                        th:max="${model.maximumFundingLevel}"
                        required="required"
-                       th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-input--error'"
+                       th:errorclass="govuk-input--error"
                        th:field="*{grantClaimPercentage}"
                        placeholder="0"
                        th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max.value.or.lower('%max%')},
-                                data-min-errormessage=#{validation.finance.grant.claim.percentage.min.value.or.lower('%min%')}" />
+                                data-min-errormessage=#{validation.finance.grant.claim.percentage.min.value.or.lower'}" />
                 <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
             </div>
         </div>

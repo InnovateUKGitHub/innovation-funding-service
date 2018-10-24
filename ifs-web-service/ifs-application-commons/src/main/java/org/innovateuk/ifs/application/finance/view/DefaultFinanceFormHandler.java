@@ -179,7 +179,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
     }
 
     private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
-        FinanceFormField financeFormField = getCostFormField(fieldName, value, true);
+        FinanceFormField financeFormField = getCostFormField(fieldName, value);
         FinanceRowType costType = FinanceRowType.fromType(FormInputType.findByName(financeFormField.getKeyType()));
         FinanceRowHandler financeRowHandler = getFinanceRowItemHandler(costType);
         Long costFormFieldId = 0L;

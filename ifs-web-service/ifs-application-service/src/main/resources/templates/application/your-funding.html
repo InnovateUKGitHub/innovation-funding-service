@@ -39,6 +39,7 @@
                   novalidate="novalidate"
                   method="POST">
 
+                <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
                 <input type="hidden" id="cacheTest" value=""/>
                 <th:block th:unless="${model.complete}" >
                     <input type="hidden"
@@ -209,6 +210,3 @@
 <th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>
-
-
-

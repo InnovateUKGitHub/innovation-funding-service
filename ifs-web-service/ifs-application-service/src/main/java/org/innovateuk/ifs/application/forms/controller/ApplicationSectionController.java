@@ -244,11 +244,6 @@ public class ApplicationSectionController {
         }
 
         switch (section.getType()) {
-            case FUNDING_FINANCES:
-                return  validateRequestingFunding(params, bindingResult) &
-                        validateOtherFundingSelectionMade(params, bindingResult) &&
-                        validateTermsAndConditionsAgreement(form, bindingResult);
-
             case PROJECT_COST_FINANCES:
                 return userIsResearch(userId, applicationId) ?
                         validateTermsAndConditionsAgreement(form, bindingResult) :
@@ -274,25 +269,6 @@ public class ApplicationSectionController {
             return true;
         }
         bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
-        return false;
-    }
-
-    private boolean validateRequestingFunding(Map<String, String[]> params, BindingResult bindingResult) {
-        if (isFundingRequest(params)) {
-            return true;
-        }
-        bindingResult.rejectValue("formInput[request-funding]", "validation.finance.funding.requesting.blank");
-        return false;
-    }
-
-    private boolean validateOtherFundingSelectionMade(Map<String, String[]> params, BindingResult bindingResult) {
-
-        List<String> publicFundingKeys = simpleFilter(params.keySet(), k -> k.contains("-otherPublicFunding"));
-        if (!publicFundingKeys.isEmpty()) {
-            return true;
-        }
-
-        bindingResult.rejectValue("formInput[cost-otherPublicFunding]", "validation.finance.other.funding.required");
         return false;
     }
 

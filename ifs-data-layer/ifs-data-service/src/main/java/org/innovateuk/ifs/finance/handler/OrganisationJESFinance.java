@@ -37,7 +37,7 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
     protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
 
-        for(FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : FinanceRowType.values()) {
             FinanceRowCostCategory financeRowCostCategory;
             switch (costType) {
                 case FINANCE:
@@ -63,7 +63,7 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
         FinanceRowHandler handler = null;
-        switch(costType) {
+        switch (costType) {
             case LABOUR:
             case CAPITAL_USAGE:
             case MATERIALS:
@@ -82,8 +82,7 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
                 handler = new OtherFundingHandler();
                 break;
         }
-        if(handler != null){
-            // some times the handler needs autowired classes
+        if (handler != null) {
             beanFactory.autowireBean(handler);
             return handler;
         }

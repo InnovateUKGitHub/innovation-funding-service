@@ -44,7 +44,7 @@ public class FinanceRowController {
     @PostMapping("/add-with-response/{applicationFinanceId}")
     public RestResult<FinanceRowItem> addWithResponse(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            @RequestBody(required=false) final FinanceRowItem newCostItem) {
+            @RequestBody final FinanceRowItem newCostItem) {
         return financeRowCostsService.addCost(applicationFinanceId, newCostItem).toPostCreateResponse();
     }
     

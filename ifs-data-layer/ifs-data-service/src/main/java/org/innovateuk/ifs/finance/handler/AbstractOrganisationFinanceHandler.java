@@ -45,17 +45,17 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
-        if(initialiseCostTypeSupported(costType)) {
-            Long competitionId = applicationFinance.getApplication().getCompetition().getId();
+        if (initialiseCostTypeSupported(costType)) {
+            long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
-            try{
+            try {
                 List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
                 cost.forEach(c -> {
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);
                 });
                 return applicationFinanceRowRepository.save(cost);
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
         }
@@ -68,7 +68,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     protected abstract Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories);
 
-    private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
+    private Question getQuestionByCostType(long competitionId, FinanceRowType costType) {
         return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccess();
     }
 
@@ -87,8 +87,8 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     private List<ApplicationFinanceRow> toApplicationFinanceRows(List<ProjectFinanceRow> costs) {
         return simpleMap(costs, cost -> {
-            Long applicationId = cost.getTarget().getProject().getApplication().getId();
-            Long organisationId = cost.getTarget().getOrganisation().getId();
+            long applicationId = cost.getTarget().getProject().getApplication().getId();
+            long organisationId = cost.getTarget().getOrganisation().getId();
             ApplicationFinance applicationFinance =
                     applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
@@ -152,13 +152,14 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
         FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
     }
+
     @Override
     public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
         FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
     }
 
-    private FinanceRowHandler getRowHandler(FinanceRow cost){
+    private FinanceRowHandler getRowHandler(FinanceRow cost) {
         cost.getQuestion().getFormInputs().size();
         FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         return getCostHandler(costType);
@@ -176,7 +177,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Override
     public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
+        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()), notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
                 .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccess();
     }
 

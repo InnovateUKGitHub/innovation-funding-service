@@ -42,8 +42,7 @@ public class YourFundingFormPopulator {
     @Autowired
     private ApplicationService applicationService;
 
-
-    public void populateForm(YourFundingForm form, Long applicationId, UserResource user) {
+    public void populateForm(YourFundingForm form, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         ApplicationResource application = applicationService.getById(applicationId);
