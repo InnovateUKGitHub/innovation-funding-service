@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update && \
     apt-get install -y mysql-client && \
@@ -17,4 +17,3 @@ WORKDIR robot-tests
 COPY ./ ./
 
 CMD ["./os_run_tests.sh", "-q"]
-#CMD ["sleep", "10000000000000"]
