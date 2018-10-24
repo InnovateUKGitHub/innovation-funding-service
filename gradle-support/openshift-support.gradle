@@ -274,6 +274,8 @@ task deleteProject {
         println ocCommand.execute().text
     }
 
+    ignoreExitValue true
+
     doLast {
         while ({
             sleep(15 * 1000)
