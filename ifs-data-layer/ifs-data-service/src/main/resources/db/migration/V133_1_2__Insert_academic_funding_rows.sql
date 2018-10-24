@@ -3,7 +3,7 @@ SET @academic_organisation_type_id = (SELECT id FROM organisation_type WHERE nam
 
 -- Insert default of NO other funding.
 insert into finance_row (cost, description, item, quantity, name, target_id, question_id, row_type)
-    select '0', 'Other Funding', '', '0', 'other-funding', finance.id, quest.id, 'ApplicationFinanceRow'
+    select '0', 'Other Funding', 'No', '0', 'other-funding', finance.id, quest.id, 'ApplicationFinanceRow'
     from application_finance finance
     inner join organisation org
     on org.id = finance.organisation_id
