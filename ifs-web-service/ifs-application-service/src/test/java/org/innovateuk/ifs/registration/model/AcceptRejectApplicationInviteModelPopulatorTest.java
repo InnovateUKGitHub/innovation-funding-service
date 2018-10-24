@@ -9,23 +9,26 @@ import org.junit.Test;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AcceptRejectApplicationInviteModelPopulatorTest {
 
     @Test
-    public void testPopulateModel() {
+    public void populateModel() {
         String inviteOrganisationNameConfirmed = "Invite Organisation Confirmed";
         String leadApplicantName = "Lead Applicant";
         String leadApplicantEmail = "lead@applicant.co.uk";
         String leadOrganisationName = "Lead Organisation Name";
+        Long leadOrganisationId = 1L;
         String competitionName = "Competition 1";
-        Long competitonId = 1L;
-        Long inviteOrganisationId = 2L;
+        Long competitionId = 2L;
+        Long inviteOrganisationId = 1L;
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).
                 withLeadApplicantEmail(leadApplicantEmail).
                 withLeadOrganisation(leadOrganisationName).
-                withCompetitionId(competitonId).
+                withLeadOrganisationId(leadOrganisationId).
+                withCompetitionId(competitionId).
                 withCompetitionName(competitionName).
                 withInviteOrganisationNameConfirmed(inviteOrganisationNameConfirmed).
                 withInviteOrganisationName(inviteOrganisationNameConfirmed).
@@ -36,13 +39,13 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
         // Method under test
         AcceptRejectApplicationInviteViewModel model = new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation);
 
-        assertEquals(competitonId, model.getCompetitionId());
+        assertEquals(competitionId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());
-        assertEquals(inviteOrganisationNameConfirmed, model.getInviteOrganisationName());
-        assertEquals(leadApplicantEmail, model.getLeadApplicantEmail());
         assertEquals(leadOrganisationName, model.getLeadOrganisationName());
         assertEquals(leadApplicantName, model.getLeadApplicantName());
-        assertEquals(inviteOrganisationId != null, model.isInviteOrganisationExists());
-
+        assertEquals(inviteOrganisationNameConfirmed, model.getInviteOrganisationName());
+        assertEquals(leadApplicantEmail, model.getLeadApplicantEmail());
+        assertTrue(model.isInviteOrganisationExists());
+        assertTrue(model.isLeadOrganisation());
     }
 }
