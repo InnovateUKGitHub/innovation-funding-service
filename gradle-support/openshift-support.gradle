@@ -268,10 +268,10 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 
 // Remote tasks
 
-task deleteProject {
+task deleteProject(type: Exec) {
     doFirst {
-        def ocCommand = "oc delete project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
-        println ocCommand.execute().text
+        executable 'oc'
+        args 'delete', 'project', openshiftEnv, "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
