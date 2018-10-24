@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <th:block th:fragment="financial_summary" th:if="${financeTotalPerType}">
-        <div th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
+        <div class="govuk-!-margin-bottom-6"
+            th:classappend="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
@@ -89,7 +90,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         </th:block>
                     </tr>
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
                         <th class="govuk-table__header" scope="row">Total</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                             <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
@@ -109,8 +110,11 @@
     </th:block>
 
     <!-- ===========================Form: funding breakdown =========================== -->
-    <th:block th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-        <th:block th:insert="finance/finance-summary :: application_finances_incomplete_warning" />
+    <th:block th:fragment="application_finances_summary"
+              th:if="${financeTotalPerType}"
+              th:with="collaborativeProject=${model.collaborativeProject}">
+        <th:block
+            th:insert="finance/finance-summary :: application_finances_incomplete_warning (collaborativeProject=${collaborativeProject})" />
 
         <div class="govuk-form-group finance-summary" style="overflow:auto;">
             <table class="govuk-table">
@@ -216,8 +220,8 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header"  scope="row">Total
+                <tr class="govuk-table__row" th:if="${collaborativeProject}">
+                    <th class="govuk-table__header" scope="row">Total
                         <div th:if="${currentApplication.isOpen()}">
                             <th:block th:if="${yourFinancesCompleteForAllOrganisations}">
                                 <img class="table-total-tick" width="20" height="17"
@@ -247,27 +251,36 @@
     </th:block>
     <!-- ===========================Form: finances incomplete =========================== -->
 
-    <th:block th:fragment="application_finances_incomplete_warning"
+    <th:block th:fragment="application_finances_incomplete_warning (collaborativeProject)"
               th:if="${isApplicant and hasFinanceSection and currentApplication.isOpen()}"
               th:with="financeSectionMarkedAsComplete=${sectionsMarkedAsComplete.contains(financeSectionId)},
                        enoughCollaboratorsSeekingFunding=${yourFinancesCompleteForAllOrganisations}">
 
-        <div th:unless="${financeSectionMarkedAsComplete}" class="warning-alert">
-            <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
-            <ul class="govuk-list govuk-list--bullet">
+        <th:block th:unless="${financeSectionMarkedAsComplete}">
+            <div th:if="${collaborativeProject}" class="warning-alert">
+                <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
+                <ul class="govuk-list govuk-list--bullet">
+                    <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
+                        <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" th:text="${applicationOrganisation.name}" />
+                    </th:block>
+                </ul>
                 <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
-                    <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" th:text="${applicationOrganisation.name}" />
+                    <p class="govuk-body"
+                       th:if="${applicationOrganisation.id == userOrganisation.id}"
+                       th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                      <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                         class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
                 </th:block>
-            </ul>
-            <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
-                <a th:if="${applicationOrganisation.id == userOrganisation.id}"
-                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                   class="govuk-body govuk-link">Return to the finances section to complete your finances</a>
-            </th:block>
-
-            <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
-        </div>
+                <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
+            </div>
+            <div th:unless="${collaborativeProject}" class="warning-alert">
+                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your finances as complete.</h2>
+                <p class="govuk-body">
+                    <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                       class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
+                <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete.</p>
+            </div>
+        </th:block>
 
         <div
             th:if="${!enoughCollaboratorsSeekingFunding and financeSectionMarkedAsComplete}" class="warning-alert">

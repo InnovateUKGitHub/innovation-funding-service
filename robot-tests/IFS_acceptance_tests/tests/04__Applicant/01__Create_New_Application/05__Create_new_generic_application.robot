@@ -59,7 +59,7 @@ The competition admin creates a competition for
     the user fills in the CS Milestones         ${month}  ${nextyear}
     the user fills in the CS Application section with custom questions  no  Generic
     the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
