@@ -14,6 +14,15 @@ public class OtherFundingRowForm {
 
     private BigDecimal fundingAmount;
 
+    public OtherFundingRowForm() {}
+
+    public OtherFundingRowForm(Long costId, String source, String date, BigDecimal fundingAmount) {
+        this.costId = costId;
+        this.source = source;
+        this.date = date;
+        this.fundingAmount = fundingAmount;
+    }
+
     public Long getCostId() {
         return costId;
     }

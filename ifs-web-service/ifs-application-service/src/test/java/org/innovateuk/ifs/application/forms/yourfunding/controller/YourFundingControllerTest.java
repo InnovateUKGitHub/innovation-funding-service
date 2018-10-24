@@ -12,8 +12,10 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFundingController> {
 
     @Override
@@ -55,7 +58,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     @Mock
     private UserRestService userRestService;
 
-    @Spy
+    @Mock
     private YourFundingFormValidator yourFundingFormValidator;
 
     @Test
@@ -126,11 +129,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
-                .param("complete", "true")
-                .param("requestingFunding", "true")
-                .param("grantClaimPercentage", "100")
-                .param("otherFunding", "false")
-                .param("termsAgreed", "true"))
+                .param("complete", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
@@ -140,38 +139,23 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
 
     @Test
-    public void complete_missingRequiredFields() throws Exception {
+    public void complete_error() throws Exception {
         YourFundingViewModel viewModel = mockUnlockedViewModel();
+        doAnswer((invocationOnMock) -> {
+            ((BindingResult) invocationOnMock.getArguments()[1]).rejectValue("requestingFunding", "something");
+            return Void.class;
+        }).when(yourFundingFormValidator).validate(any(), any(), eq(getLoggedInUser()), eq(APPLICATION_ID));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
                 .param("complete", "true"))
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attributeHasFieldErrorCode("form", "requestingFunding", "validation.finance.funding.requesting.blank"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "otherFunding", "validation.finance.other.funding.required"))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
         verifyZeroInteractions(saver);
     }
 
-    @Test
-    public void complete_withoutTermsAgreed() throws Exception {
-        YourFundingViewModel viewModel = mockUnlockedViewModel();
-
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
-                .param("complete", "true")
-                .param("requestingFunding", "true")
-                .param("grantClaimPercentage", "100")
-                .param("otherFunding", "false"))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attributeHasFieldErrorCode("form", "termsAgreed", "validation.field.must.not.be.blank"))
-                .andExpect(view().name(VIEW))
-                .andExpect(status().isOk());
-
-        verifyZeroInteractions(sectionStatusRestService);
-    }
 
     @Test
     public void addFundingRowFormPost() throws Exception {

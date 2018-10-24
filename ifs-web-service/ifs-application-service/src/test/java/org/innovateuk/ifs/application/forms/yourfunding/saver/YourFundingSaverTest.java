@@ -83,16 +83,9 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         form.setOtherFundingQuestionId(otherFundingQuestionId);
         form.setOtherFunding(true);
 
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm();
-        emptyRow.setSource("emptySource");
-        emptyRow.setDate("emptyDate");
-        emptyRow.setFundingAmount(new BigDecimal(123));
+        OtherFundingRowForm emptyRow = new OtherFundingRowForm(null, "emptySource", "emptyDate", new BigDecimal(123));
 
-        OtherFundingRowForm existingRow = new OtherFundingRowForm();
-        existingRow.setCostId(20L);
-        existingRow.setSource("existingSource");
-        existingRow.setDate("existingDate");
-        existingRow.setFundingAmount(new BigDecimal(321));
+        OtherFundingRowForm existingRow = new OtherFundingRowForm(20L, "existingSource", "existingDate", new BigDecimal(321));
 
         form.setOtherFundingRows(asMap(
                 YourFundingForm.EMPTY_ROW_ID, emptyRow,
