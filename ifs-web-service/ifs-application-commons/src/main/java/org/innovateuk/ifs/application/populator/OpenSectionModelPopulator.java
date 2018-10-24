@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
@@ -123,19 +125,19 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         final Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(comparator);
 
-        viewModel.setAcademicOrganisations(applicantSection.allOrganisations()
+        viewModel.setAcademicOrganisations(applicantSection.getAllOrganisations()
                 .filter(organisation -> organisation.getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()))
                 .collect(Collectors.toCollection(supplier)));
-        viewModel.setApplicationOrganisations(applicantSection.allOrganisations()
+        viewModel.setApplicationOrganisations(applicantSection.getAllOrganisations()
                 .collect(Collectors.toCollection(supplier)));
 
-        List<String> activeApplicationOrganisationNames = applicantSection.allOrganisations().map(OrganisationResource::getName).collect(Collectors.toList());
+        Set<String> activeApplicationOrganisationNames = applicantSection.getAllOrganisations().map(OrganisationResource::getName).collect(toSet());
 
         List<String> pendingOrganisationNames = inviteService.getPendingInvitationsByApplicationId(applicantSection.getApplication().getId()).stream()
             .map(ApplicationInviteResource::getInviteOrganisationName)
             .distinct()
             .filter(orgName -> StringUtils.hasText(orgName)
-                && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
+                && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(toList());
 
         viewModel.setPendingOrganisationNames(pendingOrganisationNames);
 
@@ -161,6 +163,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                     sectionsMarkedAsComplete, applicantSection.getCompetition().getId());
             openSectionViewModel.setYourFinancesCompleteForAllOrganisations(yourFinancesCompleteForAllOrganisations);
         }
+        openSectionViewModel.setCollaborativeProject(applicantSection.getApplication().isCollaborativeProject());
     }
 
     private boolean getFinancesOverviewCompleteForAllOrganisations(Set<Long> completedSections,

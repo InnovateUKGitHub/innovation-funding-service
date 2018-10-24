@@ -90,7 +90,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation(), response);
                             model.addAttribute("model",
                                     new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation,
-                                            getOrganisationAddress(organisation), RegistrationController.BASE_URL));
+                                            RegistrationController.BASE_URL));
                             return "registration/confirm-invited-organisation";
                         }
                 )

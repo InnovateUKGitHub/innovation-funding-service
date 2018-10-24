@@ -50,7 +50,6 @@ The type of organisation navigates to the correct page
     And the user clicks the button/link            jQuery = button:contains("Search")
     Then the user should see the element           jQuery = p:contains("Choose your organisation:")
     When the user clicks the button/link           jQuery = a:contains("Zoological Soc London Inst of Zoology")
-    Then the user should see the text in the page  This is the address that your organisation works from
     When the user goes back to the previous page
     Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
     Given the user clicks the button/link          jQuery = a:contains("Back to choose your organisation type")
@@ -123,9 +122,4 @@ the user enters organisation details
     the user enters text to a text field       id = organisationSearchName    ${orgName}
     the user clicks the button/link            id = org-search
     the user clicks the button/link            link = INNOVATE LTD
-    the user clicks the button/link            jQuery = button:contains("Enter address manually")
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link            css = #select-address-block > button
-    the user clicks the button/link            jQuery = .govuk-button:contains("Continue")
     the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")

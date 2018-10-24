@@ -36,7 +36,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(source = "target", target = "application"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.competition", target = "competition"),
-            @Mapping(source = "processState", target = "assessmentState")
+            @Mapping(source = "processState", target = "assessmentState"),
+            @Mapping(source = "target.collaborativeProject", target = "collaborativeProject")
     })
     @Override
     public abstract AssessmentResource mapToResource(Assessment domain);
