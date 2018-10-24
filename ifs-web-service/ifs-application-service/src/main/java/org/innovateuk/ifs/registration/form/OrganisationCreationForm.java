@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,8 +16,6 @@ import java.util.List;
  * Object to store the data that is used for the companies house form, while creating a new application.
  */
 public class OrganisationCreationForm implements Serializable {
-    @Valid
-    private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
 
     @NotNull(message = "{validation.standard.organisationtype.required}")
@@ -31,7 +27,6 @@ public class OrganisationCreationForm implements Serializable {
     private String searchOrganisationId;
     private boolean organisationSearching;
     private boolean manualEntry = false;
-    private boolean useSearchResultAddress = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
@@ -111,28 +106,12 @@ public class OrganisationCreationForm implements Serializable {
         this.searchOrganisationId = searchOrganisationId;
     }
 
-    public AddressForm getAddressForm() {
-        return addressForm;
-    }
-
-    public void setAddressForm(AddressForm addressForm) {
-        this.addressForm = addressForm;
-    }
-
     public boolean isTriedToSave() {
         return triedToSave;
     }
 
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
-    }
-
-    public boolean isUseSearchResultAddress() {
-        return useSearchResultAddress;
-    }
-
-    public void setUseSearchResultAddress(boolean useSearchResultAddress) {
-        this.useSearchResultAddress = useSearchResultAddress;
     }
 
     @JsonIgnore
@@ -152,8 +131,6 @@ public class OrganisationCreationForm implements Serializable {
                 .append(triedToSave, that.triedToSave)
                 .append(organisationSearching, that.organisationSearching)
                 .append(manualEntry, that.manualEntry)
-                .append(useSearchResultAddress, that.useSearchResultAddress)
-                .append(addressForm, that.addressForm)
                 .append(organisationTypeId, that.organisationTypeId)
                 .append(organisationSearchName, that.organisationSearchName)
                 .append(searchOrganisationId, that.searchOrganisationId)
@@ -165,14 +142,12 @@ public class OrganisationCreationForm implements Serializable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(addressForm)
                 .append(triedToSave)
                 .append(organisationTypeId)
                 .append(organisationSearchName)
                 .append(searchOrganisationId)
                 .append(organisationSearching)
                 .append(manualEntry)
-                .append(useSearchResultAddress)
                 .append(organisationSearchResults)
                 .append(organisationName)
                 .toHashCode();

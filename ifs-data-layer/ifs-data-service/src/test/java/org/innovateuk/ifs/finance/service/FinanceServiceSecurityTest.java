@@ -159,6 +159,16 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
                 });
     }
 
+    @Test
+    public void collaborativeFundingCriteriaMet() {
+        final long applicationId = 1L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
+
+        assertAccessDenied(
+                () -> classUnderTest.collaborativeFundingCriteriaMet(applicationId),
+                () -> verify(applicationRules).consortiumCanCheckCollaborativeFundingCriteriaIsMet(isA(ApplicationResource.class), isA(UserResource.class)));
+    }
+
     private void verifyApplicationFinanceResourceReadRulesCalled() {
         verifyApplicationFinanceResourceReadRulesCalled(1);
     }

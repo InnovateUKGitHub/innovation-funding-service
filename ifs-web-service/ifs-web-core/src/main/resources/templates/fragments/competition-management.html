@@ -21,11 +21,11 @@
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">
 	<div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
-      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Previous</button>
       <div class="status">
         Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
       </div>
-      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 1}">Next</button>
     </div>
 </th:block>
 

@@ -110,7 +110,7 @@
     <div class="complete-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m govuk-!-margin-0">Complete competition setup</h2>
-        <p class="govuk-body">Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+        <p class="govuk-body">You must ask a team member to review the competition before you mark it as complete. Changes will not be permitted without a change request form, which will require senior authority.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
