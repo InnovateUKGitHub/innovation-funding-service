@@ -31,9 +31,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<AbstractYourProjectCostsSectionViewModel> {
 
-    private final SectionService sectionService;
-    private final FinanceViewHandlerProvider financeViewHandlerProvider;
-    private final FormInputViewModelGenerator formInputViewModelGenerator;
+    private SectionService sectionService;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
+    private FormInputViewModelGenerator formInputViewModelGenerator;
 
     public YourProjectCostsSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
                                             final SectionService sectionService,
