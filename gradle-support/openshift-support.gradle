@@ -286,8 +286,6 @@ task deleteProject(type: Exec) {
             def stdErr = new StringBuffer()
             proc.waitForProcessOutput(stdErr, System.err);
 
-            println stdErr.toString()
-
             // When the project is deleted the error message is "Error from server (NotFound): namespaces "xxx" not found"
             def projectDeleted = stdErr.toString().contains("not found")
             if ( !projectDeleted ) {
