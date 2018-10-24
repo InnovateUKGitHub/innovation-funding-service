@@ -31,8 +31,11 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
     public void populate() throws Exception {
         Long questionId = 1L;
         Long applicationId = 2L;
-        String competitionName = "COMP_NAME";
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionName(competitionName).build();
+        String applicationName = "APP_NAME";
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(applicationId)
+                .withName(applicationName)
+                .build();
 
         when(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId)).thenReturn(restSuccess(newInnovationAreaResource().build(5)));
 
@@ -40,7 +43,7 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
 
         assertEquals(questionId, innovationAreaViewModel.getQuestionId());
         assertEquals(applicationId, innovationAreaViewModel.getApplicationId());
-        assertEquals(competitionName, innovationAreaViewModel.getCurrentCompetitionName());
+        assertEquals(applicationName, innovationAreaViewModel.getApplicationName());
         assertEquals(5L, innovationAreaViewModel.getAvailableInnovationAreas().size());
     }
 

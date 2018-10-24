@@ -142,6 +142,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
             );
 
             return grantClaimRow
+                    .filter(row -> row.getQuantity() != null)
                     .map(row -> BigDecimal.valueOf(row.getQuantity()))
                     .orElse(BigDecimal.ZERO);
         }

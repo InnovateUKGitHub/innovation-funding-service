@@ -46,7 +46,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     protected ApplicationFundingDecisionController supplyControllerUnderTest() {
         return new ApplicationFundingDecisionController();
     }
-    
+
     @Test
     public void saveFundingDecisionData() throws Exception {
         Long competitionId = 1L;
@@ -55,9 +55,10 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         when(applicationFundingServiceMock.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/applicationfunding/1")
-        			.contentType(MediaType.APPLICATION_JSON)
-        			.content(objectMapper.writeValueAsString(decision)))
-        		.andDo( document("applicationfunding/{method-name}"));
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(decision)))
+                .andDo(document("applicationfunding/{method-name}"));
     }
 
     @Test
@@ -75,9 +76,10 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
-                .andDo( document("applicationfunding/{method-name}",
+                .andDo(document("applicationfunding/{method-name}",
                         requestFields(fundingNotificationResourceFields)
                 ));
     }

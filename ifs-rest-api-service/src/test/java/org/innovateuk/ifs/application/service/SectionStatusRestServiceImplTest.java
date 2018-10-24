@@ -22,8 +22,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
 
     @Override
     protected SectionStatusRestServiceImpl registerRestServiceUnderTest() {
-        SectionStatusRestServiceImpl sectionRestService = new SectionStatusRestServiceImpl();
-        return sectionRestService;
+        return new SectionStatusRestServiceImpl();
     }
 
     @Test

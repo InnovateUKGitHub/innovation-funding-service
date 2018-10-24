@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
@@ -47,12 +48,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setSections(sections));
     }
 
-    public CompetitionBuilder withSetupComplete(boolean setupComplete) {
-        return with(competition -> setField("setupComplete", setupComplete, competition));
+    public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
+        return withArraySetFieldByReflection("setupComplete", setupComplete);
     }
 
-    public CompetitionBuilder withLocationPerPartner(boolean locationPerPartner) {
-        return with(competition -> setField("locationPerPartner", locationPerPartner, competition));
+    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
+        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -147,6 +148,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAssessmentClosedDate(ZonedDateTime... dates) {
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
+    }
+
+    public CompetitionBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
+        return withArray((collaborationLevel, competition) ->
+                competition.setCollaborationLevel(collaborationLevel), collaborationLevels);
     }
 
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
@@ -268,6 +274,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
+    }
+
+    public CompetitionBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
+        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
     }
 
     public CompetitionBuilder withCreatedBy(User... users) {

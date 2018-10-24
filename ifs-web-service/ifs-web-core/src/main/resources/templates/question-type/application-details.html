@@ -36,7 +36,7 @@
             <th:block th:if="${showApplicationTeamLink}">
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}" class="govuk-link">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${originQuery}" class="govuk-link">
                             view contributors and collaborators
                         </a>
                     </li>

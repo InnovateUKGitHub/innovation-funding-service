@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -41,9 +40,6 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     private QuestionStatusService questionStatusService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private SectionStatusService sectionStatusService;
 
     @Autowired
@@ -66,7 +62,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         return find(applicationRepository.findOne(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
 
-            return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, id, null)
+            return sectionStatusService.sectionsCompleteForAllOrganisations(id)
                     .andOnSuccessReturn(allSectionsComplete -> {
                         Competition competition = application.getCompetition();
                         BigDecimal researchParticipation =
