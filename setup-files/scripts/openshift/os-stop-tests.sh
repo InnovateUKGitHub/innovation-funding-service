@@ -16,9 +16,9 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 echo "Stopping tests on project ($PROJECT)"
 
 function stopTests() {
-    oc delete dc chrome --loglevel=9 ${SVC_ACCOUNT_CLAUSE}
-    oc delete dc robot-framework --loglevel=9 ${SVC_ACCOUNT_CLAUSE}
-    oc delete svc chrome --loglevel=9 ${SVC_ACCOUNT_CLAUSE}
+    oc delete dc chrome ${SVC_ACCOUNT_CLAUSE}
+    oc delete dc robot-framework ${SVC_ACCOUNT_CLAUSE}
+    oc delete svc chrome ${SVC_ACCOUNT_CLAUSE}
 }
 
 stopTests
