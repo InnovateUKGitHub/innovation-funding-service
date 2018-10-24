@@ -147,8 +147,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 APPLICATION_ID, SECTION_ID)
                 .param("complete", "true"))
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attributeHasFieldErrorCode("form", "requestingFunding", "validation.field.must.not.be.blank"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "otherFunding", "validation.field.must.not.be.blank"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "requestingFunding", "validation.finance.funding.requesting.blank"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "otherFunding", "validation.finance.other.funding.required"))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
