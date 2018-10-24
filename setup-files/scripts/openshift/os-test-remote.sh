@@ -44,9 +44,15 @@ function buildAndPushTestImages() {
 
 function deployTests() {
     oc create -f $(getBuildLocation)/robot-tests/7-chrome.yml ${SVC_ACCOUNT_CLAUSE}
-    sleep 30 # TODO should wait till chrome is running
+    until oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^chrome | grep -v deploy | grep "Running"; do
+        echo "Chrome pod is not running yet.."
+        sleep 5
+    done
     oc create -f $(getBuildLocation)/robot-tests/8-robot.yml ${SVC_ACCOUNT_CLAUSE}
-    sleep 2
+    until oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^robot-framework | grep -v deploy | grep "Running"; do
+        echo "Robot framework is not running yet.."
+        sleep 5
+    done
 }
 
 function fileFixtures() {
@@ -74,8 +80,6 @@ copyNecessaryFiles
 buildAndPushTestImages
 deployTests
 cleanUp
-
-sleep 5
 
 echo ""
 echo "Tests are running now. You can follow the progress with the following command:"
