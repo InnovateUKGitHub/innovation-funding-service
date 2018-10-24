@@ -283,7 +283,7 @@ task deleteProject(type: Exec) {
             def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
             def proc = ocCommand.execute()
 
-            def projectDeleted = proc.text.exitValue() == 1
+            def projectDeleted = proc.exitValue() == 1
             if ( !projectDeleted ) {
               println "Project is not deleted yet.. "
             }
