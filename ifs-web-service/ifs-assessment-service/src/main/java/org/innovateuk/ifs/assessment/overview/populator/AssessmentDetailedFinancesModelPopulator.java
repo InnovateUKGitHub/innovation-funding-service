@@ -23,7 +23,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -37,32 +36,35 @@ import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES
 @Component
 public class AssessmentDetailedFinancesModelPopulator {
 
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private AssessmentService assessmentService;
-
-    @Autowired
     private UserRestService userRestService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
     private FileEntryRestService fileEntryRestService;
-
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
     private FinanceService financeService;
-
-    @Autowired
     private ApplicantRestService applicantRestService;
-
-    @Autowired
     private YourProjectCostsSectionPopulator projectCostsSectionPopulator;
+
+    public AssessmentDetailedFinancesModelPopulator(final CompetitionRestService competitionRestService,
+                                                    final AssessmentService assessmentService,
+                                                    final UserRestService userRestService,
+                                                    final OrganisationRestService organisationRestService,
+                                                    final FileEntryRestService fileEntryRestService,
+                                                    final SectionService sectionService,
+                                                    final FinanceService financeService,
+                                                    final ApplicantRestService applicantRestService,
+                                                    final YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
+        this.competitionRestService = competitionRestService;
+        this.assessmentService = assessmentService;
+        this.userRestService = userRestService;
+        this.organisationRestService = organisationRestService;
+        this.fileEntryRestService = fileEntryRestService;
+        this.sectionService = sectionService;
+        this.financeService = financeService;
+        this.applicantRestService = applicantRestService;
+        this.projectCostsSectionPopulator = projectCostsSectionPopulator;
+    }
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -102,7 +104,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         model.addAttribute("showAssessorDetailedFinanceLink", financeView.equals(DETAILED) ? true : false);
     }
 
-    public void addFinanceDetails(Model model, long applicationId) {
+    private void addFinanceDetails(Model model, long applicationId) {
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);

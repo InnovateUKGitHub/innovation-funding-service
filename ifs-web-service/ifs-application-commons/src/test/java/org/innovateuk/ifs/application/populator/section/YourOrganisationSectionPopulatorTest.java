@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,6 +28,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -62,12 +64,17 @@ public class YourOrganisationSectionPopulatorTest {
     private OrganisationRestService organisationRestService;
 
     @Test
-    public void testPopulate() {
+    public void populate() {
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withStateAid(true)
+                .build();
+
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(organisation).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().build())
+                .withCompetition(competition)
                 .withApplication(newApplicationResource().build())
                 .withSection(newSectionResource().build())
                 .build();
@@ -90,14 +97,15 @@ public class YourOrganisationSectionPopulatorTest {
 
         YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L), true);
 
-        assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isComplete(), equalTo(false));
+        assertThat(viewModel.isSection(), is(true));
+        assertThat(viewModel.isComplete(), is(false));
         assertThat(viewModel.getFormInputViewModels(), equalTo(formInputViewModels));
         assertThat(viewModel.getOrganisationSizeFormInputViewModel(), equalTo(organisationSize));
         assertThat(viewModel.getFinancialEndYearFormInputViewModel(), equalTo(financialYearEnd));
         assertThat(viewModel.getFinanceOverviewRows(), equalTo(singletonList(overviewRow)));
         assertThat(viewModel.getStandardInputViewModels(), equalTo(emptyList()));
         assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
-        assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), equalTo(true));
+        assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), is(true));
+        assertThat(viewModel.isStateAidEligibility(), is(true));
     }
 }
