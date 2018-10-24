@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/FINANCE(applicationId=${model.applicationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -50,14 +50,15 @@
                             </legend>
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
                                   th:text="${err}"></span>
-                            <div class="govuk-radios">
+                            <div id="requestingFunding" class="govuk-radios">
                                 <div class="govuk-radios__item" data-target="request-funding">
                                     <input type="radio"
                                            class="govuk-radios__input"
                                            id="request-funding-yes"
                                            value="true"
                                            th:field="*{requestingFunding}"
-                                           required="required" />
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
                                     <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
                                 </div>
                                 <th:block th:insert="application/your-funding-fragments :: requesting_funding" />
@@ -68,7 +69,8 @@
                                            name="request-funding"
                                            value="false"
                                            th:field="*{requestingFunding}"
-                                           required="required" />
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
                                     <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
                                 </div>
                             </div>
@@ -83,7 +85,7 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                                   th:text="${err}"></span>
                             <span class="govuk-hint">Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.</span>
-                            <div class="govuk-radios">
+                            <div id="otherFunding" class="govuk-radios">
                                 <div class="govuk-radios__item" data-target="other-funding-table">
                                     <input type="radio"
                                            class="govuk-radios__input"

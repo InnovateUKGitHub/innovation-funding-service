@@ -7,6 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,14 +26,14 @@ public class YourFundingFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         YourFundingForm form = (YourFundingForm) target;
 
-        ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.field.must.not.be.blank");
+        ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
         if (TRUE.equals(form.getRequestingFunding())) {
             validateFundingLevel(form, errors);
         }
 
-        ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.field.must.not.be.blank");
+        ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
         if (TRUE.equals(form.getOtherFunding())) {
-            validateOtherFundingRows(form, errors);
+            validateOtherFundingRows(form.getOtherFundingRows(), errors);
         }
 
         if (!TRUE.equals(form.getTermsAgreed())) {
@@ -40,18 +41,22 @@ public class YourFundingFormValidator implements Validator {
         }
     }
 
-    private void validateOtherFundingRows(YourFundingForm form, Errors errors) {
-        if (form.getOtherFundingRows() == null || form.getOtherFundingRows().isEmpty()) {
+    private void validateOtherFundingRows(Map<String, OtherFundingRowForm> rows, Errors errors) {
+        if (rows == null || rows.isEmpty()) {
             errors.rejectValue("otherFunding", "validation.finance.min.row.other.funding.single");
         } else {
-            form.getOtherFundingRows().forEach((id, row) -> {
-                if (!row.isBlank()) {
+            rows.forEach((id, row) -> {
+                if (!isBlankButNotOnlyRow(row, rows)) {
                     validateOtherFundingDate(id, row, errors);
                     validateOtherFundingSource(id, row, errors);
                     validateOtherFundingAmount(id, row, errors);
                 }
             });
         }
+    }
+
+    private boolean isBlankButNotOnlyRow(OtherFundingRowForm row, Map<String, OtherFundingRowForm> rows) {
+        return row.isBlank() && rows.size() > 1;
     }
 
     private void validateOtherFundingSource(String id, OtherFundingRowForm row, Errors errors) {
@@ -83,10 +88,10 @@ public class YourFundingFormValidator implements Validator {
     }
 
     private void validateFundingLevel(YourFundingForm form, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.field.must.not.be.blank");
+        ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
         if (form.getGrantClaimPercentage() != null) {
-            if (form.getGrantClaimPercentage() < 0) {
-                errors.rejectValue("otherFunding", "validation.finance.funding.level.min",  new String[] {"1"}, "");
+            if (form.getGrantClaimPercentage() <= 0) {
+                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min.value.or.lower",  new String[] {"1"}, "");
             }
         }
     }
