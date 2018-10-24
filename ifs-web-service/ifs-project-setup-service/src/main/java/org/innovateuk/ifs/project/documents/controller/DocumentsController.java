@@ -142,8 +142,7 @@ public class DocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_DOCUMENTS_SECTION')")
-    @PostMapping(value = "/config/{documentConfigId}/submit") // TODO - XXX - Revert back to the below to use param
-    //@PostMapping(value = "/config/{documentConfigId}", params = "submitDocument")
+    @PostMapping(value = "/config/{documentConfigId}", params = "submitDocument")
     public String submitDocument(@PathVariable("projectId") long projectId,
                                  @PathVariable("documentConfigId") long documentConfigId,
                                  @ModelAttribute(FORM_ATTR) DocumentForm form,
