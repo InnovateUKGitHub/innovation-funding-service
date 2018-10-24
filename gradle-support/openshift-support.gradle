@@ -3,8 +3,6 @@ if (project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
-ext.openshiftToken = project.properties['openshiftToken']
-
 //Workaround because of process resources.  dependency should be removed.
 apply from: rootProject.file("gradle-support/java.gradle")
 build.enabled = false
