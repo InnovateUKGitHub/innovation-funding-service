@@ -57,9 +57,9 @@ If a jar has been built and no source files have changed it wont build the jar a
 
 ## Typical combinations
 
-Deploy a branch for the first time
+Deploy a branch for the first time with out full test suite
 
-    ./gradlew clean build deploy wait -Pinitialise="true"
+    ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test
 
 Redeploy my changed jar files (no database changes)
 
