@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
-
 /**
  * This controller handles address lookups
  */
@@ -47,16 +45,9 @@ public class AddressLookupBaseController {
             OrganisationResource organisationResource,
             OrganisationAddressType addressTypeToUseForNewAddress){
         OrganisationAddressResource organisationAddressResource = null;
-        if(existingAddressSelected(form.getAddressType())){
-            Optional<OrganisationAddressResource> organisationAddress = getAddress(organisationResource, form.getAddressType());
-            if (organisationAddress.isPresent()) {
-                organisationAddressResource = organisationAddress.get();
-            }
-        } else {
-            form.getAddressForm().setTriedToSave(true);
-            AddressResource newAddressResource = form.getAddressForm().getSelectedPostcode();
-            organisationAddressResource = new OrganisationAddressResource(organisationResource, newAddressResource, new AddressTypeResource((long)addressTypeToUseForNewAddress.ordinal(), addressTypeToUseForNewAddress.name()));
-        }
+        form.getAddressForm().setTriedToSave(true);
+        AddressResource newAddressResource = form.getAddressForm().getSelectedPostcode();
+        organisationAddressResource = new OrganisationAddressResource(organisationResource, newAddressResource, new AddressTypeResource((long)addressTypeToUseForNewAddress.ordinal(), addressTypeToUseForNewAddress.name()));
         return organisationAddressResource;
     }
 
@@ -86,10 +77,6 @@ public class AddressLookupBaseController {
         return addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
-    }
-
-    private boolean existingAddressSelected(OrganisationAddressType organisationAddressType){
-        return organisationAddressType != null && organisationAddressType != ADD_NEW;
     }
 
     protected FieldError createPostcodeSearchFieldError() {
