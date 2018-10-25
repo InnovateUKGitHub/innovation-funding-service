@@ -21,7 +21,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
         String leadOrganisationName = "Lead Organisation Name";
         Long leadOrganisationId = 1L;
         String competitionName = "Competition 1";
-        Long competitionId = 2L;
+        long competitionId = 2L;
         Long inviteOrganisationId = 1L;
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).

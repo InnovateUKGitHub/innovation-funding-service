@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.viewmodel;
 
 public class AcceptRejectApplicationInviteViewModel {
 
-    private Long competitionId;
+    private long competitionId;
     private String competitionName;
     private String leadOrganisationName;
     private String leadApplicantName;
@@ -11,7 +11,7 @@ public class AcceptRejectApplicationInviteViewModel {
     private boolean inviteOrganisationExists;
     private boolean leadOrganisation;
 
-    public AcceptRejectApplicationInviteViewModel(final Long competitionId, final String competitionName,
+    public AcceptRejectApplicationInviteViewModel(final long competitionId, final String competitionName,
                                                   final String leadOrganisationName, final String leadApplicantName,
                                                   final String inviteOrganisationName,
                                                   final String leadApplicantEmail,
@@ -47,7 +47,7 @@ public class AcceptRejectApplicationInviteViewModel {
         return competitionName;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
