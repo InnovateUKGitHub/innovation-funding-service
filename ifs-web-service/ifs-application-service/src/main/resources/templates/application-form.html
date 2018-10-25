@@ -58,10 +58,16 @@
                     </button>
                 </th:block>
 
+                <!--/* Application Form for a Section. */-->
+                <th:block th:if="${model.isSection()}">
+                    <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}" />
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})" />
+                </th:block>
+
                 <!--/* Application Form for a Question. */-->
                 <th:block th:if="${model.isQuestion()}">
                     <div class="question" th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}"
-                        th:id="'form-input-'+${formInput.id}">
+                         th:id="'form-input-'+${formInput.id}">
                         <th:block th:if="${formInput.type.displayableQuestionType}">
                             <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModel})" />
                         </th:block>
@@ -72,15 +78,9 @@
                     </th:block>
                     <th:block th:unless="${model.allReadOnly}">
                         <button th:unless="${model.isSection()}" id="application-question-save" type="submit" class="govuk-button app-submit-btn"
-                            name="submit-section">Save and return to application overview
+                                name="submit-section">Save and return to application overview
                         </button>
                     </th:block>
-                </th:block>
-
-                <!--/* Application Form for a Section. */-->
-                <th:block th:if="${model.isSection()}">
-                    <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}" />
-                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})" />
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}" />

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator.section;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -25,14 +26,19 @@ import java.util.Optional;
 @Component
 public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
 
-    @Autowired
-    private SectionService sectionService;
+    private final SectionService sectionService;
+    private final FinanceService financeService;
+    private final FileEntryRestService fileEntryRestService;
 
-    @Autowired
-    private FinanceService financeService;
-
-    @Autowired
-    private FileEntryRestService fileEntryRestService;
+    public YourFinancesSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                        final SectionService sectionService,
+                                        final FinanceService financeService,
+                                        final FileEntryRestService fileEntryRestService) {
+        super(navigationPopulator);
+        this.sectionService = sectionService;
+        this.financeService = financeService;
+        this.fileEntryRestService = fileEntryRestService;
+    }
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
