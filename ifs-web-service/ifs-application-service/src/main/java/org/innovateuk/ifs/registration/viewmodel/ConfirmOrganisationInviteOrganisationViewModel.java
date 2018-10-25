@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -15,17 +14,15 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     private String registrationNumber;
     private long organisationTypeId;
     private String emailLeadApplicant;
-    private AddressResource organisationAddress;
     private String registerUrl;
 
-    public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
+    public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, String registerUrl) {
         this.partOfOrganisation = inviteResource.getInviteOrganisationNameConfirmedSafe();
         this.organisationType = organisation.getOrganisationTypeName();
         this.organisationTypeId = organisation.getOrganisationType();
         this.registrationName = organisation.getName();
         this.registrationNumber = organisation.getCompaniesHouseNumber();
         this.emailLeadApplicant = inviteResource.getLeadApplicantEmail();
-        this.organisationAddress = organisationAddress;
         this.registerUrl = registerUrl;
     }
 
@@ -51,10 +48,6 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
 
     public String getEmailLeadApplicant() {
         return emailLeadApplicant;
-    }
-
-    public AddressResource getOrganisationAddress() {
-        return organisationAddress;
     }
 
     public String getRegisterUrl() {

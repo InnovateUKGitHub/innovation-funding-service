@@ -32,7 +32,7 @@ Comp Admin creates an APC competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #And #the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  APC
@@ -42,12 +42,13 @@ Comp Admin creates an APC competition
     Then the user clicks the button/link           css = button[type = "submit"]
 
 Applicant applies to newly created APC competition
-    [Documentation]  IFS-2286  IFS-4221
+    [Documentation]  IFS-2286  IFS-4221  IFS-4222
     [Tags]  MySQL
     When the competition is open                  ${apcCompetitionTitle}
     And Log in as a different user                &{lead_applicant_credentials}
     Then logged in user applies to competition    ${apccompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
+    And the applicant sees single comp finance summary
 
 Applicant submits his application
     [Documentation]  IFS-2286
@@ -73,4 +74,10 @@ the lead applicant fills all the questions and marks as complete(APC)
 the applicant cannot add a collaborator to a single comp
     the user clicks the button/link      link = Application team
     the user should not see the element  link = Add a collaborator organisation
+    the user clicks the button/link      link = Application overview
+
+the applicant sees single comp finance summary
+    the user clicks the button/link      link = Finances overview
+    the user should see the element      jQuery = .warning-alert:contains("You have not marked your finances as complete")
+    the user should not see the element  jQuery = .finance-summary th[scope = "row"]:contains("Total")
     the user clicks the button/link      link = Application overview
