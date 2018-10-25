@@ -70,7 +70,7 @@ public class YourFundingController {
                                             @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-        YourFundingViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId);
+        YourFundingViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId, originQuery);
         model.addAttribute("model", viewModel);
         formPopulator.populateForm(form, applicationId, user, Optional.of(applicantOrganisationId));
         return VIEW;

@@ -85,10 +85,10 @@ public class YourFundingViewModelPopulator {
                 String.format("/application/%d/form/FINANCE", applicationId));
     }
 
-    public ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
+    public ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, String originQuery) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         return new ManagementYourFundingViewModel(applicationId, sectionId, application.getCompetition(), application.getName(),
-                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                String.format("/application/%d/form/FINANCE/%d%s", applicationId, organisationId, originQuery));
 
     }
 
