@@ -88,7 +88,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     @Override
-    public ValidationMessages validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
+    public ValidationMessages validateFormInputResponse(Application application, long formInputId, long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
@@ -148,14 +148,14 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     private boolean financeFileIsEmpty(Application application) {
         List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
         Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
-        Optional<OrganisationResource> organisationOpt = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getOptionalSuccessObject();
+        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getOptionalSuccessObject();
         
-        if (applicationFinances == null || !organisationOpt.isPresent()) {
+        if (applicationFinances == null || !organisation.isPresent()) {
             return true;
         }
 
         Optional<ApplicationFinance> applicationFinanceOpt =
-                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisationOpt.get().getId()));
+                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.get().getId()));
 
         return applicationFinanceOpt.map(applicationFinance -> applicationFinance.getFinanceFileEntry() == null).orElse(true);
     }

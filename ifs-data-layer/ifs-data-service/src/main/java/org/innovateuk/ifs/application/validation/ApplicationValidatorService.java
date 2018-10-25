@@ -15,7 +15,7 @@ public interface ApplicationValidatorService {
     List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId);
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
-    ValidationMessages validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById);
+    ValidationMessages validateFormInputResponse(Application application, long formInputId, long markedAsCompleteById);
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
     List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById);
