@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.documents.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -41,6 +42,14 @@ public class ProjectDocumentBuilder extends BaseBuilder<ProjectDocument, Project
 
     public ProjectDocumentBuilder withProject(Project... projects) {
         return withArray((project, p) -> setField("project", project, p), projects);
+    }
+
+    public ProjectDocumentBuilder withProjectDocument(org.innovateuk.ifs.competitionsetup.domain.ProjectDocument... projectDocuments) {
+        return withArray((projectDocument, p) -> setField("projectDocument", projectDocument, p), projectDocuments);
+    }
+
+    public ProjectDocumentBuilder withFileEntry(FileEntry... fileEntries) {
+        return withArray((fileEntry, p) -> setField("fileEntry", fileEntry, p), fileEntries);
     }
 
     public ProjectDocumentBuilder withStatus(DocumentStatus... statuses) {
