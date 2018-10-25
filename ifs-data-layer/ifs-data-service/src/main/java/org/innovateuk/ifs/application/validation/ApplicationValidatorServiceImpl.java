@@ -88,7 +88,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     @Override
-    public ValidationMessages validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
+    public ValidationMessages validateFormInputResponse(Application application, long formInputId, long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
