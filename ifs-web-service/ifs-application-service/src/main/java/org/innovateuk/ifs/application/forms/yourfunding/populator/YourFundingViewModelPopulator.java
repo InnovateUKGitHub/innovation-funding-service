@@ -2,7 +2,9 @@ package org.innovateuk.ifs.application.forms.yourfunding.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.ManagementYourFundingViewModel;
 import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.YourFundingViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -56,6 +58,9 @@ public class YourFundingViewModelPopulator {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, section.getCurrentApplicant().getOrganisation().getId()).getSuccess();
 
         boolean complete = section.isComplete(section.getCurrentApplicant());
+        boolean open = section.getApplication().isOpen() &&
+                section.getCompetition().isOpen();
+
         Long researchCategoryQuestionId = getResearchCategoryQuestionId(section);
         boolean researchCategoryRequired = isResearchCategoryRequired(section, researchCategoryQuestionId);
         long yourOrganisationSectionId = getYourOrganisationSectionId(section);
@@ -67,6 +72,7 @@ public class YourFundingViewModelPopulator {
                 section.getSection().getId(),
                 section.getCompetition().getId(),
                 complete,
+                open,
                 section.getCurrentApplicant().isLead(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationType().equals(OrganisationTypeEnum.BUSINESS.getId()),
                 section.getApplication().getName(),
@@ -75,7 +81,15 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationRequired,
                 researchCategoryQuestionId,
                 yourOrganisationSectionId,
-                applicationFinance.getMaximumFundingLevel());
+                applicationFinance.getMaximumFundingLevel(),
+                String.format("/application/%d/form/FINANCE", applicationId));
+    }
+
+    public ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, String originQuery) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        return new ManagementYourFundingViewModel(applicationId, sectionId, application.getCompetition(), application.getName(),
+                String.format("/application/%d/form/FINANCE/%d%s", applicationId, organisationId, originQuery));
+
     }
 
     private Long getResearchCategoryQuestionId(ApplicantSectionResource section) {

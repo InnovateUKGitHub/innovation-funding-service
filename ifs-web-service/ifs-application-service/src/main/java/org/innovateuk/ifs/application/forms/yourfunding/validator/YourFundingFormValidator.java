@@ -99,7 +99,7 @@ public class YourFundingFormValidator {
             } else {
                 OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
                 ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
-                if (form.getGrantClaimPercentage() >= finance.getMaximumFundingLevel()) {
+                if (form.getGrantClaimPercentage() > finance.getMaximumFundingLevel()) {
                     errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max",  new String[] {String.valueOf(finance.getMaximumFundingLevel())}, "");
                 }
             }

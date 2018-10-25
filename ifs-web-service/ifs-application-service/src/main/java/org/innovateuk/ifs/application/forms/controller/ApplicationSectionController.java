@@ -101,6 +101,20 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @GetMapping("/{sectionType}/{applicantOrganisationId}")
+    public String redirectToSectionManagement(@PathVariable("sectionType") SectionType type,
+                                              @PathVariable(APPLICATION_ID) Long applicationId,
+                                              @PathVariable long applicantOrganisationId,
+                                              @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                              @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId + originQuery;
+    }
+
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
@@ -139,7 +153,7 @@ public class ApplicationSectionController {
                                                              @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
+        model.addAttribute("originQuery", originQuery);
         boolean isSupport = user.hasRole(SUPPORT);
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -152,6 +166,9 @@ public class ApplicationSectionController {
                 .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
+        if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
+            return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+        }
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
         return APPLICATION_FORM;
     }

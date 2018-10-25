@@ -9,6 +9,8 @@ public class YourFundingViewModel {
 
     private final boolean complete;
 
+    private final boolean open;
+
     private final boolean leadApplicant;
 
     private final boolean business;
@@ -27,11 +29,14 @@ public class YourFundingViewModel {
 
     private final Integer maximumFundingLevel;
 
-    public YourFundingViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel) {
+    private final String financesUrl;
+
+    public YourFundingViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel, String financesUrl) {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
+        this.open = open;
         this.leadApplicant = leadApplicant;
         this.business = business;
         this.applicationName = applicationName;
@@ -41,6 +46,7 @@ public class YourFundingViewModel {
         this.researchCategoryQuestionId = researchCategoryQuestionId;
         this.yourOrganisationSectionId = yourOrganisationSectionId;
         this.maximumFundingLevel = maximumFundingLevel;
+        this.financesUrl = financesUrl;
     }
 
     public long getApplicationId() {
@@ -57,6 +63,10 @@ public class YourFundingViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 
     public boolean isLeadApplicant() {
@@ -93,5 +103,14 @@ public class YourFundingViewModel {
 
     public Integer getMaximumFundingLevel() {
         return maximumFundingLevel;
+    }
+
+    public String getFinancesUrl() {
+        return financesUrl;
+    }
+
+    /* view logic */
+    public boolean isReadOnly() {
+        return complete || !open;
     }
 }

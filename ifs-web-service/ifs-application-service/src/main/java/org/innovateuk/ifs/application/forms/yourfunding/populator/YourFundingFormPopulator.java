@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -42,8 +43,10 @@ public class YourFundingFormPopulator {
     @Autowired
     private ApplicationService applicationService;
 
-    public void populateForm(YourFundingForm form, long applicationId, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
+    public void populateForm(YourFundingForm form, long applicationId, UserResource user, Optional<Long> organisationId) {
+
+        OrganisationResource organisation = organisationId.map(organisationRestService::getOrganisationById).map(RestResult::getSuccess)
+                .orElseGet(() -> organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess());
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         ApplicationResource application = applicationService.getById(applicationId);
         QuestionResource otherFundingQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING).getSuccess();
