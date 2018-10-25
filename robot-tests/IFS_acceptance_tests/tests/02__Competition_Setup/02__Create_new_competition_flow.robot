@@ -162,7 +162,6 @@ Initial Details - drop down menu is populated with comp admin users
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]
-    #And the user enters text to a text field  css = #title  ${competitionTitle}
     And The element should be disabled        css = #competitionTypeId
     And The element should be disabled        css = #openingDateDay
     And the user clicks the button/link       jQuery = button:contains("Done")

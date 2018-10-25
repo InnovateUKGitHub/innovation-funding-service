@@ -54,6 +54,7 @@ Other funding validations
     [Tags]  HappyPath
     Given the user enters text to a text field          css = [name*=other_funding-securedDate]    20
     And the user enters text to a text field            css = [name*=other_funding-fundingAmount]    txt
+    And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
     And The user should see a field and summary error   Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
