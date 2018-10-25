@@ -6,6 +6,9 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
 
 import java.util.List;
 
+/**
+ * View model for viewing all documents
+ */
 public class AllDocumentsViewModel {
 
     private Long projectId;

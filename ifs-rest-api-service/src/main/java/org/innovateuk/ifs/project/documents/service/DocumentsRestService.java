@@ -7,6 +7,9 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
+/**
+ * REST service for Project Document related operations
+ */
 public interface DocumentsRestService {
 
     RestResult<FileEntryResource> uploadDocument(long projectId, long documentConfigId, String contentType, long fileSize, String originalFilename, byte[] bytes);
