@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/FINANCE(applicationId=${model.applicationId})}" />
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -179,9 +179,9 @@
                         </div>
                     </th:block>
                 </th:block>
-                <div class="form-footer">
+                <div class="form-footer" th:if="${model.open}">
                     <div class="form-footer__actions">
-                        <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                        <button id="mark-all-as-complete" th:unless="${model.readOnly}" type="submit" name="complete"
                                 class="button-clear" value="true">Mark as complete
                         </button>
                         <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true"
@@ -190,11 +190,11 @@
                     </div>
                 </div>
                 <div>
-                    <a th:href="@{/application/{id}/(id=${model.applicationId})}"
-                       th:if="${model.complete}"
+                    <a th:href="${model.financesUrl}"
+                       th:if="${model.readOnly}"
                        class="govuk-!-margin-top-6 button-secondary">Return to finances
                     </a>
-                    <button type="submit" th:unless="${model.complete}"
+                    <button type="submit" th:unless="${model.readOnly}"
                             class="govuk-!-margin-top-6 govuk-button">
                         Save and return to finances
                     </button>

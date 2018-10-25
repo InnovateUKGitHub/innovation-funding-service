@@ -101,6 +101,16 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @GetMapping("/{sectionType}/{applicantOrganisationId}")
+    public String redirectToSectionManagement(@PathVariable("sectionType") SectionType type,
+                                    @PathVariable(APPLICATION_ID) Long applicationId,
+                                    @PathVariable long applicantOrganisationId) {
+        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId;
+    }
+
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
@@ -152,6 +162,9 @@ public class ApplicationSectionController {
                 .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
+        if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
+            return String.format("redirect:/application/%d/form/your-funding/%d/%d", applicationId, sectionId, applicantOrganisationId);
+        }
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
         return APPLICATION_FORM;
     }

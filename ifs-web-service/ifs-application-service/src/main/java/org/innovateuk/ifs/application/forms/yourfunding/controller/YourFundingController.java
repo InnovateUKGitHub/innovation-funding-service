@@ -14,12 +14,14 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}")
@@ -54,6 +57,25 @@ public class YourFundingController {
     @Autowired
     private YourFundingFormValidator yourFundingFormValidator;
 
+    @GetMapping("/{applicantOrganisationId}")
+    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    public String managementViewYourFunding(Model model,
+                                            UserResource user,
+                                            @PathVariable long applicationId,
+                                            @PathVariable long sectionId,
+                                            @PathVariable long applicantOrganisationId,
+                                            @ModelAttribute("form") YourFundingForm form,
+                                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                            @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        YourFundingViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId);
+        model.addAttribute("model", viewModel);
+        formPopulator.populateForm(form, applicationId, user, Optional.of(applicantOrganisationId));
+        return VIEW;
+    }
+
     @GetMapping
     public String viewYourFunding(Model model,
                                   UserResource user,
@@ -66,7 +88,7 @@ public class YourFundingController {
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
-        formPopulator.populateForm(form, applicationId, user);
+        formPopulator.populateForm(form, applicationId, user, Optional.empty());
         return VIEW;
     }
 
