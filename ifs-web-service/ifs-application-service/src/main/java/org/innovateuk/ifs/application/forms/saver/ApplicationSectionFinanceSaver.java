@@ -28,9 +28,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId() == organisationType) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
-            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
-            sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
         }
     }
 
