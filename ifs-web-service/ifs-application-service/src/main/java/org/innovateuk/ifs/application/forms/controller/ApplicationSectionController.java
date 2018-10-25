@@ -153,7 +153,7 @@ public class ApplicationSectionController {
                                                              @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
+        model.addAttribute("originQuery", originQuery);
         boolean isSupport = user.hasRole(SUPPORT);
 
         ApplicationResource application = applicationService.getById(applicationId);
