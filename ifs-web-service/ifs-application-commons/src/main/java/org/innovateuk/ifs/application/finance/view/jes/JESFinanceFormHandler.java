@@ -64,7 +64,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         return validationMessages;
     }
 
-    private ValidationMessages storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
+    private ValidationMessages storeFinanceRowItems(HttpServletRequest request, long userId, long applicationId, long competitionId) {
 
         Map<String, String[]> params = request.getParameterMap();
         boolean isMarkSectionAsCompleteRequest = params.containsKey(MARK_AS_COMPLETE);
@@ -82,14 +82,14 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId, boolean isMarkSectionAsCompleteRequest) {
+    public ValidationMessages storeCost(long userId, long applicationId, String fieldName, String value, long competitionId, boolean isMarkSectionAsCompleteRequest) {
         if (fieldName != null && value != null && fieldName.startsWith("cost-")) {
             return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId, isMarkSectionAsCompleteRequest);
         }
         return null;
     }
 
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId, boolean isMarkSectionAsCompleteRequest) {
+    private ValidationMessages storeField(String fieldName, String value, long userId, long applicationId, long competitionId, boolean isMarkSectionAsCompleteRequest) {
         FinanceFormField financeFormField = getCostFormField(competitionId, fieldName, value);
         if (financeFormField == null) {
             return null;
@@ -111,15 +111,13 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        if (isMarkSectionAsCompleteRequest) {
-            if (value.isEmpty()) {
+        if (value.isEmpty() && isMarkSectionAsCompleteRequest) {
                 ValidationMessages validationMessages = storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
                         financeFormField, BLANK_FIELD_MESSAGE));
             } else if (costItem != null) {
                 return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
             }
-        }
 
         return ValidationMessages.noErrors();
     }

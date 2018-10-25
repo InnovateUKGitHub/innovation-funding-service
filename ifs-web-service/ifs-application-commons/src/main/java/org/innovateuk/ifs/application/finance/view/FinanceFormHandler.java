@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface FinanceFormHandler {
     ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId);
-    ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId, boolean isMarkSectionAsCompleteRequest);
+    ValidationMessages storeCost(long userId, long applicationId, String fieldName, String value, long competitionId, boolean isMarkSectionAsCompleteRequest);
     void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId);
     ValidationMessages addCost(Long applicationId, Long userId, Long questionId);
     FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId);
