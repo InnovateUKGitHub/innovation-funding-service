@@ -315,7 +315,41 @@
 
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (costViewModel, internalView)">
-        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <th:block th:unless="${costViewModel.viewmode == 'readonly'}">
+            <p class="govuk-body">
+                Be specific and add each role separately.
+            </p>
+            <details class="govuk-details" role="group">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Labour costs guidance</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
+                    <p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>gross salary</li>
+                        <li>National Insurance</li>
+                        <li>company pension contribution</li>
+                        <li>life insurance</li>
+                        <li>other non-discretionary package costs</li>
+                    </ul>
+                    <p class="govuk-body">You cannot include:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>discretionary bonuses</li>
+                        <li>performance related payments of any kind</li>
+                    </ul>
+                    <p class="govuk-body">You may include the total number of working days for staff but do not include:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>sick days</li>
+                        <li>waiting time</li>
+                        <li>training days</li>
+                        <li>non-productive time</li>
+                    </ul>
+                    <p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>
+                    <p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
+                </div>
+            </details>
+        </th:block>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1353,7 +1387,21 @@
     <!-- ===========================Form: travel cost =========================== -->
 
     <th:block th:fragment="travel (costViewModel, internalView)">
-        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <th:block th:unless="${costViewModel.viewmode == 'readonly'}">
+            <p class="govuk-body">
+                Include all travel and subsistence costs that relate to this project. Be specific and add each item separately.
+            </p>
+            <details class="govuk-details" role="group">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">You can claim reasonable travel and subsistence costs for those individuals identified in the labour table. Costs must be necessary and be solely for the progression of your project.</p>
+                    <p class="govuk-body">Travel costs must be at economy travel only. State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
+                    <p class="govuk-body">Provide full details and the purpose for any subsistence expenditure, including the number of staff involved.</p>
+                </div>
+            </details>
+        </th:block>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
