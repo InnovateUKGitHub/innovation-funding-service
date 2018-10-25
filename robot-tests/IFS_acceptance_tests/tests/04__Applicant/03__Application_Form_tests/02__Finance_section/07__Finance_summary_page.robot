@@ -124,11 +124,11 @@ Finance summary has total marked as complete
     [Documentation]  IFS-3821
     Given the user clicks the button/link    link = Finances overview
     Then the user should see the element     css = .table-total-tick[src*="icon-tick"]
-    [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  logout as user
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
@@ -145,7 +145,7 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]
+    [Tags]  HappyPath
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
@@ -157,7 +157,7 @@ Alert should not show If research participation is below the maximum level
 
 Support User can see the read only finance summary
     [Documentation]  IFS-401
-    [Tags]  Support
+    [Tags]  Support  HappyPath
     [Setup]  log in as a different user       &{support_user_credentials}
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
@@ -166,7 +166,7 @@ Support User can see the read only finance summary
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
-    [Tags]  Support
+    [Tags]  Support  HappyPath
     Given the user clicks the button/link  link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
@@ -192,7 +192,7 @@ Support User can see the read only view of Your funding
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     [Setup]  log in as a different user     &{innovation_lead_two}
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
@@ -203,14 +203,14 @@ Innovation lead can see read only summary link for each partner
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page     Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     When the user navigates to the page             ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
@@ -251,6 +251,7 @@ Innovation lead can see read only view of Your funding
 
 IFS Admin views the finance summary
     [Documentation]  IFS-3609
+    [Tags]  HappyPath
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances

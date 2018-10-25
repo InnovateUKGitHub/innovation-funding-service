@@ -8,7 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]
+    [Tags]  HappyPath
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
@@ -27,7 +27,7 @@ Academic organisations search
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
-    [Tags]
+    [Tags]  HappyPath
 #    The search results are specific to Research Organisation type
     Given the research user finds org in companies house
     And the invited user fills the create account form  Steven  Gerrard

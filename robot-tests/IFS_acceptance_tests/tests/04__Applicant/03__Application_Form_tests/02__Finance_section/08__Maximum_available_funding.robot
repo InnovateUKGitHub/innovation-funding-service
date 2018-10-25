@@ -15,7 +15,7 @@ ${lead_rto_email}                      oscarRTO@innovateuk.com
 *** Test Cases ***
 Maximum funding level available for lead business
     [Documentation]    IFS-338
-    [Tags]
+    [Tags]  HappyPath
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link = Untitled application (start here)
     And the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
@@ -53,11 +53,11 @@ Invite existing academic collaborator
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
-    [Teardown]  logout as user
 
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  logout as user
     Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link = Untitled application (start here)
     And the user clicks the button/link                                     jQuery = button:contains("Save and return to application overview")

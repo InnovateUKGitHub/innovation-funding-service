@@ -67,7 +67,7 @@ The type of organisation navigates to the correct page
 
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page           ${INVITE_LINK}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button          organisationType    3
@@ -79,13 +79,13 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
 
 Research and technology organisations (RTO) search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page            ${server}/registration/register
     Then the invited user fills the create account form    Thierry    Henry
 
 Research and technology organisations (RTO) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
-    [Tags]
+    [Tags]  HappyPath
     Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page                        ${REGISTRATION_VERIFIED}
     When the user clicks the button/link                                         jQuery = .govuk-button:contains("Sign in")
@@ -97,7 +97,7 @@ Research and technology organisations (RTO) search (accept invitation flow with 
 
 Validation on terms and condition page
     [Documentation]  IFS-3093
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     [Setup]  Delete user from terms and conditions database   ${collaboratorId}
     Given Log in as a different user                   &{collaborator1_credentials}
     When The user clicks the button/link                css = button[type="submit"]
@@ -105,6 +105,7 @@ Validation on terms and condition page
 
 User is able to accept new terms and conditions
     [Documentation]  IFS-3093
+    [Tags]  HappyPath
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
     When the user clicks the button/link  css = .govuk-button[type="submit"]

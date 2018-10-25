@@ -78,20 +78,20 @@ Your details: client-side validation
     Then the user should not see an error in the page
 
 User can not login with the invalid email
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page          ${SERVER}
     Then the user cannot login with the invalid email  ${invalid_email_no_at}
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]  HappyPath
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account
 
 User can not verify email with invalid hash
     [Documentation]  IFS-4298
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page        ${SERVER}/registration/verify-email/200b9a1534649f4ba1dc581c9da2a77
     Then the user should see the element       jQuery = h1:contains("Invalid URL")
 

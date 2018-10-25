@@ -14,7 +14,7 @@ Resource         ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Test Cases ***
 Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946 IFS-247
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user navigates to the page    ${FRONTDOOR}
     When the user should see the element       jQuery = a:contains("Innovate UK")
     Then the user should see the element       jQuery = h1:contains("Innovation competitions")
@@ -41,7 +41,7 @@ Guest user can see Competitions and their information
 
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
-    [Tags]    MySQL
+    [Tags]    MySQL  HappyPath
     [Setup]  Connect to Database  @{database}
     Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
@@ -61,7 +61,7 @@ Guest user can see the opening and closing status of competitions
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page                       ${frontDoor}
     When the user selects the option from the drop-down menu        Space technology    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
@@ -156,7 +156,7 @@ Guest user can see the public Supporting information of the competition
 
 Guest user can apply to a competition
     [Documentation]    INFUND-6923
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
     When the user clicks the button/link         link = Start new application
