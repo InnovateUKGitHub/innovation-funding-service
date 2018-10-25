@@ -265,12 +265,16 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()
+        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
                 && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+       return setupProgressChecker.isOtherDocumentsApproved() || setupProgressChecker.isDocumentsApproved();
     }
 
     public boolean isSpendProfileGenerated() {

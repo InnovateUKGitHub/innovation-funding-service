@@ -352,7 +352,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);
-        if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) && COMPLETE.equals(spendProfileStatus)) {
+        if (documentsApproved(project) && COMPLETE.equals(spendProfileStatus)) {
             if (golWorkflowHandler.isApproved(project)) {
                 roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
             } else if (golWorkflowHandler.isRejected(project)) {
@@ -372,6 +372,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
+    }
+
+    private boolean documentsApproved(Project project) {
+        return ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) || COMPLETE.equals(getDocumentsStatus(project));
     }
 
     @Override
@@ -421,6 +425,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
+        ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
         boolean grantOfferLetterSentToProjectTeam =
@@ -438,6 +443,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 financeChecksStatus,
                 spendProfileStatus,
                 otherDocumentsStatus,
+                documentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,
                 partnerProjectLocationStatus,

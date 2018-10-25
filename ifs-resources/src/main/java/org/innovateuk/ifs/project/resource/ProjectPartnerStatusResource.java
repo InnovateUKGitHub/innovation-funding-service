@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 
@@ -29,7 +30,9 @@ public class ProjectPartnerStatusResource {
 
     /* Following properties are only applicable to lead partner */
     private ProjectActivityStates monitoringOfficerStatus;
+    @OtherDocsWindDown
     private ProjectActivityStates otherDocumentsStatus;
+    private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
     private boolean isGrantOfferLetterSent = false;
@@ -42,7 +45,7 @@ public class ProjectPartnerStatusResource {
     public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType,
                                         ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus,
                                         ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus,
-                                        ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus,
+                                        ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates documentsStatus,
                                         ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus,
                                         ProjectActivityStates partnerProjectLocationStatus,
                                         Boolean isGrantOfferLetterSent, Boolean isLead) {
@@ -55,6 +58,7 @@ public class ProjectPartnerStatusResource {
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
+        this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.financeContactStatus = financeContactStatus;
         this.partnerProjectLocationStatus = partnerProjectLocationStatus;
@@ -102,6 +106,10 @@ public class ProjectPartnerStatusResource {
         return otherDocumentsStatus;
     }
 
+    public ProjectActivityStates getDocumentsStatus() {
+        return documentsStatus;
+    }
+
     public ProjectActivityStates getGrantOfferLetterStatus() {
         return grantOfferLetterStatus;
     }
@@ -136,6 +144,10 @@ public class ProjectPartnerStatusResource {
 
     public void setOtherDocumentsStatus(ProjectActivityStates otherDocumentsStatus) {
         this.otherDocumentsStatus = otherDocumentsStatus;
+    }
+
+    public void setDocumentsStatus(ProjectActivityStates documentsStatus) {
+        this.documentsStatus = documentsStatus;
     }
 
     public void setGrantOfferLetterStatus(ProjectActivityStates grantOfferLetterStatus) {
@@ -195,6 +207,7 @@ public class ProjectPartnerStatusResource {
                 .append(spendProfileStatus, that.spendProfileStatus)
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
                 .append(otherDocumentsStatus, that.otherDocumentsStatus)
+                .append(documentsStatus, that.documentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .append(isGrantOfferLetterSent, that.isGrantOfferLetterSent)
                 .append(financeContactStatus, that.financeContactStatus)
@@ -213,6 +226,7 @@ public class ProjectPartnerStatusResource {
                 .append(spendProfileStatus)
                 .append(monitoringOfficerStatus)
                 .append(otherDocumentsStatus)
+                .append(documentsStatus)
                 .append(grantOfferLetterStatus)
                 .append(isGrantOfferLetterSent)
                 .append(financeContactStatus)
@@ -231,6 +245,7 @@ public class ProjectPartnerStatusResource {
                 .append("spendProfileStatus", spendProfileStatus)
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
                 .append("otherDocumentsStatus", otherDocumentsStatus)
+                .append("documentsStatus", documentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
                 .append("isGrantOfferLetterSent", isGrantOfferLetterSent)
                 .append("financeContactStatus", financeContactStatus)

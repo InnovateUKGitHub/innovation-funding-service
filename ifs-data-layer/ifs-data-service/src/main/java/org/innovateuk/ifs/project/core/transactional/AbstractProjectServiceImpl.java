@@ -14,6 +14,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -101,6 +103,26 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         } else {
             return ACTION_REQUIRED;
         }
+    }
+
+    protected ProjectActivityStates createDocumentStatus(Project project) {
+
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+        int expectedNumberOfDocuments = project.getApplication().getCompetition().getProjectDocuments().size();
+        int actualNumberOfDocuments = projectDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
+            return COMPLETE;
+        }
+
+        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+            return ACTION_REQUIRED;
+        }
+
+        return PENDING;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {

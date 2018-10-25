@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -19,7 +18,6 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +31,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION;
@@ -76,14 +73,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     private static final String PDF_FILE_TYPE = "PDF";
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
     private static final String PDF_MEDIA_TYPE = "application/pdf";
-    private static final String SPREADSHEET_MEDIA_TYPE = "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.oasis.opendocument.spreadsheet";
-
-/*    @Override
-    public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
-        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectConfigDocument = projectDocumentConfigRepository.findOne(documentConfigId);
-        return serviceSuccess(getMediaTypes(projectConfigDocument.getFileTypes()));
-    }*/
-
+    private static final List<String> SPREADSHEET_MEDIA_TYPE_LIST = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
     @Override
     public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
         return getProjectDocumentConfig(documentConfigId)
@@ -103,7 +93,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                     validMediaTypes.add(PDF_MEDIA_TYPE);
                     break;
                 case SPREADSHEET_FILE_TYPE:
-                    validMediaTypes.add(SPREADSHEET_MEDIA_TYPE);
+                    validMediaTypes.addAll(SPREADSHEET_MEDIA_TYPE_LIST);
                     break;
             }
         }
@@ -143,9 +133,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
             return fileService.getFileByFileEntryId(fileEntry.getId())
                 .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-
-/*            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));*/
         });
     }
 
@@ -158,12 +145,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
                 .get();
     }
-
-/*    private FileEntry getFileEntry(Project project, long documentConfigId) {
-        return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
-                .get()
-                .getFileEntry();
-    }*/
 
     @Override
     public ServiceResult<FileEntryResource> getFileEntryDetails(long projectId, long documentConfigId) {
@@ -201,8 +182,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
-                        .andOnSuccessReturnVoid(() -> submitDocument(project, documentConfigId)
-                        )
+                        .andOnSuccess(() -> submitDocument(project, documentConfigId))
                 );
     }
 
@@ -226,7 +206,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 .andOnSuccess(() -> find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
-                        .andOnSuccessReturnVoid(() -> generateGrantOfferLetterIfReady(projectId))
+                        .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))
                 ));
     }
 
@@ -256,6 +236,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
         return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId)
-                .andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+                .andOnFailure(() -> serviceFailure(GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 }

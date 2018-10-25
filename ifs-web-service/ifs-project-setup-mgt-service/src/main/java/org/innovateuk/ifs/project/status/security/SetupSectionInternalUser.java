@@ -113,7 +113,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+        if(documentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
             if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if(projectSetupProgressChecker.isGrantOfferLetterApproved()){
                     return ACCESSIBLE;
@@ -126,6 +126,10 @@ public class SetupSectionInternalUser {
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+        return projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.allDocumentsApproved();
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
