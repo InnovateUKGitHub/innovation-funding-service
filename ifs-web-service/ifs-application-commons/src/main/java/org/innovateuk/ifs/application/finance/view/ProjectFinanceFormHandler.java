@@ -45,7 +45,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler<ProjectFin
     }
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long projectId, String fieldName, String value, Long competitionId) {
+    public ValidationMessages storeCost(Long userId, Long projectId, String fieldName, String value, Long competitionId, boolean isMarkSectionAsCompleteRequest) {
         return null;
     }
 

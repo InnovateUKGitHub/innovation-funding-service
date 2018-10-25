@@ -14,7 +14,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
