@@ -23,7 +23,7 @@
                 </dl>
                 <p class="govuk-body"><span
                     th:with="participationAction=${model.leadOrganisation} ?  'contribute' : 'collaborate'"
-                    th:text="|You are invited to ${participationAction} as part of the following organisation:|"></span> <strong th:text="${model.inviteOrganisationName}"></strong></p>
+                    th:text="|You are invited to ${participationAction} in this application with:|"></span> <strong th:text="${model.inviteOrganisationName}"></strong></p>
                 <p class="govuk-body">If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}" class="govuk-link"></a>.</p>
                 <p class="govuk-body" th:unless="${model.leadOrganisation}">Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" class="govuk-link" target="_blank">how collaboration in the Innovation Funding Service works</a> (opens in a new window).</p>
                 <h2 class="govuk-heading-m">We have found an account with the invited email address</h2>
