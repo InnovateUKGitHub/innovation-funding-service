@@ -57,13 +57,7 @@
                         form
                     </button>
                 </th:block>
-
-                <!--/* Application Form for a Section. */-->
-                <th:block th:if="${model.isSection()}">
-                    <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}" />
-                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})" />
-                </th:block>
-
+                
                 <!--/* Application Form for a Question. */-->
                 <th:block th:if="${model.isQuestion()}">
                     <div class="question" th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}"
@@ -81,6 +75,12 @@
                                 name="submit-section">Save and return to application overview
                         </button>
                     </th:block>
+                </th:block>
+
+                <!--/* Application Form for a Section. */-->
+                <th:block th:if="${model.isSection()}">
+                    <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}" />
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})" />
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}" />
