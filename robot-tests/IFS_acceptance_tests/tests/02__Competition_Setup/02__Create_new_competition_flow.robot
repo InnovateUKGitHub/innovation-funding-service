@@ -83,6 +83,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4253 New Stakeholder invite and create account email
 ...
 ...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
+...
+...               IFS-4186 Competition Setup - change layout to separate items not required for open
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -108,12 +110,12 @@ User can create a new competition
     And The user should not see the element    link = Milestones
     And The user should not see the element    link = Application
     And The user should not see the element    link = Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
 #    And The user should not see the element    link = Documents in project setup
     And The user should not see the element    link = Public content
     And The user should see the element        link = Initial details
     And The user should not see the element    link = Stakeholders
-    And The user should see the element        jQuery = p:contains("Once you complete, this competition will be ready to open.")
+    And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
@@ -173,17 +175,17 @@ Initial details - should have a green check
     And the user should see the element     css = #compCTA[disabled]
 
 User should have access to all the sections
-    [Documentation]    INFUND-4725, IFS-1104  IFS-3086
-    Given The user should see the element    link = Terms and conditions
-    And The user should see the element      link = Funding information
-    And The user should see the element      link = Eligibility
-    And The user should see the element      link = Milestones
-    And The user should see the element      link = Application
-    And The user should see the element      link = Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
+    Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
+    And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Eligibility")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
 #    And the user should see the element     link = Documents in project setup
-    And The user should see the element      link = Public content
-    And The user should see the element      link = Stakeholders
+    And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
+    And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
@@ -267,7 +269,6 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(3) .task-status-complete
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -327,7 +328,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(4) .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Milestones: Page should contain the correct fields
@@ -362,7 +363,7 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]  HappyPath
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    css = li:nth-child(5) .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Milestones") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Application - Application process Page
@@ -558,7 +559,7 @@ Application: Done enabled when all questions are marked as complete
     When The user clicks the button/link      link = Return to setup overview
     Then the user should see the element      jQuery = li:contains("Application") .task-status-complete
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin adds document requirements
 #    [Documentation]    IFS-3916
 #    [Tags]  HappyPath
@@ -571,7 +572,7 @@ Application: Done enabled when all questions are marked as complete
 #    And the user clicks the button/link          css = button[type = "submit"]
 #    And the user should see the element          jQuery = span:contains("Test document type")
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin removes a document
 #    [Documentation]    IFS-3916
 #    [Tags]  HappyPath
@@ -697,20 +698,20 @@ Innovation leads can be added to a competition
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
-    And The user clicks the button/link       link = Stakeholders
+    And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
     #And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     When the user clicks the button/link      jQuery = td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery = td:contains(${peter_freeman})
     #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery = span.lead-count:contains("1")
-    When the user clicks the button/link      jQuery = a:contains("Overview")
+    When the user clicks the button/link      jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = span.total-count:contains("1")
     #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
-    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Find")
+    When the user clicks the button/link      jQuery = .govuk-tabs__list a:contains("Add")
     Then the user should see the element      jQuery = td:contains(${peter_freeman}) button:contains("Add")
 
 User deletes the competition

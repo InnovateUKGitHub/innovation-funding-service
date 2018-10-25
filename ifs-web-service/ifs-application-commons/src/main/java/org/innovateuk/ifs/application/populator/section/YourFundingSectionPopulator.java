@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -14,7 +15,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,23 +32,27 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
 @Component
 public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFundingSectionViewModel> {
 
-    @Autowired
-    private SectionService sectionService;
+    private final SectionService sectionService;
+    private final QuestionService questionService;
+    private final QuestionRestService questionRestService;
+    private final FormInputViewModelGenerator formInputViewModelGenerator;
+    private final OrganisationService organisationService;
+    private final GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private QuestionRestService questionRestService;
-
-    @Autowired
-    private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Autowired
-    private OrganisationService organisationService;
-
-    @Autowired
-    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+    public YourFundingSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                       final SectionService sectionService, final QuestionService questionService,
+                                       final QuestionRestService questionRestService,
+                                       final FormInputViewModelGenerator formInputViewModelGenerator,
+                                       final OrganisationService organisationService,
+                                       final GrantClaimMaximumRestService grantClaimMaximumRestService) {
+        super(navigationPopulator);
+        this.sectionService = sectionService;
+        this.questionService = questionService;
+        this.questionRestService = questionRestService;
+        this.formInputViewModelGenerator = formInputViewModelGenerator;
+        this.organisationService = organisationService;
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+    }
 
     @Override
     protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form,

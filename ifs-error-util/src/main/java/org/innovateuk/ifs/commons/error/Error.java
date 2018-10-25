@@ -192,4 +192,9 @@ public class Error implements Serializable {
                 .append("statusCode", statusCode)
                 .toString();
     }
+
+    @JsonIgnore
+    public String getDisplayString() {
+        return getErrorKey() + " (HTTP status " + getStatusCode().value() + " / " + getStatusCode().getReasonPhrase() + ")";
+    }
 }

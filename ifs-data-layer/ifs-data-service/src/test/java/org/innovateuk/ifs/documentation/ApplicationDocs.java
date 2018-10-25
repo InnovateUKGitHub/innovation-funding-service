@@ -37,7 +37,8 @@ public class ApplicationDocs {
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible"),
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation"),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel"),
-            fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)")
+            fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)"),
+            fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
