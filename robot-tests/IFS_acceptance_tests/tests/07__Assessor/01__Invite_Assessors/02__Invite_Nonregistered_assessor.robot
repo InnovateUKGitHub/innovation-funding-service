@@ -72,7 +72,7 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
     When the user clicks the button/link                                           id = postcode-lookup
-    And The user should see an error                                               Please enter a valid postcode    # empty postcode check
+    And The user should see an error                                               Enter a valid postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
