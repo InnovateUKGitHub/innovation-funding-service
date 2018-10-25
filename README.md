@@ -40,7 +40,8 @@ Access https://ifs.local-dev with one of the following users (with password "Pas
 # Further configuration
 
 You can enable various services in your ~/.gradle/gradle.properties and then re-build if you wish to run more of the
-stack.  Note that you may need to allocate some more memory in Docker preferences for this.
+stack.  Note that you may need to allocate some more memory in Docker preferences for this, increasing to 12GiB is
+enough for most developer requirements.
 
 # Gradle Tasks
 
