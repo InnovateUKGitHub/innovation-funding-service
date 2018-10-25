@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -91,6 +92,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
+    public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
+        return withArray((projectDocumentList, project) -> project.setProjectDocuments(projectDocumentList), projectDocuments);
     }
 
     public ProjectResourceBuilder withDuration(Long... durations) {
