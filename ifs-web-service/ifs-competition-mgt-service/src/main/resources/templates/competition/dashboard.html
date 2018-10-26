@@ -5,14 +5,14 @@
     <form role="search"
           method="get"
           id="searchform"
-          th:with="supportUser=${model.getTabs().support()}"
-          th:action="@{${supportUser ? '/dashboard/support/search' : '/dashboard/search'}}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''}, supportUser=${supportUser})"
+          th:with="internalUser=${model.getTabs().isInternalUser()}"
+          th:action="@{${internalUser ? '/dashboard/internal/search' : '/dashboard/search'}}">
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''}, internalUser=${internalUser})"
                   th:with="showSearch=${model.counts.liveCount > 0}"/>
     </form>
 </th:block>
 
-<div th:fragment="comp-dashboard-header(searchQuery, supportUser)">
+<div th:fragment="comp-dashboard-header(searchQuery, internalUser)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <th:block th:insert="fragments/layout :: page-title"
@@ -26,7 +26,7 @@
                        th:name="${'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
-                       th:placeholder="${supportUser ? 'Search for a competition name or application number' : 'Search competitions' }"/>
+                       th:placeholder="${internalUser ? 'Search for a competition name or application number' : 'Search competitions' }"/>
                 <input type="submit" id="searchsubmit" value="Search" class="btn"/>
             </div>
         </div>

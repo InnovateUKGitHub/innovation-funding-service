@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,15 +147,16 @@ public class CompetitionManagementDashboardController {
         return searchCompetition(trimmedSearchQuery, page, model, user);
     }
 
-    @SecuredBySpring(value = "READ", description = "The support users are allowed to view the application and competition search pages")
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping("/dashboard/support/search")
-    public String supportSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                Model model,
-                                HttpServletRequest request,
-                                UserResource user) {
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, " +
+            "innovation lead, stakeholder, ifs admin and support users are allowed to view the application and competition search pages")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")
+    @GetMapping("/dashboard/internal/search")
+    public String internalSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
+                                 @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                 Model model,
+                                 HttpServletRequest request,
+                                 UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
@@ -189,6 +192,11 @@ public class CompetitionManagementDashboardController {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
 
+        model.addAttribute(MODEL_ATTR,
+                new SearchBarViewModel(
+                        competitionDashboardSearchService.searchCompetitions(searchQuery, page),
+                        searchQuery,
+                        new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "search";
     }
 
