@@ -154,9 +154,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
             return true;
         }
 
-        Optional<ApplicationFinance> applicationFinanceOpt =
+        Optional<ApplicationFinance> applicationFinance =
                 simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.get().getId()));
 
-        return applicationFinanceOpt.map(applicationFinance -> applicationFinance.getFinanceFileEntry() == null).orElse(true);
+        return applicationFinance.map(af -> af.getFinanceFileEntry() == null).orElse(true);
     }
 }
