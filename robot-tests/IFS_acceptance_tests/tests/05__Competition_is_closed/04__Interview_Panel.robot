@@ -78,7 +78,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 *** Test Cases ***
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-2778
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link   link = ${CLOSED_COMPETITION_NAME}
     Given the user clicks the button/link      link = Manage interview panel
     When the user clicks the button/link       link = Invite assessors
@@ -94,7 +94,7 @@ Cancel sending invite returns to the invite tab
 
 Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779  IFS-2780
-    [Tags]
+    [Tags]  HappyPath
     Given the compAdmin navigates to the send invite email page
     And the user should see the element        jQuery = label:contains("Subject") ~ input[value = "Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css = .editor   Additional message
@@ -108,7 +108,7 @@ Assessors receives the invite to the interview panel
 CompAdmin can add or remove the applications from the invite list
 #to assign applications to interview panel
     [Documentation]  IFS-2727   IFS-3156   IFS-2635
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link = Manage interview panel
     Given the user clicks the button/link       link = Competition
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
@@ -122,7 +122,7 @@ CompAdmin can add or remove the applications from the invite list
 Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
     [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251  IFS-2783  IFS-3385
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link      link = Invite
     When the user clicks the button/link       link = Review and send invites
     Then the user should see the element       jQuery = td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
@@ -155,7 +155,7 @@ CompAdmin view invite sent to the applicant and resend invite
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button   acceptInvitation  true
@@ -196,7 +196,7 @@ CompAdmin Views the assessors that have accepted the interview panel invite
 
 Applicant can see the feedback given
     [Documentation]  IFS-3291  IFS-3541
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user          ${aaron_robertson_email}  ${short_password}
     When the user should see the element      jQuery = .progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
     Then The user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
@@ -207,7 +207,7 @@ Applicant can see the feedback given
 
 Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253  IFS-3571
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link        link = Feedback overview
     When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
     Then the compAdmin checks the status for response uploaded applicantion
@@ -217,7 +217,7 @@ Applicant can upload the reponse to interview panel
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link = ${computer_vision_application_name}
     And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
@@ -235,6 +235,7 @@ CompAdmin checks for interview panel key statistics
 
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
+    [Tags]  HappyPath
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery = a:contains("${assessor_joel}")
     And the user should see the element      jQuery = h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
@@ -246,6 +247,7 @@ CompAdmin can access the Allocate applications to assessors screen
 
 CompAdmin allocate applications to assessor
     [Documentation]  IFS-3451  IFS-3485
+    [Tags]  HappyPath
     Given the user clicks the button/link    jQuery = tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
     When the user clicks the button/link     css = .govuk-button[name="addSelected"]  #Allocate
@@ -259,6 +261,7 @@ CompAdmin allocate applications to assessor
 
 Assessor can view the list of allocated applications
     [Documentation]  IFS-3534  IFS-3566
+    [Tags]  HappyPath
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery = h1:contains("${CLOSED_COMPETITION_NAME}")
@@ -269,6 +272,7 @@ Assessor can view the list of allocated applications
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
+    [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email

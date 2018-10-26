@@ -32,7 +32,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -45,8 +45,7 @@ ${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 Competition Dashboard
     [Documentation]    INFUND-7365
     [Tags]
-    When The user clicks the button/link            link = ${INFORM_COMPETITION_NAME}
-    Then The user should see the element            jQuery = span:contains("${INFORM_COMPETITION_NAME}")
+    Given The user should see the element           jQuery = span:contains("${INFORM_COMPETITION_NAME}")
     And The user should see the element             jQuery = h1:contains("Inform")
     And The user should see the element             jQuery = dd:contains("Programme")
     And The user should see the element             jQuery = dd:contains("Materials and manufacturing")
@@ -163,6 +162,10 @@ Selecting the dashboard link takes user back to the dashboard
     Then the user should see the element     jQuery = h1:contains("Dashboard")
 
 *** Keywords ***
+Custom Suite Setup
+    The user logs-in in new browser       &{Comp_admin1_credentials}
+    The user clicks the button/link       link = ${INFORM_COMPETITION_NAME}
+
 the application question scores are correct
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")
