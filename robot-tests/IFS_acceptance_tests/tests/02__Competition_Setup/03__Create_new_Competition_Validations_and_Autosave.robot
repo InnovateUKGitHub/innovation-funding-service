@@ -251,7 +251,7 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin is required to enter a title and guidance message
 #    [Documentation]
 #    [Tags]

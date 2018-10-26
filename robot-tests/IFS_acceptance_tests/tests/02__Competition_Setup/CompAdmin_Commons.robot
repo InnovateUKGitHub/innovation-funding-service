@@ -25,7 +25,7 @@ the user sees the correct read only view of the question
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
@@ -36,7 +36,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button twice                     css = label[for="stateAid2"]
+    the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
@@ -97,7 +97,7 @@ the user fills in the CS Milestones
     the user clicks the button/link              link = Competition setup
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #the user fills in the CS Documents in other projects
 #    the user clicks the button/link          link = Documents in project setup
 #    the user clicks the button/link          link = Add document type
