@@ -13,7 +13,8 @@ Mark as complete Your funding with only one input should not be possible
     [Documentation]    INFUND-2214
     [Tags]
     When the user clicks the button/link      link = Your funding
-    And the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  70
+    And the user selects the radio button     requestingFunding   true
+    And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
     And the user moves focus to the element   css = [data-target="other-funding-table"] label
     Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
@@ -41,7 +42,8 @@ Other funding server side
 Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
-    Given the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  50
+    Giventhe user selects the radio button      requestingFunding   true
+    And the user enters text to a text field    css = [name^="grantClaimPercentage"]  50
     When the user clicks the button/link        jQuery = label:contains("No")
     And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")
@@ -235,11 +237,13 @@ Funding level server side
     [Setup]  the user clicks the button/link     link = Your finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
-    When the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  71
+    the user selects the radio button            requestingFunding   true
+    When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
     And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   This field should be 70% or lower.
-    Then the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  69
+    And the user selects the radio button        requestingFunding   true
+    Then the user enters text to a text field    css = [name^="grantClaimPercentage"]  69
     And the user moves focus to the element      css = [data-target="other-funding-table"] label
 
 *** Keywords ***
