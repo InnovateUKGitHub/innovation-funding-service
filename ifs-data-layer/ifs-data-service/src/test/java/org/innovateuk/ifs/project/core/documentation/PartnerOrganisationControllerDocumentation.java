@@ -36,10 +36,11 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
         PartnerOrganisationResource partnerOrgResource = new PartnerOrganisationResource();
         when(partnerOrganisationServiceMock.getPartnerOrganisation(123L, 234L)).thenReturn(serviceSuccess(partnerOrgResource));
 
-        mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", 123L, 234L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(partnerOrgResource))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", 123L, 234L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(partnerOrgResource)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to get the partner organisation of"),
                                 parameterWithName("organisationId").description("Id of the organisation to get the partner organisation of")
@@ -59,10 +60,11 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
         PartnerOrganisationResource partnerOrgResource = new PartnerOrganisationResource();
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(123L)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrgResource)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation", 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(Collections.singletonList(partnerOrgResource)))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/partner-organisation", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(Collections.singletonList(partnerOrgResource))))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to get the partner organisations of")
                         ),

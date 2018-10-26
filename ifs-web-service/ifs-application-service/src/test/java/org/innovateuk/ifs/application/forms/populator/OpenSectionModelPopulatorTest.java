@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -24,7 +25,6 @@ import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -41,20 +41,29 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.function.Function.identity;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.junit.Assert.assertEquals;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -113,10 +122,14 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     public void setUp() {
         super.setup();
 
-        Long competitionId = 1L, applicationId = 23L;
-        Long organisationId = 245L;
+        competition = newCompetitionResource()
+                .withCollaborationLevel(COLLABORATIVE)
+                .build();
 
-        application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(true)
+                .build();
 
         applicationForm = new ApplicationForm();
         applicationForm.setApplication(application);
@@ -125,23 +138,23 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
 
         List<Long> questionResourceList = asList(34L, 35L);
         section = newSectionResource()
-                .withChildSections(Collections.emptyList())
+                .withChildSections(emptyList())
                 .withQuestions(questionResourceList)
-                .withCompetition(competitionId)
+                .withCompetition(competition.getId())
                 .withType(SectionType.FINANCE).build();
         user = newUserResource().build();
-        competition = newCompetitionResource().withId(competitionId).build();
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
+
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(BUSINESS.getId())
+                .build();
 
         ApplicantResource applicant = newApplicantResource()
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
-                        .withRoleName("leadapplicant")
+                        .withRoleName(LEADAPPLICANT.getName())
                         .build())
-                .withOrganisation(newOrganisationResource()
-                        .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
-                        .withId(organisationId)
-                        .build())
+                .withOrganisation(organisation)
                 .build();
         applicantSection = newApplicantSectionResource()
                 .withApplication(application)
@@ -151,7 +164,6 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withSection(section).withCurrentUser(user).build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
         inviteOrg1.setId(234L);
@@ -172,7 +184,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
 
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 
-        when(userService.getUserOrganisationId(user.getId(), application.getId())).thenReturn(organisationId);
+        when(userService.getUserOrganisationId(user.getId(), application.getId())).thenReturn(organisation.getId());
 
         List<FormInputResponseResource> formInputResponseResources = new ArrayList<>();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(formInputResponseResources));
@@ -180,8 +192,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelWithValidObjects() throws Exception {
-
+    public void populateModel_withValidObjects() {
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
@@ -195,47 +206,99 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
         assertEquals(section.getId(), viewModel.getCurrentSectionId());
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(user, viewModel.getLeadApplicant());
+        assertTrue(viewModel.isCollaborativeProject());
     }
 
     @Test
-    public void testYourFinancesCompleteForAllOrganisations() {
-        List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
-        List<OrganisationResource> organisations = newOrganisationResource().build(3);
+    public void populateModel_yourFinancesCompleteForAllOrganisations() {
+        SectionResource financesSection = newSectionResource().build();
+        SectionResource financeOverviewSection = newSectionResource()
+                .withId(4L)
+                .build();
+        Set<Long> completedSectionIdsIncludingFinancesOverviewSection = asLinkedSet(1L, 2L, 3L, 4L);
+        List<Long> organisationIds = asList(1L, 2L, 3L);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisations = new HashMap<>();
-        completedSectionsByOrganisations.put(organisations.get(0).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(1).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(2).getId(), new HashSet<>());
+        Map<Long, Set<Long>> completedSectionsByOrganisations = simpleToMap(organisationIds, identity(),
+                organisationId -> completedSectionIdsIncludingFinancesOverviewSection);
 
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisations);
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), FINANCE)).thenReturn(asList(financesSection));
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES)).thenReturn(asList(financeOverviewSection));
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
-        assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(false, viewModel.getYourFinancesCompleteForAllOrganisations());
+        assertTrue(viewModel.getYourFinancesCompleteForAllOrganisations());
+
+        verify(sectionService).getCompletedSectionsByOrganisation(application.getId());
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), FINANCE);
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES);
     }
 
     @Test
-    public void testYourFinancesInCompleteForAnOrganisations() {
-        List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
-        List<OrganisationResource> organisations = newOrganisationResource().build(3);
+    public void populateModel_yourFinancesInCompleteForAnOrganisation() {
+        SectionResource financesSection = newSectionResource().build();
+        SectionResource financeOverviewSection = newSectionResource()
+                .withId(4L)
+                .build();
+        Set<Long> completedSectionIdsExcludingFinancesOverviewSection = asLinkedSet(1L, 2L, 3L);
+        List<Long> organisationIds = asList(1L, 2L, 3L);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisations = new HashMap<>();
-        completedSectionsByOrganisations.put(organisations.get(0).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(1).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
-        completedSectionsByOrganisations.put(organisations.get(2).getId(), asLinkedSet(eachOrganisationFinanceSections.get(0).getId()));
+        Map<Long, Set<Long>> completedSectionsByOrganisations = simpleToMap(organisationIds, identity(),
+                organisationId -> completedSectionIdsExcludingFinancesOverviewSection);
 
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisations);
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), FINANCE)).thenReturn(asList(financesSection));
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES)).thenReturn(asList(financeOverviewSection));
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
-        assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(true, viewModel.getYourFinancesCompleteForAllOrganisations());
+        assertFalse(viewModel.getYourFinancesCompleteForAllOrganisations());
+
+        verify(sectionService).getCompletedSectionsByOrganisation(application.getId());
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), FINANCE);
+        verify(sectionService).getSectionsForCompetitionByType(application.getCompetition(), OVERVIEW_FINANCES);
+    }
+
+    @Test
+    public void populateMode_nonCollaborativeProjectWhenCollaborationLevelIsSingle() {
+        competition.setCollaborationLevel(CollaborationLevel.SINGLE);
+        application.setCollaborativeProject(false);
+
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
+
+        assertEquals(OpenSectionViewModel.class, result.getClass());
+        OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
+
+        assertFalse(viewModel.isCollaborativeProject());
+    }
+
+    @Test
+    public void populateMode_nonCollaborativeProjectWithSingleOrganisationWhenCollaborationIsSupported() {
+        competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
+        application.setCollaborativeProject(false);
+
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
+
+        assertEquals(OpenSectionViewModel.class, result.getClass());
+        OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
+
+        assertFalse(viewModel.isCollaborativeProject());
+    }
+
+    @Test
+    public void populateMode_nonCollaborativeProjectWithMultipleOrganisationsWhenCollaborationIsSupported() {
+        competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
+        application.setCollaborativeProject(true);
+
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
+
+        assertEquals(OpenSectionViewModel.class, result.getClass());
+        OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
+
+        assertTrue(viewModel.isCollaborativeProject());
     }
 }

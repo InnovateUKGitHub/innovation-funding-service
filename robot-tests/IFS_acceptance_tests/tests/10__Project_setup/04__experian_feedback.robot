@@ -168,7 +168,7 @@ Project Finance cannot approve the bank details again
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
     [Tags]
-    [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    [Setup]    log in as a different user          ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           link = ${PS_EF_APPLICATION_TITLE}
     Then the user should see the element           css = ul li.complete:nth-child(4)
     When the user clicks the button/link           link = View the status of partners
@@ -184,7 +184,7 @@ Other internal users cannot access this page
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    [Setup]    log in as a different user  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 

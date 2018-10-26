@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.applicant.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -68,7 +69,8 @@ public abstract class AbstractApplicantResource {
         this.applicants = applicants;
     }
 
-    public Stream<OrganisationResource> allOrganisations() {
+    @JsonIgnore
+    public Stream<OrganisationResource> getAllOrganisations() {
         return applicants.stream().map(ApplicantResource::getOrganisation);
     }
 }

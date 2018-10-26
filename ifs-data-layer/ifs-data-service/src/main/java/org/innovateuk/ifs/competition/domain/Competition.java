@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -111,8 +111,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
     private Boolean useResubmissionQuestion = true;
@@ -138,6 +136,8 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
+
+    private Boolean includeProjectGrowthTable;
 
     public Competition() {
         setupComplete = false;
@@ -600,16 +600,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return "";
     }
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    public Boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
-    }
-
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -653,6 +643,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                     CompetitionStatus.CLOSED);
         }
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
+    }
+
+    public boolean isNonFinanceType() {
+        return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
     public void releaseFeedback(ZonedDateTime date) {
@@ -757,6 +751,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
         this.applicationFinanceType = applicationFinanceType;
+    }
+
+    public Boolean getIncludeProjectGrowthTable() {
+        return includeProjectGrowthTable;
+    }
+
+    public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
+        this.includeProjectGrowthTable = includeProjectGrowthTable;
     }
 }
 
