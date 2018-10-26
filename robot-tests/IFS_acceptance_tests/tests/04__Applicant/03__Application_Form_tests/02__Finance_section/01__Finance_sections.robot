@@ -201,7 +201,6 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
-    capture page screenshot
     Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance

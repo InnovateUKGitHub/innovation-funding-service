@@ -199,7 +199,6 @@ the user fills in the Finances questions
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
     the user clicks the button/link       css = button[type="submit"]
     the user clicks the button/link       link = Finances
-    capture page screenshot
     the user clicks the button/link       link = Application
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
 

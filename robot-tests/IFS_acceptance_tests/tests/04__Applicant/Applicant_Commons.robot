@@ -113,15 +113,10 @@ the user fills in Labour
     the user clicks the button/link            jQuery = button:contains("Labour")
     the user should see the element            css = .labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       css = input[name^="labour-labourDaysYearly"]    230
-    wait for autosave
     the user should see the element            jQuery = input.govuk-input[name^=labour-role]:text[value = ""]:first
     the user enters text to a text field       jQuery = input.govuk-input[name^=labour-role]:text[value = ""]:first    anotherrole
-    wait for autosave
     the user enters text to a text field       jQuery = input.govuk-input[name^=labour-gross][value = ""]:first    120000
-    wait for autosave
     the user enters text to a text field       jQuery = input.govuk-input[name^=labour-labour][value = ""]:first    100
-    wait for autosave
-    capture page screenshot
     the user clicks the button/link            jQuery = button:contains("Labour")
 
 the user fills in Overhead costs
@@ -130,7 +125,7 @@ the user fills in Overhead costs
     run keyword if  '${overheadsCost}' == 'labour costs'  the user chooses 20% overheads option
 #    run keyword if  '${overheadsCost}' == 'No overhead'  the user chooses No overhead costs
 # The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
-    capture page screenshot
+
 
 the user chooses Calculate overheads option
     [Arguments]  ${totalCosts}
@@ -138,9 +133,7 @@ the user chooses Calculate overheads option
     the user clicks the button/link                         jQuery = label:contains("Calculate overheads")
     the user should see the element                         jQuery = h3:contains("Calculate overheads")
     the user uploads the file                               css = #overheadfile   ${excel_file}
-    wait for autosave
     the user enters text to a text field                    css = input[name^="overheads-total"][id^="cost-overheads"]   40
-    wait for autosave
     the total overhead costs should reflect rate entered    css = #total-cost  £${totalCosts}
 
 
@@ -159,64 +152,42 @@ the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
     the user should see the element       css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
-    wait for autosave
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    wait for autosave
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    wait for autosave
-    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery = button:contains("Capital usage")
     the user enters text to a text field  css = textarea.govuk-textarea[name^=capital_usage-description]  some description
-    wait for autosave
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
-    wait for autosave
     the user enters text to a text field  css = .form-finances-capital-usage-npv  5000
-    wait for autosave
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
-    wait for autosave
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
-    wait for autosave
-    Set Focus To Element                                   css = .section-total-summary > [data-mirror^="#section-total"]
+    Set Focus To Element                  css = .section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
-    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
     the user enters text to a text field  css = .form-finances-subcontracting-company  SomeName
-    wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting-country]  Netherlands
-    wait for autosave
     the user enters text to a text field  css = textarea.govuk-textarea[name^=subcontracting-role]  Quality Assurance
-    wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting-subcontractingCost]  1000
-    wait for autosave
-    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
     the user enters text to a text field  css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    wait for autosave
     the user enters text to a text field  css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
-    wait for autosave
     the user enters text to a text field  css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    wait for autosave
-    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
 
 the user fills in Other costs
     the user clicks the button/link       jQuery = button:contains("Other costs")
     the user removes prev costs if there are any
     the user enters text to a text field  css = textarea.govuk-textarea[name^=other_costs-description]  some other costs
-    wait for autosave
     the user enters text to a text field  css = input.govuk-input[name^=other_costs-otherCost]  50
-    wait for autosave
-    capture page screenshot
     the user clicks the button/link       jQuery = button:contains("Other costs")
 
 the user removes prev costs if there are any
@@ -231,25 +202,15 @@ the academic user fills in his finances
 
 the academic fills in the project costs
     The user enters text to a text field  css = [name$="incurred_staff"]  4242
-    wait for autosave
     The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  4243
-    wait for autosave
     The user enters text to a text field  css = [name$="incurred_other_costs"]  4244
-    wait for autosave
     The user enters text to a text field  css = [name$="allocated_investigators"]  42
-    wait for autosave
     The user enters text to a text field  css = [name$="allocated_estates_costs"]  3000
-    wait for autosave
     The user enters text to a text field  css = [name$="allocated_other_costs"]  5
-    wait for autosave
     The user enters text to a text field  css = [name$="indirect_costs"]  8909
-    wait for autosave
     The user enters text to a text field  css = [name$="exceptions_staff"]  123
-    wait for autosave
     The user enters text to a text field  css = [name$="exceptions_other_costs"]  7890
-    wait for autosave
     The user enters text to a text field  css = input[name$="tsb_reference"]  L33t
-    wait for autosave
     Textfield Value Should Be             id = total  £23,789
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       link = ${5mb_pdf}
