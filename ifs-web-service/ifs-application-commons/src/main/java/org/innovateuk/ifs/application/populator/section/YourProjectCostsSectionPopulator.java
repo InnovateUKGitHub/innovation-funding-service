@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator.section;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCostsSectionViewModel;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,14 +31,19 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<AbstractYourProjectCostsSectionViewModel> {
 
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
+    public YourProjectCostsSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                            final SectionService sectionService,
+                                            final FinanceViewHandlerProvider financeViewHandlerProvider,
+                                            final FormInputViewModelGenerator formInputViewModelGenerator) {
+        super(navigationPopulator);
+        this.sectionService = sectionService;
+        this.financeViewHandlerProvider = financeViewHandlerProvider;
+        this.formInputViewModelGenerator = formInputViewModelGenerator;
+    }
 
     @Override
     public void populateNoReturn(
