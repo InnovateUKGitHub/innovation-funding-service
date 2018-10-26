@@ -49,12 +49,22 @@ Gradle is efficient - it wont re-run tasks if it doesn't need to (--rerun-tasks 
 If a jar has been built and no source files have changed it wont build the jar again.
 
 
-| Task     | Description
-|----------|--------------
-| deploy   | Deploy docker service.
-| stop     | Stops docker service.
-| syncShib | Syncs user data from database to LDAP after database initialisation.
-| clean    | Cleans the build directory of the project.
+| Task          | Description
+|---------------|--------------
+| build         | Build artifacts
+| clean         | Clean up resources generated during build
+| deploy        | Deploy docker service.
+| flywayClean   | Drops all tables in the configured schemas
+| flywayMigrate | Apply changes to schema to get system up to date
+| stop          | Stops docker service.
+| syncShib      | Syncs user data from database to LDAP after database initialisation.
+| test          | Run tests to assert build quality, e.g. unit tests
+| wait          | Wait until docker container is deployed
+
+| Options            | Description
+|--------------------|--------------
+| -Pinitialise=true  | Redeploy core services, e.g. data base, that typically don't change during a build cycle
+| -x test            | Ignore test task
 
 ## Typical combinations
 
@@ -64,7 +74,7 @@ Deploy a branch for the first time with out full test suite
 
 Redeploy my changed jar files (no database changes)
 
-    ./gradlew clean build deploy wait
+    ./gradlew clean build deploy wait -x test
 
 Redeploy a specific service
 
