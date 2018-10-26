@@ -351,7 +351,8 @@ the user fills in the funding information with bigger amount
     [Arguments]  ${Application}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link           link = Your funding
-    the user enters text to a text field      css = [name^="finance-grantclaimpercentage"]  30
+    the user selects the radio button         requestingFunding   true
+    the user enters text to a text field      css = [name^="grantClaimPercentage"]  30
     click element                             jQuery = label:contains("Yes")
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
