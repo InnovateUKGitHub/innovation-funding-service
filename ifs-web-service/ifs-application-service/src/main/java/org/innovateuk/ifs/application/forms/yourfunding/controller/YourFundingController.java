@@ -66,7 +66,7 @@ public class YourFundingController {
                                             @PathVariable long sectionId,
                                             @PathVariable long applicantOrganisationId,
                                             @ModelAttribute("form") YourFundingForm form,
-                                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                            @RequestParam(value = "origin", defaultValue = "MANAGEMENT_DASHBOARD") String origin,
                                             @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);

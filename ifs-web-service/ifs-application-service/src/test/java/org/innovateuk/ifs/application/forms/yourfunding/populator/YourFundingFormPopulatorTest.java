@@ -24,6 +24,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.ListUtils.union;
@@ -122,7 +123,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     public void populate() {
         YourFundingForm form = new YourFundingForm();
 
-        service.populateForm(form, APPLICATION_ID, user);
+        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
 
         assertEquals(form.getRequestingFunding(), true);
         assertEquals(form.getGrantClaimPercentage(), (Integer) 100);
@@ -150,7 +151,20 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         grantClaim.setGrantClaimPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, user);
+        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
+
+        assertNull(form.getRequestingFunding());
+        assertNull(form.getOtherFunding());
+    }
+
+
+    @Test
+    public void populate_withOrgId() {
+        YourFundingForm form = new YourFundingForm();
+        grantClaim.setGrantClaimPercentage(null);
+        otherFunding.setOtherPublicFunding(null);
+
+        service.populateForm(form, APPLICATION_ID, user, Optional.of(organisation.getId()));
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());
