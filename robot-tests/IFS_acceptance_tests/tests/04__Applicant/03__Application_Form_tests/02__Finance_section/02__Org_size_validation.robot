@@ -35,7 +35,7 @@ Funding section is now available
 
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  80
     Then the user should see a field error     This field should be 70% or lower.
 
@@ -71,7 +71,7 @@ Funding section has been reset
 
 Medium org can't have more than 60% level
     [Documentation]    INFUND-1110
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  70
     Then the user should see a field error       This field should be 60% or lower.
 
@@ -107,7 +107,7 @@ Funding section has been reset again
 
 Large org can't have more than 50% level
     [Documentation]    INFUND-1110
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  60
     Then the user should see a field error     This field should be 50% or lower.
 

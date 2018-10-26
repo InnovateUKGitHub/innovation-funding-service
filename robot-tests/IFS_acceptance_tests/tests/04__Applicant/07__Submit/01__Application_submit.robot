@@ -49,7 +49,7 @@ Submit button disabled when application is incomplete
 
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link = ${application_bus_name}
     When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
@@ -141,7 +141,7 @@ RTO lead has read only view after submission
 
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
-    [Tags]  HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link                     link = ${application_rto_name}
     And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
@@ -154,7 +154,7 @@ Submit flow rto lead (complete application)
 
 Applications are on Dashboard when Competition is Closed
     [Documentation]  IFS-1149
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  Get the original values of the competition's milestones
     Given the competition is closed
     Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}

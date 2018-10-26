@@ -127,7 +127,7 @@ Finance summary has total marked as complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  logout as user
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
@@ -145,7 +145,7 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]  HappyPath
+    [Tags]
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
