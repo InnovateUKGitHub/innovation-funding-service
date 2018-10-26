@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 public class Project {
@@ -9,8 +9,8 @@ public class Project {
     private String title;
     private String summary;
     private String publicDescription;
-    private Date grantOfferLetterDate;
-    private Date startDate;
+    private LocalDate grantOfferLetterDate;
+    private LocalDate startDate;
     private int duration;
     private Set<Participant> participants;
 
@@ -54,19 +54,19 @@ public class Project {
         this.publicDescription = publicDescription;
     }
 
-    public Date getGrantOfferLetterDate() {
+    public LocalDate getGrantOfferLetterDate() {
         return grantOfferLetterDate;
     }
 
-    public void setGrantOfferLetterDate(Date grantOfferLetterDate) {
+    public void setGrantOfferLetterDate(LocalDate grantOfferLetterDate) {
         this.grantOfferLetterDate = grantOfferLetterDate;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

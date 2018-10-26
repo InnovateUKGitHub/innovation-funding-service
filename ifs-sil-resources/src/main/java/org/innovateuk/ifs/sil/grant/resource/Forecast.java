@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Forecast {
     private String costCategory;
-    private Date start;
-    private Date end;
+    private LocalDate start;
+    private LocalDate end;
     private double value;
 
     public String getCostCategory() {
@@ -16,20 +16,30 @@ public class Forecast {
         this.costCategory = costCategory;
     }
 
-    public Date getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(LocalDate start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public Forecast start(LocalDate start) {
+        setStart(start);
+        return this;
+    }
+
+    public LocalDate getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(LocalDate end) {
         this.end = end;
+    }
+
+    public Forecast end(LocalDate end) {
+        setEnd(end);
+        return this;
     }
 
     public double getValue() {
@@ -38,5 +48,10 @@ public class Forecast {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public Forecast value(double value) {
+        setValue(value);
+        return this;
     }
 }
