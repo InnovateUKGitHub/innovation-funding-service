@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- ===========================Form: financial summary (question type) =========================== -->
     <th:block th:fragment="financial_summary" th:if="${financeTotalPerType}">
-        <div class="govuk-!-margin-bottom-6"
-            th:classappend="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
+        <div class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
+            th:classappend="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'">
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${currentCompetition.maxResearchRatio}+' %'"></dd>
@@ -25,7 +25,7 @@
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="project-cost-breakdown">
-            <div style="overflow: auto;">
+            <div class="table-overflow">
                 <th:block th:unless="${applicationOrganisations != null}">
                     <div class="warning-alert">
                         <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
@@ -54,8 +54,7 @@
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
                                 <a th:if="${showAssessorDetailedFinanceLink}"
                                    th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
-                                   th:style="'font-weight: normal;'"
-                                   class="govuk-link">
+                                   class="govuk-link govuk-!-font-weight-regular">
                                     View finances
                                 </a>
                             </th>
@@ -116,13 +115,13 @@
         <th:block
             th:insert="finance/finance-summary :: application_finances_incomplete_warning (collaborativeProject=${collaborativeProject})" />
 
-        <div class="govuk-form-group finance-summary" style="overflow:auto;">
+        <div class="govuk-form-group finance-summary table-overflow">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell"/>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">% Grant</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">&percnt; Grant</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Funding sought (&pound;)</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other public sector funding (&pound;)</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Contribution to project (&pound;)</th>
@@ -140,27 +139,27 @@
                                 <small>Partner</small>
                             </div>
                             <th:block th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}">
-                                <a th:if="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'+applicationOrganisation.id}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
-                                   class="govuk-link">
+                                <a th:if="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'+applicationOrganisation.id}+(${originQuery}?:'')"
+                                   class="govuk-link govuk-!-font-weight-regular">
                                     View finances
                                 </a>
-                                <a th:unless="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'}+(${originQuery}?:'')" th:style="'font-weight: normal;'"
-                                   class="govuk-link">
+                                <a th:unless="${supportUserAndSummaryPage}" th:href="${'/application/'+currentApplication.id+'/form/section/'+financeSectionId+'/'}+(${originQuery}?:'')"
+                                   class="govuk-link govuk-!-font-weight-regular">
                                     View finances
                                 </a>
                             </th:block>
                             <th:block th:unless="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}">
                                 <th:block th:if="${originQuery != null}">
                                     <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
-                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}+${originQuery}' th:style="'font-weight: normal;'"
-                                       class="govuk-link">
+                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}+${originQuery}'
+                                       class="govuk-link govuk-!-font-weight-regular">
                                         View finances
                                     </a>
                                 </th:block>
                                 <th:block th:unless="${originQuery != null}">
                                     <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
-                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'"
-                                       class="govuk-link">
+                                       th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'
+                                       class="govuk-link govuk-!-font-weight-regular">
                                         View finances
                                     </a>
                                 </th:block>

@@ -1,27 +1,27 @@
 # Use "pip install -r robotPythonLibs-requirements.txt" to install the following libraries:
 
 # Robot Framework and its library dependencies
-robotframework
-selenium
-robotframework-databaselibrary
-robotframework-excellibrary
-robotframework-ftplibrary
-robotframework-imaplibrary
-robotframework-selenium2library
-robotframework-xvfb
+robotframework==3.0.4
+selenium==3.14.1
+robotframework-databaselibrary==1.1.1
+robotframework-excellibrary==0.0.2
+robotframework-ftplibrary==1.6
+robotframework-imaplibrary==0.3.0
+robotframework-selenium2library==3.0.0
+robotframework-xvfb==1.2.2
 
 #In order to query the database
-PyMySQL
+PyMySQL==0.9.2
 
 #Python - Excel Library
-openpyxl
+openpyxl==2.5.9
 
 #and for PDF
-pdfminer
+pdfminer==20140328
 
 #SauceLabs dependencies
-requests
-simplejson
+requests==2.20.0
+simplejson==3.16.0
 
 #Timezones
 pytz==2018.3

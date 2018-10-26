@@ -25,7 +25,7 @@ Comp Admin creates an ATI competition
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
+    Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute  2
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  true  collaborative  # 1 means 30%
@@ -33,7 +33,7 @@ Comp Admin creates an ATI competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #And the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  ATI
@@ -57,6 +57,7 @@ Single applicant cannot submits his application to a collaborative comp
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
+    And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
@@ -150,3 +151,8 @@ the lead invites already registered user
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
+
+the user does not see state aid information
+    the user clicks the button/link      link = Your organisation
+    the user should not see the element  link = eligible for state aid
+    the user clicks the button/link      link = Your finances
