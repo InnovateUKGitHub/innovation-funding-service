@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingFor
 import org.innovateuk.ifs.application.forms.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.yourfunding.saver.YourFundingSaver;
 import org.innovateuk.ifs.application.forms.yourfunding.validator.YourFundingFormValidator;
+import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.ManagementYourFundingViewModel;
 import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -20,6 +21,8 @@ import org.springframework.validation.BindingResult;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -71,7 +74,24 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()));
+        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(empty()));
+    }
+
+    @Test
+    public void managementViewYourFunding() throws Exception {
+        long organisationId = 5L;
+        ManagementYourFundingViewModel viewModel = mock(ManagementYourFundingViewModel.class);
+
+        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?origin=PROJECT_SETUP_MANAGEMENT_STATUS"))
+                .thenReturn(viewModel);
+
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/{organisationId}?origin=PROJECT_SETUP_MANAGEMENT_STATUS",
+                APPLICATION_ID, SECTION_ID, organisationId))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name(VIEW))
+                .andExpect(status().isOk());
+
+        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(of(organisationId)));
     }
 
     @Test

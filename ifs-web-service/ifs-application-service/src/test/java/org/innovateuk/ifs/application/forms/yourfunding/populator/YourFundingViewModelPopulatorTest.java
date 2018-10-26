@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.ManagementYourFundingViewModel;
 import org.innovateuk.ifs.application.forms.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
@@ -134,5 +135,30 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals((Long) viewModel.getYourOrganisationSectionId(), yourOrgSection.getId());
         assertEquals(viewModel.getResearchCategoryQuestionId(), researchCategoryQuestion.getId());
         assertEquals(viewModel.isFundingSectionLocked(), false);
+        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE", APPLICATION_ID));
+    }
+
+    @Test
+    public void populateManagement() {
+        long organisationId = 3L;
+        long competitionId = 4L;
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withName("name")
+                .withCompetition(competitionId)
+                .build()));
+
+        ManagementYourFundingViewModel viewModel = service.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?query");
+
+
+        assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
+        assertEquals(viewModel.getCompetitionId(), competitionId);
+        assertEquals(viewModel.getApplicationName(),"name");
+
+        assertEquals(viewModel.isFundingSectionLocked(), false);
+        assertEquals(viewModel.isFundingSectionLocked(), false);
+        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE/%d%s", APPLICATION_ID, organisationId, "?query"));
+
+
     }
 }
