@@ -295,6 +295,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),
 
     /**
+     * Grant Monitoring
+     */
+    SEND_PROJECT_FAILED(BAD_REQUEST),
+
+    /**
      * IFS Admin
      */
     ADMIN_INVALID_USER_ROLE(BAD_REQUEST),
