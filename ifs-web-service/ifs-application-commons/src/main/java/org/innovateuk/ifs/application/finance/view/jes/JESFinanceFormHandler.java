@@ -53,7 +53,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String NON_DECIMAL_MESSAGE = "validation.standard.integer.non.decimal.format";
     public static final String NON_NEGATIVE_MESSAGE = "validation.standard.non.negative.integer.format";
     public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
-    public static final String NON_DECIMAL_FIELD = "tsb_reference";
+    public static final String TSB_REFERENCE = "tsb_reference";
     public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
 
     @Override
@@ -99,7 +99,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+        if (!financeFormField.getCostName().equals(TSB_REFERENCE)) {
             // if this is a project cost we test for 1) fractional values, 2) negative values - empty values are okay.
             if (!inputIsLong(value)) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
@@ -113,7 +113,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
         storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
 
-        if (value.isEmpty() && markSectionAsComplete && financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+        if (value.isEmpty() && markSectionAsComplete) {
             return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
