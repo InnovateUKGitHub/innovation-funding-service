@@ -25,12 +25,20 @@ Other funding validation message
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]
-    Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
-    Then the user should see the element       css = [name^="finance-grantclaimpercentage"]
-    And the user should see the element        css = [name*=other_funding-fundingSource]
-    And the user should see the element        css = [name*=other_funding-securedDate]
-    And the user should see the element        css = [name*=other_funding-fundingAmount]
-    And the user should see the element        css = [name^="other_funding-otherPublicFunding-"] ~ label
+    #Given the user selects the radio button    other_funding-otherPublicFunding-    Yes   #Remove if not needed, update the elements
+    Given the user selects the radio button    otherFunding  true
+    Then the user should see the element       css = [name^="grantClaimPercentage"]
+    And the user should see the element        id = otherFundingRows[1853].source
+    And the user should see the element        id = otherFundingRows[1853].date
+    And the user should see the element        id = otherFundingRows[1853].fundingAmount
+    #And the user should see the element        id = other_funding-otherPublicFunding- ~ label
+
+#Remove if not needed...
+    #Then the user should see the element       css = [name^="grantClaimPercentage"]
+    #And the user should see the element        css = [name*=other_funding-fundingSource]
+    #And the user should see the element        css = [name*=other_funding-securedDate]
+    #And the user should see the element        css = [name*=other_funding-fundingAmount]
+    #And the user should see the element        css = [name^="other_funding-otherPublicFunding-"] ~ label
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
@@ -44,7 +52,8 @@ Funding level validations
     When the user provides invalid value as percentage then he should see the error  This field should be 0% or higher.  -14
     When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
-    When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  24
+    And the user selects the radio button         requestingFunding   true
+    When the user enters text to a text field     css = [name^="grantClaimPercentage"]  24
     Then the user cannot see a validation error in the page
 
 Other funding validations
@@ -94,8 +103,9 @@ Funding level has been reset
 Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
     [Tags]
-    Given the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]    43
-    When the user enters text to a text field   css = [name*=other_funding-fundingSource]  Lottery funding
+    Given the user selects the radio button         requestingFunding   true
+    And the user enters text to a text field        css = [name^="grantClaimPercentage"]    43
+    When the user enters text to a text field       css = [name*=other_funding-fundingSource]  Lottery funding
     Then the user enters text to a text field       css = [name*=other_funding-securedDate]  12-${nextyear}
     And the user enters text to a text field        css = [name*=other_funding-fundingAmount]  20000
 
@@ -135,7 +145,8 @@ Custom Suite Setup
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
-    the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  ${value}
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  ${value}
     the user moves focus to the element   css = button.govuk-button[type="submit"]
     the user should see a field error     ${error}
 
