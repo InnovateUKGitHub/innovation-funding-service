@@ -147,9 +147,8 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     private boolean financeFileIsEmpty(Application application) {
         List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
-        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
-        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getOptionalSuccessObject();
-        
+        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(loggedInUserSupplier.get().getId(), application.getId()).getOptionalSuccessObject();
+
         if (applicationFinances == null || !organisation.isPresent()) {
             return true;
         }
