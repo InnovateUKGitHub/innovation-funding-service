@@ -164,7 +164,8 @@ public class BankDetailsManagementController {
     }
 
     private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form){
-        AddressResource address = form.getAddressForm().getSelectedPostcode();
+        AddressResource address =  null;
+                //form.getAddressForm().getSelectedPostcode();
         return new OrganisationAddressResource(organisation, address, new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name()));
     }
 
