@@ -8,15 +8,43 @@ import java.util.function.Function;
 
 @ValidAddressForm
 public class AddressForm {
-    public static final String SEARCH_POSTCODE_PARAMETER = "searchPostcodeButton";
-    public static final String CHANGE_POSTCODE_PARAMETER = "changePostcodeButton";
-    public static final String MANUAL_ADDRESS_PARAMETER = "manualAddressButton";
+
+    public enum Action {
+        SEARCH_POSTCODE,
+        CHANGE_POSTCODE,
+        ENTER_MANUAL,
+        SAVE
+    }
+
+    public enum AddressType {
+        POSTCODE_LOOKUP,
+        MANUAL_ENTRY
+    }
+
+    private Action action = Action.SAVE;
+    private AddressType addressType;
+
+
     private String postcodeInput;
     private Integer selectedPostcodeIndex;
-    private AddressResource address;
+    private AddressResource manualAddress;
     private List<AddressResource> postcodeResults;
-    private boolean searchPostcode;
-    private boolean manualAddress;
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
+    }
+
+    public AddressType getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(AddressType addressType) {
+        this.addressType = addressType;
+    }
 
     public String getPostcodeInput() {
         return postcodeInput;
@@ -34,12 +62,12 @@ public class AddressForm {
         this.selectedPostcodeIndex = selectedPostcodeIndex;
     }
 
-    public AddressResource getAddress() {
-        return address;
+    public AddressResource getManualAddress() {
+        return manualAddress;
     }
 
-    public void setAddress(AddressResource address) {
-        this.address = address;
+    public void setManualAddress(AddressResource manualAddress) {
+        this.manualAddress = manualAddress;
     }
 
     public List<AddressResource> getPostcodeResults() {
@@ -50,31 +78,39 @@ public class AddressForm {
         this.postcodeResults = postcodeResults;
     }
 
-    public boolean isSearchPostcode() {
-        return searchPostcode;
-    }
-
-    public void setSearchPostcode(boolean searchPostcode) {
-        this.searchPostcode = searchPostcode;
-    }
-
-    public boolean isManualAddress() {
-        return manualAddress;
-    }
-
-    public void setManualAddress(boolean manualAddress) {
-        this.manualAddress = manualAddress;
-    }
-
+    //methods
     public AddressResource getSelectedAddress(Function<String, List<AddressResource>> resultsSupplier) {
-        if (manualAddress) {
-            return address;
-        } else {
+        if (AddressType.MANUAL_ENTRY.equals(addressType)) {
+            return manualAddress;
+        } else if (AddressType.POSTCODE_LOOKUP.equals(addressType)) {
             return resultsSupplier.apply(postcodeInput).get(selectedPostcodeIndex);
+        } else {
+            throw new RuntimeException("Address type not selected");
         }
+    }
 
+    public void handleAction(Function<String, List<AddressResource>> resultsSupplier) {
+        if (action == Action.ENTER_MANUAL) {
+            addressType = AddressType.MANUAL_ENTRY;
+        } else if (action == Action.SEARCH_POSTCODE) {
+            addressType = AddressType.POSTCODE_LOOKUP;
+            postcodeResults = resultsSupplier.apply(postcodeInput);
+        } else if (action == Action.CHANGE_POSTCODE) {
+            addressType = null;
+        }
     }
+
     public boolean isDisplayPostcodeResults() {
-        return !manualAddress && postcodeResults != null && !postcodeResults.isEmpty();
+        return !AddressType.MANUAL_ENTRY.equals(addressType) && postcodeResults != null && !postcodeResults.isEmpty();
     }
+
+    public boolean isManualAddressEntry() {
+        return addressType == AddressType.MANUAL_ENTRY;
+    }
+
+    public boolean isPostcodeAddressEntry() {
+        return addressType == AddressType.POSTCODE_LOOKUP;
+    }
+
+
 }

@@ -3,12 +3,11 @@
 
 <th:block th:fragment="address-details">
     <div id="manual-company-input">
-        <input type="hidden" th:field="*{addressForm.searchPostcode}" />
-        <input type="hidden" th:field="*{addressForm.manualAddress}" />
+        <input type="hidden" th:field="*{addressForm.addressType}" />
         <fieldset class="govuk-fieldset">
             <legend th:if="${legend}" class="govuk-visually-hidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="govuk-visually-hidden">legend</legend>
-            <div  th:unless="${form.addressForm.searchPostcode}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-form-group--error'">
+            <div  th:unless="${form.addressForm.postcodeAddressEntry}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
                     Postcode
                 </label>
@@ -21,16 +20,16 @@
                        th:field="*{addressForm.postcodeInput}"
                        th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-input--error'"
                        type="text" />
-                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="searchPostcodeButton" value="true">Find UK address</button>
+                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="addressForm.action" value="SEARCH_POSTCODE">Find UK address</button>
             </div>
 
-            <th:block th:if="${form.addressForm.searchPostcode}">
+            <th:block th:if="${form.addressForm.postcodeAddressEntry}">
                 <input type="hidden" th:field="*{addressForm.postcodeInput}" />
                 <dl class="govuk-list">
                     <dt>Postcode</dt>
                     <dd>
                         <span th:text="${form.addressForm.postcodeInput}"></span>
-                        <button type="submit" class="button-clear govuk-!-margin-top-6" name="changePostcodeButton" value="true">Change</button>
+                        <button type="submit" class="button-clear govuk-!-margin-top-6" name="addressForm.action" value="CHANGE_POSTCODE">Change</button>
                     </dd>
                 </dl>
                 <div th:if='${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
@@ -52,93 +51,93 @@
                 </div>
             </th:block>
 
-            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manualAddressButton" value="true">Enter address manually</button>
+            <button type="submit" class="button-clear govuk-!-margin-top-6" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
         </fieldset>
-        <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddress}">
+        <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddressEntry}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"
                     th:if="${addressType}">
                 <h2 class="govuk-fieldset__heading" th:text="|Your ${addressType}|">ADDRESS TYPE</h2>
             </legend>
             <legend class="govuk-visually-hidden" th:unless="${addressType}">Address details</legend>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.addressLine1}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.address.addressLine1">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.addressLine1}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.manualAddress.addressLine1">
                     Street
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.addressLine1}')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.address.addressLine1')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.addressLine1}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.addressLine1')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.addressLine1"
+                <input id="addressForm.manualAddress.addressLine1"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.addressLine1}"
+                       th:field="*{addressForm.manualAddress.addressLine1}"
                        th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"
                        type="text"
                        required="required" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.addressLine2}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-visually-hidden" for="addressForm.address.addressLine2">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.addressLine2}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-visually-hidden" for="addressForm.manualAddress.addressLine2">
                     Street line 2
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.addressLine2}')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.address.addressLine2')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.addressLine2}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.addressLine2')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.addressLine2"
+                <input id="addressForm.manualAddress.addressLine2"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.addressLine2}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.address.addressLine2}')} ? 'govuk-input--error'"
+                       th:field="*{addressForm.manualAddress.addressLine2}"
+                       th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.addressLine2}')} ? 'govuk-input--error'"
                        type="text" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.addressLine3}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-visually-hidden" for="addressForm.address.addressLine3">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.addressLine3}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-visually-hidden" for="addressForm.manualAddress.addressLine3">
                     Street line 3
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.addressLine3}')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.address.addressLine3')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.addressLine3}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.addressLine3')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.addressLine3"
+                <input id="addressForm.manualAddress.addressLine3"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.addressLine3}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.address.addressLine3}')} ? 'govuk-input--error'"
+                       th:field="*{addressForm.manualAddress.addressLine3}"
+                       th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.addressLine3}')} ? 'govuk-input--error'"
                        type="text" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.town}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.address.town">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.town}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.manualAddress.town">
                     Town
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.town}')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.address.town')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.town}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.town')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.town"
+                <input id="addressForm.manualAddress.town"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.town}"
+                       th:field="*{addressForm.manualAddress.town}"
                        th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.town.required}"
                        type="text"
                        required="required" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.county}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.address.county">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.county}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.manualAddress.county">
                     County
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.county}')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.address.county')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.county}')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.manualAddress.county')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.county"
+                <input id="addressForm.manualAddress.county"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.county}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.address.county}')} ? 'fgovuk-input--error'"
+                       th:field="*{addressForm.manualAddress.county}"
+                       th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.county}')} ? 'fgovuk-input--error'"
                        type="text" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.address.postcode}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.address.postcode" >
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.manualAddress.postcode}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.manualAddress.postcode" >
                     Postcode
                 </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.address.postcode}')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.address.postcode')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{addressForm.manualAddress.postcode}')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.postcode')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.address.postcode"
+                <input id="addressForm.manualAddress.postcode"
                        class="govuk-input govuk-!-width-one-half"
-                       th:field="*{addressForm.address.postcode}"
+                       th:field="*{addressForm.manualAddress.postcode}"
                        th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.postcode.required}"
                        type="text"

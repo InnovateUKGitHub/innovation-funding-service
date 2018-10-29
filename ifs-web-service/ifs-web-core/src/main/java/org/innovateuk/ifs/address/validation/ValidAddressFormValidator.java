@@ -17,15 +17,15 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
     @Override
     public boolean isValid(AddressForm value, ConstraintValidatorContext context) {
         boolean valid;
-        if (value.isManualAddress()) {
-            valid = isAddressValid(value.getAddress(), context);
-        } else if (isNullOrEmpty(value.getPostcodeInput())) {
-            valid = false;
-            context.disableDefaultConstraintViolation();
-            context
-                    .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
-                    .addPropertyNode("postcodeInput").addConstraintViolation();
-
+        if (value.getAction().equals(AddressForm.Action.SAVE)) {
+            valid = true;
+        } else if (value.getAction().equals(AddressForm.Action.SEARCH_POSTCODE) &&
+                 isNullOrEmpty(value.getPostcodeInput())) {
+                valid = false;
+                context.disableDefaultConstraintViolation();
+                context
+                        .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
+                        .addPropertyNode("postcodeInput").addConstraintViolation();
         } else {
             valid = true;
         }
