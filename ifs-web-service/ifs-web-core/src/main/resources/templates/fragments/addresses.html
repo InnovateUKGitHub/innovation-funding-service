@@ -29,9 +29,7 @@
                     <dd>
                         <span th:text="${form.addressForm.postcodeInput}"></span>
                         <button type="submit"
-                                class="button-clear
-                                govuk-!-margin-left-2
-                                govuk-!-padding-0"
+                                class="button-clear govuk-!-margin-left-2 govuk-!-padding-0"
                                 name="addressForm.action"
                                 value="CHANGE_POSTCODE">
                             Change
@@ -57,7 +55,7 @@
                 </div>
             </th:block>
 
-            <button type="submit" class="button-clear govuk-!-margin-top-6" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
+            <button type="submit" class="button-clear" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
         </fieldset>
         <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddressEntry}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"
