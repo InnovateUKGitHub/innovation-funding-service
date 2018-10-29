@@ -146,7 +146,7 @@ public class ApplicationSectionController {
                 .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(),
                         Role.COLLABORATOR.getName()).contains(pr.getRoleName()))
                 .findFirst()
-                .orElseThrow(() -> new ObjectNotFoundException());
+                .orElseThrow(ObjectNotFoundException::new);
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
