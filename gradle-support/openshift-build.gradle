@@ -5,6 +5,7 @@ import com.bmuschko.gradle.docker.tasks.container.extras.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
+openshiftEnv = openshiftEnv.replaceAll('/', '-')
 
 buildscript {
     repositories {

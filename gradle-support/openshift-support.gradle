@@ -10,6 +10,8 @@ build.enabled = false
 
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
+openshiftEnv = openshiftEnv.replaceAll('/', '-')
+
 if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
 } else {
@@ -18,7 +20,6 @@ if (!isNamedEnv()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
     }
 }
-
 
 task prepareDeployment(type: Copy) {
 
