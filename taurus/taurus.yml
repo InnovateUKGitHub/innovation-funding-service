@@ -31,7 +31,7 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${invite_users}"
+  concurrency: ${invite_users}
   files:
   - jmeter/Representative/invite_data.csv
 
@@ -40,7 +40,7 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${applicant_users}"
+  concurrency: ${applicant_users}
   files:
   - jmeter/Representative/user_data.csv
 
@@ -49,7 +49,7 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${registration_users}"
+  concurrency: ${registration_users}
   files:
   - jmeter/Representative/competition_data.csv
 
@@ -58,7 +58,7 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${front_door_users}"
+  concurrency: ${front_door_users}
   files:
   - jmeter/Representative/front-door-competitions.csv
 
@@ -67,14 +67,14 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${comp_management_users}"
+  concurrency: ${comp_management_users}
 
 - scenario: assessor_users
   iterations: 1
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: "${assessor_users}"
+  concurrency: ${assessor_users}
   files:
   - jmeter/Representative/assessor_data.csv
 
@@ -95,4 +95,4 @@ scenarios:
 reporting:
 - module: passfail
   criteria:
-  - "fail>50% for 10s, stop as failed"
+  - fail>50% for 10s, stop as failed
