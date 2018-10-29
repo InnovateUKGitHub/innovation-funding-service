@@ -55,6 +55,7 @@ public class ApplicationResource {
     private boolean isInAssessmentReviewPanel;
 
     private CollaborationLevel collaborationLevel;
+    private boolean collaborativeProject;
 
     public Long getId() {
         return id;
@@ -260,6 +261,14 @@ public class ApplicationResource {
         this.collaborationLevel = collaborationLevel;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public void setCollaborativeProject(final boolean collaborativeProject) {
+        this.collaborativeProject = collaborativeProject;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -289,6 +298,7 @@ public class ApplicationResource {
                 .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(leadOrganisationId, that.leadOrganisationId)
                 .append(collaborationLevel, that.collaborationLevel)
+                .append(collaborativeProject, that.collaborativeProject)
                 .isEquals();
     }
 
@@ -315,6 +325,7 @@ public class ApplicationResource {
                 .append(leadOrganisationId)
                 .append(isInAssessmentReviewPanel)
                 .append(collaborationLevel)
+                .append(collaborativeProject)
                 .toHashCode();
     }
 }

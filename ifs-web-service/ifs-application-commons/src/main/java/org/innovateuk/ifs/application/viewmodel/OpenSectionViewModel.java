@@ -15,13 +15,12 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
     private SortedSet<OrganisationResource> applicationOrganisations;
     private List<String> pendingOrganisationNames;
     private OrganisationResource leadOrganisation;
-
     private Map<Long, Set<Long>> completedSectionsByOrganisation;
     private Boolean allQuestionsCompleted;
     private boolean yourFinancesCompleteForAllOrganisations;
     private Long eachCollaboratorFinanceSectionId;
-
     private Integer completedQuestionsPercentage;
+    private boolean collaborativeProject;
 
     public OpenSectionViewModel() {
         subFinanceSection = Boolean.FALSE;
@@ -107,5 +106,13 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
 
     public void setCompletedQuestionsPercentage(Integer completedQuestionsPercentage) {
         this.completedQuestionsPercentage = completedQuestionsPercentage;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public void setCollaborativeProject(final boolean collaborativeProject) {
+        this.collaborativeProject = collaborativeProject;
     }
 }

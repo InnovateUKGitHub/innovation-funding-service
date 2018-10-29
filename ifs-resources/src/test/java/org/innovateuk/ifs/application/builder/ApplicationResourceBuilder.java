@@ -99,4 +99,9 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((collaborationLevel, application) -> application.setCollaborationLevel(collaborationLevel),
                 collaborationLevels);
     }
+
+    public ApplicationResourceBuilder withCollaborativeProject(Boolean... collaborativeProjectArray) {
+        return withArray((collaborativeProject, application) -> application.setCollaborativeProject(collaborativeProject),
+                collaborativeProjectArray);
+    }
 }

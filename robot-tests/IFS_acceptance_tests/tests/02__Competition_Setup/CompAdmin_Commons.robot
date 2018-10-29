@@ -97,7 +97,7 @@ the user fills in the CS Milestones
     the user clicks the button/link              link = Competition setup
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #the user fills in the CS Documents in other projects
 #    the user clicks the button/link          link = Documents in project setup
 #    the user clicks the button/link          link = Add document type

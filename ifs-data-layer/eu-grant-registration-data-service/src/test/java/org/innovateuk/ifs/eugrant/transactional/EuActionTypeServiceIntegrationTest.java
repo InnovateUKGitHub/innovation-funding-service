@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.eugrant.transactional;
 
-import com.drew.lang.Iterables;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.transactional.EuActionTypeService;
@@ -12,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +29,7 @@ public class EuActionTypeServiceIntegrationTest extends BaseIntegrationTest {
         ServiceResult<List<EuActionTypeResource>> result = euActionTypeService.findAll();
         assertTrue(result.isSuccess());
 
-        List<EuActionType> actionTypes = Iterables.toList(euActionTypeRepository.findAll());
+        List<EuActionType> actionTypes = stream(euActionTypeRepository.findAll().spliterator(), false).collect(toList());
 
         assertEquals(result.getSuccess().get(0).getId(), actionTypes.get(0).getId());
     }
