@@ -3,7 +3,6 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -24,10 +23,6 @@ public class Organisation {
 
     @Column(nullable = false)
     private String name;
-
-    @ZeroDowntime(description = "Contract: remove", reference = "IFS-4196")
-    @Column(name = "company_house_number")
-    private String companyHouseNumber;
 
     @Column(name = "companies_house_number")
     private String companiesHouseNumber;
@@ -59,7 +54,6 @@ public class Organisation {
     }
     public Organisation(String name, String companiesHouseNumber) {
         this.name = name;
-        this.companyHouseNumber = companiesHouseNumber;
         this.companiesHouseNumber = companiesHouseNumber;
     }
 
@@ -93,7 +87,6 @@ public class Organisation {
     }
 
     public void setCompaniesHouseNumber(String companiesHouseNumber) {
-        this.companyHouseNumber = companiesHouseNumber;
         this.companiesHouseNumber = companiesHouseNumber;
     }
 

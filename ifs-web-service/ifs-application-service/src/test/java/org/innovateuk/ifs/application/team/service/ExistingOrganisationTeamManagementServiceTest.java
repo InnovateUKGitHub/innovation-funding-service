@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementModelPopulator;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -35,16 +35,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<OrganisationTeamManagementService> {
+public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUnitTest<ExistingOrganisationTeamManagementService> {
 
-    private long applicationId;
-    private long organisationId;
+    private long applicationId = 123L;
+    private long organisationId = 456L;
 
     @Mock
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
-
-    @Mock
-    private ProcessRoleService processRoleServiceMock;
 
     @Mock
     private UserRestService userRestService;
@@ -55,11 +52,8 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
     @Mock
     private InviteRestService inviteRestServiceMock;
 
-    @Mock
-    private QuestionRestService questionRestService;
-
-    protected OrganisationTeamManagementService supplyServiceUnderTest() {
-        return new OrganisationTeamManagementService(userRestService);
+    protected ExistingOrganisationTeamManagementService supplyServiceUnderTest() {
+        return new ExistingOrganisationTeamManagementService(userRestService);
     }
 
     @Before
@@ -69,15 +63,14 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
         organisationId = 2L;
     }
 
-
     @Test
     public void createViewModel_populatorShouldBeAppropriateParameters() throws Exception {
         UserResource userResource = newUserResource().build();
 
-        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(applicationId,
                 1L,
                 null,
-                1L,
+                organisationId,
                 1L,
                 null,
                 false,
@@ -121,47 +114,77 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
     }
 
     @Test
-    public void validateOrganisationAndApplicationIds_whenAnyProcessRolesOrganisationsMatchApplicationIdTrueShouldBeReturned() throws Exception {
-        long applicationId = 1L;
-        long inviteOrganisationId = 2L;
+    public void validateOrganisationAndApplicationIds_whenAnyProcessRolesOrganisationsMatchOrganisationIdTrueShouldBeReturned() throws Exception {
 
-        List<ProcessRoleResource> processRoleResourceList = newProcessRoleResource().withApplication(1L,2L).build(2);
+        List<ProcessRoleResource> processRoleResourceList = newProcessRoleResource().
+                withApplication(applicationId).
+                withOrganisation(987L, organisationId, 654L).
+                build(3);
 
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
+                thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoleResourceList));
 
-        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, inviteOrganisationId);
+        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
-        assertFalse(result);
+        assertTrue(result);
+
+        verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
+        verify(userRestService).findProcessRole(applicationId);
     }
 
     @Test
-    public void validateOrganisationAndApplicationIds_whenNoProcessRolesOrganisationsMatchApplicationIdFalseShouldBeReturned() throws Exception {
-        long applicationId = 1L;
-        long inviteOrganisationId = 2L;
+    public void validateOrganisationAndApplicationIds_whenNoProcessRolesOrganisationsMatchOrganisationIdFalseShouldBeReturned() throws Exception {
 
-        List<ProcessRoleResource> processRoleResourceList = newProcessRoleResource().withApplication(2L,3L).build(2);
+        List<ProcessRoleResource> processRoleResourceList = newProcessRoleResource().
+                withApplication(applicationId).
+                withOrganisation(987L, 654L).
+                build(2);
 
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
+                thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoleResourceList));
 
-        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, inviteOrganisationId);
+        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
         assertFalse(result);
+
+        verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
+        verify(userRestService).findProcessRole(applicationId);
     }
 
     @Test
     public void validateOrganisationAndApplicationIds_whenNoProcessRolesAreFoundFalseShouldBeReturned() throws Exception {
-        long applicationId = 1L;
-        long inviteOrganisationId = 2L;
 
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
+                thenReturn(restFailure(notFoundError(InviteOrganisationResource.class)));
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(new ArrayList<>()));
 
-        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, inviteOrganisationId);
+        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
 
         assertFalse(result);
+
+        verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
+        verify(userRestService).findProcessRole(applicationId);
+    }
+
+    @Test
+    public void validateOrganisationAndApplicationIds_whenInviteOrganisationExistsTrueShouldBeReturned() throws Exception {
+
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
+                thenReturn(restSuccess(newInviteOrganisationResource().build()));
+
+        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
+
+        assertTrue(result);
+
+        verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
+        verify(userRestService, never()).findProcessRole(applicationId);
     }
 
     @Test
     public void getInviteIds_foundIdsShouldBeMappedToReturnedList() throws Exception {
+
         List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withId(1L,2L,3L,4L,5L).withApplication(2L).build(5);
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResources).build();
