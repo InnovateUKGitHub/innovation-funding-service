@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.innovateuk.ifs.address.form.AddressForm.MANUAL_ADDRESS_PARAMETER;
+import static org.innovateuk.ifs.address.form.AddressForm.SEARCH_POSTCODE_PARAMETER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
@@ -97,40 +100,28 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
 //                success -> redirectToProjectDetails(projectId));
     }
 //
-//    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-//    @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS)
-//    public String searchAddress(@PathVariable("projectId") Long projectId,
-//                                Model model,
-//                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
-//                                BindingResult bindingResult) {
-//        if (StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())) {
-//            bindingResult.addError(createPostcodeSearchFieldError());
-//        }
-//        form.getAddressForm().setSelectedPostcodeIndex(null);
-//        form.getAddressForm().setTriedToSearch(true);
-//        ProjectResource project = projectService.getById(projectId);
-//        return viewCurrentAddressForm(model, form, project);
-//    }
-//
-//    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-//    @PostMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS)
-//    public String selectAddress(@PathVariable("projectId") Long projectId,
-//                                Model model,
-//                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
-//        form.getAddressForm().setSelectedPostcode(null);
-//        ProjectResource project = projectService.getById(projectId);
-//        return viewCurrentAddressForm(model, form, project);
-//    }
-//
-//    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-//    @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS)
-//    public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
-//                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
-//        AddressForm addressForm = form.getAddressForm();
-//        addressForm.setManualAddress(true);
-//        ProjectResource project = projectService.getById(projectId);
-//        return viewCurrentAddressForm(model, form, project);
-//    }
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_POSTCODE_PARAMETER)
+    public String searchAddress(@PathVariable("projectId") Long projectId,
+                                Model model,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
+                                BindingResult bindingResult) {
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setManualAddress(false);
+        ProjectResource project = projectService.getById(projectId);
+        addressForm.setPostcodeResults(searchPostcode(form.getAddressForm().getPostcodeInput()));
+        return viewCurrentAddressForm(model, form, project);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS_PARAMETER)
+    public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setSearchPostcode(false);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
 
     private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
                                           ProjectResource project) {

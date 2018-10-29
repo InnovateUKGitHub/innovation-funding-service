@@ -3,6 +3,8 @@
 
 <th:block th:fragment="address-details">
     <div id="manual-company-input">
+        <input type="hidden" th:field="*{addressForm.searchPostcode}" />
+        <input type="hidden" th:field="*{addressForm.manualAddress}" />
         <fieldset class="govuk-fieldset">
             <legend th:if="${legend}" class="govuk-visually-hidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="govuk-visually-hidden">legend</legend>
@@ -19,11 +21,12 @@
                        th:field="*{addressForm.postcodeInput}"
                        th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-input--error'"
                        type="text" />
-                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="search-address">Find UK address</button>
-                <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
+                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="searchPostcode">Find UK address</button>
+                <div th:if='${form.addressForm.searchPostcode} and ${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
             </div>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'govuk-form-group--error'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeResults)}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'govuk-form-group--error'" id="select-address-block"
+                 th:unless="${form.displayPostcodeResults}">
                 <label class="govuk-label govuk-label--s" for="addressForm.selectedPostcodeIndex">
                     Select your address
                 </label>
@@ -37,9 +40,8 @@
                             th:each="address,status : ${form.addressForm.postcodeResults}"
                             th:text="${address.combinedString}"></option>
                 </select>
-                <button type="submit" class="govuk-button govuk-!-margin-0" name="select-address">Use selected address</button>
             </div>
-            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manual-address">Enter address manually</button>
+            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manualAddress">Enter address manually</button>
         </fieldset>
         <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />

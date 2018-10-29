@@ -12,13 +12,13 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
 
     @Override
     public boolean isValid(AddressForm value, ConstraintValidatorContext context) {
+        return true;
 
 
-
-        context.disableDefaultConstraintViolation();
-        context
-                .buildConstraintViolationWithTemplate( "{my.custom.template}" )
-                .addPropertyNode( "postcodeInput" ).addConstraintViolation();
-        return false;
+//        context.disableDefaultConstraintViolation();
+//        context
+//                .buildConstraintViolationWithTemplate( "{my.custom.template}" )
+//                .addPropertyNode( "postcodeInput" ).addConstraintViolation();
+//        return false;
     }
 }
