@@ -23,12 +23,15 @@
                 <p class="govuk-body">We will assign a Monitoring Officer who will visit your project at this address.</p>
 
                 <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
-                    <p class="govuk-hint">Please select the address where the majority of work will be carried out.</p>
-                    <div id="custom-postcode" class="govuk-body panel">
-                        <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}" />
-                    </div>
-                    <p class="govuk-body">You can change your project address up until your grant offer letter is generated.</p>
-                    <button class="govuk-button govuk-!-margin-top-6">Save project address</button>
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-heading-s govuk-!-margin-bottom-0">Project address</legend>
+                        <p class="govuk-hint govuk-!-margin-top-0">Please select the address where the majority of work will be carried out.</p>
+                        <div id="custom-postcode">
+                            <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form},legend=${'Find UK address'}" />
+                        </div>
+                        <p class="govuk-body">You can change your project address up until your grant offer letter is generated.</p>
+                        <button class="govuk-button govuk-!-margin-top-6">Save project address</button>
+                    </fieldset>
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
