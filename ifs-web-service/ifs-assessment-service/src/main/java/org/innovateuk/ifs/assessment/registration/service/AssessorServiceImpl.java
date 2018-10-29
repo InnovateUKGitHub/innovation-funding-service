@@ -24,7 +24,7 @@ public class AssessorServiceImpl implements AssessorService {
         userRegistrationResource.setLastName(registrationForm.getLastName());
         userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
         userRegistrationResource.setPassword(registrationForm.getPassword());
-        userRegistrationResource.setAddress(registrationForm.getAddressForm().getSelectedPostcode());
+//        userRegistrationResource.setAddress(registrationForm.getAddressForm().getSelectedPostcode());
 
         return assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).toServiceResult();
     }
