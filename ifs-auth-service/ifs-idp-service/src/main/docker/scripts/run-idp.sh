@@ -44,6 +44,7 @@ sed -i -e 's/#idp.replayCache.StorageService = shibboleth.StorageService/idp.rep
        -e 's/#idp.artifact.StorageService = shibboleth.StorageService/idp.artifact.StorageService = shibboleth.MemcachedStorageService/g' /opt/shibboleth-idp/conf/idp.properties
 
 sed -i "s/\${GOOGLEANALYTICS_TRACKINGID}/$GOOGLEANALYTICS_TRACKINGID/" /opt/shibboleth-idp/messages/messages.properties
+sed -i "s/\${BUILD_TIMESTAMP}/$BUILD_TIMESTAMP/" /opt/shibboleth-idp/messages/messages.properties
 
 
 [ -e /var/run/apache2/apache2.pid ] && rm -f /var/run/apache2/apache2.pid

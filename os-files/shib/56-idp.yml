@@ -93,6 +93,8 @@ items:
             value: "${LDAP_AUTHENTICATOR}"
           - name: GOOGLEANALYTICS_TRACKINGID
             value: "${GA_TRACKING_ID}"
+          - name: BUILD_TIMSTAMP
+            value: "${BUILD_TIMESTAMP}"
           ports:
           - containerPort: 9443
           - containerPort: 9080

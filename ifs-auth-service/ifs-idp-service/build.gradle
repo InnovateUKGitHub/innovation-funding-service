@@ -119,7 +119,7 @@ task prepareDockerFile {
 
 buildDocker.dependsOn prepareDockerFile
 
-ext.buildTimestamp = "a1234b"
+ext.BUILD_TIMESTAMP = "a1234b"
 
 project.version = idpVersion
 tagDocker.tag = idpVersion
