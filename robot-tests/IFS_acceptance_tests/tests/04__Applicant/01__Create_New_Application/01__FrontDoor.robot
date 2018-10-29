@@ -156,7 +156,7 @@ Guest user can see the public Supporting information of the competition
 
 Guest user can apply to a competition
     [Documentation]    INFUND-6923
-    [Tags]  HappyPath
+    [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
     When the user clicks the button/link         link = Start new application

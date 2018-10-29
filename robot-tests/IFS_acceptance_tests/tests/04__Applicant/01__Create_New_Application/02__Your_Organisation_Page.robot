@@ -25,7 +25,7 @@ Companies House: Valid company name
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
-    [Tags]  happyPath
+    [Tags]  HappyPath
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the element     jQuery = h3:contains("Registered name")
     And the user should see the element     jQuery = h3:contains("Registered Address")
@@ -34,7 +34,7 @@ Companies House: User can choose the organisation address
 
 Companies House: Invalid company name
     [Documentation]    INFUND-887
-    [Tags]  HappyPath
+    [Tags]
     When the user enters text to a text field        id = organisationSearchName    innoavte
     And the user clicks the button/link              id = org-search
     Then the user should see the text in the page    No results found.
@@ -49,7 +49,7 @@ Companies House: Valid registration number
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887
-    [Tags]  HappyPath
+    [Tags]
     Given the user should see the element        jQuery = h1 span:contains("Start new application")
     When the user enters text to a text field    id = organisationSearchName    ${EMPTY}
     And the user clicks the button/link          id = org-search

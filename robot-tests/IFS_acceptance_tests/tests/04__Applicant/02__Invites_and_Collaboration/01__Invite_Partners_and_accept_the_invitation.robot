@@ -106,7 +106,7 @@ Lead Adds/Removes partner organisation
     ...
     ...    INFUND-8590
     [Tags]  HappyPath
-    Given The user clicks the button/link  link = Application team
+    Given The user clicks the button/link              link = Application team
     When The user clicks the button/link               jQuery = a:contains('Add a collaborator organisation')
     And The user enters text to a text field           name = organisationName    Fannie May
     And The user enters text to a text field           name = applicants[0].name    Collaborator 2
@@ -117,13 +117,14 @@ Lead Adds/Removes partner organisation
     And The user clicks the button/link                jQuery = .modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page  Fannie May
     And the user should see the text in the page       Application team
+    [Teardown]  the user clicks the button/link        jQuery = a:contains('Add a collaborator organisation')
 
 Partner organisation Server-side validations
     [Documentation]    INFUND-896
     ...
     ...    INFUND-7979
-    [Tags]  HappyPath
-    Given the user clicks the button/link      jQuery = a:contains('Add a collaborator organisation')
+    [Tags]
+   # Given the user clicks the button/link      jQuery = a:contains('Add a collaborator organisation')
     When The user enters text to a text field  name = organisationName    ${EMPTY}
     And The user enters text to a text field   name = applicants[0].name    ${EMPTY}
     And The user enters text to a text field   name = applicants[0].email    ${EMPTY}
@@ -132,6 +133,7 @@ Partner organisation Server-side validations
     Then the user should see an error          An organisation name is required.
     And the user should see an error           Please enter a name.
     And the user should see an error           Please enter an email address.
+    [Teardown]  the user goes back to the previous page
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979

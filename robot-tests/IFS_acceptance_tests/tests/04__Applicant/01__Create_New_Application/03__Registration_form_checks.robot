@@ -91,7 +91,7 @@ Email duplication check
 
 User can not verify email with invalid hash
     [Documentation]  IFS-4298
-    [Tags]  HappyPath
+    [Tags]
     When the user navigates to the page        ${SERVER}/registration/verify-email/200b9a1534649f4ba1dc581c9da2a77
     Then the user should see the element       jQuery = h1:contains("Invalid URL")
 
