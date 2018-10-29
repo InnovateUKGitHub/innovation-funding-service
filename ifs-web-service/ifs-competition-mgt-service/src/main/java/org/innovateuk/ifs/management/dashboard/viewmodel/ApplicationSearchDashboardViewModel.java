@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A view model for displaying the application search results when searched on the dashboard by the support user.
  */
-public class ApplicationSearchDashboardViewModel {
+public class ApplicationSearchDashboardViewModel extends DashboardViewModel{
 
     private List<ApplicationResource> applications;
 
@@ -21,11 +21,12 @@ public class ApplicationSearchDashboardViewModel {
 
     private String searchString;
 
-    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString) {
+    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString, DashboardTabsViewModel tabs) {
         this.applications = applications;
         this.applicationCount = applicationCount;
         this.applicationPagination = applicationPagination;
         this.searchString = searchString;
+        this.tabs = tabs;
     }
 
     public List<ApplicationResource> getApplications() {

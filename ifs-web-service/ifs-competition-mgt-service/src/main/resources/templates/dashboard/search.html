@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form role="search" method="get" id="searchform"
-              th:with="internalUser=${tabs.isInternalUser()}"
+              th:with="internalUser=${model.tabs.isInternalUser()}"
               th:action="@{${internalUser ? '/dashboard/internal/search' : '/dashboard/search'}}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery}, internalUser=${internalUser})"/>
 

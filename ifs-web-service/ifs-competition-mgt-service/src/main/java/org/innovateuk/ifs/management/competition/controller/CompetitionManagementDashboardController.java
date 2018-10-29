@@ -161,7 +161,7 @@ public class CompetitionManagementDashboardController {
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
         if (isSearchNumeric) {
-            return searchApplication(trimmedSearchQuery, page, pageSize, model, request);
+            return searchApplication(trimmedSearchQuery, page, pageSize, model, request, user);
         } else {
             return searchCompetition(trimmedSearchQuery, page, model, user);
         }
@@ -188,10 +188,6 @@ public class CompetitionManagementDashboardController {
     }
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page));
-        model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("tabs", new DashboardTabsViewModel(user));
-
         model.addAttribute(MODEL_ATTR,
                 new SearchBarViewModel(
                         competitionDashboardSearchService.searchCompetitions(searchQuery, page),
@@ -200,7 +196,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request) {
+    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
         String existingSearchQuery = Objects.toString(request.getQueryString(), "");
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
@@ -209,7 +205,8 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
-                        searchQuery);
+                        searchQuery,
+                        new DashboardTabsViewModel(user));
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

@@ -17,14 +17,14 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="app : ${applications}">
-                <th:block th:if="${app.isOpen() && !app.getCompetitionStatus().isFeedbackReleased()}">
+                <th:block th:if="${model.getTabs().isInternalUser() && model.getTabs().support()}">
                     <td class="govuk-table__cell">
-                        <a th:href="'/application/' + ${app.id} + '/summary'"
+                        <a th:href="'/application/' + ${app.id} + '/summary?origin='"
                            th:text="${app.id}"
                            class="govuk-link"></a>
                     </td>
                 </th:block>
-                <th:block th:unless="${app.isOpen() && !app.getCompetitionStatus().isFeedbackReleased()}">
+                <th:block th:unless="${model.getTabs().isInternalUser() && model.getTabs().support()}">
                     <td class="govuk-table__cell">
                         <a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a>
                     </td>

@@ -58,7 +58,6 @@ public class ApplicationSummaryController {
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
     }
 
-
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/summary")
@@ -80,7 +79,7 @@ public class ApplicationSummaryController {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         boolean isSupport = isSupport(user);
-        if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
+        if ((competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) && !isSupport) {
             return redirectToFeedback(applicationId, queryParams);
         }
 
