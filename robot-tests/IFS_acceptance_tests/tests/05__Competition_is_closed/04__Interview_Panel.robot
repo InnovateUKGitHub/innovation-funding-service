@@ -220,7 +220,7 @@ Applicant can remove the uploaded response
     [Tags]  HappyPath
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link = ${computer_vision_application_name}
-    And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
+    And the user should see the element      jQuery = .message-alert p:contains("If you are asked to respond to feedback you can upload your response below.")  #checking banner message befor uploading file.
     When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
     Then the user should see the element     jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
     When the user clicks the button/link     css = .button-secondary  #remove

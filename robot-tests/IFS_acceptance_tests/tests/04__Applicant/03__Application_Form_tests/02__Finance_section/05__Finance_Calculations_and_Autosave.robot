@@ -20,7 +20,7 @@ ${OTHER_FUNDING_DATE}    12-2008
 *** Test Cases ***
 Labour
     [Documentation]    INFUND-192, INFUND-736, INFUND-1256, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link                       link = Your project costs
     When the Applicant fills in the Labour costs for two rows
@@ -35,7 +35,7 @@ Labour
 
 Overhead costs
     [Documentation]    INFUND-192, INFUND-736, INFUND -6390 , INFUND-6788
-    [Tags]
+    [Tags]  HappyPath
     # Check for No overheads costs option
     Given the user clicks the button/link         jQuery = button:contains("Overhead costs")
     When The user clicks the button/link          jQuery = label:contains("No overhead costs")
@@ -54,7 +54,7 @@ Overhead costs
 
 Materials
     [Documentation]    INFUND-192, INFUND-736, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the Applicant fills the Materials fields
     Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Materials") [data-mirror^="#section-total"]  £2,000
     And the user clicks the button/link            css = #material-costs-table tbody tr:nth-of-type(1) button
@@ -64,7 +64,7 @@ Materials
 
 Capital usage
     [Documentation]    INFUND-736, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the applicant fills the 'capital usage' field
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £200
     And the user clicks the button/link                 css = #capital_usage [data-repeatable-row]:nth-child(1) button
@@ -75,7 +75,7 @@ Capital usage
 
 Capital usage - negative total
     [Documentation]    INFUND-4879, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the applicant fills the 'capital usage' field to a negative value
     Then Totals should be correct                  jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £0  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £0
     And the user clicks the button/link            css = #capital_usage [data-repeatable-row]:nth-child(1) button
@@ -83,14 +83,14 @@ Capital usage - negative total
 
 Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the applicant edits the Subcontracting costs section
     Then the user should see the element             jQuery = button:contains("Subcontracting") > *:contains("£200")
     [Teardown]    the user clicks the button/link    jQuery = button:contains("Subcontracting costs")
 
 Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the Applicant fills the Travel fields
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £2,000
     And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
@@ -100,7 +100,7 @@ Travel and subsistence
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
-    [Tags]
+    [Tags]  HappyPath
     When the applicant adds one row for the other costs
     Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Other costs") [data-mirror^="#section-total"]  £200
     Then the user reloads the page
