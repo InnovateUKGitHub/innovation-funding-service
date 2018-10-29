@@ -18,14 +18,24 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
     public boolean isValid(AddressForm value, ConstraintValidatorContext context) {
         boolean valid;
         if (value.getAction().equals(AddressForm.Action.SAVE)) {
-            valid = true;
-        } else if (value.getAction().equals(AddressForm.Action.SEARCH_POSTCODE) &&
-                 isNullOrEmpty(value.getPostcodeInput())) {
+            if (value.isManualAddressEntry()) {
+                valid = isAddressValid(value.getManualAddress(), context);
+            } else if (value.isPostcodeAddressEntry()) {
+                valid = true;
+            } else {
                 valid = false;
                 context.disableDefaultConstraintViolation();
                 context
                         .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
                         .addPropertyNode("postcodeInput").addConstraintViolation();
+            }
+        } else if (value.getAction().equals(AddressForm.Action.SEARCH_POSTCODE) &&
+                isNullOrEmpty(value.getPostcodeInput())) {
+            valid = false;
+            context.disableDefaultConstraintViolation();
+            context
+                    .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
+                    .addPropertyNode("postcodeInput").addConstraintViolation();
         } else {
             valid = true;
         }
@@ -39,27 +49,27 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
             context.disableDefaultConstraintViolation();
             context
                     .buildConstraintViolationWithTemplate("{validation.standard.addressline1.required}")
-                    .addPropertyNode("address.addressLine1").addConstraintViolation();
+                    .addPropertyNode("manualAddress.addressLine1").addConstraintViolation();
             valid = false;
         }
         if (isNullOrEmpty(address.getTown())) {
             context.disableDefaultConstraintViolation();
             context
                     .buildConstraintViolationWithTemplate("{validation.standard.town.required}")
-                    .addPropertyNode("address.town").addConstraintViolation();
+                    .addPropertyNode("manualAddress.town").addConstraintViolation();
             valid = false;
         }
         if (isNullOrEmpty(address.getPostcode())) {
             context.disableDefaultConstraintViolation();
             context
                     .buildConstraintViolationWithTemplate("{validation.standard.postcode.required}")
-                    .addPropertyNode("address.postcode").addConstraintViolation();
+                    .addPropertyNode("manualAddress.postcode").addConstraintViolation();
             valid = false;
         } else if (address.getPostcode().length() >= 9) {
             context.disableDefaultConstraintViolation();
             context
                     .buildConstraintViolationWithTemplate("{validation.standard.postcode.length}")
-                    .addPropertyNode("address.postcode").addConstraintViolation();
+                    .addPropertyNode("manualAddress.postcode").addConstraintViolation();
             valid = false;
         }
         return valid;
