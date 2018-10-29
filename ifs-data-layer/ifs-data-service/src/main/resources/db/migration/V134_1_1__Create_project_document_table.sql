@@ -6,7 +6,7 @@ CREATE TABLE `project_document` (
 	`file_entry_id` BIGINT(20) NOT NULL,
 	`status` ENUM('UPLOADED','SUBMITTED', 'APPROVED', 'REJECTED') NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `UC_project_document` (`project_id`, `document_config_id`, `file_entry_id`),
+	UNIQUE KEY `UC_project_document` (`project_id`, `document_config_id`),
 	CONSTRAINT `project_document_to_project_fk` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
 	CONSTRAINT `project_document_to_document_config_fk` FOREIGN KEY (`document_config_id`) REFERENCES `document_config` (`id`),
 	CONSTRAINT `project_document_to_file_entry_fk` FOREIGN KEY (`file_entry_id`) REFERENCES `file_entry` (`id`)
