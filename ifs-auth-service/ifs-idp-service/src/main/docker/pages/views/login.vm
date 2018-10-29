@@ -85,6 +85,8 @@
       <div id="global-cookie-message">
           <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-link">Find out more about cookies</a>.</p>
       </div>
+      <p>Test: "#springMessageText('ifs.build.test', '')"</p>
+      <p>Test two: "#springMessageText('ifs.build.timestamp', '')"</p>
       <header class="govuk-header" role="banner" data-module="header">
           <div class="govuk-header__container govuk-width-container">
               <div class="govuk-header__logo">
