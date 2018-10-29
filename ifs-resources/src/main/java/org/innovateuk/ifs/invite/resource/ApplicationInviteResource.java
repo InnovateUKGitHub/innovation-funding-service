@@ -35,7 +35,6 @@ public class ApplicationInviteResource extends InviteResource {
     	// no-arg constructor
     }
 
-
     public ApplicationInviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatus status) {
         this.id = id;
         this.name = name;
