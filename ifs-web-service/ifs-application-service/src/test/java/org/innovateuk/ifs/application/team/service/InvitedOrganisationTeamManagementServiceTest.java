@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -28,7 +27,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnitTest<InviteOrganisationTeamManagementService> {
+public class InvitedOrganisationTeamManagementServiceTest extends BaseServiceUnitTest<InvitedOrganisationTeamManagementService> {
 
     @Mock
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
@@ -39,25 +38,18 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
     @Mock
     private InviteOrganisationRestService inviteOrganisationRestServiceMock;
 
-    private long applicationId;
-    private long inviteOrganisationId;
+    private long applicationId = 123L;
+    private long inviteOrganisationId = 456L;
 
-    @Before
-    public void setUp() {
-        super.setup();
-        applicationId = 1L;
-        inviteOrganisationId = 2L;
-    }
-
-    protected InviteOrganisationTeamManagementService supplyServiceUnderTest() {
-        return new InviteOrganisationTeamManagementService();
+    protected InvitedOrganisationTeamManagementService supplyServiceUnderTest() {
+        return new InvitedOrganisationTeamManagementService();
     }
 
     @Test
     public void createViewModel_populatorShouldBeCalledWithAppropriateParameters() throws Exception {
         UserResource userResource = newUserResource().build();
 
-        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(applicationId,
                 2L,
                 null,
                 3L,
@@ -105,7 +97,8 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
 
     @Test
     public void validateOrganisationAndApplicationIds_trueShouldBeReturnedWhenInviteOrganisationContainsInvitesForApplication() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withApplication(1L).build(5);
+
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withApplication(applicationId).build(5);
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResources).build();
 

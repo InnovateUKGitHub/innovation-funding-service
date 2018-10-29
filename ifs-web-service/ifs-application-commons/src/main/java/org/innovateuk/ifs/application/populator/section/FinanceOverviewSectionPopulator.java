@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
@@ -22,9 +23,10 @@ public class FinanceOverviewSectionPopulator extends AbstractSectionPopulator<Fi
     private OpenSectionModelPopulator openSectionModelPopulator;
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
-    public FinanceOverviewSectionPopulator(
-            OpenSectionModelPopulator openSectionModelPopulator,
-            FormInputViewModelGenerator formInputViewModelGenerator) {
+    public FinanceOverviewSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                           final OpenSectionModelPopulator openSectionModelPopulator,
+                                           final FormInputViewModelGenerator formInputViewModelGenerator) {
+        super(navigationPopulator);
         this.openSectionModelPopulator = openSectionModelPopulator;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
     }
