@@ -63,7 +63,7 @@ public class BankDetailsReviewModelPopulator {
 
     private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
         addressForm.setManualAddress(true);
-        addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
+//        addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
     }
 
 }

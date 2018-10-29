@@ -4,11 +4,12 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.validation.ValidAddressForm;
 
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @ValidAddressForm
 public class AddressForm {
     public static final String SEARCH_POSTCODE_PARAMETER = "searchPostcodeButton";
+    public static final String CHANGE_POSTCODE_PARAMETER = "changePostcodeButton";
     public static final String MANUAL_ADDRESS_PARAMETER = "manualAddressButton";
     private String postcodeInput;
     private Integer selectedPostcodeIndex;
@@ -65,11 +66,11 @@ public class AddressForm {
         this.manualAddress = manualAddress;
     }
 
-    public AddressResource getSelectedAddress(Supplier<List<AddressResource>> resultsSupplier) {
+    public AddressResource getSelectedAddress(Function<String, List<AddressResource>> resultsSupplier) {
         if (manualAddress) {
             return address;
         } else {
-            return resultsSupplier.get().get(selectedPostcodeIndex);
+            return resultsSupplier.apply(postcodeInput).get(selectedPostcodeIndex);
         }
 
     }

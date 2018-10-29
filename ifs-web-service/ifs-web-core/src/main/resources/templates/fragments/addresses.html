@@ -8,7 +8,7 @@
         <fieldset class="govuk-fieldset">
             <legend th:if="${legend}" class="govuk-visually-hidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="govuk-visually-hidden">legend</legend>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-form-group--error'">
+            <div  th:unless="${form.addressForm.searchPostcode}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
                     Postcode
                 </label>
@@ -25,6 +25,14 @@
             </div>
 
             <th:block th:if="${form.addressForm.searchPostcode}">
+                <input type="hidden" th:field="*{addressForm.postcodeInput}" />
+                <dl class="govuk-list">
+                    <dt>Postcode</dt>
+                    <dd>
+                        <span th:text="${form.addressForm.postcodeInput}"></span>
+                        <button type="submit" class="button-clear govuk-!-margin-top-6" name="changePostcodeButton" value="true">Change</button>
+                    </dd>
+                </dl>
                 <div th:if='${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
                 <div th:unless='${#lists.isEmpty(form.addressForm.postcodeResults)}'
                      class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'govuk-form-group--error'" id="select-address-block">
@@ -39,7 +47,7 @@
                             th:field="*{addressForm.selectedPostcodeIndex}">
                         <option th:value="${status.index}"
                                 th:each="address,status : ${form.addressForm.postcodeResults}"
-                                th:text="${addressForm.address.combinedString}"></option>
+                                th:text="${address.combinedString}"></option>
                     </select>
                 </div>
             </th:block>

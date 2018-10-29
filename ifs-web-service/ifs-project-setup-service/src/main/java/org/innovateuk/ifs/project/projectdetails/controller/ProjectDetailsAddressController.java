@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.form.AddressForm;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -23,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.innovateuk.ifs.address.form.AddressForm.CHANGE_POSTCODE_PARAMETER;
 import static org.innovateuk.ifs.address.form.AddressForm.MANUAL_ADDRESS_PARAMETER;
 import static org.innovateuk.ifs.address.form.AddressForm.SEARCH_POSTCODE_PARAMETER;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -56,7 +55,9 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
-        if (project.getAddress() != null && project.getAddress().getId() != null) {
+        if (project.getAddress() != null) {
+            form.getAddressForm().setPostcodeInput(project.getAddress().getPostcode());
+        } else {
             ProjectFinanceResource finance = projectFinanceService.getProjectFinance(projectId, leadOrganisation.getId());
             form.getAddressForm().setPostcodeInput(finance.getWorkPostcode());
         }
@@ -73,33 +74,21 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
                                 @SuppressWarnings("unused") BindingResult bindingResult,
                                 ValidationHandler validationHandler) {
         ProjectResource projectResource = projectService.getById(projectId);
-        return viewCurrentAddressForm(model, form, projectResource);
-//
-//
-//
-//
-//
-//
-//
-//ProjectResource projectResource = projectService.getById(projectId);
-//
-//
-//        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
-//
-//        if (validationHandler.hasErrors()) {
-//            return viewCurrentAddressForm(model, form, projectResource);
-//        }
-//        projectResource.setAddress(form.getAddressForm().getSelectedAddress(() -> super.getOrganisationAddressResourceOrNull()));
-//        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(leadOrganisation.getId(), projectId, newAddressResource);
-//
-//        return updateResult.handleSuccessOrFailure(
-//                failure -> {
-//                    validationHandler.addAnyErrors(failure, asGlobalErrors());
-//                    return viewAddress(projectId, model, form);
-//                },
-//                success -> redirectToProjectDetails(projectId));
+
+        if (validationHandler.hasErrors()) {
+            return viewCurrentAddressForm(model, form, projectResource);
+        }
+        projectResource.setAddress(form.getAddressForm().getSelectedAddress(this::searchPostcode));
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
+        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(leadOrganisation.getId(), projectId, projectResource.getAddress());
+        return updateResult.handleSuccessOrFailure(
+                failure -> {
+                    validationHandler.addAnyErrors(failure, asGlobalErrors());
+                    return viewAddress(projectId, model, form);
+                },
+                success -> redirectToProjectDetails(projectId));
     }
-//
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_POSTCODE_PARAMETER)
     public String searchAddress(@PathVariable("projectId") Long projectId,
@@ -125,6 +114,16 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         return viewCurrentAddressForm(model, form, project);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PostMapping(value = "/{projectId}/details/project-address", params = CHANGE_POSTCODE_PARAMETER)
+    public String changePostcode(@PathVariable("projectId") Long projectId, Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
+        AddressForm addressForm = form.getAddressForm();
+        addressForm.setSearchPostcode(false);
+        ProjectResource project = projectService.getById(projectId);
+        return viewCurrentAddressForm(model, form, project);
+    }
+
     private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
                                           ProjectResource project) {
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
@@ -140,9 +139,4 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler) {
-        ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-        validationMessages.addError(fieldError("addressType", new Error(PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY)));
-        validationHandler.addAnyErrors(validationMessages);
-    }
 }
