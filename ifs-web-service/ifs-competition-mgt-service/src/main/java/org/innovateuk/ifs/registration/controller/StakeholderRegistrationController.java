@@ -67,16 +67,16 @@ public class StakeholderRegistrationController {
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash, loggedInUser);
 
-        if(loggedInUser != null){
+        if(loggedInUser != null) {
             return failureView.get();
         } else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 ServiceResult<Void> result = stakeholderService.createStakeholder(inviteHash, stakeholderRegistrationForm);
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
-                        bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
+                        bindingResult.rejectValue(error.getFieldName(), "stakeholders." + error.getErrorKey());
                     } else {
-                        bindingResult.reject("registration." + error.getErrorKey());
+                        bindingResult.reject("stakeholders." + error.getErrorKey());
                     }
                 });
                 return validationHandler.
@@ -109,8 +109,9 @@ public class StakeholderRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(inviteHash));
-            return "registration/register";
+            StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getInvite(inviteHash).getSuccess();
+            model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
+            return "stakeholders/create-account";
         }
     }
 
