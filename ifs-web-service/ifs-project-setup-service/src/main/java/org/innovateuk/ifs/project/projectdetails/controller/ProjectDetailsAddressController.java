@@ -52,7 +52,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
-        if (project.getAddress() != null) {
+        if (project.getAddress() != null && project.getAddress().getId() != null) {
             form.getAddressForm().setPostcodeInput(project.getAddress().getPostcode());
         } else {
             ProjectFinanceResource finance = projectFinanceService.getProjectFinance(projectId, leadOrganisation.getId());
