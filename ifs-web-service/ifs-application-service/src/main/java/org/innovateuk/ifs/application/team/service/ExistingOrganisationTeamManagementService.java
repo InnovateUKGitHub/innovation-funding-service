@@ -4,25 +4,29 @@ import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * Serves as a service for invite retrieval / manipulation for an existing {@Organisation} with or without {@InviteOrganisation}.
  */
 @Service
-public class OrganisationTeamManagementService extends AbstractTeamManagementService {
+public class ExistingOrganisationTeamManagementService extends AbstractTeamManagementService {
 
     private UserRestService userRestService;
 
-    public OrganisationTeamManagementService(UserRestService userRestService) {
+    public ExistingOrganisationTeamManagementService(UserRestService userRestService) {
         this.userRestService = userRestService;
     }
 
@@ -35,15 +39,28 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
                                                                        long organisationId,
                                                                        ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, organisationId);
-        return inviteRestService.createInvitesByOrganisationForApplication(applicationId, organisationId, Arrays.asList(invite)).toServiceResult();
+        return inviteRestService.createInvitesByOrganisationForApplication(applicationId, organisationId, singletonList(invite)).toServiceResult();
     }
 
+    @Override
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId) {
+        return hasExistingOrganisationInvite(applicationId, organisationId) ||
+               hasExistingUsersOnApplicationUsingThisOrganisation(applicationId, organisationId);
+    }
+
+    private boolean hasExistingUsersOnApplicationUsingThisOrganisation(Long applicationId, Long organisationId) {
+
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
-        if (processRoles.stream().anyMatch(processRoleResource -> organisationId.equals(processRoleResource.getOrganisationId()))) {
-            return true;
-        }
-        return false;
+        return simpleAnyMatch(processRoles, processRole -> processRole.getOrganisationId().equals(organisationId));
+    }
+
+    private boolean hasExistingOrganisationInvite(Long applicationId, Long organisationId) {
+        Optional<InviteOrganisationResource> organisationInvite =
+                inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId).
+                        toOptionalIfNotFound().
+                        getSuccess();
+
+        return organisationInvite.isPresent();
     }
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
