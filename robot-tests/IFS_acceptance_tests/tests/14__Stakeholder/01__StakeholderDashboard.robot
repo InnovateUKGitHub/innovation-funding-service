@@ -43,7 +43,7 @@ The internal user invites a Stakeholder
     Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Invite pending")
     [Teardown]  logout as user
 
-Create stakeholders account vlidations
+Create stakeholders account validations
     [Documentation]  IFS-4252
     [Tags]
     Given the user reads his email and clicks the link    ${stakeholderEmail}  Invite to Innovation Funding Service  You have been invited to view the following competition  1
@@ -55,9 +55,9 @@ Create stakeholders account vlidations
 Invited stakeholder registration flow
     [Documentation]  IFS-4252
     [Tags]
-    When the user enters text to a text field             id=firstName  Stake
-    And the user enters text to a text field              id=lastName  Holder
-    And the user enters text to a text field              id=password  ${short_password}
+    When the user enters text to a text field             id = firstName  Stake
+    And the user enters text to a text field              id = lastName  Holder
+    And the user enters text to a text field              id = password  ${short_password}
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     Then the user should see the element                  jQuery = h1:contains("Your account has been created")
     When the user clicks the button/link                  jQuery = a:contains("Sign into your account")
