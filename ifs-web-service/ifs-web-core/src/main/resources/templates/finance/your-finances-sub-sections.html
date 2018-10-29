@@ -99,7 +99,7 @@
         </div>
     </th:block>
 
-    <th:block th:if="${model.isBusinessOrganisation()}">
+    <th:block th:if="${model.stateAidEligibility and model.businessOrganisation}">
         <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
 
         <div class="message-alert">
@@ -173,7 +173,7 @@
 </th:block>
 
 <th:block th:fragment="your_finance_summary (model)">
-    <div class="govuk-form-group" style="overflow:auto;">
+    <div class="govuk-form-group table-overflow">
         <table class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -257,7 +257,7 @@
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
                   th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"
-                      th:with="model=${model.openSectionViewModel}" >
+                      th:with="model=${model.openSectionViewModel}">
                 <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
                                                 currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
                                                 completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
