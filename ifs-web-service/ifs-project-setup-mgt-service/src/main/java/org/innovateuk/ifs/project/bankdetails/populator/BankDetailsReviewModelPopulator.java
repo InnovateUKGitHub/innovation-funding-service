@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.populator;
 
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;

@@ -1046,7 +1046,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectReposiatoryMock.findOne(project.getId())).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);

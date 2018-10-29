@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;

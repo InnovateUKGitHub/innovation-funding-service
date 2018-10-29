@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 
 import javax.validation.Valid;
 

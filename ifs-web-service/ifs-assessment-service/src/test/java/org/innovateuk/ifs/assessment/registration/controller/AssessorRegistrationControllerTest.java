@@ -11,7 +11,7 @@ import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrat
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
