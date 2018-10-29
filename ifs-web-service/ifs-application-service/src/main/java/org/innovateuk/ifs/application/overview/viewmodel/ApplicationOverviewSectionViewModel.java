@@ -12,27 +12,28 @@ import java.util.SortedMap;
  * View model for the application overview - section
  */
 public class ApplicationOverviewSectionViewModel {
-    private SortedMap<Long, SectionResource> sections;
+    private List<SectionResource> sections;
     private Map<Long, List<SectionResource>> subSections;
     private Map<Long, List<QuestionResource>> sectionQuestions;
     private Map<Long, AssignButtonsViewModel> assignButtonViewModels;
-    private List<SectionResource> financeSections;
-    private Boolean hasFinanceSection;
+    private boolean hasFinanceSection;
     private Long financeSectionId;
 
-    public ApplicationOverviewSectionViewModel(SortedMap<Long, SectionResource> sections, Map<Long, List<SectionResource>> subSections,
-                                               Map<Long, List<QuestionResource>> sectionQuestions, List<SectionResource> financeSections,
-                                               Boolean hasFinanceSection, Long financeSectionId, Map<Long, AssignButtonsViewModel> assignButtonViewModels) {
+    public ApplicationOverviewSectionViewModel(List<SectionResource> sections,
+                                               Map<Long, List<SectionResource>> subSections,
+                                               Map<Long, List<QuestionResource>> sectionQuestions,
+                                               boolean hasFinanceSection,
+                                               Long financeSectionId,
+                                               Map<Long, AssignButtonsViewModel> assignButtonViewModels) {
         this.sections = sections;
         this.subSections = subSections;
         this.sectionQuestions = sectionQuestions;
-        this.financeSections = financeSections;
         this.hasFinanceSection = hasFinanceSection;
         this.financeSectionId = financeSectionId;
         this.assignButtonViewModels = assignButtonViewModels;
     }
 
-    public SortedMap<Long, SectionResource> getSections() {
+    public List<SectionResource> getSections() {
         return sections;
     }
 
@@ -44,11 +45,7 @@ public class ApplicationOverviewSectionViewModel {
         return sectionQuestions;
     }
 
-    public List<SectionResource> getFinanceSections() {
-        return financeSections;
-    }
-
-    public Boolean getHasFinanceSection() {
+    public boolean isHasFinanceSection() {
         return hasFinanceSection;
     }
 
@@ -60,7 +57,7 @@ public class ApplicationOverviewSectionViewModel {
         return assignButtonViewModels;
     }
 
-    public Boolean hasSubSection(Long sectionId) {
-        return !subSections.get(sectionId).isEmpty();
+    public boolean isHasSubSection(long sectionId) {
+        return subSections.containsKey(sectionId) && !subSections.get(sectionId).isEmpty();
     }
 }
