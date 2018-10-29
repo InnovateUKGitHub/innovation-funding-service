@@ -369,9 +369,8 @@ the user should see that the funding depends on the research area
     the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link = Your finances
 
-
 the user should see his finances empty
-    the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
+    the user should see the element  jQuery = thead:contains("Total project") ~ *:contains("0")
 
 the user decides about the growth table
     [Arguments]  ${edit}  ${read}
