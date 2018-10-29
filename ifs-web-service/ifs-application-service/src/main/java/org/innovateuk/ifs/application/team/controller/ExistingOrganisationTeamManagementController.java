@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.team.controller;
 
-import org.innovateuk.ifs.application.team.service.OrganisationTeamManagementService;
+import org.innovateuk.ifs.application.team.service.ExistingOrganisationTeamManagementService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,7 +12,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/application/{applicationId}/team/update/existing/{organisationId}")
-public class OrganisationTeamManagementController extends AbstractTeamManagementController<OrganisationTeamManagementService> {
+public class ExistingOrganisationTeamManagementController extends AbstractTeamManagementController<ExistingOrganisationTeamManagementService> {
     protected static String MAPPING_FORMAT_STRING = "/application/%s/team/update/existing/%s";
 
     protected String getMappingFormatString(long applicationId, long organisationId) {
