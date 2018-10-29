@@ -44,7 +44,7 @@ public class BankDetailsReviewModelPopulator {
                 organisation.getCompaniesHouseNumber(),
                 bankDetails.getAccountNumber(),
                 bankDetails.getSortCode(),
-                bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
+                bankDetails.getAddress().getAsSingleLine(),
                 bankDetails.isVerified(),
                 bankDetails.getCompanyNameScore(),
                 bankDetails.getRegistrationNumberMatched(),
@@ -62,8 +62,7 @@ public class BankDetailsReviewModelPopulator {
     }
 
     private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
-        addressForm.setManualAddress(true);
-//        addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
+        addressForm.setPostcodeInput(bankDetails.getAddress().getPostcode());
     }
 
 }

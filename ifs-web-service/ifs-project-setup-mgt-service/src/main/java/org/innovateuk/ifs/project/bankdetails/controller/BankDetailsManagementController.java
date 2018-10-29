@@ -197,7 +197,7 @@ public class BankDetailsManagementController {
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
         bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
-        bankDetailsResource.setOrganisationAddress(organisationAddressResource);
+        bankDetailsResource.setAddress(organisationAddressResource.getAddress());
 
         return bankDetailsResource;
     }

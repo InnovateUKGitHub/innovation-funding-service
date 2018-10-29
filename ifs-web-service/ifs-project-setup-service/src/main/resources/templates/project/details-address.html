@@ -24,7 +24,7 @@
 
                 <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
                     <p class="govuk-hint">Please select the address where the majority of work will be carried out.</p>
-                    <div id="custom-postcode" class="govuk-body panel">
+                    <div id="custom-postcode" class="govuk-body">
                         <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}" />
                     </div>
                     <p class="govuk-body">You can change your project address up until your grant offer letter is generated.</p>
