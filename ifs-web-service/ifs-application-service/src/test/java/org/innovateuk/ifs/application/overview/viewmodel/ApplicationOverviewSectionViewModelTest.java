@@ -24,8 +24,8 @@ public class ApplicationOverviewSectionViewModelTest {
         ApplicationOverviewSectionViewModel viewModel = new ApplicationOverviewSectionViewModel(null, subSections,
                 null, false, null, null);
 
-        assertFalse(viewModel.isHasSubSection(1L));
-        assertTrue(viewModel.isHasSubSection(2L));
-        assertFalse(viewModel.isHasSubSection(3L));
+        assertFalse(viewModel.hasSubSection(1L));
+        assertTrue(viewModel.hasSubSection(2L));
+        assertFalse(viewModel.hasSubSection(3L));
     }
 }

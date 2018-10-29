@@ -57,7 +57,7 @@ public class ApplicationOverviewSectionViewModel {
         return assignButtonViewModels;
     }
 
-    public boolean isHasSubSection(long sectionId) {
+    public boolean hasSubSection(long sectionId) {
         return subSections.containsKey(sectionId) && !subSections.get(sectionId).isEmpty();
     }
 }

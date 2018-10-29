@@ -11,14 +11,14 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Component
@@ -27,13 +27,16 @@ public class ApplicationOverviewSectionModelPopulator {
     private SectionService sectionService;
     private ApplicantRestService applicantRestService;
     private AssignButtonsPopulator assignButtonsPopulator;
+    private MessageSource messageSource;
 
-    public ApplicationOverviewSectionModelPopulator(SectionService sectionService,
-                                                    ApplicantRestService applicantRestService,
-                                                    AssignButtonsPopulator assignButtonsPopulator) {
+    public ApplicationOverviewSectionModelPopulator(final SectionService sectionService,
+                                                    final ApplicantRestService applicantRestService,
+                                                    final AssignButtonsPopulator assignButtonsPopulator,
+                                                    final MessageSource messageSource) {
         this.sectionService = sectionService;
         this.applicantRestService = applicantRestService;
         this.assignButtonsPopulator = assignButtonsPopulator;
+        this.messageSource = messageSource;
     }
 
     public ApplicationOverviewSectionViewModel populate(CompetitionResource competition,
@@ -52,8 +55,10 @@ public class ApplicationOverviewSectionModelPopulator {
                 s -> s.getSection().getId(),
                 s -> simpleMap(s.getApplicantQuestions(), ApplicantQuestionResource::getQuestion));
 
-        final Long financeSectionId = getFinanceSectionId(parentSections);
-        final boolean hasFinanceSection = financeSectionId != null;
+        final Long yourFinancesSectionId = getYourFinancesSectionId(parentSections);
+        final boolean hasYourFinancesSection = yourFinancesSectionId != null;
+
+        updateFinancesSectionDescription(application, parentSections);
 
         Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
         parentApplicantSections.forEach(applicantSectionResource ->
@@ -64,8 +69,21 @@ public class ApplicationOverviewSectionModelPopulator {
                 )
         );
 
-        return new ApplicationOverviewSectionViewModel(parentSections, subSections, sectionQuestions, hasFinanceSection,
-                financeSectionId, assignButtonViewModels);
+        return new ApplicationOverviewSectionViewModel(parentSections, subSections, sectionQuestions,
+                hasYourFinancesSection,
+                yourFinancesSectionId, assignButtonViewModels);
+    }
+
+    private SectionResource updateFinancesSectionDescription(ApplicationResource application,
+                                                             List<SectionResource> sections) {
+        String description = application.isCollaborativeProject() ?
+                messageSource.getMessage("ifs.section.finances.collaborativeProject.description", null, Locale.ENGLISH) :
+                messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH);
+
+        return simpleFindFirst(sections, this::isFinancesSection).map(sectionResource -> {
+            sectionResource.setDescription(description);
+            return sectionResource;
+        }).orElse(null);
     }
 
     private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections,
@@ -75,8 +93,17 @@ public class ApplicationOverviewSectionModelPopulator {
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
 
-    private Long getFinanceSectionId(List<SectionResource> sections) {
-        return simpleFindFirst(sections, s -> FINANCE.equals(s.getType()))
+    private Long getYourFinancesSectionId(List<SectionResource> sections) {
+        return simpleFindFirst(sections, this::isYourFinancesSection)
                 .map(SectionResource::getId).orElse(null);
+    }
+
+    private boolean isFinancesSection(SectionResource sectionResource) {
+        return GENERAL.equals(sectionResource.getType())
+                && FINANCES.getName().equals(sectionResource.getName());
+    }
+
+    private boolean isYourFinancesSection(SectionResource sectionResource) {
+        return FINANCE.equals(sectionResource.getType());
     }
 }
