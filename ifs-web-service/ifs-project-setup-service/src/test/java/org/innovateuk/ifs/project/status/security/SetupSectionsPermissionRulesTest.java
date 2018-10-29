@@ -178,6 +178,28 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
+    public void documentsSectionAccessLead() {
+        assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void documentsSectionAccessNonLead() {
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void projectManagerCanEditDocumentsSection() {
+        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(true);
+        assertTrue(rules.projectManagerCanEditDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void nonProjectManagerCannotEditDocumentsSection() {
+        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(false);
+        assertFalse(rules.projectManagerCanEditDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
     public void projectSetupStatusAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectSetupStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
     }
