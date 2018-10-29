@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 
 @ValidAddressForm
 public class AddressForm {
-    public static final String SEARCH_POSTCODE_PARAMETER = "searchPostcode";
-    public static final String MANUAL_ADDRESS_PARAMETER = "manualAddress";
+    public static final String SEARCH_POSTCODE_PARAMETER = "searchPostcodeButton";
+    public static final String MANUAL_ADDRESS_PARAMETER = "manualAddressButton";
     private String postcodeInput;
     private Integer selectedPostcodeIndex;
     private AddressResource address;

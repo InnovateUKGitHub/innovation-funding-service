@@ -21,29 +21,32 @@
                        th:field="*{addressForm.postcodeInput}"
                        th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-input--error'"
                        type="text" />
-                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="searchPostcode" value="true">Find UK address</button>
-                <div th:if='${form.addressForm.searchPostcode} and ${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
+                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="searchPostcodeButton" value="true">Find UK address</button>
             </div>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'govuk-form-group--error'" id="select-address-block"
-                 th:if="${form.addressForm.displayPostcodeResults}">
-                <label class="govuk-label govuk-label--s" for="addressForm.selectedPostcodeIndex">
-                    Select your address
-                </label>
-                <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcodeIndex')}" th:text="${err}" />
-                </th:block>
-                <select id="addressForm.selectedPostcodeIndex"
-                        class="govuk-select govuk-!-width-one-half"
-                        th:field="*{addressForm.selectedPostcodeIndex}">
-                    <option th:value="${status.index}"
-                            th:each="address,status : ${form.addressForm.postcodeResults}"
-                            th:text="${addressForm.address.combinedString}"></option>
-                </select>
-            </div>
-            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manualAddress" value="true">Enter address manually</button>
+            <th:block th:if="${form.addressForm.searchPostcode}">
+                <div th:if='${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
+                <div th:unless='${#lists.isEmpty(form.addressForm.postcodeResults)}'
+                     class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'govuk-form-group--error'" id="select-address-block">
+                    <label class="govuk-label govuk-label--s" for="addressForm.selectedPostcodeIndex">
+                        Select your address
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcodeIndex')}" th:text="${err}" />
+                    </th:block>
+                    <select id="addressForm.selectedPostcodeIndex"
+                            class="govuk-select govuk-!-width-one-half"
+                            th:field="*{addressForm.selectedPostcodeIndex}">
+                        <option th:value="${status.index}"
+                                th:each="address,status : ${form.addressForm.postcodeResults}"
+                                th:text="${addressForm.address.combinedString}"></option>
+                    </select>
+                </div>
+            </th:block>
+
+            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manualAddressButton" value="true">Enter address manually</button>
         </fieldset>
-        <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
+        <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddress}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"
                     th:if="${addressType}">
                 <h2 class="govuk-fieldset__heading" th:text="|Your ${addressType}|">ADDRESS TYPE</h2>

@@ -108,6 +108,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
                                 BindingResult bindingResult) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(false);
+        addressForm.setSearchPostcode(true);
         ProjectResource project = projectService.getById(projectId);
         addressForm.setPostcodeResults(searchPostcode(form.getAddressForm().getPostcodeInput()));
         return viewCurrentAddressForm(model, form, project);
@@ -118,6 +119,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         AddressForm addressForm = form.getAddressForm();
+        addressForm.setManualAddress(true);
         addressForm.setSearchPostcode(false);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
