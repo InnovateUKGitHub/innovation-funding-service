@@ -101,7 +101,7 @@ the support user should be able to see him as
     the user logs out if they are logged in
 
 the invitee has accepted the invitation but has not yet verified his account
-    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
+    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to contribute in ${openCompetitionRTO_name}  to participate in an application  2
     the user clicks the button/link                 link = Yes, accept invitation
     the user clicks the button/link                 link = Confirm and continue
     the invited user fills the create account form  Stuart  Minions

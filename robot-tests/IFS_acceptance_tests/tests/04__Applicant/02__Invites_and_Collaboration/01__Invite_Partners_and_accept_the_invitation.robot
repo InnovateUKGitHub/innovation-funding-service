@@ -251,7 +251,7 @@ Lead applicant invites a non registered user in the same organisation
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     [Tags]
-    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
+    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to contribute in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
     And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation
