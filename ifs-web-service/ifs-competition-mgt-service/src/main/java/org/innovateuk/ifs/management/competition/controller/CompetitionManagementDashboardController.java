@@ -19,8 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -189,10 +189,10 @@ public class CompetitionManagementDashboardController {
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR,
-                new SearchBarViewModel(
+                new CompetitionSearchDashboardViewModel(
                         competitionDashboardSearchService.searchCompetitions(searchQuery, page),
                         searchQuery,
-                        new DashboardTabsViewModel(user)));
+                        isInternal(user)));
         return TEMPLATE_PATH + "search";
     }
 
@@ -206,7 +206,7 @@ public class CompetitionManagementDashboardController {
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
                         searchQuery,
-                        new DashboardTabsViewModel(user));
+                        isSupport(user));
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

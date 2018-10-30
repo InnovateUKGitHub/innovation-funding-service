@@ -68,7 +68,7 @@ public interface ApplicationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
 
-    @SecuredBySpring(value = "READ", description = "Support or IFS Admin can search applications from competition dashboard")
+    @SecuredBySpring(value = "READ", description = "Only internal users can search applications from competition dashboard")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")
     ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
 

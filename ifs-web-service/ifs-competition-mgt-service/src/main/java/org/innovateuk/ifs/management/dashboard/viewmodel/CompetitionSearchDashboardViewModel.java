@@ -2,16 +2,16 @@ package org.innovateuk.ifs.management.dashboard.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 
-public class SearchBarViewModel {
+public class CompetitionSearchDashboardViewModel {
 
     private CompetitionSearchResult competitions;
     private String searchQuery;
-    private DashboardTabsViewModel tabs;
+    private boolean isInternalUser;
 
-    public SearchBarViewModel(CompetitionSearchResult competitions, String searchQuery, DashboardTabsViewModel tabs) {
+    public CompetitionSearchDashboardViewModel(CompetitionSearchResult competitions, String searchQuery, boolean isInternalUser) {
         this.competitions = competitions;
         this.searchQuery = searchQuery;
-        this.tabs = tabs;
+        this.isInternalUser = isInternalUser;
     }
 
     public CompetitionSearchResult getCompetitions() {
@@ -30,11 +30,11 @@ public class SearchBarViewModel {
         this.searchQuery = searchQuery;
     }
 
-    public DashboardTabsViewModel getTabs() {
-        return tabs;
+    public boolean isInternalUser() {
+        return isInternalUser;
     }
 
-    public void setTabs(DashboardTabsViewModel tabs) {
-        this.tabs = tabs;
+    public void setInternalUser(boolean internalUser) {
+        isInternalUser = internalUser;
     }
 }

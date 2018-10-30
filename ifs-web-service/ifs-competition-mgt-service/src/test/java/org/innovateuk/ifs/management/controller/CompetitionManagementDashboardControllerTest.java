@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearc
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +29,13 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -252,9 +247,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
 
-        SearchBarViewModel searchBarViewModel = (SearchBarViewModel) result.getModelAndView().getModel().get("model");
-        CompetitionSearchResult actualCompetitionSearchResult = searchBarViewModel.getCompetitions();
-        String actualSearchQuery = searchBarViewModel.getSearchQuery();
+        CompetitionSearchDashboardViewModel competitionSearchDashboardViewModel = (CompetitionSearchDashboardViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionSearchResult actualCompetitionSearchResult = competitionSearchDashboardViewModel.getCompetitions();
+        String actualSearchQuery = competitionSearchDashboardViewModel.getSearchQuery();
 
         assertEquals(searchResult, actualCompetitionSearchResult);
         assertEquals(searchQuery, actualSearchQuery);
@@ -274,9 +269,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
 
-        SearchBarViewModel searchBarViewModel = (SearchBarViewModel) result.getModelAndView().getModel().get("model");
-        CompetitionSearchResult actualCompetitionSearchResult = searchBarViewModel.getCompetitions();
-        String actualSearchQuery = searchBarViewModel.getSearchQuery();
+        CompetitionSearchDashboardViewModel competitionSearchDashboardViewModel = (CompetitionSearchDashboardViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionSearchResult actualCompetitionSearchResult = competitionSearchDashboardViewModel.getCompetitions();
+        String actualSearchQuery = competitionSearchDashboardViewModel.getSearchQuery();
 
         assertEquals(searchResult, actualCompetitionSearchResult);
         assertEquals(searchQuery, actualSearchQuery);
@@ -299,9 +294,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
 
-        SearchBarViewModel searchBarViewModel = (SearchBarViewModel) result.getModelAndView().getModel().get("model");
-        CompetitionSearchResult actualCompetitionSearchResult = searchBarViewModel.getCompetitions();
-        String actualSearchQuery = searchBarViewModel.getSearchQuery();
+        CompetitionSearchDashboardViewModel competitionSearchDashboardViewModel = (CompetitionSearchDashboardViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionSearchResult actualCompetitionSearchResult = competitionSearchDashboardViewModel.getCompetitions();
+        String actualSearchQuery = competitionSearchDashboardViewModel.getSearchQuery();
 
         assertEquals(searchResult, actualCompetitionSearchResult);
         assertEquals(trimmedQuery, actualSearchQuery);
@@ -347,13 +342,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
 
-//        CompetitionSearchResult actualCompetitionSearchResult = (CompetitionSearchResult) result.getModelAndView().getModel().get("results");
-//        String actualSearchQuery = (String) result.getModelAndView().getModel().get("searchQuery");
-//        DashboardTabsViewModel tabs = (DashboardTabsViewModel) result.getModelAndView().getModel().get("tabs");
-
-        SearchBarViewModel searchBarViewModel = (SearchBarViewModel) result.getModelAndView().getModel().get("model");
-        CompetitionSearchResult actualCompetitionSearchResult = searchBarViewModel.getCompetitions();
-        String actualSearchQuery = searchBarViewModel.getSearchQuery();
+        CompetitionSearchDashboardViewModel competitionSearchDashboardViewModel = (CompetitionSearchDashboardViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionSearchResult actualCompetitionSearchResult = competitionSearchDashboardViewModel.getCompetitions();
+        String actualSearchQuery = competitionSearchDashboardViewModel.getSearchQuery();
 
         assertEquals(searchQuery, actualSearchQuery);
         assertNotNull(actualCompetitionSearchResult);

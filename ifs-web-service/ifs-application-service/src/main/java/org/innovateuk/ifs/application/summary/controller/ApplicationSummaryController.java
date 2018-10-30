@@ -92,7 +92,7 @@ public class ApplicationSummaryController {
         }
 
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, userForModel, form, isSupport));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, form, isSupport));
         return "application-summary";
     }
 
