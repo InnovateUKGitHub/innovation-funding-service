@@ -39,7 +39,7 @@ createContainer.containerId="application-svc"
 createContainer.portBindings = ['9001:8000']
 
 def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, osStageRemote, osDeployRemote].each { task ->
     task.enabled = enabled
 }
 

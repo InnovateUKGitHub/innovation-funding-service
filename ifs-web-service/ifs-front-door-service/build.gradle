@@ -34,7 +34,7 @@ tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
 def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, osStageRemote, osDeployRemotew].each { task ->
     task.enabled = enabled
 }
 

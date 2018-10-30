@@ -36,7 +36,7 @@ createContainer.portBindings = ['9003:8000']
 
 def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? project.property('ifs.competition-mgt-service.enabled').toBoolean() : true
 
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, osStageRemote, osDeployRemote].each { task ->
     task.enabled = enabled
 }
 
