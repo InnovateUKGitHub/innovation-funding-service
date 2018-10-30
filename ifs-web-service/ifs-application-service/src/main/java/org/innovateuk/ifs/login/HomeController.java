@@ -25,8 +25,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -60,7 +58,7 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.hasRoles(ASSESSOR, APPLICANT)) {
+        if (user.getRoles().size() > 1) {
             return "redirect:/roleSelection";
         }
 
@@ -73,11 +71,11 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || !user.hasRoles(ASSESSOR, APPLICANT)) {
+        if (unauthenticated(authentication) || user.getRoles().size() <= 1) {
             return "redirect:/";
         }
 
-        return doViewRoleSelection(model);
+        return doViewRoleSelection(model, user);
     }
 
     @PostMapping("/roleSelection")
@@ -88,7 +86,7 @@ public class HomeController {
                               ValidationHandler validationHandler,
                               HttpServletResponse response) {
 
-        Supplier<String> failureView = () -> doViewRoleSelection(model);
+        Supplier<String> failureView = () -> doViewRoleSelection(model, user);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
@@ -98,8 +96,8 @@ public class HomeController {
         });
     }
 
-    private String doViewRoleSelection(Model model) {
-        model.addAttribute("model", roleSelectionModelPopulator.populateModel());
+    private String doViewRoleSelection(Model model, UserResource user) {
+        model.addAttribute("model", roleSelectionModelPopulator.populateModel(user));
         return "login/dual-user-choice";
     }
 

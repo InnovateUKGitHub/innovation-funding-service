@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.login.model;
 
 import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleSelectionModelPopulator {
 
-    public RoleSelectionViewModel populateModel() {
-        return new RoleSelectionViewModel();
+    public RoleSelectionViewModel populateModel(UserResource user) {
+        return new RoleSelectionViewModel(user);
     }
 }
