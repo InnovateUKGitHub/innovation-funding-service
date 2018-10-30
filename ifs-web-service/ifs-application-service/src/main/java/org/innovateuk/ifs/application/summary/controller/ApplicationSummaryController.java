@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -22,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -66,7 +68,11 @@ public class ApplicationSummaryController {
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
+                                     @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
+
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -86,6 +92,7 @@ public class ApplicationSummaryController {
             userForModel = user;
         }
 
+        model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, userForModel, form, isSupport));
         return "application-summary";
     }

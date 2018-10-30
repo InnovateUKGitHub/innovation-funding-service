@@ -9,6 +9,7 @@ import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.threads.repository.ThreadRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 @Component
 @PermissionRules
 public class AttachmentPermissionsRules {
+
     @Autowired
     private AttachmentMapper attachmentMapper;
 
@@ -36,11 +38,13 @@ public class AttachmentPermissionsRules {
     private QueryMapper queryMapper;
 
     @Autowired
+    private ThreadRepository threadRepository;
+
+    @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project Finance can upload attachments.")
     public boolean projectFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
@@ -64,7 +68,7 @@ public class AttachmentPermissionsRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
-        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchAttachment(attachment, user);
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchQueryAttachment(attachment, user);
     }
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
@@ -81,10 +85,10 @@ public class AttachmentPermissionsRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
-        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchAttachment(attachment, user);
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchQueryAttachment(attachment, user);
     }
 
-    private boolean projectPartnerIsAllowedToFetchAttachment(AttachmentResource attachmentResource, UserResource user) {
+    private boolean projectPartnerIsAllowedToFetchQueryAttachment(AttachmentResource attachmentResource, UserResource user) {
         return attachmentMapper.mapToDomain(attachmentResource).wasUploadedBy(user.getId())
                 || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
     }
@@ -96,11 +100,10 @@ public class AttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return !findQueryTheAttachmentIsLinkedTo(attachment).isPresent();
+        return threadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {
         return queryRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).stream().findFirst();
     }
-
 }

@@ -3,43 +3,40 @@ package org.innovateuk.ifs.application.team.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.controller.AcceptInviteController;
 import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -52,9 +49,6 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    private RegistrationService registrationService;
-
-    @Mock
     private RegistrationCookieService registrationCookieService;
 
     @Mock
@@ -63,13 +57,16 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
     @Mock
     private UserAuthenticationService userAuthenticationService;
 
-    @Spy
-    @InjectMocks
+    @Mock
     private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
+
+    @Mock
+    private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
 
     @Override
     protected AcceptInviteController supplyControllerUnderTest() {
-        return new AcceptInviteController();
+        return new AcceptInviteController(organisationRestService, inviteRestService,
+                acceptRejectApplicationInviteModelPopulator, confirmOrganisationInviteModelPopulator);
     }
 
     @Before
@@ -85,73 +82,88 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
     }
 
     @Test
-    public void testInviteEntryPage() throws Exception {
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(null);
+    public void inviteEntryPage() throws Exception {
+        AcceptRejectApplicationInviteViewModel expectedModel =
+                new AcceptRejectApplicationInviteViewModel(1L, "Evolution of the global phosphorus cycle",
+                        "Empire Ltd", "Steve Smith", "Empire Ltd", "steve.smith@empire.com", true, true);
 
-        MvcResult result = mockMvc.perform(get(String.format("/accept-invite/%s", INVITE_HASH)))
-                .andExpect(status().is2xxSuccessful())
+        when(acceptRejectApplicationInviteModelPopulator.populateModel(eq(invite),
+                isA(InviteOrganisationResource.class))).thenReturn(expectedModel);
+
+        mockMvc.perform(get(format("/accept-invite/%s", INVITE_HASH)))
+                .andExpect(status().isOk())
                 .andExpect(view().name("registration/accept-invite-new-user"))
-                .andReturn();
+                .andExpect(model().attribute("model", expectedModel));
 
-        assertTrue(result.getModelAndView().getModel().containsKey("model"));
-
-        Object viewModel = result.getModelAndView().getModel().get("model");
-
-        assertTrue(viewModel.getClass().equals(AcceptRejectApplicationInviteViewModel.class));
-
-        verify(registrationCookieService, times(1)).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
-        verify(registrationCookieService, times(1)).saveToInviteHashCookie(eq(INVITE_HASH), any());
+        verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
+        verify(inviteRestService).getInviteByHash(INVITE_HASH);
+        verify(inviteRestService).getInviteOrganisationByHash(INVITE_HASH);
+        verify(registrationCookieService).saveToInviteHashCookie(eq(INVITE_HASH), isA(HttpServletResponse.class));
+        verify(acceptRejectApplicationInviteModelPopulator).populateModel(eq(invite),
+                isA(InviteOrganisationResource.class));
     }
 
-
     @Test
-    public void testConfirmInvitedOrganisation() throws Exception {
-        final Long organisationId = 3L;
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(newUserResource().withEmail("email@test.com").build());
-        when(inviteRestService.getInviteByHash(anyString())).thenReturn(restSuccess(newApplicationInviteResource()
+    public void confirmInvitedOrganisation() throws Exception {
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
+
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
                 .withStatus(SENT)
                 .withEmail("email@test.com")
-                .withInviteOrganisation(organisationId)
-                .build()));
-        when(inviteRestService.getInviteOrganisationByHash(anyString())).thenReturn(restSuccess(newInviteOrganisationResource().withOrganisation(organisationId).build()));
-        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(newOrganisationResource()
-                .withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
-        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
+                .withInviteOrganisation(organisation.getId())
+                .build();
 
-        MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))
+        ConfirmOrganisationInviteOrganisationViewModel expectedModel =
+                new ConfirmOrganisationInviteOrganisationViewModel("Empire Ltd", "Business", "Empire Ltd", "09422981"
+                        , "steve.smith@empire.com", true, true, "/registration/register");
+
+        when(registrationCookieService.getInviteHashCookieValue(isA(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
+        when(inviteRestService.getInviteByHash(INVITE_HASH)).thenReturn(restSuccess(applicationInvite));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(
+                newInviteOrganisationResource()
+                        .withOrganisation(organisation.getId())
+                        .build()));
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisation.getId()))
+                .thenReturn(restSuccess(organisation));
+        when(confirmOrganisationInviteModelPopulator.populate(applicationInvite, organisation, "/registration/register")).thenReturn(expectedModel);
+
+        mockMvc.perform(get(format("/accept-invite/confirm-invited-organisation")))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/confirm-invited-organisation"))
-                .andReturn();
+                .andExpect(model().attribute("model", expectedModel));
 
-        assertTrue(result.getModelAndView().getModel().containsKey("model"));
-
-        Object viewModel = result.getModelAndView().getModel().get("model");
-
-        assertTrue(viewModel.getClass().equals(ConfirmOrganisationInviteOrganisationViewModel.class));
-
-        verify(registrationCookieService, times(1)).saveToOrganisationIdCookie(eq(organisationId), any());
+        verify(registrationCookieService).getInviteHashCookieValue(isA(HttpServletRequest.class));
+        verify(inviteRestService).getInviteByHash(INVITE_HASH);
+        verify(inviteRestService).getInviteOrganisationByHash(INVITE_HASH);
+        verify(organisationRestService).getOrganisationByIdForAnonymousUserFlow(organisation.getId());
+        verify(registrationCookieService).saveToOrganisationIdCookie(eq(organisation.getId()),
+                isA(HttpServletResponse.class));
+        verify(confirmOrganisationInviteModelPopulator).populate(applicationInvite, organisation, "/registration/register");
     }
 
     @Test
-    public void testInviteEntryPageInvalid() throws Exception {
-        mockMvc.perform(get(String.format("/accept-invite/%s", INVALID_INVITE_HASH)))
-                .andExpect(status().is2xxSuccessful())
+    public void inviteEntryPageInvalid() throws Exception {
+        mockMvc.perform(get(format("/accept-invite/%s", INVALID_INVITE_HASH)))
+                .andExpect(status().isOk())
                 .andExpect(view().name("url-hash-invalid"));
 
-        verify(registrationCookieService, times(1)).deleteOrganisationCreationCookie(any());
-        verify(registrationCookieService, times(1)).deleteOrganisationIdCookie(any());
-        verify(registrationCookieService, times(1)).deleteInviteHashCookie(any());
+        verify(inviteRestService).getInviteByHash(INVALID_INVITE_HASH);
+        verify(registrationCookieService).deleteOrganisationCreationCookie(any());
+        verify(registrationCookieService).deleteOrganisationIdCookie(any());
+        verify(registrationCookieService).deleteInviteHashCookie(any());
     }
 
     @Test
-    public void testInviteEntryPageAccepted() throws Exception {
+    public void inviteEntryPageAccepted() throws Exception {
         when(inviteRestService.getInviteOrganisationByHash(ACCEPTED_INVITE_HASH)).thenReturn(restSuccess(newInviteOrganisationResource().build()));
-        mockMvc.perform(get(String.format("/accept-invite/%s", ACCEPTED_INVITE_HASH)))
+        mockMvc.perform(get(format("/accept-invite/%s", ACCEPTED_INVITE_HASH)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"));
+                .andExpect(redirectedUrl("/login"));
 
-        verify(registrationCookieService, times(1)).deleteOrganisationCreationCookie(any());
-        verify(registrationCookieService, times(1)).deleteOrganisationIdCookie(any());
-        verify(registrationCookieService, times(1)).deleteInviteHashCookie(any());
+        verify(inviteRestService).getInviteByHash(ACCEPTED_INVITE_HASH);
+        verify(registrationCookieService).deleteOrganisationCreationCookie(any());
+        verify(registrationCookieService).deleteOrganisationIdCookie(any());
+        verify(registrationCookieService).deleteInviteHashCookie(any());
     }
 }

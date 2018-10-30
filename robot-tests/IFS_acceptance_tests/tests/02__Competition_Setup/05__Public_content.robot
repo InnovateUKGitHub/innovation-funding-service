@@ -81,7 +81,7 @@ Competition information and search: Valid values
     Then the user should see the element            jQuery = .govuk-error-summary__list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id = keywords  Search, Testing, Robot
     Then the user clicks the button/link            jQuery = .govuk-button:contains("Save and review")
-    And the user clicks the button/link             jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link             link = Return to public content
     Then the user should see the element            css = li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
@@ -96,7 +96,7 @@ Competition information and search: ReadOnly
     When the user clicks the button/link    link = Edit
     Then the user should see the element    css = #shortDescription[value="Short public description"]
     And the user clicks the button/link     jQuery = .govuk-button:contains("Save and review")
-    And the user clicks the button/link     jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link     link = Return to public content
 
 Summary: server side validation and autosave
     [Documentation]    INFUND-6916  INFUND-7486
@@ -126,7 +126,7 @@ Summary: User enters valid values and saves
     Then the user enters text to a text field    jQuery = .editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     And the user uploads the file                name = contentGroups[0].attachment  ${valid_pdf}
     When the user clicks the button/link         jQuery = button:contains("Save and review")
-    Then the user clicks the button/link         jQuery = .govuk-button:contains("Return to public content")
+    Then the user clicks the button/link         link = Return to public content
     And the user should be redirected to the correct page  ${public_content_overview}
     Then the user should see the element         link = Summary
     And the user should see the element          css = li:nth-child(2) .task-status-complete
@@ -141,11 +141,11 @@ Summary: Contains the correct values when viewed
     And the user should see the element       jQuery = div:contains("10 millions")
     And the user should see the element       jQuery = h2:contains("A nice new Heading")
     And the user should see the element       jQuery = a:contains("${valid_pdf}")
-    And the user should see the element       jQuery = .govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery = .button-secondary:contains("Edit")
+    And the user should see the element       link = Return to public content
+    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user enters text to a text field  jQuery = .editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     When the user clicks the button/link      jQuery = button:contains("Save and review")
-    Then the user clicks the button/link      jQuery = .govuk-button:contains("Return to public content")
+    Then the user clicks the button/link      link = Return to public content
     And the user should see the element       jQuery = li:nth-child(2) .task-status-complete
 
 Eligibility: server side validation and autosave
@@ -173,7 +173,7 @@ Eligibility: User enters valid values and saves
     And The user enters text to a text field                css = .contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
     And the user uploads the file                           css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery = button:contains("Save and review")
-    Then the user clicks the button/link                    jQuery = .govuk-button:contains("Return to public content")
+    Then the user clicks the button/link                    link = Return to public content
     And the user should be redirected to the correct page   ${public_content_overview}
     Then the user should see the element                    link = Eligibility
     And the user should see the element                     css = li:nth-child(3) .task-status-complete
@@ -184,8 +184,8 @@ Eligibility: Contains the correct values when viewed, Edit sections
     When the user clicks the button/link      link = Eligibility
     Then the user should see the element      jQuery = h2:contains("Nationality Eligibility Heading")
     And the user should see the element       jQuery = a:contains("${valid_pdf}")
-    And the user should see the element       jQuery = .govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery = .button-secondary:contains("Edit")
+    And the user should see the element       link = Return to public content
+    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user enters text to a text field  css = .contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
     And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
     Then the user clicks the button/link      jQuery = button:contains("+ add new section")
@@ -199,7 +199,7 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
     And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link      jQuery = button:contains("Save and review")
-    And the user clicks the button/link       jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link       link = Return to public content
     Then the user should see the element      css = li:nth-child(3) .task-status-complete
 
 Scope: Server side validation
@@ -215,7 +215,7 @@ Scope: Add, remove sections and submit
     [Tags]
     Given the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery = button:contains("Save and review")
-    And the user clicks the button/link   jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link   link = Return to public content
     Then the user should see the element  css = li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
@@ -255,7 +255,7 @@ How to apply: User enters valid values and saves
     And The user enters text to a text field                css = .contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
     And the user uploads the file                           css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery = button:contains("Save and review")
-    Then the user clicks the button/link                    jQuery = .govuk-button:contains("Return to public content")
+    Then the user clicks the button/link                    link = Return to public content
     And the user should be redirected to the correct page   ${public_content_overview}
     Then the user should see the element                    link = How to apply
     And the user should see the element                     css = li:nth-child(6) .task-status-complete
@@ -266,8 +266,8 @@ How to apply: Contains the correct values when viewed, Edit sections
     When the user clicks the button/link      link = How to apply
     Then the user should see the element      jQuery = h2:contains("The application process")
     And the user should see the element       jQuery = a:contains("${valid_pdf}")
-    And the user should see the element       jQuery = .govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery = .button-secondary:contains("Edit")
+    And the user should see the element       link = Return to public content
+    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user enters text to a text field  css = .contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
     And the user moves focus to the element   css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
     And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
@@ -290,7 +290,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user uploads the file             css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link      jQuery = button:contains("Save and review")
-    And the user clicks the button/link       jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link       link = Return to public content
     Then the user should see the element      css = li:nth-child(6) .task-status-complete
 
 Supporting information: Add, remove sections and submit
@@ -299,7 +299,7 @@ Supporting information: Add, remove sections and submit
     When the user clicks the button/link  link = Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery = button:contains("Save and review")
-    And the user clicks the button/link   jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link   link = Return to public content
     Then the user should see the element  css = li:nth-child(7) .task-status-complete
 
 Publish public content: Publish once all sections are complete
@@ -328,7 +328,7 @@ User can view the competition url for invite only competitions
     And the user clicks the button/link                 link = Edit
     Then the user selects the radio button              publishSetting  public
     And the user clicks the button/link                 jQuery = button:contains("Publish and review")
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link                 link = Return to public content
     Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
     And the user should not see the element             jQuery = p:contains("Competition URL:")
     Then the user clicks the button/link                link = Competition information and search
@@ -340,7 +340,7 @@ The user is able to edit and publish again
     [Tags]
     Given the user enters text to a text field  css = [aria-labelledby="eligibilitySummary"]  Some other summary
     And the user clicks the button/link         jQuery = button:contains("Publish and review")
-    Then the user clicks the button/link        jQuery = .govuk-button:contains("Return to public content")
+    Then the user clicks the button/link        link = Return to public content
     When the user should see all sections completed
     Then the user should see the element        jQuery = small:contains("${today}")
     And the user should not see the element     jQuery = button:contains("Publish and review")
@@ -366,7 +366,7 @@ The user is able to make the competition public
     And the user clicks the button/link                  link = Edit
     Then the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Publish and review")
-    And the user clicks the button/link                  jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link                  link = Return to public content
     Then the user should see the element                 jQuery = .button-secondary:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
@@ -461,7 +461,7 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2
     And the user selects the Terms and Conditions
     And the user fills in the CS Milestones  ${month}  ${nextyear}
 
@@ -548,7 +548,7 @@ the user can add and remove multiple event groups
     And the user should not see the element    id = dates[1].year
     And the user should not see the element    jQuery = .editor:eq(1)
     And the user clicks the button/link        jQuery = button:contains("Save and review")
-    And the user clicks the button/link        jQuery = .govuk-button:contains("Return to public content")
+    And the user clicks the button/link        link = Return to public content
 
 the user visits the sub sections then he should not see any errors
     the user visits  Competition information and search

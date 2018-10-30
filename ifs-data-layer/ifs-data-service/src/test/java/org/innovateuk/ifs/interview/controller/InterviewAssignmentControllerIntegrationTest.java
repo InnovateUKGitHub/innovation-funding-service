@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.controller;
 
-import com.drew.lang.Iterables;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -173,11 +172,11 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         flushAndClearSession();
 
-        assertTrue(Iterables.toList(interviewAssignmentRepository.findAll()).isEmpty());
+        assertEquals(0, interviewAssignmentRepository.count());
         controller.assignApplications(stagedApplicationListResource);
-        assertFalse(Iterables.toList(interviewAssignmentRepository.findAll()).isEmpty());
+        assertEquals(1, interviewAssignmentRepository.count());
 
-        InterviewAssignment interviewAssignment = Iterables.toList(interviewAssignmentRepository.findAll()).get(0);
+        InterviewAssignment interviewAssignment = interviewAssignmentRepository.findAll().iterator().next();
 
         assertEquals(applications.get(0).getId(), interviewAssignment.getParticipant().getApplicationId());
     }

@@ -40,6 +40,10 @@ RUN apt-get update --fix-missing && \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_ssl.ldif && \
   sed -i 's#/etc/ssl/certs/ca-certificates.crt#/etc/ldap/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
   echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
+# allow unlimited search results \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_search_limit.ldif && \
+# allow unlimited search results -frontend \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_search_limit_frontend.ldif && \
 
 # run openldap as its own user \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f openldap_user_access.ldif && \

@@ -206,14 +206,16 @@ Application finances: validation empty
     [Documentation]  IFS-630
     [Tags]
     [Setup]    The user navigates to the Validation competition
-    Given the user clicks the button/link     link = Application
-    And the user clicks the button/link       link = Finances
-    And the user enters text to a text field  css = .editor  ${EMPTY}
-    When the user moves focus to the element  jQuery = button:contains("Done")
-    Then the user should see an error         This field cannot be left blank.
-    And the user enters text to a text field  css = .editor  Funding rules for this competition added
-    And the user selects the radio button     applicationFinanceType  STANDARD
-    And the user clicks the button/link       jQuery = button:contains("Done")
+    Given the user clicks the button/link                      link = Application
+    And the user clicks the button/link                        link = Finances
+    And the user enters text to a text field                   css = .editor  ${EMPTY}
+    When The user clicks the button/link                       jQuery = button:contains("Done")
+    Then the user should see a field and summary error         This field cannot be left blank.
+    And the user should see a field and summary error          Select whether to include the project growth table.
+    And the user enters text to a text field                   css = .editor  Funding rules for this competition added
+    And the user selects the radio button                      applicationFinanceType  STANDARD
+    And the user selects the radio button                      includeGrowthTable  false
+    And the user clicks the button/link                        jQuery = button:contains("Done")
 
 Application finances: able to edit the field
     [Documentation]  IFS-630
@@ -249,7 +251,7 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin is required to enter a title and guidance message
 #    [Documentation]
 #    [Tags]

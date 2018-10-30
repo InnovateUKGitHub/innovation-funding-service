@@ -46,6 +46,10 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
         return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
     }
 
+    public ApplicationInviteResourceBuilder withLeadOrganisationId(Long... leadOrganisationIds) {
+        return withArraySetFieldByReflection("leadOrganisationId", leadOrganisationIds);
+    }
+
     public ApplicationInviteResourceBuilder withEmail(String... emails) {
         return withArraySetFieldByReflection("email", emails);
     }
