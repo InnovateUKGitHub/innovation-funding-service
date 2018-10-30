@@ -541,7 +541,9 @@
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
     <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
-        <p class="govuk-body" th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
+        <p class="govuk-body" th:if="${viewmode == 'edit'}">
+            You can incur overhead costs associated with those directly working on the project as well as indirect (administration) overheads. To be eligible both overhead categories need to be directly attributable to the project. The indirect overheads need to be additional as well as directly attributable. Note that there are certain cost categories/activities which are not eligible. To find out which costs are ineligible/eligible refer to our <a href=\"https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance\">project costs guidance</a>
+        </p>
         <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory == null || costCategory.costs == null || costCategory.costs.isEmpty()} ? null : ${costCategory.costs[0]}, overheadRate=${overheadCosts?.rateType == null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
@@ -861,6 +863,18 @@
     <!-- ===========================Form: materials =========================== -->
     <th:block th:fragment="materials (costViewModel, internalView)" th:with="question=${costViewModel.question}">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Materials costs guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text wysiwyg-styles">
+                <p>Materials supplied by associated companies or project partners should be charged at cost.</p>
+                <p>Software that you have purchased specifically for use during your project may be included. If you already own the software then only additional costs which are incurred and paid during your project, will be eligible. For example, installation, training or customisation.</p>
+                <p>Material costs must be itemised to justify that they are eligible.</p>
+            </div>
+        </details>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1024,6 +1038,17 @@
 
     <th:block th:fragment="capital_usage (costViewModel, internalView)" >
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Capital usage guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text wysiwyg-styles">
+                <p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value from its original price at the end of your project. If you owned the equipment before the project started then you should use its net present value.</p>
+                <p>This value is then multiplied by the amount, in percentages, that is used during the project. This final value represents the eligible cost to your project.</p>
+            </div>
+        </details>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1252,6 +1277,19 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (costViewModel, internalView)">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Subcontracting costs guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text wysiwyg-styles">
+                <p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project.</p>
+                <p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by a project partner.</p>
+                <p>Subcontracting associate companies should be charged at cost.</p>
+                <p>Where possible you should select a UK based contractor. You should name the subcontractor (where known) and describe what they will be doing. You should also state where the work will be undertaken. We will look at the size of this contribution when assessing your eligibility and level of support.</p>
+            </div>
+        </details>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1567,6 +1605,23 @@
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (costViewModel, internalView)">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Other costs guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text wysiwyg-styles">
+                <p>Examples of other costs include:</p>
+                <p><strong>Training costs:</strong> these costs are eligible for support if they relate to your project. We may support management training for your project but will not support ongoing training.</p>
+                <p><strong>Workshop/laboratory usage charges:</strong> direct costs which relate to workshops or laboratories and which can be supported with actual usage data can be claimed. You should provide details of how the workshop/laboratory charge out rates per hour or day are calculated. This can include specific labour, rent, rates, maintenance, equipment, calibration costs, etc. These should form the overall costs together with the available operational hours to form the hourly or daily charge out rates.</p>
+                <p><strong>Preparation of technical reports:</strong> if, for example, the main aim of your project is standard support or technology transfer. You should show how this is more than you would produce through good project management.</p>
+                <p><strong>Market assessment:</strong> we may support market assessments studies. The study will need to help us understand how your project is a good match for your target market. It could also be eligible if it helps commercialise your product.</p>
+                <p><strong>Licensing in new technologies:</strong> if new technology makes up a large part of your project, we will expect you to develop that technology. For instance, if the value of the technology is more than £100,000.</p>
+                <p><strong>Patent filing costs for new IP generated by your project:</strong> these are eligible for SMEs up to a limit of £7,500 per partner. You should not include legal costs relating to the filing or trademark related expenditure.</p>
+                <p>Regulatory compliance costs are eligible if necessary to carry out your project.</p>
+            </div>
+        </details>
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
