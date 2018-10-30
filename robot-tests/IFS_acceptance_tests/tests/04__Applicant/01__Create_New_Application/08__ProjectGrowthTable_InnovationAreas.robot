@@ -33,7 +33,7 @@ ${ineligibleMessage}         Your organisation type does not match our eligibili
 *** Test Cases ***
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
@@ -58,7 +58,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition setup")
     Then the user marks the Application as done  no  Programme
     And the user fills in the CS Assessors
@@ -73,17 +73,17 @@ Comp admin completes ths competition setup
 
 Competition is Open to Applications
     [Documentation]    INFUND-6393
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]
+    [Tags]  HappyPath
     Given Log in as a different user              &{lead_applicant_credentials}
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393  IFS-3938
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element          jQuery = h1:contains("Application overview")
     When the user clicks the button/link           link = Your finances
     Then the user should see the element           jQuery = li:contains("Your project costs") > .task-status-incomplete
@@ -94,14 +94,14 @@ Applicant visits his Finances
 
 Applicant fills in the Application Details
     [Documentation]  INFUND-6895  INFUND-9151
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link             link = Application details
     Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user selects Research category           Feasibility studies
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link         link = Your finances
     Then the user clicks the button/link          link = Your organisation
     And the user should see the text in the page  Turnover (£)
@@ -110,7 +110,7 @@ Turnover and Staff count fields
 
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
     When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
@@ -136,7 +136,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]
+    [Tags]  HappyPath
     Given Log in as a different user                             &{lead_applicant_credentials}
     And logged in user applies to competition                    ${compWithGrowth}  1
     When the user clicks the button/link                         link = Your finances
@@ -176,8 +176,10 @@ Organisation client side validation when no
 
 Mark Organisation as complete when no
     [Documentation]    INFUND-6393
-    [Tags]
-    Given the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
+    [Tags]  HappyPath
+    [Setup]  the user navigates to Your-finances page        ${applicationWithoutGrowth}
+    Given the user clicks the button/link                  link = Your organisation
+    And the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
     And the user enters text to a text field      jQuery = .govuk-hint:contains("turnover") + input    17506
     And the user selects medium organisation size
     And the user selects the checkbox             agree-state-aid
@@ -244,7 +246,7 @@ Organisation client side validation when yes
 
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link        link = Your organisation
     And the user selects medium organisation size
@@ -291,7 +293,7 @@ Applicant can view and edit project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
     And the user selects the checkbox                   agree-state-aid
-    and the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 The Lead Applicant fills in the Application Details for App with Growth
     [Documentation]  This step is required for following test cases
@@ -345,14 +347,14 @@ Non-lead can can edit and remark Organisation as Complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]
+    [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]
+    [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}

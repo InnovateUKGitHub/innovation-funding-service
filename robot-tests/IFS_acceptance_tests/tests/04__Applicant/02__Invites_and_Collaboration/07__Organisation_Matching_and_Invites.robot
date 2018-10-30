@@ -27,7 +27,7 @@ Business invites other business from same organisation in his application and th
     When the user invites collaborator by email address    ${bCollaborator}
     And the user changes the application name              ${bCollaborator}'s Application
     And the user logs out if they are logged in
-    And the user reads his email and clicks the link       ${bCollaborator}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
+    And the user reads his email and clicks the link       ${bCollaborator}  Invitation to contribute in ${openCompetitionBusinessRTO_name}  You are invited by  2
     Then the user is able to confirm the invite            ${bCollaborator}  ${correct_password}
     And the user sees the application he was invited for on his dashboard    ${bCollaborator}'s Application
     [Teardown]  logout as user
@@ -110,6 +110,6 @@ The latter researcher is able to invite the first one to his application
     the user navigates to the Application Team Page        ${stuart}
     the user updates his organisation inviting the user    Bob  ${bob}
     logout as user
-    the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionResearch_name}  You will be joining as part of the organisation  2
+    the user reads his email and clicks the link  ${bob}  Invitation to contribute in ${openCompetitionResearch_name}  You will be joining as part of the organisation  2
     the user is able to confirm the invite  ${bob}  ${correct_password}
     the user sees the application he was invited for on his dashboard    ${bob}'s Application

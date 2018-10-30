@@ -17,7 +17,7 @@ Resource          ../../../../resources/defaultResources.robot
 *** Test Cases ***
 Appendices available only for the correct questions
     [Documentation]    INFUND-832  IFS-2564
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user                            &{lead_applicant_credentials}
     ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
     the user cannot see the option to upload a file on the question  link = 1. Business opportunity
@@ -33,7 +33,7 @@ Appendices available only for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link = Academic robot test application
@@ -43,7 +43,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Academic robot test application
     And the user clicks the button/link   link = 5. Technical approach
@@ -52,7 +52,7 @@ Non pdf uploads not allowed
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
-    [Tags]
+    [Tags]  HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link = Academic robot test application
@@ -62,7 +62,7 @@ Lead applicant can upload a pdf file
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]  HappyPath
     Given The user opens the link in new window  ${5mb_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
@@ -73,7 +73,7 @@ Lead applicant can view a file
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
-    [Tags]
+    [Tags]  HappyPath
     When Log in as a different user               &{Comp_admin1_credentials}
     Then User verifies if uploaded document can be viewed
     When Log in as a different user               &{internal_finance_credentials}
@@ -85,7 +85,7 @@ Internal users can view uploaded files
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
@@ -109,7 +109,7 @@ Collaborators cannot remove a file if not assigned
 
 Questions can be assigned with appendices
     [Documentation]    INFUND-832  INFUND-409
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user                   &{lead_applicant_credentials}
     Given the user navigates to the page                    ${DASHBOARD_URL}
     And the user clicks the button/link                     link = Academic robot test application
