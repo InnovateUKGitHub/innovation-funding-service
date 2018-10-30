@@ -91,7 +91,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     @PostMapping(value = "/{projectId}/details/project-address", params = FORM_ACTION_PARAMETER)
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler) {
 

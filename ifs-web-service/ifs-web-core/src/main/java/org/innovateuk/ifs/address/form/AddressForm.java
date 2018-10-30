@@ -113,7 +113,7 @@ public class AddressForm {
     public void validateAction(BindingResult bindingResult) {
         if (action == Action.SEARCH_POSTCODE) {
             if (isNullOrEmpty(postcodeInput)) {
-                bindingResult.rejectValue("postcodeInput", "validation.field.must.not.be.blank");
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.field.must.not.be.blank");
             }
         }
     }
