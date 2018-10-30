@@ -16,6 +16,9 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
             " AND pp.activityState NOT IN :states " +
             " AND (str(pp.target.application.id) LIKE CONCAT('%', :applicationSearchString, '%'))";
 
+    String PROJECTS_READY_TO_SEND = "SELECT p FROM Project p " +
+            " WHERE p.offerSubmittedDate is NOT NULL";
+
     @Override
     List<Project> findAll();
     Project findOneByApplicationId(final Long applicationId);
@@ -23,4 +26,7 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID_AND_NOT_IN_STATE)
     List<Project> searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(@Param("compId") long competitionId, @Param("applicationSearchString") String applicationSearchString, @Param("states") Collection<ProjectState> projectStates);
+
+    @Query(PROJECTS_READY_TO_SEND)
+    List<Project> findReadyToSend();
 }
