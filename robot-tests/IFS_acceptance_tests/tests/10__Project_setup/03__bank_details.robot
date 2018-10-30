@@ -338,7 +338,7 @@ Project Finance approves Bank Details through the Bank Details list
 the user moves focus away from the element
     [Arguments]  ${element}
     mouse out    ${element}
-    focus        css = .govuk-button[data-js-modal = "modal-bank"]
+    Set Focus To Element        css = .govuk-button[data-js-modal = "modal-bank"]
 
 the user submits the bank account details
     [Arguments]    ${account_number}    ${sort_code}

@@ -2,12 +2,15 @@
 if (project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
+
 //Workaround because of process resources.  dependency should be removed.
 apply from: rootProject.file("gradle-support/java.gradle")
 build.enabled = false
 // End workaround
 
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
+
+openshiftEnv = openshiftEnv.replaceAll('/', '-')
 
 if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
@@ -18,11 +21,9 @@ if (!isNamedEnv()) {
     }
 }
 
-
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
-
     from('os-files/') {
         include '**/*.yml'
     }
@@ -271,20 +272,34 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 task deleteProject(type: Exec) {
     doFirst {
         executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'delete', 'project', openshiftEnv, "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
 
     doLast {
-        sleep 10_000L
+        while ({
+            sleep(15 * 1000)
+
+            def ocCommand = "oc get project ${openshiftEnv} --token=${System.env.bamboo_openshift_svc_account_token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
+            def proc = ocCommand.execute()
+
+            proc.waitFor()
+
+            def projectDeleted = proc.exitValue() == 1
+            if ( !projectDeleted ) {
+              println "Project is not deleted yet.. "
+            }
+
+            !projectDeleted
+        }()) continue
     }
 }
 
 task createProject(type: Exec, dependsOn: deleteProject) {
     doFirst {
         executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 }
 
@@ -340,17 +355,20 @@ import org.apache.tools.ant.filters.*
 
 task osTestRemote(type: Exec, dependsOn: robotTestsFilter) {
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv]
+    args = [openshiftEnv, osTestArgs]
+}
+
+task osBlockTilTestsRunning(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-block-til-tests-running.sh'
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osStopTests(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = []
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osTestResults(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = []
+    args = [openshiftEnv, "remote", project.version]
 }
-
-
