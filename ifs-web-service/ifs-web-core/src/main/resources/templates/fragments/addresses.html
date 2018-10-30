@@ -6,9 +6,8 @@
         <input type="hidden" th:field="*{addressForm.addressType}" />
         <fieldset class="govuk-fieldset">
             <legend th:if="${legend}" class="govuk-visually-hidden" th:text="${legend}" />
-            <legend th:unless="${legend}" class="govuk-visually-hidden">legend</legend>
             <div  th:unless="${form.addressForm.postcodeAddressEntry}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
+                <label class="govuk-label govuk-label--s" for="addressForm.postcodeInput">
                     Postcode
                 </label>
                 <span th:if="${formHint}" class="govuk-hint" th:text="${formHint}"></span>
@@ -16,7 +15,7 @@
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.postcodeInput')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.postcodeInput"
-                       class="govuk-input govuk-!-width-one-half"
+                       class="govuk-input govuk-input--width-10"
                        th:field="*{addressForm.postcodeInput}"
                        th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-input--error'"
                        type="text" />
@@ -29,7 +28,12 @@
                     <dt>Postcode</dt>
                     <dd>
                         <span th:text="${form.addressForm.postcodeInput}"></span>
-                        <button type="submit" class="button-clear govuk-!-margin-top-6" name="addressForm.action" value="CHANGE_POSTCODE">Change</button>
+                        <button type="submit"
+                                class="button-clear govuk-!-margin-left-2 govuk-!-padding-0"
+                                name="addressForm.action"
+                                value="CHANGE_POSTCODE">
+                            Change
+                        </button>
                     </dd>
                 </dl>
                 <div th:if='${#lists.isEmpty(form.addressForm.postcodeResults)}'>No results were found</div>
@@ -51,7 +55,7 @@
                 </div>
             </th:block>
 
-            <button type="submit" class="button-clear govuk-!-margin-top-6" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
+            <button type="submit" class="button-clear" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
         </fieldset>
         <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddressEntry}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"
