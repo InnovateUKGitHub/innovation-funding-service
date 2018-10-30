@@ -7,6 +7,12 @@ buildscript {
     repositories { jcenter() }
 }
 
+task updateIfsWebUser(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'exec', '-d', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'update ifs.user set uid="c0d02979-e66e-11e7-ac43-0242ac120002" where email="ifs_web_user@innovateuk.org"'
+    }
+}
+
 createContainer.containerName = "ifs-database"
 createContainer.containerId = "ifs-database"
 createContainer.env = ["MYSQL_ROOT_PASSWORD=password","MYSQL_DATABASE=ifs" ]
