@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,6 +77,9 @@ public class YourFundingFormValidator {
             int integerPartLength = row.getFundingAmount().precision() - row.getFundingAmount().scale();
             if (integerPartLength >= 20) {
                 errors.rejectValue(String.format("otherFundingRows[%s].fundingAmount", id), "validation.finance.funding.amount.invalid");
+            }
+            if (row.getFundingAmount().compareTo(BigDecimal.ONE) < 0) {
+                errors.rejectValue(String.format("otherFundingRows[%s].fundingAmount", id), "validation.field.max.value.or.higher", new Object[]{"1"}, "");
             }
         }
     }
