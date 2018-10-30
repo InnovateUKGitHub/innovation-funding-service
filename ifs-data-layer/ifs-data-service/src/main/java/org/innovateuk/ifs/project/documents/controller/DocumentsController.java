@@ -27,8 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/project/{projectId}/document")
-//TODO - XXX - rename class back to normal.
-public class DataDocumentsController {
+public class DocumentsController {
 
     @Autowired
     private DocumentsService documentsService;
